@@ -5,7 +5,8 @@ from cato.runners.test_suite_runner import TestSuiteRunner
 
 if __name__ == "__main__":
     config_parser = JsonConfigParser()
-    config = config_parser.parse("test", open(r"M:\workspace\cato\testconfig.json"))
+    path = r"M:\test\cato-test\testconfig.json"
+    config = config_parser.parse(path)
 
     obj_graph = pinject.new_object_graph()
     test_suite_runner = obj_graph.provide(TestSuiteRunner)

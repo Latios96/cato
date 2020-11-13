@@ -5,18 +5,23 @@ from cato.domain.test_suite import TestSuite
 
 
 class Reporter:
+    def report_message(self, message):
+        print(message)
+
     def report_start_test_suite(self, test_suite: TestSuite):
-        print(f"Running Test Suite {test_suite.name}..")
+        self.report_message(f"Running Test Suite {test_suite.name}..")
 
     def report_start_test(self, test: Test):
-        print(f"{test.name}..")
+        self.report_message(f"Running {test.name}..")
 
     def report_test_sucess(self, test):
-        print(
+        self.report_message(
             emoji.emojize(
                 f"\n{test.name} succeded :white_check_mark:", use_aliases=True
             )
         )
 
     def report_test_failure(self, test):
-        print(emoji.emojize(f"\n{test.name} failed :x:", use_aliases=True))
+        self.report_message(
+            emoji.emojize(f"\n{test.name} failed :x:", use_aliases=True)
+        )

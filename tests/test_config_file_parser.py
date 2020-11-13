@@ -39,7 +39,9 @@ INVALID_CONFIG = {
 def test_success():
     json_config_parser = JsonConfigParser()
 
-    suites = json_config_parser.parse("test", StringIO(json.dumps(VALID_CONFIG)))
+    suites = json_config_parser.parse(
+        "test/test.json", StringIO(json.dumps(VALID_CONFIG))
+    )
 
     assert suites == Config(
         path="test",

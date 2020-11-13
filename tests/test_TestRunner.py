@@ -42,7 +42,7 @@ def test_should_replace_placeholder():
     command_runner.run.assert_called_with(
         "crayg -s {}/test.json -o {}".format(
             os.path.join("test", "suite", "my first test"),
-            os.path.join("result", "my first test.png"),
+            os.path.join("result", "suite", "my first test", "my first test.png"),
         ),
     )
 

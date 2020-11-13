@@ -22,6 +22,7 @@ class TestRunner:
         command = self._prepare_command(config, current_suite, test)
 
         with Timer() as t:
+            self._reporter.report_message('Command: "{}"'.format(command))
             command_result = self._command_runner.run(command)
 
         if command_result.exit_code == 0:
@@ -36,7 +37,9 @@ class TestRunner:
     def _prepare_command(self, config, current_suite, test):
         command_variables = {
             "test_resources": os.path.join(config.path, current_suite.name, test.name),
-            "image_output_png": os.path.join("result", "{}.png".format(test.name)),
+            "image_output_png": os.path.join(
+                "result", current_suite.name, test.name, "{}.png".format(test.name)
+            ),
         }
         command = test.command.format(**command_variables)
         return command

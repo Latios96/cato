@@ -10,13 +10,15 @@ from cato.domain.test_suite import TestSuite
 
 
 class JsonConfigParser:
-    def parse(self, path, stream: IO) -> Config:
+    def parse(self, path, stream: IO = None) -> Config:
+        if not stream:
+            stream = open(path)
         schema = self._read_json_from_file(self._schema_path())
         data = self._read_json_from_stream(stream)
 
         validate(instance=data, schema=schema)
 
-        return Config(path, self._transform_suites(data))
+        return Config(os.path.dirname(path), self._transform_suites(data))
 
     def _read_json_from_file(self, path) -> dict:
         with open(path) as f:
