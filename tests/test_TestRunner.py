@@ -14,4 +14,4 @@ def test_should_report_test_start():
     test_runner.run_test(test)
 
     reporter.report_start_test.assert_called_with(test)
-    #command_runner.run.assert_called_with(test.command)
+    command_runner.run.assert_called_with(test.command)

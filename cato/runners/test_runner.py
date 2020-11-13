@@ -11,4 +11,4 @@ class TestRunner:
     def run_test(self, test: Test):
         self._reporter.report_start_test(test)
 
-        self._command_runner.run(test.command.split(" "))
+        self._command_runner.run(test.command)

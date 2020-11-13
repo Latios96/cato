@@ -1,12 +1,12 @@
 import pinject
 
-from cato.domain.Test import Test
-from cato.domain.TestSuite import TestSuite
-from cato.runners.TestSuiteRunner import TestSuiteRunner
+from cato.domain.test import Test
+from cato.domain.test_suite import TestSuite
+from cato.runners.test_suite_runner import TestSuiteRunner
 
 if __name__ == "__main__":
     test_suite = TestSuite(
-        name="example", tests=[Test(name="my first test", command="python --version")]
+        name="example", tests=[Test(name="my first test", command=["python", "--version"])]
     )
 
     obj_graph = pinject.new_object_graph()
