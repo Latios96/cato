@@ -3,7 +3,7 @@ import os
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_result import TestResult
+from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner, CommandResult
@@ -71,7 +71,7 @@ def test_should_have_succeded_with_exit_code_0():
         Config(path="test", test_suites=[]), TestSuite(name="suite", tests=[]), test
     )
 
-    assert result.result == TestResult.SUCCESS
+    assert result.result == TestStatus.SUCCESS
 
 
 def test_should_have_failed_with_exit_code_0():
@@ -85,4 +85,4 @@ def test_should_have_failed_with_exit_code_0():
         Config(path="test", test_suites=[]), TestSuite(name="suite", tests=[]), test
     )
 
-    assert result.result == TestResult.FAILED
+    assert result.result == TestStatus.FAILED

@@ -1,10 +1,13 @@
 from dataclasses import dataclass
+from typing import List
 
-from cato.domain.test_result import TestResult
+from cato.domain.test_execution_result import TestExecutionResult
+from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 
 
 @dataclass
 class TestSuiteExecutionResult:
     test_suite: TestSuite
-    result: TestResult
+    result: TestStatus
+    test_results: List[TestExecutionResult]

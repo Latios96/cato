@@ -1,6 +1,6 @@
 from enum import Enum
 
 
-class TestResult(Enum):
+class TestStatus(Enum):
     SUCCESS = 1
     FAILED = 2
