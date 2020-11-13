@@ -5,7 +5,9 @@ from cato.domain.TestSuite import TestSuite
 from cato.runners.TestSuiteRunner import TestSuiteRunner
 
 if __name__ == "__main__":
-    test_suite = TestSuite(name="example", tests=[Test(name="my first test")])
+    test_suite = TestSuite(
+        name="example", tests=[Test(name="my first test", command="python --version")]
+    )
 
     obj_graph = pinject.new_object_graph()
     test_suite_runner = obj_graph.provide(TestSuiteRunner)
