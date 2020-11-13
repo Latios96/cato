@@ -150,17 +150,6 @@ category = "dev"
 optional = false
 python-versions = "*"
 
-[[package]]
-name = "oiio"
-version = "2.0.5"
-description = "OpenImageIO Python package"
-category = "main"
-optional = false
-python-versions = "*"
-
-[package.source]
-type = "file"
-url = "oiio_packages/oiio-2.0.5-cp37-none-win_amd64.whl"
 
 [[package]]
 name = "packaging"
