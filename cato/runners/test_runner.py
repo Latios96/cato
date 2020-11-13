@@ -23,8 +23,15 @@ class TestRunner:
 
         with Timer() as t:
             command_result = self._command_runner.run(command)
-            print(t.elapsed)
-            return TestExecutionResult(test, TestResult.SUCCESS, command_result.output, t.elapsed)
+
+        if command_result.exit_code == 0:
+            return TestExecutionResult(
+                test, TestResult.SUCCESS, command_result.output, t.elapsed
+            )
+
+        return TestExecutionResult(
+            test, TestResult.FAILED, command_result.output, t.elapsed
+        )
 
     def _prepare_command(self, config, current_suite, test):
         command_variables = {
