@@ -21,7 +21,7 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     mock_reporter = mock_safe(Reporter)
     mock_test_runner = mock_safe(TestRunner)
     test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
-    test = Test(name="my first test", command="dummy_command")
+    test = Test(name="my first test", command=["dummy_command"])
     test_suite = TestSuite(name="example", tests=[test])
 
     test_suite_runner.run_test_suites([test_suite])

@@ -9,7 +9,7 @@ def test_should_report_test_start():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     test_runner = TestRunner(command_runner, reporter)
-    test = Test(name="my first test", command="dummy_command")
+    test = Test(name="my first test", command=["dummy_command"])
 
     test_runner.run_test(test)
 
