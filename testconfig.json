@@ -1,0 +1,11 @@
+{
+  "suites": {
+    "name": "My First Test Suite",
+    "tests": [
+      {
+        "name": "My First Test",
+        "cmd": "mayabatch -s {test_resources}/{test_name.json} -o {image_output}/{test_name.png}"
+      }
+    ]
+  }
+}
