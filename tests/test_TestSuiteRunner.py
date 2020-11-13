@@ -1,13 +1,11 @@
-from unittest import mock
-
 import pytest
 
 from cato.domain.Test import Test
 from cato.domain.TestSuite import TestSuite
 from cato.reporter.Reporter import Reporter
+from cato.runners.TestRunner import TestRunner
 from cato.runners.TestSuiteRunner import TestSuiteRunner
 from tests.utils import mock_safe
-from cato.runners.TestRunner import TestRunner
 
 
 def test_run_empty_suites_should_fail():
