@@ -5,7 +5,7 @@ from cato.runners.command_runner import CommandRunner, CommandResult
 
 
 def test_command_runner_success():
-    cmd = ["python", os.path.join(os.path.dirname(__file__), "demo_script.py")]
+    cmd = "python {}".format(os.path.join(os.path.dirname(__file__), "demo_script.py"))
     mock_output_processor = mock.MagicMock()
     command_runner = CommandRunner(mock_output_processor)
 

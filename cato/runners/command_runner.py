@@ -7,7 +7,7 @@ from cato.runners.output_processor import OutputProcessor
 
 @dataclass
 class CommandResult:
-    cmd: List[str]
+    cmd: str
     exit_code: int
     output: List[str]
 
