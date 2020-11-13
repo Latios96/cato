@@ -4,18 +4,19 @@ from typing import IO, List
 
 from jsonschema import validate
 
+from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
 
 class JsonConfigParser:
-    def parse(self, stream: IO) -> List[TestSuite]:
+    def parse(self, path, stream: IO) -> Config:
         schema = self._read_json_from_file(self._schema_path())
         data = self._read_json_from_stream(stream)
 
         validate(instance=data, schema=schema)
 
-        return self._transform_suites(data)
+        return Config(path, self._transform_suites(data))
 
     def _read_json_from_file(self, path) -> dict:
         with open(path) as f:
