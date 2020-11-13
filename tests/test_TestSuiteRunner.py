@@ -15,7 +15,7 @@ def test_run_empty_suites_should_fail():
     test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
 
     with pytest.raises(ValueError):
-        test_suite_runner.run_test_suites(Config(path='', test_suites=[]))
+        test_suite_runner.run_test_suites(Config(path="", test_suites=[]))
 
 
 def test_run_suite_should_report_start_and_delegate_to_test_runner():
@@ -24,7 +24,7 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
     test = Test(name="my first test", command="dummy_command")
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(path='', test_suites=[test_suite])
+    config = Config(path="", test_suites=[test_suite])
 
     test_suite_runner.run_test_suites(config)
 

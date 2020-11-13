@@ -12,9 +12,7 @@ class TestSuiteRunner:
         self._test_runner = test_runner
         self._reporter = reporter
 
-    def run_test_suites(
-        self, config: Config
-    ) -> List[TestSuiteExecutionResult]:
+    def run_test_suites(self, config: Config) -> List[TestSuiteExecutionResult]:
 
         if not config.test_suites:
             raise ValueError("At least one TestSuite is required!")

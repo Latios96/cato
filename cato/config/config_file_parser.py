@@ -30,8 +30,8 @@ class JsonConfigParser:
 
     def _transform_suites(self, data: dict) -> List[TestSuite]:
         suites = []
-        for suite in data['suites']:
-            name = suite['name']
+        for suite in data["suites"]:
+            name = suite["name"]
             tests = self._transform_test(suite)
             suites.append(TestSuite(name=name, tests=tests))
 
@@ -39,6 +39,6 @@ class JsonConfigParser:
 
     def _transform_test(self, suite) -> List[Test]:
         tests = []
-        for test in suite['tests']:
-            tests.append(Test(name=test['name'], command=test['command']))
+        for test in suite["tests"]:
+            tests.append(Test(name=test["name"], command=test["command"]))
         return tests
