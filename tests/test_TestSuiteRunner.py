@@ -29,4 +29,4 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     test_suite_runner.run_test_suites(config)
 
     mock_reporter.report_start_test_suite.assert_called_once()
-    mock_test_runner.run_test.assert_called_with(config, test)
+    mock_test_runner.run_test.assert_called_with(config, test_suite, test)

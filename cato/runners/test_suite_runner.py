@@ -20,5 +20,5 @@ class TestSuiteRunner:
         for suite in config.test_suites:
             self._reporter.report_start_test_suite(suite)
             for test in suite.tests:
-                self._test_runner.run_test(config, test)
+                self._test_runner.run_test(config, suite, test)
         return []
