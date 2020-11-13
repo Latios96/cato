@@ -1,6 +1,6 @@
 import subprocess
 from dataclasses import dataclass
-from typing import List, Callable
+from typing import List
 
 from cato.runners.output_processor import OutputProcessor
 
@@ -16,9 +16,9 @@ class CommandRunner:
     def __init__(self, output_processor: OutputProcessor):
         self._output_processor = output_processor
 
-    def run(self, cmd: List[str]) -> CommandResult:
+    def run(self, cmd: str) -> CommandResult:
         self._lines = []
-        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True)
+        popen = subprocess.Popen(cmd, stdout=subprocess.PIPE, universal_newlines=True, shell=True)
         for stdout_line in iter(popen.stdout.readline, ""):
             self._lines.append(stdout_line)
             self._output_processor.process(stdout_line)
