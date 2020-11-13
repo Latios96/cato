@@ -1,5 +1,5 @@
-from cato.domain.Test import Test
-from cato.domain.TestSuite import TestSuite
+from cato.domain.test import Test
+from cato.domain.test_suite import TestSuite
 
 
 class Reporter:

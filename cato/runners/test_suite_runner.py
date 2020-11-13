@@ -1,9 +1,9 @@
 from typing import List
 
-from cato.domain.TestSuite import TestSuite
-from cato.domain.TestSuiteExecutionResult import TestSuiteExecutionResult
-from cato.reporter.Reporter import Reporter
-from cato.runners.TestRunner import TestRunner
+from cato.domain.test_suite import TestSuite
+from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato.reporter.reporter import Reporter
+from cato.runners.test_runner import TestRunner
 
 
 class TestSuiteRunner:

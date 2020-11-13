@@ -1,7 +1,7 @@
 import os
 from unittest import mock
 
-from cato.runners.CommandRunner import CommandRunner, CommandResult
+from cato.runners.command_runner import CommandRunner, CommandResult
 
 
 def test_command_runner_success():

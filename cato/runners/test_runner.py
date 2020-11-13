@@ -1,6 +1,6 @@
-from cato.domain.Test import Test
-from cato.reporter.Reporter import Reporter
-from cato.runners.CommandRunner import CommandRunner
+from cato.domain.test import Test
+from cato.reporter.reporter import Reporter
+from cato.runners.command_runner import CommandRunner
 
 
 class TestRunner:

@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from cato.domain import TestResult
-from cato.domain.TestSuite import TestSuite
+from cato.domain.test_result import TestResult
+from cato.domain.test_suite import TestSuite
 
 
 @dataclass
