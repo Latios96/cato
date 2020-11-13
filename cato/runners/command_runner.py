@@ -19,11 +19,18 @@ class CommandRunner:
     def run(self, cmd: str) -> CommandResult:
         self._lines = []
         popen = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, universal_newlines=True, shell=True
+            cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE, universal_newlines=True, shell=True
         )
-        for stdout_line in iter(popen.stdout.readline, ""):
-            self._lines.append(stdout_line)
-            self._output_processor.process(stdout_line)
+
+        while popen.poll() is None:
+            line = popen.stdout.readline()
+            if line != "":
+                self._lines.append(line)
+                self._output_processor.process(line)
+            line = popen.stderr.readline()
+            if line != "":
+                self._lines.append(line)
+                self._output_processor.process(line)
         popen.stdout.close()
         return_code = popen.wait()
         return CommandResult(cmd, return_code, self._lines)
