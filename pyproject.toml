@@ -9,6 +9,11 @@ python = "^3.7"
 emoji = "^0.6.0"
 pinject = "^0.14.1"
 jsonschema = "^3.2.0"
+oiio = [
+    { path = "oiio_packages/oiio-2.0.5-cp37-none-win_amd64.whl", markers = "sys_platform == 'win32'" },
+    { path = "oiio_packages/oiio-2.0.5-cp37-none-macosx_10_13_x86_64.whl", markers = "sys_platform == 'darwin'" },
+    { path = "oiio_packages/oiio-2.0.5-cp37-none-win_amd64.whl", markers = "sys_platform == 'linux'" },
+]
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
