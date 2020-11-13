@@ -4,7 +4,7 @@
     "tests": [
       {
         "name": "My First Test",
-        "cmd": "mayabatch -s {test_resources}/{test_name.json} -o {image_output}/{test_name.png}"
+        "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
       }
     ]
   }
