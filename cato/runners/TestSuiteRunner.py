@@ -14,6 +14,10 @@ class TestSuiteRunner:
     def run_test_suites(
         self, test_suites: List[TestSuite]
     ) -> List[TestSuiteExecutionResult]:
+
+        if not test_suites:
+            raise ValueError("At least one TestSuite is required!")
+
         for suite in test_suites:
             self._reporter.report_start_test_suite(suite)
             for test in suite.tests:
