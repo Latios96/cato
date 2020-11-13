@@ -1,6 +1,7 @@
 from typing import List
 
 from cato.domain.config import Config
+from cato.domain.test_result import TestResult
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.reporter import Reporter
@@ -20,5 +21,9 @@ class TestSuiteRunner:
         for suite in config.test_suites:
             self._reporter.report_start_test_suite(suite)
             for test in suite.tests:
-                self._test_runner.run_test(config, suite, test)
+                result = self._test_runner.run_test(config, suite, test)
+                if result.result == TestResult.SUCCESS:
+                    self._reporter.report_test_sucess(test)
+                else:
+                    self._reporter.report_test_failure(test)
         return []
