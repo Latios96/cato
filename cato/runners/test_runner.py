@@ -22,7 +22,7 @@ class TestRunner:
     def _prepare_command(self, config, current_suite, test):
         command_variables = {
             "test_resources": os.path.join(config.path, current_suite.name, test.name),
-            "image_output_png": "{}.png".format(test.name),
+            "image_output_png": os.path.join("result", "{}.png".format(test.name)),
         }
         command = test.command.format(**command_variables)
         return command
