@@ -46,5 +46,5 @@ class JsonConfigParser:
     def _transform_test(self, suite) -> List[Test]:
         tests = []
         for test in suite["tests"]:
-            tests.append(Test(name=test["name"], command=test["command"],variables={}))
+            tests.append(Test(name=test["name"], command=test["command"],variables=test['variables'] if test.get('variables') else {}))
         return tests

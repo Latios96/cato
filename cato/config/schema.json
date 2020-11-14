@@ -133,6 +133,18 @@
                                                     "examples": [
                                                         "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
                                                     ]
+                                                },
+                                                "variables": {
+                                                    "$id": "#/properties/suites/items/anyOf/0/properties/tests/items/anyOf/0/properties/command",
+                                                    "type": "object",
+                                                    "title": "The variables schema",
+                                                    "description": "An explanation about the purpose of this instance.",
+                                                    "default": "",
+                                                    "examples": [
+                                                        {
+                                                            "frame": "7"
+                                                        }
+                                                    ]
                                                 }
                                             },
                                             "additionalProperties": true
