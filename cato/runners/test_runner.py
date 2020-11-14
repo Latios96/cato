@@ -1,5 +1,3 @@
-import os
-
 from contexttimer import Timer
 
 from cato.domain.config import Config
