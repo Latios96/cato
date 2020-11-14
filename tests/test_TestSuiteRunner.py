@@ -47,4 +47,6 @@ def test_run_suite_should_return_correctly_collected_results():
 
     result = test_suite_runner.run_test_suites(config)
 
-    assert result == [TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])]
+    assert result == [
+        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
+    ]

@@ -12,12 +12,19 @@ def test_generate_end_message():
     test = Test(name="my first test", command="dummy_command")
     test_suite = TestSuite(name="example", tests=[test])
     execution_result = TestExecutionResult(test, TestStatus.SUCCESS, [], 1)
-    result = [TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])]
+    result = [
+        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
+    ]
     generator = EndMessageGenerator()
 
     message = generator.generate_end_message(result)
 
-    assert message == emoji.emojize("""Result:
+    assert message == emoji.emojize(
+        """Result:
 Ran {} tests
 {}  succeded :white_check_mark:
-{}  failed   :x:""".format(1, 1, 0), use_aliases = True)
+{}  failed   :x:""".format(
+            1, 1, 0
+        ),
+        use_aliases=True,
+    )

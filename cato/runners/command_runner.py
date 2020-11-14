@@ -19,7 +19,11 @@ class CommandRunner:
     def run(self, cmd: str) -> CommandResult:
         self._lines = []
         popen = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE,stderr=subprocess.PIPE, universal_newlines=True, shell=True
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            universal_newlines=True,
+            shell=True,
         )
 
         while popen.poll() is None:
