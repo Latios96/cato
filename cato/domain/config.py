@@ -8,3 +8,4 @@ from cato.domain.test_suite import TestSuite
 class Config:
     path: str
     test_suites: List[TestSuite]
+    output_folder: str

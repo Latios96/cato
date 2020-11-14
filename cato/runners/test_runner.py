@@ -9,17 +9,21 @@ from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
+from cato.runners.output_folder_creator import OutputFolderCreator
 
 
 class TestRunner:
-    def __init__(self, command_runner: CommandRunner, reporter: Reporter):
+    def __init__(self, command_runner: CommandRunner, reporter: Reporter, output_folder_creator: OutputFolderCreator):
         self._command_runner = command_runner
         self._reporter = reporter
+        self._output_folder_creator = output_folder_creator
 
     def run_test(self, config: Config, current_suite: TestSuite, test: Test):
         self._reporter.report_start_test(test)
 
         command = self._prepare_command(config, current_suite, test)
+
+        self._output_folder_creator.create_folder(config.output_folder, current_suite, test)
 
         with Timer() as t:
             self._reporter.report_message('Command: "{}"'.format(command))

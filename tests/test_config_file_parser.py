@@ -1,4 +1,5 @@
 import json
+import os
 from io import StringIO
 
 import pytest
@@ -56,6 +57,7 @@ def test_success():
                 ],
             )
         ],
+        output_folder=os.getcwd()
     )
 
 
