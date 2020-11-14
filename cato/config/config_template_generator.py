@@ -17,18 +17,16 @@ TEMPLATE = {
                 },
                 {
                     "name": "use own variables in command",
-                    "variables": {
-                        'frame': '7'
-                    },
+                    "variables": {"frame": "7"},
                     "command": "python --version {@frame}",
                 },
                 {
                     "name": "define own image output if renderer does not support settings full path",
                     "variables": {
-                        'image_output': '{@image_output_folder}/my_render.png'
+                        "image_output": "{@image_output_folder}/my_render.png"
                     },
                     "command": "python --version {@image_output}",
-                }
+                },
             ],
         }
     ]

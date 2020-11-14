@@ -1,18 +1,20 @@
 from typing import Dict
 
+from cato.domain.config import Config
 from cato.vendor import lucidity
 
 
 class VariableProcessor:
     def evaluate_variables(
-        self, config, current_suite, test, variables: Dict[str, str]
+        self, config: Config, current_suite, test, variables: Dict[str, str]
     ) -> Dict[str, str]:
         default_variables = {
             "test_name": test.name,
             "suite_name": current_suite.name,
             "config_path": config.path,
+            "output_folder": config.output_folder,
             "test_resources": "{@config_path}/{@suite_name}/{@test_name}",
-            "image_output_folder": "{@test_resources}/{@suite_name}/{@test_name}",
+            "image_output_folder": "{@output_folder}/result/{@suite_name}/{@test_name}",
             "image_output_no_extension": "{@image_output_folder}/{@test_name}",
             "image_output_png": "{@image_output_no_extension}.png",
         }

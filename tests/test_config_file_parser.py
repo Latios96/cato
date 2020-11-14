@@ -32,9 +32,7 @@ VALID_CONFIG_WITH_VARIABLES = {
                 {
                     "name": "My First Test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-                    "variables":{
-                        "frame": "7"
-                    }
+                    "variables": {"frame": "7"},
                 }
             ],
         }
@@ -70,7 +68,7 @@ def test_success():
                     Test(
                         name="My First Test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-                     variables={}
+                        variables={},
                     )
                 ],
             )
@@ -95,7 +93,7 @@ def test_success_with_variables():
                     Test(
                         name="My First Test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-                     variables={'frame': '7'}
+                        variables={"frame": "7"},
                     )
                 ],
             )

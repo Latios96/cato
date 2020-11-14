@@ -10,3 +10,6 @@ class OutputFolder:
 
         if not os.path.exists(path):
             os.makedirs(path)
+
+    def image_output_exists(self, image_output):
+        return os.path.exists(image_output)
