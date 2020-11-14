@@ -57,7 +57,7 @@ def test_format_command():
     variable_processor = VariableProcessor()
 
     command = variable_processor.format_command(
-        "{image_output_png}", {"image_output_png": "test"}
+        "{@image_output_png}", {"image_output_png": "test"}
     )
 
     assert command == "test"

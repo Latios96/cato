@@ -32,4 +32,11 @@ class VariableProcessor:
         return formatted
 
     def format_command(self, command: str, variables: Dict[str, str]):
-        return command.format(**variables)
+        templates = {}
+        for name, str in variables.items():
+            template = lucidity.Template(name, str)
+            template.template_resolver = templates
+            templates[name] = template
+        command_template = lucidity.Template(command, command)
+        command_template.template_resolver = templates
+        return command_template.format(variables)
