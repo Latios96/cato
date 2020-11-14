@@ -6,7 +6,7 @@ from cato.vendor import lucidity
 
 class VariableProcessor:
     def evaluate_variables(
-        self, config: Config, current_suite, test, variables: Dict[str, str]
+            self, config: Config, current_suite, test, variables: Dict[str, str]
     ) -> Dict[str, str]:
         default_variables = {
             "test_name": test.name,
@@ -21,7 +21,7 @@ class VariableProcessor:
         }
         default_variables.update(variables)
 
-        templates = {}
+        templates: Dict[str, lucidity.Template] = {}
         for name, str in default_variables.items():
             template = lucidity.Template(name, str)
             template.template_resolver = templates
@@ -35,7 +35,7 @@ class VariableProcessor:
         return formatted
 
     def format_command(self, command: str, variables: Dict[str, str]):
-        templates = {}
+        templates: Dict[str, lucidity.Template] = {}
         for name, str in variables.items():
             template = lucidity.Template(name, str)
             template.template_resolver = templates
