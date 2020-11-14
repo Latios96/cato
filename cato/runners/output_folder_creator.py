@@ -4,7 +4,7 @@ from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
 
-class OutputFolderCreator:
+class OutputFolder:
     def create_folder(self, base: str, test_suite: TestSuite, test: Test):
         path = os.path.join(base, "result", test_suite.name, test.name)
 

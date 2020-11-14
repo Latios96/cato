@@ -7,7 +7,7 @@ from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner, CommandResult
-from cato.runners.output_folder_creator import OutputFolderCreator
+from cato.runners.output_folder_creator import OutputFolder
 from cato.runners.test_runner import TestRunner
 from tests.utils import mock_safe
 
@@ -15,7 +15,7 @@ from tests.utils import mock_safe
 def test_should_report_test_start():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
-    output_folder_creator = mock_safe(OutputFolderCreator)
+    output_folder_creator = mock_safe(OutputFolder)
     test_runner = TestRunner(command_runner, reporter, output_folder_creator)
     test = Test(name="my first test", command="dummy_command",variables={})
     test_suite = TestSuite(name="suite", tests=[])
@@ -32,7 +32,7 @@ def test_should_report_test_start():
 def test_should_replace_placeholder():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
-    output_folder_creator = mock_safe(OutputFolderCreator)
+    output_folder_creator = mock_safe(OutputFolder)
     test_runner = TestRunner(command_runner, reporter, output_folder_creator)
     test = Test(
         name="my first test",
@@ -55,7 +55,7 @@ def test_should_replace_placeholder():
 def test_should_collect_timing_info():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
-    output_folder_creator = mock_safe(OutputFolderCreator)
+    output_folder_creator = mock_safe(OutputFolder)
     test_runner = TestRunner(command_runner, reporter, output_folder_creator)
     test = Test(name="my first test", command="dummy_command",variables={})
 
@@ -71,7 +71,7 @@ def test_should_collect_timing_info():
 def test_should_have_succeded_with_exit_code_0():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
-    output_folder_creator = mock_safe(OutputFolderCreator)
+    output_folder_creator = mock_safe(OutputFolder)
     test_runner = TestRunner(command_runner, reporter, output_folder_creator)
     test = Test(name="my first test", command="dummy_command",variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -88,7 +88,7 @@ def test_should_have_succeded_with_exit_code_0():
 def test_should_have_failed_with_exit_code_0():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
-    output_folder_creator = mock_safe(OutputFolderCreator)
+    output_folder_creator = mock_safe(OutputFolder)
     test_runner = TestRunner(command_runner, reporter, output_folder_creator)
     test = Test(name="my first test", command="dummy_command",variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 1, [])

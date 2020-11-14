@@ -1,3 +1,6 @@
+import os
+import pprint
+
 from contexttimer import Timer
 
 from cato.domain.config import Config
@@ -7,7 +10,7 @@ from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
-from cato.runners.output_folder_creator import OutputFolderCreator
+from cato.runners.output_folder_creator import OutputFolder
 from cato.runners.variable_processor import VariableProcessor
 
 
@@ -16,7 +19,7 @@ class TestRunner:
         self,
         command_runner: CommandRunner,
         reporter: Reporter,
-        output_folder_creator: OutputFolderCreator,
+        output_folder_creator: OutputFolder,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -27,7 +30,7 @@ class TestRunner:
         self._reporter.report_start_test(test)
 
         variables = self._variable_processor.evaluate_variables(
-            config, current_suite, test, {}
+            config, current_suite, test, test.variables
         )
 
         command = self._variable_processor.format_command(test.command, variables)
@@ -40,11 +43,18 @@ class TestRunner:
             self._reporter.report_message('Command: "{}"'.format(command))
             command_result = self._command_runner.run(command)
 
-        if command_result.exit_code == 0:
+        if command_result.exit_code != 0:
             return TestExecutionResult(
-                test, TestStatus.SUCCESS, command_result.output, t.elapsed
+                test, TestStatus.FAILED, command_result.output, t.elapsed
+            )
+
+        if not os.path.exists(variables['image_output']):
+            return TestExecutionResult(
+                test, TestStatus.FAILED, command_result.output, t.elapsed
             )
 
         return TestExecutionResult(
-            test, TestStatus.FAILED, command_result.output, t.elapsed
+            test, TestStatus.SUCCESS, command_result.output, t.elapsed
         )
+
+

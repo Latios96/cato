@@ -11,6 +11,8 @@ from collections import defaultdict
 import cato.vendor.lucidity.error
 
 # Type of a RegexObject for isinstance check.
+from cato.vendor import lucidity
+
 _RegexType = type(re.compile(""))
 
 
