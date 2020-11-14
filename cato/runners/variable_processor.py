@@ -17,6 +17,7 @@ class VariableProcessor:
             "image_output_folder": "{@output_folder}/result/{@suite_name}/{@test_name}",
             "image_output_no_extension": "{@image_output_folder}/{@test_name}",
             "image_output_png": "{@image_output_no_extension}.png",
+            "image_output_exr": "{@image_output_no_extension}.exr",
         }
         default_variables.update(variables)
 

@@ -6,6 +6,7 @@ import pinject
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
 from cato.reporter.end_message_generator import EndMessageGenerator
+from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 
 
@@ -19,6 +20,10 @@ def run(path: str):
     test_suite_runner = obj_graph.provide(TestSuiteRunner)
 
     result = test_suite_runner.run_test_suites(config)
+
+    timing_report_generator = TimingReportGenerator()
+    print()
+    print(timing_report_generator.generate(result))
 
     generator = EndMessageGenerator()
     print()

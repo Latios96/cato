@@ -52,7 +52,7 @@ class TestRunner:
                 ":x:\n".join(self._image_outputs(variables)), use_aliases=True
             )
             self._reporter.report_message(
-                f"No given image output path exists: \n{image_output_str} :x:"
+                emoji.emojize(f"No given image output path exists: \n{image_output_str} :x:", use_aliases=True)
             )
             return TestExecutionResult(
                 test, TestStatus.FAILED, command_result.output, t.elapsed
