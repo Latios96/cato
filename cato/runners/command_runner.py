@@ -27,12 +27,12 @@ class CommandRunner:
         )
 
         while popen.poll() is None:
-            line = popen.stdout.readline()
-            if line != "":
+            lines_iterator = iter(popen.stdout.readline, "")
+            for line in lines_iterator:
                 self._lines.append(line)
                 self._output_processor.process(line)
-            line = popen.stderr.readline()
-            if line != "":
+            lines_iterator = iter(popen.stderr.readline, "")
+            for line in lines_iterator:
                 self._lines.append(line)
                 self._output_processor.process(line)
         popen.stdout.close()
