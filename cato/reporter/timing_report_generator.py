@@ -26,12 +26,17 @@ class TimingReportGenerator:
         for suite_result, test_result in iterate_suite_results(suite_results):
             name = f"{suite_result.test_suite.name}/{test_result.test.name}"
             duration = humanfriendly.format_timespan(test_result.seconds)
-            result = emoji.emojize(":white_check_mark:", use_aliases=True) if test_result.result == TestStatus.SUCCESS else emoji.emojize(":x:", use_aliases=True)
+            result = (
+                emoji.emojize(":white_check_mark:", use_aliases=True)
+                if test_result.result == TestStatus.SUCCESS
+                else emoji.emojize(":x:", use_aliases=True)
+            )
             entries.append((name, duration, result))
 
         return tabulate(entries, headers=["Test", "Duration", "Result"])
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     generator = TimingReportGenerator()
 
     test = Test("my_test", "cmd", {})

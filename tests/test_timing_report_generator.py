@@ -15,15 +15,21 @@ def test_generate():
         [
             TestSuiteExecutionResult(
                 TestSuite(name="test_suite", tests=[test, test2]),
-                test_results=[TestExecutionResult(test, TestStatus.SUCCESS, [], 50),
-                              TestExecutionResult(test2, TestStatus.SUCCESS, [], 500)],
+                test_results=[
+                    TestExecutionResult(test, TestStatus.SUCCESS, [], 50),
+                    TestExecutionResult(test2, TestStatus.SUCCESS, [], 500),
+                ],
                 result=TestStatus.SUCCESS,
             )
         ]
     )
-    assert report == """
+    assert (
+        report
+        == """
 Test                Duration                  Result
 ------------------  ------------------------  --------
 test_suite/my_test  50 seconds                ✅
-test_suite/my_test  8 minutes and 20 seconds  ✅"""[1:]
-
+test_suite/my_test  8 minutes and 20 seconds  ✅"""[
+            1:
+        ]
+    )

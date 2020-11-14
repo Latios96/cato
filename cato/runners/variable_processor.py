@@ -6,7 +6,7 @@ from cato.vendor import lucidity
 
 class VariableProcessor:
     def evaluate_variables(
-            self, config: Config, current_suite, test, variables: Dict[str, str]
+        self, config: Config, current_suite, test, variables: Dict[str, str]
     ) -> Dict[str, str]:
         default_variables = {
             "test_name": test.name,

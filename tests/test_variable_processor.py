@@ -23,6 +23,7 @@ def test_evaluate_variables_no_custom_vars():
         "image_output_folder": "test/result/my_test_suite/test_name",
         "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
         "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
     }
 
 
@@ -52,6 +53,7 @@ def test_evaluate_variables_custom_image_output():
         "image_output_folder": "test/result/my_test_suite/test_name",
         "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
         "image_output_png": "test/result/my_test_suite/test_name/test_name7.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
     }
 
 
