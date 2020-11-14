@@ -47,10 +47,7 @@ def test_should_replace_placeholder():
 
     reporter.report_start_test.assert_called_with(test)
     command_runner.run.assert_called_with(
-        "crayg -s {}/test.json -o {}".format(
-            os.path.join("test", "suite", "my first test"),
-            os.path.join("result", "suite", "my first test", "my first test.png"),
-        ),
+        "crayg -s test/suite/my first test/test.json -o test/suite/my first test/suite/my first test/my first test.png",
     )
 
 

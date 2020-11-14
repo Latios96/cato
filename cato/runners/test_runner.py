@@ -10,6 +10,7 @@ from cato.domain.test_suite import TestSuite
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
 from cato.runners.output_folder_creator import OutputFolderCreator
+from cato.runners.variable_processor import VariableProcessor
 
 
 class TestRunner:
@@ -22,11 +23,16 @@ class TestRunner:
         self._command_runner = command_runner
         self._reporter = reporter
         self._output_folder_creator = output_folder_creator
+        self._variable_processor = VariableProcessor()
 
     def run_test(self, config: Config, current_suite: TestSuite, test: Test):
         self._reporter.report_start_test(test)
 
-        command = self._prepare_command(config, current_suite, test)
+        variables = self._variable_processor.evaluate_variables(
+            config, current_suite, test, {}
+        )
+
+        command = self._variable_processor.format_command(test.command, variables)
 
         self._output_folder_creator.create_folder(
             config.output_folder, current_suite, test
@@ -44,20 +50,3 @@ class TestRunner:
         return TestExecutionResult(
             test, TestStatus.FAILED, command_result.output, t.elapsed
         )
-
-    def _prepare_command(self, config, current_suite, test):
-        command_variables = {
-            "test_resources": os.path.join(config.path, current_suite.name, test.name),
-            "image_output_png": os.path.join(
-                config.output_folder,
-                "result",
-                current_suite.name,
-                test.name,
-                "{}.png".format(test.name),
-            ),
-            "image_output_no_extension": os.path.join(
-                config.output_folder, "result", current_suite.name, test.name, test.name
-            ),
-        }
-        command = test.command.format(**command_variables)
-        return command
