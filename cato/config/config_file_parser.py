@@ -18,7 +18,11 @@ class JsonConfigParser:
 
         validate(instance=data, schema=schema)
 
-        return Config(os.path.dirname(path), self._transform_suites(data), output_folder=os.getcwd())
+        return Config(
+            os.path.dirname(path),
+            self._transform_suites(data),
+            output_folder=os.getcwd(),
+        )
 
     def _read_json_from_file(self, path) -> dict:
         with open(path) as f:

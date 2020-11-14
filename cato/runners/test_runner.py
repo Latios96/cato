@@ -13,7 +13,12 @@ from cato.runners.output_folder_creator import OutputFolderCreator
 
 
 class TestRunner:
-    def __init__(self, command_runner: CommandRunner, reporter: Reporter, output_folder_creator: OutputFolderCreator):
+    def __init__(
+        self,
+        command_runner: CommandRunner,
+        reporter: Reporter,
+        output_folder_creator: OutputFolderCreator,
+    ):
         self._command_runner = command_runner
         self._reporter = reporter
         self._output_folder_creator = output_folder_creator
@@ -23,7 +28,9 @@ class TestRunner:
 
         command = self._prepare_command(config, current_suite, test)
 
-        self._output_folder_creator.create_folder(config.output_folder, current_suite, test)
+        self._output_folder_creator.create_folder(
+            config.output_folder, current_suite, test
+        )
 
         with Timer() as t:
             self._reporter.report_message('Command: "{}"'.format(command))
@@ -42,7 +49,14 @@ class TestRunner:
         command_variables = {
             "test_resources": os.path.join(config.path, current_suite.name, test.name),
             "image_output_png": os.path.join(
-                "result", current_suite.name, test.name, "{}.png".format(test.name)
+                config.output_folder,
+                "result",
+                current_suite.name,
+                test.name,
+                "{}.png".format(test.name),
+            ),
+            "image_output_no_extension": os.path.join(
+                config.output_folder, "result", current_suite.name, test.name, test.name
             ),
         }
         command = test.command.format(**command_variables)

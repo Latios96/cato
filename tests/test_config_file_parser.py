@@ -57,7 +57,7 @@ def test_success():
                 ],
             )
         ],
-        output_folder=os.getcwd()
+        output_folder=os.getcwd(),
     )
 
 

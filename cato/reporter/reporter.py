@@ -19,7 +19,8 @@ class Reporter:
     def report_test_sucess(self, result: TestExecutionResult):
         self.report_message(
             emoji.emojize(
-                f"\n{result.test.name} succeeded in {humanfriendly.format_timespan(result.seconds)} :white_check_mark:", use_aliases=True
+                f"\n{result.test.name} succeeded in {humanfriendly.format_timespan(result.seconds)} :white_check_mark:",
+                use_aliases=True,
             )
         )
 
