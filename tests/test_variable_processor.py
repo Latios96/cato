@@ -9,7 +9,7 @@ from cato.runners.variable_processor import VariableProcessor
 def test_evaluate_variables_no_custom_vars():
     config = Config(path="config_path", test_suites=[], output_folder="test")
     suite = TestSuite(name="my_test_suite", tests=[])
-    test = Test("test_name", "test_command")
+    test = Test("test_name", "test_command",variables={})
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(config, suite, test, {})
@@ -28,7 +28,7 @@ def test_evaluate_variables_no_custom_vars():
 def test_evaluate_variables_custom_image_output():
     config = Config(path="config_path", test_suites=[], output_folder="test")
     suite = TestSuite(name="my_test_suite", tests=[])
-    test = Test("test_name", "test_command")
+    test = Test("test_name", "test_command",variables={})
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(

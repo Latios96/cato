@@ -53,6 +53,7 @@ def test_success():
                     Test(
                         name="My First Test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                     variables={}
                     )
                 ],
             )
