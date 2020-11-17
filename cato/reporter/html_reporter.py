@@ -1,5 +1,3 @@
-import dataclasses
-import itertools
 import json
 import os
 import shutil
@@ -7,11 +5,7 @@ import uuid
 from typing import List, Dict
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from jinja2.nativetypes import NativeEnvironment
 from oiio.OpenImageIO import ImageBuf
-
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
-from cato.reporter.stats_calculator import StatsCalculator
 
 
 class HtmlReporter:
@@ -24,6 +18,8 @@ class HtmlReporter:
 
         with open(os.path.join(path, 'index.html'), "w") as f:
             f.write(self._render_template(results))
+
+        self._copy_static_resources(path)
 
     def _render_template(self, data):
         env = Environment(
@@ -54,6 +50,22 @@ class HtmlReporter:
             buf.write(target_path)
 
         return target_path
+
+    def _copy_static_resources(self, path):
+        static_resources = self._resolve_resources([
+            'termynal.js',
+            'termynal.css',
+        ])
+
+        for resource in static_resources:
+            target_path = os.path.join(path, os.path.basename(resource))
+            shutil.copy(resource, target_path)
+
+    def _resolve_resources(self, resources):
+        res = []
+        for r in resources:
+            res.append(os.path.join(os.path.dirname(__file__), 'templates', r))
+        return res
 
 
 if __name__ == '__main__':
