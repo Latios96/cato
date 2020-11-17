@@ -21,9 +21,6 @@ class CompareResults:
 
 class ImageComparator:
     def compare(self, left: str, right: str):
-        assert os.path.exists(left)
-        assert os.path.exists(right)
-
         left_input = ImageBuf(left)
         right_input = ImageBuf(right)
         result = ImageBufAlgo.compare(left_input, right_input, 0.5, 0)
