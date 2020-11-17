@@ -2,7 +2,7 @@ import json
 import os
 import shutil
 import uuid
-from typing import List, Dict
+from typing import Dict
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from oiio.OpenImageIO import ImageBuf
@@ -10,7 +10,7 @@ from oiio.OpenImageIO import ImageBuf
 
 class HtmlReporter:
 
-    def report(self, results: List[Dict], path: str):
+    def report(self, results: Dict, path: str):
 
         for suite_result in results['result']:
             for test_result in suite_result['test_results']:
