@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 
 import pinject
@@ -28,6 +29,9 @@ def run(path: str):
     generator = EndMessageGenerator()
     print()
     print(generator.generate_end_message(result))
+
+    with open('report.json', 'w') as f:
+        json.dump({'result': [x.to_dict() for x in result]}, f, indent=4)
 
 
 def config_template(path: str):
