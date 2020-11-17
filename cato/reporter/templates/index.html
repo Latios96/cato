@@ -16,11 +16,11 @@
 </head>
 <body>
 {% if has_failed_tests %}
-<h1>Failed</h1>
-<div>
+<div class="headline">
+    <h1 class="failedHeadline">Failed</h1>
     There were issues with tests.
-    <h2>Failed tests:</h2>
 </div>
+<h2>Failed tests:</h2>
 <div class="resultSeperation">
 {% for suite_result in failed_tests %}
 

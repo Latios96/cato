@@ -58,6 +58,7 @@ class HtmlReporter:
         static_resources = self._resolve_resources([
             'termynal.js',
             'termynal.css',
+            'cato.css',
         ])
 
         for resource in static_resources:

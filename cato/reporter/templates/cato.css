@@ -1,0 +1,16 @@
+.suiteResult {
+    width: 80%;
+}
+
+.resultImageImg {
+    max-width: 100%;
+}
+
+.headline {
+    margin-bottom: 35px;
+}
+
+.failedHeadline {
+    color: red;
+    font-weight: bolder;
+}
