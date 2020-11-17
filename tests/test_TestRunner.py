@@ -173,4 +173,4 @@ def test_should_have_failed_with_missing_reference_image():
     )
 
     assert result.result == TestStatus.FAILED
-    assert result.message == "Reference image test/suite/my first test\\reference.png does not exist!"
+    assert result.message.startswith("Reference image")
