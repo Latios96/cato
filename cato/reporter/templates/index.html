@@ -10,66 +10,36 @@
           integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
 
     <link rel="stylesheet" href="termynal.css">
+    <link rel="stylesheet" href="cato.css">
 
     <title>Cato report</title>
 </head>
 <body>
+{% if has_failed_tests %}
 <h1>Failed</h1>
-
 <div>
-    There were issues with  tests.
+    There were issues with tests.
+    <h2>Failed tests:</h2>
 </div>
+<div class="resultSeperation">
+{% for suite_result in failed_tests %}
+
+    {% include 'suite_result_template.html' %}
+
+{% endfor %}
+</div>
+
+{% else %}
+<h1>Success</h1>
+{% endif %}
+<h2>Succeded tests:</h2>
+<div class="resultSeperation">
 {% for suite_result in result %}
 
-<div class="suiteResult">
-    <h2>
-        {{suite_result.test_suite.name}}
-    </h2>
-    <p>
-        <a class="btn btn-primary" data-toggle="collapse" href="#collapse_{{suite_result.test_suite.name}}"
-           role="button" aria-expanded="true"
-           aria-controls="collapseExample">
-            collapse suite
-        </a>
-        <button class="btn btn-primary" type="button" data-toggle="collapse"
-                data-target="#collapse_{{suite_result.test_suite.name}}"
-                aria-expanded="false" aria-controls="collapseExample">
-            show suite
-        </button>
-    </p>
-    <div class="collapse show" id="collapse_{{suite_result.test_suite.name}}">
-        {% for test_result in suite_result.test_results %}
-        <div class="testResult">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item active" aria-current="page">{{suite_result.test_suite.name}}</li>
-                    <li class="breadcrumb-item active" aria-current="page">{{test_result.test.name}}</li>
-                </ol>
-            </nav>
-            <div class="testResultImages">
-                <img src="{{test_result.copied_image}}">
-            </div>
-            <div class="testResultMessage">
-                {{test_result.message}}
-            </div>
-            <p>
-                <a class="btn btn-primary" data-toggle="collapse" href="#collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}" role="button"
-                   aria-expanded="false" aria-controls="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
-                    show/hide log
-                </a>
-            </p>
-            <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
-                <div data-termynal style="width: 100%">
-                    {% for log_line in test_result.output %}
-                    <span data-ty>{{log_line}}</span>
-                    {% endfor %}
-                </div>
-            </div>
-        </div>
-        {% endfor %}
-    </div>
-</div>
+    {% include 'suite_result_template.html' %}
+
 {% endfor %}
+</div>
 
 <!-- Optional JavaScript -->
 <!-- jQuery first, then Popper.js, then Bootstrap JS -->

@@ -16,6 +16,9 @@ class HtmlReporter:
             for test_result in suite_result['test_results']:
                 test_result['copied_image'] = self._copy_image(path, test_result['image_output'])
 
+        results['has_failed_tests'] = True
+        results['failed_tests'] = results['result']
+
         with open(os.path.join(path, 'index.html'), "w") as f:
             f.write(self._render_template(results))
 

@@ -1,0 +1,50 @@
+<div class="suiteResult">
+    <h3>
+        {{suite_result.test_suite.name}}
+    </h3>
+    <p>
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapse_{{suite_result.test_suite.name}}"
+           role="button" aria-expanded="true"
+           aria-controls="collapseExample">
+            collapse suite
+        </a>
+        <button class="btn btn-primary" type="button" data-toggle="collapse"
+                data-target="#collapse_{{suite_result.test_suite.name}}"
+                aria-expanded="false" aria-controls="collapseExample">
+            show suite
+        </button>
+    </p>
+    <div class="collapse show" id="collapse_{{suite_result.test_suite.name}}">
+        {% for test_result in suite_result.test_results %}
+        <div class="testResult">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item active" aria-current="page">{{suite_result.test_suite.name}}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{{test_result.test.name}}</li>
+                </ol>
+            </nav>
+            <div class="testResultImages">
+                <img src="{{test_result.copied_image}}">
+            </div>
+            <div class="testResultMessage">
+                {{test_result.message}}
+            </div>
+            <p>
+                <a class="btn btn-primary" data-toggle="collapse"
+                   href="#collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}" role="button"
+                   aria-expanded="false"
+                   aria-controls="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
+                    show/hide log
+                </a>
+            </p>
+            <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
+                <div data-termynal style="width: 100%">
+                    {% for log_line in test_result.output %}
+                    <span data-ty>{{log_line}}</span>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
