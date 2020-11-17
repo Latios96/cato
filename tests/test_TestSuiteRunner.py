@@ -44,7 +44,9 @@ def test_run_suite_should_return_correctly_collected_results():
     test = Test(name="my first test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(path="", test_suites=[test_suite], output_folder="output")
-    execution_result = TestExecutionResult(test, TestStatus.SUCCESS, [], 1, "this is a message")
+    execution_result = TestExecutionResult(
+        test, TestStatus.SUCCESS, [], 1, "this is a message"
+    )
     mock_test_runner.run_test.return_value = execution_result
 
     result = test_suite_runner.run_test_suites(config)

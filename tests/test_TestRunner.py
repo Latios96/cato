@@ -1,10 +1,12 @@
 import os
+from unittest import mock
 
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
+from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.runners.output_folder_creator import OutputFolder
@@ -16,7 +18,11 @@ def test_should_report_test_start():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
-    test_runner = TestRunner(command_runner, reporter, output_folder_creator)
+    image_comparator = mock_safe(ImageComparator)
+    image_comparator.compare.return_value = True
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
     test = Test(name="my first test", command="dummy_command", variables={})
     test_suite = TestSuite(name="suite", tests=[])
 
@@ -33,7 +39,11 @@ def test_should_replace_placeholder():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
-    test_runner = TestRunner(command_runner, reporter, output_folder_creator)
+    image_comparator = mock_safe(ImageComparator)
+    image_comparator.compare.return_value = True
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
     test = Test(
         name="my first test",
         command="crayg -s {test_resources}/test.json -o {image_output_png}",
@@ -56,7 +66,11 @@ def test_should_collect_timing_info():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
-    test_runner = TestRunner(command_runner, reporter, output_folder_creator)
+    image_comparator = mock_safe(ImageComparator)
+    image_comparator.compare.return_value = True
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
     test = Test(name="my first test", command="dummy_command", variables={})
 
     result = test_runner.run_test(
@@ -73,7 +87,13 @@ def test_should_have_succeded_with_exit_code_0():
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
     output_folder_creator.image_output_exists.return_value = True
-    test_runner = TestRunner(command_runner, reporter, output_folder_creator)
+    image_comparator = mock_safe(ImageComparator)
+    magic_mock = mock.MagicMock()
+    magic_mock.error = False
+    image_comparator.compare.return_value = magic_mock
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
@@ -90,7 +110,10 @@ def test_should_have_failed_with_exit_code_0():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
-    test_runner = TestRunner(command_runner, reporter, output_folder_creator)
+    image_comparator = mock_safe(ImageComparator)
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 1, [])
 
@@ -101,3 +124,28 @@ def test_should_have_failed_with_exit_code_0():
     )
 
     assert result.result == TestStatus.FAILED
+
+
+def test_should_have_failed_with_images_not_equal():
+    reporter = mock_safe(Reporter)
+    command_runner = mock_safe(CommandRunner)
+    output_folder_creator = mock_safe(OutputFolder)
+    image_comparator = mock_safe(ImageComparator)
+    magic_mock = mock.MagicMock()
+    magic_mock.error = True
+    image_comparator.compare.return_value = magic_mock
+
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
+    test = Test(name="my first test", command="dummy_command", variables={})
+    command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+
+    result = test_runner.run_test(
+        Config(path="test", test_suites=[], output_folder="output"),
+        TestSuite(name="suite", tests=[]),
+        test,
+    )
+
+    assert result.result == TestStatus.FAILED
+    assert result.message == "Images are not equal!"

@@ -11,7 +11,9 @@ from cato.reporter.end_message_generator import EndMessageGenerator
 def test_generate_end_message():
     test = Test(name="my first test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    execution_result = TestExecutionResult(test, TestStatus.SUCCESS, [], 1, "this is a message")
+    execution_result = TestExecutionResult(
+        test, TestStatus.SUCCESS, [], 1, "this is a message"
+    )
     result = [
         TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
     ]

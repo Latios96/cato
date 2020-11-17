@@ -9,6 +9,7 @@ from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
+from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
 from cato.runners.output_folder_creator import OutputFolder
@@ -21,11 +22,13 @@ class TestRunner:
         command_runner: CommandRunner,
         reporter: Reporter,
         output_folder: OutputFolder,
+        image_comparator: ImageComparator,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
         self._output_folder = output_folder
         self._variable_processor = VariableProcessor()
+        self._image_comparator = image_comparator
 
     def run_test(self, config: Config, current_suite: TestSuite, test: Test):
         self._reporter.report_start_test(test)
@@ -44,19 +47,37 @@ class TestRunner:
 
         if command_result.exit_code != 0:
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed, f"Command exited with exit code {command_result.exit_code}"
+                test,
+                TestStatus.FAILED,
+                command_result.output,
+                t.elapsed,
+                f"Command exited with exit code {command_result.exit_code}",
             )
 
-        if not self._image_output_exists(variables):
+        image_output = self._image_output_exists(variables)
+        if not image_output:
             image_output_str = emoji.emojize(
                 ":x:\n".join(self._image_outputs(variables)), use_aliases=True
             )
-            message = emoji.emojize(f"No given image output path exists: \n{image_output_str} :x:", use_aliases=True, )
-            self._reporter.report_message(
-                message
+            message = emoji.emojize(
+                f"No given image output path exists: \n{image_output_str} :x:",
+                use_aliases=True,
             )
+            self._reporter.report_message(message)
             return TestExecutionResult(
                 test, TestStatus.FAILED, command_result.output, t.elapsed, message
+            )
+
+        image_compare_result = self._image_comparator.compare(
+            os.path.join(variables["test_resources"], "reference.png"), image_output
+        )
+        if image_compare_result.error:
+            return TestExecutionResult(
+                test,
+                TestStatus.FAILED,
+                command_result.output,
+                t.elapsed,
+                "Images are not equal!",
             )
 
         return TestExecutionResult(
@@ -67,8 +88,8 @@ class TestRunner:
         image_outputs = self._image_outputs(variables)
         for output in image_outputs:
             if self._output_folder.image_output_exists(output):
-                return True
-        return False
+                return output
+        return None
 
     def _image_outputs(self, variables):
         image_outputs = [
