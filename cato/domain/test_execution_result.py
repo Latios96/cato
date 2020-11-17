@@ -12,6 +12,7 @@ class TestExecutionResult:
     output: List[str]
     seconds: float
     message: str
+    image_output: str
 
     def to_dict(self):
         return {
@@ -19,5 +20,6 @@ class TestExecutionResult:
             'result': str(self.result),
             'output': self.output,
             'seconds': self.seconds,
-            'message': self.message
+            'message': self.message,
+            'image_output': self.image_output
         }

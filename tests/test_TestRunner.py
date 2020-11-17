@@ -1,9 +1,7 @@
-import os
 from unittest import mock
 
 from cato.domain.config import Config
 from cato.domain.test import Test
-from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.image_comparison.image_comparator import ImageComparator
@@ -110,6 +108,7 @@ def test_should_have_failed_with_exit_code_0():
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder_creator = mock_safe(OutputFolder)
+    output_folder_creator.reference_image_exists.return_value = True
     image_comparator = mock_safe(ImageComparator)
     test_runner = TestRunner(
         command_runner, reporter, output_folder_creator, image_comparator
@@ -149,3 +148,29 @@ def test_should_have_failed_with_images_not_equal():
 
     assert result.result == TestStatus.FAILED
     assert result.message == "Images are not equal!"
+
+
+def test_should_have_failed_with_missing_reference_image():
+    reporter = mock_safe(Reporter)
+    command_runner = mock_safe(CommandRunner)
+    output_folder_creator = mock_safe(OutputFolder)
+    output_folder_creator.reference_image_exists.return_value = False
+    image_comparator = mock_safe(ImageComparator)
+    magic_mock = mock.MagicMock()
+    magic_mock.error = True
+    image_comparator.compare.return_value = magic_mock
+
+    test_runner = TestRunner(
+        command_runner, reporter, output_folder_creator, image_comparator
+    )
+    test = Test(name="my first test", command="dummy_command", variables={})
+    command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+
+    result = test_runner.run_test(
+        Config(path="test", test_suites=[], output_folder="output"),
+        TestSuite(name="suite", tests=[]),
+        test,
+    )
+
+    assert result.result == TestStatus.FAILED
+    assert result.message == "Reference image test/suite/my first test\\reference.png does not exist!"

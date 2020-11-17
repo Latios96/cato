@@ -18,11 +18,11 @@ from cato.runners.variable_processor import VariableProcessor
 
 class TestRunner:
     def __init__(
-        self,
-        command_runner: CommandRunner,
-        reporter: Reporter,
-        output_folder: OutputFolder,
-        image_comparator: ImageComparator,
+            self,
+            command_runner: CommandRunner,
+            reporter: Reporter,
+            output_folder: OutputFolder,
+            image_comparator: ImageComparator,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -51,7 +51,7 @@ class TestRunner:
                 TestStatus.FAILED,
                 command_result.output,
                 t.elapsed,
-                f"Command exited with exit code {command_result.exit_code}",
+                f"Command exited with exit code {command_result.exit_code}", ""
             )
 
         image_output = self._image_output_exists(variables)
@@ -65,11 +65,19 @@ class TestRunner:
             )
             self._reporter.report_message(message)
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed, message
+                test, TestStatus.FAILED, command_result.output, t.elapsed, message, ""
+            )
+
+        reference_image = os.path.join(variables["test_resources"], "reference.png")
+        if not self._output_folder.reference_image_exists(reference_image):
+            return TestExecutionResult(
+                test, TestStatus.FAILED, command_result.output, t.elapsed,
+                f"Reference image {reference_image} does not exist!",
+                image_output
             )
 
         image_compare_result = self._image_comparator.compare(
-            os.path.join(variables["test_resources"], "reference.png"), image_output
+            reference_image, image_output
         )
         if image_compare_result.error:
             return TestExecutionResult(
@@ -78,10 +86,11 @@ class TestRunner:
                 command_result.output,
                 t.elapsed,
                 "Images are not equal!",
+                image_output
             )
 
         return TestExecutionResult(
-            test, TestStatus.SUCCESS, command_result.output, t.elapsed, message=""
+            test, TestStatus.SUCCESS, command_result.output, t.elapsed, message="", image_output=image_output
         )
 
     def _image_output_exists(self, variables):

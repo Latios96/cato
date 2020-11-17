@@ -13,3 +13,6 @@ class OutputFolder:
 
     def image_output_exists(self, image_output):
         return os.path.exists(image_output)
+
+    def reference_image_exists(self, reference_image):
+        return os.path.exists(image_output)
