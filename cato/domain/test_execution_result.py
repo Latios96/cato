@@ -12,3 +12,12 @@ class TestExecutionResult:
     output: List[str]
     seconds: float
     message: str
+
+    def to_dict(self):
+        return {
+            'test': self.test.to_dict(),
+            'result': str(self.result),
+            'output': self.output,
+            'seconds': self.seconds,
+            'message': self.message
+        }
