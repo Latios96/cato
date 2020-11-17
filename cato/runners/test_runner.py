@@ -44,25 +44,23 @@ class TestRunner:
 
         if command_result.exit_code != 0:
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed
+                test, TestStatus.FAILED, command_result.output, t.elapsed, f"Command exited with exit code {command_result.exit_code}"
             )
 
         if not self._image_output_exists(variables):
             image_output_str = emoji.emojize(
                 ":x:\n".join(self._image_outputs(variables)), use_aliases=True
             )
+            message = emoji.emojize(f"No given image output path exists: \n{image_output_str} :x:", use_aliases=True, )
             self._reporter.report_message(
-                emoji.emojize(
-                    f"No given image output path exists: \n{image_output_str} :x:",
-                    use_aliases=True,
-                )
+                message
             )
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed
+                test, TestStatus.FAILED, command_result.output, t.elapsed, message
             )
 
         return TestExecutionResult(
-            test, TestStatus.SUCCESS, command_result.output, t.elapsed
+            test, TestStatus.SUCCESS, command_result.output, t.elapsed, message=""
         )
 
     def _image_output_exists(self, variables):

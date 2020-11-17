@@ -16,8 +16,8 @@ def test_generate():
             TestSuiteExecutionResult(
                 TestSuite(name="test_suite", tests=[test, test2]),
                 test_results=[
-                    TestExecutionResult(test, TestStatus.SUCCESS, [], 50),
-                    TestExecutionResult(test2, TestStatus.SUCCESS, [], 500),
+                    TestExecutionResult(test, TestStatus.SUCCESS, [], 50, "this is a message"),
+                    TestExecutionResult(test2, TestStatus.SUCCESS, [], 500, "this is a message"),
                 ],
                 result=TestStatus.SUCCESS,
             )

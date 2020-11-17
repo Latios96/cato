@@ -11,3 +11,4 @@ class TestExecutionResult:
     result: TestStatus
     output: List[str]
     seconds: float
+    message: str
