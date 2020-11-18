@@ -19,3 +19,4 @@ def iterate_suites_and_tests(
     for suite in suites:
         for test in suite.tests:
             yield suite, test
+
