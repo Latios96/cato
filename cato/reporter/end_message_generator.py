@@ -1,30 +1,25 @@
-import itertools
+from typing import List
 
 import emoji
 
-from cato.domain.test_result import TestStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato.reporter.stats_calculator import StatsCalculator
 
 
 class EndMessageGenerator:
-    def generate_end_message(self, result: TestSuiteExecutionResult) -> str:
+    def __init__(self, stats_calculator: StatsCalculator):
+        self._stats_calculator = stats_calculator
 
-        all_tests = list(itertools.chain(*map(lambda x: x.test_results, result)))
+    def generate_end_message(self, result: List[TestSuiteExecutionResult]) -> str:
 
-        total_tests = len(all_tests)
-        total_tests_succeded = len(
-            list(filter(lambda x: x.result == TestStatus.SUCCESS, all_tests))
-        )
-        total_tests_failed = len(
-            list(filter(lambda x: x.result == TestStatus.FAILED, all_tests))
-        )
+        stats = self._stats_calculator.calculate(result)
 
         return emoji.emojize(
             """Result:
 Ran {} tests
 {}  succeded :white_check_mark:
 {}  failed   :x:""".format(
-                total_tests, total_tests_succeded, total_tests_failed
+                stats.num_tests, stats.succeded_tests, stats.failed_tests
             ),
             use_aliases=True,
         )
