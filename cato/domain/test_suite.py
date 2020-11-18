@@ -2,6 +2,7 @@ from dataclasses import dataclass
 from typing import List, Iterable, Tuple
 
 from cato.domain.test import Test
+from cato.domain.test_identifier import TestIdentifier
 
 
 @dataclass
@@ -31,3 +32,14 @@ def count_tests(suites: List[TestSuite]) -> int:
 
 def filter_by_suite_name(suites: List[TestSuite], name: str) -> List[TestSuite]:
     return list(filter(lambda x: x.name == name, suites))
+
+
+def filter_by_test_identifier(
+    suites: List[TestSuite], test_identifier: TestIdentifier
+) -> List[TestSuite]:
+    for suite, test in iterate_suites_and_tests(suites):
+        if suite.name != test_identifier.suite_name:
+            continue
+        if test.name != test_identifier.test_name:
+            continue
+        return [TestSuite(name=suite.name, tests=[test])]
