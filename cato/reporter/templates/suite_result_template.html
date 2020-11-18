@@ -36,9 +36,9 @@
                 </a>
             </p>
             <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}_{{suffix}}">
-                <div data-termynal style="width: 100%">
+                <div class="terminalBackground">
                     {% for log_line in test_result.output %}
-                    <span data-ty>{{log_line}}</span>
+                        <span class="terminalRow">{{log_line}}</span>
                     {% endfor %}
                 </div>
             </div>

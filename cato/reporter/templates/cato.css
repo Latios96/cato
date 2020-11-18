@@ -29,3 +29,13 @@
 .resultSeperation{
 	display: flex;
 }
+.terminalBackground{
+    background-color: black;
+    padding: 15px;
+    font-size: 14px;
+    color: white;
+    font-family: 'Fira Mono', monospace;
+}
+.terminalRow{
+    display: block;
+}
