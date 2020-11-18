@@ -29,7 +29,7 @@ class TestSuiteRunner:
                 if result.result == TestStatus.SUCCESS:
                     self._reporter.report_test_sucess(result)
                 else:
-                    self._reporter.report_test_failure(test)
+                    self._reporter.report_test_failure(result)
                     suite_status = TestStatus.FAILED
                 test_results.append(result)
 

@@ -4,7 +4,7 @@ import shutil
 from cato import logger
 from cato.domain.config import Config
 from cato.domain.test_suite import iterate_suites_and_tests
-from cato.runners.output_folder_creator import OutputFolder
+from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.variable_processor import VariableProcessor
 
 

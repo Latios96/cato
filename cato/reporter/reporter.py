@@ -24,7 +24,10 @@ class Reporter:
             )
         )
 
-    def report_test_failure(self, test):
+    def report_test_failure(self, test_result: TestExecutionResult):
         self.report_message(
-            emoji.emojize(f"\n{test.name} failed :x:", use_aliases=True)
+            emoji.emojize(
+                f"\n{test_result.test.name} failed :x:: {test_result.message}",
+                use_aliases=True,
+            )
         )
