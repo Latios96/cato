@@ -17,7 +17,9 @@ class HtmlReporter:
 
         for suite_result in results["result"]:
             for test_result in suite_result["test_results"]:
-                test_result['formatted_time'] = humanfriendly.format_timespan(test_result['seconds'])
+                test_result["formatted_time"] = humanfriendly.format_timespan(
+                    test_result["seconds"]
+                )
                 test_result["copied_image"] = self._copy_image(
                     path, test_result["image_output"]
                 )
@@ -103,7 +105,7 @@ class HtmlReporter:
             if tests:
                 suite_result["test_results"] = tests
                 filtered.append(suite_result)
-        return {'result': filtered}
+        return {"result": filtered}
 
     def _checksum(self, image_path: str) -> str:
         A = ImageBuf(image_path)

@@ -69,7 +69,9 @@ class TestRunner:
         reference_image = self._output_folder.any_existing(
             self._reference_images(variables)
         )
-        if not reference_image or not self._output_folder.reference_image_exists(reference_image):
+        if not reference_image or not self._output_folder.reference_image_exists(
+            reference_image
+        ):
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
