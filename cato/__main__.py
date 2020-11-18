@@ -6,6 +6,7 @@ import pinject
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
+from cato.domain.test_suite import iterate_suites_and_tests, count_tests, count_suites
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
@@ -28,7 +29,7 @@ def run(path: str):
     print()
     print(timing_report_generator.generate(result))
 
-    generator = EndMessageGenerator()
+    generator = obj_graph.provide(EndMessageGenerator)
     print()
     print(generator.generate_end_message(result))
 
@@ -48,6 +49,21 @@ def update_missing_reference_images(path):
     update_missing = obj_graph.provide(UpdateMissingReferenceImages)
 
     update_missing.update(config)
+
+
+def list_tests(path):
+    path = config_path(path)
+
+    config_parser = JsonConfigParser()
+    config = config_parser.parse(path)
+
+    print(
+        f"Found {count_tests(config.test_suites)} tests in {count_suites(config.test_suites)} suites:"
+    )
+    print()
+
+    for suite, test in iterate_suites_and_tests(config.test_suites):
+        print(f"{suite.name}/{test.name}")
 
 
 def config_template(path: str):
@@ -88,6 +104,11 @@ if __name__ == "__main__":
     )
     run_parser.add_argument("--path", help="Path to config file")
 
+    list_parser = commands_subparser.add_parser(
+        "list-tests", help="Lists tests in config file", parents=[parent_parser]
+    )
+    list_parser.add_argument("--path", help="Path to config file")
+
     args = main_parser.parse_args()
     if args.command == "config-template":
         config_template(args.path)
@@ -95,3 +116,5 @@ if __name__ == "__main__":
         run(args.path)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
+    elif args.command == "list-tests":
+        list_tests(args.path)
