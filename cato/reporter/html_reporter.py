@@ -5,6 +5,7 @@ import os
 import shutil
 from typing import Dict
 
+import humanfriendly
 from jinja2 import Environment, FileSystemLoader, select_autoescape
 from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
@@ -16,6 +17,7 @@ class HtmlReporter:
 
         for suite_result in results["result"]:
             for test_result in suite_result["test_results"]:
+                test_result['formatted_time'] = humanfriendly.format_timespan(test_result['seconds'])
                 test_result["copied_image"] = self._copy_image(
                     path, test_result["image_output"]
                 )
@@ -92,13 +94,16 @@ class HtmlReporter:
 
     def _filter_results(self, results, test_status):
         results = copy.deepcopy(results)
+        filtered = []
         for suite_result in results["result"]:
             tests = []
             for test_result in suite_result["test_results"]:
                 if test_result["status"] == test_status:
                     tests.append(test_result)
-            suite_result["test_results"] = tests
-        return results
+            if tests:
+                suite_result["test_results"] = tests
+                filtered.append(suite_result)
+        return {'result': filtered}
 
     def _checksum(self, image_path: str) -> str:
         A = ImageBuf(image_path)
@@ -106,8 +111,8 @@ class HtmlReporter:
 
 
 if __name__ == "__main__":
-    with open(r"M:\test\cato-arnold_suite\report.json") as f:
+    with open(r"M:\test\cato-vray-suite\report.json") as f:
         data = json.load(f)
 
         report = HtmlReporter()
-        report.report(data, r"M:\test\cato-arnold_suite\report")
+        report.report(data, r"M:\test\cato-vray-suite\report")
