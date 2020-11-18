@@ -14,17 +14,17 @@ logger = logging.getLogger(__name__)
 class HtmlReporter:
     def report(self, results: Dict, path: str):
 
-        for suite_result in results["result"]:
+        for suite_result in results["status"]:
             for test_result in suite_result["test_results"]:
                 test_result["copied_image"] = self._copy_image(
                     path, test_result["image_output"]
                 )
 
-        failed_tests = self._filter_results(results, "TestStatus.FAILED")["result"]
+        failed_tests = self._filter_results(results, "TestStatus.FAILED")["status"]
         results["has_failed_tests"] = bool(failed_tests)
         results["failed_tests"] = failed_tests
         results["succeded_tests"] = self._filter_results(results, "TestStatus.SUCCESS")[
-            "result"
+            "status"
         ]
 
         with open(os.path.join(path, "index.html"), "w") as f:
@@ -92,10 +92,10 @@ class HtmlReporter:
 
     def _filter_results(self, results, test_status):
         results = copy.deepcopy(results)
-        for suite_result in results["result"]:
+        for suite_result in results["status"]:
             tests = []
             for test_result in suite_result["test_results"]:
-                if test_result["result"] == test_status:
+                if test_result["status"] == test_status:
                     tests.append(test_result)
             suite_result["test_results"] = tests
         return results

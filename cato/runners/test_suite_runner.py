@@ -26,7 +26,7 @@ class TestSuiteRunner:
             self._reporter.report_start_test_suite(suite)
             for test in suite.tests:
                 result = self._test_runner.run_test(config, suite, test)
-                if result.result == TestStatus.SUCCESS:
+                if result.status == TestStatus.SUCCESS:
                     self._reporter.report_test_sucess(result)
                 else:
                     self._reporter.report_test_failure(result)

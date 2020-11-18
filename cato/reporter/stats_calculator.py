@@ -20,9 +20,9 @@ class StatsCalculator:
         total_tests = len(all_tests)
 
         total_tests_succeded = len(
-            list(filter(lambda x: x.result == TestStatus.SUCCESS, all_tests))
+            list(filter(lambda x: x.status == TestStatus.SUCCESS, all_tests))
         )
         total_tests_failed = len(
-            list(filter(lambda x: x.result == TestStatus.FAILED, all_tests))
+            list(filter(lambda x: x.status == TestStatus.FAILED, all_tests))
         )
         return Stats(total_tests, total_tests_succeded, total_tests_failed)

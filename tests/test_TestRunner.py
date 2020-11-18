@@ -93,7 +93,7 @@ def test_should_have_succeded_with_exit_code_0():
         test,
     )
 
-    assert result.result == TestStatus.SUCCESS
+    assert result.status == TestStatus.SUCCESS
 
 
 def test_should_have_failed_with_exit_code_0():
@@ -112,7 +112,7 @@ def test_should_have_failed_with_exit_code_0():
         test,
     )
 
-    assert result.result == TestStatus.FAILED
+    assert result.status == TestStatus.FAILED
 
 
 def test_should_have_failed_with_images_not_equal():
@@ -134,7 +134,7 @@ def test_should_have_failed_with_images_not_equal():
         test,
     )
 
-    assert result.result == TestStatus.FAILED
+    assert result.status == TestStatus.FAILED
     assert result.message == "Images are not equal!"
 
 
@@ -158,5 +158,5 @@ def test_should_have_failed_with_missing_reference_image():
         test,
     )
 
-    assert result.result == TestStatus.FAILED
+    assert result.status == TestStatus.FAILED
     assert result.message.startswith("Reference image")
