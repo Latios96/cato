@@ -78,8 +78,6 @@ class HtmlReporter:
         logger.info("Copy static resources..")
         static_resources = self._resolve_resources(
             [
-                "termynal.js",
-                "termynal.css",
                 "cato.css",
             ]
         )
