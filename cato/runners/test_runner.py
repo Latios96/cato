@@ -12,7 +12,7 @@ from cato.domain.test_suite import TestSuite
 from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
-from cato.runners.output_folder_creator import OutputFolder
+from cato.runners.output_folder import OutputFolder
 from cato.runners.variable_processor import VariableProcessor
 
 
