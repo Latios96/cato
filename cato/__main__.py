@@ -10,6 +10,7 @@ from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
+from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 
 
 def run(path: str):
@@ -31,11 +32,22 @@ def run(path: str):
     print()
     print(generator.generate_end_message(result))
 
-    report_data = {'result': [x.to_dict() for x in result]}
+    report_data = {"result": [x.to_dict() for x in result]}
 
     reporter = HtmlReporter()
-    reporter.report(report_data, os.path.join(config.output_folder, 'report'))
+    reporter.report(report_data, os.path.join(config.output_folder, "report"))
 
+
+def update_missing_reference_images(path):
+    path = config_path(path)
+
+    config_parser = JsonConfigParser()
+    config = config_parser.parse(path)
+
+    obj_graph = pinject.new_object_graph()
+    update_missing = obj_graph.provide(UpdateMissingReferenceImages)
+
+    update_missing.update(config)
 
 
 def config_template(path: str):
@@ -69,8 +81,17 @@ if __name__ == "__main__":
     )
     run_parser.add_argument("--path", help="Path to config file")
 
+    run_parser = commands_subparser.add_parser(
+        "update-missing-reference-images",
+        help="Updates missing reference images after a test run",
+        parents=[parent_parser],
+    )
+    run_parser.add_argument("--path", help="Path to config file")
+
     args = main_parser.parse_args()
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
         run(args.path)
+    elif args.command == "update-missing-reference-images":
+        update_missing_reference_images(args.path)

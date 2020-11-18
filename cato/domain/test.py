@@ -9,7 +9,4 @@ class Test:
     variables: Dict[str, str]
 
     def to_dict(self):
-        return {
-            'name': self.name,
-            'command': self.command
-        }
+        return {"name": self.name, "command": self.command}

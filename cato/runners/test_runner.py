@@ -18,11 +18,11 @@ from cato.runners.variable_processor import VariableProcessor
 
 class TestRunner:
     def __init__(
-            self,
-            command_runner: CommandRunner,
-            reporter: Reporter,
-            output_folder: OutputFolder,
-            image_comparator: ImageComparator,
+        self,
+        command_runner: CommandRunner,
+        reporter: Reporter,
+        output_folder: OutputFolder,
+        image_comparator: ImageComparator,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -51,10 +51,11 @@ class TestRunner:
                 TestStatus.FAILED,
                 command_result.output,
                 t.elapsed,
-                f"Command exited with exit code {command_result.exit_code}", ""
+                f"Command exited with exit code {command_result.exit_code}",
+                "",
             )
 
-        image_output = self._image_output_exists(variables)
+        image_output = self._output_folder.any_existing(self._image_outputs(variables))
         if not image_output:
             image_output_str = emoji.emojize(
                 ":x:\n".join(self._image_outputs(variables)), use_aliases=True
@@ -68,12 +69,17 @@ class TestRunner:
                 test, TestStatus.FAILED, command_result.output, t.elapsed, message, ""
             )
 
-        reference_image = os.path.join(variables["test_resources"], "reference.png")
+        reference_image = self._output_folder.any_existing(
+            self._reference_images(variables)
+        )
         if not self._output_folder.reference_image_exists(reference_image):
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed,
+                test,
+                TestStatus.FAILED,
+                command_result.output,
+                t.elapsed,
                 f"Reference image {reference_image} does not exist!",
-                image_output
+                image_output,
             )
 
         image_compare_result = self._image_comparator.compare(
@@ -86,11 +92,16 @@ class TestRunner:
                 command_result.output,
                 t.elapsed,
                 "Images are not equal!",
-                image_output
+                image_output,
             )
 
         return TestExecutionResult(
-            test, TestStatus.SUCCESS, command_result.output, t.elapsed, message="", image_output=image_output
+            test,
+            TestStatus.SUCCESS,
+            command_result.output,
+            t.elapsed,
+            message="",
+            image_output=image_output,
         )
 
     def _image_output_exists(self, variables):
@@ -105,5 +116,13 @@ class TestRunner:
             variables.get("image_output"),
             variables.get("image_output_png"),
             variables.get("image_output_exr"),
+        ]
+        return list(filter(lambda x: x != None, image_outputs))
+
+    def _reference_images(self, variables):
+        image_outputs = [
+            variables.get("reference_image"),
+            variables.get("reference_image_png"),
+            variables.get("reference_image_exr"),
         ]
         return list(filter(lambda x: x != None, image_outputs))

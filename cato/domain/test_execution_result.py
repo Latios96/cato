@@ -16,10 +16,10 @@ class TestExecutionResult:
 
     def to_dict(self):
         return {
-            'test': self.test.to_dict(),
-            'result': str(self.result),
-            'output': self.output,
-            'seconds': self.seconds,
-            'message': self.message,
-            'image_output': self.image_output
+            "test": self.test.to_dict(),
+            "result": str(self.result),
+            "output": self.output,
+            "seconds": self.seconds,
+            "message": self.message,
+            "image_output": self.image_output,
         }

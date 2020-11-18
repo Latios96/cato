@@ -14,7 +14,7 @@ class TestSuiteExecutionResult:
 
     def to_dict(self):
         return {
-            'test_suite': self.test_suite.to_dict(),
-            'result': str(self.result),
-            'test_results': [x.to_dict() for x in self.test_results]
+            "test_suite": self.test_suite.to_dict(),
+            "result": str(self.result),
+            "test_results": [x.to_dict() for x in self.test_results],
         }

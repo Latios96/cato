@@ -10,10 +10,8 @@ class TestSuite:
     tests: List[Test]
 
     def to_dict(self):
-        return {
-            'name': self.name,
-            'tests': [x.to_dict() for x in self.tests]
-        }
+        return {"name": self.name, "tests": [x.to_dict() for x in self.tests]}
+
 
 def iterate_suites_and_tests(
     suites: List[TestSuite],

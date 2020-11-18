@@ -28,12 +28,12 @@ def test_generate():
         ]
     )
     assert (
-            report
-            == """
+        report
+        == """
 Test                Duration                  Result
 ------------------  ------------------------  --------
 test_suite/my_test  50 seconds                ✅
 test_suite/my_test  8 minutes and 20 seconds  ✅"""[
-               1:
-               ]
+            1:
+        ]
     )

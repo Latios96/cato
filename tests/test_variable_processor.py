@@ -24,6 +24,9 @@ def test_evaluate_variables_no_custom_vars():
         "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
         "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
         "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
     }
 
 
@@ -54,6 +57,9 @@ def test_evaluate_variables_custom_image_output():
         "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
         "image_output_png": "test/result/my_test_suite/test_name/test_name7.png",
         "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
     }
 
 
