@@ -4,6 +4,7 @@ from cato.domain.test_suite import (
     iterate_suites_and_tests,
     count_suites,
     count_tests,
+    filter_by_suite_name,
 )
 
 test1 = Test("test1", "command", {})
@@ -31,3 +32,9 @@ def test_count_suites():
 
 def test_count_tests():
     assert count_tests(suites) == 3
+
+
+def test_filter_by_suite_name():
+    filter_result = filter_by_suite_name(suites, "my suite 1")
+
+    assert filter_result == [suite1]

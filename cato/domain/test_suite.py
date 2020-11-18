@@ -21,9 +21,13 @@ def iterate_suites_and_tests(
             yield suite, test
 
 
-def count_suites(suites: List[TestSuite]):
+def count_suites(suites: List[TestSuite]) -> int:
     return len(suites)
 
 
-def count_tests(suites: List[TestSuite]):
+def count_tests(suites: List[TestSuite]) -> int:
     return sum(map(lambda x: len(x.tests), suites))
+
+
+def filter_by_suite_name(suites: List[TestSuite], name: str) -> List[TestSuite]:
+    return list(filter(lambda x: x.name == name, suites))
