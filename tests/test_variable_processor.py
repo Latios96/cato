@@ -74,3 +74,130 @@ def test_format_command():
     )
 
     assert command == "test"
+
+
+def test_evaluate_variables_variables_from_config():
+    config = Config(
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+        variables={"test_variable": "my_value"},
+    )
+    suite = TestSuite(name="my_test_suite", tests=[])
+    test = Test("test_name", "test_command", variables={})
+    variable_processor = VariableProcessor()
+
+    variables = variable_processor.evaluate_variables(config, suite, test)
+
+    assert variables == {
+        "test_name": test.name,
+        "suite_name": suite.name,
+        "config_path": config.path,
+        "output_folder": "test",
+        "test_resources": "config_path/my_test_suite/test_name",
+        "image_output_folder": "test/result/my_test_suite/test_name",
+        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_variable": "my_value"
+    }
+
+
+def test_evaluate_variables_variables_from_suite():
+    config = Config(path="config_path", test_suites=[], output_folder="test")
+    suite = TestSuite(
+        name="my_test_suite", tests=[], variables={"test_variable": "my_value"}
+    )
+    test = Test("test_name", "test_command", variables={})
+    variable_processor = VariableProcessor()
+
+    variables = variable_processor.evaluate_variables(config, suite, test)
+
+    assert variables == {
+        "test_name": test.name,
+        "suite_name": suite.name,
+        "config_path": config.path,
+        "output_folder": "test",
+        "test_resources": "config_path/my_test_suite/test_name",
+        "image_output_folder": "test/result/my_test_suite/test_name",
+        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_variable": "my_value"
+    }
+
+
+def test_evaluate_variables_variables_from_config_override_by_suite():
+    config = Config(
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+        variables={"test_variable": "my_value_from_config"},
+    )
+    suite = TestSuite(
+        name="my_test_suite",
+        tests=[],
+        variables={"test_variable": "my_value_from_suite"},
+    )
+    test = Test("test_name", "test_command", variables={})
+    variable_processor = VariableProcessor()
+
+    variables = variable_processor.evaluate_variables(config, suite, test)
+
+    assert variables == {
+        "test_name": test.name,
+        "suite_name": suite.name,
+        "config_path": config.path,
+        "output_folder": "test",
+        "test_resources": "config_path/my_test_suite/test_name",
+        "image_output_folder": "test/result/my_test_suite/test_name",
+        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_variable": "my_value_from_suite"
+    }
+
+
+def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by_test():
+    config = Config(
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+        variables={"test_variable": "my_value_from_config"},
+    )
+    suite = TestSuite(
+        name="my_test_suite",
+        tests=[],
+        variables={"test_variable": "my_value_from_suite"},
+    )
+    test = Test(
+        "test_name", "test_command", variables={"test_variable": "my_value_from_test"}
+    )
+    variable_processor = VariableProcessor()
+
+    variables = variable_processor.evaluate_variables(config, suite, test)
+
+    assert variables == {
+        "test_name": test.name,
+        "suite_name": suite.name,
+        "config_path": config.path,
+        "output_folder": "test",
+        "test_resources": "config_path/my_test_suite/test_name",
+        "image_output_folder": "test/result/my_test_suite/test_name",
+        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_variable": "my_value_from_test"
+    }

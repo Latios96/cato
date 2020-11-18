@@ -20,6 +20,8 @@ class VariableProcessor:
             "image_output_png": "{@image_output_no_extension}.png",
             "image_output_exr": "{@image_output_no_extension}.exr",
         }
+        default_variables.update(config.variables)
+        default_variables.update(current_suite.variables)
         default_variables.update(test.variables)
 
         templates: Dict[str, lucidity.Template] = {}
