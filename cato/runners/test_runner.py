@@ -10,6 +10,7 @@ from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
 from cato.file_system_abstractions.output_folder import OutputFolder
+from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 
 
@@ -31,7 +32,7 @@ class TestRunner:
         self._reporter.report_start_test(test)
 
         variables = self._variable_processor.evaluate_variables(
-            config, current_suite, test
+            config, current_suite, test, predefinitions=PREDEFINITIONS
         )
 
         command = self._variable_processor.format_command(test.command, variables)

@@ -1,12 +1,20 @@
-from typing import Dict
+from typing import Dict, Optional, List
 
 from cato.domain.config import Config
+from cato.variable_processing.variable_predefinition import VariablePredefinition
 from cato.vendor import lucidity
 
 
 class VariableProcessor:
-    def evaluate_variables(self, config: Config, current_suite, test) -> Dict[str, str]:
+    def evaluate_variables(
+        self,
+        config: Config,
+        current_suite,
+        test,
+        predefinitions: Optional[List[VariablePredefinition]] = None,
+    ) -> Dict[str, str]:
         default_variables = {
+            "frame": "0001",
             "test_name": test.name,
             "suite_name": current_suite.name,
             "config_path": config.path,
@@ -20,6 +28,9 @@ class VariableProcessor:
             "image_output_png": "{@image_output_no_extension}.png",
             "image_output_exr": "{@image_output_no_extension}.exr",
         }
+        if predefinitions:
+            for predefinition in predefinitions:
+                default_variables.update(predefinition.variables)
         default_variables.update(config.variables)
         default_variables.update(current_suite.variables)
         default_variables.update(test.variables)

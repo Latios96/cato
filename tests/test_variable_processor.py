@@ -1,6 +1,7 @@
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 
 
@@ -13,6 +14,7 @@ def test_evaluate_variables_no_custom_vars():
     variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
+        "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
         "config_path": config.path,
@@ -88,6 +90,7 @@ def test_evaluate_variables_variables_from_config():
     variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
+        "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
         "config_path": config.path,
@@ -115,6 +118,7 @@ def test_evaluate_variables_variables_from_suite():
     variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
+        "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
         "config_path": config.path,
@@ -149,6 +153,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
     variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
+        "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
         "config_path": config.path,
@@ -185,6 +190,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
     variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
+        "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
         "config_path": config.path,
@@ -199,3 +205,59 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
         "test_variable": "my_value_from_test",
     }
+
+
+def test_evaluate_variables_maya_predefinition():
+    config = Config(
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+        variables={"test_variable": "my_value_from_config"},
+    )
+    suite = TestSuite(
+        name="my_test_suite",
+        tests=[],
+        variables={"test_variable": "my_value_from_suite"},
+    )
+    test = Test(
+        "test_name", "test_command", variables={"test_variable": "my_value_from_test"}
+    )
+    variable_processor = VariableProcessor()
+
+    variables = variable_processor.evaluate_variables(
+        config, suite, test, predefinitions=PREDEFINITIONS
+    )
+
+    assert variables == {
+        "frame": "0001",
+        "test_name": test.name,
+        "suite_name": suite.name,
+        "config_path": config.path,
+        "output_folder": "test",
+        "test_resources": "config_path/my_test_suite/test_name",
+        "image_output_folder": "test/result/my_test_suite/test_name",
+        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
+        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
+        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
+        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_variable": "my_value_from_test",
+        "arnold_location": r"C:\Program Files\Autodesk\Arnold\2020",
+        "arnold_render_command": r'"C:\Program Files\Autodesk\Arnold\2020\bin\kick" -i config_path/my_test_suite/test_name/test_name.ass -o test/result/my_test_suite/test_name/test_name.png -of exr -dw -v 2',
+        "arnold_scene_file": "config_path/my_test_suite/test_name/test_name.ass",
+        "blender_location": r"C:\Program Files\Blender Foundation\Blender 2.90",
+        "blender_render_command": r'"C:\Program Files\Blender Foundation\Blender 2.90\blender.exe" -b  config_path/my_test_suite/test_name/test_name.blend -o test/result/my_test_suite/test_name/test_name -F PNG -f 0001',
+        "blender_scene_file": "config_path/my_test_suite/test_name/test_name.blend",
+        "blender_version": "2.90",
+        "maya_location": r"C:\Program Files\Autodesk\Maya2020",
+        "maya_version": "2020",
+        "vray_render_command": r'"C:\Program Files\Autodesk\Maya2020\vray\bin\vray.exe" -sceneFile=config_path/my_test_suite/test_name/scene.vrscene -imgFile=test/result/my_test_suite/test_name/test_name.exr',
+        "vray_scene_file": "config_path/my_test_suite/test_name/scene.vrscene",
+    }
+
+
+# maya
+# vray
+# arnold
+# blender
