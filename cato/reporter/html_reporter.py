@@ -23,6 +23,7 @@ class HtmlReporter:
                 test_result["copied_image"] = self._copy_image(
                     path, test_result["image_output"]
                 )
+                test_result["output"] = [x[:-1] for x in test_result["output"]]
 
         failed_tests = self._filter_results(results, "TestStatus.FAILED")["result"]
         results["has_failed_tests"] = bool(failed_tests)
@@ -111,8 +112,8 @@ class HtmlReporter:
 
 
 if __name__ == "__main__":
-    with open(r"M:\test\cato-vray-suite\report.json") as f:
+    with open(r"M:\test\cato-arnold_suite\report.json") as f:
         data = json.load(f)
 
         report = HtmlReporter()
-        report.report(data, r"M:\test\cato-vray-suite\report")
+        report.report(data, r"M:\test\cato-arnold_suite\report")

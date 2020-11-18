@@ -37,9 +37,10 @@
             </p>
             <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}_{{suffix}}">
                 <div class="terminalBackground">
+                    <pre class="terminalRow">
                     {% for log_line in test_result.output %}
-                        <span class="terminalRow">{{log_line}}</span>
-                    {% endfor %}
+{{log_line}}{% endfor %}
+                        </pre>
                 </div>
             </div>
         </div>

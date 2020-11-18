@@ -23,19 +23,23 @@
     color: green;
     font-weight: bolder;
 }
-.testResultImages{
-	display: flex;
+
+.testResultImages {
+    display: flex;
 }
-.resultSeperation{
-	display: flex;
+
+.resultSeperation {
+    display: flex;
 }
-.terminalBackground{
+
+.terminalBackground {
     background-color: black;
     padding: 15px;
     font-size: 14px;
     color: white;
     font-family: 'Fira Mono', monospace;
 }
-.terminalRow{
-    display: block;
+
+.terminalRow {
+    color: white;
 }
