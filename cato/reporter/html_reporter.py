@@ -28,9 +28,9 @@ class HtmlReporter:
         failed_tests = self._filter_results(results, "TestStatus.FAILED")["result"]
         results["has_failed_tests"] = bool(failed_tests)
         results["failed_tests"] = failed_tests
-        results["succeded_tests"] = self._filter_results(results, "TestStatus.SUCCESS")[
-            "result"
-        ]
+        succeded_tests = self._filter_results(results, "TestStatus.SUCCESS")["result"]
+        results["has_succeded_tests"] = bool(succeded_tests)
+        results["succeded_tests"] = succeded_tests
 
         with open(os.path.join(path, "index.html"), "w") as f:
             logger.info("Rendering template..")
@@ -112,6 +112,7 @@ class HtmlReporter:
 
 
 if __name__ == "__main__":
+    import cato
     with open(r"M:\test\cato-arnold_suite\report.json") as f:
         data = json.load(f)
 
