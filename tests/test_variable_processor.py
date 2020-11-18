@@ -102,7 +102,7 @@ def test_evaluate_variables_variables_from_config():
         "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
         "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
         "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
-        "test_variable": "my_value"
+        "test_variable": "my_value",
     }
 
 
@@ -129,7 +129,7 @@ def test_evaluate_variables_variables_from_suite():
         "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
         "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
         "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
-        "test_variable": "my_value"
+        "test_variable": "my_value",
     }
 
 
@@ -163,7 +163,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
         "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
         "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
-        "test_variable": "my_value_from_suite"
+        "test_variable": "my_value_from_suite",
     }
 
 
@@ -199,5 +199,5 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
         "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
         "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
-        "test_variable": "my_value_from_test"
+        "test_variable": "my_value_from_test",
     }
