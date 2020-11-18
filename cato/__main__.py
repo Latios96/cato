@@ -23,7 +23,7 @@ from cato.runners.update_missing_reference_images import UpdateMissingReferenceI
 PATH_TO_CONFIG_FILE = "Path to config file"
 
 
-def run(path: str, suite_name: str, test_identifier_str: str):
+def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: bool):
     path = config_path(path)
 
     config_parser = JsonConfigParser()
@@ -53,6 +53,10 @@ def run(path: str, suite_name: str, test_identifier_str: str):
 
     reporter = HtmlReporter()
     reporter.report(report_data, os.path.join(config.output_folder, "report"))
+
+    if dump_report_json:
+        with open("report.json", "w") as f:
+            json.dump(report_data, f)
 
 
 def update_missing_reference_images(path):
@@ -117,13 +121,18 @@ if __name__ == "__main__":
         "--test-identifier",
         help="Identifier of test to run. Example: suite_name/test_name",
     )
+    run_parser.add_argument(
+        "--dump-report-json",
+        action="store_true",
+        help="Dump report data as json (usefull for debugging report generation)",
+    )
 
-    run_parser = commands_subparser.add_parser(
+    update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
         help="Updates missing reference images after a test run",
         parents=[parent_parser],
     )
-    run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
 
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
@@ -134,7 +143,7 @@ if __name__ == "__main__":
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path, args.suite, args.test_identifier)
+        run(args.path, args.suite, args.test_identifier, args.dump_report_json)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":
