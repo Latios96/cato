@@ -1,5 +1,5 @@
-from dataclasses import dataclass
-from typing import List, Iterable, Tuple
+from dataclasses import dataclass, field
+from typing import List, Iterable, Tuple, Dict
 
 from cato.domain.test import Test
 from cato.domain.test_identifier import TestIdentifier
@@ -9,6 +9,7 @@ from cato.domain.test_identifier import TestIdentifier
 class TestSuite:
     name: str
     tests: List[Test]
+    variables: Dict[str, str] = field(default_factory=dict)
 
     def to_dict(self):
         return {"name": self.name, "tests": [x.to_dict() for x in self.tests]}
