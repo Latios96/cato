@@ -32,7 +32,9 @@ def test_calculates_failed_correctly():
         test, TestStatus.FAILED, [], 1, "this is a message", ""
     )
     result = [
-        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result1, execution_result2])
+        TestSuiteExecutionResult(
+            test_suite, TestStatus.SUCCESS, [execution_result1, execution_result2]
+        )
     ]
     stats_calculator = StatsCalculator()
 
