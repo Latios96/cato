@@ -7,6 +7,7 @@ import pinject
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
 from cato.reporter.end_message_generator import EndMessageGenerator
+from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 
@@ -30,8 +31,11 @@ def run(path: str):
     print()
     print(generator.generate_end_message(result))
 
-    with open('report.json', 'w') as f:
-        json.dump({'result': [x.to_dict() for x in result]}, f, indent=4)
+    report_data = {'result': [x.to_dict() for x in result]}
+
+    reporter = HtmlReporter()
+    reporter.report(report_data, os.path.join(config.output_folder, 'report'))
+
 
 
 def config_template(path: str):
