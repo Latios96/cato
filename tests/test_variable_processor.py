@@ -12,7 +12,7 @@ def test_evaluate_variables_no_custom_vars():
     test = Test("test_name", "test_command", variables={})
     variable_processor = VariableProcessor()
 
-    variables = variable_processor.evaluate_variables(config, suite, test, {})
+    variables = variable_processor.evaluate_variables(config, suite, test)
 
     assert variables == {
         "test_name": test.name,
@@ -33,17 +33,20 @@ def test_evaluate_variables_no_custom_vars():
 def test_evaluate_variables_custom_image_output():
     config = Config(path="config_path", test_suites=[], output_folder="test")
     suite = TestSuite(name="my_test_suite", tests=[])
-    test = Test("test_name", "test_command", variables={})
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={
+            "frame": "7",
+            "image_output_png": "{@image_output_folder}/test_name{@frame}.png",
+        },
+    )
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(
         config,
         suite,
         test,
-        {
-            "frame": "7",
-            "image_output_png": "{@image_output_folder}/test_name{@frame}.png",
-        },
     )
 
     assert variables == {

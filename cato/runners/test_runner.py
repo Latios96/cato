@@ -31,7 +31,7 @@ class TestRunner:
         self._reporter.report_start_test(test)
 
         variables = self._variable_processor.evaluate_variables(
-            config, current_suite, test, test.variables
+            config, current_suite, test
         )
 
         command = self._variable_processor.format_command(test.command, variables)

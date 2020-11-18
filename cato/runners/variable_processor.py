@@ -5,9 +5,7 @@ from cato.vendor import lucidity
 
 
 class VariableProcessor:
-    def evaluate_variables(
-        self, config: Config, current_suite, test, variables: Dict[str, str]
-    ) -> Dict[str, str]:
+    def evaluate_variables(self, config: Config, current_suite, test) -> Dict[str, str]:
         default_variables = {
             "test_name": test.name,
             "suite_name": current_suite.name,
@@ -22,7 +20,7 @@ class VariableProcessor:
             "image_output_png": "{@image_output_no_extension}.png",
             "image_output_exr": "{@image_output_no_extension}.exr",
         }
-        default_variables.update(variables)
+        default_variables.update(test.variables)
 
         templates: Dict[str, lucidity.Template] = {}
         for name, str in default_variables.items():
