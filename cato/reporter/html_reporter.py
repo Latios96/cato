@@ -3,13 +3,13 @@ import copy
 import json
 import os
 import shutil
-import uuid
 from typing import Dict
 
 from jinja2 import Environment, FileSystemLoader, select_autoescape
-from oiio.OpenImageIO import ImageBuf
+from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
 logger = logging.getLogger(__name__)
+
 
 class HtmlReporter:
 
@@ -18,7 +18,6 @@ class HtmlReporter:
         for suite_result in results['result']:
             for test_result in suite_result['test_results']:
                 test_result['copied_image'] = self._copy_image(path, test_result['image_output'])
-
 
         failed_tests = self._filter_results(results, "TestStatus.FAILED")['result']
         results['has_failed_tests'] = bool(failed_tests)
@@ -43,11 +42,13 @@ class HtmlReporter:
         image_path = os.path.abspath(image_path)
         path = os.path.abspath(path)
         folder = os.path.join(path, 'images')
-        target_path = os.path.join(folder, f"{uuid.uuid4()}{os.path.splitext(image_path)[1]}")
-        if not os.path.exists(folder):
-            os.makedirs(folder)
+        checksum = self._checksum(image_path)
+        target_path = os.path.join(folder, f"{checksum}{os.path.splitext(image_path)[1]}")
+        if not os.path.exists(target_path):
+            if not os.path.exists(folder):
+                os.makedirs(folder)
 
-        return self._copy_or_convert(image_path, target_path)
+            return self._copy_or_convert(image_path, target_path)
 
     def _copy_or_convert(self, image_path, target_path):
         if os.path.splitext(image_path)[1].lower() in ['.png', '.jpg', 'jpeg']:
@@ -89,6 +90,10 @@ class HtmlReporter:
                     tests.append(test_result)
             suite_result['test_results'] = tests
         return results
+
+    def _checksum(self, image_path: str) -> str:
+        A = ImageBuf(image_path)
+        return ImageBufAlgo.computePixelHashSHA1(A, blocksize=64)
 
 
 if __name__ == '__main__':
