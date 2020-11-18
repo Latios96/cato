@@ -34,7 +34,7 @@
 {% endif %}
 <h2 class="succededHeadline">Succeded tests:</h2>
 <div class="resultSeperation">
-{% for suite_result in result %}
+{% for suite_result in succeded_tests %}
     {% set suffix = 'success' %}
     {% include 'suite_result_template.html' %}
 
