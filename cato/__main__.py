@@ -73,7 +73,7 @@ def update_missing_reference_images(path):
 
 def list_tests(path):
     path = config_path(path)
-
+    print(path)
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
