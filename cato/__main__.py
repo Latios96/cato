@@ -6,7 +6,14 @@ import pinject
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
-from cato.domain.test_suite import iterate_suites_and_tests, count_tests, count_suites
+from cato.domain.test_identifier import TestIdentifier
+from cato.domain.test_suite import (
+    iterate_suites_and_tests,
+    count_tests,
+    count_suites,
+    filter_by_suite_name,
+    filter_by_test_identifier,
+)
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
@@ -14,7 +21,7 @@ from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 
 
-def run(path: str):
+def run(path: str, suite_name: str, test_identifier_str: str):
     path = config_path(path)
 
     config_parser = JsonConfigParser()
@@ -22,6 +29,13 @@ def run(path: str):
 
     obj_graph = pinject.new_object_graph()
     test_suite_runner = obj_graph.provide(TestSuiteRunner)
+
+    if suite_name:
+        config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
+    if test_identifier_str:
+        config.test_suites = filter_by_test_identifier(
+            config.test_suites, TestIdentifier.from_string(test_identifier_str)
+        )
 
     result = test_suite_runner.run_test_suites(config)
 
@@ -96,6 +110,11 @@ if __name__ == "__main__":
         "run", help="Run a config file", parents=[parent_parser]
     )
     run_parser.add_argument("--path", help="Path to config file")
+    run_parser.add_argument("--suite", help="Suite to run")
+    run_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
 
     run_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
@@ -113,7 +132,7 @@ if __name__ == "__main__":
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path)
+        run(args.path, args.suite, args.test_identifier)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":
