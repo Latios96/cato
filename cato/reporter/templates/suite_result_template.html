@@ -1,20 +1,15 @@
 <div class="suiteResult">
     <h3>
-        {{suite_result.test_suite.name}}
+        Suite: {{suite_result.test_suite.name}}
     </h3>
     <p>
-        <a class="btn btn-primary" data-toggle="collapse" href="#collapse_{{suite_result.test_suite.name}}"
+        <a class="btn btn-primary" data-toggle="collapse" href="#collapse_{{suite_result.test_suite.name}}_{{suffix}}"
            role="button" aria-expanded="true"
            aria-controls="collapseExample">
-            collapse suite
+            show/hide {{suite_result.test_suite.name}} suite
         </a>
-        <button class="btn btn-primary" type="button" data-toggle="collapse"
-                data-target="#collapse_{{suite_result.test_suite.name}}"
-                aria-expanded="false" aria-controls="collapseExample">
-            show suite
-        </button>
     </p>
-    <div class="collapse show" id="collapse_{{suite_result.test_suite.name}}">
+    <div class="collapse show" id="collapse_{{suite_result.test_suite.name}}_{{suffix}}">
         {% for test_result in suite_result.test_results %}
         <div class="testResult">
             <nav aria-label="breadcrumb">
@@ -33,11 +28,11 @@
                 <a class="btn btn-primary" data-toggle="collapse"
                    href="#collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}" role="button"
                    aria-expanded="false"
-                   aria-controls="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
+                   aria-controls="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}_{{suffix}}">
                     show/hide log
                 </a>
             </p>
-            <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}">
+            <div class="collapse" id="collapse_{{suite_result.test_suite.name}}_{{test_result.test.name}}_{{suffix}}">
                 <div data-termynal style="width: 100%">
                     {% for log_line in test_result.output %}
                     <span data-ty>{{log_line}}</span>

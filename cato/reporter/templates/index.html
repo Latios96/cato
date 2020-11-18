@@ -20,11 +20,11 @@
     <h1 class="failedHeadline">Failed</h1>
     There were issues with tests.
 </div>
-<h2>Failed tests:</h2>
+<h2 class="failedHeadline">Failed tests:</h2>
 <div class="resultSeperation">
 {% for suite_result in failed_tests %}
-
-    {% include 'suite_result_template.html' %}
+    {% set suffix = 'failed' %}
+    {% include 'suite_result_template.html'%}
 
 {% endfor %}
 </div>
@@ -32,10 +32,10 @@
 {% else %}
 <h1>Success</h1>
 {% endif %}
-<h2>Succeded tests:</h2>
+<h2 class="succededHeadline">Succeded tests:</h2>
 <div class="resultSeperation">
 {% for suite_result in result %}
-
+    {% set suffix = 'success' %}
     {% include 'suite_result_template.html' %}
 
 {% endfor %}
