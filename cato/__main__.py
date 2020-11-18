@@ -20,6 +20,8 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 
+PATH_TO_CONFIG_FILE = "Path to config file"
+
 
 def run(path: str, suite_name: str, test_identifier_str: str):
     path = config_path(path)
@@ -109,7 +111,7 @@ if __name__ == "__main__":
     run_parser = commands_subparser.add_parser(
         "run", help="Run a config file", parents=[parent_parser]
     )
-    run_parser.add_argument("--path", help="Path to config file")
+    run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
     run_parser.add_argument("--suite", help="Suite to run")
     run_parser.add_argument(
         "--test-identifier",
@@ -121,12 +123,12 @@ if __name__ == "__main__":
         help="Updates missing reference images after a test run",
         parents=[parent_parser],
     )
-    run_parser.add_argument("--path", help="Path to config file")
+    run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
 
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
     )
-    list_parser.add_argument("--path", help="Path to config file")
+    list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
 
     args = main_parser.parse_args()
     if args.command == "config-template":
