@@ -7,7 +7,7 @@ from cato.domain.test_suite import TestSuite
 from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner, CommandResult
-from cato.runners.output_folder import OutputFolder
+from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.test_runner import TestRunner
 from tests.utils import mock_safe
 
@@ -18,9 +18,7 @@ def test_should_report_test_start():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
     test_suite = TestSuite(name="suite", tests=[])
 
@@ -39,9 +37,7 @@ def test_should_replace_placeholder():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(
         name="my first test",
         command="crayg -s {test_resources}/test.json -o {image_output_png}",
@@ -66,9 +62,7 @@ def test_should_collect_timing_info():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
 
     result = test_runner.run_test(
@@ -89,9 +83,7 @@ def test_should_have_succeded_with_exit_code_0():
     magic_mock = mock.MagicMock()
     magic_mock.error = False
     image_comparator.compare.return_value = magic_mock
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
@@ -110,9 +102,7 @@ def test_should_have_failed_with_exit_code_0():
     output_folder = mock_safe(OutputFolder)
     output_folder.reference_image_exists.return_value = True
     image_comparator = mock_safe(ImageComparator)
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 1, [])
 
@@ -134,9 +124,7 @@ def test_should_have_failed_with_images_not_equal():
     magic_mock.error = True
     image_comparator.compare.return_value = magic_mock
 
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
@@ -160,9 +148,7 @@ def test_should_have_failed_with_missing_reference_image():
     magic_mock.error = True
     image_comparator.compare.return_value = magic_mock
 
-    test_runner = TestRunner(
-        command_runner, reporter, output_folder, image_comparator
-    )
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
     test = Test(name="my first test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 

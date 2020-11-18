@@ -1,6 +1,3 @@
-import os
-import pprint
-
 import emoji
 from contexttimer import Timer
 
@@ -12,7 +9,7 @@ from cato.domain.test_suite import TestSuite
 from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
-from cato.runners.output_folder import OutputFolder
+from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.variable_processor import VariableProcessor
 
 
