@@ -20,3 +20,10 @@ def iterate_suites_and_tests(
         for test in suite.tests:
             yield suite, test
 
+
+def count_suites(suites: List[TestSuite]):
+    return len(suites)
+
+
+def count_tests(suites: List[TestSuite]):
+    return sum(map(lambda x: len(x.tests), suites))
