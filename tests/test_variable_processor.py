@@ -1,9 +1,7 @@
-import os
-
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
-from cato.runners.variable_processor import VariableProcessor
+from cato.variable_processing.variable_processor import VariableProcessor
 
 
 def test_evaluate_variables_no_custom_vars():

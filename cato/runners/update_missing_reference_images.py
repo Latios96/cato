@@ -5,7 +5,7 @@ from cato import logger
 from cato.domain.config import Config
 from cato.domain.test_suite import iterate_suites_and_tests
 from cato.file_system_abstractions.output_folder import OutputFolder
-from cato.runners.variable_processor import VariableProcessor
+from cato.variable_processing.variable_processor import VariableProcessor
 
 
 class UpdateMissingReferenceImages:
@@ -15,9 +15,7 @@ class UpdateMissingReferenceImages:
     def update(self, config: Config):
         for suite, test in iterate_suites_and_tests(config.test_suites):
             variable_processor = VariableProcessor()
-            variables = variable_processor.evaluate_variables(
-                config, suite, test
-            )
+            variables = variable_processor.evaluate_variables(config, suite, test)
 
             image_outputs = [
                 variables["image_output_exr"],

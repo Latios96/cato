@@ -10,7 +10,7 @@ from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
 from cato.file_system_abstractions.output_folder import OutputFolder
-from cato.runners.variable_processor import VariableProcessor
+from cato.variable_processing.variable_processor import VariableProcessor
 
 
 class TestRunner:
