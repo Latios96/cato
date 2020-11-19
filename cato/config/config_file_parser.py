@@ -22,6 +22,7 @@ class JsonConfigParser:
             os.path.dirname(path),
             self._transform_suites(data),
             output_folder=os.getcwd(),
+            variables=data["variables"] if data.get("variables") else {},
         )
 
     def _read_json_from_file(self, path) -> dict:
@@ -39,7 +40,7 @@ class JsonConfigParser:
         for suite in data["suites"]:
             name = suite["name"]
             tests = self._transform_test(suite)
-            suites.append(TestSuite(name=name, tests=tests))
+            suites.append(TestSuite(name=name, tests=tests,variables=suite["variables"] if suite.get("variables") else {},))
 
         return suites
 

@@ -39,6 +39,27 @@ VALID_CONFIG_WITH_VARIABLES = {
     ]
 }
 
+VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
+    "suites": [
+        {
+            "name": "My First Test Suite",
+            "tests": [
+                {
+                    "name": "My First Test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    "variables": {"frame": "7"},
+                }
+            ],
+            "variables": {
+                'my_var': 'from_suite'
+            }
+        }
+    ],
+    "variables": {
+        'my_var': 'from_config'
+    }
+}
+
 INVALID_CONFIG = {
     "suite": {
         "name": "My First Test Suite",
@@ -99,6 +120,33 @@ def test_success_with_variables():
             )
         ],
         output_folder=os.getcwd(),
+    )
+
+
+def test_success_with_variables_in_config_and_suite():
+    json_config_parser = JsonConfigParser()
+
+    suites = json_config_parser.parse(
+        "test/test.json", StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST))
+    )
+
+    assert suites == Config(
+        path="test",
+        test_suites=[
+            TestSuite(
+                name="My First Test Suite",
+                tests=[
+                    Test(
+                        name="My First Test",
+                        command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                        variables={"frame": "7"},
+                    )
+                ],
+                variables={'my_var': 'from_suite'}
+            )
+        ],
+        output_folder=os.getcwd(),
+        variables={'my_var': 'from_config'}
     )
 
 
