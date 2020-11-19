@@ -50,14 +50,10 @@ VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
                     "variables": {"frame": "7"},
                 }
             ],
-            "variables": {
-                'my_var': 'from_suite'
-            }
+            "variables": {"my_var": "from_suite"},
         }
     ],
-    "variables": {
-        'my_var': 'from_config'
-    }
+    "variables": {"my_var": "from_config"},
 }
 
 INVALID_CONFIG = {
@@ -127,7 +123,8 @@ def test_success_with_variables_in_config_and_suite():
     json_config_parser = JsonConfigParser()
 
     suites = json_config_parser.parse(
-        "test/test.json", StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST))
+        "test/test.json",
+        StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST)),
     )
 
     assert suites == Config(
@@ -142,11 +139,11 @@ def test_success_with_variables_in_config_and_suite():
                         variables={"frame": "7"},
                     )
                 ],
-                variables={'my_var': 'from_suite'}
+                variables={"my_var": "from_suite"},
             )
         ],
         output_folder=os.getcwd(),
-        variables={'my_var': 'from_config'}
+        variables={"my_var": "from_config"},
     )
 
 

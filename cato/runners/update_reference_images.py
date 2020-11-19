@@ -29,8 +29,8 @@ class UpdateReferenceImages:
 
             if image_output:
                 target_path = (
-                        variables["reference_image_no_extension"]
-                        + os.path.splitext(image_output)[1]
+                    variables["reference_image_no_extension"]
+                    + os.path.splitext(image_output)[1]
                 )
                 logger.info(f"Copy {image_output} to {target_path}..")
                 shutil.copy(image_output, target_path)

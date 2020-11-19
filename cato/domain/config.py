@@ -12,7 +12,4 @@ class Config:
     variables: Dict[str, str] = field(default_factory=dict)
 
     def for_json(self):
-        return {
-            'suites': self.test_suites,
-            'variables': self.variables
-        }
+        return {"suites": self.test_suites, "variables": self.variables}

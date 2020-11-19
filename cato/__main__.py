@@ -96,7 +96,7 @@ def update_reference(path, test_identifier):
     obj_graph = pinject.new_object_graph()
     update_reference = obj_graph.provide(UpdateReferenceImages)
 
-    update_reference.update(config,TestIdentifier.from_string(test_identifier))
+    update_reference.update(config, TestIdentifier.from_string(test_identifier))
 
 
 def config_template(path: str):

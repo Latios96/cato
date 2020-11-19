@@ -40,7 +40,13 @@ class JsonConfigParser:
         for suite in data["suites"]:
             name = suite["name"]
             tests = self._transform_test(suite)
-            suites.append(TestSuite(name=name, tests=tests,variables=suite["variables"] if suite.get("variables") else {},))
+            suites.append(
+                TestSuite(
+                    name=name,
+                    tests=tests,
+                    variables=suite["variables"] if suite.get("variables") else {},
+                )
+            )
 
         return suites
 
