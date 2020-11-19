@@ -19,6 +19,7 @@ from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
+from cato.runners.update_reference_images import UpdateReferenceImages
 
 PATH_TO_CONFIG_FILE = "Path to config file"
 
@@ -86,6 +87,18 @@ def list_tests(path):
         print(f"{suite.name}/{test.name}")
 
 
+def update_reference(path, test_identifier):
+    path = config_path(path)
+
+    config_parser = JsonConfigParser()
+    config = config_parser.parse(path)
+
+    obj_graph = pinject.new_object_graph()
+    update_reference = obj_graph.provide(UpdateReferenceImages)
+
+    update_reference.update(config,TestIdentifier.from_string(test_identifier))
+
+
 def config_template(path: str):
     path = config_path(path)
 
@@ -134,6 +147,17 @@ if __name__ == "__main__":
     )
     update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
 
+    update_reference_parser = commands_subparser.add_parser(
+        "update-reference",
+        help="Updates reference images",
+        parents=[parent_parser],
+    )
+    update_reference_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
+    update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
     )
@@ -148,3 +172,8 @@ if __name__ == "__main__":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":
         list_tests(args.path)
+    elif args.command == "update-reference":
+        print(args)
+        update_reference(args.path, args.test_identifier)
+    else:
+        print(f"No method found to run command {args.command}")
