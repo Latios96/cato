@@ -44,3 +44,4 @@ def filter_by_test_identifier(
         if test.name != test_identifier.test_name:
             continue
         return [TestSuite(name=suite.name, tests=[test])]
+    return []

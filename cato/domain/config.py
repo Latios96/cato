@@ -10,3 +10,9 @@ class Config:
     test_suites: List[TestSuite]
     output_folder: str
     variables: Dict[str, str] = field(default_factory=dict)
+
+    def for_json(self):
+        return {
+            'suites': self.test_suites,
+            'variables': self.variables
+        }
