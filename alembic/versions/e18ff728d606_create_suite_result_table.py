@@ -21,7 +21,7 @@ def upgrade():
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column("run_id", sa.INTEGER, sa.ForeignKey("run_entity.id")),
         sa.Column("suite_name", sa.String(), nullable=False),
-        sa.Column("variables", sa.JSON(), nullable=False),
+        sa.Column("suite_variables", sa.JSON(), nullable=False),
     )
 
 
