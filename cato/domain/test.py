@@ -2,6 +2,8 @@ from typing import Dict
 
 import attr
 
+from cato.domain.validation import validate_name
+
 
 @attr.s
 class Test:
@@ -14,11 +16,4 @@ class Test:
 
     @name.validator
     def check(self, attribute, value):
-        if not value:
-            raise ValueError("Test name can not be empty!")
-
-        for c in value:
-            if c in [" ", "/", ",", ".", "\\", '"', "'"]:
-                raise ValueError(
-                    f"Test name {value} contains not allowed character: {c}"
-                )
+        validate_name(value)
