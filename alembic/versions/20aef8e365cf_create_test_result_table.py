@@ -20,6 +20,7 @@ op.create_table(
         "suite_result_entity_id", sa.Integer, sa.ForeignKey("suite_result_entity.id")
     ),
     sa.Column("test_name", sa.String(), nullable=False),
+    sa.Column("test_identifier", sa.String(), nullable=False),
     sa.Column("test_command", sa.String(), nullable=False),
     sa.Column("test_variables", sa.JSON(), nullable=False),
     sa.Column("execution_status", sa.String(), nullable=False),

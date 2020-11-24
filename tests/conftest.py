@@ -7,11 +7,15 @@ from sqlalchemy.orm import sessionmaker
 
 from cato.domain.project import Project
 from cato.domain.run import Run
+from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
+from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+    SqlAlchemySuiteResultRepository,
+)
 
 
 @event.listens_for(Engine, "connect")
@@ -40,3 +44,12 @@ def run(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
     return repository.save(run)
+
+
+@pytest.fixture
+def suite_result(sessionmaker_fixture, run):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_result = SuiteResult(
+        id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+    return repository.save(suite_result)
