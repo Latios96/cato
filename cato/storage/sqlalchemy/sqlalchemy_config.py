@@ -8,7 +8,7 @@ from sqlalchemy.orm import sessionmaker
 
 class SqlAlchemyConfig:
     def get_connection_str(self):
-        ini_path = os.path.join(os.path.dirname(__file__), "connection.ini")
+        ini_path = os.path.join(os.path.dirname(__file__), "config.ini")
         if os.path.exists(ini_path):
             config = configparser.ConfigParser()
             config.read(ini_path)
