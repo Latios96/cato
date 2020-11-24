@@ -9,6 +9,7 @@ from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.reporter import Reporter
+from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.test_runner import TestRunner
 from cato.runners.test_suite_runner import TestSuiteRunner
 from tests.utils import mock_safe
@@ -17,7 +18,10 @@ from tests.utils import mock_safe
 def test_run_empty_suites_should_fail():
     mock_reporter = mock_safe(Reporter)
     mock_test_runner = mock_safe(TestRunner)
-    test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
+    mock_execution_reporter = mock_safe(TestExecutionReporter)
+    test_suite_runner = TestSuiteRunner(
+        mock_test_runner, mock_reporter, mock_execution_reporter
+    )
 
     with pytest.raises(ValueError):
         test_suite_runner.run_test_suites(
@@ -28,7 +32,10 @@ def test_run_empty_suites_should_fail():
 def test_run_suite_should_report_start_and_delegate_to_test_runner():
     mock_reporter = mock_safe(Reporter)
     mock_test_runner = mock_safe(TestRunner)
-    test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
+    mock_execution_reporter = mock_safe(TestExecutionReporter)
+    test_suite_runner = TestSuiteRunner(
+        mock_test_runner, mock_reporter, mock_execution_reporter
+    )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(path="", test_suites=[test_suite], output_folder="output")
@@ -42,7 +49,10 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
 def test_run_suite_should_return_correctly_collected_results():
     mock_reporter = mock_safe(Reporter)
     mock_test_runner = mock_safe(TestRunner)
-    test_suite_runner = TestSuiteRunner(mock_test_runner, mock_reporter)
+    mock_execution_reporter = mock_safe(TestExecutionReporter)
+    test_suite_runner = TestSuiteRunner(
+        mock_test_runner, mock_reporter, mock_execution_reporter
+    )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(path="", test_suites=[test_suite], output_folder="output")

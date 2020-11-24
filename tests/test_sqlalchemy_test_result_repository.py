@@ -65,7 +65,7 @@ def test_save_no_suite_result(sessionmaker_fixture):
         test_result_save = repository.save(test_result)
 
 
-def test_find_by_test_identifier(sessionmaker_fixture, suite_result):
+def test_find_by_suite_result_and_test_identifier(sessionmaker_fixture, suite_result):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -88,12 +88,16 @@ def test_find_by_test_identifier(sessionmaker_fixture, suite_result):
     )
     test_result_save = repository.save(test_result)
 
-    result = repository.find_by_test_identifier(TestIdentifier("my_suite", "my_test"))
+    result = repository.find_by_suite_result_and_test_identifier(
+        suite_result.id, TestIdentifier("my_suite", "my_test")
+    )
 
     assert result.id == test_result_save.id
 
 
-def test_find_by_test_identifier_not_found(sessionmaker_fixture):
+def test_find_find_by_suite_result_and_test_identifier_not_found(sessionmaker_fixture):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    assert not repository.find_by_test_identifier(TestIdentifier("my_suite", "my_test"))
+    assert not repository.find_by_suite_result_and_test_identifier(
+        3, TestIdentifier("my_suite", "my_test")
+    )
