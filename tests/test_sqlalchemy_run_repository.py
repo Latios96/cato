@@ -3,19 +3,8 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato.domain.project import Project
 from cato.domain.run import Run
-from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
-    SqlAlchemyProjectRepository,
-)
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
-
-
-@pytest.fixture
-def project(sessionmaker_fixture):
-    repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
-    project = Project(id=0, name="test_name")
-    return repository.save(project)
 
 
 def test_to_entity(sessionmaker_fixture):
