@@ -8,6 +8,8 @@ from cato.domain.test_suite import TestSuite
 
 @dataclass
 class TestSuiteExecutionResult:
+    id: int
+    run_id: int
     test_suite: TestSuite
     result: TestStatus
     test_results: List[TestExecutionResult]

@@ -33,6 +33,8 @@ class TestSuiteRunner:
                     suite_status = TestStatus.FAILED
                 test_results.append(result)
 
-            results.append(TestSuiteExecutionResult(suite, suite_status, test_results))
+            results.append(
+                TestSuiteExecutionResult(0, 0, suite, suite_status, test_results)
+            )
 
         return results

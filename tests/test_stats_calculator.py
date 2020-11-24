@@ -22,7 +22,9 @@ def test_calculates_succeded_correctly():
         datetime.datetime.now(),
     )
     result = [
-        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
+        TestSuiteExecutionResult(
+            0, 0, test_suite, TestStatus.SUCCESS, [execution_result]
+        )
     ]
     stats_calculator = StatsCalculator()
 
@@ -56,7 +58,7 @@ def test_calculates_failed_correctly():
     )
     result = [
         TestSuiteExecutionResult(
-            test_suite, TestStatus.SUCCESS, [execution_result1, execution_result2]
+            0, 0, test_suite, TestStatus.SUCCESS, [execution_result1, execution_result2]
         )
     ]
     stats_calculator = StatsCalculator()
