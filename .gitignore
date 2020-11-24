@@ -148,3 +148,4 @@ dmypy.json
 .scannerwork/*
 sonarqube.bat
 alembic.ini
+config.ini
