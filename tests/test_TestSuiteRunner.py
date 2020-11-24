@@ -25,7 +25,12 @@ def test_run_empty_suites_should_fail():
 
     with pytest.raises(ValueError):
         test_suite_runner.run_test_suites(
-            Config(path="", test_suites=[], output_folder="output")
+            Config(
+                project_name="Example project",
+                path="",
+                test_suites=[],
+                output_folder="output",
+            )
         )
 
 
@@ -38,7 +43,12 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(path="", test_suites=[test_suite], output_folder="output")
+    config = Config(
+        project_name="Example project",
+        path="",
+        test_suites=[test_suite],
+        output_folder="output",
+    )
 
     test_suite_runner.run_test_suites(config)
 
@@ -55,7 +65,12 @@ def test_run_suite_should_return_correctly_collected_results():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(path="", test_suites=[test_suite], output_folder="output")
+    config = Config(
+        project_name="Example project",
+        path="",
+        test_suites=[test_suite],
+        output_folder="output",
+    )
     execution_result = TestExecutionResult(
         test,
         TestStatus.SUCCESS,

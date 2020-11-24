@@ -6,7 +6,12 @@ from cato.variable_processing.variable_processor import VariableProcessor
 
 
 def test_evaluate_variables_no_custom_vars():
-    config = Config(path="config_path", test_suites=[], output_folder="test")
+    config = Config(
+        project_name="Example project",
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+    )
     suite = TestSuite(name="my_test_suite", tests=[])
     test = Test("test_name", "test_command", variables={})
     variable_processor = VariableProcessor()
@@ -31,7 +36,12 @@ def test_evaluate_variables_no_custom_vars():
 
 
 def test_evaluate_variables_custom_image_output():
-    config = Config(path="config_path", test_suites=[], output_folder="test")
+    config = Config(
+        project_name="Example project",
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+    )
     suite = TestSuite(name="my_test_suite", tests=[])
     test = Test(
         "test_name",
@@ -78,6 +88,7 @@ def test_format_command():
 
 def test_evaluate_variables_variables_from_config():
     config = Config(
+        project_name="Example project",
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -108,7 +119,12 @@ def test_evaluate_variables_variables_from_config():
 
 
 def test_evaluate_variables_variables_from_suite():
-    config = Config(path="config_path", test_suites=[], output_folder="test")
+    config = Config(
+        project_name="Example project",
+        path="config_path",
+        test_suites=[],
+        output_folder="test",
+    )
     suite = TestSuite(
         name="my_test_suite", tests=[], variables={"test_variable": "my_value"}
     )
@@ -137,6 +153,7 @@ def test_evaluate_variables_variables_from_suite():
 
 def test_evaluate_variables_variables_from_config_override_by_suite():
     config = Config(
+        project_name="Example project",
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -172,6 +189,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
 
 def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by_test():
     config = Config(
+        project_name="Example project",
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -209,6 +227,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
 
 def test_evaluate_variables_maya_predefinition():
     config = Config(
+        project_name="Example project",
         path="config_path",
         test_suites=[],
         output_folder="test",

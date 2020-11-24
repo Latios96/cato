@@ -6,6 +6,7 @@ from cato.domain.test_suite import TestSuite
 
 @dataclass
 class Config:
+    project_name: str
     path: str
     test_suites: List[TestSuite]
     output_folder: str

@@ -18,6 +18,7 @@ def test_write_and_read_back_is_equal():
     suites = [suite1, suite2]
 
     config = Config(
+        project_name="Example project",
         path="test",
         test_suites=suites,
         output_folder=os.getcwd(),
