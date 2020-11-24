@@ -47,7 +47,9 @@ class SqlAlchemyTestResultRepository(
             test_identifier=str(domain_object.test_identifier),
             test_command=domain_object.test_command,
             test_variables=domain_object.test_variables,
-            execution_status=domain_object.execution_status.name if domain_object.execution_status else None,
+            execution_status=domain_object.execution_status.name
+            if domain_object.execution_status
+            else None,
             status=domain_object.status.name if domain_object.status else None,
             output=domain_object.output,
             seconds=domain_object.seconds,
@@ -85,22 +87,25 @@ class SqlAlchemyTestResultRepository(
     def _map_execution_status(self, status):
         if not status:
             return None
-        return {"NOT_STARTED": ExecutionStatus.NOT_STARTED, "RUNNING": ExecutionStatus.RUNNING,
-                "FINISHED": ExecutionStatus.FINISHED}[status]
+        return {
+            "NOT_STARTED": ExecutionStatus.NOT_STARTED,
+            "RUNNING": ExecutionStatus.RUNNING,
+            "FINISHED": ExecutionStatus.FINISHED,
+        }[status]
 
     def mapping_cls(self):
         return _TestResultMapping
 
     def find_by_suite_result_and_test_identifier(
-            self, suite_result_id: int, test_identifier: TestIdentifier
+        self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         session = self._session_maker()
 
         entity = (
             session.query(self.mapping_cls())
-                .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
-                .filter(self.mapping_cls().test_identifier == str(test_identifier))
-                .first()
+            .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
+            .filter(self.mapping_cls().test_identifier == str(test_identifier))
+            .first()
         )
         if entity:
             return self.to_domain_object(entity)
