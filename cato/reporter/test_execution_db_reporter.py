@@ -16,9 +16,13 @@ from cato.storage.domain.test_result import TestResult
 
 
 class TestExecutionDbReporter(TestExecutionReporter):
-
-    def __init__(self, project_repository: ProjectRepository, run_repository: RunRepository,
-                 suite_result_repository: SuiteResultRepository, test_result_repository: TestResultRepository):
+    def __init__(
+        self,
+        project_repository: ProjectRepository,
+        run_repository: RunRepository,
+        suite_result_repository: SuiteResultRepository,
+        test_result_repository: TestResultRepository,
+    ):
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
         self._run_repository = run_repository
@@ -32,22 +36,34 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._run_id = run.id
 
         for test_suite in test_suites:
-            suite_result = SuiteResult(id=0, run_id=run.id, suite_name=test_suite.name,
-                                       suite_variables=test_suite.variables)
+            suite_result = SuiteResult(
+                id=0,
+                run_id=run.id,
+                suite_name=test_suite.name,
+                suite_variables=test_suite.variables,
+            )
             suite_result = self._suite_result_repository.save(suite_result)
 
             for test in test_suite.tests:
-                test = TestResult(id=0, suite_result_id=suite_result.id, test_name=test.name,
-                                  test_identifier=TestIdentifier(test_suite.name, test.name),
-                                  test_variables=test.variables, test_command=test.command)
+                test = TestResult(
+                    id=0,
+                    suite_result_id=suite_result.id,
+                    test_name=test.name,
+                    test_identifier=TestIdentifier(test_suite.name, test.name),
+                    test_variables=test.variables,
+                    test_command=test.command,
+                )
                 self._test_result_repository.save(test)
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
-        suite_result = self._suite_result_repository.find_by_run_id_and_name(self._run_id, current_suite.name)
-        test_result = self._test_result_repository.find_by_suite_result_and_test_identifier(suite_result.id,
-                                                                                            TestIdentifier(
-                                                                                                current_suite.name,
-                                                                                                test.name))
+        suite_result = self._suite_result_repository.find_by_run_id_and_name(
+            self._run_id, current_suite.name
+        )
+        test_result = (
+            self._test_result_repository.find_by_suite_result_and_test_identifier(
+                suite_result.id, TestIdentifier(current_suite.name, test.name)
+            )
+        )
 
         test_result.execution_status = "RUNNING"
         test_result.started_at = datetime.datetime.now()
@@ -55,13 +71,17 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._test_result_repository.save(test_result)
 
     def report_test_result(
-            self, current_suite: TestSuite, test_execution_result: TestExecutionResult
+        self, current_suite: TestSuite, test_execution_result: TestExecutionResult
     ):
-        suite_result = self._suite_result_repository.find_by_run_id_and_name(self._run_id, current_suite.name)
-        test_result = self._test_result_repository.find_by_suite_result_and_test_identifier(suite_result.id,
-                                                                                            TestIdentifier(
-                                                                                                current_suite.name,
-                                                                                                test_execution_result.test.name))
+        suite_result = self._suite_result_repository.find_by_run_id_and_name(
+            self._run_id, current_suite.name
+        )
+        test_result = (
+            self._test_result_repository.find_by_suite_result_and_test_identifier(
+                suite_result.id,
+                TestIdentifier(current_suite.name, test_execution_result.test.name),
+            )
+        )
 
         test_result.execution_status = "FINISHED"
         test_result.finished_at = datetime.datetime.now()

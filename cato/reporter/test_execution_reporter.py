@@ -9,12 +9,10 @@ class TestExecutionReporter:
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         raise NotImplementedError()
 
-    def report_test_execution_start(
-            self, current_suite: TestSuite, test: Test
-    ):
+    def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         raise NotImplementedError()
 
     def report_test_result(
-            self, current_suite: TestSuite, test_execution_result: TestExecutionResult
+        self, current_suite: TestSuite, test_execution_result: TestExecutionResult
     ):
         raise NotImplementedError()
