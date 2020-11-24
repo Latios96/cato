@@ -16,8 +16,6 @@ def test_generate():
     report = generator.generate(
         [
             TestSuiteExecutionResult(
-                0,
-                0,
                 TestSuite(name="test_suite", tests=[test, test2]),
                 test_results=[
                     TestExecutionResult(
