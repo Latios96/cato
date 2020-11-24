@@ -6,6 +6,7 @@ import attr
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
+from cato.storage.domain.execution_status import ExecutionStatus
 
 
 @attr.s
@@ -16,7 +17,7 @@ class TestResult:
     test_identifier: TestIdentifier = attr.ib()
     test_command: str = attr.ib()
     test_variables: Dict[str, str] = attr.ib()
-    execution_status: str = attr.ib(default="NOT_STARTED")  # todo use enum
+    execution_status: ExecutionStatus = attr.ib(default=ExecutionStatus.NOT_STARTED)
     status: TestStatus = attr.ib(default=None)
     output: List[str] = attr.ib(factory=list)
     seconds: float = attr.ib(default=0)

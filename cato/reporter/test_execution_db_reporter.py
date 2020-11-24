@@ -13,6 +13,7 @@ from cato.storage.abstract.abstract_test_result_repository import TestResultRepo
 from cato.storage.abstract.project_repository import ProjectRepository
 from cato.storage.abstract.run_repository import RunRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
 
@@ -78,7 +79,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
         )
 
-        test_result.execution_status = "RUNNING"
+        test_result.execution_status = ExecutionStatus.RUNNING
         test_result.started_at = datetime.datetime.now()
 
         logger.info(f"Reporting execution start of test {test_identifier}..")
@@ -100,7 +101,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
         )
 
-        test_result.execution_status = "FINISHED"
+        test_result.execution_status = ExecutionStatus.FINISHED
         test_result.finished_at = datetime.datetime.now()
         test_result.output = test_execution_result.output
         test_result.status = test_execution_result.status
