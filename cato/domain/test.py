@@ -18,5 +18,7 @@ class Test:
             raise ValueError("Test name can not be empty!")
 
         for c in value:
-            if c in [' ', '/',",", ".", "\\", "\"", "'"]:
-                raise ValueError(f"Test name {value} contains not allowed character: {c}")
+            if c in [" ", "/", ",", ".", "\\", '"', "'"]:
+                raise ValueError(
+                    f"Test name {value} contains not allowed character: {c}"
+                )
