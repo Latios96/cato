@@ -2,6 +2,7 @@ import datetime
 import logging
 from typing import List
 
+from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
@@ -35,6 +36,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         logger.info("Reporting execution start to db..")
         project = self._project_repository.find_by_name(project_name)
+        if not project:
+            logger.info("No project with name %s exists, creating one..", project_name)
+            project = self._project_repository.save(Project(id=0, name=project_name))
+            logger.info("Created project %s", project)
         run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
         run = self._run_repository.save(run)
         self._run_id = run.id
