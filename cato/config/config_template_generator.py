@@ -4,7 +4,7 @@ from typing import IO
 TEMPLATE = {
     "suites": [
         {
-            "name": "My_first_test Suite",
+            "name": "My_first_test_Suite",
             "tests": [
                 {"name": "My_first_test", "command": "python --version"},
                 {

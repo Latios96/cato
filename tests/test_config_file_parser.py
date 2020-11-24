@@ -13,7 +13,7 @@ from cato.domain.test_suite import TestSuite
 VALID_CONFIG = {
     "suites": [
         {
-            "name": "My_first_test Suite",
+            "name": "My_first_test_Suite",
             "tests": [
                 {
                     "name": "My_first_test",
@@ -27,7 +27,7 @@ VALID_CONFIG = {
 VALID_CONFIG_WITH_VARIABLES = {
     "suites": [
         {
-            "name": "My_first_test Suite",
+            "name": "My_first_test_Suite",
             "tests": [
                 {
                     "name": "My_first_test",
@@ -42,7 +42,7 @@ VALID_CONFIG_WITH_VARIABLES = {
 VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
     "suites": [
         {
-            "name": "My_first_test Suite",
+            "name": "My_first_test_Suite",
             "tests": [
                 {
                     "name": "My_first_test",
@@ -58,7 +58,7 @@ VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
 
 INVALID_CONFIG = {
     "suite": {
-        "name": "My_first_test Suite",
+        "name": "My_first_test_Suite",
         "tests": [
             {
                 "name": "My_first_test",
@@ -80,7 +80,7 @@ def test_success():
         path="test",
         test_suites=[
             TestSuite(
-                name="My_first_test Suite",
+                name="My_first_test_Suite",
                 tests=[
                     Test(
                         name="My_first_test",
@@ -105,7 +105,7 @@ def test_success_with_variables():
         path="test",
         test_suites=[
             TestSuite(
-                name="My_first_test Suite",
+                name="My_first_test_Suite",
                 tests=[
                     Test(
                         name="My_first_test",
@@ -131,7 +131,7 @@ def test_success_with_variables_in_config_and_suite():
         path="test",
         test_suites=[
             TestSuite(
-                name="My_first_test Suite",
+                name="My_first_test_Suite",
                 tests=[
                     Test(
                         name="My_first_test",

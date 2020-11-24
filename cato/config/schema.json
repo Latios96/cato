@@ -9,7 +9,7 @@
     {
       "suites": [
         {
-          "name": "My_first_test Suite",
+          "name": "My_first_test_Suite",
           "tests": [
             {
               "name": "My_first_test",
@@ -33,7 +33,7 @@
       "examples": [
         [
           {
-            "name": "My_first_test Suite",
+            "name": "My_first_test_Suite",
             "tests": [
               {
                 "name": "My_first_test",
@@ -55,7 +55,7 @@
             "default": {},
             "examples": [
               {
-                "name": "My_first_test Suite",
+                "name": "My_first_test_Suite",
                 "tests": [
                   {
                     "name": "My_first_test",
@@ -76,7 +76,7 @@
                 "description": "An explanation about the purpose of this instance.",
                 "default": "",
                 "examples": [
-                  "My_first_test Suite"
+                  "My_first_test_Suite"
                 ]
               },
               "tests": {

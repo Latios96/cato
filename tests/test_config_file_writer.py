@@ -12,8 +12,8 @@ def test_write_and_read_back_is_equal():
     test1 = Test("test1", "command", {"key": "value"})
     test2 = Test("test2", "command", {})
     test3 = Test("test3", "command", {})
-    suite1 = TestSuite(name="my suite 1", tests=[test1])
-    suite2 = TestSuite(name="my suite 2", tests=[test2, test3])
+    suite1 = TestSuite(name="my_suite_1", tests=[test1])
+    suite2 = TestSuite(name="my_suite_2", tests=[test2, test3])
 
     suites = [suite1, suite2]
 

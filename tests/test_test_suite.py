@@ -12,8 +12,8 @@ from cato.domain.test_suite import (
 test1 = Test("test1", "command", {})
 test2 = Test("test2", "command", {})
 test3 = Test("test3", "command", {})
-suite1 = TestSuite(name="my suite 1", tests=[test1])
-suite2 = TestSuite(name="my suite 2", tests=[test2, test3])
+suite1 = TestSuite(name="my_suite_1", tests=[test1])
+suite2 = TestSuite(name="my_suite_2", tests=[test2, test3])
 
 suites = [suite1, suite2]
 
@@ -37,14 +37,14 @@ def test_count_tests():
 
 
 def test_filter_by_suite_name():
-    filter_result = filter_by_suite_name(suites, "my suite 1")
+    filter_result = filter_by_suite_name(suites, "my_suite_1")
 
     assert filter_result == [suite1]
 
 
 def test_filter_by_test_identifier():
     filter_result = filter_by_test_identifier(
-        suites, TestIdentifier.from_string("my suite 2/test2")
+        suites, TestIdentifier.from_string("my_suite_2/test2")
     )
 
-    assert filter_result == [TestSuite(name="my suite 2", tests=[test2])]
+    assert filter_result == [TestSuite(name="my_suite_2", tests=[test2])]

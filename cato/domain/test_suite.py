@@ -1,22 +1,27 @@
-from dataclasses import dataclass, field
 from typing import List, Iterable, Tuple, Dict
+
+import attr
 
 from cato.domain.test import Test
 from cato.domain.test_identifier import TestIdentifier
+from cato.domain.validation import validate_name
 
 
-@dataclass
+@attr.s
 class TestSuite:
-    name: str
-    tests: List[Test]
-    variables: Dict[str, str] = field(default_factory=dict)
+    name: str = attr.ib()
+    tests: List[Test] = attr.ib()
+    variables: Dict[str, str] = attr.ib(factory=dict)
 
     def to_dict(self):
         return {"name": self.name, "tests": [x.to_dict() for x in self.tests]}
 
+    @name.validator
+    def check(self, attribute, value):
+        validate_name(value)
 
 def iterate_suites_and_tests(
-    suites: List[TestSuite],
+        suites: List[TestSuite],
 ) -> Iterable[Tuple[TestSuite, Test]]:
     for suite in suites:
         for test in suite.tests:
@@ -36,7 +41,7 @@ def filter_by_suite_name(suites: List[TestSuite], name: str) -> List[TestSuite]:
 
 
 def filter_by_test_identifier(
-    suites: List[TestSuite], test_identifier: TestIdentifier
+        suites: List[TestSuite], test_identifier: TestIdentifier
 ) -> List[TestSuite]:
     for suite, test in iterate_suites_and_tests(suites):
         if suite.name != test_identifier.suite_name:
