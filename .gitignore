@@ -147,3 +147,4 @@ dmypy.json
 .idea/*
 .scannerwork/*
 sonarqube.bat
+alembic.ini
