@@ -19,6 +19,7 @@ class JsonConfigParser:
         validate(instance=data, schema=schema)
 
         return Config(
+            data["project_name"],
             os.path.dirname(path),
             self._transform_suites(data),
             output_folder=os.getcwd(),

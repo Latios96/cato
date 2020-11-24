@@ -80,6 +80,7 @@ def test_success():
     )
 
     assert suites == Config(
+        project_name="example project",
         path="test",
         test_suites=[
             TestSuite(
@@ -105,6 +106,7 @@ def test_success_with_variables():
     )
 
     assert suites == Config(
+        project_name="example project",
         path="test",
         test_suites=[
             TestSuite(
@@ -131,6 +133,7 @@ def test_success_with_variables_in_config_and_suite():
     )
 
     assert suites == Config(
+        project_name="example project",
         path="test",
         test_suites=[
             TestSuite(
