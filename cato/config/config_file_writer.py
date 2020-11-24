@@ -2,6 +2,8 @@ import dataclasses
 import json
 from typing import IO
 
+import attr
+
 from cato.domain.config import Config
 
 
@@ -9,6 +11,8 @@ class EnhancedJSONEncoder(json.JSONEncoder):
     def default(self, o):
         if dataclasses.is_dataclass(o):
             return dataclasses.asdict(o)
+        if attr.has(o):
+            return attr.asdict(o)
         return super().default(o)
 
 

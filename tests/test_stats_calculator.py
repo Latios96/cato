@@ -7,7 +7,7 @@ from cato.reporter.stats_calculator import StatsCalculator, Stats
 
 
 def test_calculates_succeded_correctly():
-    test = Test(name="my first test", command="dummy_command", variables={})
+    test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     execution_result = TestExecutionResult(
         test, TestStatus.SUCCESS, [], 1, "this is a message", ""
@@ -23,7 +23,7 @@ def test_calculates_succeded_correctly():
 
 
 def test_calculates_failed_correctly():
-    test = Test(name="my first test", command="dummy_command", variables={})
+    test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     execution_result1 = TestExecutionResult(
         test, TestStatus.SUCCESS, [], 1, "this is a message", ""

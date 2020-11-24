@@ -13,10 +13,10 @@ from cato.domain.test_suite import TestSuite
 VALID_CONFIG = {
     "suites": [
         {
-            "name": "My First Test Suite",
+            "name": "My_first_test Suite",
             "tests": [
                 {
-                    "name": "My First Test",
+                    "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                 }
             ],
@@ -27,10 +27,10 @@ VALID_CONFIG = {
 VALID_CONFIG_WITH_VARIABLES = {
     "suites": [
         {
-            "name": "My First Test Suite",
+            "name": "My_first_test Suite",
             "tests": [
                 {
-                    "name": "My First Test",
+                    "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                     "variables": {"frame": "7"},
                 }
@@ -42,10 +42,10 @@ VALID_CONFIG_WITH_VARIABLES = {
 VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
     "suites": [
         {
-            "name": "My First Test Suite",
+            "name": "My_first_test Suite",
             "tests": [
                 {
-                    "name": "My First Test",
+                    "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                     "variables": {"frame": "7"},
                 }
@@ -58,10 +58,10 @@ VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
 
 INVALID_CONFIG = {
     "suite": {
-        "name": "My First Test Suite",
+        "name": "My_first_test Suite",
         "tests": [
             {
-                "name": "My First Test",
+                "name": "My_first_test",
                 "cmd": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
             }
         ],
@@ -80,10 +80,10 @@ def test_success():
         path="test",
         test_suites=[
             TestSuite(
-                name="My First Test Suite",
+                name="My_first_test Suite",
                 tests=[
                     Test(
-                        name="My First Test",
+                        name="My_first_test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                         variables={},
                     )
@@ -105,10 +105,10 @@ def test_success_with_variables():
         path="test",
         test_suites=[
             TestSuite(
-                name="My First Test Suite",
+                name="My_first_test Suite",
                 tests=[
                     Test(
-                        name="My First Test",
+                        name="My_first_test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                         variables={"frame": "7"},
                     )
@@ -131,10 +131,10 @@ def test_success_with_variables_in_config_and_suite():
         path="test",
         test_suites=[
             TestSuite(
-                name="My First Test Suite",
+                name="My_first_test Suite",
                 tests=[
                     Test(
-                        name="My First Test",
+                        name="My_first_test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                         variables={"frame": "7"},
                     )

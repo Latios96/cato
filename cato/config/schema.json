@@ -9,10 +9,10 @@
     {
       "suites": [
         {
-          "name": "My First Test Suite",
+          "name": "My_first_test Suite",
           "tests": [
             {
-              "name": "My First Test",
+              "name": "My_first_test",
               "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
             }
           ]
@@ -33,10 +33,10 @@
       "examples": [
         [
           {
-            "name": "My First Test Suite",
+            "name": "My_first_test Suite",
             "tests": [
               {
-                "name": "My First Test",
+                "name": "My_first_test",
                 "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
               }
             ]
@@ -55,10 +55,10 @@
             "default": {},
             "examples": [
               {
-                "name": "My First Test Suite",
+                "name": "My_first_test Suite",
                 "tests": [
                   {
-                    "name": "My First Test",
+                    "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
                   }
                 ]
@@ -76,7 +76,7 @@
                 "description": "An explanation about the purpose of this instance.",
                 "default": "",
                 "examples": [
-                  "My First Test Suite"
+                  "My_first_test Suite"
                 ]
               },
               "tests": {
@@ -88,7 +88,7 @@
                 "examples": [
                   [
                     {
-                      "name": "My First Test",
+                      "name": "My_first_test",
                       "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
                     }
                   ]
@@ -105,7 +105,7 @@
                       "default": {},
                       "examples": [
                         {
-                          "name": "My First Test",
+                          "name": "My_first_test",
                           "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}"
                         }
                       ],
@@ -121,7 +121,7 @@
                           "description": "An explanation about the purpose of this instance.",
                           "default": "",
                           "examples": [
-                            "My First Test"
+                            "My_first_test"
                           ]
                         },
                         "command": {

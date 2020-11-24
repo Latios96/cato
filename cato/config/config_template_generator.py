@@ -4,9 +4,9 @@ from typing import IO
 TEMPLATE = {
     "suites": [
         {
-            "name": "My First Test Suite",
+            "name": "My_first_test Suite",
             "tests": [
-                {"name": "My First Test", "command": "python --version"},
+                {"name": "My_first_test", "command": "python --version"},
                 {
                     "name": "use {@test_resources} to get test resource folder",
                     "command": "python --version {@test_resources}",
