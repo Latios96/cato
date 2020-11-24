@@ -60,7 +60,7 @@ class HtmlReporter:
             if not os.path.exists(folder):
                 os.makedirs(folder)
 
-            return self._copy_or_convert(image_path, target_path)
+        return self._copy_or_convert(image_path, target_path)
 
     def _copy_or_convert(self, image_path, target_path):
         if os.path.splitext(image_path)[1].lower() in [".png", ".jpg", "jpeg"]:
