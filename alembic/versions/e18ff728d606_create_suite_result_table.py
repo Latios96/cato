@@ -19,7 +19,7 @@ def upgrade():
     op.create_table(
         "suite_result_entity",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("run_id", sa.INTEGER, sa.ForeignKey("run_entity.id")),
+        sa.Column("run_entity_id", sa.INTEGER, sa.ForeignKey("run_entity.id")),
         sa.Column("suite_name", sa.String(), nullable=False),
         sa.Column("suite_variables", sa.JSON(), nullable=False),
     )

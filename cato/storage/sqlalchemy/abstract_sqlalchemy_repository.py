@@ -16,9 +16,14 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
     def save(self, domain_object: T) -> T:
         session = self._session_maker()
 
+        is_insert = True if not domain_object.id else False
+
         project_mapping = self.to_entity(domain_object)
 
-        session.add(project_mapping)
+        if is_insert:
+            session.add(project_mapping)
+        else:
+            session.merge(project_mapping)
         session.flush()
 
         domain_object = self.to_domain_object(project_mapping)

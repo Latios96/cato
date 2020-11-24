@@ -12,7 +12,7 @@ class _RunMapping(Base):
     __tablename__ = "run_entity"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    project_id = Column(Integer, ForeignKey("project_entity.id"))
+    project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
     started_at = Column(DateTime)
 
 
@@ -20,13 +20,15 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
     def to_entity(self, domain_object: Run) -> _RunMapping:
         return _RunMapping(
             id=domain_object.id if domain_object.id else None,
-            project_id=domain_object.project_id,
+            project_entity_id=domain_object.project_id,
             started_at=domain_object.started_at,
         )
 
     def to_domain_object(self, entity: _RunMapping) -> Run:
         return Run(
-            id=entity.id, project_id=entity.project_id, started_at=entity.started_at
+            id=entity.id,
+            project_id=entity.project_entity_id,
+            started_at=entity.started_at,
         )
 
     def mapping_cls(self):

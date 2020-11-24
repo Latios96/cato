@@ -15,10 +15,10 @@ from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
 
 
 class _TestResultMapping(Base):
-    __tablename__ = "test_result"
+    __tablename__ = "test_result_entity"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    suite_result_id = Column(Integer, ForeignKey("suite_result.id"))
+    suite_result_entity_id = Column(Integer, ForeignKey("suite_result_entity.id"))
     test_name = Column(String, nullable=False)
     test_identifier = Column(String, nullable=False)
     test_command = Column(String, nullable=False)
@@ -39,14 +39,14 @@ class SqlAlchemyTestResultRepository(
 ):
     def to_entity(self, domain_object: TestResult) -> _TestResultMapping:
         return _TestResultMapping(
-            id=domain_object.id,
-            suite_result_id=domain_object.suite_result_id,
+            id=domain_object.id if domain_object.id else None,
+            suite_result_entity_id=domain_object.suite_result_id,
             test_name=domain_object.test_name,
             test_identifier=str(domain_object.test_identifier),
             test_command=domain_object.test_command,
             test_variables=domain_object.test_variables,
             execution_status=domain_object.execution_status,
-            status=domain_object.status.name,
+            status=domain_object.status.name if domain_object.status else None,
             output=domain_object.output,
             seconds=domain_object.seconds,
             message=domain_object.message,
@@ -59,15 +59,13 @@ class SqlAlchemyTestResultRepository(
     def to_domain_object(self, entity: _TestResultMapping) -> TestResult:
         return TestResult(
             id=entity.id,
-            suite_result_id=entity.suite_result_id,
+            suite_result_id=entity.suite_result_entity_id,
             test_name=entity.test_name,
             test_identifier=TestIdentifier.from_string(entity.test_identifier),
             test_command=entity.test_command,
             test_variables=entity.test_variables,
             execution_status=entity.execution_status,
-            status=TestStatus.SUCCESS
-            if entity.status == "SUCCESS"
-            else TestStatus.FAILED,
+            status=self._map_test_status(entity.status),
             output=entity.output,
             seconds=entity.seconds,
             message=entity.message,
@@ -76,6 +74,11 @@ class SqlAlchemyTestResultRepository(
             started_at=entity.started_at,
             finished_at=entity.finished_at,
         )
+
+    def _map_test_status(self, status):
+        if not status:
+            return None
+        return TestStatus.SUCCESS if status == "SUCCESS" else TestStatus.FAILED
 
     def mapping_cls(self):
         return _TestResultMapping

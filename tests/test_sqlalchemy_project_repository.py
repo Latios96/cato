@@ -25,7 +25,7 @@ def test_save_name_should_be_unique(sessionmaker_fixture):
     project = repository.save(project)
 
     with pytest.raises(IntegrityError):
-        project = repository.save(project)
+        project = repository.save(Project(id=0, name="test_name"))
 
 
 def test_find_by_name_should_find(sessionmaker_fixture):

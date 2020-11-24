@@ -4,7 +4,10 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato.domain.run import Run
-from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
+from cato.storage.sqlalchemy.sqlalchemy_run_repository import (
+    SqlAlchemyRunRepository,
+    _RunMapping,
+)
 
 
 def test_to_entity(sessionmaker_fixture):
@@ -15,14 +18,14 @@ def test_to_entity(sessionmaker_fixture):
     entity = repository.to_entity(run)
 
     assert entity.id == 1
-    assert entity.project_id == 2
+    assert entity.project_entity_id == 2
     assert entity.started_at == now
 
 
 def test_to_domain_object(sessionmaker_fixture):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     now = datetime.datetime.now()
-    run_entity = Run(id=1, project_id=2, started_at=now)
+    run_entity = _RunMapping(id=1, project_entity_id=2, started_at=now)
 
     run = repository.to_domain_object(run_entity)
 

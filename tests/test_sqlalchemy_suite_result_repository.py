@@ -21,7 +21,7 @@ def test_to_entity(sessionmaker_fixture, run):
     entity = repository.to_entity(suite_result)
 
     assert entity.id == 1
-    assert entity.run_id == run.id
+    assert entity.run_entity_id == run.id
     assert entity.suite_name == "my_suite"
     assert entity.suite_variables == {"key": "value"}
 
@@ -31,7 +31,10 @@ def test_to_domain_object(sessionmaker_fixture, run):
 
     suite_result = repository.to_domain_object(
         _SuiteResultMapping(
-            id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+            id=1,
+            run_entity_id=run.id,
+            suite_name="my_suite",
+            suite_variables={"key": "value"},
         )
     )
 
