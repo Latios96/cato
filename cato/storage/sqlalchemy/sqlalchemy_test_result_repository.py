@@ -30,8 +30,8 @@ class _TestResultMapping(Base):
     output = Column(JSON, nullable=False)
     seconds = Column(Float, nullable=False)
     message = Column(String, nullable=True)
-    image_output = Column(String, nullable=True)
-    reference_image = Column(String, nullable=True)
+    image_output = Column(Integer, nullable=True)
+    reference_image = Column(Integer, nullable=True)
     started_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
 
