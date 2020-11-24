@@ -1,4 +1,5 @@
 import datetime
+import logging
 from typing import List
 
 from cato.domain.run import Run
@@ -13,6 +14,8 @@ from cato.storage.abstract.run_repository import RunRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
+
+logger = logging.getLogger(__name__)
 
 
 class TestExecutionDbReporter(TestExecutionReporter):
@@ -30,6 +33,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._run_id = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
+        logger.info("Reporting execution start to db..")
         project = self._project_repository.find_by_name(project_name)
         run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
         run = self._run_repository.save(run)
@@ -53,21 +57,26 @@ class TestExecutionDbReporter(TestExecutionReporter):
                     test_variables=test.variables,
                     test_command=test.command,
                 )
+                logger.info(
+                    f"Reporting execution of test {test_suite.name}/{test.test_name}.."
+                )
                 self._test_result_repository.save(test)
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         suite_result = self._suite_result_repository.find_by_run_id_and_name(
             self._run_id, current_suite.name
         )
+        test_identifier = TestIdentifier(current_suite.name, test.name)
         test_result = (
             self._test_result_repository.find_by_suite_result_and_test_identifier(
-                suite_result.id, TestIdentifier(current_suite.name, test.name)
+                suite_result.id, test_identifier
             )
         )
 
         test_result.execution_status = "RUNNING"
         test_result.started_at = datetime.datetime.now()
 
+        logger.info(f"Reporting execution start of test {test_identifier}..")
         self._test_result_repository.save(test_result)
 
     def report_test_result(
@@ -76,10 +85,13 @@ class TestExecutionDbReporter(TestExecutionReporter):
         suite_result = self._suite_result_repository.find_by_run_id_and_name(
             self._run_id, current_suite.name
         )
+        test_identifier = TestIdentifier(
+            current_suite.name, test_execution_result.test.name
+        )
         test_result = (
             self._test_result_repository.find_by_suite_result_and_test_identifier(
                 suite_result.id,
-                TestIdentifier(current_suite.name, test_execution_result.test.name),
+                test_identifier,
             )
         )
 
@@ -90,4 +102,5 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.seconds = test_execution_result.seconds
         test_result.message = test_execution_result.message
 
+        logger.info(f"Reporting test result of test {test_identifier}..")
         self._test_result_repository.save(test_result)
