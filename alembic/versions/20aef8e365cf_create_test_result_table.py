@@ -9,14 +9,16 @@ from alembic import op
 import sqlalchemy as sa
 
 # revision identifiers, used by Alembic.
-revision = '20aef8e365cf'
-down_revision = 'e18ff728d606'
+revision = "20aef8e365cf"
+down_revision = "e18ff728d606"
 branch_labels = None
 depends_on = None
 op.create_table(
     "test_result_entity",
     sa.Column("id", sa.Integer, primary_key=True),
-    sa.Column("suite_result_entity_id", sa.Integer, sa.ForeignKey("suite_result_entity.id")),
+    sa.Column(
+        "suite_result_entity_id", sa.Integer, sa.ForeignKey("suite_result_entity.id")
+    ),
     sa.Column("test_name", sa.String(), nullable=False),
     sa.Column("test_command", sa.String(), nullable=False),
     sa.Column("test_variables", sa.JSON(), nullable=False),
