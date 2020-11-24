@@ -1,4 +1,7 @@
+from typing import Optional
+
 from sqlalchemy import Column, Integer, ForeignKey, String, JSON
+from sqlalchemy.orm import relationship
 
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.suite_result import SuiteResult
@@ -15,6 +18,8 @@ class _SuiteResultMapping(Base):
     run_entity_id = Column(Integer, ForeignKey("run_entity.id"))
     suite_name = Column(String, nullable=False)
     suite_variables = Column(JSON, nullable=False)
+
+    test_results = relationship("_TestResultMapping", backref="suite_result")
 
 
 class SqlAlchemySuiteResultRepository(
@@ -38,3 +43,15 @@ class SqlAlchemySuiteResultRepository(
 
     def mapping_cls(self):
         return _SuiteResultMapping
+
+    def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
+        session = self._session_maker()
+
+        entity = (
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().run_entity_id == run_id)
+            .filter(self.mapping_cls().suite_name == name)
+            .first()
+        )
+        if entity:
+            return self.to_domain_object(entity)

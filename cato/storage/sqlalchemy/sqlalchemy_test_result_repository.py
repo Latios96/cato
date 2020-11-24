@@ -1,11 +1,12 @@
 from typing import Optional
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
+from sqlalchemy.orm import relationship
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
 from cato.storage.abstract.abstract_test_result_repository import (
-    AbstractTestResultRepository,
+    TestResultRepository,
 )
 from cato.storage.domain.test_result import TestResult
 from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
@@ -35,7 +36,7 @@ class _TestResultMapping(Base):
 
 
 class SqlAlchemyTestResultRepository(
-    AbstractSqlAlchemyRepository, AbstractTestResultRepository
+    AbstractSqlAlchemyRepository, TestResultRepository
 ):
     def to_entity(self, domain_object: TestResult) -> _TestResultMapping:
         return _TestResultMapping(
@@ -83,13 +84,14 @@ class SqlAlchemyTestResultRepository(
     def mapping_cls(self):
         return _TestResultMapping
 
-    def find_by_test_identifier(
-        self, test_identifier: TestIdentifier
+    def find_by_suite_result_and_test_identifier(
+        self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         session = self._session_maker()
 
         entity = (
             session.query(self.mapping_cls())
+            .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
             .filter(self.mapping_cls().test_identifier == str(test_identifier))
             .first()
         )

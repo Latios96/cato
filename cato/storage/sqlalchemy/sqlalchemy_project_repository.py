@@ -2,6 +2,7 @@ from typing import Optional
 
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
 
 from cato.domain.project import Project
 from cato.storage.abstract.project_repository import ProjectRepository
@@ -16,6 +17,8 @@ class _ProjectMapping(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, unique=True)
+
+    runs = relationship("_RunMapping", backref="project")
 
 
 class SqlAlchemyProjectRepository(AbstractSqlAlchemyRepository, ProjectRepository):

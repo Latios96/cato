@@ -9,4 +9,7 @@ class SuiteResultRepository(AbstractRepository):
         raise NotImplementedError()
 
     def find_by_id(self, id: int) -> Optional[SuiteResult]:
-        pass
+        raise NotImplementedError()
+
+    def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
+        raise NotImplementedError()

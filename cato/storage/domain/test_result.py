@@ -16,7 +16,7 @@ class TestResult:
     test_identifier: TestIdentifier = attr.ib()
     test_command: str = attr.ib()
     test_variables: Dict[str, str] = attr.ib()
-    execution_status: str = attr.ib(default="NOT_STARTED")
+    execution_status: str = attr.ib(default="NOT_STARTED")  # todo use enum
     status: TestStatus = attr.ib(default=None)
     output: List[str] = attr.ib(factory=list)
     seconds: float = attr.ib(default=0)

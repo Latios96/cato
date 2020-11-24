@@ -1,4 +1,5 @@
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy.orm import relationship
 
 from cato.domain.run import Run
 from cato.storage.abstract.run_repository import RunRepository
@@ -14,6 +15,8 @@ class _RunMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
     started_at = Column(DateTime)
+
+    suite_results = relationship("_SuiteResultMapping", backref="run")
 
 
 class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
