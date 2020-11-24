@@ -20,8 +20,9 @@ class TestSuite:
     def check(self, attribute, value):
         validate_name(value)
 
+
 def iterate_suites_and_tests(
-        suites: List[TestSuite],
+    suites: List[TestSuite],
 ) -> Iterable[Tuple[TestSuite, Test]]:
     for suite in suites:
         for test in suite.tests:
@@ -41,7 +42,7 @@ def filter_by_suite_name(suites: List[TestSuite], name: str) -> List[TestSuite]:
 
 
 def filter_by_test_identifier(
-        suites: List[TestSuite], test_identifier: TestIdentifier
+    suites: List[TestSuite], test_identifier: TestIdentifier
 ) -> List[TestSuite]:
     for suite, test in iterate_suites_and_tests(suites):
         if suite.name != test_identifier.suite_name:

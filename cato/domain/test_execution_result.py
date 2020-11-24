@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass
 from typing import List
 
@@ -13,6 +14,8 @@ class TestExecutionResult:
     seconds: float
     message: str
     image_output: str
+    started_at: datetime.datetime
+    finished_at: datetime.datetime
 
     def to_dict(self):
         return {

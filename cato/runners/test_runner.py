@@ -1,15 +1,16 @@
+import datetime
+
 import emoji
-from contexttimer import Timer
 
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_result import TestStatus
 from cato.domain.test_suite import TestSuite
+from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
-from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 
@@ -39,18 +40,24 @@ class TestRunner:
 
         self._output_folder.create_folder(config.output_folder, current_suite, test)
 
-        with Timer() as t:
-            self._reporter.report_message('Command: "{}"'.format(command))
-            command_result = self._command_runner.run(command)
+        start = datetime.datetime.now()
+
+        self._reporter.report_message('Command: "{}"'.format(command))
+        command_result = self._command_runner.run(command)
+
+        end = datetime.datetime.now()
+        elapsed = (end - start).total_seconds()
 
         if command_result.exit_code != 0:
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
                 command_result.output,
-                t.elapsed,
+                elapsed,
                 f"Command exited with exit code {command_result.exit_code}",
                 "",
+                start,
+                end,
             )
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
@@ -64,7 +71,14 @@ class TestRunner:
             )
             self._reporter.report_message(message)
             return TestExecutionResult(
-                test, TestStatus.FAILED, command_result.output, t.elapsed, message, ""
+                test,
+                TestStatus.FAILED,
+                command_result.output,
+                elapsed,
+                message,
+                "",
+                start,
+                end,
             )
 
         reference_image = self._output_folder.any_existing(
@@ -77,9 +91,11 @@ class TestRunner:
                 test,
                 TestStatus.FAILED,
                 command_result.output,
-                t.elapsed,
+                elapsed,
                 f"Reference image {reference_image if reference_image else '<not found>'} does not exist!",
                 image_output,
+                start,
+                end,
             )
 
         image_compare_result = self._image_comparator.compare(
@@ -90,18 +106,22 @@ class TestRunner:
                 test,
                 TestStatus.FAILED,
                 command_result.output,
-                t.elapsed,
+                elapsed,
                 "Images are not equal!",
                 image_output,
+                start,
+                end,
             )
 
         return TestExecutionResult(
             test,
             TestStatus.SUCCESS,
             command_result.output,
-            t.elapsed,
+            elapsed,
             message="",
             image_output=image_output,
+            started_at=start,
+            finished_at=end,
         )
 
     def _image_output_exists(self, variables):

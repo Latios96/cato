@@ -1,3 +1,5 @@
+import datetime
+
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_result import TestStatus
@@ -17,10 +19,24 @@ def test_generate():
                 TestSuite(name="test_suite", tests=[test, test2]),
                 test_results=[
                     TestExecutionResult(
-                        test, TestStatus.SUCCESS, [], 50, "this is a message", ""
+                        test,
+                        TestStatus.SUCCESS,
+                        [],
+                        50,
+                        "this is a message",
+                        "",
+                        datetime.datetime.now(),
+                        datetime.datetime.now(),
                     ),
                     TestExecutionResult(
-                        test2, TestStatus.SUCCESS, [], 500, "this is a message", ""
+                        test2,
+                        TestStatus.SUCCESS,
+                        [],
+                        500,
+                        "this is a message",
+                        "",
+                        datetime.datetime.now(),
+                        datetime.datetime.now(),
                     ),
                 ],
                 result=TestStatus.SUCCESS,

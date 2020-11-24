@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 
 from cato.domain.config import Config
@@ -45,7 +47,14 @@ def test_run_suite_should_return_correctly_collected_results():
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(path="", test_suites=[test_suite], output_folder="output")
     execution_result = TestExecutionResult(
-        test, TestStatus.SUCCESS, [], 1, "this is a message", ""
+        test,
+        TestStatus.SUCCESS,
+        [],
+        1,
+        "this is a message",
+        "",
+        datetime.datetime.now(),
+        datetime.datetime.now(),
     )
     mock_test_runner.run_test.return_value = execution_result
 
