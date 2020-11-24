@@ -1,21 +1,11 @@
 import pytest
-from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import sessionmaker
 
 from cato.domain.project import Project
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
-    Base,
     SqlAlchemyProjectRepository,
     _ProjectMapping,
 )
-
-
-@pytest.fixture
-def sessionmaker_fixture():
-    engine = create_engine("sqlite:///:memory:", echo=True)
-    Base.metadata.create_all(engine)
-    return sessionmaker(bind=engine)
 
 
 def test_save(sessionmaker_fixture):
@@ -81,7 +71,7 @@ def test_to_entity(sessionmaker_fixture):
     assert entity.name == "test"
 
 
-def test_to_domain_object():
+def test_to_domain_object(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
 
     entity = _ProjectMapping(id=1, name="test")
