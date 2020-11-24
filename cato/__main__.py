@@ -47,7 +47,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
         bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
         bind("file_storage", to_class=SqlAlchemySimpleFileStorage)
-        bind("root_path", to_instance=r"M:/test/cato-file-storage")
+        bind("root_path", to_instance=config.get_file_storage_path())
         bind("session_maker", to_instance=config.get_session_maker())
 
 
