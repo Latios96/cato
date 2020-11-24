@@ -8,7 +8,7 @@ from cato.domain.test_result import TestStatus
 @dataclass
 class TestExecutionResult:
     test: Test
-    status: TestStatus  # todo rename to status
+    status: TestStatus
     output: List[str]
     seconds: float
     message: str
