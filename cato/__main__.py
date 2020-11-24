@@ -16,12 +16,36 @@ from cato.domain.test_suite import (
 )
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
+from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImages
+from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
+from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
+    SqlAlchemyProjectRepository,
+)
+from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
+from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+    SqlAlchemySuiteResultRepository,
+)
+from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+    SqlAlchemyTestResultRepository,
+)
 
 PATH_TO_CONFIG_FILE = "Path to config file"
+
+config = SqlAlchemyConfig()
+
+
+class TestExecutionReporterBindings(pinject.BindingSpec):
+    def configure(self, bind):
+        bind("test_execution_reporter", to_class=TestExecutionDbReporter)
+        bind("project_repository", to_class=SqlAlchemyProjectRepository)
+        bind("run_repository", to_class=SqlAlchemyRunRepository)
+        bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
+        bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
+        bind("session_maker", to_instance=config.get_session_maker())
 
 
 def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: bool):
@@ -30,7 +54,9 @@ def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: 
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
-    obj_graph = pinject.new_object_graph()
+    obj_graph = pinject.new_object_graph(
+        binding_specs=[TestExecutionReporterBindings()]
+    )
     test_suite_runner = obj_graph.provide(TestSuiteRunner)
 
     if suite_name:
