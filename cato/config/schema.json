@@ -21,7 +21,7 @@
     }
   ],
   "required": [
-    "suites"
+    "suites","project_name"
   ],
   "properties": {
     "suites": {
@@ -180,6 +180,16 @@
         {
           "frame": "7"
         }
+      ]
+    },
+    "project_name": {
+      "$id": "#/properties/suites/items/anyOf/0/properties/name",
+      "type": "string",
+      "title": "The Project name",
+      "description": "An explanation about the purpose of this instance.",
+      "default": "",
+      "examples": [
+        "My_first_test_Suite"
       ]
     }
   },

@@ -11,6 +11,7 @@ from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
 VALID_CONFIG = {
+    "project_name": "example project",
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -21,10 +22,11 @@ VALID_CONFIG = {
                 }
             ],
         }
-    ]
+    ],
 }
 
 VALID_CONFIG_WITH_VARIABLES = {
+"project_name": "example project",
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -40,6 +42,7 @@ VALID_CONFIG_WITH_VARIABLES = {
 }
 
 VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
+"project_name": "example project",
     "suites": [
         {
             "name": "My_first_test_Suite",
