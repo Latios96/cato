@@ -26,6 +26,7 @@ from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
+from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import SqlAlchemySimpleFileStorage
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
@@ -45,6 +46,8 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("run_repository", to_class=SqlAlchemyRunRepository)
         bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
         bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
+        bind("file_storage", to_class=SqlAlchemySimpleFileStorage)
+        bind("root_path", to_instance=r"M:/test/cato-file-storage")
         bind("session_maker", to_instance=config.get_session_maker())
 
 
