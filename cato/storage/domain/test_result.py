@@ -4,6 +4,7 @@ from typing import Dict, List
 
 import attr
 
+from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
 from cato.storage.domain.execution_status import ExecutionStatus
@@ -17,6 +18,7 @@ class TestResult:
     test_identifier: TestIdentifier = attr.ib()
     test_command: str = attr.ib()
     test_variables: Dict[str, str] = attr.ib()
+    machine_info: MachineInfo = attr.ib()
     execution_status: ExecutionStatus = attr.ib(default=ExecutionStatus.NOT_STARTED)
     status: TestStatus = attr.ib(default=None)
     output: List[str] = attr.ib(factory=list)

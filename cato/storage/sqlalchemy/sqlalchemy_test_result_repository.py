@@ -1,8 +1,11 @@
+import dataclasses
 from typing import Optional
 
+import attr
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
 from sqlalchemy.orm import relationship
 
+from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
 from cato.storage.abstract.abstract_test_result_repository import (
@@ -25,6 +28,7 @@ class _TestResultMapping(Base):
     test_identifier = Column(String, nullable=False)
     test_command = Column(String, nullable=False)
     test_variables = Column(JSON, nullable=False)
+    machine_info = Column(JSON, nullable=False)
     execution_status = Column(String, nullable=True)
     status = Column(String, nullable=True)
     output = Column(JSON, nullable=False)
@@ -47,6 +51,7 @@ class SqlAlchemyTestResultRepository(
             test_identifier=str(domain_object.test_identifier),
             test_command=domain_object.test_command,
             test_variables=domain_object.test_variables,
+            machine_info=dataclasses.asdict(domain_object.machine_info),
             execution_status=domain_object.execution_status.name
             if domain_object.execution_status
             else None,
@@ -68,6 +73,7 @@ class SqlAlchemyTestResultRepository(
             test_identifier=TestIdentifier.from_string(entity.test_identifier),
             test_command=entity.test_command,
             test_variables=entity.test_variables,
+            machine_info=MachineInfo(**entity.machine_info) if entity.machine_info else None,
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
             output=entity.output,
@@ -97,15 +103,16 @@ class SqlAlchemyTestResultRepository(
         return _TestResultMapping
 
     def find_by_suite_result_and_test_identifier(
-        self, suite_result_id: int, test_identifier: TestIdentifier
+            self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         session = self._session_maker()
 
         entity = (
             session.query(self.mapping_cls())
-            .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
-            .filter(self.mapping_cls().test_identifier == str(test_identifier))
-            .first()
+                .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
+                .filter(self.mapping_cls().test_identifier == str(test_identifier))
+                .first()
         )
         if entity:
             return self.to_domain_object(entity)
+

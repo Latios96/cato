@@ -3,6 +3,7 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
 from cato.storage.domain.execution_status import ExecutionStatus
@@ -23,13 +24,14 @@ def test_save_success(sessionmaker_fixture, suite_result):
         test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
         test_command="my_command",
         test_variables={"testkey": "test_value"},
+        machine_info=MachineInfo(cpu_name='cpu', cores=56,memory=8),
         execution_status=ExecutionStatus.NOT_STARTED,
         status=TestStatus.SUCCESS,
         output=["1", "2", "3"],
         seconds=5,
         message="sucess",
-        image_output="image_output",
-        reference_image="reference_image",
+        image_output=6,
+        reference_image=7,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -52,13 +54,14 @@ def test_save_no_suite_result(sessionmaker_fixture):
         test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
         test_command="my_command",
         test_variables={"testkey": "test_value"},
+        machine_info=MachineInfo(cpu_name='cpu', cores=56, memory=8),
         execution_status=ExecutionStatus.NOT_STARTED,
         status=TestStatus.SUCCESS,
         output=["1", "2", "3"],
         seconds=5,
         message="sucess",
-        image_output="image_output",
-        reference_image="reference_image",
+        image_output=3,
+        reference_image=4,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -77,13 +80,14 @@ def test_find_by_suite_result_and_test_identifier(sessionmaker_fixture, suite_re
         test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
         test_command="my_command",
         test_variables={"testkey": "test_value"},
+        machine_info=MachineInfo(cpu_name='cpu', cores=56, memory=8),
         execution_status=ExecutionStatus.NOT_STARTED,
         status=TestStatus.SUCCESS,
         output=["1", "2", "3"],
         seconds=5,
         message="sucess",
-        image_output="image_output",
-        reference_image="reference_image",
+        image_output=1,
+        reference_image=3,
         started_at=start_time,
         finished_at=end_time,
     )
