@@ -1,6 +1,6 @@
 import datetime
 import logging
-from typing import List
+from typing import List, Optional
 
 from cato.domain.project import Project
 from cato.domain.run import Run
@@ -35,7 +35,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._run_repository = run_repository
         self._project_repository = project_repository
         self._file_storage = file_storage
-        self._run_id = None
+        self._run_id: Optional[int] = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         logger.info("Reporting execution start to db..")
@@ -58,7 +58,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             suite_result = self._suite_result_repository.save(suite_result)
 
             for test in test_suite.tests:
-                test = TestResult(
+                test_result = TestResult(
                     id=0,
                     suite_result_id=suite_result.id,
                     test_name=test.name,
@@ -67,9 +67,9 @@ class TestExecutionDbReporter(TestExecutionReporter):
                     test_command=test.command,
                 )
                 logger.info(
-                    f"Reporting execution of test {test_suite.name}/{test.test_name}.."
+                    f"Reporting execution of test {test_suite.name}/{test_result.test_name}.."
                 )
-                self._test_result_repository.save(test)
+                self._test_result_repository.save(test_result)
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         suite_result = self._suite_result_repository.find_by_run_id_and_name(
@@ -112,17 +112,17 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.message = test_execution_result.message
 
         if test_execution_result.image_output:
-            test_result.image_output = self._copy_to_storage(test_execution_result.image_output)
+            test_result.image_output = self._copy_to_storage(
+                test_execution_result.image_output
+            )
         if test_execution_result.reference_image:
-            test_result.reference_image = self._copy_to_storage(test_execution_result.reference_image)
+            test_result.reference_image = self._copy_to_storage(
+                test_execution_result.reference_image
+            )
 
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._test_result_repository.save(test_result)
 
-    def _copy_to_storage(self, image_path: str)-> int:
-        logger.info(
-            "Copy image %s to file storage..", image_path
-        )
-        return self._file_storage.save_file(
-            image_path
-        ).id
+    def _copy_to_storage(self, image_path: str) -> int:
+        logger.info("Copy image %s to file storage..", image_path)
+        return self._file_storage.save_file(image_path).id
