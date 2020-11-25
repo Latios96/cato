@@ -55,7 +55,8 @@ class TestRunner:
                 command_result.output,
                 elapsed,
                 f"Command exited with exit code {command_result.exit_code}",
-                "",
+                None,
+                None,
                 start,
                 end,
             )
@@ -76,7 +77,8 @@ class TestRunner:
                 command_result.output,
                 elapsed,
                 message,
-                "",
+                None,
+                None,
                 start,
                 end,
             )
@@ -94,6 +96,7 @@ class TestRunner:
                 elapsed,
                 f"Reference image {reference_image if reference_image else '<not found>'} does not exist!",
                 image_output,
+                None,
                 start,
                 end,
             )
@@ -109,6 +112,7 @@ class TestRunner:
                 elapsed,
                 "Images are not equal!",
                 image_output,
+                reference_image,
                 start,
                 end,
             )
@@ -120,6 +124,7 @@ class TestRunner:
             elapsed,
             message="",
             image_output=image_output,
+            reference_image=reference_image,
             started_at=start,
             finished_at=end,
         )

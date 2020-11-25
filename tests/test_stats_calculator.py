@@ -17,7 +17,8 @@ def test_calculates_succeded_correctly():
         [],
         1,
         "this is a message",
-        "",
+        None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )
@@ -40,7 +41,8 @@ def test_calculates_failed_correctly():
         [],
         1,
         "this is a message",
-        "",
+        None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )
@@ -50,7 +52,8 @@ def test_calculates_failed_correctly():
         [],
         1,
         "this is a message",
-        "",
+        None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )

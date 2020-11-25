@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass
-from typing import List
+from typing import List, Optional
 
 from cato.domain.test import Test
 from cato.domain.test_result import TestStatus
@@ -13,7 +13,8 @@ class TestExecutionResult:
     output: List[str]
     seconds: float
     message: str
-    image_output: str
+    image_output: Optional[str]
+    reference_image: Optional[str]
     started_at: datetime.datetime
     finished_at: datetime.datetime
 
