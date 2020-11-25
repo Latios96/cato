@@ -21,16 +21,18 @@ class UpdateMissingReferenceImages:
                 variables["image_output_exr"],
                 variables["image_output_png"],
             ]
-            if variables.get("image_output"):
-                image_outputs.append(variables.get("image_output"))
+            image_output = variables.get("image_output")
+            if image_output:
+                image_outputs.append(image_output)
             image_output = self._output_folder.any_existing(image_outputs)
 
             reference_images = [
                 variables["reference_image_exr"],
                 variables["reference_image_png"],
             ]
-            if variables.get("reference_image"):
-                reference_images.append(variables.get("reference_image"))
+            reference_image = variables.get("reference_image")
+            if reference_image:
+                reference_images.append(reference_image)
             reference_image = self._output_folder.any_existing(reference_images)
 
             if image_output and not reference_image:

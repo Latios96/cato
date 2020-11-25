@@ -9,6 +9,10 @@ E = TypeVar("E")
 Base = declarative_base()
 
 
+class BaseEntity:
+    id: int
+
+
 class AbstractSqlAlchemyRepository(Generic[T, E, K]):
     def __init__(self, session_maker):
         self._session_maker = session_maker

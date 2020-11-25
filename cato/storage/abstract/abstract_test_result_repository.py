@@ -14,5 +14,5 @@ class TestResultRepository(AbstractRepository):
 
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
-    ):
+    ) -> Optional[TestResult]:
         raise NotImplementedError()

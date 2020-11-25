@@ -103,6 +103,12 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 test_identifier,
             )
         )
+        if not test_result:
+            logger.error(
+                "Did not found a TestResult for suite with id %s and TestIdentifier %s",
+                suite_result.id,
+                test_identifier,
+            )
 
         test_result.execution_status = ExecutionStatus.FINISHED
         test_result.finished_at = datetime.datetime.now()
