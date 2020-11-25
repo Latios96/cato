@@ -17,6 +17,7 @@ from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
+from cato.utils.machine_info_collector import MachineInfoCollector
 
 logger = logging.getLogger(__name__)
 
@@ -29,12 +30,14 @@ class TestExecutionDbReporter(TestExecutionReporter):
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
         file_storage: AbstractFileStorage,
+        machine_info_collector: MachineInfoCollector,
     ):
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
         self._run_repository = run_repository
         self._project_repository = project_repository
         self._file_storage = file_storage
+        self._machine_info_collector = machine_info_collector
         self._run_id: Optional[int] = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
@@ -47,6 +50,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
         run = self._run_repository.save(run)
         self._run_id = run.id
+        machine_info = self._machine_info_collector.collect()
 
         for test_suite in test_suites:
             suite_result = SuiteResult(
@@ -65,6 +69,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
                     test_identifier=TestIdentifier(test_suite.name, test.name),
                     test_variables=test.variables,
                     test_command=test.command,
+                    machine_info=machine_info,
                 )
                 logger.info(
                     f"Reporting execution of test {test_suite.name}/{test_result.test_name}.."

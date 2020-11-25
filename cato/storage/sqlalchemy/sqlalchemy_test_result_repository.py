@@ -73,7 +73,9 @@ class SqlAlchemyTestResultRepository(
             test_identifier=TestIdentifier.from_string(entity.test_identifier),
             test_command=entity.test_command,
             test_variables=entity.test_variables,
-            machine_info=MachineInfo(**entity.machine_info) if entity.machine_info else None,
+            machine_info=MachineInfo(**entity.machine_info)
+            if entity.machine_info
+            else None,
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
             output=entity.output,
@@ -103,16 +105,15 @@ class SqlAlchemyTestResultRepository(
         return _TestResultMapping
 
     def find_by_suite_result_and_test_identifier(
-            self, suite_result_id: int, test_identifier: TestIdentifier
+        self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         session = self._session_maker()
 
         entity = (
             session.query(self.mapping_cls())
-                .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
-                .filter(self.mapping_cls().test_identifier == str(test_identifier))
-                .first()
+            .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
+            .filter(self.mapping_cls().test_identifier == str(test_identifier))
+            .first()
         )
         if entity:
             return self.to_domain_object(entity)
-
