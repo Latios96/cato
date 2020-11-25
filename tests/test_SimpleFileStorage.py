@@ -14,7 +14,7 @@ def test_save_file(sessionmaker_fixture, tmp_path):
 
     assert f.id == 1
     assert f.name == "test_image_white.png"
-    assert f.md5_hash
+    assert f.hash
 
 
 def test_save_files(sessionmaker_fixture, tmp_path):
@@ -40,7 +40,7 @@ def test_save_stream(sessionmaker_fixture, tmp_path):
 
     assert f.id == 1
     assert f.name == "test_image_white.png"
-    assert f.md5_hash
+    assert f.hash
 
 
 def test_get_stream(sessionmaker_fixture, tmp_path):

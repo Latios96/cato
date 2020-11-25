@@ -9,8 +9,6 @@ from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.domain.File import File
 from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
-    E,
-    T,
     Base,
 )
 
@@ -20,7 +18,7 @@ class _FileMapping(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String)
-    md5_hash = Column(String)
+    hash = Column(String)
 
 
 class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStorage):
@@ -60,7 +58,7 @@ class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStor
     def _create_file_obj_for_stream(self, name: str, stream: IO) -> File:
         bytes = stream.read()
         file_hash = hashlib.sha3_256(bytes).hexdigest()
-        return File(id=0, name=name, file_hash=str(file_hash))
+        return File(id=0, name=name, hash=str(file_hash))
 
     def _create_file_obj_for_path(self, path: str) -> File:
         with open(path, "rb") as f:
@@ -70,11 +68,11 @@ class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStor
         return _FileMapping(
             id=domain_object.id if domain_object.id else None,
             name=domain_object.name,
-            md5_hash=domain_object.md5_hash,
+            hash=domain_object.hash,
         )
 
     def to_domain_object(self, entity: _FileMapping) -> File:
-        return File(id=entity.id, name=entity.name, md5_hash=entity.md5_hash)
+        return File(id=entity.id, name=entity.name, hash=entity.hash)
 
     def mapping_cls(self):
         return _FileMapping
