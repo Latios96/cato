@@ -22,6 +22,7 @@ from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImages
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
+from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import SqlAlchemyDeduplicatingFileStorage
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
@@ -46,7 +47,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("run_repository", to_class=SqlAlchemyRunRepository)
         bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
         bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
-        bind("file_storage", to_class=SqlAlchemySimpleFileStorage)
+        bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
         bind("root_path", to_instance=config.get_file_storage_path())
         bind("session_maker", to_instance=config.get_session_maker())
 

@@ -31,16 +31,18 @@ class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStor
     def save_file(self, path: str) -> File:
         file = self._create_file_obj_for_path(path)
         file = self.save(file)
-        shutil.copy(path, self.get_path(file))
+        if self._needs_write(file):
+            shutil.copy(path, self.get_path(file))
         return file
 
     def save_stream(self, name: str, stream: IO) -> File:
         file = self._create_file_obj_for_stream(name, stream)
         file = self.save(file)
-        target_stream = self.get_write_stream(file)
-        for line in stream:
-            target_stream.write(line)
-        target_stream.close()
+        if self._needs_write(file):
+            target_stream = self.get_write_stream(file)
+            for line in stream:
+                target_stream.write(line)
+            target_stream.close()
         return file
 
     def get_write_stream(self, file: File) -> IO:
@@ -56,9 +58,9 @@ class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStor
         return target_path
 
     def _create_file_obj_for_stream(self, name: str, stream: IO) -> File:
-        bytes = stream.read()  # read file as bytes
-        md5_hash = hashlib.md5(bytes).hexdigest()
-        return File(id=0, name=name, md5_hash=str(md5_hash))
+        bytes = stream.read()
+        file_hash = hashlib.sha3_256(bytes).hexdigest()
+        return File(id=0, name=name, file_hash=str(file_hash))
 
     def _create_file_obj_for_path(self, path: str) -> File:
         with open(path, "rb") as f:
@@ -76,3 +78,6 @@ class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStor
 
     def mapping_cls(self):
         return _FileMapping
+
+    def _needs_write(self, file):
+        return True
