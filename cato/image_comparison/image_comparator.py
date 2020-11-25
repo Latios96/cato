@@ -23,7 +23,7 @@ class ImageComparator:
     def compare(self, left: str, right: str):
         left_input = ImageBuf(left)
         right_input = ImageBuf(right)
-        result = ImageBufAlgo.compare(left_input, right_input, 0.5, 0)
+        result = ImageBufAlgo.compare(left_input, right_input, 0.2, 0)
 
         return CompareResults(
             meanerror=result.meanerror,
