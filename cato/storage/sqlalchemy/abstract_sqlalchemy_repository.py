@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional
+from typing import TypeVar, Generic, Optional, Iterable
 
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -47,6 +47,12 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         )
         if entity:
             return self.to_domain_object(entity)
+
+    def find_all(self) -> Iterable[T]:
+        session = self._session_maker()
+        results = session.query(self.mapping_cls()).all()
+
+        return [self.to_domain_object(x) for x in results]
 
     def to_entity(self, domain_object: T) -> E:
         raise NotImplementedError()

@@ -107,6 +107,7 @@ class SqlAlchemyTestResultRepository(
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
+        print(suite_result_id, test_identifier)
         session = self._session_maker()
 
         entity = (

@@ -1,8 +1,6 @@
 import datetime
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Dict, List
-
-import attr
 
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
@@ -10,21 +8,21 @@ from cato.domain.test_result import TestStatus
 from cato.storage.domain.execution_status import ExecutionStatus
 
 
-@attr.s
+@dataclass
 class TestResult:
-    id: int = attr.ib()
-    suite_result_id: int = attr.ib()
-    test_name: str = attr.ib()
-    test_identifier: TestIdentifier = attr.ib()
-    test_command: str = attr.ib()
-    test_variables: Dict[str, str] = attr.ib()
-    machine_info: MachineInfo = attr.ib()
-    execution_status: ExecutionStatus = attr.ib(default=ExecutionStatus.NOT_STARTED)
-    status: TestStatus = attr.ib(default=None)
-    output: List[str] = attr.ib(factory=list)
-    seconds: float = attr.ib(default=0)
-    message: str = attr.ib(default="")
-    image_output: int = attr.ib(default="")
-    reference_image: int = attr.ib(default="")
-    started_at: datetime.datetime = attr.ib(default=None)
-    finished_at: datetime.datetime = attr.ib(default=None)
+    id: int
+    suite_result_id: int
+    test_name: str
+    test_identifier: TestIdentifier
+    test_command: str
+    test_variables: Dict[str, str]
+    machine_info: MachineInfo
+    execution_status: ExecutionStatus = ExecutionStatus.NOT_STARTED
+    status: TestStatus = None
+    output: List[str] = field(default_factory=list)
+    seconds: float = 0
+    message: str = ""
+    image_output: int = ""
+    reference_image: int = ""
+    started_at: datetime.datetime = None
+    finished_at: datetime.datetime = None
