@@ -29,9 +29,6 @@ from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
-from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
-    SqlAlchemySimpleFileStorage,
-)
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
