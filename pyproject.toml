@@ -4,6 +4,12 @@ version = "0.1.0"
 description = ""
 authors = ["Jan <jan.honsbrok@gmail.com>"]
 
+packages = [
+    { include = "cato" },
+    { include = "cato_server" },
+]
+
+
 [tool.poetry.dependencies]
 python = "^3.7"
 emoji = "^0.6.0"
