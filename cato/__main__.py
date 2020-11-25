@@ -22,12 +22,16 @@ from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImages
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
-from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import SqlAlchemyDeduplicatingFileStorage
+from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+    SqlAlchemyDeduplicatingFileStorage,
+)
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
-from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import SqlAlchemySimpleFileStorage
+from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
+    SqlAlchemySimpleFileStorage,
+)
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )

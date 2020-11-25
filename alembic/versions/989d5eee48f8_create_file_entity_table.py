@@ -10,8 +10,8 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '989d5eee48f8'
-down_revision = '20aef8e365cf'
+revision = "989d5eee48f8"
+down_revision = "20aef8e365cf"
 branch_labels = None
 depends_on = None
 
@@ -26,5 +26,4 @@ def upgrade():
 
 
 def downgrade():
-    op.drop_table('file_entity')
-
+    op.drop_table("file_entity")

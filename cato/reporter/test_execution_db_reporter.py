@@ -23,12 +23,12 @@ logger = logging.getLogger(__name__)
 
 class TestExecutionDbReporter(TestExecutionReporter):
     def __init__(
-            self,
-            project_repository: ProjectRepository,
-            run_repository: RunRepository,
-            suite_result_repository: SuiteResultRepository,
-            test_result_repository: TestResultRepository,
-            file_storage: AbstractFileStorage
+        self,
+        project_repository: ProjectRepository,
+        run_repository: RunRepository,
+        suite_result_repository: SuiteResultRepository,
+        test_result_repository: TestResultRepository,
+        file_storage: AbstractFileStorage,
     ):
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
@@ -89,7 +89,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._test_result_repository.save(test_result)
 
     def report_test_result(
-            self, current_suite: TestSuite, test_execution_result: TestExecutionResult
+        self, current_suite: TestSuite, test_execution_result: TestExecutionResult
     ):
         suite_result = self._suite_result_repository.find_by_run_id_and_name(
             self._run_id, current_suite.name
@@ -110,9 +110,13 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.status = test_execution_result.status
         test_result.seconds = test_execution_result.seconds
         test_result.message = test_execution_result.message
-        logger.info("Copy image %s to file storage..", test_execution_result.image_output)
-        test_result.image_output = self._file_storage.save_file(test_execution_result.image_output).id
-        #test_result.reference_image = self._file_storage.save_file(test_execution_result.)
+        logger.info(
+            "Copy image %s to file storage..", test_execution_result.image_output
+        )
+        test_result.image_output = self._file_storage.save_file(
+            test_execution_result.image_output
+        ).id
+        # test_result.reference_image = self._file_storage.save_file(test_execution_result.)
 
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._test_result_repository.save(test_result)
