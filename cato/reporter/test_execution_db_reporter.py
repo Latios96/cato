@@ -110,13 +110,19 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.status = test_execution_result.status
         test_result.seconds = test_execution_result.seconds
         test_result.message = test_execution_result.message
-        logger.info(
-            "Copy image %s to file storage..", test_execution_result.image_output
-        )
-        test_result.image_output = self._file_storage.save_file(
-            test_execution_result.image_output
-        ).id
-        # test_result.reference_image = self._file_storage.save_file(test_execution_result.)
+
+        if test_execution_result.image_output:
+            test_result.image_output = self._copy_to_storage(test_execution_result.image_output)
+        if test_execution_result.reference_image:
+            test_result.reference_image = self._copy_to_storage(test_execution_result.reference_image)
 
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._test_result_repository.save(test_result)
+
+    def _copy_to_storage(self, image_path: str)-> int:
+        logger.info(
+            "Copy image %s to file storage..", image_path
+        )
+        return self._file_storage.save_file(
+            image_path
+        ).id
