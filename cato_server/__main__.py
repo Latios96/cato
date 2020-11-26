@@ -2,7 +2,7 @@ import dataclasses
 
 import flask
 import pinject
-from flask import jsonify
+from flask import jsonify, send_file
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
@@ -69,7 +69,7 @@ def suite_result_by_run(run_id):
     "/api/v1/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
     methods=["GET"],
 )
-def test_result_by_suite_and_identifier(suite_result_id, suite_name, test_name):
+def get_test_result_by_suite_and_identifier(suite_result_id, suite_name, test_name):
     suite_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
         SqlAlchemyTestResultRepository
     )
@@ -83,12 +83,22 @@ def test_result_by_suite_and_identifier(suite_result_id, suite_name, test_name):
 
 
 @app.route("/api/v1/test_results/<int:test_result_id>/output", methods=["GET"])
-def test_result_output(test_result_id):
+def get_test_result_output(test_result_id):
     suite_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
         SqlAlchemyTestResultRepository
     )
     suite_result = suite_result_repo.find_by_id(test_result_id)
     return jsonify(suite_result.output)
+
+
+@app.route("/api/v1/files/<int:file_id>", methods=["GET"])
+def get_file(file_id):
+    file_storage: SqlAlchemyDeduplicatingFileStorage = obj_graph.provide(
+        SqlAlchemyDeduplicatingFileStorage
+    )
+    file = file_storage.find_by_id(file_id)
+    if file:
+        return send_file(file_storage.get_path(file),attachment_filename=file.name)
 
 
 if __name__ == "__main__":
