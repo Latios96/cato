@@ -21,7 +21,7 @@ class _FileMapping(Base):
     hash = Column(String)
 
 
-class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository, AbstractFileStorage):
+class SqlAlchemySimpleFileStorage(AbstractSqlAlchemyRepository[File, _FileMapping, int], AbstractFileStorage):
     def __init__(self, session_maker, root_path: str):
         super(SqlAlchemySimpleFileStorage, self).__init__(session_maker)
         self._root_path = root_path
