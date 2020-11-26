@@ -146,7 +146,7 @@ def config_path(path):
     return path
 
 
-if __name__ == "__main__":
+def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
     commands_subparser = main_parser.add_subparsers(title="commands", dest="command")
@@ -170,14 +170,12 @@ if __name__ == "__main__":
         action="store_true",
         help="Dump report data as json (usefull for debugging report generation)",
     )
-
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
         help="Updates missing reference images after a test run",
         parents=[parent_parser],
     )
     update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-
     update_reference_parser = commands_subparser.add_parser(
         "update-reference",
         help="Updates reference images",
@@ -188,12 +186,10 @@ if __name__ == "__main__":
         help="Identifier of test to run. Example: suite_name/test_name",
     )
     update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
     )
     list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-
     args = main_parser.parse_args()
     if args.command == "config-template":
         config_template(args.path)
@@ -208,3 +204,7 @@ if __name__ == "__main__":
         update_reference(args.path, args.test_identifier)
     else:
         print(f"No method found to run command {args.command}")
+
+
+if __name__ == "__main__":
+    main()
