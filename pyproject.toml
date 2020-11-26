@@ -9,6 +9,8 @@ packages = [
     { include = "cato_server" },
 ]
 
+[tool.poetry.scripts]
+cato = 'cato.__main__:main'
 
 [tool.poetry.dependencies]
 python = "^3.7"
