@@ -1,6 +1,6 @@
 import datetime
 from dataclasses import dataclass, field
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
@@ -18,11 +18,11 @@ class TestResult:
     test_variables: Dict[str, str]
     machine_info: MachineInfo
     execution_status: ExecutionStatus = ExecutionStatus.NOT_STARTED
-    status: TestStatus = None
-    output: List[str] = field(default_factory=list)
-    seconds: float = 0
-    message: str = ""
-    image_output: int = ""
-    reference_image: int = ""
-    started_at: datetime.datetime = None
-    finished_at: datetime.datetime = None
+    status: Optional[TestStatus] = None
+    output: Optional[List[str]] = field(default_factory=list)
+    seconds: Optional[float] = None
+    message: Optional[str] = None
+    image_output: Optional[int] = None
+    reference_image: Optional[int] = None
+    started_at: Optional[datetime.datetime] = None
+    finished_at: Optional[datetime.datetime] = None

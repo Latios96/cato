@@ -34,19 +34,3 @@ class TimingReportGenerator:
             entries.append((name, duration, result))
 
         return tabulate(entries, headers=["Test", "Duration", "Result"])
-
-
-if __name__ == "__main__":
-    generator = TimingReportGenerator()
-
-    test = Test("my_test", "cmd", {})
-    report = generator.generate(
-        [
-            TestSuiteExecutionResult(
-                TestSuite(name="test_suite", tests=[test]),
-                test_results=[TestExecutionResult(test, TestStatus.SUCCESS, [], 50)],
-                result=TestStatus.SUCCESS,
-            )
-        ]
-    )
-    print(report)

@@ -73,9 +73,11 @@ class SqlAlchemyTestResultRepository(
             test_identifier=TestIdentifier.from_string(entity.test_identifier),
             test_command=entity.test_command,
             test_variables=entity.test_variables,
-            machine_info=MachineInfo(**entity.machine_info)
-            if entity.machine_info
-            else None,
+            machine_info=MachineInfo(
+                cpu_name=entity.machine_info["cpu_name"],
+                cores=entity.machine_info["cores"],
+                memory=entity.machine_info["memory"],
+            ),
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
             output=entity.output,

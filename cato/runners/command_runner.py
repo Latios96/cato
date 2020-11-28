@@ -26,15 +26,20 @@ class CommandRunner:
             shell=True,
         )
 
+        stdout = popen.stdout
+        stderr = popen.stderr
+        assert stdout and stderr
         while popen.poll() is None:
-            lines_iterator = iter(popen.stdout.readline, "")
+            lines_iterator = iter(stdout.readline, "")
             for line in lines_iterator:
                 self._lines.append(line)
                 self._output_processor.process(line)
-            lines_iterator = iter(popen.stderr.readline, "")
+
+            lines_iterator = iter(stderr.readline, "")
             for line in lines_iterator:
                 self._lines.append(line)
                 self._output_processor.process(line)
-        popen.stdout.close()
+        stdout.close()
+        stderr.close()
         return_code = popen.wait()
         return CommandResult(cmd, return_code, self._lines)

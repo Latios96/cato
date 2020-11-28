@@ -1,4 +1,4 @@
-from typing import IO
+from typing import IO, Optional
 
 from cato.storage.domain.File import File
 
@@ -10,11 +10,11 @@ class AbstractFileStorage:
     def save_stream(self, name: str, stream: IO) -> File:
         raise NotImplementedError()
 
-    def find_by_id(self, id: int) -> File:
+    def find_by_id(self, id: int) -> Optional[File]:
         raise NotImplementedError()
 
-    def get_write_stream(self, id: int) -> IO:
+    def get_write_stream(self, file: File) -> IO:  # todo files should be immutable?
         raise NotImplementedError()
 
-    def get_path(self, id: int) -> IO:
+    def get_path(self, file: File) -> str:
         raise NotImplementedError()

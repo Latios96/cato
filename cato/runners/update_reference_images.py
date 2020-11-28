@@ -23,8 +23,9 @@ class UpdateReferenceImages:
                 variables["image_output_exr"],
                 variables["image_output_png"],
             ]
-            if variables.get("image_output"):
-                image_outputs.append(variables.get("image_output"))
+            image_output_variable = variables.get("image_output")
+            if image_output_variable is not None:
+                image_outputs.append(image_output_variable)
             image_output = self._output_folder.any_existing(image_outputs)
 
             if image_output:
