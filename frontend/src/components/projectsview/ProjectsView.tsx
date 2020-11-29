@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import ProjectComponent from "../project/ProjectComponent";
 import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
+import { Link } from "react-router-dom";
 
 interface Props {}
 
@@ -25,7 +26,9 @@ class ProjectsView extends Component<Props, State> {
         {this.state.projects.map((p: Project) => {
           return (
             <div className={styles.projectsViewProjectComponent}>
-              <ProjectComponent project={p} />
+              <Link to={"/projects/" + p.id}>
+                <ProjectComponent project={p} />
+              </Link>
             </div>
           );
         })}

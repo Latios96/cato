@@ -1,7 +1,6 @@
 import React from "react";
 import { Card } from "react-bootstrap";
 import Project from "../../models/Project";
-import styles from "./ProjectComponent.module.css";
 
 interface Props {
   project: Project;
