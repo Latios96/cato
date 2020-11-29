@@ -52,8 +52,8 @@ def all_projects():
 @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
 def run_by_project(project_id):
     run_repo: SqlAlchemyRunRepository = obj_graph.provide(SqlAlchemyRunRepository)
-    run = run_repo.find_by_id(project_id)
-    return jsonify(run)
+    runs = run_repo.find_by_project_id(project_id)
+    return jsonify(runs)
 
 
 @app.route("/api/v1/suite_results/run/<run_id>", methods=["GET"])

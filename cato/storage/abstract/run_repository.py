@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterable
 
 from cato.domain.run import Run
 from cato.storage.abstract.abstract_repository import AbstractRepository, K, T
@@ -9,4 +9,7 @@ class RunRepository(AbstractRepository[Run, int]):
         raise NotImplementedError()
 
     def find_by_id(self, id: int) -> Optional[Run]:
-        pass
+        raise NotImplementedError()
+
+    def find_by_project_id(self, id: int) -> Iterable[Run]:
+        raise NotImplementedError()

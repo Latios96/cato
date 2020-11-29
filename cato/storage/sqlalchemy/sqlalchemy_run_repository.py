@@ -1,3 +1,5 @@
+from typing import Iterable
+
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
@@ -36,3 +38,13 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
 
     def mapping_cls(self):
         return _RunMapping
+
+    def find_by_project_id(self, id: int) -> Iterable[Run]:
+        session = self._session_maker()
+
+        entities = (
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().project_entity_id == id)
+            .all()
+        )
+        return list(map(self.to_domain_object, entities))
