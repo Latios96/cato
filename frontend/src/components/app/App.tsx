@@ -9,11 +9,15 @@ import {
 import ProjectsPage from "../../pages/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage";
 
-interface MatchParams {
+interface ProjectPageMatchParams {
   projectId: string;
+  runId: string;
 }
 
-interface MatchProps extends RouteComponentProps<MatchParams> {}
+interface ProjectPageMatchProps
+  extends RouteComponentProps<ProjectPageMatchParams> {}
+interface ProjectRunPageMatchProps
+  extends RouteComponentProps<ProjectPageMatchParams> {}
 
 function App() {
   return (
@@ -23,9 +27,24 @@ function App() {
         <Route
           exact
           path="/projects/:projectId"
-          component={(props: MatchProps) => {
+          component={(props: ProjectPageMatchProps) => {
             return (
-              <ProjectPage projectId={parseInt(props.match.params.projectId)} />
+              <ProjectPage
+                projectId={parseInt(props.match.params.projectId)}
+                currentRunId={null}
+              />
+            );
+          }}
+        />
+        <Route
+          exact
+          path="/projects/:projectId/runs/:runId"
+          component={(props: ProjectPageMatchProps) => {
+            return (
+              <ProjectPage
+                projectId={parseInt(props.match.params.projectId)}
+                currentRunId={parseInt(props.match.params.runId)}
+              />
             );
           }}
         />
