@@ -6,6 +6,7 @@ import styles from "./ProjectRunsView.module.css";
 import { Link } from "react-router-dom";
 import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
+import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
 
 interface Props {
   projectId: number;
@@ -62,8 +63,7 @@ class ProjectRunsView extends Component<Props, State> {
           {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
             return (
               <div>
-                {suiteResult.id}
-                {suiteResult.suite_name}
+                <SuiteResultComponent suiteResult={suiteResult} />
               </div>
             );
           })}
