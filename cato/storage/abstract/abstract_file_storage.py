@@ -13,7 +13,7 @@ class AbstractFileStorage:
     def find_by_id(self, id: int) -> Optional[File]:
         raise NotImplementedError()
 
-    def get_write_stream(self, file: File) -> IO:  # todo files should be immutable?
+    def get_write_stream(self, file: File) -> IO:  # todo files should be immutable!
         raise NotImplementedError()
 
     def get_path(self, file: File) -> str:

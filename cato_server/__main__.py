@@ -48,6 +48,7 @@ def all_projects():
     all_projects = project_repo.find_all()
     return jsonify(all_projects)
 
+
 @app.route("/api/v1/projects/<project_id>", methods=["GET"])
 def project_by_id(project_id):
     project_repo: SqlAlchemyProjectRepository = obj_graph.provide(
@@ -89,6 +90,7 @@ def get_test_result_by_suite_and_identifier(suite_result_id, suite_name, test_na
         suite_result.pop("output")
     return jsonify(suite_result)
 
+
 @app.route("/api/v1/test_results/suite_result/<int:suite_id>", methods=["GET"])
 def get_test_result_by_suite_id(suite_id):
     test_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
@@ -119,7 +121,7 @@ def get_file(file_id):
     )
     file = file_storage.find_by_id(file_id)
     if file:
-        return send_file(file_storage.get_path(file),attachment_filename=file.name)
+        return send_file(file_storage.get_path(file), attachment_filename=file.name)
 
 
 if __name__ == "__main__":
