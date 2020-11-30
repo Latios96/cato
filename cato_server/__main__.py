@@ -21,7 +21,7 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 
-app = flask.Flask(__name__)
+app = flask.Flask(__name__, static_url_path="/")
 app.config["DEBUG"] = True
 
 config = SqlAlchemyConfig()
@@ -124,6 +124,9 @@ def get_file(file_id):
     if file:
         return send_file(file_storage.get_path(file), attachment_filename=file.name)
 
+@app.route('/')
+def index():
+    return app.send_static_file('index.html')
 
 if __name__ == "__main__":
     http_server = WSGIServer(('localhost', 5000), app)
