@@ -1,5 +1,5 @@
 import dataclasses
-from typing import Optional
+from typing import Optional, Iterable
 
 import attr
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
@@ -77,7 +77,9 @@ class SqlAlchemyTestResultRepository(
                 cpu_name=entity.machine_info["cpu_name"],
                 cores=entity.machine_info["cores"],
                 memory=entity.machine_info["memory"],
-            ),
+            )
+            if entity.machine_info
+            else MachineInfo("", 0, 0),
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
             output=entity.output,
@@ -120,3 +122,13 @@ class SqlAlchemyTestResultRepository(
         )
         if entity:
             return self.to_domain_object(entity)
+
+    def find_by_suite_result(self, suite_result_id: int) -> Iterable[TestResult]:
+        session = self._session_maker()
+
+        entities = (
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
+            .all()
+        )
+        return list(map(self.to_domain_object, entities))

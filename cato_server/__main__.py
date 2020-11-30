@@ -89,6 +89,19 @@ def get_test_result_by_suite_and_identifier(suite_result_id, suite_name, test_na
         suite_result.pop("output")
     return jsonify(suite_result)
 
+@app.route("/api/v1/test_results/suite_result/<int:suite_id>", methods=["GET"])
+def get_test_result_by_suite_id(suite_id):
+    test_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
+        SqlAlchemyTestResultRepository
+    )
+    test_results = test_result_repo.find_by_suite_result(suite_id)
+    mapped_results = []
+    for result in test_results:
+        result = dataclasses.asdict(result)
+        result.pop("output")
+        mapped_results.append(result)
+    return jsonify(mapped_results)
+
 
 @app.route("/api/v1/test_results/<int:test_result_id>/output", methods=["GET"])
 def get_test_result_output(test_result_id):

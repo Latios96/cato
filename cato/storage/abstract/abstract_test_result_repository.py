@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterable
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.storage.abstract.abstract_repository import AbstractRepository
@@ -15,4 +15,7 @@ class TestResultRepository(AbstractRepository):
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
+        raise NotImplementedError()
+
+    def find_by_suite_result(self, suite_result_id: int) -> Iterable[TestResult]:
         raise NotImplementedError()
