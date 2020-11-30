@@ -3,7 +3,9 @@ name = "cato"
 version = "0.1.0"
 description = "coolest project"
 authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
-
+include = [
+    "cato_server/static/**/*"
+]
 packages = [
     { include = "cato" },
     { include = "cato_server" },

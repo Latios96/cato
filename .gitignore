@@ -154,3 +154,4 @@ config.ini
 
 # Ignore Gradle build output directory
 build
+cato_server/static/*
