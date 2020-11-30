@@ -60,14 +60,14 @@ class ProjectRunsView extends Component<Props, State> {
               );
             })}
           </ListGroup>
-            <div>
-          {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
-            return (
-              <div>
-                <SuiteResultComponent suiteResult={suiteResult} />
-              </div>
-            );
-          })}
+          <div>
+            {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
+              return (
+                <div>
+                  <SuiteResultComponent suiteResult={suiteResult} />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>
