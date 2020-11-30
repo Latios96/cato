@@ -5,22 +5,25 @@ import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.css";
 import { Link } from "react-router-dom";
 import SuiteResult from "../../models/SuiteResult";
+import Project from "../../models/Project";
 
 interface Props {
   projectId: number;
   currentRunId: number | null;
 }
 interface State {
+  project: Project | null;
   runs: Run[];
-  currentSuite: SuiteResult | null;
+  currentSuiteResults: SuiteResult[];
 }
 class ProjectRunsView extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { runs: [], currentSuite: null };
+    this.state = { project: null, runs: [], currentSuiteResults: [] };
   }
   componentDidMount() {
-    this.fetchProjects();
+    this.fetchProject();
+    this.fetchRuns();
     this.fetchSuiteResults();
   }
 
@@ -37,27 +40,51 @@ class ProjectRunsView extends Component<Props, State> {
   render() {
     return (
       <div>
-        <ListGroup>
-          {this.state.runs.map((r: Run) => {
+        <h1>{this.state.project?.name}</h1>
+        <div className={styles.runsViewContainer}>
+          <ListGroup>
+            {this.state.runs.map((r: Run) => {
+              return (
+                <div>
+                  <Link to={`/projects/${this.props.projectId}/runs/${r.id}`}>
+                    <ListGroup.Item
+                      className={styles.runListEntry}
+                      active={this.isCurrentEntry(r)}
+                    >
+                      <p>Run #{r.id}</p>
+                      <p>{this.formatTime(r.started_at)}</p>
+                    </ListGroup.Item>
+                  </Link>
+                </div>
+              );
+            })}
+          </ListGroup>
+          {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
             return (
               <div>
-                <Link to={`/projects/${this.props.projectId}/runs/${r.id}`}>
-                  <ListGroup.Item
-                    className={styles.runListEntry}
-                    active={this.isCurrentEntry(r)}
-                  >
-                    <p>Run #{r.id}</p>
-                    <p>{this.formatTime(r.started_at)}</p>
-                  </ListGroup.Item>
-                </Link>
+                {suiteResult.id}
+                {suiteResult.suite_name}
               </div>
             );
           })}
-        </ListGroup>
+        </div>
       </div>
     );
   }
-  fetchProjects = () => {
+  fetchProject = () => {
+    fetch("/api/v1/projects/" + this.props.projectId)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setState({ project: result });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
+
+  fetchRuns = () => {
     fetch("/api/v1/runs/project/" + this.props.projectId)
       .then((res) => res.json())
       .then(
@@ -72,12 +99,15 @@ class ProjectRunsView extends Component<Props, State> {
   };
 
   fetchSuiteResults = () => {
+    if (!this.props.currentRunId) {
+      return;
+    }
     fetch("/api/v1/suite_results/run/" + this.props.currentRunId)
       .then((res) => res.json())
       .then(
         (result) => {
           console.log(result);
-          this.setState({ currentSuite: result });
+          this.setState({ currentSuiteResults: result });
         },
         (error) => {
           console.log(error);

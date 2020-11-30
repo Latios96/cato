@@ -48,6 +48,14 @@ def all_projects():
     all_projects = project_repo.find_all()
     return jsonify(all_projects)
 
+@app.route("/api/v1/projects/<project_id>", methods=["GET"])
+def project_by_id(project_id):
+    project_repo: SqlAlchemyProjectRepository = obj_graph.provide(
+        SqlAlchemyProjectRepository
+    )
+    project = project_repo.find_by_id(project_id)
+    return jsonify(project)
+
 
 @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
 def run_by_project(project_id):

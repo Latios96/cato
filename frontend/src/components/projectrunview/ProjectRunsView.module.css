@@ -1,3 +1,6 @@
+.runsViewContainer {
+  display: flex;
+}
 .runListEntry {
-  max-width: 300px;
+  width: 300px;
 }
