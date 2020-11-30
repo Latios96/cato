@@ -3,6 +3,7 @@ import dataclasses
 import flask
 import pinject
 from flask import jsonify, send_file
+from gevent.pywsgi import WSGIServer
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
@@ -125,4 +126,5 @@ def get_file(file_id):
 
 
 if __name__ == "__main__":
-    app.run()
+    http_server = WSGIServer(('localhost', 5000), app)
+    http_server.serve_forever()

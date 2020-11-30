@@ -1,5 +1,6 @@
 import datetime
 import logging
+import os
 from typing import List, Optional
 
 from cato.domain.project import Project
@@ -18,6 +19,8 @@ from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
 from cato.utils.machine_info_collector import MachineInfoCollector
+from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
+
 
 logger = logging.getLogger(__name__)
 
@@ -160,5 +163,14 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._test_result_repository.save(test_result)
 
     def _copy_to_storage(self, image_path: str) -> int:
-        logger.info("Copy image %s to file storage..", image_path)
-        return self._file_storage.save_file(image_path).id
+        if not os.path.splitext(image_path)[1].lower() in [".png", ".jpg", "jpeg"]:
+            logger.info("Converting image %s to png", image_path)
+            target_path = os.path.splitext(image_path)[0] + ".png"
+
+            buf = ImageBuf(image_path)
+            buf.write(target_path)
+        else:
+            target_path = image_path
+
+        logger.info("Copy image %s to file storage..", target_path)
+        return self._file_storage.save_file(target_path).id
