@@ -61,8 +61,8 @@ def suite_result_by_run(run_id):
     suite_result_repo: SqlAlchemySuiteResultRepository = obj_graph.provide(
         SqlAlchemySuiteResultRepository
     )
-    suite_result = suite_result_repo.find_by_id(run_id)
-    return jsonify(suite_result)
+    suite_results = suite_result_repo.find_by_run_id(run_id)
+    return jsonify(suite_results)
 
 
 @app.route(

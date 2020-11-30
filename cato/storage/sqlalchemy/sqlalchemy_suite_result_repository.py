@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Iterable
 
 from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
@@ -43,6 +43,16 @@ class SqlAlchemySuiteResultRepository(
 
     def mapping_cls(self):
         return _SuiteResultMapping
+
+    def find_by_run_id(self, run_id: int) -> Iterable[SuiteResult]:
+        session = self._session_maker()
+
+        entities = (
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().run_entity_id == run_id)
+            .all()
+        )
+        return list(map(self.to_domain_object, entities))
 
     def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
         session = self._session_maker()
