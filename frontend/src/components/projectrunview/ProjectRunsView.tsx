@@ -12,20 +12,29 @@ interface Props {
   projectId: number;
   currentRunId: number | null;
 }
+
 interface State {
   project: Project | null;
   runs: Run[];
   currentSuiteResults: SuiteResult[];
 }
+
 class ProjectRunsView extends Component<Props, State> {
+  interval: any;
+
   constructor(props: Props) {
     super(props);
     this.state = { project: null, runs: [], currentSuiteResults: [] };
+    this.interval = 0;
   }
+
   componentDidMount() {
-    this.fetchProject();
-    this.fetchRuns();
-    this.fetchSuiteResults();
+    this.update();
+    this.interval = setInterval(() => this.fetchRuns(), 10000);
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   componentDidUpdate(
@@ -73,6 +82,13 @@ class ProjectRunsView extends Component<Props, State> {
       </div>
     );
   }
+
+  update = () => {
+    this.fetchProject();
+    this.fetchRuns();
+    this.fetchSuiteResults();
+  };
+
   fetchProject = () => {
     fetch("/api/v1/projects/" + this.props.projectId)
       .then((res) => res.json())
