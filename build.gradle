@@ -92,3 +92,8 @@ install.dependsOn(':frontend:yarn_install')
 task formatPython(type:Exec){
     commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests'
 }
+
+task format{
+dependsOn 'formatPython'
+dependsOn ':frontend:formatJs'
+}
