@@ -16,7 +16,7 @@ class SqlAlchemyConfig:
         raise RuntimeError("config.ini not found!")
 
     def get_engine(self):
-        return create_engine(self.get_connection_str())
+        return create_engine(self.get_connection_str(), pool_size=10, max_overflow=20)
 
     def get_session_maker(self):
         return sessionmaker(bind=self.get_engine())
