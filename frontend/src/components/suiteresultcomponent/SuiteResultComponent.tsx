@@ -1,6 +1,9 @@
 import React, { Component } from "react";
+import { Button, Card, Spinner } from "react-bootstrap";
 import SuiteResult from "../../models/SuiteResult";
 import TestResult from "../../models/TestResult";
+import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
+import FinishedTestResultComponent from "./FinishedTestResultComponent";
 interface Props {
   suiteResult: SuiteResult;
 }
@@ -32,8 +35,19 @@ class SuiteResultComponent extends Component<Props, State> {
         {this.state.testResults.map((result: TestResult) => {
           return (
             <div>
-              #{result.id}: {result.test_identifier.suite_name}/
-              {result.test_identifier.test_name}
+              <Card>
+                <Card.Body>
+                  <Card.Title>
+                    {result.test_identifier.suite_name} /{" "}
+                    {result.test_identifier.test_name}
+                  </Card.Title>
+                  {result.execution_status === "FINISHED" ? (
+                    <FinishedTestResultComponent result={result} />
+                  ) : (
+                    <WaitingOrRunningTestResultComponent result={result} />
+                  )}
+                </Card.Body>
+              </Card>
             </div>
           );
         })}
