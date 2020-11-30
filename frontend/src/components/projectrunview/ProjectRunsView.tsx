@@ -44,7 +44,7 @@ class ProjectRunsView extends Component<Props, State> {
         <h1>{this.state.project?.name}</h1>
         <div className={styles.runsViewContainer}>
           <ListGroup>
-            {this.state.runs.map((r: Run) => {
+            {this.state.runs.reverse().map((r: Run) => {
               return (
                 <div>
                   <Link to={`/projects/${this.props.projectId}/runs/${r.id}`}>
@@ -60,6 +60,7 @@ class ProjectRunsView extends Component<Props, State> {
               );
             })}
           </ListGroup>
+            <div>
           {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
             return (
               <div>
@@ -67,6 +68,7 @@ class ProjectRunsView extends Component<Props, State> {
               </div>
             );
           })}
+          </div>
         </div>
       </div>
     );
