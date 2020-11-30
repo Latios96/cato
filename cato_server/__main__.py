@@ -124,10 +124,12 @@ def get_file(file_id):
     if file:
         return send_file(file_storage.get_path(file), attachment_filename=file.name)
 
-@app.route('/')
+
+@app.route("/")
 def index():
-    return app.send_static_file('index.html')
+    return app.send_static_file("index.html")
+
 
 if __name__ == "__main__":
-    http_server = WSGIServer(('localhost', 5000), app)
+    http_server = WSGIServer(("localhost", 5000), app)
     http_server.serve_forever()
