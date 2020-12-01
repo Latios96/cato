@@ -1,4 +1,5 @@
 import dataclasses
+import os
 
 import flask
 import pinject
@@ -121,15 +122,20 @@ def get_file(file_id):
         SqlAlchemyDeduplicatingFileStorage
     )
     file = file_storage.find_by_id(file_id)
-    if file:
-        return send_file(file_storage.get_path(file), attachment_filename=file.name)
+    file_path = file_storage.get_path(file)
+    if file and os.path.exists(file_path):
+        return send_file(file_path, attachment_filename=file.name)
 
 
-@app.route("/")
-def index():
+@app.route("/", defaults={"path": ""})
+@app.route("/<string:path>")
+@app.route("/<path:path>")
+def index(path):
+    print(path)
     return app.send_static_file("index.html")
 
 
 if __name__ == "__main__":
     http_server = WSGIServer(("localhost", 5000), app)
+    print("Running on http://localhost:5000")
     http_server.serve_forever()
