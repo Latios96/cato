@@ -14,7 +14,7 @@ interface State {
 class SuiteResultComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {testResults: []};
+    this.state = { testResults: [] };
   }
 
   componentDidMount() {
@@ -22,9 +22,9 @@ class SuiteResultComponent extends Component<Props, State> {
   }
 
   componentDidUpdate(
-      prevProps: Readonly<Props>,
-      prevState: Readonly<State>,
-      snapshot?: any
+    prevProps: Readonly<Props>,
+    prevState: Readonly<State>,
+    snapshot?: any
   ) {
     if (this.props.suiteResult.id !== prevProps.suiteResult.id) {
       this.fetchTestResults();
@@ -33,40 +33,40 @@ class SuiteResultComponent extends Component<Props, State> {
 
   render() {
     return (
-        <div>
-          <h2 className={styles.suiteResultName}>
-            {this.props.suiteResult.suite_name}
-          </h2>
-          {this.filterResults(this.state.testResults, "RUNNING").map(
-              (result: TestResult) => {
-                return this.renderResult(result);
-              }
-          )}
-          {this.filterResults(this.state.testResults, "NOT_STARTED").map(
-              (result: TestResult) => {
-                return this.renderResult(result);
-              }
-          )}
-          {this.filterResults(this.state.testResults, "FINISHED").map(
-              (result: TestResult) => {
-                return this.renderResult(result);
-              }
-          )}
-        </div>
+      <div>
+        <h2 className={styles.suiteResultName}>
+          {this.props.suiteResult.suite_name}
+        </h2>
+        {this.filterResults(this.state.testResults, "RUNNING").map(
+          (result: TestResult) => {
+            return this.renderResult(result);
+          }
+        )}
+        {this.filterResults(this.state.testResults, "NOT_STARTED").map(
+          (result: TestResult) => {
+            return this.renderResult(result);
+          }
+        )}
+        {this.filterResults(this.state.testResults, "FINISHED").map(
+          (result: TestResult) => {
+            return this.renderResult(result);
+          }
+        )}
+      </div>
     );
   }
 
   fetchTestResults = () => {
     fetch("/api/v1/test_results/suite_result/" + this.props.suiteResult.id)
-        .then((res) => res.json())
-        .then(
-            (result) => {
-              this.setState({testResults: result});
-            },
-            (error) => {
-              console.log(error);
-            }
-        );
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setState({ testResults: result });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
   };
   filterResults = (results: TestResult[], status: string) => {
     return results.filter((r: TestResult) => r.execution_status === status);
@@ -74,32 +74,32 @@ class SuiteResultComponent extends Component<Props, State> {
 
   renderResult = (result: TestResult) => {
     return (
-        <div className={styles.suiteResultCard}>
-          <Card>
-            <Card.Body>
-              <Card.Title>
-                {result.test_identifier.suite_name} /{" "}
-                {result.test_identifier.test_name} {this.emojinizeStatus(result.status)}
-              </Card.Title>
-              {result.execution_status === "FINISHED" ? (
-                  <FinishedTestResultComponent result={result}/>
-              ) : (
-                  <WaitingOrRunningTestResultComponent result={result}/>
-              )}
-            </Card.Body>
-          </Card>
-        </div>
+      <div className={styles.suiteResultCard}>
+        <Card>
+          <Card.Body>
+            <Card.Title>
+              {result.test_identifier.suite_name} /{" "}
+              {result.test_identifier.test_name}{" "}
+              {this.emojinizeStatus(result.status)}
+            </Card.Title>
+            {result.execution_status === "FINISHED" ? (
+              <FinishedTestResultComponent result={result} />
+            ) : (
+              <WaitingOrRunningTestResultComponent result={result} />
+            )}
+          </Card.Body>
+        </Card>
+      </div>
     );
   };
   emojinizeStatus = (status: string | null) => {
-
     if (status === "SUCCESS") {
-      return "✔"
+      return "✔";
     } else if (status === "FAILED") {
       return "❌";
     }
     return "";
-  }
+  };
 }
 
 export default SuiteResultComponent;
