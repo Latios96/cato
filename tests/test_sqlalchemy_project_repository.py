@@ -57,7 +57,8 @@ def test_find_by_id_should_not_find(sessionmaker_fixture):
     project = Project(id=0, name="dyfg")
     project = repository.save(project)
 
-    assert not repository.find_by_id(100)
+    by_id = repository.find_by_id(100)
+    assert not by_id
 
 
 def test_to_entity(sessionmaker_fixture):
