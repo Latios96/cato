@@ -68,3 +68,18 @@ def test_find_by_id_should_not_find(sessionmaker_fixture):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
 
     assert not repository.find_by_id(100)
+
+
+def test_find_by_project_id_should_find_empty(sessionmaker_fixture):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+    assert repository.find_by_project_id(10) == []
+
+
+def test_find_by_project_id_should_find_correct(sessionmaker_fixture, project):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = repository.save(run)
+
+    assert repository.find_by_project_id(project.id) == [run]
