@@ -26,24 +26,22 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 from cato_server.api.project_resource import ProjectsBlueprint
 
 
-def create_app():
+def create_app(sql_alchemy_config: SqlAlchemyConfig = SqlAlchemyConfig()):
     app = flask.Flask(__name__, static_url_path="/")
     app.config["DEBUG"] = True
 
-    config = SqlAlchemyConfig()
-
-    class TestExecutionReporterBindings(pinject.BindingSpec):
+    class ProdBinding(pinject.BindingSpec):
         def configure(self, bind):
             bind("project_repository", to_class=SqlAlchemyProjectRepository)
             bind("run_repository", to_class=SqlAlchemyRunRepository)
             bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
             bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
             bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
-            bind("root_path", to_instance=config.get_file_storage_path())
-            bind("session_maker", to_instance=config.get_session_maker())
+            bind("root_path", to_instance=sql_alchemy_config.get_file_storage_path())
+            bind("session_maker", to_instance=sql_alchemy_config.get_session_maker())
 
     obj_graph = pinject.new_object_graph(
-        modules=[cato, cato_server], binding_specs=[TestExecutionReporterBindings()]
+        modules=[cato, cato_server], binding_specs=[ProdBinding()]
     )
 
     @app.route("/api/v1/projects/<project_id>", methods=["GET"])
@@ -125,7 +123,6 @@ def create_app():
     app.register_blueprint(obj_graph.provide(ProjectsBlueprint))
 
     return app
-
 
 
 if __name__ == "__main__":
