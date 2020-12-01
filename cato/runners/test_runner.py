@@ -62,7 +62,9 @@ class TestRunner:
             )
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
-        if not image_output:
+        if not image_output or not self._output_folder.image_output_exists(
+            image_output
+        ):
             image_output_str = emoji.emojize(
                 ":x:\n".join(self._image_outputs(variables)), use_aliases=True
             )
@@ -128,13 +130,6 @@ class TestRunner:
             started_at=start,
             finished_at=end,
         )
-
-    def _image_output_exists(self, variables):
-        image_outputs = self._image_outputs(variables)
-        for output in image_outputs:
-            if self._output_folder.image_output_exists(output):
-                return output
-        return None
 
     def _image_outputs(self, variables):
         image_outputs = [

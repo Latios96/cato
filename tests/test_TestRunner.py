@@ -197,3 +197,32 @@ def test_should_have_failed_with_missing_reference_image():
 
     assert result.status == TestStatus.FAILED
     assert result.message.startswith("Reference image")
+
+
+def test_should_have_failed_with_missing_image_output():
+    reporter = mock_safe(Reporter)
+    command_runner = mock_safe(CommandRunner)
+    output_folder = mock_safe(OutputFolder)
+    output_folder.image_output_exists.return_value = False
+    image_comparator = mock_safe(ImageComparator)
+    magic_mock = mock.MagicMock()
+    magic_mock.error = True
+    image_comparator.compare.return_value = magic_mock
+
+    test_runner = TestRunner(command_runner, reporter, output_folder, image_comparator)
+    test = Test(name="my_first_test", command="dummy_command", variables={})
+    command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+
+    result = test_runner.run_test(
+        Config(
+            project_name="Example project",
+            path="test",
+            test_suites=[],
+            output_folder="output",
+        ),
+        TestSuite(name="suite", tests=[]),
+        test,
+    )
+
+    assert result.status == TestStatus.FAILED
+    assert result.message.startswith("No given image output path exists")
