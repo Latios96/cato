@@ -95,6 +95,6 @@ task formatPython(type:Exec){
 }
 
 task format{
-dependsOn 'formatPython'
-dependsOn ':frontend:formatJs'
+    dependsOn 'formatPython'
+    dependsOn ':frontend:formatJs'
 }
