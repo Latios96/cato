@@ -1,11 +1,13 @@
 import dataclasses
 import os
+from gevent.pywsgi import WSGIServer
 
 import flask
 import pinject
 from flask import jsonify, send_file
-from gevent.pywsgi import WSGIServer
 
+import cato
+import cato_server
 from cato.domain.test_identifier import TestIdentifier
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
@@ -21,7 +23,7 @@ from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.api.project_resource import ProjectBluePrint
+from cato_server.api.project_resource import ProjectsBlueprint
 
 app = flask.Flask(__name__, static_url_path="/")
 app.config["DEBUG"] = True
@@ -40,16 +42,9 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("session_maker", to_instance=config.get_session_maker())
 
 
-obj_graph = pinject.new_object_graph(binding_specs=[TestExecutionReporterBindings()])
-
-
-@app.route("/api/v1/projects", methods=["GET"])
-def all_projects():
-    project_repo: SqlAlchemyProjectRepository = obj_graph.provide(
-        SqlAlchemyProjectRepository
-    )
-    all_projects = project_repo.find_all()
-    return jsonify(all_projects)
+obj_graph = pinject.new_object_graph(
+    modules=[cato, cato_server], binding_specs=[TestExecutionReporterBindings()]
+)
 
 
 @app.route("/api/v1/projects/<project_id>", methods=["GET"])
@@ -135,9 +130,8 @@ def index(path):
     print(path)
     return app.send_static_file("index.html")
 
-project_blue_print = obj_graph.provide(ProjectBluePrint)
-app.register_blueprint(project_blue_print)
 
+app.register_blueprint(obj_graph.provide(ProjectsBlueprint))
 
 if __name__ == "__main__":
     http_server = WSGIServer(("localhost", 5000), app)
