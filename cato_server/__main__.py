@@ -126,9 +126,10 @@ def create_app():
 
     return app
 
-app = create_app()
+
 
 if __name__ == "__main__":
+    app = create_app()
     http_server = WSGIServer(("localhost", 5000), app)
     print("Running on http://localhost:5000")
     http_server.serve_forever()
