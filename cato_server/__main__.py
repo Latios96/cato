@@ -44,13 +44,7 @@ def create_app(sql_alchemy_config: SqlAlchemyConfig = SqlAlchemyConfig()):
         modules=[cato, cato_server], binding_specs=[ProdBinding()]
     )
 
-    @app.route("/api/v1/projects/<project_id>", methods=["GET"])
-    def project_by_id(project_id):
-        project_repo: SqlAlchemyProjectRepository = obj_graph.provide(
-            SqlAlchemyProjectRepository
-        )
-        project = project_repo.find_by_id(project_id)
-        return jsonify(project)
+
 
     @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
     def run_by_project(project_id):
