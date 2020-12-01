@@ -65,3 +65,14 @@ def test_get_path(sessionmaker_fixture, tmp_path):
 
     assert path
     assert path == os.path.join(str(tmp_path), str(f.id), f.name)
+
+
+def test_find_by_id(sessionmaker_fixture, tmp_path):
+    file_storage = SqlAlchemySimpleFileStorage(sessionmaker_fixture, str(tmp_path))
+
+    f = file_storage.save_stream(
+        "test_image_white.png",
+        open(os.path.join(os.path.dirname(__file__), "test_image_white.png"), "rb"),
+    )
+
+    assert file_storage.find_by_id(f.id).id == f.id
