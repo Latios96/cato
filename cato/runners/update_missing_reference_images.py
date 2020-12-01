@@ -1,5 +1,6 @@
 import os
 import shutil
+from typing import Callable
 
 from cato import logger
 from cato.domain.config import Config
@@ -9,8 +10,13 @@ from cato.variable_processing.variable_processor import VariableProcessor
 
 
 class UpdateMissingReferenceImages:
-    def __init__(self, output_folder: OutputFolder):
+    def __init__(
+        self,
+        output_folder: OutputFolder,
+        copy_file: Callable[[str, str], None] = shutil.copy,
+    ):
         self._output_folder = output_folder
+        self._copy_file = copy_file
 
     def update(self, config: Config):
         for suite, test in iterate_suites_and_tests(config.test_suites):
@@ -41,4 +47,4 @@ class UpdateMissingReferenceImages:
                     + os.path.splitext(image_output)[1]
                 )
                 logger.info(f"Copy {image_output} to {target_path}..")
-                shutil.copy(image_output, target_path)
+                self._copy_file(image_output, target_path)
