@@ -63,6 +63,7 @@ task pytest(type:Exec){
 
 task copyFrontendToBuild {
     dependsOn(':frontend:yarn_install')
+    dependsOn(':frontend:yarn_build')
     doLast {
         copy {
             from "${rootDir}/frontend/build"
