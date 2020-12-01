@@ -23,7 +23,7 @@ from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.api.project_resource import ProjectsBlueprint
+from cato_server.api.project_blueprint import ProjectsBlueprint
 
 
 def create_app(sql_alchemy_config: SqlAlchemyConfig = SqlAlchemyConfig()):
