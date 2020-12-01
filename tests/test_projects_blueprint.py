@@ -5,16 +5,20 @@ from cato_server.__main__ import create_app
 
 
 class SqlAlchemyTestConfig(SqlAlchemyConfig):
-    def __init__(self, session_maker):
+    def __init__(self, session_maker, file_storage_path):
         self.session_maker = session_maker
+        self._file_storage_path = file_storage_path
 
     def get_session_maker(self):
         return self.session_maker
 
+    def get_file_storage_path(self):
+        return self._file_storage_path
+
 
 @pytest.fixture
-def client(sessionmaker_fixture):
-    config = SqlAlchemyTestConfig(sessionmaker_fixture)
+def client(sessionmaker_fixture, tmp_path):
+    config = SqlAlchemyTestConfig(sessionmaker_fixture, str(tmp_path))
     app = create_app(config)
 
     with app.test_client() as client:
