@@ -46,3 +46,20 @@ def test_get_project_should_return_none(client, project):
     rv = client.get("/api/v1/projects/10")
 
     assert rv.status_code == 404
+
+
+def test_create_project(client):
+    rv = client.post("/api/v1/projects", data={"name": "my_project_name"})
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {"id": 1, "name": "my_project_name"}
+
+
+def test_create_project_no_name(client):
+    rv = client.post("/api/v1/projects", data={"xfcgvy": "my_project_name"})
+
+    assert rv.status_code == 400
+    assert rv.get_json() == {
+        "name": ["Missing data for required field."],
+        "xfcgvy": ["Unknown field."],
+    }
