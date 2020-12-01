@@ -9,7 +9,6 @@ interface Props {
 function FinishedTestResultComponent(props: Props) {
   return (
     <div>
-      <p>Finished</p>
       <p>
         {props.result.started_at
           ? "started: " + formatTime(props.result.started_at)
@@ -25,7 +24,6 @@ function FinishedTestResultComponent(props: Props) {
           ? "duration: " + formatDuration(props.result.seconds)
           : ""}
       </p>
-      <p>status: {props.result.status}</p>
       {props.result.status === "FAILED"
         ? renderFailureInformation(props.result)
         : ""}
