@@ -23,6 +23,12 @@ def main():
     print("Building..")
     subprocess.check_call("gradlew.bat build")
 
+    print("Copy wheel..")
+    wheel_path = os.path.join(
+        os.path.dirname(__file__), "dist", f"cato-{version}-py3-none-any.whl"
+    )
+    shutil.copy(wheel_path, os.path.join(r'M:\cato\wheels', os.path.basename(wheel_path)))
+
     pip_path = r"M:\cato\venv\Scripts\pip"
 
     print("Install OpenImageIO..")
@@ -36,9 +42,6 @@ def main():
     )
 
     print("Install..")
-    wheel_path = os.path.join(
-        os.path.dirname(__file__), "dist", f"cato-{version}-py3-none-any.whl"
-    )
     subprocess.check_call([pip_path, "install", "--upgrade", wheel_path])
 
     print("Copy config..")
