@@ -21,6 +21,7 @@ from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from cato_server.api.project_resource import ProjectBluePrint
 
 app = flask.Flask(__name__, static_url_path="/")
 app.config["DEBUG"] = True
@@ -133,6 +134,9 @@ def get_file(file_id):
 def index(path):
     print(path)
     return app.send_static_file("index.html")
+
+project_blue_print = obj_graph.provide(ProjectBluePrint)
+app.register_blueprint(project_blue_print)
 
 
 if __name__ == "__main__":
