@@ -20,7 +20,7 @@ from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
-from cato.runners.update_reference_images import UpdateReferenceImages
+from cato.runners.update_reference_images import UpdateReferenceImage
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -125,7 +125,7 @@ def update_reference(path, test_identifier):
     config = config_parser.parse(path)
 
     obj_graph = pinject.new_object_graph()
-    update_reference = obj_graph.provide(UpdateReferenceImages)
+    update_reference = obj_graph.provide(UpdateReferenceImage)
 
     update_reference.update(config, TestIdentifier.from_string(test_identifier))
 

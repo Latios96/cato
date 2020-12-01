@@ -9,7 +9,7 @@ from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_processor import VariableProcessor
 
 
-class UpdateReferenceImages:
+class UpdateReferenceImage:
     def __init__(self, output_folder: OutputFolder):
         self._output_folder = output_folder
 
