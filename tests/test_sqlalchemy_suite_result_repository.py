@@ -82,3 +82,35 @@ def test_find_by_id_should_not_find(sessionmaker_fixture):
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
 
     assert not repository.find_by_id(100)
+
+
+def test_find_by_run_id_should_find(sessionmaker_fixture, run):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_result = SuiteResult(
+        id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+    saved_suite_result = repository.save(suite_result)
+
+    assert repository.find_by_run_id(run.id) == [saved_suite_result]
+
+
+def test_find_by_run_id_should_not_find(sessionmaker_fixture):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+
+    assert not repository.find_by_run_id(100)
+
+
+def test_find_by_run_id_and_name_should_find(sessionmaker_fixture, run):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_result = SuiteResult(
+        id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+    saved_suite_result = repository.save(suite_result)
+
+    assert repository.find_by_run_id_and_name(run.id, "my_suite") == saved_suite_result
+
+
+def test_find_by_run_id_and_name_should_not_find(sessionmaker_fixture):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+
+    assert not repository.find_by_run_id_and_name(100, "")
