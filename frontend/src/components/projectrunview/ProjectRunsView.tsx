@@ -50,10 +50,10 @@ class ProjectRunsView extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h1>{this.state.project?.name}</h1>
+        <h1 className={styles.projectName}>{this.state.project?.name}</h1>
         <div className={styles.runsViewContainer}>
           <ListGroup>
-            {this.state.runs.reverse().map((r: Run) => {
+            {this.state.runs.map((r: Run) => {
               return (
                 <div>
                   <Link to={`/projects/${this.props.projectId}/runs/${r.id}`}>
@@ -69,7 +69,7 @@ class ProjectRunsView extends Component<Props, State> {
               );
             })}
           </ListGroup>
-          <div>
+          <div className={styles.suiteResult}>
             {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
               return (
                 <div>
@@ -108,7 +108,7 @@ class ProjectRunsView extends Component<Props, State> {
       .then(
         (result) => {
           console.log(result);
-          this.setState({ runs: result });
+          this.setState({ runs: result.reverse() });
         },
         (error) => {
           console.log(error);
@@ -134,6 +134,7 @@ class ProjectRunsView extends Component<Props, State> {
   };
 
   formatTime = (datestr: string) => {
+    datestr = datestr.replace(" GMT", "");
     var date = new Date(datestr);
     return ago(date);
   };

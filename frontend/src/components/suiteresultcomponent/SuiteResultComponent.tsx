@@ -3,6 +3,7 @@ import { Card } from "react-bootstrap";
 import SuiteResult from "../../models/SuiteResult";
 import TestResult from "../../models/TestResult";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
+import styles from "./SuiteResultComponent.module.css";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 interface Props {
   suiteResult: SuiteResult;
@@ -31,7 +32,9 @@ class SuiteResultComponent extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h2>{this.props.suiteResult.suite_name}</h2>
+        <h2 className={styles.suiteResultName}>
+          {this.props.suiteResult.suite_name}
+        </h2>
         {this.filterResults(this.state.testResults, "RUNNING").map(
           (result: TestResult) => {
             return this.renderResult(result);
@@ -69,7 +72,7 @@ class SuiteResultComponent extends Component<Props, State> {
 
   renderResult = (result: TestResult) => {
     return (
-      <div>
+      <div className={styles.suiteResultCard}>
         <Card>
           <Card.Body>
             <Card.Title>

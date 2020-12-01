@@ -5,6 +5,7 @@ import {
   Switch,
   Route,
   RouteComponentProps,
+  HashRouter,
 } from "react-router-dom";
 import ProjectsPage from "../../pages/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage";
@@ -21,35 +22,27 @@ interface ProjectRunPageMatchProps
 
 function App() {
   return (
-    <Router>
+    <HashRouter>
       <Switch>
         <Route exact path="/" component={() => <ProjectsPage />} />
         <Route
           exact
-          path="/projects/:projectId"
+          path="/projects/:projectId/runs/:runId?"
           component={(props: ProjectPageMatchProps) => {
             return (
               <ProjectPage
                 projectId={parseInt(props.match.params.projectId)}
-                currentRunId={null}
-              />
-            );
-          }}
-        />
-        <Route
-          exact
-          path="/projects/:projectId/runs/:runId"
-          component={(props: ProjectPageMatchProps) => {
-            return (
-              <ProjectPage
-                projectId={parseInt(props.match.params.projectId)}
-                currentRunId={parseInt(props.match.params.runId)}
+                currentRunId={
+                  props.match.params.runId != null
+                    ? parseInt(props.match.params.runId)
+                    : null
+                }
               />
             );
           }}
         />
       </Switch>
-    </Router>
+    </HashRouter>
   );
 }
 

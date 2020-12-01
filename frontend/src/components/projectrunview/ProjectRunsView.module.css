@@ -1,6 +1,15 @@
 .runsViewContainer {
   display: flex;
+  margin-left: 20px;
 }
+
 .runListEntry {
   width: 300px;
+}
+
+.projectName {
+  margin: 25px;
+}
+.suiteResult {
+  margin-left: 60px;
 }
