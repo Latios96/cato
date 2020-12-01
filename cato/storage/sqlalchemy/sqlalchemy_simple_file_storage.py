@@ -39,14 +39,11 @@ class SqlAlchemySimpleFileStorage(
         file = self._create_file_obj_for_stream(name, stream)
         file = self.save(file)
         if self._needs_write(file):
-            target_stream = self.get_write_stream(file)
+            target_stream = self._get_write_stream(file)
             for line in stream:
                 target_stream.write(line)
             target_stream.close()
         return file
-
-    def get_write_stream(self, file: File) -> IO:
-        return open(self.get_path(file), "wb")
 
     def get_read_stream(self, file: File) -> IO:
         return open(self.get_path(file), "rb")
@@ -81,3 +78,6 @@ class SqlAlchemySimpleFileStorage(
 
     def _needs_write(self, file):
         return True
+
+    def _get_write_stream(self, file: File) -> IO:
+        return open(self.get_path(file), "wb")
