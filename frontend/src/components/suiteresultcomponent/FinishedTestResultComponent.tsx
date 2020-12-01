@@ -1,6 +1,6 @@
 import React from "react";
 import TestResult from "../../models/TestResult";
-import { formatTime } from "../../utils";
+import { formatDuration, formatTime } from "../../utils";
 
 interface Props {
   result: TestResult;
@@ -20,18 +20,41 @@ function FinishedTestResultComponent(props: Props) {
           ? "finished: " + formatTime(props.result.finished_at)
           : ""}
       </p>
-      <p>duration: {props.result.seconds}</p>
+      <p>
+        {props.result.seconds != null
+          ? "duration: " + formatDuration(props.result.seconds)
+          : ""}
+      </p>
       <p>status: {props.result.status}</p>
       {props.result.status === "FAILED"
-        ? "message: " + props.result.message
+        ? renderFailureInformation(props.result)
         : ""}
-      <p>Command: "{props.result.test_command}"</p>
-      {props.result.image_output ? (
-        <img src={"/api/v1/files/" + props.result.image_output} />
+      {renderImages(props.result)}
+    </div>
+  );
+}
+
+function renderFailureInformation(result: TestResult): React.ReactNode {
+  return (
+    <div>
+      <p>{"message: " + result.message}</p>
+      <p>Command: "{result.test_command}"</p>
+    </div>
+  );
+}
+
+function renderImages(result: TestResult): React.ReactNode {
+  return (
+    <React.Fragment>
+      {result.image_output ? (
+        <img
+          src={"/api/v1/files/" + result.image_output}
+          alt={"image output"}
+        />
       ) : (
         ""
       )}
-    </div>
+    </React.Fragment>
   );
 }
 

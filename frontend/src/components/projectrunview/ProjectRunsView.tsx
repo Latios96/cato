@@ -7,6 +7,7 @@ import { Link } from "react-router-dom";
 import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
+import { formatTime } from "../../utils";
 
 interface Props {
   projectId: number;
@@ -62,7 +63,7 @@ class ProjectRunsView extends Component<Props, State> {
                       active={this.isCurrentEntry(r)}
                     >
                       <p>Run #{r.id}</p>
-                      <p>{this.formatTime(r.started_at)}</p>
+                      <p>{formatTime(r.started_at)}</p>
                     </ListGroup.Item>
                   </Link>
                 </div>
@@ -133,11 +134,6 @@ class ProjectRunsView extends Component<Props, State> {
       );
   };
 
-  formatTime = (datestr: string) => {
-    datestr = datestr.replace(" GMT", "");
-    var date = new Date(datestr);
-    return ago(date);
-  };
   isCurrentEntry = (r: Run) => {
     return r.id === this.props.currentRunId;
   };
