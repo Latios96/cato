@@ -10,8 +10,9 @@ from cato.variable_processing.variable_processor import VariableProcessor
 
 
 class UpdateReferenceImage:
-    def __init__(self, output_folder: OutputFolder):
+    def __init__(self, output_folder: OutputFolder, copy_file=shutil.copy):
         self._output_folder = output_folder
+        self._copy_file = copy_file
 
     def update(self, config: Config, test_identifier: TestIdentifier):
         filtered = filter_by_test_identifier(config.test_suites, test_identifier)
@@ -34,4 +35,4 @@ class UpdateReferenceImage:
                     + os.path.splitext(image_output)[1]
                 )
                 logger.info(f"Copy {image_output} to {target_path}..")
-                shutil.copy(image_output, target_path)
+                self._copy_file(image_output, target_path)
