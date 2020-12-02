@@ -25,6 +25,7 @@ from cato_server.configuration.storage_configuration import StorageConfiguration
 def test_create_storage_bindings_for_postgres():
     configuration = AppConfiguration(
         port=5000,
+        debug=True,
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
             file_storage_url="some_path",
@@ -52,6 +53,7 @@ def test_create_storage_bindings_for_postgres():
 def test_create_storage_bindings_using_sqlite_in_memory():
     configuration = AppConfiguration(
         port=5000,
+        debug=True,
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
