@@ -27,3 +27,5 @@ class TestExecutionResult:
             "message": self.message,
             "image_output": self.image_output,
         }
+
+    __test__ = False

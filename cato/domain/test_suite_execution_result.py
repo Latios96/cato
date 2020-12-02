@@ -18,3 +18,5 @@ class TestSuiteExecutionResult:
             "status": str(self.result),
             "test_results": [x.to_dict() for x in self.test_results],
         }
+
+    __test__ = False

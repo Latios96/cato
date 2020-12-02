@@ -2,7 +2,6 @@ from typing import List
 
 from cato.domain.config import Config
 from cato.domain.test_result import TestStatus
-from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
@@ -10,6 +9,8 @@ from cato.runners.test_runner import TestRunner
 
 
 class TestSuiteRunner:
+    __test__ = False
+
     def __init__(
         self,
         test_runner: TestRunner,

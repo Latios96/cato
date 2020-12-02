@@ -20,6 +20,8 @@ class TestSuite:
     def check(self, attribute, value):
         validate_name(value)
 
+    __test__ = False
+
 
 def iterate_suites_and_tests(
     suites: List[TestSuite],

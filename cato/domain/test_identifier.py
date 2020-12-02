@@ -13,3 +13,5 @@ class TestIdentifier:
 
     def __str__(self):
         return f"{self.suite_name}/{self.test_name}"
+
+    __test__ = False

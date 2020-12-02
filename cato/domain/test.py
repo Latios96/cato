@@ -17,3 +17,5 @@ class Test:
     @name.validator
     def check(self, attribute, value):
         validate_name(value)
+
+    __test__ = False

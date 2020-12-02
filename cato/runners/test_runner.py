@@ -16,6 +16,8 @@ from cato.variable_processing.variable_processor import VariableProcessor
 
 
 class TestRunner:
+    __test__ = False
+
     def __init__(
         self,
         command_runner: CommandRunner,

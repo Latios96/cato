@@ -26,3 +26,4 @@ class TestResult:
     reference_image: Optional[int] = None
     started_at: Optional[datetime.datetime] = None
     finished_at: Optional[datetime.datetime] = None
+    __test__ = False
