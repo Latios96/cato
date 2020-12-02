@@ -47,6 +47,14 @@ def test_create_project(client, project_name):
     assert rv.status_code == 201
 
 
+def test_create_project_same_name_should_fail(client):
+    client.post(API_V_PROJECTS, data={"name": "test"})
+    rv = client.post(API_V_PROJECTS, data={"name": "test"})
+
+    assert rv.get_json() == {"name": 'Project with name "test" already exists!'}
+    assert rv.status_code == 400
+
+
 def test_create_project_no_name(client):
     rv = client.post(API_V_PROJECTS, data={"xfcgvy": "my_project_name"})
 
