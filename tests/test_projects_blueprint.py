@@ -25,10 +25,11 @@ class SqlAlchemyTestConfig(SqlAlchemyConfig):
         return self._file_storage_path
 
 
-@pytest.fixture
-def client(sessionmaker_fixture, tmp_path):
+@pytest.fixture()
+def app_fixture(sessionmaker_fixture, tmp_path):
     config = AppConfiguration(
         port=5010,
+        debug=True,
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),
@@ -41,7 +42,12 @@ def client(sessionmaker_fixture, tmp_path):
 
     app = create_app(config, pinject_bindings)
 
-    with app.test_client() as client:
+    return app
+
+
+@pytest.fixture
+def client(app_fixture):
+    with app_fixture.test_client() as client:
         yield client
 
 
