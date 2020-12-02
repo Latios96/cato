@@ -2,6 +2,13 @@ import pytest
 
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato_server.__main__ import create_app
+from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.bindings_factory import (
+    BindingsFactory,
+    PinjectBindings,
+    Bindings,
+)
+from cato_server.configuration.storage_configuration import StorageConfiguration
 
 API_V_PROJECTS = "/api/v1/projects"
 
@@ -20,8 +27,19 @@ class SqlAlchemyTestConfig(SqlAlchemyConfig):
 
 @pytest.fixture
 def client(sessionmaker_fixture, tmp_path):
-    config = SqlAlchemyTestConfig(sessionmaker_fixture, str(tmp_path))
-    app = create_app(config)
+    config = AppConfiguration(
+        port=5010,
+        storage_configuration=StorageConfiguration(
+            database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
+        ),
+    )
+    bindings_factory = BindingsFactory(config)
+    storage_bindings = bindings_factory.create_storage_bindings()
+    storage_bindings.session_maker_binding = sessionmaker_fixture
+    bindings = Bindings(storage_bindings)
+    pinject_bindings = PinjectBindings(bindings)
+
+    app = create_app(pinject_bindings)
 
     with app.test_client() as client:
         yield client
