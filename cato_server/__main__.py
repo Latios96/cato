@@ -111,10 +111,9 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--config',
-                        help='path to config.ini')
+    parser.add_argument("--config", help="path to config.ini")
     args = parser.parse_args()
-    path = 'config.ini'
+    path = "config.ini"
     if args.config:
         path = args.config
 
