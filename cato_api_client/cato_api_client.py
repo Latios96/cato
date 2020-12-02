@@ -29,6 +29,7 @@ class CatoApiClient:
 
     def create_project(self, project_name) -> Project:
         url = self._build_url("/api/v1/projects")
+        logger.info("Creating project with name %s..", project_name)
         return self._create(url, {'name': project_name}, Project)
 
     def upload_file(self, path: str) -> File:
@@ -38,6 +39,7 @@ class CatoApiClient:
         url = self._build_url("/api/v1/files")
         files = {'file': open(path, 'rb')}
 
+        logger.info("Uploading file %s", path)
         response = self._post(url, {}, files=files)
 
         if response.status_code == 201:
