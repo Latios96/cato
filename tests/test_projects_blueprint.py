@@ -39,7 +39,7 @@ def client(sessionmaker_fixture, tmp_path):
     bindings = Bindings(storage_bindings)
     pinject_bindings = PinjectBindings(bindings)
 
-    app = create_app(pinject_bindings)
+    app = create_app(config, pinject_bindings)
 
     with app.test_client() as client:
         yield client

@@ -21,11 +21,12 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_server.api.project_blueprint import ProjectsBlueprint
+from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
 
 
-def create_app(bindings: PinjectBindings):
+def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     obj_graph = pinject.new_object_graph(
         modules=[cato, cato_server], binding_specs=[bindings]
     )
@@ -118,7 +119,7 @@ if __name__ == "__main__":
     config = AppConfigurationReader().read_file(path)
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()
-    app = create_app(bindings)
+    app = create_app(config, bindings)
     http_server = WSGIServer(("localhost", config.port), app)
     print(f"Running on http://localhost:{config.port}")
     http_server.serve_forever()
