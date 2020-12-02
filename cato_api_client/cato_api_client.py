@@ -1,3 +1,6 @@
+import logging
+# noinspection PyUnresolvedReferences
+import cato_api_client.api_client_logging
 import os
 from typing import Optional
 from urllib.parse import quote
@@ -7,8 +10,8 @@ from requests import Response
 
 from cato.domain.project import Project
 from cato.storage.domain.File import File
-from cato_api_client.api_client_logging import logger
 
+logger = logging.getLogger(__name__)
 
 class CatoApiClient:
 
