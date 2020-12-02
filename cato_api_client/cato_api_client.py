@@ -1,13 +1,12 @@
-import logging
-from typing import Optional, List
-from urllib.parse import urlencode, quote_plus
+from typing import Optional
+from urllib.parse import quote_plus
 
 import requests
 from requests import Response
 
 from cato.domain.project import Project
+from cato_api_client.api_client_logging import logger
 
-logger = logging.getLogger(__name__)
 
 class CatoApiClient:
 
@@ -26,6 +25,10 @@ class CatoApiClient:
         url = self._build_url("/api/v1/projects/name/{}", project_name)
         return self._get_one_project(url)
 
+    def create_project(self, project_name) -> Project:
+        url = self._build_url("/api/v1/projects")
+        return self._create(url, {'name': project_name}, Project)
+
     def _build_url(self, url_template, *params: str):
         params = list(map(lambda x: quote_plus(x), params))
         return self._url + url_template.format(*params)
@@ -38,8 +41,23 @@ class CatoApiClient:
         return Project(**data)
 
     def _get(self, url: str) -> Response:
-        logger.info("Launching GET request to {}", url)
+        logger.debug("Launching GET request to %s", url)
         return requests.get(url)
 
     def _get_json(self, reponse):
         return reponse.json()
+
+    def _create(self, url, params, cls):
+        response = self._post(url, params)
+        if response.status_code == 201:
+            return cls(**self._get_json(response))
+        raise self._create_value_error_for_bad_request(response)
+
+    def _create_value_error_for_bad_request(self, response):
+        return ValueError("Bad parameters: {}".format(
+            " ".join(["{}: {}".format(key, value) for key, value in self._get_json(response).items()])))
+
+    def _post(self, url, params):
+        logger.debug("Launching POST request to %s with params %s", url, params)
+        return requests.post(url, data=params)
+
