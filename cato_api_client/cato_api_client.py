@@ -1,5 +1,5 @@
 from typing import Optional
-from urllib.parse import quote_plus
+from urllib.parse import quote
 
 import requests
 from requests import Response
@@ -30,7 +30,7 @@ class CatoApiClient:
         return self._create(url, {'name': project_name}, Project)
 
     def _build_url(self, url_template, *params: str):
-        params = list(map(lambda x: quote_plus(x), params))
+        params = list(map(lambda x: quote(x), params))
         return self._url + url_template.format(*params)
 
     def _get_one_project(self, url) -> Optional[Project]:
