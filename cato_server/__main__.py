@@ -1,20 +1,17 @@
+import argparse
 import dataclasses
 import os
-from gevent.pywsgi import WSGIServer
 
 import flask
 import pinject
 from flask import jsonify, send_file
+from gevent.pywsgi import WSGIServer
 
 import cato
 import cato_server
 from cato.domain.test_identifier import TestIdentifier
-from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
-)
-from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
-    SqlAlchemyProjectRepository,
 )
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
@@ -24,25 +21,17 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_server.api.project_blueprint import ProjectsBlueprint
+from cato_server.configuration.app_configuration_reader import AppConfigurationReader
+from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
 
 
-def create_app(sql_alchemy_config: SqlAlchemyConfig = SqlAlchemyConfig()):
+def create_app(bindings: PinjectBindings):
+    obj_graph = pinject.new_object_graph(
+        modules=[cato, cato_server], binding_specs=[bindings]
+    )
+
     app = flask.Flask(__name__, static_url_path="/")
     app.config["DEBUG"] = True
-
-    class ProdBinding(pinject.BindingSpec):
-        def configure(self, bind):
-            bind("project_repository", to_class=SqlAlchemyProjectRepository)
-            bind("run_repository", to_class=SqlAlchemyRunRepository)
-            bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
-            bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
-            bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
-            bind("root_path", to_instance=sql_alchemy_config.get_file_storage_path())
-            bind("session_maker", to_instance=sql_alchemy_config.get_session_maker())
-
-    obj_graph = pinject.new_object_graph(
-        modules=[cato, cato_server], binding_specs=[ProdBinding()]
-    )
 
     @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
     def run_by_project(project_id):
@@ -118,7 +107,18 @@ def create_app(sql_alchemy_config: SqlAlchemyConfig = SqlAlchemyConfig()):
 
 
 if __name__ == "__main__":
-    app = create_app()
-    http_server = WSGIServer(("localhost", 5000), app)
-    print("Running on http://localhost:5000")
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--config',
+                        help='path to config.ini')
+    args = parser.parse_args()
+    path = 'config.ini'
+    if args.config:
+        path = args.config
+
+    config = AppConfigurationReader().read_file(path)
+    bindings_factory: BindingsFactory = BindingsFactory(config)
+    bindings = bindings_factory.create_bindings()
+    app = create_app(bindings)
+    http_server = WSGIServer(("localhost", config.port), app)
+    print(f"Running on http://localhost:{config.port}")
     http_server.serve_forever()
