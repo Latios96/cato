@@ -53,7 +53,7 @@ def ini_file_creator(tmp_path):
 def test_read_not_existing_ini_file():
     reader = AppConfigurationReader()
     with pytest.raises(ValueError):
-        config = reader.read_file("ini_path")
+        reader.read_file("ini_path")
 
 
 def test_read_valid_file(ini_file_creator):
