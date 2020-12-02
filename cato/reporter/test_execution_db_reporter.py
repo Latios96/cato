@@ -3,7 +3,6 @@ import logging
 import os
 from typing import List, Optional
 
-from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
@@ -21,6 +20,7 @@ from cato.storage.domain.test_result import TestResult
 from cato.utils.machine_info_collector import MachineInfoCollector
 from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
+from cato_api_client.cato_api_client import CatoApiClient
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +34,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result_repository: TestResultRepository,
         file_storage: AbstractFileStorage,
         machine_info_collector: MachineInfoCollector,
+        cato_api_client: CatoApiClient,
     ):
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
@@ -41,18 +42,21 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._project_repository = project_repository
         self._file_storage = file_storage
         self._machine_info_collector = machine_info_collector
+        self._cato_api_client = cato_api_client
         self._run_id: Optional[int] = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
-        logger.info("Reporting execution start to db..")
-        project = self._project_repository.find_by_name(project_name)
+        logger.info("Reporting execution start to server..")
+        project = self._cato_api_client.get_project_by_name(project_name)
         if not project:
             logger.info("No project with name %s exists, creating one..", project_name)
-            project = self._project_repository.save(Project(id=0, name=project_name))
+            project = self._cato_api_client.create_project(project_name)
             logger.info("Created project %s", project)
+        logger.info("Creating run..")
         run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
         run = self._run_repository.save(run)
         self._run_id = run.id
+        logger.info("Collecting machine info..")
         machine_info = self._machine_info_collector.collect()
 
         for test_suite in test_suites:
