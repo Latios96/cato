@@ -1,42 +1,4 @@
-import pytest
-from random_open_port import random_port
-
-from cato_server.__main__ import create_app
-from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.bindings_factory import (
-    BindingsFactory,
-    PinjectBindings,
-    Bindings,
-)
-from cato_server.configuration.storage_configuration import StorageConfiguration
-
 API_V_PROJECTS = "/api/v1/projects"
-
-
-@pytest.fixture()
-def app_fixture(sessionmaker_fixture, tmp_path):
-    config = AppConfiguration(
-        port=random_port(),
-        debug=True,
-        storage_configuration=StorageConfiguration(
-            database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
-        ),
-    )
-    bindings_factory = BindingsFactory(config)
-    storage_bindings = bindings_factory.create_storage_bindings()
-    storage_bindings.session_maker_binding = sessionmaker_fixture
-    bindings = Bindings(storage_bindings)
-    pinject_bindings = PinjectBindings(bindings)
-
-    app = create_app(config, pinject_bindings)
-
-    return app
-
-
-@pytest.fixture
-def client(app_fixture):
-    with app_fixture.test_client() as client:
-        yield client
 
 
 def test_no_projects(client):
