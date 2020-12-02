@@ -4,10 +4,20 @@ from cato.domain.test_suite import TestSuite
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 
+REFERENCE_IMAGE_PNG = "config_path/my_test_suite/test_name/reference.png"
+REFERENCE_IMAGE_NO_EXTENSION = "config_path/my_test_suite/test_name/reference"
+REFERENCE_IMAGE_EXR = "config_path/my_test_suite/test_name/reference.exr"
+IMAGE_OUTPUT_EXR = "test/result/my_test_suite/test_name/test_name.exr"
+IMAGE_OUTPUT_PNG = "test/result/my_test_suite/test_name/test_name.png"
+IMAGE_OUTPUT_NO_EXTENSION = "test/result/my_test_suite/test_name/test_name"
+IMAGE_OUTPUT_FOLDER = "test/result/my_test_suite/test_name"
+TEST_RESOURCES = "config_path/my_test_suite/test_name"
+EXAMPLE_PROJECT = "Example project"
+
 
 def test_evaluate_variables_no_custom_vars():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -24,20 +34,20 @@ def test_evaluate_variables_no_custom_vars():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
-        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
+        "image_output_exr": IMAGE_OUTPUT_EXR,
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
     }
 
 
 def test_evaluate_variables_custom_image_output():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -65,14 +75,14 @@ def test_evaluate_variables_custom_image_output():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
         "image_output_png": "test/result/my_test_suite/test_name/test_name7.png",
-        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "image_output_exr": IMAGE_OUTPUT_EXR,
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
     }
 
 
@@ -88,7 +98,7 @@ def test_format_command():
 
 def test_evaluate_variables_variables_from_config():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -106,21 +116,21 @@ def test_evaluate_variables_variables_from_config():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
-        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
+        "image_output_exr": IMAGE_OUTPUT_EXR,
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value",
     }
 
 
 def test_evaluate_variables_variables_from_suite():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -139,21 +149,21 @@ def test_evaluate_variables_variables_from_suite():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
-        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
+        "image_output_exr": IMAGE_OUTPUT_EXR,
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value",
     }
 
 
 def test_evaluate_variables_variables_from_config_override_by_suite():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -175,21 +185,21 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
-        "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
+        "image_output_exr": IMAGE_OUTPUT_EXR,
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value_from_suite",
     }
 
 
 def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by_test():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -213,21 +223,21 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
         "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value_from_test",
     }
 
 
 def test_evaluate_variables_maya_predefinition():
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
         output_folder="test",
@@ -253,14 +263,14 @@ def test_evaluate_variables_maya_predefinition():
         "suite_name": suite.name,
         "config_path": config.path,
         "output_folder": "test",
-        "test_resources": "config_path/my_test_suite/test_name",
-        "image_output_folder": "test/result/my_test_suite/test_name",
-        "image_output_no_extension": "test/result/my_test_suite/test_name/test_name",
-        "image_output_png": "test/result/my_test_suite/test_name/test_name.png",
+        "test_resources": TEST_RESOURCES,
+        "image_output_folder": IMAGE_OUTPUT_FOLDER,
+        "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
+        "image_output_png": IMAGE_OUTPUT_PNG,
         "image_output_exr": "test/result/my_test_suite/test_name/test_name.exr",
-        "reference_image_exr": "config_path/my_test_suite/test_name/reference.exr",
-        "reference_image_no_extension": "config_path/my_test_suite/test_name/reference",
-        "reference_image_png": "config_path/my_test_suite/test_name/reference.png",
+        "reference_image_exr": REFERENCE_IMAGE_EXR,
+        "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
+        "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value_from_test",
         "arnold_location": r"C:\Program Files\Autodesk\Arnold\maya2020",
         "arnold_render_command": r'"C:\Program Files\Autodesk\Arnold\maya2020\bin\kick" -i config_path/my_test_suite/test_name/test_name.ass -o test/result/my_test_suite/test_name/test_name.png -of exr -dw -v 2',
