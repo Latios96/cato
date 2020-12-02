@@ -66,7 +66,7 @@ def test_save_no_suite_result(sessionmaker_fixture):
         finished_at=end_time,
     )
     with pytest.raises(IntegrityError):
-        test_result_save = repository.save(test_result)
+        repository.save(test_result)
 
 
 def test_find_by_suite_result_and_test_identifier(sessionmaker_fixture, suite_result):

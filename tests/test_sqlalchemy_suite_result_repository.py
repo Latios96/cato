@@ -1,11 +1,7 @@
-import datetime
-
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato.domain.run import Run
 from cato.storage.domain.suite_result import SuiteResult
-from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
     _SuiteResultMapping,
@@ -65,7 +61,7 @@ def test_save_no_run_id(sessionmaker_fixture):
     )
 
     with pytest.raises(IntegrityError):
-        run = repository.save(suite_result)
+        repository.save(suite_result)
 
 
 def test_find_by_id_should_find(sessionmaker_fixture, run):
