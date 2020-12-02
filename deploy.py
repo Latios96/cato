@@ -17,6 +17,7 @@ def main():
     tag = check_tag()
     if not tag:
         print("Current commit is not tagged! Please run bumpversion!")
+        exit(1)
     version = tag.name[1:]
     print(f"Deploy version {version}..")
 
