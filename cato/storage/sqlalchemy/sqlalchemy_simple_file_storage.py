@@ -1,7 +1,7 @@
 import hashlib
 import os
 import shutil
-from typing import IO
+from typing import IO, Tuple, AnyStr
 
 from sqlalchemy import Column, Integer, String
 
@@ -36,12 +36,11 @@ class SqlAlchemySimpleFileStorage(
         return file
 
     def save_stream(self, name: str, stream: IO) -> File:
-        file = self._create_file_obj_for_stream(name, stream)
+        file, content = self._create_file_obj_for_stream(name, stream)
         file = self.save(file)
         if self._needs_write(file):
             target_stream = self._get_write_stream(file)
-            for line in stream:
-                target_stream.write(line)
+            target_stream.write(content)
             target_stream.close()
         return file
 
@@ -54,14 +53,14 @@ class SqlAlchemySimpleFileStorage(
             os.makedirs(os.path.dirname(target_path))
         return target_path
 
-    def _create_file_obj_for_stream(self, name: str, stream: IO) -> File:
+    def _create_file_obj_for_stream(self, name: str, stream: IO) -> Tuple[File, AnyStr]:
         bytes = stream.read()
         file_hash = hashlib.sha3_256(bytes).hexdigest()
-        return File(id=0, name=name, hash=str(file_hash))
+        return File(id=0, name=name, hash=str(file_hash)), bytes
 
     def _create_file_obj_for_path(self, path: str) -> File:
         with open(path, "rb") as f:
-            return self._create_file_obj_for_stream(os.path.basename(path), f)
+            return self._create_file_obj_for_stream(os.path.basename(path), f)[0]
 
     def to_entity(self, domain_object: File) -> _FileMapping:
         return _FileMapping(
