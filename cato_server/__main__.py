@@ -104,7 +104,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         print(path)
         return app.send_static_file("index.html")
 
-    app.register_blueprint(obj_graph.provide(ProjectsBlueprint))
+    app.register_blueprint(obj_graph.provide(ProjectsBlueprint), url_prefix="/api/v1")
 
     return app
 

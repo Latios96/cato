@@ -21,12 +21,12 @@ class ProjectsBlueprint(Blueprint):
         super(ProjectsBlueprint, self).__init__("projects", __name__)
         self._project_repository = project_repository
 
-        self.route("/api/v1/projects", methods=["GET"])(self.get_projects)
-        self.route("/api/v1/projects/<project_id>", methods=["GET"])(self.get_project)
-        self.route("/api/v1/projects/name/<project_name>", methods=["GET"])(
+        self.route("/projects", methods=["GET"])(self.get_projects)
+        self.route("/projects/<project_id>", methods=["GET"])(self.get_project)
+        self.route("/projects/name/<project_name>", methods=["GET"])(
             self.get_project_by_name
         )
-        self.route("/api/v1/projects", methods=["POST"])(self.create_project)
+        self.route("/projects", methods=["POST"])(self.create_project)
 
     def get_projects(self):
         projects = self._project_repository.find_all()
