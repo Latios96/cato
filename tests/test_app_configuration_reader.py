@@ -9,24 +9,34 @@ from cato_server.configuration.storage_configuration import StorageConfiguration
 
 VALID_INI_FILE = """[app]
 port=5000
+debug=True
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url"""
 
 MISSING_PORT = """[app]
 [storage]
+debug=True
 database_url=my_database_url
 file_storage_url=my_file_storage_url"""
 
 MISSING_DATABASE_URL = """[app]
 port=5000
+debug=True
 [storage]
 file_storage_url=my_file_storage_url"""
 
 MISSING_FILE_STORAGE_URL = """[app]
 port=5000
+debug=True
 [storage]
 database_url=my_database_url"""
+
+MISSING_DEBUG = """[app]
+port=5000
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url"""
 
 
 @pytest.fixture
@@ -54,6 +64,7 @@ def test_read_valid_file(ini_file_creator):
 
     assert config == AppConfiguration(
         port=5000,
+        debug=True,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -63,9 +74,24 @@ def test_read_valid_file(ini_file_creator):
 @pytest.mark.parametrize(
     "invalid_config", [MISSING_PORT, MISSING_DATABASE_URL, MISSING_FILE_STORAGE_URL]
 )
-def test_read_missing_port(invalid_config, ini_file_creator):
+def test_read_missing_should_fail(invalid_config, ini_file_creator):
     ini_path = ini_file_creator(invalid_config)
     reader = AppConfigurationReader()
 
     with pytest.raises(configparser.NoOptionError):
         reader.read_file(ini_path)
+
+
+def test_read_missing_debug_should_default_to_false(ini_file_creator):
+    ini_path = ini_file_creator(MISSING_DEBUG)
+    reader = AppConfigurationReader()
+
+    config = reader.read_file(ini_path)
+
+    assert config == AppConfiguration(
+        port=5000,
+        debug=False,
+        storage_configuration=StorageConfiguration(
+            database_url="my_database_url", file_storage_url="my_file_storage_url"
+        ),
+    )

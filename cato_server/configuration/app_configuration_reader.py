@@ -21,6 +21,7 @@ class AppConfigurationReader:
 
         return AppConfiguration(
             port=config.getint("app", "port"),
+            debug=config.getboolean("app", "debug", fallback=False),
             storage_configuration=storage_configuration,
         )
 
