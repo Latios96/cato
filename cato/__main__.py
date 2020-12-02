@@ -4,6 +4,7 @@ import os
 
 import pinject
 
+import cato
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
 from cato.domain.test_identifier import TestIdentifier
@@ -18,6 +19,7 @@ from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
+from cato.runners.test_runner import TestRunner
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
@@ -35,10 +37,25 @@ from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from cato_api_client import cato_api_client
 
 PATH_TO_CONFIG_FILE = "Path to config file"
 
 config = SqlAlchemyConfig()
+
+
+def create_object_graph():
+    return pinject.new_object_graph(
+        modules=[
+            cato,
+            cato.runners.test_runner,
+            cato.runners.command_runner,
+            cato.utils.machine_info_collector,
+            cato.reporter.stats_calculator,
+            cato_api_client,
+        ],
+        binding_specs=[TestExecutionReporterBindings()],
+    )
 
 
 class TestExecutionReporterBindings(pinject.BindingSpec):
@@ -51,6 +68,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
         bind("root_path", to_instance=config.get_file_storage_path())
         bind("session_maker", to_instance=config.get_session_maker())
+        bind("url", to_instance="http://127.0.0.1:5000")
 
 
 def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: bool):
@@ -59,9 +77,7 @@ def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: 
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
-    obj_graph = pinject.new_object_graph(
-        binding_specs=[TestExecutionReporterBindings()]
-    )
+    obj_graph = create_object_graph()
     test_suite_runner = obj_graph.provide(TestSuiteRunner)
 
     if suite_name:
@@ -97,7 +113,7 @@ def update_missing_reference_images(path):
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
-    obj_graph = pinject.new_object_graph()
+    obj_graph = create_object_graph()
     update_missing = obj_graph.provide(UpdateMissingReferenceImages)
 
     update_missing.update(config)
@@ -124,7 +140,7 @@ def update_reference(path, test_identifier):
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
-    obj_graph = pinject.new_object_graph()
+    obj_graph = create_object_graph()
     update_reference = obj_graph.provide(UpdateReferenceImage)
 
     update_reference.update(config, TestIdentifier.from_string(test_identifier))
