@@ -22,10 +22,10 @@ def test_save_file(sessionmaker_fixture, tmp_path):
 def test_save_files(sessionmaker_fixture, tmp_path):
     file_storage = SqlAlchemySimpleFileStorage(sessionmaker_fixture, str(tmp_path))
 
-    f = file_storage.save_file(
+    file_storage.save_file(
         os.path.join(os.path.dirname(__file__), TEST_IMAGE_WHITE_PNG)
     )
-    f = file_storage.save_file(
+    file_storage.save_file(
         os.path.join(os.path.dirname(__file__), "test_image_black.png")
     )
 
