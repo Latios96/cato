@@ -26,8 +26,7 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from cato_server.configuration.app_configuration import AppConfiguration
 
-IN_MEMORY = ":memory:"
-MOCK = ":mock:"
+FILE_STORAGE_IN_MEMORY = ":memory:"
 
 
 @dataclass
