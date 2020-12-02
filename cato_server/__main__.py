@@ -1,3 +1,4 @@
+from cato_server.server_logging import logger
 import argparse
 import dataclasses
 import os
@@ -25,6 +26,7 @@ from cato_server.api.project_blueprint import ProjectsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
+
 
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
@@ -124,5 +126,5 @@ if __name__ == "__main__":
     bindings = bindings_factory.create_bindings()
     app = create_app(config, bindings)
     http_server = WSGIServer(("127.0.0.1", config.port), app)
-    print(f"Running on http://127.0.0.1:{config.port}")
+    logger.info(f"Running on http://127.0.0.1:{config.port}")
     http_server.serve_forever()

@@ -30,6 +30,7 @@ class FilesBlueprint(Blueprint):
             f = self._file_storage.save_stream(
                 uploaded_file.filename, uploaded_file.stream
             )
+        logger.info("Saved file %s to %s", uploaded_file.filename, f)
         return jsonify(f), 201
 
     def _convert_and_save(self, uploaded_file):

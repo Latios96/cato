@@ -1,3 +1,4 @@
+import logging
 from http.client import BAD_REQUEST
 
 from flask import Blueprint, jsonify, abort, request
@@ -7,8 +8,7 @@ from marshmallow.validate import Length, Regexp
 from cato.domain.project import Project
 from cato.storage.abstract.project_repository import ProjectRepository
 
-name = __name__
-
+logger = logging.getLogger(__name__)
 
 class CreateProjectSchema(Schema):
     name = fields.Str(
@@ -43,8 +43,15 @@ class ProjectsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        project = Project(id=0, name=request.form["name"])
-        return jsonify(self._project_repository.save(project)), 201
+        project_name = request.form["name"]
+
+        if self._project_repository.find_by_name(project_name):
+            return jsonify({'name': f'Project with name \"{project_name}\" already exists!'}), BAD_REQUEST
+
+        project = Project(id=0, name=project_name)
+        project = self._project_repository.save(project)
+        logger.info("Created project %s", project)
+        return jsonify(project), 201
 
     def get_project_by_name(self, project_name: str):
         project = self._project_repository.find_by_name(project_name)
