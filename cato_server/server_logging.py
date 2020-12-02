@@ -2,7 +2,7 @@ import logging
 
 LOGGING_LEVEL = logging.INFO
 
-logger = logging.getLogger('cato_server')
+logger = logging.getLogger("cato_server")
 logger.setLevel(LOGGING_LEVEL)
 ch = logging.StreamHandler()
 ch.setLevel(LOGGING_LEVEL)

@@ -28,7 +28,6 @@ from cato_server.configuration.app_configuration_reader import AppConfigurationR
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
 
 
-
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     obj_graph = pinject.new_object_graph(
         modules=[cato, cato_server], binding_specs=[bindings]

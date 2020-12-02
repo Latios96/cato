@@ -10,6 +10,7 @@ from cato.storage.abstract.project_repository import ProjectRepository
 
 logger = logging.getLogger(__name__)
 
+
 class CreateProjectSchema(Schema):
     name = fields.Str(
         required=True, validate=[Length(min=1), Regexp(r"^[A-Za-z0-9_\-]+$")]
@@ -46,7 +47,12 @@ class ProjectsBlueprint(Blueprint):
         project_name = request.form["name"]
 
         if self._project_repository.find_by_name(project_name):
-            return jsonify({'name': f'Project with name \"{project_name}\" already exists!'}), BAD_REQUEST
+            return (
+                jsonify(
+                    {"name": f'Project with name "{project_name}" already exists!'}
+                ),
+                BAD_REQUEST,
+            )
 
         project = Project(id=0, name=project_name)
         project = self._project_repository.save(project)
