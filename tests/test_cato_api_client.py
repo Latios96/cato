@@ -1,7 +1,10 @@
+import os
+
 import pytest
 from requests.models import Response
 
 from cato.domain.project import Project
+from cato.storage.domain.File import File
 from cato_api_client.cato_api_client import CatoApiClient
 
 
@@ -14,7 +17,9 @@ class CatoApiTestClient(CatoApiClient):
         get = self._client.get(url.replace(self._url, ""))
         return get
 
-    def _post(self, url, params):
+    def _post(self, url, params, files=None):
+        if files:
+            params.update(files)
         return self._client.post(url.replace(self._url, ""), data=params)
 
     def _get_json(self, reponse):
@@ -49,3 +54,22 @@ def test_create_project_should_create_project(cato_api_client):
 def test_create_project_should_not_create_invalid_name(cato_api_client):
     with pytest.raises(ValueError):
         cato_api_client.create_project("my project")
+
+
+def test_upload_file(cato_api_client):
+    path = os.path.join(os.path.dirname(__file__), "test.exr")
+
+    f = cato_api_client.upload_file(path)
+
+    assert f == File(
+        id=1,
+        name="test.png",
+        hash="505cc9e0719a4f15a36eaa6df776bea0cc065b32d198be6002a79a03823b4d9e",
+    )
+
+
+def test_upload_file_not_existing(cato_api_client):
+    path = os.path.join(os.path.dirname(__file__), "seAERER")
+
+    with pytest.raises(ValueError):
+        cato_api_client.upload_file(path)
