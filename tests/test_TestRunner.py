@@ -11,6 +11,8 @@ from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.test_runner import TestRunner
 from tests.utils import mock_safe
 
+EXAMPLE_PROJECT = "Example Project"
+
 
 def test_should_report_test_start():
     reporter = mock_safe(Reporter)
@@ -24,7 +26,7 @@ def test_should_report_test_start():
 
     test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -53,7 +55,7 @@ def test_should_replace_placeholder():
 
     test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -79,7 +81,7 @@ def test_should_collect_timing_info():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -106,7 +108,7 @@ def test_should_have_succeded_with_exit_code_0():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -130,7 +132,7 @@ def test_should_have_failed_with_exit_code_0():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -157,7 +159,7 @@ def test_should_have_failed_with_images_not_equal():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -186,7 +188,7 @@ def test_should_have_failed_with_missing_reference_image():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
@@ -215,7 +217,7 @@ def test_should_have_failed_with_missing_image_output():
 
     result = test_runner.run_test(
         Config(
-            project_name="Example project",
+            project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
             output_folder="output",
