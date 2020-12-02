@@ -20,6 +20,9 @@ class ProjectsBlueprint(Blueprint):
 
         self.route("/api/v1/projects", methods=["GET"])(self.get_projects)
         self.route("/api/v1/projects/<project_id>", methods=["GET"])(self.get_project)
+        self.route("/api/v1/projects/name/<project_name>", methods=["GET"])(
+            self.get_project_by_name
+        )
         self.route("/api/v1/projects", methods=["POST"])(self.create_project)
 
     def get_projects(self):
@@ -39,3 +42,9 @@ class ProjectsBlueprint(Blueprint):
 
         project = Project(id=0, name=request.form["name"])
         return jsonify(self._project_repository.save(project))
+
+    def get_project_by_name(self, project_name: str):
+        project = self._project_repository.find_by_name(project_name)
+        if not project:
+            abort(404)
+        return jsonify(project)
