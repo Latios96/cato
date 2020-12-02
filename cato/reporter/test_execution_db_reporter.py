@@ -167,14 +167,4 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._test_result_repository.save(test_result)
 
     def _copy_to_storage(self, image_path: str) -> int:
-        if not os.path.splitext(image_path)[1].lower() in [".png", ".jpg", "jpeg"]:
-            logger.info("Converting image %s to png", image_path)
-            target_path = os.path.splitext(image_path)[0] + ".png"
-
-            buf = ImageBuf(image_path)
-            buf.write(target_path)
-        else:
-            target_path = image_path
-
-        logger.info("Copy image %s to file storage..", target_path)
-        return self._file_storage.save_file(target_path).id
+        return self._cato_api_client.upload_file(image_path).id
