@@ -56,9 +56,8 @@ class HtmlReporter:
         target_path = os.path.join(
             folder, f"{checksum}{os.path.splitext(image_path)[1]}"
         )
-        if not os.path.exists(target_path):
-            if not os.path.exists(folder):
-                os.makedirs(folder)
+        if not os.path.exists(target_path) and not os.path.exists(folder):
+            os.makedirs(folder)
 
         return self._copy_or_convert(image_path, target_path)
 
