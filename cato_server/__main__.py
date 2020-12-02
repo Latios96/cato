@@ -32,7 +32,9 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     )
 
     app = flask.Flask(__name__, static_url_path="/")
-    app.config["DEBUG"] = True
+
+    if app_configuration.debug == True:
+        app.config["DEBUG"] = True
 
     @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
     def run_by_project(project_id):
