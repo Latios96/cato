@@ -65,7 +65,7 @@ def suite_result(sessionmaker_fixture, run):
 
 
 @pytest.fixture()
-def app_fixture(sessionmaker_fixture, tmp_path):
+def app_and_config_fixture(sessionmaker_fixture, tmp_path):
     config = AppConfiguration(
         port=random_port(),
         debug=True,
@@ -81,6 +81,12 @@ def app_fixture(sessionmaker_fixture, tmp_path):
 
     app = create_app(config, pinject_bindings)
 
+    return app, config
+
+
+@pytest.fixture
+def app_fixture(app_and_config_fixture):
+    app, config = app_and_config_fixture
     return app
 
 
