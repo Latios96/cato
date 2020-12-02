@@ -121,6 +121,6 @@ if __name__ == "__main__":
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()
     app = create_app(config, bindings)
-    http_server = WSGIServer(("localhost", config.port), app)
-    print(f"Running on http://localhost:{config.port}")
+    http_server = WSGIServer(("127.0.0.1", config.port), app)
+    print(f"Running on http://127.0.0.1:{config.port}")
     http_server.serve_forever()
