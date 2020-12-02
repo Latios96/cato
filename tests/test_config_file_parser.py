@@ -104,7 +104,7 @@ def test_success_with_variables():
     json_config_parser = JsonConfigParser()
 
     suites = json_config_parser.parse(
-        "test/test.json", StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES))
+        TEST_JSON, StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES))
     )
 
     assert suites == Config(
@@ -130,7 +130,7 @@ def test_success_with_variables_in_config_and_suite():
     json_config_parser = JsonConfigParser()
 
     suites = json_config_parser.parse(
-        "test/test.json",
+        TEST_JSON,
         StringIO(json.dumps(VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST)),
     )
 
