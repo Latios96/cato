@@ -44,7 +44,7 @@ class ProjectsBlueprint(Blueprint):
             return jsonify(errors), BAD_REQUEST
 
         project = Project(id=0, name=request.form["name"])
-        return jsonify(self._project_repository.save(project))
+        return jsonify(self._project_repository.save(project)), 201
 
     def get_project_by_name(self, project_name: str):
         project = self._project_repository.find_by_name(project_name)

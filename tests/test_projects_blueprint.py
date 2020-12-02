@@ -44,7 +44,7 @@ def test_create_project(client, project_name):
     rv = client.post(API_V_PROJECTS, data={"name": project_name})
 
     assert rv.get_json() == {"id": 1, "name": project_name}
-    assert rv.status_code == 200
+    assert rv.status_code == 201
 
 
 def test_create_project_no_name(client):
