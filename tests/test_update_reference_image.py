@@ -10,11 +10,13 @@ from cato.runners.update_missing_reference_images import UpdateMissingReferenceI
 from cato.runners.update_reference_images import UpdateReferenceImage
 from tests.utils import mock_safe
 
+EXISTS_PNG = "exists.png"
+
 
 def test_should_update():
     mock_copy = mock.MagicMock()
     output_folder = mock_safe(OutputFolder)
-    output_folder.any_existing.return_value = "exists.png"
+    output_folder.any_existing.return_value = EXISTS_PNG
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
@@ -28,7 +30,7 @@ def test_should_update():
     missing_reference_images.update(config, TestIdentifier("example", "my_first_test"))
 
     mock_copy.assert_called_once_with(
-        "exists.png", "/example/my_first_test/reference.png"
+        EXISTS_PNG, "/example/my_first_test/reference.png"
     )
 
 
@@ -54,7 +56,7 @@ def test_should_not_update_because_image_output_missing():
 def test_user_supplied_paths_are_checked():
     mock_copy = mock.MagicMock()
     output_folder = mock_safe(OutputFolder)
-    output_folder.any_existing.side_effect = ["exists.png", "reference.png"]
+    output_folder.any_existing.side_effect = [EXISTS_PNG, "reference.png"]
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
     test = Test(
         name="my_first_test",
