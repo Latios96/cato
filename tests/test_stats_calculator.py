@@ -7,6 +7,8 @@ from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.stats_calculator import StatsCalculator, Stats
 
+MESSAGE = "this is a message"
+
 
 def test_calculates_succeded_correctly():
     test = Test(name="my_first_test", command="dummy_command", variables={})
@@ -16,7 +18,7 @@ def test_calculates_succeded_correctly():
         TestStatus.SUCCESS,
         [],
         1,
-        "this is a message",
+        MESSAGE,
         None,
         None,
         datetime.datetime.now(),
@@ -40,7 +42,7 @@ def test_calculates_failed_correctly():
         TestStatus.SUCCESS,
         [],
         1,
-        "this is a message",
+        MESSAGE,
         None,
         None,
         datetime.datetime.now(),
@@ -51,7 +53,7 @@ def test_calculates_failed_correctly():
         TestStatus.FAILED,
         [],
         1,
-        "this is a message",
+        MESSAGE,
         None,
         None,
         datetime.datetime.now(),
