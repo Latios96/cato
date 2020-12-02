@@ -23,3 +23,13 @@ def test_upload_file_no_filename(client):
 
     assert response.status_code == 400
     assert response.get_json() == {"file": "Filename can not be empty!"}
+
+
+def test_serve_file(client):
+    data = {"file": (io.BytesIO(b"some initial text data"), "my_file_name")}
+    f = client.post(API_V_FILES, data=data).get_json()
+
+    response = client.get(f"/api/v1/files/{f['id']}")
+
+    assert response.status_code == 200
+    assert response.data == b"some initial text data"
