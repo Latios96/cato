@@ -1,3 +1,5 @@
+import pytest
+
 API_V_PROJECTS = "/api/v1/projects"
 
 
@@ -28,11 +30,21 @@ def test_get_project_should_return_none(client, project):
     assert rv.status_code == 404
 
 
-def test_create_project(client):
-    rv = client.post(API_V_PROJECTS, data={"name": "my_project_name"})
+@pytest.mark.parametrize(
+    "project_name",
+    [
+        "my_project_name",
+        "my-project_name",
+        "my-project_name222",
+        "22",
+        "My-Project-Name",
+    ],
+)
+def test_create_project(client, project_name):
+    rv = client.post(API_V_PROJECTS, data={"name": project_name})
 
+    assert rv.get_json() == {"id": 1, "name": project_name}
     assert rv.status_code == 200
-    assert rv.get_json() == {"id": 1, "name": "my_project_name"}
 
 
 def test_create_project_no_name(client):
@@ -42,6 +54,35 @@ def test_create_project_no_name(client):
     assert rv.get_json() == {
         "name": ["Missing data for required field."],
         "xfcgvy": ["Unknown field."],
+    }
+
+
+@pytest.mark.parametrize(
+    "invalid_project_name,error_messages",
+    [
+        ("my invalid name", ["String does not match expected pattern."]),
+        ("myinvalid%name", ["String does not match expected pattern."]),
+        ("myinvalid$name", ["String does not match expected pattern."]),
+        ("myinvalid§*+*name", ["String does not match expected pattern."]),
+        ("myinvalid/name", ["String does not match expected pattern."]),
+        ("myinvalid\\name", ["String does not match expected pattern."]),
+        ("my invalid&name", ["String does not match expected pattern."]),
+        ("my invalid name", ["String does not match expected pattern."]),
+        (
+            "",
+            [
+                "Shorter than minimum length 1.",
+                "String does not match expected pattern.",
+            ],
+        ),
+    ],
+)
+def test_create_project_invalid_name(client, invalid_project_name, error_messages):
+    rv = client.post(API_V_PROJECTS, data={"name": invalid_project_name})
+
+    assert rv.status_code == 400
+    assert rv.get_json() == {
+        "name": error_messages,
     }
 
 
