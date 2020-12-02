@@ -3,6 +3,8 @@ import pytest
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato_server.__main__ import create_app
 
+API_V_PROJECTS = "/api/v1/projects"
+
 
 class SqlAlchemyTestConfig(SqlAlchemyConfig):
     def __init__(self, session_maker, file_storage_path):
@@ -26,14 +28,14 @@ def client(sessionmaker_fixture, tmp_path):
 
 
 def test_no_projects(client):
-    rv = client.get("/api/v1/projects")
+    rv = client.get(API_V_PROJECTS)
 
     assert rv.status_code == 200
     assert rv.get_json() == []
 
 
 def test_get_projects(client, project):
-    rv = client.get("/api/v1/projects")
+    rv = client.get(API_V_PROJECTS)
 
     assert rv.status_code == 200
     assert rv.get_json() == [{"id": 1, "name": "test_name"}]
@@ -53,14 +55,14 @@ def test_get_project_should_return_none(client, project):
 
 
 def test_create_project(client):
-    rv = client.post("/api/v1/projects", data={"name": "my_project_name"})
+    rv = client.post(API_V_PROJECTS, data={"name": "my_project_name"})
 
     assert rv.status_code == 200
     assert rv.get_json() == {"id": 1, "name": "my_project_name"}
 
 
 def test_create_project_no_name(client):
-    rv = client.post("/api/v1/projects", data={"xfcgvy": "my_project_name"})
+    rv = client.post(API_V_PROJECTS, data={"xfcgvy": "my_project_name"})
 
     assert rv.status_code == 400
     assert rv.get_json() == {
