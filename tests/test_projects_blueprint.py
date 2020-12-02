@@ -1,4 +1,5 @@
 import pytest
+from random_open_port import random_port
 
 from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato_server.__main__ import create_app
@@ -28,7 +29,7 @@ class SqlAlchemyTestConfig(SqlAlchemyConfig):
 @pytest.fixture()
 def app_fixture(sessionmaker_fixture, tmp_path):
     config = AppConfiguration(
-        port=5010,
+        port=random_port(),
         debug=True,
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
