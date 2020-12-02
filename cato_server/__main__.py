@@ -89,16 +89,6 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         suite_result = suite_result_repo.find_by_id(test_result_id)
         return jsonify(suite_result.output)
 
-    @app.route("/api/v1/files/<int:file_id>", methods=["GET"])
-    def get_file(file_id):
-        file_storage: SqlAlchemyDeduplicatingFileStorage = obj_graph.provide(
-            SqlAlchemyDeduplicatingFileStorage
-        )
-        file = file_storage.find_by_id(file_id)
-        file_path = file_storage.get_path(file)
-        if file and os.path.exists(file_path):
-            return send_file(file_path, attachment_filename=file.name)
-
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
