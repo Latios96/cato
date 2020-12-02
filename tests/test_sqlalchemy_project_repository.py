@@ -22,16 +22,16 @@ def test_save_name_should_be_unique(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
     project = Project(id=0, name="test_name")
 
-    project = repository.save(project)
+    repository.save(project)
 
     with pytest.raises(IntegrityError):
-        project = repository.save(Project(id=0, name="test_name"))
+        repository.save(Project(id=0, name="test_name"))
 
 
 def test_find_by_name_should_find(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
     project = Project(id=0, name="test_name")
-    project = repository.save(project)
+    repository.save(project)
 
     assert repository.find_by_name("test_name").name == "test_name"
 
@@ -39,7 +39,7 @@ def test_find_by_name_should_find(sessionmaker_fixture):
 def test_find_by_name_should_not_find(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
     project = Project(id=0, name="dyfg")
-    project = repository.save(project)
+    repository.save(project)
 
     assert not repository.find_by_name("test_name")
 
@@ -55,7 +55,7 @@ def test_find_by_id_should_find(sessionmaker_fixture):
 def test_find_by_id_should_not_find(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
     project = Project(id=0, name="dyfg")
-    project = repository.save(project)
+    repository.save(project)
 
     by_id = repository.find_by_id(100)
     assert not by_id
