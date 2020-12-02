@@ -8,6 +8,8 @@ from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from tests.utils import mock_safe
 
+EXAMPLE_PROJECT = "Example project"
+
 EXISTS_PNG = "exists.png"
 
 
@@ -21,7 +23,7 @@ def test_should_update_missing():
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
         output_folder="output",
@@ -44,7 +46,7 @@ def test_should_not_update_because_exists():
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
         output_folder="output",
@@ -72,7 +74,7 @@ def test_user_supplied_paths_are_checked():
     )
     test_suite = TestSuite(name="example", tests=[test])
     config = Config(
-        project_name="Example project",
+        project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
         output_folder="output",
