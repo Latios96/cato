@@ -1,8 +1,13 @@
+import logging
 import os
+import tempfile
 
 from flask import Blueprint, jsonify, request, send_file
 
 from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
+from oiio.OpenImageIO import ImageBuf
+
+logger = logging.getLogger(__name__)
 
 
 class FilesBlueprint(Blueprint):
@@ -11,15 +16,33 @@ class FilesBlueprint(Blueprint):
         self._file_storage = file_storage
 
         self.route("/files/<int:file_id>", methods=["GET"])(self.get_file)
-        # self.route("/files/<int:file_id>/web-representation", methods=["GET"])(self.get_web_representation)
         self.route("files", methods=["POST"])(self.upload_file)
 
     def upload_file(self):
         uploaded_file = request.files["file"]
         if not uploaded_file.filename:
             return jsonify({"file": "Filename can not be empty!"}), 400
-        f = self._file_storage.save_stream(uploaded_file.filename, uploaded_file.stream)
+
+        extension = os.path.splitext(uploaded_file.filename)[1].lower()
+        if not extension in [".png", ".jpg", "jpeg"] and extension:
+            f = self._convert_and_save(uploaded_file)
+        else:
+            f = self._file_storage.save_stream(
+                uploaded_file.filename, uploaded_file.stream
+            )
         return jsonify(f), 201
+
+    def _convert_and_save(self, uploaded_file):
+        logger.info("Converting image %s to png", uploaded_file.filename)
+        with tempfile.TemporaryDirectory() as tmpdirname:
+            tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
+            uploaded_file.save(tmp_path)
+            target_path = os.path.splitext(tmp_path)[0] + ".png"
+
+            buf = ImageBuf(tmp_path)
+            buf.write(target_path)
+
+            return self._file_storage.save_file(target_path)
 
     def get_file(self, file_id: int):
         file = self._file_storage.find_by_id(file_id)

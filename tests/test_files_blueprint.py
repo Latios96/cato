@@ -1,4 +1,5 @@
 import io
+import os
 
 import pytest
 
@@ -23,6 +24,19 @@ def test_upload_file_no_filename(client):
 
     assert response.status_code == 400
     assert response.get_json() == {"file": "Filename can not be empty!"}
+
+
+def test_upload_file_needs_conversion(client):
+    test_exr = os.path.join(os.path.dirname(__file__), "test.exr")
+    data = {"file": (open(test_exr, "rb"), "test.exr")}
+    response = client.post(API_V_FILES, data=data)
+
+    assert response.status_code == 201
+    assert response.get_json() == {
+        "hash": "505cc9e0719a4f15a36eaa6df776bea0cc065b32d198be6002a79a03823b4d9e",
+        "id": 1,
+        "name": "test.png",
+    }
 
 
 def test_serve_file(client):
