@@ -10,8 +10,12 @@ from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
+TEST_JSON = "test/test.json"
+
+EXAMPLE_PROJECT = "example project"
+
 VALID_CONFIG = {
-    "project_name": "example project",
+    "project_name": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -26,7 +30,7 @@ VALID_CONFIG = {
 }
 
 VALID_CONFIG_WITH_VARIABLES = {
-    "project_name": "example project",
+    "project_name": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -42,7 +46,7 @@ VALID_CONFIG_WITH_VARIABLES = {
 }
 
 VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
-    "project_name": "example project",
+    "project_name": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -75,12 +79,10 @@ INVALID_CONFIG = {
 def test_success():
     json_config_parser = JsonConfigParser()
 
-    suites = json_config_parser.parse(
-        "test/test.json", StringIO(json.dumps(VALID_CONFIG))
-    )
+    suites = json_config_parser.parse(TEST_JSON, StringIO(json.dumps(VALID_CONFIG)))
 
     assert suites == Config(
-        project_name="example project",
+        project_name=EXAMPLE_PROJECT,
         path="test",
         test_suites=[
             TestSuite(
@@ -106,7 +108,7 @@ def test_success_with_variables():
     )
 
     assert suites == Config(
-        project_name="example project",
+        project_name=EXAMPLE_PROJECT,
         path="test",
         test_suites=[
             TestSuite(
@@ -133,7 +135,7 @@ def test_success_with_variables_in_config_and_suite():
     )
 
     assert suites == Config(
-        project_name="example project",
+        project_name=EXAMPLE_PROJECT,
         path="test",
         test_suites=[
             TestSuite(
