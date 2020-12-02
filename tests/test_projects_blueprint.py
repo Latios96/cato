@@ -1,7 +1,6 @@
 import pytest
 from random_open_port import random_port
 
-from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -12,18 +11,6 @@ from cato_server.configuration.bindings_factory import (
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 API_V_PROJECTS = "/api/v1/projects"
-
-
-class SqlAlchemyTestConfig(SqlAlchemyConfig):
-    def __init__(self, session_maker, file_storage_path):
-        self.session_maker = session_maker
-        self._file_storage_path = file_storage_path
-
-    def get_session_maker(self):
-        return self.session_maker
-
-    def get_file_storage_path(self):
-        return self._file_storage_path
 
 
 @pytest.fixture()
