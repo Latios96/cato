@@ -102,18 +102,30 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     return app
 
 
-if __name__ == "__main__":
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", help="path to config.ini")
     args = parser.parse_args()
-    path = "config.ini"
-    if args.config:
-        path = args.config
 
+    path = get_config_path(args)
     config = AppConfigurationReader().read_file(path)
+
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()
+
     app = create_app(config, bindings)
+
     http_server = WSGIServer(("127.0.0.1", config.port), app)
     logger.info(f"Running on http://127.0.0.1:{config.port}")
     http_server.serve_forever()
+
+
+def get_config_path(args):
+    path = "config.ini"
+    if args.config:
+        path = args.config
+    return path
+
+
+if __name__ == "__main__":
+    main()
