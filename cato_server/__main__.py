@@ -93,7 +93,6 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     @app.route("/<string:path>")
     @app.route("/<path:path>")
     def index(path):
-        print(path)
         return app.send_static_file("index.html")
 
     app.register_blueprint(obj_graph.provide(ProjectsBlueprint), url_prefix="/api/v1")
