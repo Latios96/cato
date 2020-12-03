@@ -41,22 +41,22 @@ def test_get_project_should_return_none(client, project):
     ],
 )
 def test_create_project(client, project_name):
-    rv = client.post(API_V_PROJECTS, data={"name": project_name})
+    rv = client.post(API_V_PROJECTS, json={"name": project_name})
 
     assert rv.get_json() == {"id": 1, "name": project_name}
     assert rv.status_code == 201
 
 
 def test_create_project_same_name_should_fail(client):
-    client.post(API_V_PROJECTS, data={"name": "test"})
-    rv = client.post(API_V_PROJECTS, data={"name": "test"})
+    client.post(API_V_PROJECTS, json={"name": "test"})
+    rv = client.post(API_V_PROJECTS, json={"name": "test"})
 
     assert rv.get_json() == {"name": 'Project with name "test" already exists!'}
     assert rv.status_code == 400
 
 
 def test_create_project_no_name(client):
-    rv = client.post(API_V_PROJECTS, data={"xfcgvy": "my_project_name"})
+    rv = client.post(API_V_PROJECTS, json={"xfcgvy": "my_project_name"})
 
     assert rv.status_code == 400
     assert rv.get_json() == {
@@ -86,7 +86,7 @@ def test_create_project_no_name(client):
     ],
 )
 def test_create_project_invalid_name(client, invalid_project_name, error_messages):
-    rv = client.post(API_V_PROJECTS, data={"name": invalid_project_name})
+    rv = client.post(API_V_PROJECTS, json={"name": invalid_project_name})
 
     assert rv.status_code == 400
     assert rv.get_json() == {

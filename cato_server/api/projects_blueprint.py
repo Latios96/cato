@@ -40,11 +40,12 @@ class ProjectsBlueprint(Blueprint):
         return jsonify(project)
 
     def create_project(self):
-        errors = CreateProjectSchema().validate(request.form)
+        request_json = request.get_json()
+        errors = CreateProjectSchema().validate(request_json)
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        project_name = request.form["name"]
+        project_name = request_json["name"]
 
         if self._project_repository.find_by_name(project_name):
             return (
