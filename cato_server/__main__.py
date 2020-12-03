@@ -34,7 +34,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     app = flask.Flask(__name__, static_url_path="/")
 
     if app_configuration.debug == True:
-        logger.info("Configure app to run in debug mode")
+        logger.info("Configuring app to run in debug mode")
         app.config["DEBUG"] = True
 
     @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
