@@ -18,6 +18,7 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.project_blueprint import ProjectsBlueprint
+from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
@@ -95,6 +96,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
 
     app.register_blueprint(obj_graph.provide(ProjectsBlueprint), url_prefix="/api/v1")
     app.register_blueprint(obj_graph.provide(FilesBlueprint), url_prefix="/api/v1")
+    app.register_blueprint(obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1")
 
     return app
 
