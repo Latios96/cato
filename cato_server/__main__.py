@@ -79,7 +79,6 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     app = create_app(config, bindings)
-    print(app.url_map)
 
     http_server = WSGIServer(("127.0.0.1", config.port), app)
     logger.info(f"Up and running on http://127.0.0.1:{config.port}")
