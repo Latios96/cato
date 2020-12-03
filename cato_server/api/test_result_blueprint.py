@@ -34,7 +34,6 @@ class TestResultsBlueprint(Blueprint):
                 suite_result_id, identifier
             )
         )
-        print(suite_result)
         if not suite_result:
             abort(404)
         suite_result = dataclasses.asdict(suite_result)
