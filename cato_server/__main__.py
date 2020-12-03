@@ -25,6 +25,7 @@ from cato_server.server_logging import logger
 
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
+    logger.info("Creating Flask app..")
     obj_graph = pinject.new_object_graph(
         modules=[cato, cato_server], binding_specs=[bindings]
     )
@@ -32,6 +33,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     app = flask.Flask(__name__, static_url_path="/")
 
     if app_configuration.debug == True:
+        logger.info("Configure app to run in debug mode")
         app.config["DEBUG"] = True
 
     @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
@@ -111,7 +113,7 @@ def main():
     app = create_app(config, bindings)
 
     http_server = WSGIServer(("127.0.0.1", config.port), app)
-    logger.info(f"Running on http://127.0.0.1:{config.port}")
+    logger.info(f"Up and running on http://127.0.0.1:{config.port}")
     http_server.serve_forever()
 
 
