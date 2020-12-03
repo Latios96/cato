@@ -1,6 +1,4 @@
 # noinspection PyUnresolvedReferences
-import cato_server.server_logging
-
 import argparse
 
 import flask
@@ -10,20 +8,19 @@ from gevent.pywsgi import WSGIServer
 
 import cato
 import cato_server
-from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
+import cato_server.server_logging
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
+from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
 
-import logging
-
-logger = logging.getLogger(__name__)
+logger = cato_server.server_logging.logger
 
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
@@ -37,12 +34,6 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     if app_configuration.debug == True:
         logger.info("Configuring app to run in debug mode")
         app.config["DEBUG"] = True
-
-    @app.route("/api/v1/runs/project/<project_id>", methods=["GET"])
-    def run_by_project(project_id):
-        run_repo: SqlAlchemyRunRepository = obj_graph.provide(SqlAlchemyRunRepository)
-        runs = run_repo.find_by_project_id(project_id)
-        return jsonify(runs)
 
     @app.route("/api/v1/suite_results/run/<run_id>", methods=["GET"])
     def suite_result_by_run(run_id):
@@ -63,6 +54,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     app.register_blueprint(
         obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1"
     )
+    app.register_blueprint(obj_graph.provide(RunsBlueprint), url_prefix="/api/v1")
 
     return app
 
