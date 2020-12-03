@@ -27,9 +27,11 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 from cato_server.configuration.app_configuration import AppConfiguration
 
 import logging
+
 logger = logging.getLogger(__name__)
 
 FILE_STORAGE_IN_MEMORY = ":memory:"
+
 
 @dataclass
 class StorageBindings:
@@ -115,5 +117,11 @@ class BindingsFactory:
             return engine
         pool_size = 10
         max_overflow = 20
-        logger.info("Creating engine with pool_size=%s and max_overflow=%s", pool_size, max_overflow)
-        return create_engine(database_url, pool_size=pool_size, max_overflow=max_overflow)
+        logger.info(
+            "Creating engine with pool_size=%s and max_overflow=%s",
+            pool_size,
+            max_overflow,
+        )
+        return create_engine(
+            database_url, pool_size=pool_size, max_overflow=max_overflow
+        )
