@@ -3,8 +3,10 @@ import os
 import pytest
 from requests.models import Response
 
+from cato.domain import run
 from cato.domain.project import Project
 from cato.storage.domain.File import File
+from cato.storage.domain.suite_result import SuiteResult
 from cato_api_client.cato_api_client import CatoApiClient
 
 
@@ -17,10 +19,13 @@ class CatoApiTestClient(CatoApiClient):
         get = self._client.get(url.replace(self._url, ""))
         return get
 
-    def _post(self, url, params, files=None):
+    def _post_form(self, url, params, files=None):
         if files:
             params.update(files)
         return self._client.post(url.replace(self._url, ""), data=params)
+
+    def _post_json(self, url, params):
+        return self._client.post(url.replace(self._url, ""), json=params)
 
     def _get_json(self, reponse):
         return reponse.get_json()
@@ -73,3 +78,24 @@ def test_upload_file_not_existing(cato_api_client):
 
     with pytest.raises(ValueError):
         cato_api_client.upload_file(path)
+
+
+def test_create_suite_result_success(cato_api_client, run):
+    suite_result = SuiteResult(
+        id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+
+    result = cato_api_client.create_suite_result(suite_result)
+
+    assert result == SuiteResult(
+        id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+
+
+def test_create_suite_result_failure_missing_run_id(cato_api_client, run):
+    suite_result = SuiteResult(
+        id=0, run_id=42, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+
+    with pytest.raises(ValueError):
+        cato_api_client.create_suite_result(suite_result)

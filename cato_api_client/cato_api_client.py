@@ -10,6 +10,7 @@ from requests import Response
 
 from cato.domain.project import Project
 from cato.storage.domain.File import File
+from cato.storage.domain.suite_result import SuiteResult
 
 logger = logging.getLogger(__name__)
 
@@ -43,11 +44,21 @@ class CatoApiClient:
         files = {'file': open(path, 'rb')}
 
         logger.info("Uploading file %s", path)
-        response = self._post(url, {}, files=files)
+        response = self._post_form(url, {}, files=files)
 
         if response.status_code == 201:
             return File(**self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
+
+    def create_suite_result(self, suite_result: SuiteResult) -> Project:
+        if suite_result.id:
+            raise ValueError(f"Id of SuiteResult is not 0, was {suite_result.id}")
+
+        url = self._build_url("/api/v1/suite_results")
+        logger.info("Creating suite_result with data %s..", suite_result)
+        return self._create(url, {'run_id': suite_result.run_id,
+                                  'suite_name': suite_result.suite_name,
+                                  'suite_variables': suite_result.suite_variables}, SuiteResult)
 
     def _build_url(self, url_template, *params: str):
         params = list(map(lambda x: quote(x), params))
@@ -70,7 +81,7 @@ class CatoApiClient:
         return reponse.json()
 
     def _create(self, url, params, cls):
-        response = self._post(url, params)
+        response = self._post_json(url, params)
         if response.status_code == 201:
             return cls(**self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
@@ -79,8 +90,14 @@ class CatoApiClient:
         return ValueError("Bad parameters: {}".format(
             " ".join(["{}: {}".format(key, value) for key, value in self._get_json(response).items()])))
 
-    def _post(self, url, params, files=None):
+    def _post_form(self, url, params, files=None):
         logger.debug("Launching POST request to %s with params %s", url, params)
         response = requests.post(url, data=params, files=files)
+        logger.debug("Received response %s", response)
+        return response
+
+    def _post_json(self, url, params):
+        logger.debug("Launching POST request to %s with json %s", url, params)
+        response = requests.post(url, json=params)
         logger.debug("Received response %s", response)
         return response
