@@ -1,4 +1,3 @@
-# noinspection PyUnresolvedReferences
 import argparse
 
 import flask
