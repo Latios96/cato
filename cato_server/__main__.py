@@ -1,19 +1,14 @@
-from cato_server.server_logging import logger
 import argparse
 import dataclasses
-import os
 
 import flask
 import pinject
-from flask import jsonify, send_file
+from flask import jsonify
 from gevent.pywsgi import WSGIServer
 
 import cato
 import cato_server
 from cato.domain.test_identifier import TestIdentifier
-from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
-    SqlAlchemyDeduplicatingFileStorage,
-)
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
@@ -26,6 +21,7 @@ from cato_server.api.project_blueprint import ProjectsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
+from cato_server.server_logging import logger
 
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
