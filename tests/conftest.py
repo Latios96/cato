@@ -6,9 +6,14 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
+from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
+from cato.domain.test_identifier import TestIdentifier
+from cato.domain.test_result import TestStatus
+from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
+from cato.storage.domain.test_result import TestResult
 from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
@@ -16,6 +21,9 @@ from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
+)
+from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+    SqlAlchemyTestResultRepository,
 )
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -62,6 +70,30 @@ def suite_result(sessionmaker_fixture, run):
         id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
     )
     return repository.save(suite_result)
+
+
+@pytest.fixture
+def test_result(sessionmaker_fixture, suite_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result = TestResult(
+        id=0,
+        suite_result_id=suite_result.id,
+        test_name="my_test_name",
+        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test_name"),
+        test_command="my_command",
+        test_variables={"testkey": "test_value"},
+        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+        execution_status=ExecutionStatus.NOT_STARTED,
+        status=TestStatus.SUCCESS,
+        output=["1", "2", "3"],
+        seconds=5,
+        message="sucess",
+        image_output=3,
+        reference_image=4,
+        started_at=datetime.datetime.now(),
+        finished_at=datetime.datetime.now(),
+    )
+    return repository.save(test_result)
 
 
 @pytest.fixture()

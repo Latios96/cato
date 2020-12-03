@@ -51,43 +51,6 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         suite_results = suite_result_repo.find_by_run_id(run_id)
         return jsonify(suite_results)
 
-    @app.route(
-        "/api/v1/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
-        methods=["GET"],
-    )
-    def get_test_result_by_suite_and_identifier(suite_result_id, suite_name, test_name):
-        suite_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
-            SqlAlchemyTestResultRepository
-        )
-        suite_result = suite_result_repo.find_by_suite_result_and_test_identifier(
-            suite_result_id, TestIdentifier(suite_name, test_name)
-        )
-        if suite_result:
-            suite_result = dataclasses.asdict(suite_result)
-            suite_result.pop("output")
-        return jsonify(suite_result)
-
-    @app.route("/api/v1/test_results/suite_result/<int:suite_id>", methods=["GET"])
-    def get_test_result_by_suite_id(suite_id):
-        test_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
-            SqlAlchemyTestResultRepository
-        )
-        test_results = test_result_repo.find_by_suite_result(suite_id)
-        mapped_results = []
-        for result in test_results:
-            result = dataclasses.asdict(result)
-            result.pop("output")
-            mapped_results.append(result)
-        return jsonify(mapped_results)
-
-    @app.route("/api/v1/test_results/<int:test_result_id>/output", methods=["GET"])
-    def get_test_result_output(test_result_id):
-        suite_result_repo: SqlAlchemyTestResultRepository = obj_graph.provide(
-            SqlAlchemyTestResultRepository
-        )
-        suite_result = suite_result_repo.find_by_id(test_result_id)
-        return jsonify(suite_result.output)
-
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
@@ -96,7 +59,9 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
 
     app.register_blueprint(obj_graph.provide(ProjectsBlueprint), url_prefix="/api/v1")
     app.register_blueprint(obj_graph.provide(FilesBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1")
+    app.register_blueprint(
+        obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1"
+    )
 
     return app
 
@@ -113,6 +78,7 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     app = create_app(config, bindings)
+    print(app.url_map)
 
     http_server = WSGIServer(("127.0.0.1", config.port), app)
     logger.info(f"Up and running on http://127.0.0.1:{config.port}")
