@@ -1,5 +1,4 @@
 import argparse
-import dataclasses
 
 import flask
 import pinject
@@ -8,13 +7,9 @@ from gevent.pywsgi import WSGIServer
 
 import cato
 import cato_server
-from cato.domain.test_identifier import TestIdentifier
 from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
 from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
-)
-from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
 )
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
