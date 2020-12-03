@@ -26,8 +26,10 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from cato_server.configuration.app_configuration import AppConfiguration
 
-FILE_STORAGE_IN_MEMORY = ":memory:"
+import logging
+logger = logging.getLogger(__name__)
 
+FILE_STORAGE_IN_MEMORY = ":memory:"
 
 @dataclass
 class StorageBindings:
@@ -82,11 +84,13 @@ class BindingsFactory:
         self._configuration = configuration
 
     def create_bindings(self) -> PinjectBindings:
+        logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
         bindings = Bindings(storage_bindings)
         return PinjectBindings(bindings)
 
     def create_storage_bindings(self):
+        logger.info("Creating storage bindings..")
         return StorageBindings(
             project_repository_binding=SqlAlchemyProjectRepository,
             run_repository_binding=SqlAlchemyRunRepository,
@@ -103,8 +107,13 @@ class BindingsFactory:
     def _get_engine(self):
         database_url = self._configuration.storage_configuration.database_url
         if database_url.startswith("sqlite"):
+            logger.info("Configure bindings for SQLite database..")
             engine = create_engine(database_url)
             if database_url.endswith(":memory:"):
+                logger.info("SQLite in-memory detected, creating tables..")
                 Base.metadata.create_all(engine)
             return engine
-        return create_engine(database_url, pool_size=10, max_overflow=20)
+        pool_size = 10
+        max_overflow = 20
+        logger.info("Creating engine with pool_size=%s and max_overflow=%s", pool_size, max_overflow)
+        return create_engine(database_url, pool_size=pool_size, max_overflow=max_overflow)
