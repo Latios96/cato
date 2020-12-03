@@ -12,6 +12,6 @@ logger = logging.getLogger(__name__)
 
 class TestResultsBlueprint(Blueprint):
     def __init__(self, file_storage: AbstractFileStorage):
-        super(TestResultsBlueprint, self).__init__("files", __name__)
+        super(TestResultsBlueprint, self).__init__("test-results", __name__)
         self._file_storage = file_storage
 
