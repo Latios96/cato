@@ -1,3 +1,6 @@
+# noinspection PyUnresolvedReferences
+import cato_server.server_logging
+
 import argparse
 
 import flask
@@ -17,7 +20,10 @@ from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
-from cato_server.server_logging import logger
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
