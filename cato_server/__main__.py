@@ -15,6 +15,7 @@ from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
+from cato_server.api.suite_results_blueprint import SuiteResultsBlueprint
 from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
@@ -35,14 +36,6 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         logger.info("Configuring app to run in debug mode")
         app.config["DEBUG"] = True
 
-    @app.route("/api/v1/suite_results/run/<run_id>", methods=["GET"])
-    def suite_result_by_run(run_id):
-        suite_result_repo: SqlAlchemySuiteResultRepository = obj_graph.provide(
-            SqlAlchemySuiteResultRepository
-        )
-        suite_results = suite_result_repo.find_by_run_id(run_id)
-        return jsonify(suite_results)
-
     @app.route("/", defaults={"path": ""})
     @app.route("/<string:path>")
     @app.route("/<path:path>")
@@ -55,6 +48,9 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1"
     )
     app.register_blueprint(obj_graph.provide(RunsBlueprint), url_prefix="/api/v1")
+    app.register_blueprint(
+        obj_graph.provide(SuiteResultsBlueprint), url_prefix="/api/v1"
+    )
 
     return app
 
