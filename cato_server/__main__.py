@@ -28,6 +28,7 @@ BANNER = """
  `-----'  `--`--'   `--'    `---'    `-----'   `----' `--'       `--'     `----' `--'    
 """
 
+
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     logger.info(BANNER)
     logger.info("Creating Flask app..")
@@ -74,6 +75,8 @@ def main():
 
     path = get_config_path(args)
     config = AppConfigurationReader().read_file(path)
+
+    cato_server.server_logging.setup_file_handler('log.txt', 1024 * 1024, 10)
 
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()
