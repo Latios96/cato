@@ -76,7 +76,7 @@ def main():
     path = get_config_path(args)
     config = AppConfigurationReader().read_file(path)
 
-    cato_server.server_logging.setup_file_handler('log.txt', 1024 * 1024, 10)
+    cato_server.server_logging.setup_file_handler("log.txt", 1024 * 1024, 10)
 
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()

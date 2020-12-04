@@ -2,8 +2,13 @@ import configparser
 
 import os
 
+import humanfriendly
+
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.app_configuration_defaults import AppConfigurationDefaults
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
+from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
@@ -21,11 +26,17 @@ class AppConfigurationReader:
         config.read(path)
 
         storage_configuration = self._read_storage_configuration(config)
+        logging_configuration = self._read_logging_configuration(config)
 
         return AppConfiguration(
-            port=config.getint("app", "port"),
-            debug=config.getboolean("app", "debug", fallback=AppConfigurationDefaults.PORT_DEFAULT),
+            port=config.getint(
+                "app", "port", fallback=AppConfigurationDefaults.PORT_DEFAULT
+            ),
+            debug=config.getboolean(
+                "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
+            ),
             storage_configuration=storage_configuration,
+            logging_configuration=logging_configuration,
         )
 
     def _read_storage_configuration(
@@ -34,4 +45,26 @@ class AppConfigurationReader:
         return StorageConfiguration(
             database_url=config.get("storage", "database_url"),
             file_storage_url=config.get("storage", "file_storage_url"),
+        )
+
+    def _read_logging_configuration(
+        self, config: configparser.ConfigParser
+    ) -> LoggingConfiguration:
+        max_bytes_str = config.get("logging", "max_file_size", fallback=None)
+        if max_bytes_str:
+            max_bytes = humanfriendly.parse_size(max_bytes_str)
+        else:
+            max_bytes = AppConfigurationDefaults.MAX_BYTES_DEFAULT
+        return LoggingConfiguration(
+            use_file_handler=config.getboolean(
+                "logging",
+                "use_file_handler",
+                fallback=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+            ),
+            max_bytes=max_bytes,
+            backup_count=config.getint(
+                "logging",
+                "backup_count",
+                fallback=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
+            ),
         )

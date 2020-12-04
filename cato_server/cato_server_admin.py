@@ -2,15 +2,18 @@ import argparse
 import sys
 
 import cato_server.server_logging
+
 logger = cato_server.server_logging.logger
 
-from cato_server.configuration.app_configuration_defaults import AppConfigurationDefaults
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.configuration.app_configuration_writer import AppConfigurationWriter
 
 
 def config_template(path):
     if not path:
-        path = 'config.ini'
+        path = "config.ini"
 
     config = AppConfigurationDefaults().create()
     logger.info("Write config to %s", path)

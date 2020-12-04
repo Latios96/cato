@@ -15,10 +15,14 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.configuration.bindings_factory import (
     BindingsFactory,
     FILE_STORAGE_IN_MEMORY,
 )
+from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
@@ -29,6 +33,11 @@ def test_create_storage_bindings_for_postgres():
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
             file_storage_url="some_path",
+        ),
+        logging_configuration=LoggingConfiguration(
+            use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+            max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
+            backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
     )
     bindings_factory = BindingsFactory(configuration)
@@ -57,6 +66,11 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
+        ),
+        logging_configuration=LoggingConfiguration(
+            use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+            max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
+            backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
     )
     bindings_factory = BindingsFactory(configuration)

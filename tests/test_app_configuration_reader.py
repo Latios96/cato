@@ -1,22 +1,18 @@
 import configparser
 import os
 
+import humanfriendly
 import pytest
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
+from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 VALID_INI_FILE = """[app]
 port=5000
 debug=True
 [storage]
-database_url=my_database_url
-file_storage_url=my_file_storage_url"""
-
-MISSING_PORT = """[app]
-[storage]
-debug=True
 database_url=my_database_url
 file_storage_url=my_file_storage_url"""
 
@@ -37,6 +33,44 @@ port=5000
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url"""
+
+WITH_LOGGING = """[app]
+port=5000
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[logging]
+use_file_handler=False
+max_file_size=100mb
+backup_count=100"""
+
+WITH_LOGGING_INVALID_USE_FILE_HANDLER = """[app]
+port=5000
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[logging]
+use_file_handler=wurst
+max_file_size=100mb
+backup_count=100"""
+WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
+port=5000
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[logging]
+use_file_handler=True
+max_file_size=100wurst
+backup_count=100"""
+WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
+port=5000
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[logging]
+use_file_handler=True
+max_file_size=1mb
+backup_count=wurst"""
 
 
 @pytest.fixture
@@ -68,11 +102,14 @@ def test_read_valid_file(ini_file_creator):
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
+        logging_configuration=LoggingConfiguration(
+            True, humanfriendly.parse_size("10mb"), 10
+        ),
     )
 
 
 @pytest.mark.parametrize(
-    "invalid_config", [MISSING_PORT, MISSING_DATABASE_URL, MISSING_FILE_STORAGE_URL]
+    "invalid_config", [MISSING_DATABASE_URL, MISSING_FILE_STORAGE_URL]
 )
 def test_read_missing_should_fail(invalid_config, ini_file_creator):
     ini_path = ini_file_creator(invalid_config)
@@ -94,4 +131,23 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
+        logging_configuration=LoggingConfiguration(
+            True, humanfriendly.parse_size("10mb"), 10
+        ),
     )
+
+
+@pytest.mark.parametrize(
+    "invalid_config,exception",
+    [
+        (WITH_LOGGING_INVALID_USE_FILE_HANDLER, ValueError),
+        (WITH_LOGGING_INVALID_MAX_FILE_SIZE, humanfriendly.InvalidSize),
+        (WITH_LOGGING_INVALID_BACKUP_COUNT, ValueError),
+    ],
+)
+def test_read_missing_should_fail(invalid_config, exception, ini_file_creator):
+    ini_path = ini_file_creator(invalid_config)
+    reader = AppConfigurationReader()
+
+    with pytest.raises(exception):
+        reader.read_file(ini_path)

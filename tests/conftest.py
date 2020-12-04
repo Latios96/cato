@@ -1,5 +1,6 @@
 import datetime
 
+import humanfriendly
 import pytest
 from random_open_port import random_port
 from sqlalchemy import create_engine, event
@@ -32,6 +33,7 @@ from cato_server.configuration.bindings_factory import (
     Bindings,
     PinjectBindings,
 )
+from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
@@ -103,6 +105,9 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
         debug=True,
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
+        ),
+        logging_configuration=LoggingConfiguration(
+            False, humanfriendly.parse_size("10mb"), 10
         ),
     )
     bindings_factory = BindingsFactory(config)
