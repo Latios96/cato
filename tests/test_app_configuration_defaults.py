@@ -20,6 +20,6 @@ def test_create_default_config():
             database_url="db_url", file_storage_url="file_storage_url"
         ),
         logging_configuration=LoggingConfiguration(
-            True, humanfriendly.parse_size("10mb"), 10
+            "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
     )

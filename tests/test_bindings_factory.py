@@ -20,7 +20,6 @@ from cato_server.configuration.app_configuration_defaults import (
 )
 from cato_server.configuration.bindings_factory import (
     BindingsFactory,
-    FILE_STORAGE_IN_MEMORY,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -35,6 +34,7 @@ def test_create_storage_bindings_for_postgres():
             file_storage_url="some_path",
         ),
         logging_configuration=LoggingConfiguration(
+            log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
             use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
@@ -68,6 +68,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             file_storage_url="some_path",
         ),
         logging_configuration=LoggingConfiguration(
+            log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
             use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,

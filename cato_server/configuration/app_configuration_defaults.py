@@ -8,6 +8,7 @@ TEN_MEGABYTES = 10_000_000
 class AppConfigurationDefaults:
     DEBUG_DEFAULT = False
     PORT_DEFAULT = 5000
+    LOG_FILE_PATH_DEFAULT = "log.txt"
     USE_FILE_HANDLER_DEFAULT = True
     MAX_BYTES_DEFAULT = TEN_MEGABYTES
     BACKUP_COUNT_DEFAULT = 10
@@ -20,6 +21,7 @@ class AppConfigurationDefaults:
                 database_url="db_url", file_storage_url="file_storage_url"
             ),
             logging_configuration=LoggingConfiguration(
+                log_file_path=self.LOG_FILE_PATH_DEFAULT,
                 use_file_handler=self.USE_FILE_HANDLER_DEFAULT,
                 max_bytes=self.MAX_BYTES_DEFAULT,
                 backup_count=self.BACKUP_COUNT_DEFAULT,

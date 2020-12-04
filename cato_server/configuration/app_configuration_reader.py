@@ -56,6 +56,7 @@ class AppConfigurationReader:
         else:
             max_bytes = AppConfigurationDefaults.MAX_BYTES_DEFAULT
         return LoggingConfiguration(
+            log_file_path=config.get("logging", "log_file_path", fallback="log.txt"),
             use_file_handler=config.getboolean(
                 "logging",
                 "use_file_handler",

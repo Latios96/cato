@@ -107,7 +107,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),
         logging_configuration=LoggingConfiguration(
-            False, humanfriendly.parse_size("10mb"), 10
+            "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
     )
     bindings_factory = BindingsFactory(config)

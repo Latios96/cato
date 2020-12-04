@@ -40,6 +40,7 @@ port=5000
 database_url=my_database_url
 file_storage_url=my_file_storage_url
 [logging]
+log_file_path=cato-log.txt
 use_file_handler=False
 max_file_size=100mb
 backup_count=100"""
@@ -53,6 +54,7 @@ file_storage_url=my_file_storage_url
 use_file_handler=wurst
 max_file_size=100mb
 backup_count=100"""
+
 WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
 port=5000
 [storage]
@@ -62,6 +64,7 @@ file_storage_url=my_file_storage_url
 use_file_handler=True
 max_file_size=100wurst
 backup_count=100"""
+
 WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
 port=5000
 [storage]
@@ -103,7 +106,7 @@ def test_read_valid_file(ini_file_creator):
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
         logging_configuration=LoggingConfiguration(
-            True, humanfriendly.parse_size("10mb"), 10
+            "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
     )
 
@@ -132,7 +135,25 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
         logging_configuration=LoggingConfiguration(
-            True, humanfriendly.parse_size("10mb"), 10
+            "log.txt", True, humanfriendly.parse_size("10mb"), 10
+        ),
+    )
+
+
+def test_read_with_logging(ini_file_creator):
+    ini_path = ini_file_creator(WITH_LOGGING)
+    reader = AppConfigurationReader()
+
+    config = reader.read_file(ini_path)
+
+    assert config == AppConfiguration(
+        port=5000,
+        debug=False,
+        storage_configuration=StorageConfiguration(
+            database_url="my_database_url", file_storage_url="my_file_storage_url"
+        ),
+        logging_configuration=LoggingConfiguration(
+            "cato-log.txt", False, humanfriendly.parse_size("100mb"), 100
         ),
     )
 
