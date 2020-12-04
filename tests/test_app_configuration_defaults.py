@@ -1,10 +1,12 @@
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.app_configuration_defaults import AppConfigurationDefault
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
 def test_create_default_config():
-    configuration_default = AppConfigurationDefault()
+    configuration_default = AppConfigurationDefaults()
 
     config = configuration_default.create()
 

@@ -2,8 +2,7 @@ from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
-class AppConfigurationDefault:
-
+class AppConfigurationDefaults:
     def create(self) -> AppConfiguration:
         return AppConfiguration(
             port=5000,
