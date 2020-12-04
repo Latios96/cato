@@ -3,6 +3,7 @@ import configparser
 import os
 
 from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.app_configuration_defaults import AppConfigurationDefaults
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
@@ -23,7 +24,7 @@ class AppConfigurationReader:
 
         return AppConfiguration(
             port=config.getint("app", "port"),
-            debug=config.getboolean("app", "debug", fallback=False),
+            debug=config.getboolean("app", "debug", fallback=AppConfigurationDefaults.PORT_DEFAULT),
             storage_configuration=storage_configuration,
         )
 
