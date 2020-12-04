@@ -66,7 +66,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 suite_name=test_suite.name,
                 suite_variables=test_suite.variables,
             )
-            suite_result = self._suite_result_repository.save(suite_result)
+            suite_result = self._cato_api_client.create_suite_result(suite_result)
 
             for test in test_suite.tests:
                 test_result = TestResult(
