@@ -3,6 +3,7 @@ import argparse
 import flask
 import pinject
 from gevent.pywsgi import WSGIServer
+from werkzeug.exceptions import HTTPException
 
 import cato
 import cato_server
@@ -55,6 +56,13 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     app.register_blueprint(
         obj_graph.provide(SuiteResultsBlueprint), url_prefix="/api/v1"
     )
+
+    @app.errorhandler(Exception)
+    def handle_500(e):
+        if isinstance(e, HTTPException):
+            return e
+        logger.error(e, exc_info=True)
+        return "Internal Server Error", 500
 
     return app
 
