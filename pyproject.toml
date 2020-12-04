@@ -13,6 +13,7 @@ packages = [
 
 [tool.poetry.scripts]
 cato = 'cato.__main__:main'
+cato_server_admin = 'cato_server.cato_server_admin:main'
 
 [tool.poetry.dependencies]
 python = "^3.7"

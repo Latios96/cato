@@ -206,7 +206,9 @@ def main():
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
     )
     list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
     args = main_parser.parse_args()
+
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
