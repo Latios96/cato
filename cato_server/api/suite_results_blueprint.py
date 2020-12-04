@@ -48,6 +48,21 @@ class SuiteResultsBlueprint(Blueprint):
         errors = schema.validate(request_json)
         if errors:
             return jsonify(errors), BAD_REQUEST
+
+        if self._suite_result_repository.find_by_run_id_and_name(
+            request_json["run_id"], request_json["suite_name"]
+        ):
+            return (
+                jsonify(
+                    [
+                        {
+                            "run_id": f'A test suite with name {request_json["suite_name"]} already exists for run id {request_json["run_id"]}'
+                        }
+                    ]
+                ),
+                BAD_REQUEST,
+            )
+
         suite_result = SuiteResult(
             id=0,
             run_id=request_json["run_id"],

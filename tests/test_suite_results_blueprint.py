@@ -77,6 +77,20 @@ def test_create_suite_result_invalid_data_should_not_create(data, errors, client
     assert rv.get_json() == errors
 
 
+def test_create_suite_result_with_same_name_should_error(client, run):
+    url = "/api/v1/suite_results"
+
+    data = dict(run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"})
+
+    rv = client.post(url, json=data)
+    rv = client.post(url, json=data)
+
+    assert rv.status_code == 400
+    assert rv.get_json() == [
+        {"run_id": "A test suite with name my_suite already exists for run id 1"}
+    ]
+
+
 def test_create_suite_result_should_create(client, run):
     url = "/api/v1/suite_results"
 
