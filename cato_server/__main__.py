@@ -18,8 +18,17 @@ from cato_server.configuration.bindings_factory import BindingsFactory, PinjectB
 
 logger = cato_server.server_logging.logger
 
+BANNER = """
+
+ ,-----.            ,--.              ,---.                                              
+'  .--./  ,--,--. ,-'  '-.  ,---.    '   .-'   ,---.  ,--.--. ,--.  ,--.  ,---.  ,--.--. 
+|  |     ' ,-.  | '-.  .-' | .-. |   `.  `-.  | .-. : |  .--'  \  `'  /  | .-. : |  .--' 
+'  '--'\ \ '-'  |   |  |   ' '-' '   .-'    | \   --. |  |      \    /   \   --. |  |    
+ `-----'  `--`--'   `--'    `---'    `-----'   `----' `--'       `--'     `----' `--'    
+"""
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
+    logger.info(BANNER)
     logger.info("Creating Flask app..")
     obj_graph = pinject.new_object_graph(
         modules=[cato, cato_server], binding_specs=[bindings]
