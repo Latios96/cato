@@ -1,7 +1,9 @@
 import argparse
+import datetime
 
 import flask
 import pinject
+from flask.json import JSONEncoder
 from gevent.pywsgi import WSGIServer
 from werkzeug.exceptions import HTTPException
 
@@ -64,6 +66,20 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
             return e
         logger.error(e, exc_info=True)
         return "Internal Server Error", 500
+
+    class CustomJSONEncoder(JSONEncoder):
+        def default(self, obj):
+            try:
+                if isinstance(obj, datetime.datetime):
+                    return obj.isoformat()
+                iterable = iter(obj)
+            except TypeError:
+                pass
+            else:
+                return list(iterable)
+            return JSONEncoder.default(self, obj)
+
+    app.json_encoder = CustomJSONEncoder
 
     return app
 
