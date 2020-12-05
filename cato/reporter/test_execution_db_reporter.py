@@ -1,6 +1,5 @@
 import datetime
 import logging
-import os
 from typing import List, Optional
 
 from cato.domain.run import Run
@@ -9,17 +8,12 @@ from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import TestSuite
 from cato.reporter.test_execution_reporter import TestExecutionReporter
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
-from cato.storage.abstract.project_repository import ProjectRepository
-from cato.storage.abstract.run_repository import RunRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
 from cato.utils.machine_info_collector import MachineInfoCollector
-from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
-
 from cato_api_client.cato_api_client import CatoApiClient
 
 logger = logging.getLogger(__name__)
@@ -28,19 +22,13 @@ logger = logging.getLogger(__name__)
 class TestExecutionDbReporter(TestExecutionReporter):
     def __init__(
         self,
-        project_repository: ProjectRepository,
-        run_repository: RunRepository,
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
-        file_storage: AbstractFileStorage,
         machine_info_collector: MachineInfoCollector,
         cato_api_client: CatoApiClient,
     ):
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
-        self._run_repository = run_repository
-        self._project_repository = project_repository
-        self._file_storage = file_storage
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
         self._run_id: Optional[int] = None
