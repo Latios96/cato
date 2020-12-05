@@ -16,7 +16,7 @@ from cato_server.api.schemas.general import (
 def is_test_identifier(string):
     try:
         TestIdentifier.from_string(string)
-    except:
+    except ValueError:
         raise ValidationError(f'String "{string}" is not a valid TestIdentifier.')
 
 
