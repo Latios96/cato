@@ -139,7 +139,7 @@ class TestRunner:
             variables.get("image_output_png"),
             variables.get("image_output_exr"),
         ]
-        return list(filter(lambda x: x != None, image_outputs))
+        return list(filter(lambda x: x is not None, image_outputs))
 
     def _reference_images(self, variables):
         image_outputs = [
@@ -147,4 +147,4 @@ class TestRunner:
             variables.get("reference_image_png"),
             variables.get("reference_image_exr"),
         ]
-        return list(filter(lambda x: x != None, image_outputs))
+        return list(filter(lambda x: x is not None, image_outputs))

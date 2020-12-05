@@ -1,9 +1,7 @@
 import dataclasses
 from typing import Optional, Iterable
 
-import attr
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
-from sqlalchemy.orm import relationship
 
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier

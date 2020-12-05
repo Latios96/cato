@@ -2,7 +2,7 @@ import logging
 # noinspection PyUnresolvedReferences
 from dateutil.parser import parse
 
-import cato_api_client.api_client_logging
+import cato_api_client.api_client_logging  # noqa: F401
 import os
 from typing import Optional
 from urllib.parse import quote

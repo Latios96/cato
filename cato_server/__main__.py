@@ -21,7 +21,7 @@ from cato_server.configuration.bindings_factory import BindingsFactory, PinjectB
 
 logger = cato_server.server_logging.logger
 
-BANNER = """
+BANNER = r"""
 
  ,-----.            ,--.              ,---.                                              
 '  .--./  ,--,--. ,-'  '-.  ,---.    '   .-'   ,---.  ,--.--. ,--.  ,--.  ,---.  ,--.--. 
@@ -40,7 +40,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
 
     app = flask.Flask(__name__, static_url_path="/")
 
-    if app_configuration.debug == True:
+    if app_configuration.debug is True:
         logger.info("Configuring app to run in debug mode")
         app.config["DEBUG"] = True
 

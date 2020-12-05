@@ -111,7 +111,7 @@ class HtmlReporter:
 
 
 if __name__ == "__main__":
-    import cato
+    import cato  # noqa: F401
 
     with open(r"M:\test\cato-arnold_suite\report.json") as f:
         data = json.load(f)

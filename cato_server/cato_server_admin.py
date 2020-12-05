@@ -1,8 +1,6 @@
 import argparse
-import sys
 
 import cato_server.server_logging
-
 logger = cato_server.server_logging.logger
 
 from cato_server.configuration.app_configuration_defaults import (

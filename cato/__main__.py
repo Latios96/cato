@@ -19,7 +19,6 @@ from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.html_reporter import HtmlReporter
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
-from cato.runners.test_runner import TestRunner
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage

@@ -24,7 +24,7 @@ class FilesBlueprint(Blueprint):
             return jsonify({"file": "Filename can not be empty!"}), 400
 
         extension = os.path.splitext(uploaded_file.filename)[1].lower()
-        if not extension in [".png", ".jpg", "jpeg"] and extension:
+        if extension not in [".png", ".jpg", "jpeg"] and extension:
             f = self._convert_and_save(uploaded_file)
         else:
             f = self._file_storage.save_stream(

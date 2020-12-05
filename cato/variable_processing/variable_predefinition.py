@@ -28,7 +28,7 @@ MTOA_PREDEFINITION = VariablePredefinition(
     name="Arnold for Maya",
     variables={
         "arnold_scene_file": "{@test_resources}/{@test_name}.ass",
-        "arnold_location": "C:\Program Files\Autodesk\Arnold\maya{@maya_version}",
+        "arnold_location": r"C:\Program Files\Autodesk\Arnold\maya{@maya_version}",
         "arnold_render_command": r'"{@arnold_location}\bin\kick" -i {@test_resources}/{@test_name}.ass -o {@image_output_png} -of exr -dw -v 2',
     },
 )

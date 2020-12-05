@@ -1,7 +1,7 @@
 from typing import Optional, Iterable
 
 from cato.domain.run import Run
-from cato.storage.abstract.abstract_repository import AbstractRepository, K, T
+from cato.storage.abstract.abstract_repository import AbstractRepository
 
 
 class RunRepository(AbstractRepository[Run, int]):

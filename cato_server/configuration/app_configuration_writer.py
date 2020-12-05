@@ -1,12 +1,8 @@
 import configparser
-
-import os
+import logging
 from typing import IO
 
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
-
-import logging
 
 logger = logging.getLogger(__name__)
 

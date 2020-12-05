@@ -32,7 +32,7 @@ class Template(object):
         name,
         pattern,
         anchor=ANCHOR_START,
-        default_placeholder_expression="[\w_.\-]+",
+        default_placeholder_expression="[\w_.\-]+",  # noqa: W605
         duplicate_placeholder_mode=RELAXED,
         template_resolver=None,
     ):

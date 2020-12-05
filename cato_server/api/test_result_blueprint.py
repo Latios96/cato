@@ -2,15 +2,9 @@ import dataclasses
 import logging
 
 from flask import Blueprint, jsonify, abort
-from marshmallow import Schema, fields
-from marshmallow.validate import Length, Regexp
-from marshmallow_enum import EnumField
 
 from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_result import TestStatus
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
-from cato.storage.domain.execution_status import ExecutionStatus
-from cato_server.api.schemas.general import MachineInfoSchema
 
 logger = logging.getLogger(__name__)
 

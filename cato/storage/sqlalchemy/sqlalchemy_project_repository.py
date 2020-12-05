@@ -1,7 +1,6 @@
 from typing import Optional
 
 from sqlalchemy import Column, Integer, String
-from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 
 from cato.domain.project import Project
