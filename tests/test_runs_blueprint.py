@@ -1,3 +1,6 @@
+import datetime
+
+
 def test_get_run_by_project_id_should_return(client, project, run):
     url = "/api/v1/runs/project/{}".format(project.id)
 
@@ -17,3 +20,30 @@ def test_get_run_by_project_id_should_return_empty_list(client, project):
 
     assert rv.status_code == 200
     assert rv.get_json() == []
+
+
+def test_create_run_success(client, project):
+    started_at = datetime.datetime.now()
+
+    rv = client.post(
+        "/api/v1/runs",
+        json={"project_id": project.id, "started_at": started_at.isoformat()},
+    )
+
+    assert rv.get_json() == {
+        "id": 1,
+        "project_id": project.id,
+        "started_at": started_at.isoformat(),
+    }
+    assert rv.status_code == 201
+
+
+def test_create_run_failure(client):
+    started_at = datetime.datetime.now()
+
+    rv = client.post(
+        "/api/v1/runs", json={"project_id": 2, "started_at": started_at.isoformat()}
+    )
+
+    assert rv.status_code == 400
+    assert rv.get_json() == {"project_id": ["No project with id 2 exists!"]}
