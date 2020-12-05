@@ -31,12 +31,16 @@ class CreateTestResultValidator(SchemaValidator):
 
         test_identifier = data.get("test_identifier")
         if test_identifier and suite_result:
-            suite_name = TestIdentifier.from_string(test_identifier).suite_name
-            if not suite_name == suite_result.suite_name:
+            expected_test_identifier = TestIdentifier(
+                suite_result.suite_name, data.get("test_name")
+            )
+            if not expected_test_identifier == TestIdentifier.from_string(
+                test_identifier
+            ):
                 self.add_error(
                     errors,
                     "test_identifier",
-                    f"Suite name in test identifier {test_identifier} does not match suite name {suite_result.suite_name} of linked suite result.",
+                    f"Provided {test_identifier} does not match suite name {suite_result.suite_name} of linked suite result and test name {data.get('test_name')}",
                 )
 
         image_output = data.get("image_output")

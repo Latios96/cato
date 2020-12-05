@@ -21,7 +21,7 @@ class TestCreateTestResultValidator:
             {
                 "suite_result_id": 1,
                 "test_name": "my_test_name",
-                "test_identifier": "my_suite/test_identifier",
+                "test_identifier": "my_suite/my_test_name",
                 "test_command": "my_command",
                 "test_variables": {"key": "value"},
                 "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
@@ -40,7 +40,7 @@ class TestCreateTestResultValidator:
                 {
                     "suite_result_id": 5,
                     "test_name": "my_test_name",
-                    "test_identifier": "my_suite/test_identifier",
+                    "test_identifier": "my_suite/my_test_name",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
                     "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
@@ -54,7 +54,7 @@ class TestCreateTestResultValidator:
                 {
                     "suite_result_id": 1,
                     "test_name": "my_test_name",
-                    "test_identifier": "foo/test_identifier",
+                    "test_identifier": "foo/my_test_name",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
                     "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
@@ -64,8 +64,7 @@ class TestCreateTestResultValidator:
                 },
                 {
                     "test_identifier": [
-                        "Suite name in test identifier foo/test_identifier does "
-                        "not match suite name my_suite of linked suite result."
+                        "Provided foo/my_test_name does not match suite name my_suite of linked suite result and test name my_test_name"
                     ]
                 },
             ),
@@ -73,7 +72,25 @@ class TestCreateTestResultValidator:
                 {
                     "suite_result_id": 1,
                     "test_name": "my_test_name",
-                    "test_identifier": "my_suite/test_identifier",
+                    "test_identifier": "my_suite/bar",
+                    "test_command": "my_command",
+                    "test_variables": {"key": "value"},
+                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
+                    "execution_status": "NOT_STARTED",
+                    "image_output": 1,
+                    "reference_image": 2,
+                },
+                {
+                    "test_identifier": [
+                        "Provided my_suite/bar does not match suite name my_suite of linked suite result and test name my_test_name"
+                    ]
+                },
+            ),
+            (
+                {
+                    "suite_result_id": 1,
+                    "test_name": "my_test_name",
+                    "test_identifier": "my_suite/my_test_name",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
                     "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},

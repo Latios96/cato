@@ -78,7 +78,7 @@ def test_create_test_result_success(client, suite_result, stored_file):
         json={
             "suite_result_id": 1,
             "test_name": "my_test_name",
-            "test_identifier": "my_suite/test_identifier",
+            "test_identifier": "my_suite/my_test_name",
             "test_command": "my_command",
             "test_variables": {"key": "value"},
             "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
@@ -104,7 +104,7 @@ def test_create_test_result_success(client, suite_result, stored_file):
         "status": None,
         "suite_result_id": 1,
         "test_command": "my_command",
-        "test_identifier": "my_suite/test_identifier",
+        "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"key": "value"},
     }
