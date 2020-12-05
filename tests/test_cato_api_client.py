@@ -5,10 +5,14 @@ import pytest
 from requests.models import Response
 
 from cato.domain import run
+from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
+from cato.domain.test_identifier import TestIdentifier
 from cato.storage.domain.File import File
+from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
+from cato.storage.domain.test_result import TestResult
 from cato_api_client.cato_api_client import CatoApiClient
 
 
@@ -118,3 +122,78 @@ def test_create_run_failure(cato_api_client):
 
     with pytest.raises(ValueError):
         cato_api_client.create_run(run)
+
+
+def test_create_test_result_success_minimal(cato_api_client, suite_result):
+    test_result = TestResult(
+        id=0,
+        suite_result_id=suite_result.id,
+        test_name="test",
+        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
+        test_variables={},
+        test_command="my_command",
+        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
+    )
+
+    result = cato_api_client.create_test_result(test_result)
+
+    assert result == TestResult(
+        id=1,
+        suite_result_id=suite_result.id,
+        test_name="test",
+        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
+        test_variables={},
+        test_command="my_command",
+        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
+        execution_status=ExecutionStatus.NOT_STARTED,
+        seconds=0,
+        output=[],
+    )
+
+
+def test_create_test_result_success_complex(cato_api_client, suite_result, stored_file):
+    started_at = datetime.datetime.now()
+    test_result = TestResult(
+        id=0,
+        suite_result_id=suite_result.id,
+        test_name="test",
+        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
+        test_variables={},
+        test_command="my_command",
+        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
+        started_at=started_at,
+        image_output=stored_file.id,
+        output=["1", "2", "3"],
+    )
+
+    result = cato_api_client.create_test_result(test_result)
+
+    assert result == TestResult(
+        id=1,
+        suite_result_id=suite_result.id,
+        test_name="test",
+        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
+        test_variables={},
+        test_command="my_command",
+        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
+        execution_status=ExecutionStatus.NOT_STARTED,
+        seconds=0,
+        started_at=started_at,
+        image_output=stored_file.id,
+        output=["1", "2", "3"],
+    )
+
+
+def test_create_failure_failure(cato_api_client, suite_result):
+    test_result = TestResult(
+        id=0,
+        suite_result_id=5,
+        test_name="test",
+        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
+        test_variables={},
+        test_command="my_command",
+        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
+    )
+
+    with pytest.raises(ValueError):
+        cato_api_client.create_test_result(test_result)

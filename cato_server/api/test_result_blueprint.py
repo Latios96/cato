@@ -96,7 +96,7 @@ class TestResultsBlueprint(Blueprint):
                 request_json["execution_status"]
             ),
             status=self._map_test_status(request_json.get("status")),
-            output=request_json.get("output"),
+            output=request_json.get("output") or [],
             seconds=request_json.get("seconds") or 0,
             message=request_json.get("message"),
             image_output=request_json.get("image_output"),
@@ -107,6 +107,8 @@ class TestResultsBlueprint(Blueprint):
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
+        test_result.test_identifier = str(test_result.test_identifier)
+        test_result.execution_status = test_result.execution_status.name
         return jsonify(test_result), 201
 
     def _map_test_status(self, status):
