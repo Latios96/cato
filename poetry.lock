@@ -738,7 +738,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "88bfdf5541d43553e2e40ffae90add47e12605522fea3574693196ead3ecc6d8"
+content-hash = "07e48842629170bec3b323aae0e9717ee3ff5685f0a620c3b8f52cb5fa1afa3d"
 
 [metadata.files]
 alembic = [
