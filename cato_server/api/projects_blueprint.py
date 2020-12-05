@@ -2,19 +2,12 @@ import logging
 from http.client import BAD_REQUEST
 
 from flask import Blueprint, jsonify, abort, request
-from marshmallow import Schema, fields
-from marshmallow.validate import Length, Regexp
 
 from cato.domain.project import Project
 from cato.storage.abstract.project_repository import ProjectRepository
+from cato_server.api.schemas.project_schemas import CreateProjectSchema
 
 logger = logging.getLogger(__name__)
-
-
-class CreateProjectSchema(Schema):
-    name = fields.Str(
-        required=True, validate=[Length(min=1), Regexp(r"^[A-Za-z0-9_\-]+$")]
-    )
 
 
 class ProjectsBlueprint(Blueprint):
