@@ -1,10 +1,3 @@
-import json
-
-import pytest
-
-from cato.storage.domain.suite_result import SuiteResult
-
-
 def test_get_run_by_project_id_should_return(client, suite_result, run):
     url = "/api/v1/suite_results/run/{}".format(run.id)
 
