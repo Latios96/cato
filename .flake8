@@ -1,3 +1,3 @@
 [flake8]
 ignore = E501,E127,E402,W291,W503
-exclude = cato\vendor\lucidity
+exclude = cato/vendor/lucidity
