@@ -8,6 +8,9 @@ from marshmallow.validate import Length, Regexp
 from cato.storage.abstract.run_repository import RunRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.suite_result import SuiteResult
+from cato_server.api.validators.suite_result_validators import (
+    CreateSuiteResultValidator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -36,32 +39,12 @@ class SuiteResultsBlueprint(Blueprint):
         return jsonify(suite_results)
 
     def create_suite_result(self):
-        class CreateSuiteResultSchema(Schema):
-            run_id = fields.Integer(required=True, validate=self._run_id_exists)
-            suite_name = fields.Str(
-                required=True, validate=[Length(min=1), Regexp(r"^[A-Za-z0-9_\-]+$")]
-            )
-            suite_variables = fields.Dict(required=True, validate=self._is_str_str_dict)
-
-        schema = CreateSuiteResultSchema()
         request_json = request.get_json()
-        errors = schema.validate(request_json)
+        errors = CreateSuiteResultValidator(
+            self._run_repository, self._suite_result_repository
+        ).validate(request_json)
         if errors:
             return jsonify(errors), BAD_REQUEST
-
-        if self._suite_result_repository.find_by_run_id_and_name(
-            request_json["run_id"], request_json["suite_name"]
-        ):
-            return (
-                jsonify(
-                    [
-                        {
-                            "run_id": f'A test suite with name {request_json["suite_name"]} already exists for run id {request_json["run_id"]}'
-                        }
-                    ]
-                ),
-                BAD_REQUEST,
-            )
 
         suite_result = SuiteResult(
             id=0,
