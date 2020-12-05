@@ -1,4 +1,6 @@
 import datetime
+import os
+from io import StringIO
 
 import humanfriendly
 import pytest
@@ -16,6 +18,9 @@ from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
 from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
+from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+    SqlAlchemyDeduplicatingFileStorage,
+)
 from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
@@ -96,6 +101,12 @@ def test_result(sessionmaker_fixture, suite_result):
         finished_at=datetime.datetime.now(),
     )
     return repository.save(test_result)
+
+
+@pytest.fixture()
+def stored_file(sessionmaker_fixture, tmp_path):
+    repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
+    return repository.save_file(os.path.join(os.path.dirname(__file__), "test.exr"))
 
 
 @pytest.fixture()
