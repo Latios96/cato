@@ -12,6 +12,10 @@ from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     Base,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class _FileMapping(Base):
     __tablename__ = "file_entity"
@@ -32,7 +36,9 @@ class SqlAlchemySimpleFileStorage(
         file = self._create_file_obj_for_path(path)
         file = self.save(file)
         if self._needs_write(file):
-            shutil.copy(path, self.get_path(file))
+            target_path = self.get_path(file)
+            logger.info("Copy file %s to storage at %s", path, target_path)
+            shutil.copy(path, target_path)
         return file
 
     def save_stream(self, name: str, stream: IO) -> File:

@@ -5,6 +5,10 @@ from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
     SqlAlchemySimpleFileStorage,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class SqlAlchemyDeduplicatingFileStorage(SqlAlchemySimpleFileStorage):
     def get_path(self, file: File) -> str:
@@ -17,4 +21,13 @@ class SqlAlchemyDeduplicatingFileStorage(SqlAlchemySimpleFileStorage):
         return target_path
 
     def _needs_write(self, file):
-        return not os.path.exists(self.get_path(file))
+        needs_write = not os.path.exists(self.get_path(file))
+        if needs_write:
+            logger.info(
+                "File %s needs write, no file exists for hash %s", file, file.hash
+            )
+        else:
+            logger.info(
+                "File %s needs no write, file exists for hash %s", file, file.hash
+            )
+        return needs_write
