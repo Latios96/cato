@@ -71,7 +71,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 logger.info(
                     f"Reporting execution of test {test_suite.name}/{test_result.test_name}.."
                 )
-                self._test_result_repository.save(test_result)
+                self._cato_api_client.create_test_result(test_result)
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         if self._run_id is None:

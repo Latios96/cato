@@ -1,3 +1,4 @@
+import dataclasses
 import logging
 # noinspection PyUnresolvedReferences
 from dateutil.parser import parse
@@ -90,7 +91,7 @@ class CatoApiClient:
             "test_identifier": str(test_result.test_identifier),
             "test_command": test_result.test_command,
             "test_variables": test_result.test_variables,
-            "machine_info": test_result.machine_info,
+            "machine_info": dataclasses.asdict(test_result.machine_info),
             "execution_status": test_result.execution_status.name,
         }
         if test_result.status:
