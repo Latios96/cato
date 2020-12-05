@@ -57,7 +57,6 @@ class TestResultsBlueprint(Blueprint):
         return jsonify(suite_result.output)
 
     def create_test_result(self):
+        # check that suite result id exists
+        # check that test identifier name matches suite name
         pass
-
-    def _is_test_identifier(self, test_identifier):
-        raise NotImplementedError()
