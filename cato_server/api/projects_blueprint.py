@@ -5,7 +5,7 @@ from flask import Blueprint, jsonify, abort, request
 
 from cato.domain.project import Project
 from cato.storage.abstract.project_repository import ProjectRepository
-from cato_server.api.schemas.project_schemas import CreateProjectSchema
+from cato_server.api.validators.project_validators import CreateProjectValidator
 
 logger = logging.getLogger(__name__)
 
@@ -34,19 +34,11 @@ class ProjectsBlueprint(Blueprint):
 
     def create_project(self):
         request_json = request.get_json()
-        errors = CreateProjectSchema().validate(request_json)
+        errors = CreateProjectValidator(self._project_repository).validate(request_json)
         if errors:
             return jsonify(errors), BAD_REQUEST
 
         project_name = request_json["name"]
-
-        if self._project_repository.find_by_name(project_name):
-            return (
-                jsonify(
-                    {"name": f'Project with name "{project_name}" already exists!'}
-                ),
-                BAD_REQUEST,
-            )
 
         project = Project(id=0, name=project_name)
         project = self._project_repository.save(project)
