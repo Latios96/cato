@@ -63,26 +63,7 @@ class TestResultsBlueprint(Blueprint):
         return jsonify(suite_result.output)
 
     def create_test_result(self):
-        class CreateTestResultSchema(Schema):
-            suite_result_id: fields.Integer(required=True)
-            test_name: fields.String(
-                required=True, validate=[Length(min=1), Regexp(r"^[A-Za-z0-9_\-]+$")]
-            )
-            test_identifier: fields.String(
-                required=True, validate=[Length(min=1), self._is_test_identifier]
-            )
-            test_command: fields.String(required=True, validate=[Length(1)])
-            test_variables: fields.Dict(required=True)
-            machine_info: fields.Nested(MachineInfoSchema, required=True)
-            execution_status: EnumField(ExecutionStatus, required=True)
-            status = EnumField(TestStatus)
-            output = fields.List(fields.String())
-            seconds = fields.Float(min=1)
-            message = fields.String(validate=[Length(1)])
-            image_output = fields.Integer()
-            reference_image = fields.Integer()
-            started_at = fields.DateTime()
-            finished_at = fields.DateTime()
+        pass
 
     def _is_test_identifier(self, test_identifier):
         raise NotImplementedError()

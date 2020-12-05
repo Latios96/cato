@@ -52,7 +52,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             logger.info("No project with name %s exists, creating one..", project_name)
             project = self._cato_api_client.create_project(project_name)
             logger.info("Created project %s", project)
-        logger.info("Creating run..")
+        logger.info("Creating run..")  # todo migrate to api
         run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
         run = self._run_repository.save(run)
         self._run_id = run.id
