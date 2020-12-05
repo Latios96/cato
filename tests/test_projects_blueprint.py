@@ -51,7 +51,7 @@ def test_create_project_same_name_should_fail(client):
     client.post(API_V_PROJECTS, json={"name": "test"})
     rv = client.post(API_V_PROJECTS, json={"name": "test"})
 
-    assert rv.get_json() == {"name": 'Project with name "test" already exists!'}
+    assert rv.get_json() == {"name": ['Project with name "test" already exists!']}
     assert rv.status_code == 400
 
 
