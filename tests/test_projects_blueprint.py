@@ -1,5 +1,3 @@
-import pytest
-
 API_V_PROJECTS = "/api/v1/projects"
 
 
