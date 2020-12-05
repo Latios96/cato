@@ -1,5 +1,7 @@
 import logging
 # noinspection PyUnresolvedReferences
+from dateutil.parser import parse
+
 import cato_api_client.api_client_logging
 import os
 from typing import Optional
@@ -9,10 +11,12 @@ import requests
 from requests import Response
 
 from cato.domain.project import Project
+from cato.domain.run import Run
 from cato.storage.domain.File import File
 from cato.storage.domain.suite_result import SuiteResult
 
 logger = logging.getLogger(__name__)
+
 
 class CatoApiClient:
 
@@ -50,7 +54,7 @@ class CatoApiClient:
             return File(**self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
 
-    def create_suite_result(self, suite_result: SuiteResult) -> Project:
+    def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
         if suite_result.id:
             raise ValueError(f"Id of SuiteResult is not 0, was {suite_result.id}")
 
@@ -59,6 +63,17 @@ class CatoApiClient:
         return self._create(url, {'run_id': suite_result.run_id,
                                   'suite_name': suite_result.suite_name,
                                   'suite_variables': suite_result.suite_variables}, SuiteResult)
+
+    def create_run(self, run: Run) -> Run:
+        if run.id:
+            raise ValueError(f"Id of Run is not 0, was {run.id}")
+
+        url = self._build_url("/api/v1/runs")
+        logger.info("Creating run with data %s..", run)
+        run = self._create(url, {'project_id': run.project_id,
+                                  'started_at': run.started_at.isoformat()}, Run)
+        run.started_at = parse(run.started_at)
+        return run
 
     def _build_url(self, url_template, *params: str):
         params = list(map(lambda x: quote(x), params))

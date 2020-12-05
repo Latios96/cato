@@ -1,3 +1,4 @@
+import datetime
 import os
 
 import pytest
@@ -5,6 +6,7 @@ from requests.models import Response
 
 from cato.domain import run
 from cato.domain.project import Project
+from cato.domain.run import Run
 from cato.storage.domain.File import File
 from cato.storage.domain.suite_result import SuiteResult
 from cato_api_client.cato_api_client import CatoApiClient
@@ -99,3 +101,20 @@ def test_create_suite_result_failure_missing_run_id(cato_api_client, run):
 
     with pytest.raises(ValueError):
         cato_api_client.create_suite_result(suite_result)
+
+
+def test_create_run_success(cato_api_client, project):
+    started_at = datetime.datetime.now()
+    run = Run(id=0, project_id=project.id, started_at=started_at)
+
+    result = cato_api_client.create_run(run)
+
+    assert result == Run(id=1, project_id=project.id, started_at=started_at)
+
+
+def test_create_run_failure(cato_api_client):
+    started_at = datetime.datetime.now()
+    run = Run(id=0, project_id=2, started_at=started_at)
+
+    with pytest.raises(ValueError):
+        cato_api_client.create_run(run)
