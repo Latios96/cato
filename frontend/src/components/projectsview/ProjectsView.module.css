@@ -2,7 +2,8 @@
   display: flex;
   max-width: 1232px;
   max-height: 100%;
-  margin: 100px auto auto auto;
+  margin: 150px auto auto auto;
+  flex-wrap: wrap;
 }
 .projectsViewProjectComponent {
   margin: 10px;
