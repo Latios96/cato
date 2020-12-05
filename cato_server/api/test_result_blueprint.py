@@ -62,11 +62,6 @@ class TestResultsBlueprint(Blueprint):
         return jsonify(suite_result.output)
 
     def create_test_result(self):
-        class MachineInfoSchema(Schema):
-            cpu_name: fields.String(required=True, validate=[Length(1)])
-            cores: fields.Integer(required=True, min=1)
-            memory: fields.Float(required=True, min=0)
-
         class CreateTestResultSchema(Schema):
             suite_result_id: fields.Integer(required=True)
             test_name: fields.String(
