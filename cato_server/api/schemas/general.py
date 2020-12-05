@@ -16,6 +16,6 @@ VARIABLES_FIELD = fields.Dict(required=True, validate=_is_str_str_dict)
 
 
 class MachineInfoSchema(Schema):
-    cpu_name: fields.String(required=True, validate=[Length(1)])
-    cores: fields.Integer(required=True, min=1)
-    memory: fields.Float(required=True, min=0)
+    cpu_name = fields.String(required=True, validate=[Length(min=1)])
+    cores = fields.Integer(required=True, validate=[Range(min=1)])
+    memory = fields.Float(required=True, validate=[Range(min=0)])

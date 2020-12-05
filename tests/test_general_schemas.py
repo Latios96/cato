@@ -1,7 +1,12 @@
 import pytest
 from marshmallow import Schema
 
-from cato_server.api.schemas.general import ID_FIELD, NAME_FIELD, VARIABLES_FIELD
+from cato_server.api.schemas.general import (
+    ID_FIELD,
+    NAME_FIELD,
+    VARIABLES_FIELD,
+    MachineInfoSchema,
+)
 
 
 @pytest.mark.parametrize(
@@ -47,3 +52,39 @@ def test_field_failure(field, value, expected_errors):
     errors = TestSchema().validate({"field_to_test": value})
 
     assert errors == {"field_to_test": expected_errors}
+
+
+class TestMaschineInfoSchema:
+    def test_success(self):
+        schema = MachineInfoSchema()
+
+        result = schema.validate({"cpu_name": "name", "cores": 8, "memory": 1})
+
+        assert result == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {"cores": 8, "memory": 1},
+                {"cpu_name": ["Missing data for required field."]},
+            ),
+            (
+                {"cpu_name": "name", "cores": -1, "memory": 1},
+                {"cores": ["Must be greater than or equal to 1."]},
+            ),
+            (
+                {"cpu_name": "name", "cores": -1, "memory": -1},
+                {
+                    "cores": ["Must be greater than or equal to 1."],
+                    "memory": ["Must be greater than or equal to 0."],
+                },
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors):
+        schema = MachineInfoSchema()
+
+        result = schema.validate(data)
+
+        assert result == expected_errors
