@@ -2,9 +2,14 @@ import dataclasses
 import logging
 
 from flask import Blueprint, jsonify, abort
+from marshmallow import Schema, fields
+from marshmallow.validate import Length, Regexp
+from marshmallow_enum import EnumField
 
 from cato.domain.test_identifier import TestIdentifier
+from cato.domain.test_result import TestStatus
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
+from cato.storage.domain.execution_status import ExecutionStatus
 
 logger = logging.getLogger(__name__)
 
@@ -24,6 +29,7 @@ class TestResultsBlueprint(Blueprint):
         self.route("/test_results/<int:test_result_id>/output", methods=["GET"])(
             self.get_test_result_output
         )
+        self.route("/test_results", methods=["POST"])(self.create_test_result)
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id, suite_name, test_name
@@ -54,3 +60,33 @@ class TestResultsBlueprint(Blueprint):
         if not suite_result:
             abort(404)
         return jsonify(suite_result.output)
+
+    def create_test_result(self):
+        class MachineInfoSchema(Schema):
+            cpu_name: fields.String(required=True, validate=[Length(1)])
+            cores: fields.Integer(required=True, min=1)
+            memory: fields.Float(required=True, min=0)
+
+        class CreateTestResultSchema(Schema):
+            suite_result_id: fields.Integer(required=True)
+            test_name: fields.String(
+                required=True, validate=[Length(min=1), Regexp(r"^[A-Za-z0-9_\-]+$")]
+            )
+            test_identifier: fields.String(
+                required=True, validate=[Length(min=1), self._is_test_identifier]
+            )
+            test_command: fields.String(required=True, validate=[Length(1)])
+            test_variables: fields.Dict(required=True)
+            machine_info: fields.Nested(MachineInfoSchema, required=True)
+            execution_status: EnumField(ExecutionStatus, required=True)
+            status = EnumField(TestStatus)
+            output = fields.List(fields.String())
+            seconds = fields.Float(min=1)
+            message = fields.String(validate=[Length(1)])
+            image_output = fields.Integer()
+            reference_image = fields.Integer()
+            started_at = fields.DateTime()
+            finished_at = fields.DateTime()
+
+    def _is_test_identifier(self, test_identifier):
+        raise NotImplementedError()
