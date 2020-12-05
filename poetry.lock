@@ -369,6 +369,17 @@ lint = ["mypy (==0.790)", "flake8 (==3.8.4)", "flake8-bugbear (==20.1.4)", "pre-
 tests = ["pytest", "pytz", "simplejson"]
 
 [[package]]
+name = "marshmallow-enum"
+version = "1.5.1"
+description = "Enum field for Marshmallow"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+marshmallow = ">=2.0.0"
+
+[[package]]
 name = "mypy"
 version = "0.790"
 description = "Optional static typing for Python"
@@ -727,7 +738,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "9629d2f1b9630578a407e0764c360a442ae944184e34519cd2f18844c05755a1"
+content-hash = "88bfdf5541d43553e2e40ffae90add47e12605522fea3574693196ead3ecc6d8"
 
 [metadata.files]
 alembic = [
@@ -988,6 +999,10 @@ markupsafe = [
 marshmallow = [
     {file = "marshmallow-3.9.1-py2.py3-none-any.whl", hash = "sha256:e26763201474b588d144dae9a32bdd945cd26a06c943bc746a6882e850475378"},
     {file = "marshmallow-3.9.1.tar.gz", hash = "sha256:73facc37462dfc0b27f571bdaffbef7709e19f7a616beb3802ea425b07843f4e"},
+]
+marshmallow-enum = [
+    {file = "marshmallow-enum-1.5.1.tar.gz", hash = "sha256:38e697e11f45a8e64b4a1e664000897c659b60aa57bfa18d44e226a9920b6e58"},
+    {file = "marshmallow_enum-1.5.1-py2.py3-none-any.whl", hash = "sha256:57161ab3dbfde4f57adeb12090f39592e992b9c86d206d02f6bd03ebec60f072"},
 ]
 mypy = [
     {file = "mypy-0.790-cp35-cp35m-macosx_10_6_x86_64.whl", hash = "sha256:bd03b3cf666bff8d710d633d1c56ab7facbdc204d567715cb3b9f85c6e94f669"},
