@@ -1,3 +1,8 @@
+import logging
+
+logger = logging.getLogger(__name__)
+
+
 class OutputProcessor:
     def process(self, line: str) -> None:
-        print(line.strip())
+        logger.info(line.strip())

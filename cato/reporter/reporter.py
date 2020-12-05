@@ -1,3 +1,4 @@
+import logging
 import emoji
 import humanfriendly
 
@@ -5,10 +6,12 @@ from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
 
+logger = logging.getLogger(__name__)
+
 
 class Reporter:
     def report_message(self, message):
-        print(message)
+        logger.info(message)
 
     def report_start_test_suite(self, test_suite: TestSuite):
         self.report_message(f"Running Test Suite {test_suite.name}..")

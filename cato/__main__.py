@@ -1,7 +1,7 @@
 import argparse
 import json
 import os
-
+import logging
 import pinject
 
 import cato
@@ -41,6 +41,8 @@ from cato_api_client import cato_api_client
 PATH_TO_CONFIG_FILE = "Path to config file"
 
 config = SqlAlchemyConfig()
+
+logger = logging.getLogger(__name__)
 
 
 def create_object_graph():
@@ -89,12 +91,12 @@ def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: 
     result = test_suite_runner.run_test_suites(config)
 
     timing_report_generator = TimingReportGenerator()
-    print()
-    print(timing_report_generator.generate(result))
+    logger.info("")
+    logger.info(timing_report_generator.generate(result))
 
     generator = obj_graph.provide(EndMessageGenerator)
-    print()
-    print(generator.generate_end_message(result))
+    logger.info("")
+    logger.info(generator.generate_end_message(result))
 
     report_data = {"result": [x.to_dict() for x in result]}
 
@@ -120,17 +122,17 @@ def update_missing_reference_images(path):
 
 def list_tests(path):
     path = config_path(path)
-    print(path)
+    logger.info(path)
     config_parser = JsonConfigParser()
     config = config_parser.parse(path)
 
-    print(
+    logger.info(
         f"Found {count_tests(config.test_suites)} tests in {count_suites(config.test_suites)} suites:"
     )
-    print()
+    logger.info("")
 
     for suite, test in iterate_suites_and_tests(config.test_suites):
-        print(f"{suite.name}/{test.name}")
+        logger.info(f"{suite.name}/{test.name}")
 
 
 def update_reference(path, test_identifier):
@@ -217,10 +219,10 @@ def main():
     elif args.command == "list-tests":
         list_tests(args.path)
     elif args.command == "update-reference":
-        print(args)
+        logger.info(args)
         update_reference(args.path, args.test_identifier)
     else:
-        print(f"No method found to run command {args.command}")
+        logger.error(f"No method found to run command {args.command}")
 
 
 if __name__ == "__main__":

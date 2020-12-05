@@ -34,7 +34,7 @@ def main():
     if args.command == "config-template":
         config_template(args.path)
     else:
-        print(f"No method found to run command {args.command}")
+        logger.error(f"No method found to run command {args.command}")
 
 
 if __name__ == "__main__":
