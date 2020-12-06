@@ -22,13 +22,9 @@ logger = logging.getLogger(__name__)
 class TestExecutionDbReporter(TestExecutionReporter):
     def __init__(
         self,
-        suite_result_repository: SuiteResultRepository,
-        test_result_repository: TestResultRepository,
         machine_info_collector: MachineInfoCollector,
         cato_api_client: CatoApiClient,
     ):
-        self._test_result_repository = test_result_repository
-        self._suite_result_repository = suite_result_repository
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
         self._run_id: Optional[int] = None
@@ -93,7 +89,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.started_at = datetime.datetime.now()
 
         logger.info(f"Reporting execution start of test {test_identifier}..")
-        self._test_result_repository.save(test_result)
+        self._cato_api_client.update_test_result(test_result)
 
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
@@ -133,7 +129,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
 
         logger.info(f"Reporting test result of test {test_identifier}..")
-        self._test_result_repository.save(test_result)
+        self._cato_api_client.update_test_result(test_result)
 
     def _copy_to_storage(self, image_path: str) -> int:
         return self._cato_api_client.upload_file(image_path).id
