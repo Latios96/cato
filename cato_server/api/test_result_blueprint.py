@@ -76,7 +76,8 @@ class TestResultsBlueprint(Blueprint):
             abort(404)
 
         test_result = self._test_result_mapper.map_to_dict(test_result)
-        test_result.pop("output")
+        if test_result.get('output'):
+            test_result.pop("output")
         return jsonify(test_result)
 
     def get_test_result_by_suite_id(self, suite_id):
