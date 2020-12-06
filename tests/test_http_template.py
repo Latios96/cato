@@ -5,6 +5,7 @@ import pytest
 
 from cato.domain.project import Project
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
+from cato.mappers.project_class_mapper import ProjectMapper
 from cato_api_client.http_template import HttpTemplate, HttpTemplateException
 
 

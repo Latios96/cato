@@ -18,7 +18,7 @@ class TestResultClassMapper(AbstractClassMapper):
 
     def map_from_dict(self, the_dict: Dict) -> TestResult:
         return TestResult(
-            id=0,
+            id=the_dict.get("id") or 0,
             suite_result_id=the_dict["suite_result_id"],
             test_name=the_dict["test_name"],
             test_identifier=TestIdentifier.from_string(the_dict["test_identifier"]),

@@ -231,7 +231,7 @@ def test_get_test_result_by_run_and_identifier_success(
     )
 
     assert result == TestResult(
-        id=0,
+        id=1,
         suite_result_id=suite_result.id,
         test_name="my_test_name",
         test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test_name"),

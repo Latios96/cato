@@ -99,40 +99,9 @@ class CatoApiClient:
         if test_result.id:
             raise ValueError(f"Id of TestResult is not 0, was {test_result.id}")
 
-        url = self._build_url("/api/v1/test_results")
+        url = "/api/v1/test_results"
         logger.info("Creating test_result with data %s..", test_result)
-        data = {
-            "suite_result_id": test_result.suite_result_id,
-            "test_name": test_result.test_name,
-            "test_identifier": str(test_result.test_identifier),
-            "test_command": test_result.test_command,
-            "test_variables": test_result.test_variables,
-            "machine_info": dataclasses.asdict(test_result.machine_info),
-            "execution_status": test_result.execution_status.name,
-        }
-        if test_result.status:
-            data["status"] = test_result.status.name
-        if test_result.output:
-            data["output"] = test_result.output
-        if test_result.seconds:
-            data["seconds"] = test_result.seconds
-        if test_result.message:
-            data["message"] = test_result.message
-        if test_result.image_output:
-            data["image_output"] = test_result.image_output
-        if test_result.reference_image:
-            data["reference_image"] = test_result.reference_image
-        if test_result.started_at:
-            data["started_at"] = test_result.started_at
-        if test_result.finished_at:
-            data["finished_at"] = test_result.finished_at
-        test_result = self._create(url, data, TestResult)
-        test_result.test_identifier = TestIdentifier.from_string(test_result.test_identifier)
-        test_result.machine_info = MachineInfo(test_result.machine_info['cpu_name'], test_result.machine_info['cores'],
-                                               test_result.machine_info['memory'])
-        test_result.started_at = parse(test_result.started_at) if test_result.started_at else None
-        test_result.finished_at = parse(test_result.finished_at) if test_result.finished_at else None
-        return test_result
+        return self._create_with_http_template(url, test_result, TestResultClassMapper(), TestResultClassMapper())
 
     def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier) -> Optional[
         TestResult]:
