@@ -3,7 +3,10 @@ from typing import List, Dict
 from cato.domain.test_identifier import TestIdentifier
 from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.api.schemas.test_result_schemas import CreateTestResultSchema
+from cato_server.api.schemas.test_result_schemas import (
+    CreateTestResultSchema,
+    UpdateTestResultSchema,
+)
 from cato_server.api.validators.basic import SchemaValidator
 
 
@@ -56,3 +59,14 @@ class CreateTestResultValidator(SchemaValidator):
             )
 
         return errors
+
+
+class UpdateTestResultValidator(CreateTestResultValidator):
+    def __init__(
+        self,
+        suite_result_repository: SuiteResultRepository,
+        file_storage: AbstractFileStorage,
+    ):
+        super(CreateTestResultValidator, self).__init__(UpdateTestResultSchema())
+        self._suite_result_repository = suite_result_repository
+        self._file_storage = file_storage

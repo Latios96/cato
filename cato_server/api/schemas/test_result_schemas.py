@@ -38,3 +38,14 @@ class CreateTestResultSchema(Schema):
     reference_image = fields.Integer()
     started_at = fields.DateTime()
     finished_at = fields.DateTime()
+
+
+class UpdateTestResultSchema(Schema):
+    status = EnumField(TestStatus)
+    output = fields.List(fields.String())
+    seconds = fields.Float(min=1)
+    message = fields.String(validate=[Length(1)])
+    image_output = fields.Integer()
+    reference_image = fields.Integer()
+    started_at = fields.DateTime()
+    finished_at = fields.DateTime()
