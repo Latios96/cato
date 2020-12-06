@@ -16,7 +16,7 @@ from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
-from cato_server.storage.domain.File import File
+from cato_server.storage.domain.file import File
 from cato_server.storage.domain.suite_result import SuiteResult
 from cato_server.storage.domain.test_result import TestResult
 

@@ -1,6 +1,6 @@
 from typing import Optional
 
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.mappers.abstract_value_mapper import AbstractValueMapper
 
 

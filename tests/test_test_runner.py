@@ -2,7 +2,7 @@ from unittest import mock
 
 from cato.domain.config import Config
 from cato.domain.test import Test
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.image_comparison.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter

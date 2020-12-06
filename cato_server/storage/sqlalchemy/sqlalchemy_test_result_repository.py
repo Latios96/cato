@@ -5,7 +5,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTim
 
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )

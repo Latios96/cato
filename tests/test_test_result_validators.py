@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.domain.suite_result import SuiteResult

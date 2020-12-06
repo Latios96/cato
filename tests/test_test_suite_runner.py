@@ -5,7 +5,7 @@ import pytest
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.reporter import Reporter

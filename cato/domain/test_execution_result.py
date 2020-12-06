@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List, Optional
 
 from cato.domain.test import Test
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 
 
 @dataclass

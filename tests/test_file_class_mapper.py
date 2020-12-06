@@ -1,5 +1,5 @@
 from cato.mappers.file_class_mapper import FileClassMapper
-from cato_server.storage.domain.File import File
+from cato_server.storage.domain.file import File
 
 
 def test_map_from_dict():

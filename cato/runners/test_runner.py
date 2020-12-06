@@ -5,7 +5,7 @@ import emoji
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.image_comparison.image_comparator import ImageComparator

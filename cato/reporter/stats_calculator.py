@@ -2,7 +2,7 @@ import itertools
 from dataclasses import dataclass
 from typing import List
 
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 

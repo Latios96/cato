@@ -1,7 +1,7 @@
 from typing import List
 
 from cato.domain.config import Config
-from cato.domain.test_result import TestStatus
+from cato.domain.test_status import TestStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
