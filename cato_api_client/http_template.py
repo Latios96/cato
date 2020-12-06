@@ -63,6 +63,23 @@ class AbstractHttpTemplate:
             raise HttpTemplateException("Internal Server Error!")
         return self._construct_http_template_response(response, response_cls_mapper)
 
+    def patch_for_entity(
+        self,
+        url,
+        body,
+        body_cls_mapper: AbstractClassMapper[T],
+        response_cls_mapper: AbstractClassMapper,
+    ) -> HttpTemplateResponse[T]:
+        params = body
+        if body_cls_mapper:
+            params = body_cls_mapper.map_to_dict(body)
+        logger.debug("Launching PATCH request to %s with json %s", url, params)
+        response = self._patch(url, params)
+        logger.debug("Received response %s", response)
+        if response.status_code == 500:
+            raise HttpTemplateException("Internal Server Error!")
+        return self._construct_http_template_response(response, response_cls_mapper)
+
     def _handle_response(
         self, response, response_cls_mapper: AbstractClassMapper[T]
     ) -> HttpTemplateResponse[T]:
@@ -74,6 +91,9 @@ class AbstractHttpTemplate:
         raise NotImplementedError()
 
     def _get(self, url):
+        raise NotImplementedError()
+
+    def _patch(self, url, params):
         raise NotImplementedError()
 
     def _construct_http_template_response(
@@ -88,6 +108,9 @@ class RequestsHttpTemplate(AbstractHttpTemplate):
 
     def _get(self, url):
         return requests.get(url)
+
+    def _patch(self, url, params):
+        return requests.patch(url, json=params)
 
     def _construct_http_template_response(self, response, response_cls_mapper):
         return RequestsHttpTemplateResponse(response, response_cls_mapper)

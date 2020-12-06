@@ -87,3 +87,36 @@ def test_post_for_entity_404(mock_requests_post):
     assert response.status_code() == 404
     with pytest.raises(TypeError):
         response.get_entity()
+
+
+@mock.patch("requests.patch")
+def test_patch_for_entity_success(mock_requests_post):
+    mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
+    http_template = HttpTemplate()
+
+    response = http_template.patch_for_entity(
+        "/ap1/v1/projects/test-project",
+        Project(id=1, name="test"),
+        ProjectClassMapper(),
+        ProjectClassMapper(),
+    )
+
+    assert response.status_code() == 200
+    assert response.get_entity() == Project(id=2, name="test-project")
+
+
+@mock.patch("requests.patch")
+def test_patch_for_entity_404(mock_requests_post):
+    mock_requests_post.return_value = Response(404, None)
+    http_template = HttpTemplate()
+
+    response = http_template.patch_for_entity(
+        "/ap1/v1/projects/test-project",
+        Project(id=1, name="test"),
+        ProjectClassMapper(),
+        ProjectClassMapper(),
+    )
+
+    assert response.status_code() == 404
+    with pytest.raises(TypeError):
+        response.get_entity()
