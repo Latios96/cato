@@ -105,13 +105,8 @@ class CatoApiClient:
 
     def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier) -> Optional[
         TestResult]:
-        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}', str(run_id), test_identifier.suite_name,
-                              test_identifier.test_name)
-        response = self._get(url)
-        if response.status_code == 404:
-            return None
-        data = self._get_json(response)
-        return TestResultClassMapper().map_from_dict(data)
+        url = '/api/v1/test_results/runs/{}/{}/{}'.format(run_id, test_identifier.suite_name, test_identifier.test_name)
+        return self._find_with_http_template(url, TestResultClassMapper())
 
     def _build_url(self, url_template, *params: str):
         params = list(map(lambda x: quote(x), params))
@@ -162,3 +157,12 @@ class CatoApiClient:
         response = requests.post(url, json=params)
         logger.debug("Received response %s", response)
         return response
+
+    def _find_with_http_template(self, url, entity_mapper: AbstractClassMapper):
+        response= self._http_template.get_for_entity(url, entity_mapper)
+        if response.status_code() == 404:
+            return None
+        if response.status_code() == 200:
+            return response.get_entity()
+        raise ValueError("Bad parameters: {}".format(
+            " ".join(["{}: {}".format(key, value) for key, value in response.get_json().items()])))
