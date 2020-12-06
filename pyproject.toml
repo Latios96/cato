@@ -9,6 +9,7 @@ include = [
 packages = [
     { include = "cato" },
     { include = "cato_server" },
+    { include = "cato_api_client" },
 ]
 
 [tool.poetry.scripts]
