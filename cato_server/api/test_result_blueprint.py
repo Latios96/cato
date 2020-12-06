@@ -10,7 +10,10 @@ from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.test_result import TestResult
-from cato_server.api.validators.test_result_validators import CreateTestResultValidator
+from cato_server.api.validators.test_result_validators import (
+    CreateTestResultValidator,
+    UpdateTestResultValidator,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +47,9 @@ class TestResultsBlueprint(Blueprint):
             self.get_test_result_output
         )
         self.route("/test_results", methods=["POST"])(self.create_test_result)
+        self.route("/test_results/<int:test_result_id>", methods=["PATCH"])(
+            self.update_test_result
+        )
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id, suite_name, test_name
@@ -99,6 +105,24 @@ class TestResultsBlueprint(Blueprint):
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
         return self._map_test_result(test_result, 201)
+
+    def update_test_result(self, test_result_id):
+        request_json = request.get_json()
+        errors = UpdateTestResultValidator(
+            self._suite_result_repository, self._file_storage
+        ).validate(request_json)
+        if errors:
+            return jsonify(errors), BAD_REQUEST
+
+        test_result = self._test_result_repository.find_by_id(test_result_id)
+        if not test_result:
+            abort(404)
+
+        test_result_dict = self._test_result_mapper.map_to_dict(test_result)
+        test_result_dict.update(request_json)
+        test_result = self._test_result_mapper.map_from_dict(test_result_dict)
+        self._test_result_repository.save(test_result)
+        return jsonify(test_result_dict), 200
 
     def _map_test_result(self, test_result: TestResult, status=200):
         test_result = self._test_result_mapper.map_to_dict(test_result)

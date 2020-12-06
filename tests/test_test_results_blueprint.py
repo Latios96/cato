@@ -171,3 +171,44 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifi
     rv = client.get(f"/api/v1/test_results/runs/{suite_result.run_id}/sdrft/test_name")
 
     assert rv.status_code == 404
+
+
+def test_update_test_result_success(client, test_result):
+    rv = client.patch(
+        f"/api/v1/test_results/{test_result.id}", json={"status": "FAILED"}
+    )
+
+    assert rv.get_json() == {
+        "execution_status": "NOT_STARTED",
+        "finished_at": test_result.finished_at.isoformat(),
+        "id": 1,
+        "image_output": 3,
+        "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+        "message": "sucess",
+        "output": ["1", "2", "3"],
+        "reference_image": 4,
+        "seconds": 5.0,
+        "started_at": test_result.started_at.isoformat(),
+        "status": "FAILED",
+        "suite_result_id": 1,
+        "test_command": "my_command",
+        "test_identifier": "my_suite/my_test_name",
+        "test_name": "my_test_name",
+        "test_variables": {"testkey": "test_value"},
+    }
+    assert rv.status_code == 200
+
+
+def test_update_test_result_failure_invalid_data(client, test_result):
+    rv = client.patch(
+        f"/api/v1/test_results/{test_result.id}", json={"status": "sdfsdf"}
+    )
+
+    assert rv.get_json() == {"status": ["Invalid enum member sdfsdf"]}
+    assert rv.status_code == 400
+
+
+def test_update_test_result_failure_invalid_test_result_id(client):
+    rv = client.patch("/api/v1/test_results/42", json={"status": "SUCCESS"})
+
+    assert rv.status_code == 404

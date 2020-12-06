@@ -104,7 +104,7 @@ class CatoApiClient:
         )
 
     def find_test_result_by_run_id_and_identifier(
-        self, run_id: int, test_identifier: TestIdentifier
+            self, run_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         url = self._build_url(
             "/api/v1/test_results/runs/{}/{}/{}".format(
@@ -116,34 +116,15 @@ class CatoApiClient:
     def _build_url(self, url):
         return self._url + quote(url)
 
-    def _get_one_project(self, url) -> Optional[Project]:
-        response = self._get(url)
-        if response.status_code == 404:
-            return None
-        data = self._get_json(response)
-        return Project(**data)
-
-    def _get(self, url: str) -> Response:
-        logger.debug("Launching GET request to %s", url)
-        response = requests.get(url)
-        logger.debug("Received response %s", response)
-        return response
-
     def _get_json(self, reponse):
         return reponse.json()
 
-    def _create(self, url, params, cls):
-        response = self._post_json(url, params)
-        if response.status_code == 201:
-            return cls(**self._get_json(response))
-        raise self._create_value_error_for_bad_request(response)
-
     def _create_with_http_template(
-        self,
-        url,
-        body,
-        body_mapper: AbstractClassMapper,
-        entity_mapper: AbstractClassMapper,
+            self,
+            url,
+            body,
+            body_mapper: AbstractClassMapper,
+            entity_mapper: AbstractClassMapper,
     ):
         response = self._http_template.post_for_entity(
             url, body, body_mapper, entity_mapper
@@ -176,12 +157,6 @@ class CatoApiClient:
     def _post_form(self, url, params, files=None):
         logger.debug("Launching POST request to %s with params %s", url, params)
         response = requests.post(url, data=params, files=files)
-        logger.debug("Received response %s", response)
-        return response
-
-    def _post_json(self, url, params):
-        logger.debug("Launching POST request to %s with json %s", url, params)
-        response = requests.post(url, json=params)
         logger.debug("Received response %s", response)
         return response
 
