@@ -53,15 +53,9 @@ class AbstractHttpTemplate:
         body_cls_mapper: AbstractClassMapper[T],
         response_cls_mapper: AbstractClassMapper,
     ) -> HttpTemplateResponse[T]:
-        params = body
-        if body_cls_mapper:
-            params = body_cls_mapper.map_to_dict(body)
-        logger.debug("Launching POST request to %s with json %s", url, params)
-        response = self._post(url, params)
-        logger.debug("Received response %s", response)
-        if response.status_code == 500:
-            raise HttpTemplateException("Internal Server Error!")
-        return self._construct_http_template_response(response, response_cls_mapper)
+        return self._launch_request_with_body(
+            url, body, body_cls_mapper, response_cls_mapper, "POST"
+        )
 
     def patch_for_entity(
         self,
@@ -70,11 +64,28 @@ class AbstractHttpTemplate:
         body_cls_mapper: AbstractClassMapper[T],
         response_cls_mapper: AbstractClassMapper,
     ) -> HttpTemplateResponse[T]:
+        return self._launch_request_with_body(
+            url, body, body_cls_mapper, response_cls_mapper, "PATCH"
+        )
+
+    def _launch_request_with_body(
+        self,
+        url,
+        body,
+        body_cls_mapper: AbstractClassMapper[T],
+        response_cls_mapper: AbstractClassMapper,
+        method: str,
+    ):
+        method = method.upper()
         params = body
         if body_cls_mapper:
             params = body_cls_mapper.map_to_dict(body)
-        logger.debug("Launching PATCH request to %s with json %s", url, params)
-        response = self._patch(url, params)
+        logger.debug("Launching %s request to %s with json %s", method, url, params)
+        assert method in ["POST", "PATCH"]
+        if method == "POST":
+            response = self._post(url, params)
+        else:
+            response = self._patch(url, params)
         logger.debug("Received response %s", response)
         if response.status_code == 500:
             raise HttpTemplateException("Internal Server Error!")
