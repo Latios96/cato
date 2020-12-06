@@ -17,6 +17,7 @@ from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.abstract_class_mapper import AbstractClassMapper, T
 from cato.mappers.project_class_mapper import ProjectMapper
+from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato.storage.domain.File import File
@@ -90,12 +91,9 @@ class CatoApiClient:
         if run.id:
             raise ValueError(f"Id of Run is not 0, was {run.id}")
 
-        url = self._build_url("/api/v1/runs")
+        url = "/api/v1/runs"
         logger.info("Creating run with data %s..", run)
-        run = self._create(url, {'project_id': run.project_id,
-                                 'started_at': run.started_at.isoformat()}, Run)
-        run.started_at = parse(run.started_at)
-        return run
+        return self._create_with_http_template(url, run, RunClassMapper(), RunClassMapper())
 
     def create_test_result(self, test_result: TestResult):
         if test_result.id:

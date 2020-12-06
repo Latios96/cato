@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, ValidationError
+from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from marshmallow.validate import Length
 from marshmallow_enum import EnumField
 
@@ -21,6 +21,9 @@ def is_test_identifier(string):
 
 
 class CreateTestResultSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
     suite_result_id = ID_FIELD
     test_name = NAME_FIELD
     test_identifier = fields.String(
@@ -41,6 +44,9 @@ class CreateTestResultSchema(Schema):
 
 
 class UpdateTestResultSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
     status = EnumField(TestStatus)
     output = fields.List(fields.String())
     seconds = fields.Float(min=1)

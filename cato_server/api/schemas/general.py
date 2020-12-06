@@ -1,4 +1,4 @@
-from marshmallow import fields, ValidationError, Schema
+from marshmallow import fields, ValidationError, Schema, EXCLUDE
 from marshmallow.validate import Regexp, Length, Range
 
 REGEX_VALID_NAME = Regexp(r"^[A-Za-z0-9_\-]+$")
@@ -16,6 +16,9 @@ VARIABLES_FIELD = fields.Dict(required=True, validate=_is_str_str_dict)
 
 
 class MachineInfoSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
     cpu_name = fields.String(required=True, validate=[Length(min=1)])
     cores = fields.Integer(required=True, validate=[Range(min=1)])
     memory = fields.Float(required=True, validate=[Range(min=0)])
