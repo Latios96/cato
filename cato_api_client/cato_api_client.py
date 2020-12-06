@@ -56,9 +56,7 @@ class CatoApiClient:
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
         url = "/api/v1/projects/name/{}".format(project_name)
-        response = self._http_template.get_for_entity(url, ProjectMapper())
-        if response.status_code() == 200:
-            return response.get_entity()
+        return self._find_with_http_template(url, ProjectMapper())
 
     def create_project(self, project_name) -> Project:
         url = "/api/v1/projects"
