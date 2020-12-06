@@ -2,7 +2,7 @@ from typing import Optional, Iterable
 
 from cato.domain.test_identifier import TestIdentifier
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.test_result import TestResult
 
 
 class TestResultRepository(AbstractRepository):

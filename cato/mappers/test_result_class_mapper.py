@@ -6,7 +6,7 @@ from cato.mappers.datetime_value_mapper import DateTimeValueMapper
 from cato.mappers.execution_status_value_mapper import ExecutionStatusValueMapper
 from cato.mappers.machine_info_class_mapper import MachineInfoClassMapper
 from cato.mappers.test_status_value_mapper import TestStatusValueMapper
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.test_result import TestResult
 
 
 class TestResultClassMapper(AbstractClassMapper):

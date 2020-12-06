@@ -10,9 +10,9 @@ from cato.domain.test_suite import TestSuite
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.storage.domain.execution_status import ExecutionStatus
-from cato_server.storage.domain.suite_result import SuiteResult
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.execution_status import ExecutionStatus
+from cato.domain.suite_result import SuiteResult
+from cato.domain.test_result import TestResult
 
 logger = logging.getLogger(__name__)
 

@@ -6,7 +6,7 @@ from marshmallow import ValidationError
 
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.storage.domain.suite_result import SuiteResult
+from cato.domain.suite_result import SuiteResult
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,
 )

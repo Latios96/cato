@@ -1,6 +1,6 @@
 from typing import IO, Optional
 
-from cato_server.storage.domain.file import File
+from cato.domain.file import File
 
 
 class AbstractFileStorage:

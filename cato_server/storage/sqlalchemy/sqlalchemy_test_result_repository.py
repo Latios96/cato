@@ -9,8 +9,8 @@ from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
-from cato_server.storage.domain.execution_status import ExecutionStatus
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.execution_status import ExecutionStatus
+from cato.domain.test_result import TestResult
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,

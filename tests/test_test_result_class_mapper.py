@@ -4,8 +4,8 @@ from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
-from cato_server.storage.domain.execution_status import ExecutionStatus
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.execution_status import ExecutionStatus
+from cato.domain.test_result import TestResult
 
 
 def test_map_from_with_required_only():

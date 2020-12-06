@@ -11,7 +11,7 @@ from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.test_result import TestResult
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,

@@ -5,7 +5,7 @@ import pytest
 from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.storage.domain.suite_result import SuiteResult
+from cato.domain.suite_result import SuiteResult
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,

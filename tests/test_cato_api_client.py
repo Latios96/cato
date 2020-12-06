@@ -10,10 +10,10 @@ from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
-from cato_server.storage.domain.file import File
-from cato_server.storage.domain.execution_status import ExecutionStatus
-from cato_server.storage.domain.suite_result import SuiteResult
-from cato_server.storage.domain.test_result import TestResult
+from cato.domain.file import File
+from cato.domain.execution_status import ExecutionStatus
+from cato.domain.suite_result import SuiteResult
+from cato.domain.test_result import TestResult
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
 

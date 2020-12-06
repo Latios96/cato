@@ -1,7 +1,7 @@
 from typing import Optional, Iterable
 
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
-from cato_server.storage.domain.suite_result import SuiteResult
+from cato.domain.suite_result import SuiteResult
 
 
 class SuiteResultRepository(AbstractRepository):
