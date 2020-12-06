@@ -13,6 +13,7 @@ from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
+from cato.mappers.file_class_mapper import FileClassMapper
 from cato.mappers.project_class_mapper import ProjectMapper
 from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
@@ -71,7 +72,7 @@ class CatoApiClient:
         response = self._post_form(url, {}, files=files)
 
         if response.status_code == 201:
-            return File(**self._get_json(response))
+            return FileClassMapper().map_from_dict(response.json)
         raise self._create_value_error_for_bad_request(response)
 
     def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
