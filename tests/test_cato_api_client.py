@@ -15,11 +15,34 @@ from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
+
+
+class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
+    def status_code(self) -> int:
+        return self._response.status_code
+
+    def get_json(self):
+        return self._response.get_json()
+
+
+class FlaskClientHttpTemplate(AbstractHttpTemplate):
+    def __init__(self, client):
+        self._client = client
+
+    def _post(self, url, params):
+        return self._client.post(url, json=params)
+
+    def _get(self, url):
+        return self._client.get(url)
+
+    def _construct_http_template_response(self, response, response_cls_mapper):
+        return FlaskClientHttpTemplateResponse(response, response_cls_mapper)
 
 
 class CatoApiTestClient(CatoApiClient):
     def __init__(self, url, client):
-        super(CatoApiTestClient, self).__init__(url)
+        super(CatoApiTestClient, self).__init__(url, FlaskClientHttpTemplate(client))
         self._client = client
 
     def _get(self, url: str) -> Response:
@@ -229,7 +252,6 @@ def test_get_test_result_by_run_and_identifier_success(
 def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(
     cato_api_client, suite_result, test_result
 ):
-
     result = cato_api_client.find_test_result_by_run_id_and_identifier(
         10, TestIdentifier(suite_result.suite_name, test_result.test_name)
     )
@@ -240,7 +262,6 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(
 def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifier(
     cato_api_client, suite_result
 ):
-
     result = cato_api_client.find_test_result_by_run_id_and_identifier(
         suite_result.run_id, TestIdentifier("test", "wurst")
     )

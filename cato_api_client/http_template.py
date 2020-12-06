@@ -4,7 +4,8 @@ from urllib.parse import quote
 import requests
 
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_api_client.cato_api_client import logger
+import logging
+logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
@@ -19,9 +20,9 @@ class HttpTemplateResponse(Generic[T]):
         raise NotImplementedError()
 
     def get_entity(self) -> T:
-        return self._mapper.map_from_dict(self._get_json())
+        return self._mapper.map_from_dict(self.get_json())
 
-    def _get_json(self):
+    def get_json(self):
         raise NotImplementedError()
 
 
@@ -30,7 +31,7 @@ class RequestsHttpTemplateResponse(HttpTemplateResponse):
     def status_code(self):
         return self._response.status_code
 
-    def _get_json(self):
+    def get_json(self):
         return self._response.json()
 
 

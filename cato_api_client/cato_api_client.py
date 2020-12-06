@@ -5,7 +5,7 @@ from dateutil.parser import parse
 
 import cato_api_client.api_client_logging  # noqa: F401
 import os
-from typing import Optional
+from typing import Optional, Dict
 from urllib.parse import quote
 
 import requests
@@ -15,35 +15,54 @@ from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
+from cato.mappers.abstract_class_mapper import AbstractClassMapper, T
+from cato.mappers.project_class_mapper import ProjectMapper
+from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato.storage.domain.File import File
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
+from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
 
 logger = logging.getLogger(__name__)
+
+
+class DictMapper(AbstractClassMapper):
+
+    def map_from_dict(self, json_data: Dict) -> Dict:
+        return json_data
+
+    def map_to_dict(self, the_dict: Dict) -> Dict:
+        return the_dict
 
 
 class CatoApiClient:
 
     @staticmethod
     def from_url(url: str):
-        return CatoApiClient(url)
+        return CatoApiClient(url, HttpTemplate())
 
     @staticmethod
     def from_hostname_and_port(hostname: str, port: int):
-        return CatoApiClient(f"http://{hostname}:{port}")
+        return CatoApiClient(f"http://{hostname}:{port}", HttpTemplate())
 
-    def __init__(self, url):
+    def __init__(self, url, http_template: AbstractHttpTemplate):
         self._url = url
+        if not http_template:
+            self._http_template = HttpTemplate()
+        else:
+            self._http_template = http_template
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
-        url = self._build_url("/api/v1/projects/name/{}", project_name)
-        return self._get_one_project(url)
+        url = "/api/v1/projects/name/{}".format(project_name)
+        response = self._http_template.get_for_entity(url, ProjectMapper())
+        if response.status_code() == 200:
+            return response.get_entity()
 
     def create_project(self, project_name) -> Project:
-        url = self._build_url("/api/v1/projects")
+        url = "/api/v1/projects"
         logger.info("Creating project with name %s..", project_name)
-        return self._create(url, {'name': project_name}, Project)
+        return self._create_with_http_template(url, {'name': project_name}, DictMapper(), ProjectMapper())
 
     def upload_file(self, path: str) -> File:
         if not os.path.exists(path):
@@ -63,11 +82,9 @@ class CatoApiClient:
         if suite_result.id:
             raise ValueError(f"Id of SuiteResult is not 0, was {suite_result.id}")
 
-        url = self._build_url("/api/v1/suite_results")
+        url = "/api/v1/suite_results"
         logger.info("Creating suite_result with data %s..", suite_result)
-        return self._create(url, {'run_id': suite_result.run_id,
-                                  'suite_name': suite_result.suite_name,
-                                  'suite_variables': suite_result.suite_variables}, SuiteResult)
+        return self._create_with_http_template(url, suite_result, SuiteResultClassMapper(), SuiteResultClassMapper())
 
     def create_run(self, run: Run) -> Run:
         if run.id:
@@ -119,8 +136,10 @@ class CatoApiClient:
         test_result.finished_at = parse(test_result.finished_at) if test_result.finished_at else None
         return test_result
 
-    def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier)->Optional[TestResult]:
-        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}', str(run_id), test_identifier.suite_name, test_identifier.test_name)
+    def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier) -> Optional[
+        TestResult]:
+        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}', str(run_id), test_identifier.suite_name,
+                              test_identifier.test_name)
         response = self._get(url)
         if response.status_code == 404:
             return None
@@ -152,6 +171,14 @@ class CatoApiClient:
         if response.status_code == 201:
             return cls(**self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
+
+    def _create_with_http_template(self, url, body, body_mapper: AbstractClassMapper,
+                                   entity_mapper: AbstractClassMapper):
+        response = self._http_template.post_for_entity(url, body, body_mapper, entity_mapper)
+        if response.status_code() == 201:
+            return response.get_entity()
+        raise ValueError("Bad parameters: {}".format(
+            " ".join(["{}: {}".format(key, value) for key, value in response.get_json().items()])))
 
     def _create_value_error_for_bad_request(self, response):
         return ValueError("Bad parameters: {}".format(

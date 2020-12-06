@@ -17,14 +17,6 @@ class Response:
         return self._json_value
 
 
-class ProjectMapper(AbstractClassMapper[Project]):
-    def map_from_dict(self, json_data: Dict) -> Project:
-        return Project(json_data["id"], json_data["name"])
-
-    def map_to_dict(self, project: Project) -> Dict:
-        return {"id": project.id, "name": project.name}
-
-
 @mock.patch("requests.get")
 def test_get_for_entity_success(mock_requests_get):
     mock_requests_get.return_value = Response(200, {"id": 1, "name": "test-project"})
