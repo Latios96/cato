@@ -1,6 +1,6 @@
 from typing import Dict
 
-from cato.mappers.abstract_class_mapper import AbstractClassMapper, T
+from cato.mappers.abstract_class_mapper import AbstractClassMapper
 from cato.storage.domain.File import File
 
 

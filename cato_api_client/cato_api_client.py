@@ -4,8 +4,6 @@ from typing import Optional, Dict
 from urllib.parse import quote
 
 import requests
-# noinspection PyUnresolvedReferences
-from dateutil.parser import parse
 from requests import Response
 
 import cato_api_client.api_client_logging  # noqa: F401
@@ -27,7 +25,6 @@ logger = logging.getLogger(__name__)
 
 
 class DictMapper(AbstractClassMapper):
-
     def map_from_dict(self, json_data: Dict) -> Dict:
         return json_data
 
@@ -36,7 +33,6 @@ class DictMapper(AbstractClassMapper):
 
 
 class CatoApiClient:
-
     @staticmethod
     def from_url(url: str):
         return CatoApiClient(url, HttpTemplate())
@@ -59,14 +55,16 @@ class CatoApiClient:
     def create_project(self, project_name) -> Project:
         url = self._build_url("/api/v1/projects")
         logger.info("Creating project with name %s..", project_name)
-        return self._create_with_http_template(url, {'name': project_name}, DictMapper(), ProjectClassMapper())
+        return self._create_with_http_template(
+            url, {"name": project_name}, DictMapper(), ProjectClassMapper()
+        )
 
     def upload_file(self, path: str) -> File:
         if not os.path.exists(path):
             raise ValueError(f"Path {path} does not exists!")
 
         url = self._build_url("/api/v1/files")
-        files = {'file': open(path, 'rb')}
+        files = {"file": open(path, "rb")}
 
         logger.info("Uploading file %s", path)
         response = self._post_form(url, {}, files=files)
@@ -81,7 +79,9 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/suite_results")
         logger.info("Creating suite_result with data %s..", suite_result)
-        return self._create_with_http_template(url, suite_result, SuiteResultClassMapper(), SuiteResultClassMapper())
+        return self._create_with_http_template(
+            url, suite_result, SuiteResultClassMapper(), SuiteResultClassMapper()
+        )
 
     def create_run(self, run: Run) -> Run:
         if run.id:
@@ -89,7 +89,9 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/runs")
         logger.info("Creating run with data %s..", run)
-        return self._create_with_http_template(url, run, RunClassMapper(), RunClassMapper())
+        return self._create_with_http_template(
+            url, run, RunClassMapper(), RunClassMapper()
+        )
 
     def create_test_result(self, test_result: TestResult):
         if test_result.id:
@@ -97,11 +99,18 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/test_results")
         logger.info("Creating test_result with data %s..", test_result)
-        return self._create_with_http_template(url, test_result, TestResultClassMapper(), TestResultClassMapper())
+        return self._create_with_http_template(
+            url, test_result, TestResultClassMapper(), TestResultClassMapper()
+        )
 
-    def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier) -> Optional[
-        TestResult]:
-        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}'.format(run_id, test_identifier.suite_name, test_identifier.test_name))
+    def find_test_result_by_run_id_and_identifier(
+        self, run_id: int, test_identifier: TestIdentifier
+    ) -> Optional[TestResult]:
+        url = self._build_url(
+            "/api/v1/test_results/runs/{}/{}/{}".format(
+                run_id, test_identifier.suite_name, test_identifier.test_name
+            )
+        )
         return self._find_with_http_template(url, TestResultClassMapper())
 
     def _build_url(self, url):
@@ -129,17 +138,40 @@ class CatoApiClient:
             return cls(**self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
 
-    def _create_with_http_template(self, url, body, body_mapper: AbstractClassMapper,
-                                   entity_mapper: AbstractClassMapper):
-        response = self._http_template.post_for_entity(url, body, body_mapper, entity_mapper)
+    def _create_with_http_template(
+        self,
+        url,
+        body,
+        body_mapper: AbstractClassMapper,
+        entity_mapper: AbstractClassMapper,
+    ):
+        response = self._http_template.post_for_entity(
+            url, body, body_mapper, entity_mapper
+        )
         if response.status_code() == 201:
             return response.get_entity()
-        raise ValueError("Bad parameters: {}".format(
-            " ".join(["{}: {}".format(key, value) for key, value in response.get_json().items()])))
+        raise ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in response.get_json().items()
+                    ]
+                )
+            )
+        )
 
     def _create_value_error_for_bad_request(self, response):
-        return ValueError("Bad parameters: {}".format(
-            " ".join(["{}: {}".format(key, value) for key, value in self._get_json(response).items()])))
+        return ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in self._get_json(response).items()
+                    ]
+                )
+            )
+        )
 
     def _post_form(self, url, params, files=None):
         logger.debug("Launching POST request to %s with params %s", url, params)
@@ -154,10 +186,18 @@ class CatoApiClient:
         return response
 
     def _find_with_http_template(self, url, entity_mapper: AbstractClassMapper):
-        response= self._http_template.get_for_entity(url, entity_mapper)
+        response = self._http_template.get_for_entity(url, entity_mapper)
         if response.status_code() == 404:
             return None
         if response.status_code() == 200:
             return response.get_entity()
-        raise ValueError("Bad parameters: {}".format(
-            " ".join(["{}: {}".format(key, value) for key, value in response.get_json().items()])))
+        raise ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in response.get_json().items()
+                    ]
+                )
+            )
+        )

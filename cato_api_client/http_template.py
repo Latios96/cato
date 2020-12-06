@@ -1,17 +1,16 @@
 from typing import TypeVar, Generic
-from urllib.parse import quote
 
 import requests
 
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
 import logging
+
 logger = logging.getLogger(__name__)
 
 T = TypeVar("T")
 
 
 class HttpTemplateResponse(Generic[T]):
-
     def __init__(self, response, mapper: AbstractClassMapper[T]):
         self._response = response
         self._mapper = mapper
@@ -27,7 +26,6 @@ class HttpTemplateResponse(Generic[T]):
 
 
 class RequestsHttpTemplateResponse(HttpTemplateResponse):
-
     def status_code(self):
         return self._response.status_code
 
@@ -40,15 +38,21 @@ class HttpTemplateException(Exception):
 
 
 class AbstractHttpTemplate:
-
-    def get_for_entity(self, url: str, response_cls_mapper: AbstractClassMapper[T]) -> HttpTemplateResponse[T]:
+    def get_for_entity(
+        self, url: str, response_cls_mapper: AbstractClassMapper[T]
+    ) -> HttpTemplateResponse[T]:
         logger.debug("Launching GET request to %s ", url)
         response = self._get(url)
         logger.debug("Received response %s", response)
         return self._handle_response(response, response_cls_mapper)
 
-    def post_for_entity(self, url, body, body_cls_mapper: AbstractClassMapper[T],
-                        response_cls_mapper: AbstractClassMapper, ) -> HttpTemplateResponse[T]:
+    def post_for_entity(
+        self,
+        url,
+        body,
+        body_cls_mapper: AbstractClassMapper[T],
+        response_cls_mapper: AbstractClassMapper,
+    ) -> HttpTemplateResponse[T]:
         params = body
         if body_cls_mapper:
             params = body_cls_mapper.map_to_dict(body)
@@ -59,7 +63,9 @@ class AbstractHttpTemplate:
             raise HttpTemplateException("Internal Server Error!")
         return self._construct_http_template_response(response, response_cls_mapper)
 
-    def _handle_response(self, response, response_cls_mapper: AbstractClassMapper[T]) -> HttpTemplateResponse[T]:
+    def _handle_response(
+        self, response, response_cls_mapper: AbstractClassMapper[T]
+    ) -> HttpTemplateResponse[T]:
         if response.status_code == 500:
             raise HttpTemplateException("Internal Server Error!")
         return self._construct_http_template_response(response, response_cls_mapper)
@@ -70,7 +76,9 @@ class AbstractHttpTemplate:
     def _get(self, url):
         raise NotImplementedError()
 
-    def _construct_http_template_response(self, response, response_cls_mapper: AbstractClassMapper[T]):
+    def _construct_http_template_response(
+        self, response, response_cls_mapper: AbstractClassMapper[T]
+    ):
         raise NotImplementedError()
 
 
