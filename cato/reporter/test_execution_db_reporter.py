@@ -8,15 +8,11 @@ from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import TestSuite
 from cato.reporter.test_execution_reporter import TestExecutionReporter
-from cato_server.storage.abstract.abstract_test_result_repository import (
-    TestResultRepository,
-)
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato.utils.machine_info_collector import MachineInfoCollector
+from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.storage.domain.execution_status import ExecutionStatus
 from cato_server.storage.domain.suite_result import SuiteResult
 from cato_server.storage.domain.test_result import TestResult
-from cato.utils.machine_info_collector import MachineInfoCollector
-from cato_api_client.cato_api_client import CatoApiClient
 
 logger = logging.getLogger(__name__)
 
