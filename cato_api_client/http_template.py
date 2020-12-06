@@ -42,7 +42,6 @@ class HttpTemplateException(Exception):
 class AbstractHttpTemplate:
 
     def get_for_entity(self, url: str, response_cls_mapper: AbstractClassMapper[T]) -> HttpTemplateResponse[T]:
-        url = quote(url)
         logger.debug("Launching GET request to %s ", url)
         response = self._get(url)
         logger.debug("Received response %s", response)
@@ -50,7 +49,6 @@ class AbstractHttpTemplate:
 
     def post_for_entity(self, url, body, body_cls_mapper: AbstractClassMapper[T],
                         response_cls_mapper: AbstractClassMapper, ) -> HttpTemplateResponse[T]:
-        url = quote(url)
         params = body
         if body_cls_mapper:
             params = body_cls_mapper.map_to_dict(body)

@@ -53,11 +53,11 @@ class CatoApiClient:
             self._http_template = http_template
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
-        url = "/api/v1/projects/name/{}".format(project_name)
+        url = self._build_url("/api/v1/projects/name/{}".format(project_name))
         return self._find_with_http_template(url, ProjectMapper())
 
     def create_project(self, project_name) -> Project:
-        url = "/api/v1/projects"
+        url = self._build_url("/api/v1/projects")
         logger.info("Creating project with name %s..", project_name)
         return self._create_with_http_template(url, {'name': project_name}, DictMapper(), ProjectMapper())
 
@@ -72,14 +72,14 @@ class CatoApiClient:
         response = self._post_form(url, {}, files=files)
 
         if response.status_code == 201:
-            return FileClassMapper().map_from_dict(response.json)
+            return FileClassMapper().map_from_dict(self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
 
     def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
         if suite_result.id:
             raise ValueError(f"Id of SuiteResult is not 0, was {suite_result.id}")
 
-        url = "/api/v1/suite_results"
+        url = self._build_url("/api/v1/suite_results")
         logger.info("Creating suite_result with data %s..", suite_result)
         return self._create_with_http_template(url, suite_result, SuiteResultClassMapper(), SuiteResultClassMapper())
 
@@ -87,7 +87,7 @@ class CatoApiClient:
         if run.id:
             raise ValueError(f"Id of Run is not 0, was {run.id}")
 
-        url = "/api/v1/runs"
+        url = self._build_url("/api/v1/runs")
         logger.info("Creating run with data %s..", run)
         return self._create_with_http_template(url, run, RunClassMapper(), RunClassMapper())
 
@@ -95,18 +95,17 @@ class CatoApiClient:
         if test_result.id:
             raise ValueError(f"Id of TestResult is not 0, was {test_result.id}")
 
-        url = "/api/v1/test_results"
+        url = self._build_url("/api/v1/test_results")
         logger.info("Creating test_result with data %s..", test_result)
         return self._create_with_http_template(url, test_result, TestResultClassMapper(), TestResultClassMapper())
 
     def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier) -> Optional[
         TestResult]:
-        url = '/api/v1/test_results/runs/{}/{}/{}'.format(run_id, test_identifier.suite_name, test_identifier.test_name)
+        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}'.format(run_id, test_identifier.suite_name, test_identifier.test_name))
         return self._find_with_http_template(url, TestResultClassMapper())
 
-    def _build_url(self, url_template, *params: str):
-        params = list(map(lambda x: quote(x), params))
-        return self._url + url_template.format(*params)
+    def _build_url(self, url):
+        return self._url + quote(url)
 
     def _get_one_project(self, url) -> Optional[Project]:
         response = self._get(url)

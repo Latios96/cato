@@ -37,6 +37,7 @@ from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_api_client import cato_api_client
+from cato_api_client.http_template import HttpTemplate
 
 PATH_TO_CONFIG_FILE = "Path to config file"
 
@@ -69,6 +70,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
         bind("root_path", to_instance=config.get_file_storage_path())
         bind("session_maker", to_instance=config.get_session_maker())
+        bind("http_template", to_class=HttpTemplate)
         bind("url", to_instance="http://127.0.0.1:5000")
 
 
