@@ -14,12 +14,21 @@ class EndMessageGenerator:
 
         stats = self._stats_calculator.calculate(result)
 
-        return emoji.emojize(
-            """Result:
-Ran {} tests
-{}  succeded :white_check_mark:
-{}  failed   :x:""".format(
-                stats.num_tests, stats.succeded_tests, stats.failed_tests
-            ),
-            use_aliases=True,
+        end_message = """Result:
+Ran {} tests""".format(
+            stats.num_tests
         )
+
+        if stats.succeded_tests:
+            end_message += """
+{}  succeded :white_check_mark:""".format(
+                stats.succeded_tests
+            )
+
+        if stats.failed_tests:
+            end_message += """
+{}  failed   :x:""".format(
+                stats.failed_tests
+            )
+
+        return emoji.emojize(end_message, use_aliases=True)
