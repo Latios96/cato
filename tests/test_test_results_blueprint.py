@@ -130,3 +130,44 @@ def test_create_test_result_failure(client, suite_result, stored_file):
 
     assert rv.get_json() == {"suite_result_id": ["No suite result exists for id 5."]}
     assert rv.status_code == 400
+
+
+def test_get_test_result_by_run_and_identifier_success(
+    client, suite_result, test_result
+):
+    rv = client.get(
+        f"/api/v1/test_results/runs/{suite_result.run_id}/{suite_result.suite_name}/{test_result.test_name}"
+    )
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "execution_status": "NOT_STARTED",
+        "finished_at": test_result.finished_at.isoformat(),
+        "id": 1,
+        "image_output": 3,
+        "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+        "message": "sucess",
+        "reference_image": 4,
+        "seconds": 5.0,
+        "started_at": test_result.started_at.isoformat(),
+        "status": "SUCCESS",
+        "suite_result_id": 1,
+        "test_command": "my_command",
+        "test_identifier": {"suite_name": "my_suite", "test_name": "my_test_name"},
+        "test_name": "my_test_name",
+        "test_variables": {"testkey": "test_value"},
+    }
+
+
+def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(client):
+    rv = client.get("/api/v1/test_results/runs/10/suite_name/test_name")
+
+    assert rv.status_code == 404
+
+
+def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifier(
+    client, suite_result
+):
+    rv = client.get(f"/api/v1/test_results/runs/{suite_result.run_id}/sdrft/test_name")
+
+    assert rv.status_code == 404
