@@ -1,6 +1,6 @@
-import dataclasses
 import logging
 from http.client import BAD_REQUEST
+from typing import Iterable
 
 from flask import Blueprint, jsonify, abort, request
 
@@ -9,6 +9,7 @@ from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato.storage.domain.test_result import TestResult
 from cato_server.api.validators.test_result_validators import CreateTestResultValidator
 
 logger = logging.getLogger(__name__)
@@ -55,9 +56,7 @@ class TestResultsBlueprint(Blueprint):
         )
         if not test_result:
             abort(404)
-        test_result = dataclasses.asdict(test_result)
-        test_result.pop("output")
-        return jsonify(test_result)
+        return self._map_test_result(test_result)
 
     def get_test_result_by_run_id_and_identifier(self, run_id, suite_name, test_name):
         identifier = TestIdentifier(suite_name, test_name)
@@ -75,19 +74,11 @@ class TestResultsBlueprint(Blueprint):
         if not test_result:
             abort(404)
 
-        test_result = self._test_result_mapper.map_to_dict(test_result)
-        if test_result.get('output'):
-            test_result.pop("output")
-        return jsonify(test_result)
+        return self._map_test_result(test_result)
 
     def get_test_result_by_suite_id(self, suite_id):
         test_results = self._test_result_repository.find_by_suite_result(suite_id)
-        mapped_results = []
-        for result in test_results:
-            result = dataclasses.asdict(result)
-            result.pop("output")
-            mapped_results.append(result)
-        return jsonify(mapped_results)
+        return self._map_many_test_results(test_results)
 
     def get_test_result_output(self, test_result_id):
         suite_result = self._test_result_repository.find_by_id(test_result_id)
@@ -107,4 +98,19 @@ class TestResultsBlueprint(Blueprint):
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
-        return jsonify(self._test_result_mapper.map_to_dict(test_result)), 201
+        return self._map_test_result(test_result, 201)
+
+    def _map_test_result(self, test_result: TestResult, status=200):
+        test_result = self._test_result_mapper.map_to_dict(test_result)
+        if test_result.get("output"):
+            test_result.pop("output")
+        return jsonify(test_result), status
+
+    def _map_many_test_results(self, test_results: Iterable[TestResult]):
+        mapped_results = []
+        for result in test_results:
+            result = self._test_result_mapper.map_to_dict(result)
+            if result.get("output"):
+                result.pop("output")
+            mapped_results.append(result)
+        return jsonify(mapped_results)

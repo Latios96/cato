@@ -153,7 +153,7 @@ def test_get_test_result_by_run_and_identifier_success(
         "status": "SUCCESS",
         "suite_result_id": 1,
         "test_command": "my_command",
-        "test_identifier": {"suite_name": "my_suite", "test_name": "my_test_name"},
+        "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"testkey": "test_value"},
     }

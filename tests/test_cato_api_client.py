@@ -181,7 +181,6 @@ def test_create_test_result_success_complex(cato_api_client, suite_result, store
         seconds=0,
         started_at=started_at,
         image_output=stored_file.id,
-        output=["1", "2", "3"],
     )
 
 
