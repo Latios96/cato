@@ -1,7 +1,8 @@
 import argparse
 import json
-import os
 import logging
+import os
+
 import pinject
 
 import cato
@@ -21,28 +22,10 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
-from cato_server.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
-from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
-    SqlAlchemyDeduplicatingFileStorage,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
-    SqlAlchemyProjectRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
-    SqlAlchemyRunRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
-    SqlAlchemySuiteResultRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
 from cato_api_client import cato_api_client
 from cato_api_client.http_template import HttpTemplate
 
 PATH_TO_CONFIG_FILE = "Path to config file"
-
-config = SqlAlchemyConfig()
 
 logger = logging.getLogger(__name__)
 
@@ -64,13 +47,6 @@ def create_object_graph():
 class TestExecutionReporterBindings(pinject.BindingSpec):
     def configure(self, bind):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
-        bind("project_repository", to_class=SqlAlchemyProjectRepository)
-        bind("run_repository", to_class=SqlAlchemyRunRepository)
-        bind("suite_result_repository", to_class=SqlAlchemySuiteResultRepository)
-        bind("test_result_repository", to_class=SqlAlchemyTestResultRepository)
-        bind("file_storage", to_class=SqlAlchemyDeduplicatingFileStorage)
-        bind("root_path", to_instance=config.get_file_storage_path())
-        bind("session_maker", to_instance=config.get_session_maker())
         bind("http_template", to_class=HttpTemplate)
         bind("url", to_instance="http://127.0.0.1:5000")
 
