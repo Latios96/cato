@@ -14,7 +14,7 @@ from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
 from cato.mappers.file_class_mapper import FileClassMapper
-from cato.mappers.project_class_mapper import ProjectMapper
+from cato.mappers.project_class_mapper import ProjectClassMapper
 from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
@@ -54,12 +54,12 @@ class CatoApiClient:
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
         url = self._build_url("/api/v1/projects/name/{}".format(project_name))
-        return self._find_with_http_template(url, ProjectMapper())
+        return self._find_with_http_template(url, ProjectClassMapper())
 
     def create_project(self, project_name) -> Project:
         url = self._build_url("/api/v1/projects")
         logger.info("Creating project with name %s..", project_name)
-        return self._create_with_http_template(url, {'name': project_name}, DictMapper(), ProjectMapper())
+        return self._create_with_http_template(url, {'name': project_name}, DictMapper(), ProjectClassMapper())
 
     def upload_file(self, path: str) -> File:
         if not os.path.exists(path):

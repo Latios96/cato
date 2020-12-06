@@ -5,7 +5,7 @@ import pytest
 
 from cato.domain.project import Project
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.mappers.project_class_mapper import ProjectMapper
+from cato.mappers.project_class_mapper import ProjectClassMapper
 from cato_api_client.http_template import HttpTemplate, HttpTemplateException
 
 
@@ -24,7 +24,7 @@ def test_get_for_entity_success(mock_requests_get):
     http_template = HttpTemplate()
 
     response = http_template.get_for_entity(
-        "/ap1/v1/projects/test-project", ProjectMapper()
+        "/ap1/v1/projects/test-project", ProjectClassMapper()
     )
 
     assert response.status_code() == 200
@@ -37,7 +37,7 @@ def test_get_for_entity_404(mock_requests_get):
     http_template = HttpTemplate()
 
     response = http_template.get_for_entity(
-        "/ap1/v1/projects/test-project", ProjectMapper()
+        "/ap1/v1/projects/test-project", ProjectClassMapper()
     )
 
     assert response.status_code() == 404
@@ -51,7 +51,9 @@ def test_get_for_entity_500(mock_requests_get):
     http_template = HttpTemplate()
 
     with pytest.raises(HttpTemplateException):
-        http_template.get_for_entity("/ap1/v1/projects/test-project", ProjectMapper())
+        http_template.get_for_entity(
+            "/ap1/v1/projects/test-project", ProjectClassMapper()
+        )
 
 
 @mock.patch("requests.post")
@@ -62,8 +64,8 @@ def test_post_for_entity_success(mock_requests_post):
     response = http_template.post_for_entity(
         "/ap1/v1/projects/test-project",
         Project(id=1, name="test"),
-        ProjectMapper(),
-        ProjectMapper(),
+        ProjectClassMapper(),
+        ProjectClassMapper(),
     )
 
     assert response.status_code() == 200
@@ -78,8 +80,8 @@ def test_post_for_entity_404(mock_requests_post):
     response = http_template.post_for_entity(
         "/ap1/v1/projects/test-project",
         Project(id=1, name="test"),
-        ProjectMapper(),
-        ProjectMapper(),
+        ProjectClassMapper(),
+        ProjectClassMapper(),
     )
 
     assert response.status_code() == 404
