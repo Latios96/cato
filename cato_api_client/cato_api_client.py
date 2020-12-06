@@ -104,7 +104,7 @@ class CatoApiClient:
         )
 
     def find_test_result_by_run_id_and_identifier(
-            self, run_id: int, test_identifier: TestIdentifier
+        self, run_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
         url = self._build_url(
             "/api/v1/test_results/runs/{}/{}/{}".format(
@@ -113,6 +113,12 @@ class CatoApiClient:
         )
         return self._find_with_http_template(url, TestResultClassMapper())
 
+    def update_test_result(self, test_result):
+        url = self._build_url(f"/api/v1/test_results/{test_result.id}")
+        return self._patch_with_http_template(
+            url, test_result, TestResultClassMapper(), TestResultClassMapper()
+        )
+
     def _build_url(self, url):
         return self._url + quote(url)
 
@@ -120,16 +126,39 @@ class CatoApiClient:
         return reponse.json()
 
     def _create_with_http_template(
-            self,
-            url,
-            body,
-            body_mapper: AbstractClassMapper,
-            entity_mapper: AbstractClassMapper,
+        self,
+        url,
+        body,
+        body_mapper: AbstractClassMapper,
+        entity_mapper: AbstractClassMapper,
     ):
         response = self._http_template.post_for_entity(
             url, body, body_mapper, entity_mapper
         )
         if response.status_code() == 201:
+            return response.get_entity()
+        raise ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in response.get_json().items()
+                    ]
+                )
+            )
+        )
+
+    def _patch_with_http_template(
+        self,
+        url,
+        body,
+        body_mapper: AbstractClassMapper,
+        entity_mapper: AbstractClassMapper,
+    ):
+        response = self._http_template.patch_for_entity(
+            url, body, body_mapper, entity_mapper
+        )
+        if response.status_code() == 200:
             return response.get_entity()
         raise ValueError(
             "Bad parameters: {}".format(

@@ -36,6 +36,9 @@ class FlaskClientHttpTemplate(AbstractHttpTemplate):
     def _get(self, url):
         return self._client.get(url)
 
+    def _patch(self, url, params):
+        return self._client.patch(url, json=params)
+
     def _construct_http_template_response(self, response, response_cls_mapper):
         return FlaskClientHttpTemplateResponse(response, response_cls_mapper)
 
@@ -242,8 +245,8 @@ def test_get_test_result_by_run_and_identifier_success(
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=3,
-        reference_image=4,
+        image_output=1,
+        reference_image=1,
         started_at=test_result.started_at,
         finished_at=test_result.finished_at,
     )
@@ -256,7 +259,7 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(
         10, TestIdentifier(suite_result.suite_name, test_result.test_name)
     )
 
-    assert result == None
+    assert result is None
 
 
 def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifier(
@@ -266,4 +269,19 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifi
         suite_result.run_id, TestIdentifier("test", "wurst")
     )
 
-    assert result == None
+    assert result is None
+
+
+def test_update_test_result(cato_api_client, test_result):
+    test_result.status = TestStatus.FAILED
+
+    result = cato_api_client.update_test_result(test_result)
+
+    assert result == test_result
+
+
+def test_update_test_failure(cato_api_client, test_result):
+    test_result.reference_image = 42
+
+    with pytest.raises(ValueError):
+        cato_api_client.update_test_result(test_result)

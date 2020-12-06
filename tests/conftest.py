@@ -80,7 +80,7 @@ def suite_result(sessionmaker_fixture, run):
 
 
 @pytest.fixture
-def test_result(sessionmaker_fixture, suite_result):
+def test_result(sessionmaker_fixture, suite_result, stored_file):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result = TestResult(
         id=0,
@@ -95,8 +95,8 @@ def test_result(sessionmaker_fixture, suite_result):
         output=["1", "2", "3"],
         seconds=5,
         message="sucess",
-        image_output=3,
-        reference_image=4,
+        image_output=stored_file.id,
+        reference_image=stored_file.id,
         started_at=datetime.datetime.now(),
         finished_at=datetime.datetime.now(),
     )
