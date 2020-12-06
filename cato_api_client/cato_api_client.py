@@ -1,21 +1,18 @@
-import dataclasses
 import logging
-# noinspection PyUnresolvedReferences
-from dateutil.parser import parse
-
-import cato_api_client.api_client_logging  # noqa: F401
 import os
 from typing import Optional, Dict
 from urllib.parse import quote
 
 import requests
+# noinspection PyUnresolvedReferences
+from dateutil.parser import parse
 from requests import Response
 
-from cato.domain.machine_info import MachineInfo
+import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
-from cato.mappers.abstract_class_mapper import AbstractClassMapper, T
+from cato.mappers.abstract_class_mapper import AbstractClassMapper
 from cato.mappers.project_class_mapper import ProjectMapper
 from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
