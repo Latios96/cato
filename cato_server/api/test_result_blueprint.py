@@ -10,6 +10,7 @@ from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.storage.domain.test_result import TestResult
+from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
@@ -118,9 +119,14 @@ class TestResultsBlueprint(Blueprint):
         if not test_result:
             abort(404)
 
+        update_data_keys = UpdateTestResultSchema().load(request_json).keys()
+        update_data = { key: request_json[key] for key in update_data_keys }
+
         test_result_dict = self._test_result_mapper.map_to_dict(test_result)
-        test_result_dict.update(request_json)
+        logger.info("Updating TestResult with data %s", update_data)
+        test_result_dict.update(update_data)
         test_result = self._test_result_mapper.map_from_dict(test_result_dict)
+        logger.info("Saving updated TestResult %s", test_result)
         self._test_result_repository.save(test_result)
         return jsonify(test_result_dict), 200
 
