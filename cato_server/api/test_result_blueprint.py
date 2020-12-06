@@ -75,7 +75,7 @@ class TestResultsBlueprint(Blueprint):
         if not test_result:
             abort(404)
 
-        test_result = dataclasses.asdict(test_result)
+        test_result = self._test_result_mapper.map_to_dict(test_result)
         test_result.pop("output")
         return jsonify(test_result)
 

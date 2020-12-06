@@ -15,6 +15,7 @@ from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
+from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato.storage.domain.File import File
 from cato.storage.domain.suite_result import SuiteResult
 from cato.storage.domain.test_result import TestResult
@@ -117,6 +118,14 @@ class CatoApiClient:
         test_result.started_at = parse(test_result.started_at) if test_result.started_at else None
         test_result.finished_at = parse(test_result.finished_at) if test_result.finished_at else None
         return test_result
+
+    def find_test_result_by_run_id_and_identifier(self, run_id: int, test_identifier: TestIdentifier)->Optional[TestResult]:
+        url = self._build_url('/api/v1/test_results/runs/{}/{}/{}', str(run_id), test_identifier.suite_name, test_identifier.test_name)
+        response = self._get(url)
+        if response.status_code == 404:
+            return None
+        data = self._get_json(response)
+        return TestResultClassMapper().map_from_dict(data)
 
     def _build_url(self, url_template, *params: str):
         params = list(map(lambda x: quote(x), params))

@@ -9,6 +9,7 @@ from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
+from cato.domain.test_result import TestStatus
 from cato.storage.domain.File import File
 from cato.storage.domain.execution_status import ExecutionStatus
 from cato.storage.domain.suite_result import SuiteResult
@@ -197,3 +198,52 @@ def test_create_failure_failure(cato_api_client, suite_result):
 
     with pytest.raises(ValueError):
         cato_api_client.create_test_result(test_result)
+
+
+def test_get_test_result_by_run_and_identifier_success(
+    cato_api_client, suite_result, test_result
+):
+    result = cato_api_client.find_test_result_by_run_id_and_identifier(
+        suite_result.run_id,
+        TestIdentifier(suite_result.suite_name, test_result.test_name),
+    )
+
+    assert result == TestResult(
+        id=0,
+        suite_result_id=suite_result.id,
+        test_name="my_test_name",
+        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test_name"),
+        test_command="my_command",
+        test_variables={"testkey": "test_value"},
+        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+        execution_status=ExecutionStatus.NOT_STARTED,
+        status=TestStatus.SUCCESS,
+        seconds=5,
+        message="sucess",
+        image_output=3,
+        reference_image=4,
+        started_at=test_result.started_at,
+        finished_at=test_result.finished_at,
+    )
+
+
+def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(
+    cato_api_client, suite_result, test_result
+):
+
+    result = cato_api_client.find_test_result_by_run_id_and_identifier(
+        10, TestIdentifier(suite_result.suite_name, test_result.test_name)
+    )
+
+    assert result == None
+
+
+def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifier(
+    cato_api_client, suite_result
+):
+
+    result = cato_api_client.find_test_result_by_run_id_and_identifier(
+        suite_result.run_id, TestIdentifier("test", "wurst")
+    )
+
+    assert result == None
