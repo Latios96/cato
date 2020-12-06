@@ -77,24 +77,16 @@ class TestExecutionDbReporter(TestExecutionReporter):
         if self._run_id is None:
             raise RuntimeError("start_execution has to be called first!")
 
-        suite_result = self._suite_result_repository.find_by_run_id_and_name(
-            self._run_id, current_suite.name
-        )
-        if not suite_result:
-            logger.error(
-                "Did not found a SuiteResult for run id %s and suite name %s",
-                self._run_id,
-                current_suite.name,
-            )
-            return
-
         test_identifier = TestIdentifier(current_suite.name, test.name)
-        test_result = (
-            self._test_result_repository.find_by_suite_result_and_test_identifier(
-                suite_result.id, test_identifier
-            )
+        test_result = self._cato_api_client.find_test_result_by_run_id_and_identifier(
+            self._run_id, test_identifier
         )
         if test_result is None:
+            logger.error(
+                "Did not found a TestResult for suite with run id %s and TestIdentifier %s",
+                self._run_id,
+                test_identifier,
+            )
             return
 
         test_result.execution_status = ExecutionStatus.RUNNING
@@ -108,31 +100,18 @@ class TestExecutionDbReporter(TestExecutionReporter):
     ):
         if self._run_id is None:
             raise RuntimeError("start_execution has to be called first!")
-        suite_result = self._suite_result_repository.find_by_run_id_and_name(
-            self._run_id, current_suite.name
-        )
-
-        if suite_result is None:
-            logger.error(
-                "Did not found a SuiteResult for run id %s and suite name %s",
-                self._run_id,
-                current_suite.name,
-            )
-            return
-
         test_identifier = TestIdentifier(
             current_suite.name, test_execution_result.test.name
         )
-        test_result = (
-            self._test_result_repository.find_by_suite_result_and_test_identifier(
-                suite_result.id,
-                test_identifier,
-            )
+
+        test_result = self._cato_api_client.find_test_result_by_run_id_and_identifier(
+            self._run_id, test_identifier
         )
+
         if test_result is None:
             logger.error(
-                "Did not found a TestResult for suite with id %s and TestIdentifier %s",
-                suite_result.id,
+                "Did not found a TestResult for suite with run id %s and TestIdentifier %s",
+                self._run_id,
                 test_identifier,
             )
             return
