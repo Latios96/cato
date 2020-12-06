@@ -32,6 +32,7 @@ def test_map_from_with_required_only():
         test_variables={"key": "value"},
         machine_info=MachineInfo("Intel Xeon", 8, 2),
         execution_status=ExecutionStatus.NOT_STARTED,
+        seconds=0,
     )
 
 
@@ -104,6 +105,7 @@ def test_map_to_with_required_only():
         "test_command": "my_command",
         "test_variables": {"key": "value"},
         "machine_info": {"cores": 8, "cpu_name": "Intel Xeon", "memory": 2},
+        "seconds": 0,
     }
 
 

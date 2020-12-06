@@ -8,6 +8,7 @@ from flask import Blueprint, jsonify, abort, request
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
+from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
 from cato.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -80,51 +81,10 @@ class TestResultsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        test_result = TestResult(
-            id=0,
-            suite_result_id=request_json["suite_result_id"],
-            test_name=request_json["test_name"],
-            test_identifier=TestIdentifier.from_string(request_json["test_identifier"]),
-            test_command=request_json["test_command"],
-            test_variables=request_json["test_variables"],
-            machine_info=MachineInfo(
-                cpu_name=request_json["machine_info"]["cpu_name"],
-                cores=request_json["machine_info"]["cores"],
-                memory=request_json["machine_info"]["memory"],
-            ),
-            execution_status=self._map_execution_status(
-                request_json["execution_status"]
-            ),
-            status=self._map_test_status(request_json.get("status")),
-            output=request_json.get("output") or [],
-            seconds=request_json.get("seconds") or 0,
-            message=request_json.get("message"),
-            image_output=request_json.get("image_output"),
-            reference_image=request_json.get("reference_image"),
-            started_at=self._map_datetime(request_json.get("started_at")),
-            finished_at=self._map_datetime(request_json.get("finished_at")),
-        )
+        mapper = TestResultClassMapper()
+
+        test_result = mapper.map_from_dict(request_json)
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
-        test_result.test_identifier = str(test_result.test_identifier)
-        test_result.execution_status = test_result.execution_status.name
-        return jsonify(test_result), 201
-
-    def _map_test_status(self, status):
-        if not status:
-            return None
-        return TestStatus.SUCCESS if status == "SUCCESS" else TestStatus.FAILED
-
-    def _map_execution_status(self, status):
-        if not status:
-            return None
-        return {
-            "NOT_STARTED": ExecutionStatus.NOT_STARTED,
-            "RUNNING": ExecutionStatus.RUNNING,
-            "FINISHED": ExecutionStatus.FINISHED,
-        }[status]
-
-    def _map_datetime(self, date: str):
-        if date:
-            return parse(date)
+        return jsonify(mapper.map_to_dict(test_result)), 201

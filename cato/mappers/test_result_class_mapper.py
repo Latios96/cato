@@ -32,7 +32,7 @@ class TestResultClassMapper(AbstractClassMapper):
             ),
             status=self._test_status_value_wrapper.map_from(the_dict.get("status")),
             output=the_dict.get("output") or [],
-            seconds=the_dict.get("seconds"),
+            seconds=the_dict.get("seconds") or 0,
             message=the_dict.get("message"),
             image_output=the_dict.get("image_output"),
             reference_image=the_dict.get("reference_image"),
@@ -71,6 +71,8 @@ class TestResultClassMapper(AbstractClassMapper):
             data["output"] = test_result.output
         if test_result.seconds:
             data["seconds"] = test_result.seconds
+        else:
+            data["seconds"] = 0
         if test_result.message:
             data["message"] = test_result.message
         if test_result.image_output:
