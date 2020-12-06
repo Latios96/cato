@@ -5,9 +5,9 @@ from typing import IO, Tuple, AnyStr
 
 from sqlalchemy import Column, Integer, String
 
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato.storage.domain.File import File
-from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.domain.File import File
+from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )

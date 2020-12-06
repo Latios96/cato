@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cato.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.api.validators.run_validators import CreateRunValidator
 from tests.utils import mock_safe
 

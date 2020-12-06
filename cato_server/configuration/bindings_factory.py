@@ -5,23 +5,27 @@ import pinject
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
-from cato.storage.abstract.project_repository import ProjectRepository
-from cato.storage.abstract.run_repository import RunRepository
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
-from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_test_result_repository import (
+    TestResultRepository,
+)
+from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
+from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
-from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
-from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
-from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
+    SqlAlchemyRunRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
-from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_server.configuration.app_configuration import AppConfiguration

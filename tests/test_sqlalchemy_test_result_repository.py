@@ -6,9 +6,9 @@ from sqlalchemy.exc import IntegrityError
 from cato.domain.machine_info import MachineInfo
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
-from cato.storage.domain.execution_status import ExecutionStatus
-from cato.storage.domain.test_result import TestResult
-from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+from cato_server.storage.domain.execution_status import ExecutionStatus
+from cato_server.storage.domain.test_result import TestResult
+from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 

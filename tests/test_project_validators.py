@@ -1,6 +1,6 @@
 import pytest
 
-from cato.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.api.validators.project_validators import CreateProjectValidator
 from tests.utils import mock_safe
 

@@ -4,7 +4,7 @@ from marshmallow_enum import EnumField
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestStatus
-from cato.storage.domain.execution_status import ExecutionStatus
+from cato_server.storage.domain.execution_status import ExecutionStatus
 from cato_server.api.schemas.general import (
     MachineInfoSchema,
     ID_FIELD,

@@ -22,18 +22,20 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
-from cato.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
-from cato.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+from cato_server.storage.sqlalchemy.sqlalchemy_config import SqlAlchemyConfig
+from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
-from cato.storage.sqlalchemy.sqlalchemy_project_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
-from cato.storage.sqlalchemy.sqlalchemy_run_repository import SqlAlchemyRunRepository
-from cato.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
+    SqlAlchemyRunRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
-from cato.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_api_client import cato_api_client

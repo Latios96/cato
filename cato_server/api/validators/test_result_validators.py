@@ -1,8 +1,8 @@
 from typing import List, Dict
 
 from cato.domain.test_identifier import TestIdentifier
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.api.schemas.test_result_schemas import (
     CreateTestResultSchema,
     UpdateTestResultSchema,

@@ -6,10 +6,12 @@ from flask import Blueprint, jsonify, abort, request
 
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato.storage.abstract.abstract_test_result_repository import TestResultRepository
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.storage.domain.test_result import TestResult
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_test_result_repository import (
+    TestResultRepository,
+)
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.domain.test_result import TestResult
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
@@ -120,7 +122,7 @@ class TestResultsBlueprint(Blueprint):
             abort(404)
 
         update_data_keys = UpdateTestResultSchema().load(request_json).keys()
-        update_data = { key: request_json[key] for key in update_data_keys }
+        update_data = {key: request_json[key] for key in update_data_keys}
 
         test_result_dict = self._test_result_mapper.map_to_dict(test_result)
         logger.info("Updating TestResult with data %s", update_data)

@@ -4,9 +4,9 @@ from http.client import BAD_REQUEST
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
-from cato.storage.abstract.run_repository import RunRepository
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.storage.domain.suite_result import SuiteResult
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.domain.suite_result import SuiteResult
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,
 )

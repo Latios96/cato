@@ -4,7 +4,7 @@ import tempfile
 
 from flask import Blueprint, jsonify, request, send_file
 
-from cato.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from oiio.OpenImageIO import ImageBuf
 
 logger = logging.getLogger(__name__)

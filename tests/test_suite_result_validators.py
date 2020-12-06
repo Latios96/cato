@@ -1,7 +1,7 @@
 import pytest
 
-from cato.storage.abstract.run_repository import RunRepository
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,
 )

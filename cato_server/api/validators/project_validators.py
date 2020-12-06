@@ -1,6 +1,6 @@
 from typing import Dict, List
 
-from cato.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.api.schemas.project_schemas import CreateProjectSchema
 from cato_server.api.validators.basic import SchemaValidator
 

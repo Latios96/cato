@@ -1,7 +1,7 @@
 from typing import Optional
 
 from cato.domain.project import Project
-from cato.storage.abstract.abstract_repository import AbstractRepository
+from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 
 class ProjectRepository(AbstractRepository[Project, int]):

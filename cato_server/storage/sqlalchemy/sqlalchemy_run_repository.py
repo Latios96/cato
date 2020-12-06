@@ -4,8 +4,8 @@ from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 from cato.domain.run import Run
-from cato.storage.abstract.run_repository import RunRepository
-from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )

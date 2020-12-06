@@ -3,9 +3,9 @@ from typing import Optional, Iterable
 from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
 
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.storage.domain.suite_result import SuiteResult
-from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.domain.suite_result import SuiteResult
+from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )

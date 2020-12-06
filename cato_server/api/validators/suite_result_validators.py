@@ -1,7 +1,7 @@
 from typing import Dict, List
 
-from cato.storage.abstract.run_repository import RunRepository
-from cato.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.api.schemas.suite_result_schemas import CreateSuiteResultSchema
 from cato_server.api.validators.basic import SchemaValidator
 

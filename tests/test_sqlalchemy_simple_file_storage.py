@@ -1,6 +1,6 @@
 import os
 
-from cato.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
+from cato_server.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
     SqlAlchemySimpleFileStorage,
 )
 

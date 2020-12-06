@@ -1,7 +1,7 @@
 from typing import Optional
 
 from cato.mappers.abstract_value_mapper import AbstractValueMapper
-from cato.storage.domain.execution_status import ExecutionStatus
+from cato_server.storage.domain.execution_status import ExecutionStatus
 
 
 class ExecutionStatusValueMapper(AbstractValueMapper[ExecutionStatus, str]):

@@ -1,8 +1,8 @@
 from typing import Optional, Iterable
 
 from cato.domain.test_identifier import TestIdentifier
-from cato.storage.abstract.abstract_repository import AbstractRepository
-from cato.storage.domain.test_result import TestResult
+from cato_server.storage.abstract.abstract_repository import AbstractRepository
+from cato_server.storage.domain.test_result import TestResult
 
 
 class TestResultRepository(AbstractRepository):

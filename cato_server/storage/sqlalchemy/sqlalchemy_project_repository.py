@@ -4,8 +4,8 @@ from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
 from cato.domain.project import Project
-from cato.storage.abstract.project_repository import ProjectRepository
-from cato.storage.sqlalchemy.abstract_sqlalchemy_repository import (
+from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )

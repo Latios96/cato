@@ -1,7 +1,7 @@
 from typing import Dict
 
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.storage.domain.suite_result import SuiteResult
+from cato_server.storage.domain.suite_result import SuiteResult
 
 
 class SuiteResultClassMapper(AbstractClassMapper[SuiteResult]):

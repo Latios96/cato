@@ -5,8 +5,8 @@ from http.client import BAD_REQUEST
 from flask import Blueprint, jsonify, request
 
 from cato.domain.run import Run
-from cato.storage.abstract.project_repository import ProjectRepository
-from cato.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.api.validators.run_validators import CreateRunValidator
 
 logger = logging.getLogger(__name__)
