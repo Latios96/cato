@@ -53,13 +53,17 @@ def test_get_test_result_by_suite_id_should_return_empty_list(
     assert rv.get_json() == []
 
 
-def test_get_test_result_output_should_return(client, test_result):
+def test_get_test_result_output_should_return(client, test_result, output):
     url = "/api/v1/test_results/{}/output".format(test_result.id)
 
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == ["1", "2", "3"]
+    assert rv.get_json() == {
+        "id": 1,
+        "test_result_id": 1,
+        "text": "This is a long text",
+    }
 
 
 def test_get_test_result_output_should_404(client, test_result):
@@ -185,7 +189,6 @@ def test_update_test_result_success(client, test_result):
         "image_output": 1,
         "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
         "message": "sucess",
-        "output": ["1", "2", "3"],
         "reference_image": 1,
         "seconds": 5.0,
         "started_at": test_result.started_at.isoformat(),

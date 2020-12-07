@@ -29,7 +29,6 @@ class _TestResultMapping(Base):
     machine_info = Column(JSON, nullable=False)
     execution_status = Column(String, nullable=True)
     status = Column(String, nullable=True)
-    output = Column(JSON, nullable=False)
     seconds = Column(Float, nullable=False)
     message = Column(String, nullable=True)
     image_output = Column(Integer, nullable=True)
@@ -54,7 +53,6 @@ class SqlAlchemyTestResultRepository(
             if domain_object.execution_status
             else None,
             status=domain_object.status.name if domain_object.status else None,
-            output=domain_object.output,
             seconds=domain_object.seconds,
             message=domain_object.message,
             image_output=domain_object.image_output,
@@ -80,7 +78,6 @@ class SqlAlchemyTestResultRepository(
             else MachineInfo("", 0, 0),
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
-            output=entity.output,
             seconds=entity.seconds,
             message=entity.message,
             image_output=entity.image_output,

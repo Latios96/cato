@@ -9,12 +9,16 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
+from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
+    SqlAlchemyOutputRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
@@ -44,6 +48,7 @@ class StorageBindings:
     suite_result_repository_binding: Type[SuiteResultRepository]
     test_result_repository_binding: Type[TestResultRepository]
     file_storage_binding: Type[AbstractFileStorage]
+    output_repository_binding: Type[OutputRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -78,6 +83,10 @@ class PinjectBindings(pinject.BindingSpec):
             "file_storage",
             to_class=self._bindings.storage_bindings.file_storage_binding,
         )
+        bind(
+            "output_repository",
+            to_class=self._bindings.storage_bindings.output_repository_binding,
+        )
         bind("root_path", to_instance=self._bindings.storage_bindings.root_path_binding)
         bind(
             "session_maker",
@@ -103,6 +112,7 @@ class BindingsFactory:
             suite_result_repository_binding=SqlAlchemySuiteResultRepository,
             test_result_repository_binding=SqlAlchemyTestResultRepository,
             file_storage_binding=SqlAlchemyDeduplicatingFileStorage,
+            output_repository_binding=SqlAlchemyOutputRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )

@@ -17,7 +17,7 @@ depends_on = None
 
 
 def upgrade():
-    op.create_table(
+    output_table = op.create_table(
         "output_entity",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column(
@@ -28,6 +28,15 @@ def upgrade():
         ),
         sa.Column("text", sa.Text(), nullable=False),
     )
+    conn = op.get_bind()
+    res = conn.execute("select id, output from test_result_entity")
+    results = res.fetchall()
+
+    output_data = [
+        {"test_result_entity_id": r[0], "text": "".join(r[1])} for r in results
+    ]
+
+    op.bulk_insert(output_table, output_data)
 
 
 def downgrade():

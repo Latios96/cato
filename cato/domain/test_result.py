@@ -19,7 +19,6 @@ class TestResult:
     machine_info: MachineInfo
     execution_status: ExecutionStatus = ExecutionStatus.NOT_STARTED
     status: Optional[TestStatus] = None
-    output: Optional[List[str]] = field(default_factory=list)
     seconds: Optional[float] = None
     message: Optional[str] = None
     image_output: Optional[int] = None

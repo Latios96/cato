@@ -1,6 +1,5 @@
 import datetime
 import os
-from io import StringIO
 
 import humanfriendly
 import pytest
@@ -9,17 +8,30 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
+from cato.domain.execution_status import ExecutionStatus
 from cato.domain.machine_info import MachineInfo
+from cato.domain.output import Output
 from cato.domain.project import Project
 from cato.domain.run import Run
-from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_status import TestStatus
-from cato.domain.execution_status import ExecutionStatus
 from cato.domain.suite_result import SuiteResult
+from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_result import TestResult
+from cato.domain.test_status import TestStatus
+from cato_server.__main__ import create_app
+from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.bindings_factory import (
+    BindingsFactory,
+    Bindings,
+    PinjectBindings,
+)
+from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
+    SqlAlchemyOutputRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
@@ -33,15 +45,6 @@ from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.__main__ import create_app
-from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.bindings_factory import (
-    BindingsFactory,
-    Bindings,
-    PinjectBindings,
-)
-from cato_server.configuration.logging_configuration import LoggingConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
 @event.listens_for(Engine, "connect")
@@ -94,7 +97,6 @@ def test_result(sessionmaker_fixture, suite_result, stored_file):
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
         execution_status=ExecutionStatus.NOT_STARTED,
         status=TestStatus.SUCCESS,
-        output=["1", "2", "3"],
         seconds=5,
         message="sucess",
         image_output=stored_file.id,
@@ -109,6 +111,14 @@ def test_result(sessionmaker_fixture, suite_result, stored_file):
 def stored_file(sessionmaker_fixture, tmp_path):
     repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
     return repository.save_file(os.path.join(os.path.dirname(__file__), "test.exr"))
+
+
+@pytest.fixture()
+def output(sessionmaker_fixture, test_result):
+    repository = SqlAlchemyOutputRepository(sessionmaker_fixture)
+    return repository.save(
+        Output(id=0, test_result_id=test_result.id, text="This is a long text")
+    )
 
 
 @pytest.fixture()

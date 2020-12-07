@@ -4,7 +4,6 @@ import os
 import pytest
 from requests.models import Response
 
-from cato.domain import run
 from cato.domain.machine_info import MachineInfo
 from cato.domain.project import Project
 from cato.domain.run import Run
@@ -174,7 +173,6 @@ def test_create_test_result_success_minimal(cato_api_client, suite_result):
         machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
         execution_status=ExecutionStatus.NOT_STARTED,
         seconds=0,
-        output=[],
     )
 
 
@@ -190,7 +188,6 @@ def test_create_test_result_success_complex(cato_api_client, suite_result, store
         machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
         started_at=started_at,
         image_output=stored_file.id,
-        output=["1", "2", "3"],
     )
 
     result = cato_api_client.create_test_result(test_result)

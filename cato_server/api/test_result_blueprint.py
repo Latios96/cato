@@ -10,6 +10,7 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
+from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.domain.test_result import TestResult
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
@@ -27,11 +28,13 @@ class TestResultsBlueprint(Blueprint):
         test_result_repository: TestResultRepository,
         suite_result_repository: SuiteResultRepository,
         file_storage: AbstractFileStorage,
+        output_repository: OutputRepository,
     ):
         super(TestResultsBlueprint, self).__init__("test-results", __name__)
         self._test_result_repository = test_result_repository
         self._suite_result_repository = suite_result_repository
         self._file_storage = file_storage
+        self._output_repository = output_repository
 
         self._test_result_mapper = TestResultClassMapper()
 
@@ -90,10 +93,10 @@ class TestResultsBlueprint(Blueprint):
         return self._map_many_test_results(test_results)
 
     def get_test_result_output(self, test_result_id):
-        suite_result = self._test_result_repository.find_by_id(test_result_id)
-        if not suite_result:
+        output = self._output_repository.find_by_test_result_id(test_result_id)
+        if not output:
             abort(404)
-        return jsonify(suite_result.output)
+        return jsonify(output)
 
     def create_test_result(self):
         request_json = request.get_json()
