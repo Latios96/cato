@@ -61,7 +61,10 @@ class ProjectRunsView extends Component<Props, State> {
                       className={styles.runListEntry}
                       active={this.isCurrentEntry(r)}
                     >
-                      <span className={styles.runNumber}>Run #{r.id}</span> <span className={styles.runTimingInformation}>{formatTime(r.started_at)}</span>
+                      <span className={styles.runNumber}>Run #{r.id}</span>{" "}
+                      <span className={styles.runTimingInformation}>
+                        {formatTime(r.started_at)}
+                      </span>
                     </ListGroup.Item>
                   </Link>
                 </div>
@@ -69,13 +72,9 @@ class ProjectRunsView extends Component<Props, State> {
             })}
           </ListGroup>
           <div className={styles.suiteResult}>
-            {this.state.currentSuiteResults.map((suiteResult: SuiteResult) => {
-              return (
-                <div>
-                  <SuiteResultComponent suiteResult={suiteResult} />
-                </div>
-              );
-            })}
+            {this.state.currentSuiteResults
+              ? this.renderSuiteResults(this.state.currentSuiteResults)
+              : this.renderSuiteResultsPlaceholder()}
           </div>
         </div>
       </div>
@@ -116,10 +115,10 @@ class ProjectRunsView extends Component<Props, State> {
   };
 
   fetchSuiteResults = () => {
-    if (!this.props.currentRunId) {
-      return;
-    }
-    fetch("/api/v1/suite_results/run/" + this.props.currentRunId)
+    fetch(
+      "/api/v1/suite_results/run/" +
+        (this.props.currentRunId ? this.props.currentRunId : "0")
+    )
       .then((res) => res.json())
       .then(
         (result) => {
@@ -130,6 +129,24 @@ class ProjectRunsView extends Component<Props, State> {
           console.log(error);
         }
       );
+  };
+
+  renderSuiteResults = (suiteResults: SuiteResult[]) => {
+    return suiteResults.map((suiteResult: SuiteResult) => {
+      return (
+        <div>
+          <SuiteResultComponent suiteResult={suiteResult} />
+        </div>
+      );
+    });
+  };
+
+  renderSuiteResultsPlaceholder = () => {
+    return (
+      <div>
+        <h1>please select a run</h1>
+      </div>
+    );
   };
 
   isCurrentEntry = (r: Run) => {
