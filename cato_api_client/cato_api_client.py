@@ -11,6 +11,7 @@ from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
 from cato.mappers.file_class_mapper import FileClassMapper
+from cato.mappers.output_class_mapper import OutputClassMapper
 from cato.mappers.project_class_mapper import ProjectClassMapper
 from cato.mappers.run_class_mapper import RunClassMapper
 from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
@@ -116,6 +117,15 @@ class CatoApiClient:
         url = self._build_url(f"/api/v1/test_results/{test_result.id}")
         return self._patch_with_http_template(
             url, test_result, TestResultClassMapper(), TestResultClassMapper()
+        )
+
+    def upload_output(self, test_result_id: int, output: str):
+        url = self._build_url("/api/v1/test_results/output")
+        self._create_with_http_template(
+            url,
+            {"test_result_id": test_result_id, "text": output},
+            DictMapper(),
+            OutputClassMapper(),
         )
 
     def _build_url(self, url):
