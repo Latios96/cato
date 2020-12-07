@@ -91,7 +91,7 @@ build.dependsOn('poetryBuild')
 install.dependsOn(':frontend:yarn_install')
 
 task formatPython(type:Exec){
-    commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client'
+    commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
 }
 
 task format{
