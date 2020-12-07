@@ -7,6 +7,7 @@ import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
 import { formatTime } from "../../utils";
+import RunListEntryComponent from "./RunListEntryComponent";
 
 interface Props {
   projectId: number;
@@ -55,19 +56,11 @@ class ProjectRunsView extends Component<Props, State> {
           <ListGroup>
             {this.state.runs.map((r: Run) => {
               return (
-                <div>
-                  <Link to={`/projects/${this.props.projectId}/runs/${r.id}`}>
-                    <ListGroup.Item
-                      className={styles.runListEntry}
-                      active={this.isCurrentEntry(r)}
-                    >
-                      <span className={styles.runNumber}>Run #{r.id}</span>{" "}
-                      <span className={styles.runTimingInformation}>
-                        {formatTime(r.started_at)}
-                      </span>
-                    </ListGroup.Item>
-                  </Link>
-                </div>
+                <RunListEntryComponent
+                  run={r}
+                  isCurrentEntry={this.isCurrentEntry(r)}
+                  link={`/projects/${this.props.projectId}/runs/${r.id}`}
+                />
               );
             })}
           </ListGroup>
