@@ -1,7 +1,6 @@
 import React from "react";
 import "./App.css";
 import {
-  BrowserRouter as Router,
   Switch,
   Route,
   RouteComponentProps,
@@ -16,8 +15,6 @@ interface ProjectPageMatchParams {
 }
 
 interface ProjectPageMatchProps
-  extends RouteComponentProps<ProjectPageMatchParams> {}
-interface ProjectRunPageMatchProps
   extends RouteComponentProps<ProjectPageMatchParams> {}
 
 function App() {

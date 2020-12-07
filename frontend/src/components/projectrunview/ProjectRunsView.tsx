@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import Run from "../../models/Run";
-import ago from "s-ago";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.css";
 import { Link } from "react-router-dom";

@@ -78,9 +78,7 @@ class SuiteResultComponent extends Component<Props, State> {
         <Card>
           <Card.Body>
             <Card.Title>
-              {result.test_identifier.suite_name} /{" "}
-              {result.test_identifier.test_name}{" "}
-              {this.emojinizeStatus(result.status)}
+              {result.test_identifier}{" "}{this.emojinizeStatus(result.status)}
             </Card.Title>
             {result.execution_status === "FINISHED" ? (
               <FinishedTestResultComponent result={result} />
