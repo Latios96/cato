@@ -12,7 +12,7 @@ code {
 }
 a {
   text-decoration: none;
-  color: black;
+  color: black !important;
 }
 
 a:visited {
