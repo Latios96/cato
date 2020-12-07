@@ -4,23 +4,22 @@ from typing import Iterable
 
 from flask import Blueprint, jsonify, abort, request
 
-from cato.domain.output import Output
 from cato.domain.test_identifier import TestIdentifier
+from cato.domain.test_result import TestResult
 from cato.mappers.output_class_mapper import OutputClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
-from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.abstract_test_result_repository import (
-    TestResultRepository,
-)
-from cato_server.storage.abstract.output_repository import OutputRepository
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.domain.test_result import TestResult
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
     CreateOutputValidator,
 )
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_test_result_repository import (
+    TestResultRepository,
+)
+from cato_server.storage.abstract.output_repository import OutputRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 
 logger = logging.getLogger(__name__)
 
@@ -160,15 +159,11 @@ class TestResultsBlueprint(Blueprint):
 
     def _map_test_result(self, test_result: TestResult, status=200):
         test_result = self._test_result_mapper.map_to_dict(test_result)
-        if test_result.get("output"):
-            test_result.pop("output")
         return jsonify(test_result), status
 
     def _map_many_test_results(self, test_results: Iterable[TestResult]):
         mapped_results = []
         for result in test_results:
             result = self._test_result_mapper.map_to_dict(result)
-            if result.get("output"):
-                result.pop("output")
             mapped_results.append(result)
         return jsonify(mapped_results)
