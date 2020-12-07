@@ -156,6 +156,9 @@ class TestResultsBlueprint(Blueprint):
             test_result_id=request_json["test_result_id"],
             text=request_json["text"],
         )
+        logger.info(
+            "Saving output for test result with id %s", request_json["test_result_id"]
+        )
         output = self._output_repository.save(output)
         return jsonify(self._output_class_mapper.map_to_dict(output)), 201
 
