@@ -18,6 +18,6 @@ a {
 a:visited {
   color: black;
 }
-a:hover{
+a:hover {
   text-decoration: none !important;
 }

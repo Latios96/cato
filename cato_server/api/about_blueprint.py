@@ -18,7 +18,5 @@ class AboutBlueprint(Blueprint):
     def about(self):
         version = cato_server.__version__
         if self._app_configuration.debug:
-            version+="-dev"
-        return jsonify({
-            'version': version
-        })
+            version += "-dev"
+        return jsonify({"version": version})

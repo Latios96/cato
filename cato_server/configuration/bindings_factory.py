@@ -103,7 +103,7 @@ class BindingsFactory:
     def create_bindings(self) -> PinjectBindings:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
-        bindings = Bindings(storage_bindings,self._configuration)
+        bindings = Bindings(storage_bindings, self._configuration)
         return PinjectBindings(bindings)
 
     def create_storage_bindings(self):

@@ -1,49 +1,45 @@
-import React, {Component} from "react";
-import styles from "./AboutComponent.module.css"
+import React, { Component } from "react";
+import styles from "./AboutComponent.module.css";
 
-interface Props {
+interface Props {}
 
-}
-
-const FRONTEND_VERSION = "0.15.1"
+const FRONTEND_VERSION = "0.15.1";
 
 interface State {
-    backendVersion: string
+  backendVersion: string;
 }
 
 class AboutComponent extends Component<Props, State> {
-    constructor(props: Props) {
-        super(props);
-        this.state = {backendVersion: ''}
-    }
+  constructor(props: Props) {
+    super(props);
+    this.state = { backendVersion: "" };
+  }
 
-    componentDidMount() {
-        fetch(
-            "/api/v1/about"
-        )
-            .then((res) => res.json())
-            .then(
-                (result) => {
-                    this.setState({backendVersion: result.version});
-                },
-                (error) => {
-                    console.log(error);
-                }
-            );
-    }
+  componentDidMount() {
+    fetch("/api/v1/about")
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setState({ backendVersion: result.version });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  }
 
-    render() {
-        return (
-            <div className={styles.about}>
-                <div>
-                    <span>Cato Server:</span> <span>{this.state.backendVersion}</span>
-                </div>
-                <div>
-                    <span>Frontend:</span> <span>{FRONTEND_VERSION}</span>
-                </div>
-            </div>
-        );
-    }
+  render() {
+    return (
+      <div className={styles.about}>
+        <div>
+          <span>Cato Server:</span> <span>{this.state.backendVersion}</span>
+        </div>
+        <div>
+          <span>Frontend:</span> <span>{FRONTEND_VERSION}</span>
+        </div>
+      </div>
+    );
+  }
 }
 
 export default AboutComponent;
