@@ -22,7 +22,6 @@ function WaitingOrRunningTestResultComponent(props: Props) {
           ? "started: " + formatTime(props.result.started_at)
           : ""}
       </p>
-      <p>Command: "{props.result.test_command}"</p>
     </div>
   );
 }
