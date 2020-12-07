@@ -7,7 +7,7 @@ export default interface TestResult {
   id: number;
   suite_result_id: number;
   test_name: string;
-  test_identifier: TestIdentifier;
+  test_identifier: string;
   test_command: string;
   test_variables: object;
   machine_info: object;
