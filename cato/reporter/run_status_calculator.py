@@ -18,8 +18,6 @@ class RunStatusCalculator:
 
         total = len(test_results)
 
-        print(test_results)
-
         if execution_status_counts[ExecutionStatus.NOT_STARTED] == total:
             return RunStatus.NOT_STARTED
         elif execution_status_counts[ExecutionStatus.FINISHED] == total:
