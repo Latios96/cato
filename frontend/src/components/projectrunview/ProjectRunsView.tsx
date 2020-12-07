@@ -72,7 +72,7 @@ class ProjectRunsView extends Component<Props, State> {
             })}
           </ListGroup>
           <div className={styles.suiteResult}>
-            {this.state.currentSuiteResults
+            {this.state.currentSuiteResults.length !== 0
               ? this.renderSuiteResults(this.state.currentSuiteResults)
               : this.renderSuiteResultsPlaceholder()}
           </div>
@@ -132,6 +132,7 @@ class ProjectRunsView extends Component<Props, State> {
   };
 
   renderSuiteResults = (suiteResults: SuiteResult[]) => {
+    console.log("renderSuiteResults");
     return suiteResults.map((suiteResult: SuiteResult) => {
       return (
         <div>
@@ -144,7 +145,9 @@ class ProjectRunsView extends Component<Props, State> {
   renderSuiteResultsPlaceholder = () => {
     return (
       <div>
-        <h1>please select a run</h1>
+        <span className={styles.suiteResultsPlaceholder}>
+          Please select a run
+        </span>
       </div>
     );
   };
