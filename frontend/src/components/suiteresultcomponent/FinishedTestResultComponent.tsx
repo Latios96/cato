@@ -45,7 +45,8 @@ function renderImages(result: TestResult): React.ReactNode {
   return (
     <React.Fragment>
       {result.image_output ? (
-        <img className={styles.imageOutput}
+        <img
+          className={styles.imageOutput}
           src={"/api/v1/files/" + result.image_output}
           alt={"image output"}
         />

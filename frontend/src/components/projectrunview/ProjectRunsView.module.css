@@ -15,11 +15,11 @@
   margin-right: 60px;
   flex-grow: 1;
 }
-.runNumber{
+.runNumber {
   font-weight: bold;
   font-size: 18px;
 }
-.runTimingInformation{
+.runTimingInformation {
   font-weight: lighter;
   margin-left: 13px;
 }
