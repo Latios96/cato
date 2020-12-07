@@ -2,12 +2,10 @@ import React, { Component } from "react";
 import Run from "../../models/Run";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.css";
-import { Link } from "react-router-dom";
 import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
-import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
-import { formatTime } from "../../utils";
 import RunListEntryComponent from "./RunListEntryComponent";
+import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
 
 interface Props {
   projectId: number;

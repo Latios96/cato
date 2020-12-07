@@ -4,7 +4,8 @@
 }
 
 .runListEntry {
-  width: 300px;
+  width: 270px;
+  display: flex !important;
 }
 
 .projectName {
@@ -19,9 +20,11 @@
   font-weight: bold;
   font-size: 18px;
   margin-right: 10px;
+  width: 80px;
 }
 .runTimingInformation {
   font-weight: lighter;
+  width: 100px;
 }
 .suiteResultsPlaceholder {
   font-weight: lighter;
