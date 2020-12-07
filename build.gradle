@@ -48,22 +48,21 @@ task poetryInstall(type:Exec){
     commandLine 'runInVenv.bat', 'poetry', 'install'
     inputs.file('pyproject.toml')
     inputs.file('poetry.lock')
-    outputs.dir('venv')
+    outputs.file('poetryInstallOutput')
 }
 
 task pytest(type:Exec){
-    dependsOn 'createVenv'
-    dependsOn 'installPoetry'
+    dependsOn 'poetryInstall'
     commandLine 'runInVenv.bat', 'pytest', 'tests'
     inputs.dir('cato')
     inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
     inputs.dir('tests')
-    outputs.dir('dist')
+    outputs.dir('pytestOutput')
 }
 
 task copyFrontendToBuild {
-    dependsOn(':frontend:yarn_install')
-    dependsOn(':frontend:yarn_build')
+    dependsOn(':frontend:yarnBuild')
     doLast {
         copy {
             from "${rootDir}/frontend/build"
@@ -74,6 +73,7 @@ task copyFrontendToBuild {
 
 task poetryBuild(type:Exec){
     dependsOn 'installPoetry'
+    dependsOn 'pytest'
     dependsOn 'copyFrontendToBuild'
     commandLine 'runInVenv.bat', 'poetry', 'build'
     inputs.dir('cato')
@@ -88,7 +88,7 @@ install.dependsOn('installOiio')
 check.dependsOn('pytest')
 build.dependsOn('poetryBuild')
 
-install.dependsOn(':frontend:yarn_install')
+install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPython(type:Exec){
     commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'

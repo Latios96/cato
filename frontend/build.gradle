@@ -3,3 +3,18 @@ apply plugin: "com.github.node-gradle.node"
 task formatJs(type: YarnTask) {
   args = ['run', 'prettier', 'src', '-w']
 }
+
+task yarnInstallDependencies(type: YarnTask) {
+  args = ['install']
+  inputs.file('package.json')
+  inputs.file('yarn.lock')
+  outputs.file('yarnInstallDependencies')
+}
+
+task yarnBuild(type: YarnTask) {
+    dependsOn('yarnInstallDependencies')
+    args = ['build']
+    inputs.dir('public')
+    inputs.dir('src')
+    outputs.dir('build')
+}
