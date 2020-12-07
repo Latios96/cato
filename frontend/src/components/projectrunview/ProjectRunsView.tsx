@@ -96,7 +96,6 @@ class ProjectRunsView extends Component<Props, State> {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({ runs: result.reverse() });
         },
         (error) => {
@@ -113,7 +112,6 @@ class ProjectRunsView extends Component<Props, State> {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({ currentSuiteResults: result });
         },
         (error) => {
@@ -123,7 +121,6 @@ class ProjectRunsView extends Component<Props, State> {
   };
 
   renderSuiteResults = (suiteResults: SuiteResult[]) => {
-    console.log("renderSuiteResults");
     return suiteResults.map((suiteResult: SuiteResult) => {
       return (
         <div>

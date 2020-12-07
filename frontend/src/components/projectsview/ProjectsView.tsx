@@ -40,7 +40,6 @@ class ProjectsView extends Component<Props, State> {
       .then((res) => res.json())
       .then(
         (result) => {
-          console.log(result);
           this.setState({ projects: result });
         },
         (error) => {

@@ -38,6 +38,13 @@ class RunListEntryComponent extends Component<Props, State> {
     clearInterval(this.interval);
   }
 
+  fetchStatusInBg = () => {
+    if (this.state.status === "SUCCESS" || this.state.status === "FAILED") {
+      return;
+    }
+    this.fetchStatus();
+  };
+
   fetchStatus = () => {
     fetch(`/api/v1/runs/${this.props.run.id}/status`)
       .then((res) => res.json())
