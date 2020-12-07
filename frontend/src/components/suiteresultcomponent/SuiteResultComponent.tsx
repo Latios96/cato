@@ -75,7 +75,9 @@ class SuiteResultComponent extends Component<Props, State> {
         <Card>
           <Card.Body>
             <Card.Title>
-              {result.test_identifier.split("/")[0]} / {result.test_identifier.split("/")[1]} {this.emojinizeStatus(result.status)}
+              {result.test_identifier.split("/")[0]} /{" "}
+              {result.test_identifier.split("/")[1]}{" "}
+              {this.emojinizeStatus(result.status)}
             </Card.Title>
             {result.execution_status === "FINISHED" ? (
               <FinishedTestResultComponent result={result} />
