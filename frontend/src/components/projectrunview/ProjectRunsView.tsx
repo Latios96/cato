@@ -61,8 +61,7 @@ class ProjectRunsView extends Component<Props, State> {
                       className={styles.runListEntry}
                       active={this.isCurrentEntry(r)}
                     >
-                      <p>Run #{r.id}</p>
-                      <p>{formatTime(r.started_at)}</p>
+                      <span className={styles.runNumber}>Run #{r.id}</span> <span className={styles.runTimingInformation}>{formatTime(r.started_at)}</span>
                     </ListGroup.Item>
                   </Link>
                 </div>
