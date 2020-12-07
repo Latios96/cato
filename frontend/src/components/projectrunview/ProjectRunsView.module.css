@@ -18,12 +18,10 @@
 .runNumber {
   font-weight: bold;
   font-size: 18px;
+  margin-right: 10px;
 }
 .runTimingInformation {
   font-weight: lighter;
-  margin-left: 13px;
-  float: right;
-  margin-right: 85px;
 }
 .suiteResultsPlaceholder {
   font-weight: lighter;
