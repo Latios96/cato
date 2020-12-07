@@ -156,3 +156,4 @@ config.ini
 build
 cato_server/static/*
 log.txt
+.eslintcache
