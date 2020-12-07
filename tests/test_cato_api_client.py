@@ -5,6 +5,7 @@ import pytest
 from requests.models import Response
 
 from cato.domain.machine_info import MachineInfo
+from cato.domain.output import Output
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
@@ -282,3 +283,14 @@ def test_update_test_failure(cato_api_client, test_result):
 
     with pytest.raises(ValueError):
         cato_api_client.update_test_result(test_result)
+
+
+def test_upload_output_success(cato_api_client, test_result):
+    output = cato_api_client.upload_output(test_result.id, "my text")
+
+    assert output == Output(id=1, test_result_id=test_result.id, text="my text")
+
+
+def test_upload_output_failure(cato_api_client):
+    with pytest.raises(ValueError):
+        cato_api_client.upload_output(42, "my text")

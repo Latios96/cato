@@ -121,7 +121,7 @@ class CatoApiClient:
 
     def upload_output(self, test_result_id: int, output: str):
         url = self._build_url("/api/v1/test_results/output")
-        self._create_with_http_template(
+        return self._create_with_http_template(
             url,
             {"test_result_id": test_result_id, "text": output},
             DictMapper(),
