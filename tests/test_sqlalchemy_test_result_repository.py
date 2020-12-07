@@ -139,3 +139,34 @@ def test_find_by_suite_result_not_found(sessionmaker_fixture, suite_result):
     results = repository.find_by_suite_result(suite_result.id)
 
     assert results == []
+
+
+def test_find_by_run_id_should_find_single_test(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    results = repository.find_by_suite_result(run.id)
+
+    assert results == [test_result]
+
+
+def test_find_by_run_id_should_find_multiple(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    test_result1 = repository.save(test_result)
+    test_result.id = 0
+    test_result2 = repository.save(test_result)
+    test_result.id = 0
+    test_result3 = repository.save(test_result)
+    test_result.id = 1
+
+    results = repository.find_by_suite_result(run.id)
+
+    assert results == [test_result, test_result1, test_result2, test_result3]
+
+
+def test_find_by_run_id_should_find_empty_list(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    results = repository.find_by_suite_result(run.id)
+
+    assert results == []

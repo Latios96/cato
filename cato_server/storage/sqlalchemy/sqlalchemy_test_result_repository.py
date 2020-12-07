@@ -15,6 +15,10 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import _RunMapping
+from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+    _SuiteResultMapping,
+)
 
 
 class _TestResultMapping(Base):
@@ -35,6 +39,9 @@ class _TestResultMapping(Base):
     reference_image = Column(Integer, nullable=True)
     started_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
+
+    def __repr__(self):
+        return f"<_TestResultMapping id={self.id}>"
 
 
 class SqlAlchemyTestResultRepository(
@@ -123,6 +130,18 @@ class SqlAlchemyTestResultRepository(
         entities = (
             session.query(self.mapping_cls())
             .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
+            .all()
+        )
+        return list(map(self.to_domain_object, entities))
+
+    def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
+        session = self._session_maker()
+
+        entities = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
             .all()
         )
         return list(map(self.to_domain_object, entities))
