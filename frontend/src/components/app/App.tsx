@@ -8,6 +8,7 @@ import {
 } from "react-router-dom";
 import ProjectsPage from "../../pages/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage";
+import AboutPage from "../../pages/AboutPage";
 
 interface ProjectPageMatchParams {
   projectId: string;
@@ -22,6 +23,7 @@ function App() {
     <HashRouter>
       <Switch>
         <Route exact path="/" component={() => <ProjectsPage />} />
+        <Route exact path="/about" component={() => <AboutPage />} />
         <Route
           exact
           path="/projects/:projectId/runs/:runId?"
