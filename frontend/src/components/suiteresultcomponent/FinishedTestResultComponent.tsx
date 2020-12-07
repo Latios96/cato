@@ -1,7 +1,7 @@
 import React from "react";
 import TestResult from "../../models/TestResult";
 import { formatDuration, formatTime } from "../../utils";
-
+import styles from "./SuiteResultComponent.module.css";
 interface Props {
   result: TestResult;
 }
@@ -45,7 +45,7 @@ function renderImages(result: TestResult): React.ReactNode {
   return (
     <React.Fragment>
       {result.image_output ? (
-        <img
+        <img className={styles.imageOutput}
           src={"/api/v1/files/" + result.image_output}
           alt={"image output"}
         />

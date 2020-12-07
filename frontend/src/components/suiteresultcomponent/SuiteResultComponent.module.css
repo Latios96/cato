@@ -5,3 +5,7 @@
 .suiteResultCard {
   margin-bottom: 20px;
 }
+.imageOutput{
+  display: flex;
+  margin: auto;
+}
