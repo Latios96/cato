@@ -4,6 +4,7 @@ from typing import Iterable
 
 from flask import Blueprint, jsonify, abort, request
 
+from cato.domain.output import Output
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
@@ -17,6 +18,7 @@ from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
+    CreateOutputValidator,
 )
 
 logger = logging.getLogger(__name__)
@@ -51,6 +53,9 @@ class TestResultsBlueprint(Blueprint):
         )
         self.route("/test_results/<int:test_result_id>/output", methods=["GET"])(
             self.get_test_result_output
+        )
+        self.route("/test_results/output", methods=["POST"])(
+            self.create_test_result_output
         )
         self.route("/test_results", methods=["POST"])(self.create_test_result)
         self.route("/test_results/<int:test_result_id>", methods=["PATCH"])(
@@ -135,6 +140,21 @@ class TestResultsBlueprint(Blueprint):
         logger.info("Saving updated TestResult %s", test_result)
         self._test_result_repository.save(test_result)
         return jsonify(test_result_dict), 200
+
+    def create_test_result_output(self):
+        request_json = request.get_json()
+        errors = CreateOutputValidator(
+            self._test_result_repository, self._output_repository
+        ).validate(request_json)
+        if errors:
+            return jsonify(errors), BAD_REQUEST
+
+        output = Output(
+            id=0,
+            test_result_id=request_json["test_result_id"],
+            text=request_json["text"],
+        )
+        return jsonify(self._output_repository.save(output))
 
     def _map_test_result(self, test_result: TestResult, status=200):
         test_result = self._test_result_mapper.map_to_dict(test_result)

@@ -4,11 +4,16 @@ import pytest
 
 from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_test_result_repository import (
+    TestResultRepository,
+)
+from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato.domain.suite_result import SuiteResult
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
+    CreateOutputValidator,
 )
 from tests.utils import mock_safe
 
@@ -177,3 +182,40 @@ class TestUpdateTestResultValidator:
         )
 
         assert errors == {"reference_image": ["No file exists for id 3."]}
+
+
+class TestCreateOutputValidator:
+    def test_success(self):
+        test_result_repo = mock_safe(TestResultRepository)
+        test_result_repo.find_by_id.return_value = True
+        output_repository = mock_safe(OutputRepository)
+        output_repository.find_by_test_result_id.return_value = None
+        validator = CreateOutputValidator(test_result_repo, output_repository)
+
+        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+
+        assert errors == {}
+
+    def test_failure_invalid_test_result_id(self):
+        test_result_repo = mock_safe(TestResultRepository)
+        test_result_repo.find_by_id.return_value = False
+        output_repository = mock_safe(OutputRepository)
+        output_repository.find_by_test_result_id.return_value = None
+        validator = CreateOutputValidator(test_result_repo, output_repository)
+
+        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+
+        assert errors == {"test_result_id": ["No test result exists for id 1."]}
+
+    def test_failure_existing_output(self):
+        test_result_repo = mock_safe(TestResultRepository)
+        test_result_repo.find_by_id.return_value = True
+        output_repository = mock_safe(OutputRepository)
+        output_repository.find_by_test_result_id.return_value = True
+        validator = CreateOutputValidator(test_result_repo, output_repository)
+
+        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+
+        assert errors == {
+            "test_result_id": ["An output already exists for test result with id 1."]
+        }

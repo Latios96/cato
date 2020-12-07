@@ -215,3 +215,26 @@ def test_update_test_result_failure_invalid_test_result_id(client):
     rv = client.patch("/api/v1/test_results/42", json={"status": "SUCCESS"})
 
     assert rv.status_code == 404
+
+
+def test_create_output_success(client, test_result):
+    rv = client.post(
+        "/api/v1/test_results/output",
+        json={"test_result_id": test_result.id, "text": "my text"},
+    )
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "id": 1,
+        "test_result_id": test_result.id,
+        "text": "my text",
+    }
+
+
+def test_create_output_failure(client, test_result):
+    rv = client.post(
+        "/api/v1/test_results/output", json={"test_result_id": 42, "text": "my text"}
+    )
+
+    assert rv.status_code == 400
+    assert rv.get_json() == {"test_result_id": ["No test result exists for id 42."]}

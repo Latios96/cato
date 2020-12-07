@@ -56,3 +56,11 @@ class UpdateTestResultSchema(Schema):
     reference_image = fields.Integer()
     started_at = fields.DateTime()
     finished_at = fields.DateTime()
+
+
+class CreateOutputSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    test_result_id = ID_FIELD
+    text = fields.String(required=True, allow_none=False)

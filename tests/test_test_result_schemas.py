@@ -2,7 +2,10 @@ import datetime
 
 import pytest
 
-from cato_server.api.schemas.test_result_schemas import CreateTestResultSchema
+from cato_server.api.schemas.test_result_schemas import (
+    CreateTestResultSchema,
+    CreateOutputSchema,
+)
 
 
 class TestCreateTestResultSchema:
@@ -367,6 +370,42 @@ class TestCreateTestResultSchema:
     )
     def test_failure_optional_fields(self, data, expected_errors):
         schema = CreateTestResultSchema()
+
+        errors = schema.validate(data)
+
+        assert errors == expected_errors
+
+
+class TestCreateOutputSchema:
+    def test_success(self):
+        schema = CreateOutputSchema()
+
+        errors = schema.validate({"test_result_id": 1, "text": "This is a long text"})
+
+        assert errors == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {},
+                {
+                    "test_result_id": ["Missing data for required field."],
+                    "text": ["Missing data for required field."],
+                },
+            ),
+            (
+                {"test_result_id": "wurst", "text": "This is a long text"},
+                {"test_result_id": ["Not a valid integer."]},
+            ),
+            (
+                {"test_result_id": 1, "text": ["This is a long text"]},
+                {"text": ["Not a valid string."]},
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors):
+        schema = CreateOutputSchema()
 
         errors = schema.validate(data)
 
