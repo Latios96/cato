@@ -33,6 +33,7 @@ BANNER = r"""
 
 def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     logger.info(BANNER)
+    logger.info("Cato Server Version %s", cato_server.__version__)
     logger.info("Creating Flask app..")
     obj_graph = pinject.new_object_graph(
         modules=[cato, cato_server], binding_specs=[bindings]
