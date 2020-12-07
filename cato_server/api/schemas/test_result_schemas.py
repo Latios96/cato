@@ -47,7 +47,7 @@ class UpdateTestResultSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    execution_status = EnumField(ExecutionStatus, required=True)
+    execution_status = EnumField(ExecutionStatus)
     status = EnumField(TestStatus)
     output = fields.List(fields.String())
     seconds = fields.Float(min=1)
