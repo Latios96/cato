@@ -1,7 +1,7 @@
 import React from "react";
 import TestResult from "../../models/TestResult";
 import { formatTime } from "../../utils";
-import { GridLoader } from "react-spinners";
+import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 
 interface Props {
   result: TestResult;
@@ -14,7 +14,7 @@ function WaitingOrRunningTestResultComponent(props: Props) {
         {props.result.execution_status === "NOT_STARTED" ? (
           "waiting to start"
         ) : (
-          <GridLoader size={5} />
+          <RenderingBucketIcon />
         )}
       </p>
       <p>

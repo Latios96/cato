@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.css";
 import { formatTime } from "../../utils";
-import { GridLoader } from "react-spinners";
+import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 interface Props {
   run: Run;
   isCurrentEntry: boolean;
@@ -73,7 +73,7 @@ class RunListEntryComponent extends Component<Props, State> {
     if (status === "NOT_STARTED") {
       return <span>☐</span>;
     } else if (status === "RUNNING") {
-      return <GridLoader size={5} />;
+      return <RenderingBucketIcon />;
     } else if (status === "SUCCESS") {
       return "✔";
     } else if (status === "FAILED") {
