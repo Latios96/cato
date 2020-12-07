@@ -112,7 +112,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
         test_result.execution_status = ExecutionStatus.FINISHED
         test_result.finished_at = datetime.datetime.now()
-        test_result.output = test_execution_result.output
         test_result.status = test_execution_result.status
         test_result.seconds = test_execution_result.seconds
         test_result.message = test_execution_result.message
@@ -128,6 +127,11 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._cato_api_client.update_test_result(test_result)
+
+        logger.info(f"Uploading output of test {test_identifier}..")
+        self._cato_api_client.upload_output(
+            test_result.id, "".join(test_execution_result.output)
+        )
 
     def _copy_to_storage(self, image_path: str) -> int:
         return self._cato_api_client.upload_file(image_path).id
