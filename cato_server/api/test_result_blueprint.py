@@ -128,6 +128,7 @@ class TestResultsBlueprint(Blueprint):
         logger.info("Updating TestResult with data %s", update_data)
         test_result_dict.update(update_data)
         test_result = self._test_result_mapper.map_from_dict(test_result_dict)
+
         logger.info("Saving updated TestResult %s", test_result)
         self._test_result_repository.save(test_result)
         return jsonify(test_result_dict), 200
