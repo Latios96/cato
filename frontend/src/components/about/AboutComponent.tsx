@@ -5,7 +5,7 @@ interface Props {
 
 }
 
-const FRONTEND_VERSION = "0.14.6"
+const FRONTEND_VERSION = "0.15.0"
 
 interface State {
     backendVersion: string
