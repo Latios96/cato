@@ -21,8 +21,10 @@ def main():
     version = tag.name[1:]
     print(f"Deploy version {version}..")
 
-    print("Clean frontend")
-    shutil.rmtree('cato_server/static')
+    static_path = os.path.join('cato_server', 'static')
+    if os.path.exists(static_path):
+        print("Clean frontend")
+        shutil.rmtree('cato_server/static')
 
     print("Building..")
     subprocess.check_call("gradlew.bat build")
