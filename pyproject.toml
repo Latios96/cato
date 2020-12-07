@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cato"
-version = "0.14.1"
+version = "0.14.2"
 description = "coolest project"
 authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
 include = [
@@ -19,7 +19,7 @@ cato_server_admin = 'cato_server.cato_server_admin:main'
 [tool.poetry.dependencies]
 python = "^3.7"
 emoji = "^0.6.0"
-pinject = "^0.14.1"
+pinject = "^0.14.2"
 jsonschema = "^3.2.0"
 contexttimer = "^0.3.3"
 humanfriendly = "^8.2"
