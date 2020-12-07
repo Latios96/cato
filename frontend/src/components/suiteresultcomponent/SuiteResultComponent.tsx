@@ -34,9 +34,6 @@ class SuiteResultComponent extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h2 className={styles.suiteResultName}>
-          {this.props.suiteResult.suite_name}
-        </h2>
         {this.filterResults(this.state.testResults, "RUNNING").map(
           (result: TestResult) => {
             return this.renderResult(result);
