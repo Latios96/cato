@@ -56,6 +56,7 @@ class StorageBindings:
 @dataclass
 class Bindings:
     storage_bindings: StorageBindings
+    app_configuration: AppConfiguration
 
 
 class PinjectBindings(pinject.BindingSpec):
@@ -92,6 +93,7 @@ class PinjectBindings(pinject.BindingSpec):
             "session_maker",
             to_instance=self._bindings.storage_bindings.session_maker_binding,
         )
+        bind("app_configuration", to_instance=self._bindings.app_configuration)
 
 
 class BindingsFactory:
@@ -101,7 +103,7 @@ class BindingsFactory:
     def create_bindings(self) -> PinjectBindings:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
-        bindings = Bindings(storage_bindings)
+        bindings = Bindings(storage_bindings,self._configuration)
         return PinjectBindings(bindings)
 
     def create_storage_bindings(self):

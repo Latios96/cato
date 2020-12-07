@@ -136,7 +136,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()
     storage_bindings.session_maker_binding = sessionmaker_fixture
-    bindings = Bindings(storage_bindings)
+    bindings = Bindings(storage_bindings, config)
     pinject_bindings = PinjectBindings(bindings)
 
     app = create_app(config, pinject_bindings)

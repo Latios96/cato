@@ -10,6 +10,7 @@ from werkzeug.exceptions import HTTPException
 import cato
 import cato_server
 import cato_server.server_logging
+from cato_server.api.about_blueprint import AboutBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
@@ -60,6 +61,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
     app.register_blueprint(
         obj_graph.provide(SuiteResultsBlueprint), url_prefix="/api/v1"
     )
+    app.register_blueprint(obj_graph.provide(AboutBlueprint), url_prefix="/api/v1")
 
     @app.errorhandler(Exception)
     def handle_500(e):
