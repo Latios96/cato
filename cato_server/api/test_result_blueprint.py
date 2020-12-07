@@ -151,11 +151,7 @@ class TestResultsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        output = Output(
-            id=0,
-            test_result_id=request_json["test_result_id"],
-            text=request_json["text"],
-        )
+        output = self._output_class_mapper.map_from_dict(request_json)
         logger.info(
             "Saving output for test result with id %s", request_json["test_result_id"]
         )
