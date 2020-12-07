@@ -6,6 +6,7 @@ from flask import Blueprint, jsonify, abort, request
 
 from cato.domain.output import Output
 from cato.domain.test_identifier import TestIdentifier
+from cato.mappers.output_class_mapper import OutputClassMapper
 from cato.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -39,6 +40,7 @@ class TestResultsBlueprint(Blueprint):
         self._output_repository = output_repository
 
         self._test_result_mapper = TestResultClassMapper()
+        self._output_class_mapper = OutputClassMapper()
 
         self.route(
             "/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
@@ -154,7 +156,8 @@ class TestResultsBlueprint(Blueprint):
             test_result_id=request_json["test_result_id"],
             text=request_json["text"],
         )
-        return jsonify(self._output_repository.save(output))
+        output = self._output_repository.save(output)
+        return jsonify(self._output_class_mapper.map_to_dict(output)), 201
 
     def _map_test_result(self, test_result: TestResult, status=200):
         test_result = self._test_result_mapper.map_to_dict(test_result)

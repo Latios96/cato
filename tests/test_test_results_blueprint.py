@@ -223,7 +223,7 @@ def test_create_output_success(client, test_result):
         json={"test_result_id": test_result.id, "text": "my text"},
     )
 
-    assert rv.status_code == 200
+    assert rv.status_code == 201
     assert rv.get_json() == {
         "id": 1,
         "test_result_id": test_result.id,
