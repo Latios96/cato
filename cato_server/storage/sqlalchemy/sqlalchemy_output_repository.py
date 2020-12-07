@@ -6,8 +6,6 @@ from cato.domain.output import Output
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
-    E,
-    T,
     Base,
 )
 
