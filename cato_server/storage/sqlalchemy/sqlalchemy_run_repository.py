@@ -47,4 +47,6 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             .filter(self.mapping_cls().project_entity_id == id)
             .all()
         )
+
+        session.close()
         return list(map(self.to_domain_object, entities))

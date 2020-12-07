@@ -52,6 +52,7 @@ class SqlAlchemySuiteResultRepository(
             .filter(self.mapping_cls().run_entity_id == run_id)
             .all()
         )
+        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
@@ -63,5 +64,6 @@ class SqlAlchemySuiteResultRepository(
             .filter(self.mapping_cls().suite_name == name)
             .first()
         )
+        session.close()
         if entity:
             return self.to_domain_object(entity)

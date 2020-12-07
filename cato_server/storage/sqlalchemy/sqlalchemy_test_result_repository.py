@@ -121,6 +121,7 @@ class SqlAlchemyTestResultRepository(
             .filter(self.mapping_cls().test_identifier == str(test_identifier))
             .first()
         )
+        session.close()
         if entity:
             return self.to_domain_object(entity)
 
@@ -132,6 +133,7 @@ class SqlAlchemyTestResultRepository(
             .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
             .all()
         )
+        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
@@ -144,4 +146,5 @@ class SqlAlchemyTestResultRepository(
             .filter(_RunMapping.id == run_id)
             .all()
         )
+        session.close()
         return list(map(self.to_domain_object, entities))

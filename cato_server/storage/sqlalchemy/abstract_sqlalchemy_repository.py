@@ -41,12 +41,14 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         session = self._session_maker()
 
         query = session.query(self.mapping_cls()).filter(self.mapping_cls().id == id)
+        session.close()
         return self._map_one_to_domain_object(query.first())
 
     def find_all(self) -> Iterable[T]:
         session = self._session_maker()
         results = session.query(self.mapping_cls()).all()
 
+        session.close()
         return self._map_many_to_domain_object(results)
 
     def to_entity(self, domain_object: T) -> E:

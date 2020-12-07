@@ -27,6 +27,7 @@ class SqlAlchemyProjectRepository(AbstractSqlAlchemyRepository, ProjectRepositor
         project = (
             session.query(_ProjectMapping).filter(_ProjectMapping.name == name).first()
         )
+        session.close()
         if project:
             return self.to_domain_object(project)
 

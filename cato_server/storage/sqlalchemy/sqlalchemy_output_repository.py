@@ -43,4 +43,6 @@ class SqlAlchemyOutputRepository(
         query = session.query(self.mapping_cls()).filter(
             self.mapping_cls().test_result_entity_id == id
         )
+
+        session.close()
         return self._map_one_to_domain_object(query.first())
