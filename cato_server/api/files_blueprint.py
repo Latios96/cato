@@ -5,7 +5,7 @@ import tempfile
 from flask import Blueprint, jsonify, request, send_file
 
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from oiio.OpenImageIO import ImageBuf
+from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
 logger = logging.getLogger(__name__)
 
@@ -40,14 +40,32 @@ class FilesBlueprint(Blueprint):
             uploaded_file.save(tmp_path)
             target_path = os.path.splitext(tmp_path)[0] + ".png"
 
-            buf = ImageBuf(tmp_path)
-            buf.write(target_path)
+            self._convert_from_to(tmp_path, target_path)
 
             f = self._file_storage.save_file(target_path)
 
             logger.info("Cleaning up temporary directory %s", tmpdirname)
 
         return f
+
+    def _convert_from_to(self, src, dst):
+        logger.info("Converting image %s to %s using OpenImageIO..", src, dst)
+        buf = ImageBuf(src)
+
+        logger.info("Image has %s channels", buf.nchannels)
+        if buf.nchannels > 4:
+            logger.info("Image has more than 4 channels, stripping channels..")
+            buf = ImageBufAlgo.channels(buf, (0, 1, 2, 3))
+            logger.info("Stripped channels")
+
+        logger.info("Writing image to %s", dst)
+        ok = buf.write(dst)
+
+        class ImageConversionError(Exception):
+            pass
+
+        if not ok:
+            raise ImageConversionError("Error when converting image {} to {}: {}".format(src, dst, buf.geterror()))
 
     def get_file(self, file_id: int):
         file = self._file_storage.find_by_id(file_id)
