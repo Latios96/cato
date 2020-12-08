@@ -4,7 +4,7 @@ from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
-from cato.image_comparison.image_comparator import ImageComparator
+from cato.image_utils.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.file_system_abstractions.output_folder import OutputFolder

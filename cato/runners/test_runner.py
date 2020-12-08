@@ -8,7 +8,7 @@ from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
-from cato.image_comparison.image_comparator import ImageComparator
+from cato.image_utils.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
