@@ -43,7 +43,11 @@ class FilesBlueprint(Blueprint):
             buf = ImageBuf(tmp_path)
             buf.write(target_path)
 
-            return self._file_storage.save_file(target_path)
+            f = self._file_storage.save_file(target_path)
+
+            logger.info("Cleaning up temporary directory %s", tmpdirname)
+
+        return f
 
     def get_file(self, file_id: int):
         file = self._file_storage.find_by_id(file_id)
