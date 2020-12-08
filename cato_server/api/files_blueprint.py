@@ -34,7 +34,7 @@ class FilesBlueprint(Blueprint):
         return jsonify(f), 201
 
     def _convert_and_save(self, uploaded_file):
-        logger.info("Converting image %s to png", uploaded_file.filename)
+        logger.info("Converting image %s to png..", uploaded_file.filename)
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
             uploaded_file.save(tmp_path)
@@ -44,7 +44,7 @@ class FilesBlueprint(Blueprint):
 
             f = self._file_storage.save_file(target_path)
 
-            logger.info("Cleaning up temporary directory %s", tmpdirname)
+            logger.info("Cleaning up temporary directory %s..", tmpdirname)
 
         return f
 
