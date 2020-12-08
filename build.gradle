@@ -39,7 +39,9 @@ task installPoetry(type:Exec){
 }
 
 task installOiio(type:Exec){
-    onlyIf { file('venv/Lib/site-packages/oiio').exists() == false }
+    dependsOn 'createVenv'
+    inputs.file('oiio-requirements.txt')
+    outputs.dir('venv/Lib/site-packages/oiio')
     commandLine 'venv/Scripts/pip', 'install', '-r', 'oiio-requirements.txt'
 }
 
