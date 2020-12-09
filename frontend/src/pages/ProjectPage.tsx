@@ -7,7 +7,7 @@ interface Props {
   currentRunId: number | null;
 }
 
-function ProjectsPage(props: Props) {
+function ProjectPage(props: Props) {
   return (
     <div>
       <Header />
@@ -19,4 +19,4 @@ function ProjectsPage(props: Props) {
   );
 }
 
-export default ProjectsPage;
+export default ProjectPage;
