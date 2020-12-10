@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import styles from "./ImageComparison.module.css";
+import ReactCompareImage from "react-compare-image";
 
 interface Props {
   outputImageUrl: string;
@@ -21,12 +22,11 @@ class ImageComparison extends Component<Props, State> {
     return (
       <div
         className={styles.imgCompContainer}
-        style={
-          this.state.imgHeight !== 0 ? { height: this.state.imgHeight } : {}
-        }
+        style={{ maxWidth: this.state.imgWidth }}
       >
-          <div className={styles.compareSlider}/>
         <img
+          src={this.props.outputImageUrl}
+          className={styles.imageSizeCalculator}
           onLoad={(e) => {
             console.log(e.currentTarget.clientHeight);
             this.setState({
@@ -34,10 +34,11 @@ class ImageComparison extends Component<Props, State> {
               imgWidth: e.currentTarget.naturalWidth,
             });
           }}
-          src={this.props.outputImageUrl}
-          className={styles.imgCompImg}
         />
-        <img src={this.props.referenceImageUrl} className={styles.imgCompImg} />
+        <ReactCompareImage
+          leftImage={this.props.outputImageUrl}
+          rightImage={this.props.referenceImageUrl}
+        />
       </div>
     );
   }

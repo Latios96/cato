@@ -1,22 +1,15 @@
 .imgCompContainer {
-  position: relative;
+  display: flex;
+  margin: auto;
 }
 
-.imgCompImg {
-  max-height: 100%;
-  max-width: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
+.imgCompContainer img {
+  max-width: 100% !important;
 }
-.compareSlider{
-  background-color: red;
-  width: 2px;
-  z-index: 5;
-  position: absolute;
-  top: 0;
-  left: 0;
-  cursor: ew-resize;
-  height: 100%
+
+.imgCompContainer div[style] {
+}
+
+.imageSizeCalculator {
+  display: none;
 }

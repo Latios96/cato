@@ -9223,6 +9223,11 @@ react-bootstrap@^1.4.0:
     uncontrollable "^7.0.0"
     warning "^4.0.3"
 
+react-compare-image@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.yarnpkg.com/react-compare-image/-/react-compare-image-3.0.2.tgz#1b9a31f20caa67acc902793815c17a1e417498e9"
+  integrity sha512-XYS7fvBz6G2aRttg1zuR9Q72W2vpdux6YDQ8bBpaV/Em+bTqwogxfdmUeVqKnhQpOu3uWab75Lsmr9ucxdYbgA==
+
 react-dev-utils@^11.0.1:
   version "11.0.1"
   resolved "https://registry.yarnpkg.com/react-dev-utils/-/react-dev-utils-11.0.1.tgz#30106c2055acfd6b047d2dc478a85c356e66fe45"
