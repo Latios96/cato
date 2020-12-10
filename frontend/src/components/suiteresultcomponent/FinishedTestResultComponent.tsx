@@ -1,7 +1,9 @@
 import React from "react";
 import TestResult from "../../models/TestResult";
 import { formatDuration, formatTime } from "../../utils";
+import ReactCompareImage from "react-compare-image";
 import styles from "./SuiteResultComponent.module.css";
+import ImageComparison from "../imagecomparison/ImageComparison";
 interface Props {
   result: TestResult;
 }
@@ -45,10 +47,9 @@ function renderImages(result: TestResult): React.ReactNode {
   return (
     <React.Fragment>
       {result.image_output ? (
-        <img
-          className={styles.imageOutput}
-          src={"/api/v1/files/" + result.image_output}
-          alt={"image output"}
+        <ImageComparison
+          outputImageUrl={"/api/v1/files/" + result.image_output}
+          referenceImageUrl={"/api/v1/files/" + result.reference_image}
         />
       ) : (
         ""
