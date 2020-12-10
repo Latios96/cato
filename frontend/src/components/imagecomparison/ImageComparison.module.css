@@ -8,4 +8,15 @@
   position: absolute;
   top: 0;
   left: 0;
+  z-index: 1;
+}
+.compareSlider{
+  background-color: red;
+  width: 2px;
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  left: 0;
+  cursor: ew-resize;
+  height: 100%
 }

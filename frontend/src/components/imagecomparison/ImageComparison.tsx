@@ -25,6 +25,7 @@ class ImageComparison extends Component<Props, State> {
           this.state.imgHeight !== 0 ? { height: this.state.imgHeight } : {}
         }
       >
+          <div className={styles.compareSlider}/>
         <img
           onLoad={(e) => {
             console.log(e.currentTarget.clientHeight);
