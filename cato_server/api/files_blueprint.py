@@ -6,7 +6,6 @@ from flask import Blueprint, jsonify, request, send_file
 
 from cato.image_utils.image_conversion import ImageConverter
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
 logger = logging.getLogger(__name__)
 
