@@ -15,6 +15,7 @@ def test_upload_file(client):
         "hash": "43cb15ad0b6b6a956dfb128d0dd4d1fc93462968bdbf7a285579eda534772514",
         "id": 1,
         "name": "my_file_name",
+        "value_counter": 0,
     }
 
 
@@ -36,6 +37,7 @@ def test_upload_file_needs_conversion(client):
         "hash": "505cc9e0719a4f15a36eaa6df776bea0cc065b32d198be6002a79a03823b4d9e",
         "id": 1,
         "name": "test.png",
+        "value_counter": 0,
     }
 
 

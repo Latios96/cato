@@ -63,7 +63,7 @@ class SqlAlchemySimpleFileStorage(
     def _create_file_obj_for_stream(self, name: str, stream: IO) -> Tuple[File, AnyStr]:
         bytes = stream.read()
         file_hash = hashlib.sha3_256(bytes).hexdigest()
-        return File(id=0, name=name, hash=str(file_hash)), bytes
+        return File(id=0, name=name, hash=str(file_hash), value_counter=0), bytes
 
     def _create_file_obj_for_path(self, path: str) -> File:
         with open(path, "rb") as f:
@@ -77,7 +77,7 @@ class SqlAlchemySimpleFileStorage(
         )
 
     def to_domain_object(self, entity: _FileMapping) -> File:
-        return File(id=entity.id, name=entity.name, hash=entity.hash)
+        return File(id=entity.id, name=entity.name, hash=entity.hash, value_counter=0)
 
     def mapping_cls(self):
         return _FileMapping

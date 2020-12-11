@@ -6,3 +6,4 @@ class File:
     id: int
     name: str
     hash: str
+    value_counter: int

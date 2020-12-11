@@ -103,6 +103,7 @@ def test_upload_file(cato_api_client):
         id=1,
         name="test.png",
         hash="505cc9e0719a4f15a36eaa6df776bea0cc065b32d198be6002a79a03823b4d9e",
+        value_counter=0,
     )
 
 
