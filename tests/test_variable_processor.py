@@ -282,6 +282,7 @@ def test_evaluate_variables_maya_predefinition():
         "maya_location": r"C:\Program Files\Autodesk\Maya2020",
         "maya_version": "2020",
         "vray_render_command": r'"C:\Program Files\Autodesk\Maya2020\vray\bin\vray.exe" -sceneFile=config_path/my_test_suite/test_name/scene.vrscene -imgFile=test/result/my_test_suite/test_name/test_name.exr -progressIncrement=1',
+        "vray_gpu_render_command": r'"C:\Program Files\Autodesk\Maya2020\vray\bin\vray.exe" -sceneFile=config_path/my_test_suite/test_name/scene.vrscene -imgFile=test/result/my_test_suite/test_name/test_name.exr -progressIncrement=1 -rtengine=5',
         "vray_scene_file": "config_path/my_test_suite/test_name/scene.vrscene",
     }
 
