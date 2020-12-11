@@ -4,4 +4,4 @@ def validate_name(name):
 
     for c in name:
         if c in [" ", "/", ",", ".", "\\", '"', "'"]:
-            raise ValueError(f"Test name {name} contains not allowed character: {c}")
+            raise ValueError(f'Name {name} contains not allowed character: "{c}"')
