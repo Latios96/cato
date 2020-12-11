@@ -1,0 +1,11 @@
+.terminalBackground {
+  background-color: black;
+  padding: 15px;
+  font-size: 14px;
+  color: white;
+  font-family: "Fira Mono", monospace;
+}
+
+.terminalContent {
+  color: white;
+}

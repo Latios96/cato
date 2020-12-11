@@ -4,6 +4,7 @@ import { formatDuration, formatTime } from "../../utils";
 import ReactCompareImage from "react-compare-image";
 import styles from "./SuiteResultComponent.module.css";
 import ImageComparison from "../imagecomparison/ImageComparison";
+import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 interface Props {
   result: TestResult;
 }
@@ -30,6 +31,7 @@ function FinishedTestResultComponent(props: Props) {
         ? renderFailureInformation(props.result)
         : ""}
       {renderImages(props.result)}
+      <DisplayLogComponent testResultId={props.result.id} />
     </div>
   );
 }

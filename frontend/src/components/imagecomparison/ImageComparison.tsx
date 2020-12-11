@@ -28,7 +28,6 @@ class ImageComparison extends Component<Props, State> {
           src={this.props.outputImageUrl}
           className={styles.imageSizeCalculator}
           onLoad={(e) => {
-            console.log(e.currentTarget.clientHeight);
             this.setState({
               imgHeight: e.currentTarget.naturalHeight,
               imgWidth: e.currentTarget.naturalWidth,
