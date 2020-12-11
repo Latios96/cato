@@ -34,21 +34,22 @@ class SqlAlchemySimpleFileStorage(
         self._root_path = root_path
 
     def save_file(self, path: str) -> File:
-        file = self._create_file_obj_for_path(path)
+        file, content = self._create_file_obj_for_path(path)
+        logger.info("Saving file %s..", file)
         file = self.save(file)
-        if self._needs_write(file):
-            target_path = self.get_path(file)
-            logger.info("Copy file %s to storage at %s", path, target_path)
-            shutil.copy(path, target_path)
+        logger.info("Write file %s to storage at %s", path, self.get_path(file))
+        target_path = self.get_path(file)
+        shutil.copy(path, target_path)
         return file
 
     def save_stream(self, name: str, stream: IO) -> File:
         file, content = self._create_file_obj_for_stream(name, stream)
+        logger.info("Saving file %s..", file)
         file = self.save(file)
-        if self._needs_write(file):
-            target_stream = self._get_write_stream(file)
-            target_stream.write(content)
-            target_stream.close()
+        logger.info("Write stream to storage at %s", self.get_path(file))
+        target_stream = self._get_write_stream(file)
+        target_stream.write(content)
+        target_stream.close()
         return file
 
     def get_read_stream(self, file: File) -> IO:
@@ -65,9 +66,9 @@ class SqlAlchemySimpleFileStorage(
         file_hash = hashlib.sha3_256(bytes).hexdigest()
         return File(id=0, name=name, hash=str(file_hash), value_counter=0), bytes
 
-    def _create_file_obj_for_path(self, path: str) -> File:
+    def _create_file_obj_for_path(self, path: str) -> Tuple[File, AnyStr]:
         with open(path, "rb") as f:
-            return self._create_file_obj_for_stream(os.path.basename(path), f)[0]
+            return self._create_file_obj_for_stream(os.path.basename(path), f)
 
     def to_entity(self, domain_object: File) -> _FileMapping:
         return _FileMapping(
@@ -81,9 +82,6 @@ class SqlAlchemySimpleFileStorage(
 
     def mapping_cls(self):
         return _FileMapping
-
-    def _needs_write(self, file):
-        return True
 
     def _get_write_stream(self, file: File) -> IO:
         return open(self.get_path(file), "wb")
