@@ -50,8 +50,10 @@ function renderImages(result: TestResult): React.ReactNode {
     <React.Fragment>
       {result.image_output ? (
         <ImageComparison
-          outputImageUrl={"/api/v1/files/" + result.image_output}
-          referenceImageUrl={"/api/v1/files/" + result.reference_image}
+          outputImageUrl={"/api/v1/images/original_file/" + result.image_output}
+          referenceImageUrl={
+            "/api/v1/images/original_file/" + result.reference_image
+          }
         />
       ) : (
         ""
