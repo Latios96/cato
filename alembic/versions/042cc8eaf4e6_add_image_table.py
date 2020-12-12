@@ -23,7 +23,6 @@ def upgrade():
         sa.Column(
             "original_file_entity_id", sa.INTEGER, sa.ForeignKey("file_entity.id")
         ),
-        sa.Column("channels", sa.JSON(), nullable=False),
     )
 
 
