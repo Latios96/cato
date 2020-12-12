@@ -1,14 +1,12 @@
 import dataclasses
 
-from sqlalchemy import Column, Integer, ForeignKey, Text, String, JSON
+from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 
-from cato.domain.image import Image, Channel
+from cato.domain.image import Image, ImageChannel
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
-    E,
-    T,
 )
 
 
@@ -36,7 +34,7 @@ class SqlAlchemyImageRepository(
             id=entity.id,
             name=entity.name,
             original_file_id=entity.original_file_entity_id,
-            channels=[Channel(**x) for x in entity.channels],
+            channels=[ImageChannel(**x) for x in entity.channels],
         )
 
     def mapping_cls(self):

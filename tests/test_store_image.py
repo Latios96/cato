@@ -1,6 +1,6 @@
 import os
 
-from cato.domain.image import Channel, Image
+from cato.domain.image import ImageChannel, Image
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -25,7 +25,7 @@ def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path):
         id=1,
         name="test_image_white.jpg",
         original_file_id=1,
-        channels=[Channel(name="rgb", file_id=2)],
+        channels=[ImageChannel(name="rgb", file_id=2)],
     )
 
 
@@ -44,7 +44,7 @@ def test_store_rgb_png(sessionmaker_fixture, tmp_path):
         id=1,
         name="test_image_white.png",
         original_file_id=1,
-        channels=[Channel(name="rgb", file_id=2)],
+        channels=[ImageChannel(name="rgb", file_id=2)],
     )
 
 
@@ -64,11 +64,11 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path):
         name="test_image_multichannel_exr.exr",
         original_file_id=1,
         channels=[
-            Channel(name="rgb", file_id=2),
-            Channel(name="alpha", file_id=3),
-            Channel(name="depth", file_id=4),
-            Channel(name="normals", file_id=5),
-            Channel(name="samplerInfo", file_id=6),
-            Channel(name="velocity", file_id=7),
+            ImageChannel(name="rgb", file_id=2),
+            ImageChannel(name="alpha", file_id=3),
+            ImageChannel(name="depth", file_id=4),
+            ImageChannel(name="normals", file_id=5),
+            ImageChannel(name="samplerInfo", file_id=6),
+            ImageChannel(name="velocity", file_id=7),
         ],
     )

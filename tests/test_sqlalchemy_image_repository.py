@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato.domain.image import Image, Channel
+from cato.domain.image import Image, ImageChannel
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
@@ -15,7 +15,7 @@ def test_should_save(sessionmaker_fixture, stored_file):
             id=0,
             name="test.exr",
             original_file_id=stored_file.id,
-            channels=[Channel(name="rgb", file_id=2)],
+            channels=[ImageChannel(name="rgb", file_id=2)],
         )
     )
 
@@ -23,7 +23,7 @@ def test_should_save(sessionmaker_fixture, stored_file):
         id=1,
         name="test.exr",
         original_file_id=stored_file.id,
-        channels=[Channel(name="rgb", file_id=2)],
+        channels=[ImageChannel(name="rgb", file_id=2)],
     )
 
 
@@ -36,7 +36,7 @@ def test_save_should_fail_not_existing_file_id(sessionmaker_fixture, stored_file
                 id=0,
                 name="test.exr",
                 original_file_id=42,
-                channels=[Channel(name="rgb", file_id=2)],
+                channels=[ImageChannel(name="rgb", file_id=2)],
             )
         )
 
@@ -55,7 +55,7 @@ def test_should_find(sessionmaker_fixture, stored_file):
             id=0,
             name="test.exr",
             original_file_id=stored_file.id,
-            channels=[Channel(name="rgb", file_id=2)],
+            channels=[ImageChannel(name="rgb", file_id=2)],
         )
     )
 

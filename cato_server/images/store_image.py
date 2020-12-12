@@ -5,7 +5,7 @@ from typing import List
 
 from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
-from cato.domain.image import Image, Channel
+from cato.domain.image import Image, ImageChannel
 from cato.image_utils.image_conversion import ImageConversionError
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 
@@ -61,7 +61,7 @@ class StoreImage:
                 logger.info("Saving channel %s to db..", name)
                 channel_file = self._file_storage.save_file(target_path)
                 logger.info("Saved channel %s to %s", name, channel_file)
-                channel_files.append(Channel(name=name, file_id=channel_file.id))
+                channel_files.append(ImageChannel(name=name, file_id=channel_file.id))
 
             logger.info("Removing temporary directory..")
 
