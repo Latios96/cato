@@ -2,7 +2,7 @@ import logging
 import os
 import tempfile
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify, request, send_file
 
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
@@ -20,6 +20,9 @@ class ImagesBlueprint(Blueprint):
         self._image_repository = image_repository
 
         self.route("images", methods=["POST"])(self.upload_file)
+        self.route("images/original_file/<int:file_id>", methods=["GET"])(
+            self.get_original_image_file
+        )
 
     def upload_file(self):
         uploaded_file = request.files["file"]
@@ -36,3 +39,11 @@ class ImagesBlueprint(Blueprint):
             logger.info("Deleting tmpdir %s", tmpdirname)
 
         return jsonify(image), 201
+
+    def get_original_image_file(self, file_id: int):
+        image = self._image_repository.find_by_id(file_id)
+        file = self._file_storage.find_by_id(image.original_file_id)
+        file_path = self._file_storage.get_path(file)
+        if file and os.path.exists(file_path):
+            return send_file(file_path, attachment_filename=file.name)
+        return jsonify({"file_id": "No file found!"}), 404
