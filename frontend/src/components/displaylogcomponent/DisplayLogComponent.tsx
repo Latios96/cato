@@ -10,19 +10,25 @@ interface State {
   isOpened: boolean;
   content: string;
   contentIsLoaded: boolean;
+  isLoading: boolean;
 }
 
 class DisplayLogComponent extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { isOpened: false, content: "", contentIsLoaded: false };
+    this.state = {
+      isOpened: false,
+      content: "",
+      contentIsLoaded: false,
+      isLoading: false,
+    };
   }
 
   render() {
     return (
       <div>
-        <Button onClick={(e) => this.toggle()}>
-          {this.state.isOpened ? "Hide Log" : "Display Log"}
+        <Button onClick={(e) => this.toggle()} disabled={this.state.isLoading}>
+          {this.getButtonText()}
         </Button>
         {this.state.isOpened && this.state.contentIsLoaded ? (
           <LogComponent content={this.state.content} />
@@ -41,16 +47,28 @@ class DisplayLogComponent extends Component<Props, State> {
     }
   };
   fetchLog = () => {
+    this.setState({ isLoading: true });
     fetch(`api/v1/test_results/${this.props.testResultId}/output`)
       .then((res) => res.json())
       .then(
         (result) => {
-          this.setState({ content: result.text, contentIsLoaded: true });
+          this.setState({
+            content: result.text,
+            contentIsLoaded: true,
+            isLoading: false,
+          });
         },
         (error) => {
+          this.setState({ isLoading: false });
           console.log(error);
         }
       );
+  };
+  getButtonText = () => {
+    if (this.state.isLoading) {
+      return "Loading..";
+    }
+    return this.state.isOpened ? "Hide Log" : "Display Log";
   };
 }
 
