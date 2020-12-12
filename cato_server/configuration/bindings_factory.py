@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
@@ -17,6 +18,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import SqlAlchemyImageRepository
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
 )
@@ -49,6 +51,7 @@ class StorageBindings:
     test_result_repository_binding: Type[TestResultRepository]
     file_storage_binding: Type[AbstractFileStorage]
     output_repository_binding: Type[OutputRepository]
+    image_repository: Type[ImageRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -88,12 +91,14 @@ class PinjectBindings(pinject.BindingSpec):
             "output_repository",
             to_class=self._bindings.storage_bindings.output_repository_binding,
         )
+        bind("image_repository", to_class=self._bindings.storage_bindings.image_repository)
         bind("root_path", to_instance=self._bindings.storage_bindings.root_path_binding)
         bind(
             "session_maker",
             to_instance=self._bindings.storage_bindings.session_maker_binding,
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
+
 
 
 class BindingsFactory:
@@ -115,6 +120,7 @@ class BindingsFactory:
             test_result_repository_binding=SqlAlchemyTestResultRepository,
             file_storage_binding=SqlAlchemyDeduplicatingFileStorage,
             output_repository_binding=SqlAlchemyOutputRepository,
+            image_repository=SqlAlchemyImageRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
