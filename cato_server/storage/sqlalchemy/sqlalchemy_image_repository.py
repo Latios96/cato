@@ -1,6 +1,4 @@
-import dataclasses
-
-from sqlalchemy import Column, Integer, ForeignKey, String, JSON
+from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 
 from cato.domain.image import Image, ImageChannel
