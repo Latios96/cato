@@ -74,7 +74,7 @@ def test_get_test_result_output_should_404(client, test_result):
     assert rv.status_code == 404
 
 
-def test_create_test_result_success(client, suite_result, stored_file):
+def test_create_test_result_success(client, suite_result, stored_image):
     started_at = datetime.datetime.now().isoformat()
     finished_at = datetime.datetime.now().isoformat()
     rv = client.post(
@@ -87,8 +87,8 @@ def test_create_test_result_success(client, suite_result, stored_file):
             "test_variables": {"key": "value"},
             "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
             "execution_status": "NOT_STARTED",
-            "image_output": stored_file.id,
-            "reference_image": stored_file.id,
+            "image_output": stored_image.id,
+            "reference_image": stored_image.id,
             "started_at": started_at,
             "finished_at": finished_at,
         },

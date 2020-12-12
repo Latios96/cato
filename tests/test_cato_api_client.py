@@ -179,7 +179,9 @@ def test_create_test_result_success_minimal(cato_api_client, suite_result):
     )
 
 
-def test_create_test_result_success_complex(cato_api_client, suite_result, stored_file):
+def test_create_test_result_success_complex(
+    cato_api_client, suite_result, stored_image
+):
     started_at = datetime.datetime.now()
     test_result = TestResult(
         id=0,
@@ -190,7 +192,7 @@ def test_create_test_result_success_complex(cato_api_client, suite_result, store
         test_command="my_command",
         machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
         started_at=started_at,
-        image_output=stored_file.id,
+        image_output=stored_image.id,
     )
 
     result = cato_api_client.create_test_result(test_result)
@@ -206,7 +208,7 @@ def test_create_test_result_success_complex(cato_api_client, suite_result, store
         execution_status=ExecutionStatus.NOT_STARTED,
         seconds=0,
         started_at=started_at,
-        image_output=stored_file.id,
+        image_output=stored_image.id,
     )
 
 
