@@ -1,5 +1,7 @@
 import os
 
+import pytest
+
 from cato.domain.image import ImageChannel, Image
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
@@ -72,3 +74,25 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path):
             ImageChannel(id=6, image_id=1, name="velocity", file_id=7),
         ],
     )
+
+
+def test_store_not_existing_image(sessionmaker_fixture, tmp_path):
+    file_storage = SqlAlchemyDeduplicatingFileStorage(
+        sessionmaker_fixture, str(tmp_path)
+    )
+    mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
+    store_image = StoreImage(file_storage, mock_image_repository)
+
+    with pytest.raises(ValueError):
+        store_image.store_image("not_existing")
+
+
+def test_store_no_image(sessionmaker_fixture, tmp_path):
+    file_storage = SqlAlchemyDeduplicatingFileStorage(
+        sessionmaker_fixture, str(tmp_path)
+    )
+    mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
+    store_image = StoreImage(file_storage, mock_image_repository)
+
+    with pytest.raises(ValueError):
+        store_image.store_image(__file__)

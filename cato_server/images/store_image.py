@@ -24,12 +24,16 @@ class StoreImage:
         self._image_repository = image_repository
 
     def store_image(self, path: str) -> Image:
+        if not os.path.exists(path):
+            raise ValueError(f"Image {path} does not exist!")
         logger.info("Storing original file %s in db..", path)
         original_file = self._file_storage.save_file(path)
         logger.info("Stored original file %s to %s", path, original_file)
 
         logger.info("Reading image %s", path)
         buf = ImageBuf(path)
+        if not buf.initialized:
+            raise ValueError(f"Could not read image from path {path}!")
 
         indices_and_name = self._channel_indices_and_name(buf.spec().channelnames)
 
