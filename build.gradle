@@ -96,7 +96,15 @@ task formatPython(type:Exec){
     commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
 }
 
+task lintPython(type:Exec){
+    commandLine 'venv/Scripts/flake8', 'cato', 'cato_server', 'cato_api_client'
+}
+
 task format{
     dependsOn 'formatPython'
     dependsOn ':frontend:formatJs'
+}
+
+task lint{
+    dependsOn 'lintPython'
 }
