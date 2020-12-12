@@ -107,7 +107,6 @@ def upgrade():
             test_result.reference_image_id = image.id
             session.merge(test_result)
             session.commit()
-            print(test_result.reference_image_id)
 
     session.commit()
 
