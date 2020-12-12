@@ -9,6 +9,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
 from cato.domain.execution_status import ExecutionStatus
+from cato.domain.image import Image, ImageChannel
 from cato.domain.machine_info import MachineInfo
 from cato.domain.output import Output
 from cato.domain.project import Project
@@ -29,6 +30,9 @@ from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
+    SqlAlchemyImageRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
@@ -85,7 +89,7 @@ def suite_result(sessionmaker_fixture, run):
 
 
 @pytest.fixture
-def test_result(sessionmaker_fixture, suite_result, stored_file):
+def test_result(sessionmaker_fixture, suite_result, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result = TestResult(
         id=0,
@@ -99,8 +103,8 @@ def test_result(sessionmaker_fixture, suite_result, stored_file):
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=stored_file.id,
-        reference_image=stored_file.id,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
         started_at=datetime.datetime.now(),
         finished_at=datetime.datetime.now(),
     )
@@ -111,6 +115,21 @@ def test_result(sessionmaker_fixture, suite_result, stored_file):
 def stored_file(sessionmaker_fixture, tmp_path):
     repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
     return repository.save_file(os.path.join(os.path.dirname(__file__), "test.exr"))
+
+
+@pytest.fixture()
+def stored_image(sessionmaker_fixture, tmp_path, stored_file):
+    repository = SqlAlchemyImageRepository(sessionmaker_fixture)
+    return repository.save(
+        Image(
+            id=0,
+            name="test.exr",
+            original_file_id=stored_file.id,
+            channels=[
+                ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id)
+            ],
+        )
+    )
 
 
 @pytest.fixture()

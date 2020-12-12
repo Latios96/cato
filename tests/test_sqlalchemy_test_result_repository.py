@@ -13,7 +13,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 
 
-def test_save_success(sessionmaker_fixture, suite_result):
+def test_save_success(sessionmaker_fixture, suite_result, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -29,8 +29,8 @@ def test_save_success(sessionmaker_fixture, suite_result):
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=6,
-        reference_image=7,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -42,7 +42,7 @@ def test_save_success(sessionmaker_fixture, suite_result):
     assert test_result_save == test_result
 
 
-def test_save_no_suite_result(sessionmaker_fixture):
+def test_save_no_suite_result(sessionmaker_fixture, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -58,8 +58,8 @@ def test_save_no_suite_result(sessionmaker_fixture):
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=3,
-        reference_image=4,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -67,7 +67,9 @@ def test_save_no_suite_result(sessionmaker_fixture):
         repository.save(test_result)
 
 
-def test_find_by_suite_result_and_test_identifier(sessionmaker_fixture, suite_result):
+def test_find_by_suite_result_and_test_identifier(
+    sessionmaker_fixture, suite_result, stored_image
+):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -83,8 +85,8 @@ def test_find_by_suite_result_and_test_identifier(sessionmaker_fixture, suite_re
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=1,
-        reference_image=3,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -105,7 +107,7 @@ def test_find_find_by_suite_result_and_test_identifier_not_found(sessionmaker_fi
     )
 
 
-def test_find_by_suite_result(sessionmaker_fixture, suite_result):
+def test_find_by_suite_result(sessionmaker_fixture, suite_result, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -121,8 +123,8 @@ def test_find_by_suite_result(sessionmaker_fixture, suite_result):
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=1,
-        reference_image=3,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
         started_at=start_time,
         finished_at=end_time,
     )

@@ -35,8 +35,8 @@ class _TestResultMapping(Base):
     status = Column(String, nullable=True)
     seconds = Column(Float, nullable=False)
     message = Column(String, nullable=True)
-    image_output = Column(Integer, nullable=True)
-    reference_image = Column(Integer, nullable=True)
+    image_output_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
+    reference_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     started_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
 
@@ -62,8 +62,8 @@ class SqlAlchemyTestResultRepository(
             status=domain_object.status.name if domain_object.status else None,
             seconds=domain_object.seconds,
             message=domain_object.message,
-            image_output=domain_object.image_output,
-            reference_image=domain_object.reference_image,
+            image_output_id=domain_object.image_output,
+            reference_image_id=domain_object.reference_image,
             started_at=domain_object.started_at,
             finished_at=domain_object.finished_at,
         )
@@ -87,8 +87,8 @@ class SqlAlchemyTestResultRepository(
             status=self._map_test_status(entity.status),
             seconds=entity.seconds,
             message=entity.message,
-            image_output=entity.image_output,
-            reference_image=entity.reference_image,
+            image_output=entity.image_output_id,
+            reference_image=entity.reference_image_id,
             started_at=entity.started_at,
             finished_at=entity.finished_at,
         )
