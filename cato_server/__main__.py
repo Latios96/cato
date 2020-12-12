@@ -12,6 +12,7 @@ import cato_server
 import cato_server.server_logging
 from cato_server.api.about_blueprint import AboutBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
+from cato_server.api.images_blueprint import ImagesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.suite_results_blueprint import SuiteResultsBlueprint
@@ -62,6 +63,7 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
         obj_graph.provide(SuiteResultsBlueprint), url_prefix="/api/v1"
     )
     app.register_blueprint(obj_graph.provide(AboutBlueprint), url_prefix="/api/v1")
+    app.register_blueprint(obj_graph.provide(ImagesBlueprint), url_prefix="/api/v1")
 
     @app.errorhandler(Exception)
     def handle_500(e):

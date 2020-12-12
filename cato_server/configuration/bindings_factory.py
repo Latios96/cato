@@ -18,7 +18,9 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
-from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import SqlAlchemyImageRepository
+from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
+    SqlAlchemyImageRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
 )
@@ -91,14 +93,16 @@ class PinjectBindings(pinject.BindingSpec):
             "output_repository",
             to_class=self._bindings.storage_bindings.output_repository_binding,
         )
-        bind("image_repository", to_class=self._bindings.storage_bindings.image_repository)
+        bind(
+            "image_repository",
+            to_class=self._bindings.storage_bindings.image_repository,
+        )
         bind("root_path", to_instance=self._bindings.storage_bindings.root_path_binding)
         bind(
             "session_maker",
             to_instance=self._bindings.storage_bindings.session_maker_binding,
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
-
 
 
 class BindingsFactory:
