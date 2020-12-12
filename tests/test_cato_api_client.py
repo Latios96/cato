@@ -4,6 +4,7 @@ import os
 import pytest
 from requests.models import Response
 
+from cato.domain.image import Image, ImageChannel
 from cato.domain.machine_info import MachineInfo
 from cato.domain.output import Output
 from cato.domain.project import Project
@@ -295,3 +296,23 @@ def test_upload_output_success(cato_api_client, test_result):
 def test_upload_output_failure(cato_api_client):
     with pytest.raises(ValueError):
         cato_api_client.upload_output(42, "my text")
+
+
+def test_upload_image(cato_api_client):
+    path = os.path.join(os.path.dirname(__file__), "test.exr")
+
+    f = cato_api_client.upload_image(path)
+
+    assert f == Image(
+        id=1,
+        name="test.exr",
+        original_file_id=1,
+        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
+    )
+
+
+def test_upload_image_not_existing(cato_api_client):
+    path = os.path.join(os.path.dirname(__file__), "seAERER")
+
+    with pytest.raises(ValueError):
+        cato_api_client.upload_image(path)

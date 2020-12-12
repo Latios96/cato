@@ -6,11 +6,13 @@ from urllib.parse import quote
 import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
+from cato.domain.image import Image
 from cato.domain.project import Project
 from cato.domain.run import Run
 from cato.domain.test_identifier import TestIdentifier
 from cato.mappers.abstract_class_mapper import AbstractClassMapper
 from cato.mappers.file_class_mapper import FileClassMapper
+from cato.mappers.image_class_mapper import ImageClassMapper
 from cato.mappers.output_class_mapper import OutputClassMapper
 from cato.mappers.project_class_mapper import ProjectClassMapper
 from cato.mappers.run_class_mapper import RunClassMapper
@@ -71,6 +73,20 @@ class CatoApiClient:
 
         if response.status_code == 201:
             return FileClassMapper().map_from_dict(self._get_json(response))
+        raise self._create_value_error_for_bad_request(response)
+
+    def upload_image(self, path: str) -> Image:
+        if not os.path.exists(path):
+            raise ValueError(f"Path {path} does not exists!")
+
+        url = self._build_url("/api/v1/images")
+        files = {"file": open(path, "rb")}
+
+        logger.info("Uploading image %s", path)
+        response = self._post_form(url, {}, files=files)
+
+        if response.status_code == 201:
+            return ImageClassMapper().map_from_dict(self._get_json(response))
         raise self._create_value_error_for_bad_request(response)
 
     def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
