@@ -92,7 +92,7 @@ def upgrade():
                     ImageChannelMapping(
                         id=None,
                         image_entity_id=None,
-                        name=name,
+                        name="rgb",
                         file_entity_id=reference_image,
                     )
                 ],
