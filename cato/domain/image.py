@@ -4,6 +4,8 @@ from typing import List
 
 @dataclass
 class ImageChannel:
+    id: int
+    image_id: int
     name: str
     file_id: int
 

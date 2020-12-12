@@ -25,7 +25,7 @@ def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path):
         id=1,
         name="test_image_white.jpg",
         original_file_id=1,
-        channels=[ImageChannel(name="rgb", file_id=2)],
+        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
     )
 
 
@@ -44,7 +44,7 @@ def test_store_rgb_png(sessionmaker_fixture, tmp_path):
         id=1,
         name="test_image_white.png",
         original_file_id=1,
-        channels=[ImageChannel(name="rgb", file_id=2)],
+        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
     )
 
 
@@ -64,11 +64,11 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path):
         name="test_image_multichannel_exr.exr",
         original_file_id=1,
         channels=[
-            ImageChannel(name="rgb", file_id=2),
-            ImageChannel(name="alpha", file_id=3),
-            ImageChannel(name="depth", file_id=4),
-            ImageChannel(name="normals", file_id=5),
-            ImageChannel(name="samplerInfo", file_id=6),
-            ImageChannel(name="velocity", file_id=7),
+            ImageChannel(id=1, image_id=1, name="rgb", file_id=2),
+            ImageChannel(id=2, image_id=1, name="alpha", file_id=3),
+            ImageChannel(id=3, image_id=1, name="depth", file_id=4),
+            ImageChannel(id=4, image_id=1, name="normals", file_id=5),
+            ImageChannel(id=5, image_id=1, name="samplerInfo", file_id=6),
+            ImageChannel(id=6, image_id=1, name="velocity", file_id=7),
         ],
     )

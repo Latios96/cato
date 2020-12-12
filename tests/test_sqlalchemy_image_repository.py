@@ -15,7 +15,7 @@ def test_should_save(sessionmaker_fixture, stored_file):
             id=0,
             name="test.exr",
             original_file_id=stored_file.id,
-            channels=[ImageChannel(name="rgb", file_id=2)],
+            channels=[],
         )
     )
 
@@ -23,7 +23,7 @@ def test_should_save(sessionmaker_fixture, stored_file):
         id=1,
         name="test.exr",
         original_file_id=stored_file.id,
-        channels=[ImageChannel(name="rgb", file_id=2)],
+        channels=[],
     )
 
 
@@ -36,7 +36,23 @@ def test_save_should_fail_not_existing_file_id(sessionmaker_fixture, stored_file
                 id=0,
                 name="test.exr",
                 original_file_id=42,
-                channels=[ImageChannel(name="rgb", file_id=2)],
+                channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=2)],
+            )
+        )
+
+
+def test_save_should_fail_not_existing_file_id_for_channel(
+    sessionmaker_fixture, stored_file
+):
+    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
+
+    with pytest.raises(IntegrityError):
+        image_repository.save(
+            Image(
+                id=0,
+                name="test.exr",
+                original_file_id=42,
+                channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=42)],
             )
         )
 
@@ -55,7 +71,9 @@ def test_should_find(sessionmaker_fixture, stored_file):
             id=0,
             name="test.exr",
             original_file_id=stored_file.id,
-            channels=[ImageChannel(name="rgb", file_id=2)],
+            channels=[
+                ImageChannel(id=0, image_id=0, name="rgb", file_id=stored_file.id)
+            ],
         )
     )
 

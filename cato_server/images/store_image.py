@@ -61,7 +61,9 @@ class StoreImage:
                 logger.info("Saving channel %s to db..", name)
                 channel_file = self._file_storage.save_file(target_path)
                 logger.info("Saved channel %s to %s", name, channel_file)
-                channel_files.append(ImageChannel(name=name, file_id=channel_file.id))
+                channel_files.append(
+                    ImageChannel(id=0, image_id=0, name=name, file_id=channel_file.id)
+                )
 
             logger.info("Removing temporary directory..")
 
