@@ -1,7 +1,4 @@
 import io
-import os
-
-import pytest
 
 API_V_FILES = "/api/v1/files"
 
