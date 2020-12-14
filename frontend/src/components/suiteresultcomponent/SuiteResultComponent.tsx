@@ -71,7 +71,7 @@ class SuiteResultComponent extends Component<Props, State> {
 
   renderResult = (result: TestResult) => {
     return (
-      <div className={styles.suiteResultCard}>
+      <div key={result.id} className={styles.suiteResultCard}>
         <Card>
           <Card.Body>
             <Card.Title>

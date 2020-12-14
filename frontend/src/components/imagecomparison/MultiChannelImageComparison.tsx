@@ -76,7 +76,11 @@ class MultiChannelImageComparison extends Component<Props, State> {
       <React.Fragment>
         <select onChange={this.handleChange}>
           {imageOutput.channels.map((channel) => {
-            return <option value={channel.name}>{channel.name}</option>;
+            return (
+              <option key={channel.id} value={channel.name}>
+                {channel.name}
+              </option>
+            );
           })}
         </select>
         <ImageComparison

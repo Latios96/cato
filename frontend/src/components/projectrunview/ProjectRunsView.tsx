@@ -55,6 +55,7 @@ class ProjectRunsView extends Component<Props, State> {
             {this.state.runs.map((r: Run) => {
               return (
                 <RunListEntryComponent
+                  key={r.id}
                   run={r}
                   isCurrentEntry={this.isCurrentEntry(r)}
                   link={`/projects/${this.props.projectId}/runs/${r.id}`}

@@ -26,7 +26,7 @@ class ProjectsView extends Component<Props, State> {
       <div className={styles.projectsView}>
         {this.state.projects.map((p: Project) => {
           return (
-            <div className={styles.projectsViewProjectComponent}>
+            <div key={p.id} className={styles.projectsViewProjectComponent}>
               <LinkCard name={p.name} linkTo={`/projects/${p.id}/runs`} />
             </div>
           );
