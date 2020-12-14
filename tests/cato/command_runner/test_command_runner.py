@@ -47,9 +47,10 @@ def test_read_from_both():
 
     result = command_runner.run(cmd)
 
-    assert result == CommandResult(
-        cmd, 0, ["Hello world from STDOUT\n", "Hello world from STDERR\n"]
-    )
+    assert set(result.output) == {
+        "Hello world from STDOUT\n",
+        "Hello world from STDERR\n",
+    }
 
 
 def test_log_line_collector():
