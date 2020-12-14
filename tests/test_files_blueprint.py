@@ -27,8 +27,8 @@ def test_upload_file_no_filename(client):
     assert response.get_json() == {"file": "Filename can not be empty!"}
 
 
-def test_upload_file_needs_conversion(client):
-    test_exr = os.path.join(os.path.dirname(__file__), "test.exr")
+def test_upload_file_needs_conversion(client, test_resource_provider):
+    test_exr = test_resource_provider.resource_by_name("test.exr")
     data = {"file": (open(test_exr, "rb"), "test.exr")}
     response = client.post(API_V_FILES, data=data)
 

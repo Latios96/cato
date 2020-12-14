@@ -95,8 +95,8 @@ def test_create_project_should_not_create_invalid_name(cato_api_client):
         cato_api_client.create_project("my project")
 
 
-def test_upload_file(cato_api_client):
-    path = os.path.join(os.path.dirname(__file__), "test.exr")
+def test_upload_file(cato_api_client, test_resource_provider):
+    path = test_resource_provider.resource_by_name("test.exr")
 
     f = cato_api_client.upload_file(path)
 
@@ -300,8 +300,8 @@ def test_upload_output_failure(cato_api_client):
         cato_api_client.upload_output(42, "my text")
 
 
-def test_upload_image(cato_api_client):
-    path = os.path.join(os.path.dirname(__file__), "test.exr")
+def test_upload_image(cato_api_client, test_resource_provider):
+    path = test_resource_provider.resource_by_name("test.exr")
 
     f = cato_api_client.upload_image(path)
 
