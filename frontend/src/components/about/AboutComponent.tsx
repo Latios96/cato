@@ -3,7 +3,7 @@ import styles from "./AboutComponent.module.css";
 
 interface Props {}
 
-const FRONTEND_VERSION = "0.21.0";
+const FRONTEND_VERSION = "0.22.0";
 
 interface State {
   backendVersion: string;
