@@ -2,17 +2,17 @@ import datetime
 import logging
 from typing import List, Optional
 
-from cato.domain.run import Run
+from cato_server.domain.run import Run
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import TestSuite
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato.domain.execution_status import ExecutionStatus
-from cato.domain.suite_result import SuiteResult
-from cato.domain.test_result import TestResult
+from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.domain.test_result import TestResult
 
 logger = logging.getLogger(__name__)
 
