@@ -112,9 +112,9 @@ def test_result(sessionmaker_fixture, suite_result, stored_image):
 
 
 @pytest.fixture()
-def stored_file(sessionmaker_fixture, tmp_path):
+def stored_file(sessionmaker_fixture, tmp_path, test_resource_provider):
     repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
-    return repository.save_file(os.path.join(os.path.dirname(__file__), "test.exr"))
+    return repository.save_file(test_resource_provider.resource_by_name("test.exr"))
 
 
 @pytest.fixture()
