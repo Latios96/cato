@@ -48,5 +48,5 @@ def test_read_from_both():
     result = command_runner.run(cmd)
 
     assert result == CommandResult(
-        cmd, 0, ["Hello world from STDOUT", "Hello world from STDERR"]
+        cmd, 0, ["Hello world from STDOUT\n", "Hello world from STDERR\n"]
     )
