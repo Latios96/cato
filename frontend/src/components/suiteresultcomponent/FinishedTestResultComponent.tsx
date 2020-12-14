@@ -5,6 +5,8 @@ import ReactCompareImage from "react-compare-image";
 import styles from "./SuiteResultComponent.module.css";
 import ImageComparison from "../imagecomparison/ImageComparison";
 import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
+import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
+
 interface Props {
   result: TestResult;
 }
@@ -49,11 +51,9 @@ function renderImages(result: TestResult): React.ReactNode {
   return (
     <React.Fragment>
       {result.image_output ? (
-        <ImageComparison
-          outputImageUrl={"/api/v1/images/original_file/" + result.image_output}
-          referenceImageUrl={
-            "/api/v1/images/original_file/" + result.reference_image
-          }
+        <MultiChannelImageComparison
+          imageOutputId={result.image_output}
+          referenceImageId={result.reference_image ? result.reference_image : 0}
         />
       ) : (
         ""
