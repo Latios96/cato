@@ -1,9 +1,9 @@
 from collections import defaultdict
 from typing import List
 
-from cato.domain.execution_status import ExecutionStatus
-from cato.domain.run_status import RunStatus
-from cato.domain.test_result import TestResult
+from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.run_status import RunStatus
+from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
 
 

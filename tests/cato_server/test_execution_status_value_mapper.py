@@ -1,7 +1,7 @@
 import pytest
 
-from cato.mappers.execution_status_value_mapper import ExecutionStatusValueMapper
-from cato.domain.execution_status import ExecutionStatus
+from cato_server.mappers.execution_status_value_mapper import ExecutionStatusValueMapper
+from cato_server.domain.execution_status import ExecutionStatus
 
 
 @pytest.mark.parametrize(

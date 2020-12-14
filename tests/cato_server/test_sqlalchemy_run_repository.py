@@ -3,7 +3,7 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato.domain.run import Run
+from cato_server.domain.run import Run
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
     _RunMapping,

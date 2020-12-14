@@ -1,4 +1,4 @@
-from cato.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_identifier import TestIdentifier
 
 
 def test_from_string():

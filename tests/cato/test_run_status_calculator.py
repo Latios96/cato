@@ -2,11 +2,11 @@ from typing import Optional
 
 import pytest
 
-from cato.domain.execution_status import ExecutionStatus
-from cato.domain.machine_info import MachineInfo
-from cato.domain.run_status import RunStatus
-from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_result import TestResult
+from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.machine_info import MachineInfo
+from cato_server.domain.run_status import RunStatus
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
 from cato.reporter.run_status_calculator import RunStatusCalculator
 

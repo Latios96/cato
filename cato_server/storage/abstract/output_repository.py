@@ -1,6 +1,6 @@
 from typing import Optional
 
-from cato.domain.output import Output
+from cato_server.domain.output import Output
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 

@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 
-from cato.domain.project import Project
+from cato_server.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )

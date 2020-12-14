@@ -4,7 +4,7 @@ from http.client import BAD_REQUEST
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
-from cato.domain.run import Run
+from cato_server.domain.run import Run
 from cato.reporter.run_status_calculator import RunStatusCalculator
 from cato_server.api.validators.run_validators import CreateRunValidator
 from cato_server.storage.abstract.abstract_test_result_repository import (

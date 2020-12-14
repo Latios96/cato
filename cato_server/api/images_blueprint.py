@@ -4,7 +4,7 @@ import tempfile
 
 from flask import Blueprint, jsonify, request, send_file, abort
 
-from cato.mappers.image_class_mapper import ImageClassMapper
+from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository

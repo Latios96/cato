@@ -4,10 +4,10 @@ from typing import Iterable
 
 from flask import Blueprint, jsonify, abort, request
 
-from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_result import TestResult
-from cato.mappers.output_class_mapper import OutputClassMapper
-from cato.mappers.test_result_class_mapper import TestResultClassMapper
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
+from cato_server.mappers.output_class_mapper import OutputClassMapper
+from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,

@@ -1,8 +1,6 @@
-import os
-
 import pytest
+from cato_server.domain.image import ImageChannel, Image
 
-from cato.domain.image import ImageChannel, Image
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,

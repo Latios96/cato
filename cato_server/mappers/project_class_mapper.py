@@ -1,7 +1,7 @@
 from typing import Dict
 
-from cato.domain.project import Project
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.domain.project import Project
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 
 
 class ProjectClassMapper(AbstractClassMapper[Project]):

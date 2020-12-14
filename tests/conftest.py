@@ -8,15 +8,15 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
-from cato.domain.execution_status import ExecutionStatus
-from cato.domain.image import Image, ImageChannel
-from cato.domain.machine_info import MachineInfo
-from cato.domain.output import Output
-from cato.domain.project import Project
-from cato.domain.run import Run
-from cato.domain.suite_result import SuiteResult
-from cato.domain.test_identifier import TestIdentifier
-from cato.domain.test_result import TestResult
+from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.image import Image, ImageChannel
+from cato_server.domain.machine_info import MachineInfo
+from cato_server.domain.output import Output
+from cato_server.domain.project import Project
+from cato_server.domain.run import Run
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration

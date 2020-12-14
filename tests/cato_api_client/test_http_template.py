@@ -1,12 +1,10 @@
-from typing import Dict
 from unittest import mock
 
 import pytest
 
-from cato.domain.project import Project
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.mappers.project_class_mapper import ProjectClassMapper
+from cato_server.mappers.project_class_mapper import ProjectClassMapper
 from cato_api_client.http_template import HttpTemplate, HttpTemplateException
+from cato_server.domain.project import Project
 
 
 class Response:

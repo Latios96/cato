@@ -3,7 +3,7 @@ from typing import Optional
 
 from dateutil.parser import parse
 
-from cato.mappers.abstract_value_mapper import AbstractValueMapper
+from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
 
 
 class DateTimeValueMapper(AbstractValueMapper[datetime.datetime, str]):

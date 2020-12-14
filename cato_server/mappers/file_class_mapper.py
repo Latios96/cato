@@ -1,7 +1,7 @@
 from typing import Dict
 
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.domain.file import File
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.domain.file import File
 
 
 class FileClassMapper(AbstractClassMapper[File]):

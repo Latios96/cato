@@ -3,7 +3,7 @@ import shutil
 
 from cato import logger
 from cato.domain.config import Config
-from cato.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import iterate_suites_and_tests, filter_by_test_identifier
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_processor import VariableProcessor

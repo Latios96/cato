@@ -3,7 +3,7 @@ from http.client import BAD_REQUEST
 
 from flask import Blueprint, jsonify, abort, request
 
-from cato.domain.project import Project
+from cato_server.domain.project import Project
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.api.validators.project_validators import CreateProjectValidator
 

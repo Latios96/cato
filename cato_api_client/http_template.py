@@ -2,7 +2,7 @@ from typing import TypeVar, Generic
 
 import requests
 
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 import logging
 
 logger = logging.getLogger(__name__)

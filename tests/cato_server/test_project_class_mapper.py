@@ -1,5 +1,5 @@
-from cato.domain.project import Project
-from cato.mappers.project_class_mapper import ProjectClassMapper
+from cato_server.domain.project import Project
+from cato_server.mappers.project_class_mapper import ProjectClassMapper
 
 
 def test_map_from_dict():

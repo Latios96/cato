@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
 
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato.domain.suite_result import SuiteResult
+from cato_server.domain.suite_result import SuiteResult
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,

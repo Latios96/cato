@@ -1,7 +1,7 @@
 from typing import Optional
 
 from cato.domain.test_status import TestStatus
-from cato.mappers.abstract_value_mapper import AbstractValueMapper
+from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
 
 
 class TestStatusValueMapper(AbstractValueMapper[TestStatus, str]):

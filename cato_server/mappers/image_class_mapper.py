@@ -1,8 +1,8 @@
 from typing import Dict
 
-from cato.domain.image import Image
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.mappers.image_channel_class_mapper import ImageChannelClassMapper
+from cato_server.domain.image import Image
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.image_channel_class_mapper import ImageChannelClassMapper
 
 
 class ImageClassMapper(AbstractClassMapper[Image]):

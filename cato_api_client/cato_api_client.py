@@ -6,22 +6,22 @@ from urllib.parse import quote
 import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
-from cato.domain.image import Image
-from cato.domain.project import Project
-from cato.domain.run import Run
-from cato.domain.test_identifier import TestIdentifier
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.mappers.file_class_mapper import FileClassMapper
-from cato.mappers.image_class_mapper import ImageClassMapper
-from cato.mappers.output_class_mapper import OutputClassMapper
-from cato.mappers.project_class_mapper import ProjectClassMapper
-from cato.mappers.run_class_mapper import RunClassMapper
-from cato.mappers.suite_result_class_mapper import SuiteResultClassMapper
-from cato.mappers.test_result_class_mapper import TestResultClassMapper
+from cato_server.domain.image import Image
+from cato_server.domain.project import Project
+from cato_server.domain.run import Run
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.file_class_mapper import FileClassMapper
+from cato_server.mappers.image_class_mapper import ImageClassMapper
+from cato_server.mappers.output_class_mapper import OutputClassMapper
+from cato_server.mappers.project_class_mapper import ProjectClassMapper
+from cato_server.mappers.run_class_mapper import RunClassMapper
+from cato_server.mappers.suite_result_class_mapper import SuiteResultClassMapper
+from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
-from cato.domain.file import File
-from cato.domain.suite_result import SuiteResult
-from cato.domain.test_result import TestResult
+from cato_server.domain.file import File
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.domain.test_result import TestResult
 
 logger = logging.getLogger(__name__)
 

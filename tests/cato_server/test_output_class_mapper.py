@@ -1,5 +1,5 @@
-from cato.domain.output import Output
-from cato.mappers.output_class_mapper import OutputClassMapper
+from cato_server.domain.output import Output
+from cato_server.mappers.output_class_mapper import OutputClassMapper
 
 
 def test_from_dict_with_id():

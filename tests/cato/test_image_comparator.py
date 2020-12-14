@@ -1,5 +1,3 @@
-import os
-
 from cato.image_utils.image_comparator import ImageComparator
 
 TEST_IMAGE_WHITE_PNG = "test_image_white.png"

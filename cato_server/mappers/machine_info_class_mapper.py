@@ -1,7 +1,7 @@
 from typing import Dict
 
-from cato.domain.machine_info import MachineInfo
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.domain.machine_info import MachineInfo
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 
 
 class MachineInfoClassMapper(AbstractClassMapper[MachineInfo]):

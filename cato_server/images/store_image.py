@@ -5,7 +5,7 @@ from typing import List
 
 from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
 
-from cato.domain.image import Image, ImageChannel
+from cato_server.domain.image import Image, ImageChannel
 from cato.image_utils.image_conversion import ImageConversionError
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 

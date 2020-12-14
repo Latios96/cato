@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
 
-from cato.domain.image import Image, ImageChannel
+from cato_server.domain.image import Image, ImageChannel
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,

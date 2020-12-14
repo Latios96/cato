@@ -1,13 +1,11 @@
 from unittest import mock
-from unittest.mock import call
 
 from cato.domain.config import Config
 from cato.domain.test import Test
-from cato.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
-from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
+from cato_server.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
 EXAMPLE_PROJECT = "Example project"

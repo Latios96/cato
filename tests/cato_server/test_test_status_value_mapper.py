@@ -1,7 +1,7 @@
 import pytest
 
 from cato.domain.test_status import TestStatus
-from cato.mappers.test_status_value_mapper import TestStatusValueMapper
+from cato_server.mappers.test_status_value_mapper import TestStatusValueMapper
 
 
 @pytest.mark.parametrize(

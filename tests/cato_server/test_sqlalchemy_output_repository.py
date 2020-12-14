@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato.domain.output import Output
+from cato_server.domain.output import Output
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
 )

@@ -1,8 +1,8 @@
 from typing import Dict
 
-from cato.domain.run import Run
-from cato.mappers.abstract_class_mapper import AbstractClassMapper
-from cato.mappers.datetime_value_mapper import DateTimeValueMapper
+from cato_server.domain.run import Run
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.datetime_value_mapper import DateTimeValueMapper
 
 
 class RunClassMapper(AbstractClassMapper[Run]):

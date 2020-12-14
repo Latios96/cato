@@ -1,4 +1,4 @@
-from cato.mappers.datetime_value_mapper import DateTimeValueMapper
+from cato_server.mappers.datetime_value_mapper import DateTimeValueMapper
 import datetime
 
 
