@@ -173,3 +173,15 @@ def app_fixture(app_and_config_fixture):
 def client(app_fixture):
     with app_fixture.test_client() as client:
         yield client
+
+
+@pytest.fixture
+def test_resource_provider():
+    class TestResourceProvider:
+        def __init__(self, root):
+            self._root = root
+
+        def resource_by_name(self, name):
+            return os.path.join(self._root, name)
+
+    return TestResourceProvider(os.path.join(os.path.dirname(__file__), "resources"))
