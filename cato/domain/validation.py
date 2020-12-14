@@ -1,4 +1,4 @@
-from pathvalidate import validate_filename, ValidationError
+from pathvalidate import validate_filename
 
 
 def validate_name(name):
