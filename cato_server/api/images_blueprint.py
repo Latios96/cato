@@ -2,8 +2,9 @@ import logging
 import os
 import tempfile
 
-from flask import Blueprint, jsonify, request, send_file
+from flask import Blueprint, jsonify, request, send_file, abort
 
+from cato.mappers.image_class_mapper import ImageClassMapper
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
@@ -23,6 +24,7 @@ class ImagesBlueprint(Blueprint):
         self.route("images/original_file/<int:file_id>", methods=["GET"])(
             self.get_original_image_file
         )
+        self.route("images/<int:image_id>", methods=["GET"])(self.get_image)
 
     def upload_file(self):
         uploaded_file = request.files["file"]
@@ -47,3 +49,9 @@ class ImagesBlueprint(Blueprint):
         if file and os.path.exists(file_path):
             return send_file(file_path, attachment_filename=file.name)
         return jsonify({"file_id": "No file found!"}), 404
+
+    def get_image(self, image_id):
+        image = self._image_repository.find_by_id(image_id)
+        if not image:
+            abort(404)
+        return jsonify(ImageClassMapper().map_to_dict(image)), 200
