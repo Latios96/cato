@@ -12,7 +12,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
 )
 
 
-def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path):
+def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path, test_resource_provider):
     file_storage = SqlAlchemyDeduplicatingFileStorage(
         sessionmaker_fixture, str(tmp_path)
     )
@@ -20,7 +20,7 @@ def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path):
     store_image = StoreImage(file_storage, mock_image_repository)
 
     image = store_image.store_image(
-        os.path.join(os.path.dirname(__file__), "test_image_white.jpg")
+        test_resource_provider.resource_by_name("test_image_white.jpg")
     )
 
     assert image == Image(

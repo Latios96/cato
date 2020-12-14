@@ -6,8 +6,8 @@ import pytest
 API_V_IMAGES = "/api/v1/images"
 
 
-def test_upload_file(client):
-    test_image = os.path.join(os.path.dirname(__file__), "test_image_white.jpg")
+def test_upload_file(client, test_resource_provider):
+    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": (open(test_image, "rb"), "test_image_white.jpg")}
     response = client.post(API_V_IMAGES, data=data)
 
@@ -20,8 +20,8 @@ def test_upload_file(client):
     }
 
 
-def test_upload_file_no_filename(client):
-    test_image = os.path.join(os.path.dirname(__file__), "test_image_white.jpg")
+def test_upload_file_no_filename(client, test_resource_provider):
+    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": (open(test_image, "rb"), "")}
     response = client.post(API_V_IMAGES, data=data)
 
