@@ -35,8 +35,20 @@ def test_field_success(field, value):
     [
         (ID_FIELD, "tesetset", ["Not a valid integer."]),
         (ID_FIELD, -1, ["Must be greater than or equal to 0."]),
-        (NAME_FIELD, "$my_name", ["String does not match expected pattern."]),
-        (NAME_FIELD, "my/name", ["String does not match expected pattern."]),
+        (
+            NAME_FIELD,
+            ":my_name",
+            [
+                "invalid char found: invalids=(':'), value=':my_name', reason=INVALID_CHARACTER, target-platform=Windows"
+            ],
+        ),
+        (
+            NAME_FIELD,
+            "my/name",
+            [
+                "invalid char found: invalids=('/'), value='my/name', reason=INVALID_CHARACTER, target-platform=Windows"
+            ],
+        ),
         (VARIABLES_FIELD, [], ["Not a valid mapping type."]),
         (
             VARIABLES_FIELD,

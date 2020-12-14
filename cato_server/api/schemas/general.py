@@ -1,5 +1,7 @@
+import pathvalidate
 from marshmallow import fields, ValidationError, Schema, EXCLUDE
 from marshmallow.validate import Regexp, Length, Range
+from pathvalidate import validate_filename
 
 REGEX_VALID_NAME = Regexp(r"^[A-Za-z0-9_\-]+$")
 
@@ -10,8 +12,15 @@ def _is_str_str_dict(the_dict):
             raise ValidationError(f"Not a mapping of str->str: {key}={value}")
 
 
+def _validate_filename(name):
+    try:
+        validate_filename(name)
+    except pathvalidate.ValidationError as e:
+        raise ValidationError(str(e))
+
+
 ID_FIELD = fields.Integer(required=True, validate=[Range(min=0)])
-NAME_FIELD = fields.Str(required=True, validate=[Length(min=1), REGEX_VALID_NAME])
+NAME_FIELD = fields.Str(required=True, validate=[Length(min=1), _validate_filename])
 VARIABLES_FIELD = fields.Dict(required=True, validate=_is_str_str_dict)
 
 

@@ -77,13 +77,15 @@ class TestCreateTestResultSchema:
                 },
             ),
             (
-                {"suite_result_id": 1, "test_name": "$!"},
+                {"suite_result_id": 1, "test_name": ":"},
                 {
                     "execution_status": ["Missing data for required field."],
                     "machine_info": ["Missing data for required field."],
                     "test_command": ["Missing data for required field."],
                     "test_identifier": ["Missing data for required field."],
-                    "test_name": ["String does not match expected pattern."],
+                    "test_name": [
+                        "':' is a reserved name, reason=RESERVED_NAME, target-platform=universal, reusable_name=False"
+                    ],
                     "test_variables": ["Missing data for required field."],
                 },
             ),

@@ -31,7 +31,9 @@ class TestCreateSuiteResultValidator:
             (
                 {"run_id": 1, "suite_name": "yrsdt*$%$$"},
                 {
-                    "suite_name": ["String does not match expected pattern."],
+                    "suite_name": [
+                        "invalid char found: invalids=('*'), value='yrsdt*$%$$', reason=INVALID_CHARACTER, target-platform=Windows"
+                    ],
                     "suite_variables": ["Missing data for required field."],
                 },
             ),
