@@ -1,6 +1,6 @@
 import ImageChannel from "./ImageChannel";
 
-export default interface Image {
+export default interface CatoImage {
   id: number;
   name: string;
   original_file_id: string;

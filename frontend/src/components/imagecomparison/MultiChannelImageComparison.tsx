@@ -1,5 +1,5 @@
 import React, { Component, SyntheticEvent } from "react";
-import Image from "../../models/Image";
+import CatoImage from "../../models/CatoImage";
 import ImageChannel from "../../models/ImageChannel";
 import ImageComparison from "./ImageComparison";
 
@@ -10,9 +10,11 @@ interface Props {
 
 interface State {
   imageOutputHasLoaded: boolean;
-  imageOutput: Image | null;
-  referenceImage: Image | null;
+  imageOutput: CatoImage | null;
+  referenceImage: CatoImage | null;
   selectedChannel: string;
+  width: number;
+  height: number;
 }
 
 class MultiChannelImageComparison extends Component<Props, State> {
@@ -23,6 +25,8 @@ class MultiChannelImageComparison extends Component<Props, State> {
       imageOutput: null,
       referenceImage: null,
       selectedChannel: "rgb",
+      width: 0,
+      height: 0,
     };
   }
 
@@ -51,7 +55,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
 
   render() {
     return (
-      <div>
+      <div style={this.state.height ? { height: this.state.height } : {}}>
         {this.state.imageOutput && this.state.referenceImage ? (
           this.renderImageComparison(
             this.state.imageOutput,
@@ -64,7 +68,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   }
 
-  renderImageComparison = (imageOutput: Image, referenceImage: Image) => {
+  renderImageComparison = (
+    imageOutput: CatoImage,
+    referenceImage: CatoImage
+  ) => {
     return (
       <React.Fragment>
         <select onChange={this.handleChange}>
@@ -81,12 +88,15 @@ class MultiChannelImageComparison extends Component<Props, State> {
             "/api/v1/files/" +
             this.channelFileIdByName(referenceImage, this.state.selectedChannel)
           }
+          sizeIsKnownCallback={(width, height) => {
+            this.setState({ width: width, height: height });
+          }}
         />
       </React.Fragment>
     );
   };
 
-  channelFileIdByName = (image: Image, name: string) => {
+  channelFileIdByName = (image: CatoImage, name: string) => {
     let channel = this.channelByName(image, name);
     if (channel === null) {
       return null;
@@ -94,7 +104,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     return channel.file_id;
   };
 
-  channelByName = (image: Image, name: string) => {
+  channelByName = (image: CatoImage, name: string) => {
     let index = image.channels.findIndex((ch) => {
       return ch.name === name;
     });
@@ -105,7 +115,8 @@ class MultiChannelImageComparison extends Component<Props, State> {
   };
 
   handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    this.setState({ selectedChannel: event.currentTarget.value });
+    let selectedChannel = event.currentTarget.value;
+    this.setState({ selectedChannel: selectedChannel });
   };
 }
 

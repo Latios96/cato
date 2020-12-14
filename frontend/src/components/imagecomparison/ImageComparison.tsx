@@ -5,6 +5,7 @@ import ReactCompareImage from "react-compare-image";
 interface Props {
   outputImageUrl: string;
   referenceImageUrl: string;
+  sizeIsKnownCallback: (width: number, height: number) => void;
 }
 
 interface State {
@@ -28,10 +29,13 @@ class ImageComparison extends Component<Props, State> {
           src={this.props.outputImageUrl}
           className={styles.imageSizeCalculator}
           onLoad={(e) => {
+            let width = e.currentTarget.naturalWidth;
+            let height = e.currentTarget.naturalHeight;
             this.setState({
-              imgHeight: e.currentTarget.naturalHeight,
-              imgWidth: e.currentTarget.naturalWidth,
+              imgHeight: height,
+              imgWidth: width,
             });
+            this.props.sizeIsKnownCallback(width, height);
           }}
         />
         <ReactCompareImage
