@@ -1,7 +1,7 @@
 import os
 from unittest import mock
 
-from cato.runners.command_runner import CommandRunner, CommandResult
+from cato.runners.command_runner import CommandRunner, CommandResult, LogLinesCollector
 
 
 def create_cmd(script_name):
@@ -50,3 +50,23 @@ def test_read_from_both():
     assert result == CommandResult(
         cmd, 0, ["Hello world from STDOUT\n", "Hello world from STDERR\n"]
     )
+
+
+def test_log_line_collector():
+    log_lines_collector = LogLinesCollector(10)
+    for i in range(11):
+        log_lines_collector.append(str(i))
+
+    assert log_lines_collector.lines == [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4",
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "Log does contain more than maximum of 10 lines, capping log..",
+    ]

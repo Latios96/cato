@@ -3,4 +3,4 @@ import time
 
 if __name__ == "__main__":
     sys.stderr.write("Hello world from STDERR")
-    time.sleep(5)
+    time.sleep(1)
