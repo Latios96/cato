@@ -50,7 +50,7 @@ def test_store_rgb_png(sessionmaker_fixture, tmp_path):
     )
 
 
-def test_store_multichannel_exr(sessionmaker_fixture, tmp_path):
+def test_store_multichannel_exr(sessionmaker_fixture, tmp_path, test_resource_provider):
     file_storage = SqlAlchemyDeduplicatingFileStorage(
         sessionmaker_fixture, str(tmp_path)
     )
@@ -58,7 +58,7 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path):
     store_image = StoreImage(file_storage, mock_image_repository)
 
     image = store_image.store_image(
-        os.path.join(os.path.dirname(__file__), "test_image_multichannel_exr.exr")
+        test_resource_provider.resource_by_name("test_image_multichannel_exr.exr")
     )
 
     assert image == Image(
