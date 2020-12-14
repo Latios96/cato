@@ -8,7 +8,7 @@ from cato_server.domain.run_status import RunStatus
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
-from cato.reporter.run_status_calculator import RunStatusCalculator
+from cato_server.run_status_calculator import RunStatusCalculator
 
 
 def make_test_result(
