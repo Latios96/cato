@@ -134,4 +134,4 @@ class TestExecutionDbReporter(TestExecutionReporter):
         )
 
     def _copy_to_storage(self, image_path: str) -> int:
-        return self._cato_api_client.upload_file(image_path).id
+        return self._cato_api_client.upload_image(image_path).id
