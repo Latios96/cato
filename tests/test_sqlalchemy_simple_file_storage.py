@@ -19,14 +19,14 @@ def test_save_file(sessionmaker_fixture, tmp_path):
     assert f.hash
 
 
-def test_save_files(sessionmaker_fixture, tmp_path):
+def test_save_files(sessionmaker_fixture, tmp_path, test_resource_provider):
     file_storage = SqlAlchemySimpleFileStorage(sessionmaker_fixture, str(tmp_path))
 
     file_storage.save_file(
         os.path.join(os.path.dirname(__file__), TEST_IMAGE_WHITE_PNG)
     )
     file_storage.save_file(
-        os.path.join(os.path.dirname(__file__), "test_image_black.png")
+        test_resource_provider.resource_by_name("test_image_black.png")
     )
 
     assert len(os.listdir(str(tmp_path))) == 2

@@ -23,7 +23,7 @@ def test_save_file(sessionmaker_fixture, tmp_path):
     assert f.hash
 
 
-def test_save_files(sessionmaker_fixture, tmp_path):
+def test_save_files(sessionmaker_fixture, tmp_path, test_resource_provider):
     file_storage = SqlAlchemyDeduplicatingFileStorage(
         sessionmaker_fixture, str(tmp_path)
     )
@@ -32,7 +32,7 @@ def test_save_files(sessionmaker_fixture, tmp_path):
         os.path.join(os.path.dirname(__file__), TEST_IMAGE_WHITE_PNG)
     )
     file_storage.save_file(
-        os.path.join(os.path.dirname(__file__), "test_image_black.png")
+        test_resource_provider.resource_by_name("test_image_black.png")
     )
 
     assert len(os.listdir(str(tmp_path))) == 2
@@ -115,7 +115,7 @@ def test_save_same_file_should_store_one_file_on_disk(sessionmaker_fixture, tmp_
 
 
 def test_save_different_files_should_store_two_files_on_disk(
-    sessionmaker_fixture, tmp_path
+    sessionmaker_fixture, tmp_path, test_resource_provider
 ):
     file_storage = SqlAlchemyDeduplicatingFileStorage(
         sessionmaker_fixture, str(tmp_path)
@@ -126,7 +126,7 @@ def test_save_different_files_should_store_two_files_on_disk(
     )
 
     f2 = file_storage.save_file(
-        os.path.join(os.path.dirname(__file__), TEST_IMAGE_BLACK_PNG)
+        test_resource_provider.resource_by_name("test_image_black.png")
     )
     assert f1.id != f2.id
     assert f1.hash != f2.hash
@@ -137,7 +137,7 @@ def test_save_different_files_should_store_two_files_on_disk(
 
 
 def test_hash_collision_should_store_into_next_value_counter(
-    sessionmaker_fixture, tmp_path
+    sessionmaker_fixture, tmp_path, test_resource_provider
 ):
     the_hash = "7d9d649022a65fa9cf18a7dcb3bf07de41e3fd1b8fc4e8bf3d79007ef3b705bt"
 
@@ -157,7 +157,7 @@ def test_hash_collision_should_store_into_next_value_counter(
     )
 
     f2 = file_storage.save_file(
-        os.path.join(os.path.dirname(__file__), TEST_IMAGE_BLACK_PNG)
+        test_resource_provider.resource_by_name("test_image_black.png")
     )
     assert f1.id != f2.id
     assert f1.hash == f2.hash
