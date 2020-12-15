@@ -1,6 +1,23 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        maven { url 'https://dl.bintray.com/palantir/releases/' }
+    }
+
+    dependencies {
+        classpath 'com.palantir.gradle.conjure:gradle-conjure:4.27.2'
+    }
+}
+
 plugins {
     id 'ru.vyarus.use-python' version '2.2.0'
     id "com.github.node-gradle.node" version "2.2.4"
+}
+
+allprojects {
+    repositories {
+        maven { url 'https://dl.bintray.com/palantir/releases/' }
+    }
 }
 
 task install{
@@ -40,6 +57,7 @@ task pythonInstall{
 
 task pytest(type: PythonTask){
     dependsOn 'pythonInstall'
+    dependsOn ':cato-api:compileConjurePython'
     command = "-m pytest tests"
     inputs.dir('cato')
     inputs.dir('cato_server')
@@ -62,6 +80,7 @@ task poetryBuild(type:Exec){
     dependsOn 'pythonInstall'
     dependsOn 'pytest'
     dependsOn 'copyFrontendToBuild'
+    dependsOn ':cato-api:compileConjurePython'
     commandLine 'runInVenv.bat', 'poetry', 'build'
     inputs.dir('cato')
     inputs.dir('cato_server')

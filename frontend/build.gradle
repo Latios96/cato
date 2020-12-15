@@ -13,6 +13,7 @@ task yarnInstallDependencies(type: YarnTask) {
 
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
+    dependsOn(':cato-api:compileConjureTypeScript')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')

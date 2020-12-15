@@ -1,0 +1,30 @@
+types:
+  definitions:
+    default-package: com.company.product
+    objects:
+
+      TestForRunCreation:
+        fields: 
+          test_name: string
+          test_identifier: string
+          test_command: string
+          test_variables: map<string, string>
+          execution_status: ExecutionStatus
+
+      ExecutionStatus:
+        values: 
+          - NOT_STARTED
+          - RUNNING
+          - FINISHED
+
+      TestSuiteForRunCreation:
+        fields:
+          suite_name: string
+          suite_variables: map<string, string>
+          tests: list<TestForRunCreation>
+
+
+      CreateFullRunDto:
+        fields:
+          project_id: integer
+          test_suites: list<TestSuiteForRunCreation>
