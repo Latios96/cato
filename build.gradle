@@ -84,7 +84,7 @@ task pytest(type: PythonTask){
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
     inputs.dir('tests')
-    outputs.dir('pytestOutput')
+    outputs.file('pytestOutput')
 }
 
 task copyFrontendToBuild {
@@ -104,6 +104,8 @@ task poetryBuild(type:Exec){
     commandLine 'runInVenv.bat', 'poetry', 'build'
     inputs.dir('cato')
     inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    inputs.dir('cato_api_models')
     inputs.file('pyproject.toml')
     inputs.file('poetry.lock')
     outputs.dir('dist')
@@ -125,6 +127,10 @@ task formatPython(type:Exec){
 
 task lintPython(type:Exec){
     commandLine '.venv/Scripts/flake8', 'cato', 'cato_server', 'cato_api_client'
+    inputs.dir('cato')
+    inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    outputs.file('lintPython')
 }
 
 task format{
@@ -134,4 +140,5 @@ task format{
 
 task lint{
     dependsOn 'lintPython'
+    dependsOn ':frontend:lintTypescript'
 }

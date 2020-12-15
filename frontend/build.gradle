@@ -30,3 +30,9 @@ task yarnBuild(type: YarnTask) {
     inputs.dir('src')
     outputs.dir('build')
 }
+
+task lintTypescript(type: YarnTask) {
+    args = ['run', 'eslint',  'src']
+    inputs.dir('src')
+    outputs.file('esLintSuccess')
+}
