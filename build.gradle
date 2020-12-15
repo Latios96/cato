@@ -45,7 +45,7 @@ task poetryInstall(type: PythonTask) {
 
 
 task installOiio(type: PythonTask){
-    command = "-m pip install -r oiio-requirements.txt"
+    command = "-m pip install -r oiio-requirements.txt --no-dependencies"
     inputs.file('oiio-requirements.txt')
     outputs.dir('venv/Lib/site-packages/oiio')
 }
