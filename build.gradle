@@ -12,6 +12,7 @@ buildscript {
 plugins {
     id 'ru.vyarus.use-python' version '2.2.0'
     id "com.github.node-gradle.node" version "2.2.4"
+    id "com.star-zero.gradle.githook" version "1.2.1"
 }
 
 allprojects {
@@ -33,6 +34,17 @@ python.envPath = ".venv"
 
 python{
 	pip "poetry:1.1.4"
+}
+
+githook {
+    hooks {
+        "pre-commit" {
+            task = "formatPythonCheck"
+        }
+        "pre-push" {
+            task = "lint"
+        }
+    }
 }
 
 task copyConjurePythonModels {
@@ -102,6 +114,10 @@ check.dependsOn('pytest')
 build.dependsOn('poetryBuild')
 
 install.dependsOn(':frontend:yarnInstallDependencies')
+
+task formatPythonCheck(type:Exec){
+    commandLine '.venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
+}
 
 task formatPython(type:Exec){
     commandLine '.venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
