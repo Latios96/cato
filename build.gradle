@@ -35,14 +35,24 @@ python{
 	pip "poetry:1.1.4"
 }
 
+task copyConjurePythonModels {
+    dependsOn ':cato-api-models:compileConjurePython'
+    doLast {
+        copy {
+            from "${rootDir}/cato-api-models/cato-api-models-python/python/cato_api_models"
+            into "${rootDir}/cato_api_models"
+        }
+    }
+}
+
 task poetryInstall(type: PythonTask) {
 	dependsOn 'pipInstall'
+	dependsOn 'copyConjurePythonModels'
     command = "-m poetry install"
     inputs.file('pyproject.toml')
     inputs.file('poetry.lock')
     outputs.file('poetryInstallOutput')
 }
-
 
 task installOiio(type: PythonTask){
     command = "-m pip install -r oiio-requirements.txt --no-dependencies"
@@ -50,18 +60,7 @@ task installOiio(type: PythonTask){
     outputs.dir('venv/Lib/site-packages/oiio')
 }
 
-task copyConjurePythonModels {
-    dependsOn ':cato-api-models:compileConjurePython'
-    doLast {
-        copy {
-            from "${rootDir}/cato-api-models/cato-api-models-python/python/cato_api_models"
-            into "${rootDir}/cato_server"
-        }
-    }
-}
-
 task pythonInstall{
-    dependsOn 'copyConjurePythonModels'
     dependsOn 'poetryInstall'
     dependsOn 'installOiio'
 }
