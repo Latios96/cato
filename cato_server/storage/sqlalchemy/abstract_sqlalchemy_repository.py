@@ -1,6 +1,7 @@
-from typing import TypeVar, Generic, Optional, Iterable
+from typing import TypeVar, Generic, Optional, Iterable, Callable
 
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import Session
 
 T = TypeVar("T")
 K = TypeVar("K")
@@ -14,6 +15,8 @@ class BaseEntity:
 
 
 class AbstractSqlAlchemyRepository(Generic[T, E, K]):
+    _session_maker: Callable[[], Session]
+
     def __init__(self, session_maker):
         self._session_maker = session_maker
 
@@ -36,6 +39,21 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         session.close()
 
         return domain_object
+
+    def insert_many(self, domain_objects: Iterable[T]) -> Iterable[T]:
+        session = self._session_maker()
+
+        project_mappings = list(map(self.to_entity, domain_objects))
+
+        session.bulk_save_objects(project_mappings, return_defaults=True)
+
+        session.flush()
+        session.commit()
+        session.close()
+
+        domain_objects = list(map(self.to_domain_object, project_mappings))
+
+        return domain_objects
 
     def find_by_id(self, id: K) -> Optional[T]:
         session = self._session_maker()

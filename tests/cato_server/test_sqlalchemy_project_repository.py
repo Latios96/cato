@@ -28,6 +28,21 @@ def test_save_name_should_be_unique(sessionmaker_fixture):
         repository.save(Project(id=0, name="test_name"))
 
 
+def test_insert_many_should_insert(sessionmaker_fixture):
+    repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
+    project1 = Project(id=0, name="test_name1")
+    project2 = Project(id=0, name="test_name2")
+    project3 = Project(id=0, name="test_name3")
+
+    projects = repository.insert_many([project1, project2, project3])
+
+    assert projects == [
+        Project(id=1, name="test_name1"),
+        Project(id=2, name="test_name2"),
+        Project(id=3, name="test_name3"),
+    ]
+
+
 def test_find_by_name_should_find(sessionmaker_fixture):
     repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
     project = Project(id=0, name="test_name")

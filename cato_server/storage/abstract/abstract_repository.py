@@ -8,6 +8,9 @@ class AbstractRepository(Generic[T, K]):
     def save(self, entity: T) -> T:
         raise NotImplementedError()
 
+    def insert_many(self, entities: Iterable[T]) -> Iterable[T]:
+        raise NotImplementedError()
+
     def find_by_id(self, id: K) -> Optional[T]:
         raise NotImplementedError()
 
