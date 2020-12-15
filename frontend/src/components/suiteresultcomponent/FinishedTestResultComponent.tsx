@@ -1,9 +1,6 @@
 import React from "react";
 import TestResult from "../../models/TestResult";
 import { formatDuration, formatTime } from "../../utils";
-import ReactCompareImage from "react-compare-image";
-import styles from "./SuiteResultComponent.module.css";
-import ImageComparison from "../imagecomparison/ImageComparison";
 import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
 

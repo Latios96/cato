@@ -1,8 +1,6 @@
 import React, { Component } from "react";
-import ProjectComponent from "../project/ProjectComponent";
 import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
-import { Link } from "react-router-dom";
 import LinkCard from "../linkcard/LinkCard";
 
 interface Props {}

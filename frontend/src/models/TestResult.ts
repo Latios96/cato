@@ -1,8 +1,3 @@
-interface TestIdentifier {
-  suite_name: string;
-  test_name: string;
-}
-
 export default interface TestResult {
   id: number;
   suite_result_id: number;

@@ -1,6 +1,5 @@
-import React, { Component, SyntheticEvent } from "react";
+import React, { Component} from "react";
 import CatoImage from "../../models/CatoImage";
-import ImageChannel from "../../models/ImageChannel";
 import ImageComparison from "./ImageComparison";
 
 interface Props {
