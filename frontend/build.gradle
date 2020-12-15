@@ -1,6 +1,10 @@
 apply plugin: "com.github.node-gradle.node"
 
-task formatJs(type: YarnTask) {
+task formatTypescriptCheck(type: YarnTask) {
+  args = ['run', 'prettier', 'src', '-c']
+}
+
+task formatTypescript(type: YarnTask) {
   args = ['run', 'prettier', 'src', '-w']
 }
 

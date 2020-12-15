@@ -16,6 +16,7 @@ function FinishedTestResultComponent(props: Props) {
           ? "started: " + formatTime(props.result.started_at)
           : ""}
       </p>
+
       <p>
         {props.result.finished_at
           ? "finished: " + formatTime(props.result.finished_at)

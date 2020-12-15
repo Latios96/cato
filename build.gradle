@@ -39,7 +39,7 @@ python{
 githook {
     hooks {
         "pre-commit" {
-            task = "formatPythonCheck"
+            task = "formatCheck"
         }
         "pre-push" {
             task = "lint"
@@ -117,25 +117,30 @@ build.dependsOn('poetryBuild')
 
 install.dependsOn(':frontend:yarnInstallDependencies')
 
-task formatPythonCheck(type:Exec){
-    commandLine '.venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
+task formatPythonCheck(type: PythonTask){
+    command = '-m black cato cato_server tests cato_api_client alembic --check'
 }
 
-task formatPython(type:Exec){
-    commandLine '.venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
+task formatPython(type:PythonTask){
+    command = '-m black cato cato_server tests cato_api_client alembic'
 }
 
-task lintPython(type:Exec){
-    commandLine '.venv/Scripts/flake8', 'cato', 'cato_server', 'cato_api_client'
+task lintPython(type:PythonTask){
+    command = '-m flake8 cato cato_server cato_api_client'
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
     outputs.file('lintPython')
 }
 
+task formatCheck{
+    dependsOn 'formatPythonCheck'
+    dependsOn ':frontend:formatTypescriptCheck'
+}
+
 task format{
     dependsOn 'formatPython'
-    dependsOn ':frontend:formatJs'
+    dependsOn ':frontend:formatTypescript'
 }
 
 task lint{

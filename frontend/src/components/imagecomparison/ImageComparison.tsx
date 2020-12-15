@@ -37,7 +37,8 @@ class ImageComparison extends Component<Props, State> {
             });
             this.props.sizeIsKnownCallback(width, height);
           }}
-         alt={"left"}/>
+          alt={"left"}
+        />
         <ReactCompareImage
           leftImage={this.props.outputImageUrl}
           rightImage={this.props.referenceImageUrl}

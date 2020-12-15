@@ -1,4 +1,4 @@
-import React, { Component} from "react";
+import React, { Component } from "react";
 import CatoImage from "../../models/CatoImage";
 import ImageComparison from "./ImageComparison";
 
