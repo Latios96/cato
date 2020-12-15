@@ -29,7 +29,7 @@ task build{
 }
 
 python.installVirtualenv = true
-python.envPath = "venv"
+python.envPath = ".venv"
 
 python{
 	pip "poetry:1.1.4"
@@ -57,7 +57,7 @@ task poetryInstall(type: PythonTask) {
 task installOiio(type: PythonTask){
     command = "-m pip install -r oiio-requirements.txt --no-dependencies"
     inputs.file('oiio-requirements.txt')
-    outputs.dir('venv/Lib/site-packages/oiio')
+    outputs.dir('.venv/Lib/site-packages/oiio')
 }
 
 task pythonInstall{
@@ -104,11 +104,11 @@ build.dependsOn('poetryBuild')
 install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPython(type:Exec){
-    commandLine 'venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
+    commandLine '.venv/Scripts/black', 'cato', 'cato_server', 'tests', 'cato_api_client', 'alembic'
 }
 
 task lintPython(type:Exec){
-    commandLine 'venv/Scripts/flake8', 'cato', 'cato_server', 'cato_api_client'
+    commandLine '.venv/Scripts/flake8', 'cato', 'cato_server', 'cato_api_client'
 }
 
 task format{
