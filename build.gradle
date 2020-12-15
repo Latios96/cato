@@ -97,11 +97,11 @@ task copyFrontendToBuild {
     }
 }
 
-task poetryBuild(type:Exec){
+task poetryBuild(type: PythonTask){
     dependsOn 'pythonInstall'
     dependsOn 'pytest'
     dependsOn 'copyFrontendToBuild'
-    commandLine 'runInVenv.bat', 'poetry', 'build'
+    command = '-m poetry build'
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
