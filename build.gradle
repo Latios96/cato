@@ -50,14 +50,24 @@ task installOiio(type: PythonTask){
     outputs.dir('venv/Lib/site-packages/oiio')
 }
 
+task copyConjurePythonModels {
+    dependsOn ':cato-api-models:compileConjurePython'
+    doLast {
+        copy {
+            from "${rootDir}/cato-api-models/cato-api-models-python/python/cato_api_models"
+            into "${rootDir}/cato_server"
+        }
+    }
+}
+
 task pythonInstall{
+    dependsOn 'copyConjurePythonModels'
     dependsOn 'poetryInstall'
     dependsOn 'installOiio'
 }
 
 task pytest(type: PythonTask){
     dependsOn 'pythonInstall'
-    dependsOn ':cato-api:compileConjurePython'
     command = "-m pytest tests"
     inputs.dir('cato')
     inputs.dir('cato_server')
@@ -80,7 +90,6 @@ task poetryBuild(type:Exec){
     dependsOn 'pythonInstall'
     dependsOn 'pytest'
     dependsOn 'copyFrontendToBuild'
-    dependsOn ':cato-api:compileConjurePython'
     commandLine 'runInVenv.bat', 'poetry', 'build'
     inputs.dir('cato')
     inputs.dir('cato_server')

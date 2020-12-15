@@ -4,7 +4,18 @@ task formatJs(type: YarnTask) {
   args = ['run', 'prettier', 'src', '-w']
 }
 
+task copyConjureTypescriptModels {
+    dependsOn(':cato-api-models:compileConjureTypeScript')
+    doLast {
+        copy {
+            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
+            into "${rootDir}/frontend/src/catoapimodels"
+        }
+    }
+}
+
 task yarnInstallDependencies(type: YarnTask) {
+    dependsOn 'copyConjureTypescriptModels'
   args = ['install']
   inputs.file('package.json')
   inputs.file('yarn.lock')
@@ -13,7 +24,7 @@ task yarnInstallDependencies(type: YarnTask) {
 
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
-    dependsOn(':cato-api:compileConjureTypeScript')
+    dependsOn(':cato-api-models:compileConjureTypeScript')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')

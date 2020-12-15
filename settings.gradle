@@ -9,6 +9,6 @@
 
 rootProject.name = 'cato'
 include('frontend')
-include('cato-api')
-include('cato-api:cato-api-python')
-include('cato-api:cato-api-typescript')
+include('cato-api-models')
+include('cato-api-models:cato-api-models-python')
+include('cato-api-models:cato-api-models-typescript')

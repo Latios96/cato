@@ -10,6 +10,7 @@ packages = [
     { include = "cato" },
     { include = "cato_server" },
     { include = "cato_api_client" },
+    { include = "cato_api_models" },
 ]
 
 [tool.poetry.scripts]
@@ -39,6 +40,7 @@ requests = "^2.25.0"
 marshmallow-enum = "^1.5.1"
 python-dateutil = "^2.8.1"
 pathvalidate = "^2.3.1"
+conjure-python-client = "^1.10.0"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"

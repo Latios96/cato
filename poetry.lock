@@ -142,6 +142,20 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "conjure-python-client"
+version = "1.10.0"
+description = "Conjure Python Library"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+enum34 = "*"
+future = "*"
+requests = "*"
+typing = "*"
+
+[[package]]
 name = "contexttimer"
 version = "0.3.3"
 description = "A timer context manager measuring the clock wall time of the code block it contains."
@@ -178,6 +192,14 @@ python-versions = "*"
 
 [package.extras]
 dev = ["pytest", "coverage", "coveralls"]
+
+[[package]]
+name = "enum34"
+version = "1.1.10"
+description = "Python 3.4 Enum backported to 3.3, 3.2, 3.1, 2.7, 2.6, 2.5, and 2.4"
+category = "main"
+optional = false
+python-versions = "*"
 
 [[package]]
 name = "flake8"
@@ -224,6 +246,14 @@ Werkzeug = ">=0.15"
 dev = ["pytest", "coverage", "tox", "sphinx", "pallets-sphinx-themes", "sphinxcontrib-log-cabinet", "sphinx-issues"]
 docs = ["sphinx", "pallets-sphinx-themes", "sphinxcontrib-log-cabinet", "sphinx-issues"]
 dotenv = ["python-dotenv"]
+
+[[package]]
+name = "future"
+version = "0.18.2"
+description = "Clean single-source support for Python 3 and 2"
+category = "main"
+optional = false
+python-versions = ">=2.6, !=3.0.*, !=3.1.*, !=3.2.*"
 
 [[package]]
 name = "gevent"
@@ -728,6 +758,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "typing"
+version = "3.7.4.3"
+description = "Type Hints for Python"
+category = "main"
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+
+[[package]]
 name = "typing-extensions"
 version = "3.7.4.3"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -800,7 +838,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "3ea1ab2ca42e32303a640acb7519edf0f17e8d68c2c55d47f0a8712b1420afd5"
+content-hash = "506b7ed5cb528280769401bdd2f3462d86184e1e9f86edad5290cec6d162927e"
 
 [metadata.files]
 alembic = [
@@ -887,6 +925,10 @@ colorama = [
     {file = "colorama-0.4.4-py2.py3-none-any.whl", hash = "sha256:9f47eda37229f68eee03b24b9748937c7dc3868f906e8ba69fbcbdd3bc5dc3e2"},
     {file = "colorama-0.4.4.tar.gz", hash = "sha256:5941b2b48a20143d2267e95b1c2a7603ce057ee39fd88e7329b0c292aa16869b"},
 ]
+conjure-python-client = [
+    {file = "conjure-python-client-1.10.0.tar.gz", hash = "sha256:e47365e95583797268de67b198636173fbede9338e5bf50a3235bd4f28fb1b6a"},
+    {file = "conjure_python_client-1.10.0-py2.py3-none-any.whl", hash = "sha256:51e2dd26e8e9ef25dde3c3e1745e18b5221f97b9137cb13617977c8a21c81068"},
+]
 contexttimer = [
     {file = "contexttimer-0.3.3.tar.gz", hash = "sha256:35a1efd389af3f1ca509f33ff23e17d98b66c8fde5ba2a4eb8a8b7fa456598a5"},
 ]
@@ -933,6 +975,11 @@ decorator = [
 emoji = [
     {file = "emoji-0.6.0.tar.gz", hash = "sha256:e42da4f8d648f8ef10691bc246f682a1ec6b18373abfd9be10ec0b398823bd11"},
 ]
+enum34 = [
+    {file = "enum34-1.1.10-py2-none-any.whl", hash = "sha256:a98a201d6de3f2ab3db284e70a33b0f896fbf35f8086594e8c9e74b909058d53"},
+    {file = "enum34-1.1.10-py3-none-any.whl", hash = "sha256:c3858660960c984d6ab0ebad691265180da2b43f07e061c0f8dca9ef3cffd328"},
+    {file = "enum34-1.1.10.tar.gz", hash = "sha256:cce6a7477ed816bd2542d03d53db9f0db935dd013b70f336a95c73979289f248"},
+]
 flake8 = [
     {file = "flake8-3.8.4-py2.py3-none-any.whl", hash = "sha256:749dbbd6bfd0cf1318af27bf97a14e28e5ff548ef8e5b1566ccfb25a11e7c839"},
     {file = "flake8-3.8.4.tar.gz", hash = "sha256:aadae8761ec651813c24be05c6f7b4680857ef6afaae4651a4eccaef97ce6c3b"},
@@ -944,6 +991,9 @@ flake8-print = [
 flask = [
     {file = "Flask-1.1.2-py2.py3-none-any.whl", hash = "sha256:8a4fdd8936eba2512e9c85df320a37e694c93945b33ef33c89946a340a238557"},
     {file = "Flask-1.1.2.tar.gz", hash = "sha256:4efa1ae2d7c9865af48986de8aeb8504bf32c7f3d6fdc9353d34b21f4b127060"},
+]
+future = [
+    {file = "future-0.18.2.tar.gz", hash = "sha256:b1bead90b70cf6ec3f0710ae53a525360fa360d306a86583adc6bf83a4db537d"},
 ]
 gevent = [
     {file = "gevent-20.9.0-cp27-cp27m-macosx_10_15_x86_64.whl", hash = "sha256:1628a403fc9c3ea9b35924638a4d4fbe236f60ecdf4e22ed133fbbaf0bc7cb6b"},
@@ -1326,6 +1376,10 @@ typed-ast = [
     {file = "typed_ast-1.4.1-cp38-cp38-win_amd64.whl", hash = "sha256:fc0fea399acb12edbf8a628ba8d2312f583bdbdb3335635db062fa98cf71fca4"},
     {file = "typed_ast-1.4.1-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:d43943ef777f9a1c42bf4e552ba23ac77a6351de620aa9acf64ad54933ad4d34"},
     {file = "typed_ast-1.4.1.tar.gz", hash = "sha256:8c8aaad94455178e3187ab22c8b01a3837f8ee50e09cf31f1ba129eb293ec30b"},
+]
+typing = [
+    {file = "typing-3.7.4.3-py2-none-any.whl", hash = "sha256:283d868f5071ab9ad873e5e52268d611e851c870a2ba354193026f2dfb29d8b5"},
+    {file = "typing-3.7.4.3.tar.gz", hash = "sha256:1187fb9c82fd670d10aa07bbb6cfcfe4bdda42d6fab8d5134f04e8c4d0b71cc9"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.7.4.3-py2-none-any.whl", hash = "sha256:dafc7639cde7f1b6e1acc0f457842a83e722ccca8eef5270af2d74792619a89f"},

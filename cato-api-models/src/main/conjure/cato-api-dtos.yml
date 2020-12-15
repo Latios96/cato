@@ -1,6 +1,6 @@
 types:
   definitions:
-    default-package: com.company.product
+    default-package: org.cato.catoapimodels
     objects:
 
       TestForRunCreation:
