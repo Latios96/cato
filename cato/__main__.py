@@ -8,7 +8,7 @@ import pinject
 import cato
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
-from cato.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import (
     iterate_suites_and_tests,
     count_tests,
