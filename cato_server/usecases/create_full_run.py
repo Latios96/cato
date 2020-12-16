@@ -10,7 +10,7 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.run_class_mapper import RunClassMapper
-from cato_server.queues.RabbitMqMessageQueue import RabbitMqMessageQueue
+from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
@@ -26,11 +26,12 @@ class CreateFullRunUsecase:
         run_repository: RunRepository,
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
+        message_queue: AbstractMessageQueue,
     ):
         self._run_repository = run_repository
         self._suite_result_repository = suite_result_repository
         self._test_result_repository = test_result_repository
-        self._message_queue = RabbitMqMessageQueue("localhost")
+        self._message_queue = message_queue
         self._run_mapper = RunClassMapper()
 
     def create_full_run(self, create_full_run_dto: CreateFullRunDto):
