@@ -200,5 +200,6 @@ class BindingsFactory:
                 connection.close()
                 return True
         except Exception as error:
+            logger.error("Error when connecting to RabbitMQ")
             logger.error(error)
             return False
