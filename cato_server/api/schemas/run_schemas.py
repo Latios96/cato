@@ -20,7 +20,7 @@ class CreateRunSchema(Schema):
     started_at = fields.DateTime()
 
 
-class TestForRunCreation(Schema):
+class TestForRunCreationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
@@ -34,18 +34,20 @@ class TestForRunCreation(Schema):
     execution_status = EnumField(ExecutionStatus, required=True)
 
 
-class TestSuiteForRunCreation(Schema):
+class TestSuiteForRunCreationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
     suite_name = NAME_FIELD
     suite_variables = VARIABLES_FIELD
-    tests = fields.List(fields.Nested(TestForRunCreation), required=True)
+    tests = fields.List(fields.Nested(TestForRunCreationSchema), required=True)
 
 
-class CreateFullRunDto(Schema):
+class CreateFullRunSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
     project_id = ID_FIELD
-    test_suites = fields.List(fields.Nested(TestSuiteForRunCreation), required=True)
+    test_suites = fields.List(
+        fields.Nested(TestSuiteForRunCreationSchema), required=True
+    )
