@@ -1,4 +1,6 @@
 import datetime
+
+from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
@@ -62,9 +64,7 @@ class CreateFullRunUsecase:
                             cores=test_dto.machine_info.cores,
                             memory=test_dto.machine_info.memory,
                         ),
-                        execution_status=ExecutionStatusValueMapper().map_from(
-                            test_dto.execution_status.value
-                        ),
+                        execution_status=ExecutionStatus.NOT_STARTED,
                         seconds=0,
                     )
                 )

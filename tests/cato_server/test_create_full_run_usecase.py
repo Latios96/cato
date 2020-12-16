@@ -2,8 +2,7 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
-    ExecutionStatus,
-    MachineInfo,
+    MachineInfoDto,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
@@ -34,8 +33,7 @@ def test_should_create(sessionmaker_fixture, project):
                     suite_variables={},
                     tests=[
                         TestForRunCreation(
-                            ExecutionStatus.NOT_STARTED,
-                            MachineInfo(cpu_name="test", cores=8, memory=8),
+                            MachineInfoDto(cpu_name="test", cores=8, memory=8),
                             "cmd",
                             "test/identifier",
                             "test_name",

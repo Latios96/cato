@@ -2,25 +2,19 @@ types:
   definitions:
     default-package: org.cato.catoapimodels
     objects:
-      MachineInfo:
+      MachineInfoDto:
         fields:
           cpu_name: string
           cores: integer
           memory: double
+
       TestForRunCreation:
-        fields: 
+        fields:
           test_name: string
           test_identifier: string
           test_command: string
           test_variables: map<string, string>
-          execution_status: ExecutionStatus
-          machine_info: MachineInfo
-
-      ExecutionStatus:
-        values: 
-          - NOT_STARTED
-          - RUNNING
-          - FINISHED
+          machine_info: MachineInfoDto
 
       TestSuiteForRunCreation:
         fields:
