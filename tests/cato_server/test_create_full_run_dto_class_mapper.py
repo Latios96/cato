@@ -3,6 +3,7 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     ExecutionStatus,
+    MachineInfo,
 )
 from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
@@ -23,6 +24,11 @@ def test_map_from():
                         "test_identifier": "test/identifier",
                         "test_name": "test_name",
                         "test_variables": {},
+                        "machine_info": {
+                            "cpu_name": "test",
+                            "cores": 8,
+                            "memory": 8,
+                        },
                     }
                 ],
             }
@@ -41,6 +47,7 @@ def test_map_from():
                 tests=[
                     TestForRunCreation(
                         ExecutionStatus.NOT_STARTED,
+                        MachineInfo(cpu_name="test", cores=8, memory=8),
                         "cmd",
                         "test/identifier",
                         "test_name",
@@ -62,6 +69,7 @@ def test_map_to():
                 tests=[
                     TestForRunCreation(
                         ExecutionStatus.NOT_STARTED,
+                        MachineInfo(cpu_name="test", cores=8, memory=8),
                         "cmd",
                         "test/identifier",
                         "test_name",
@@ -88,6 +96,7 @@ def test_map_to():
                         "test_identifier": "test/identifier",
                         "test_name": "test_name",
                         "test_variables": {},
+                        "machine_info": {"cpu_name": "test", "cores": 8, "memory": 8},
                     }
                 ],
             }
