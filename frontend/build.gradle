@@ -2,10 +2,14 @@ apply plugin: "com.github.node-gradle.node"
 
 task formatTypescriptCheck(type: YarnTask) {
   args = ['run', 'prettier', 'src', '-c']
+  inputs.dir('src')
+    outputs.file('formatTypescriptCheckSuccess')
 }
 
 task formatTypescript(type: YarnTask) {
   args = ['run', 'prettier', 'src', '-w']
+  inputs.dir('src')
+    outputs.file('formatTypescriptSuccess')
 }
 
 task copyConjureTypescriptModels {

@@ -119,10 +119,20 @@ install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPythonCheck(type: PythonTask){
     command = '-m black cato cato_server tests cato_api_client alembic --check'
+    inputs.dir('cato')
+    inputs.dir('tests')
+    inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    outputs.file('formatPythonCheck')
 }
 
 task formatPython(type:PythonTask){
     command = '-m black cato cato_server tests cato_api_client alembic'
+    inputs.dir('cato')
+    inputs.dir('tests')
+    inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    outputs.file('formatPython')
 }
 
 task lintPython(type:PythonTask){
