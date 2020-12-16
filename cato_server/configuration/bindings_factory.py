@@ -106,6 +106,7 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
         bind("create_full_run_usecase", to_class=CreateFullRunUsecase)
+        bind("message_queue", to_instance="None")
 
 
 class BindingsFactory:

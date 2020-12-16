@@ -9,6 +9,9 @@ from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
@@ -27,6 +30,7 @@ class AppConfigurationReader:
 
         storage_configuration = self._read_storage_configuration(config)
         logging_configuration = self._read_logging_configuration(config)
+        message_queue_configuration = self._read_message_queue_configuration(config)
 
         return AppConfiguration(
             port=config.getint(
@@ -37,6 +41,7 @@ class AppConfigurationReader:
             ),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
+            message_queue_configuration=message_queue_configuration,
         )
 
     def _read_storage_configuration(
@@ -69,3 +74,9 @@ class AppConfigurationReader:
                 fallback=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
             ),
         )
+
+    def _read_message_queue_configuration(
+        self, config: configparser.ConfigParser
+    ) -> MessageQueueConfiguration:
+        host = config.get("message_queue", "host", fallback="localhost")
+        return MessageQueueConfiguration(host=host)

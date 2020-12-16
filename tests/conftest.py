@@ -8,6 +8,9 @@ from sqlalchemy import create_engine, event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image, ImageChannel
 from cato_server.domain.machine_info import MachineInfo
@@ -151,6 +154,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
         logging_configuration=LoggingConfiguration(
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

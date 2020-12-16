@@ -12,6 +12,7 @@ class AppConfigurationWriter:
         config_reader = configparser.ConfigParser()
         config_reader.add_section("app")
         config_reader.add_section("storage")
+        config_reader.add_section("message_queue")
         config_reader.set("app", "port", str(config.port))
         config_reader.set("app", "debug", str(config.debug))
         config_reader.set(
@@ -19,6 +20,9 @@ class AppConfigurationWriter:
         )
         config_reader.set(
             "storage", "file_storage_url", config.storage_configuration.file_storage_url
+        )
+        config_reader.set(
+            "message_queue", "host", config.message_queue_configuration.host
         )
 
         config_reader.write(stream)

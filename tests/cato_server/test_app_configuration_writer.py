@@ -14,6 +14,9 @@ debug = False
 database_url = db_url
 file_storage_url = file_storage_url
 
+[message_queue]
+host = localhost
+
 """
 
 

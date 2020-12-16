@@ -5,6 +5,9 @@ from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
@@ -22,4 +25,5 @@ def test_create_default_config():
         logging_configuration=LoggingConfiguration(
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="localhost"),
     )

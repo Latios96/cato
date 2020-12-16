@@ -7,6 +7,9 @@ import pytest
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 VALID_INI_FILE = """[app]
@@ -14,7 +17,9 @@ port=5000
 debug=True
 [storage]
 database_url=my_database_url
-file_storage_url=my_file_storage_url"""
+file_storage_url=my_file_storage_url
+[message_queue]
+host=127.0.01"""
 
 MISSING_DATABASE_URL = """[app]
 port=5000
@@ -108,6 +113,7 @@ def test_read_valid_file(ini_file_creator):
         logging_configuration=LoggingConfiguration(
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="127.0.01"),
     )
 
 
@@ -137,6 +143,7 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         logging_configuration=LoggingConfiguration(
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="localhost"),
     )
 
 
@@ -155,6 +162,7 @@ def test_read_with_logging(ini_file_creator):
         logging_configuration=LoggingConfiguration(
             "cato-log.txt", False, humanfriendly.parse_size("100mb"), 100
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="localhost"),
     )
 
 
