@@ -95,7 +95,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,
@@ -127,9 +126,8 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_SccTARTED",
                                 "machine_info": {
-                                    "cpu_name": "test",
+                                    "cpu_nsame": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
@@ -144,7 +142,11 @@ class TestCreateFullRunValidator:
             "test_suites": {
                 0: {
                     "tests": {
-                        0: {"execution_status": ["Invalid enum member NOT_SccTARTED"]}
+                        0: {
+                            "machine_info": {
+                                "cpu_name": ["Missing data " "for required " "field."]
+                            }
+                        }
                     }
                 }
             }
