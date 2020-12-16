@@ -1,6 +1,7 @@
 import logging
 from http.client import BAD_REQUEST
 
+import flask
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
@@ -8,11 +9,13 @@ from cato_server.api.validators.run_validators import (
     CreateRunValidator,
     CreateFullRunValidator,
 )
+from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.run import Run
 from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
 )
 from cato_server.mappers.run_class_mapper import RunClassMapper
+from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
@@ -31,17 +34,27 @@ class RunsBlueprint(Blueprint):
         project_repository: ProjectRepository,
         test_result_repository: TestResultRepository,
         create_full_run_usecase: CreateFullRunUsecase,
+        message_queue: OptionalComponent[AbstractMessageQueue],
     ):
         super(RunsBlueprint, self).__init__("runs", __name__)
         self._run_repository = run_repository
         self._project_repository = project_repository
         self._test_result_repository = test_result_repository
         self._create_full_run_usecase = create_full_run_usecase
+        self._message_queue = message_queue
+
+        self._run_class_mapper = RunClassMapper()
 
         self.route("/runs/project/<project_id>", methods=["GET"])(self.run_by_project)
         self.route("/runs", methods=["POST"])(self.create_run)
         self.route("/runs/full", methods=["POST"])(self.create_full_run)
         self.route("/runs/<int:run_id>/status", methods=["GET"])(self.status)
+
+        if self._message_queue.is_available():
+            logger.info("Message queue is available, adding run events route")
+            self.route("/runs/events/<int:project_id>", methods=["GET"])(
+                self.run_events_for_project
+            )
 
     def run_by_project(self, project_id):
         runs = self._run_repository.find_by_project_id(project_id)
@@ -79,4 +92,16 @@ class RunsBlueprint(Blueprint):
         create_full_run_dto = CreateFullRunDtoClassMapper().map_from_dict(request_json)
 
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
-        return jsonify(RunClassMapper().map_to_dict(run)), 201
+        return jsonify(self._run_class_mapper.map_to_dict(run)), 201
+
+    def run_events_for_project(self, project_id):
+        if not self._project_repository.find_by_id(project_id):
+            abort(404)
+        message_queue = self._message_queue.component
+        logger.info("run_events_for_project")
+        return flask.Response(
+            message_queue.get_event_stream(
+                "run_events", str(project_id), self._run_class_mapper
+            ),
+            mimetype="text/event-stream",
+        )
