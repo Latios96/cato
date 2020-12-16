@@ -17,6 +17,12 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_result import TestResult
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
+from cato_api_models.catoapimodels import (
+    CreateFullRunDto,
+    TestSuiteForRunCreation,
+    TestForRunCreation,
+    MachineInfoDto,
+)
 
 
 class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
@@ -318,3 +324,49 @@ def test_upload_image_not_existing(cato_api_client):
 
     with pytest.raises(ValueError):
         cato_api_client.upload_image(path)
+
+
+def test_create_full_run_success(cato_api_client, project):
+    dto = CreateFullRunDto(
+        project_id=project.id,
+        test_suites=[
+            TestSuiteForRunCreation(
+                suite_name="my_suite",
+                suite_variables={},
+                tests=[
+                    TestForRunCreation(
+                        MachineInfoDto(cpu_name="test", cores=8, memory=8),
+                        "cmd",
+                        "test/identifier",
+                        "test_name",
+                        {},
+                    )
+                ],
+            )
+        ],
+    )
+    run = cato_api_client.create_full_run(dto)
+    assert run.id == project.id
+
+
+def test_create_full_run_failure(cato_api_client):
+    dto = CreateFullRunDto(
+        project_id=42,
+        test_suites=[
+            TestSuiteForRunCreation(
+                suite_name="my_suite",
+                suite_variables={},
+                tests=[
+                    TestForRunCreation(
+                        MachineInfoDto(cpu_name="test", cores=8, memory=8),
+                        "cmd",
+                        "test/identifier",
+                        "test_name",
+                        {},
+                    )
+                ],
+            )
+        ],
+    )
+    with pytest.raises(ValueError):
+        cato_api_client.create_full_run(dto)

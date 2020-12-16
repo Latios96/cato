@@ -11,6 +11,9 @@ from cato_server.domain.project import Project
 from cato_server.domain.run import Run
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.create_full_run_dto_class_mapper import (
+    CreateFullRunDtoClassMapper,
+)
 from cato_server.mappers.file_class_mapper import FileClassMapper
 from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.mappers.output_class_mapper import OutputClassMapper
@@ -22,6 +25,7 @@ from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
 from cato_server.domain.file import File
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_result import TestResult
+from cato_api_models.catoapimodels import CreateFullRunDto
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +111,12 @@ class CatoApiClient:
         logger.info("Creating run with data %s..", run)
         return self._create_with_http_template(
             url, run, RunClassMapper(), RunClassMapper()
+        )
+
+    def create_full_run(self, create_full_run_dto: CreateFullRunDto) -> Run:
+        url = self._build_url("/api/v1/runs/full")
+        return self._create_with_http_template(
+            url, create_full_run_dto, CreateFullRunDtoClassMapper(), RunClassMapper()
         )
 
     def create_test_result(self, test_result: TestResult):
