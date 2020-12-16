@@ -2,6 +2,7 @@ import datetime
 import logging
 
 from cato_api_models.catoapimodels import CreateFullRunDto
+from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
@@ -26,7 +27,7 @@ class CreateFullRunUsecase:
         run_repository: RunRepository,
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
-        message_queue: AbstractMessageQueue,
+        message_queue: OptionalComponent[AbstractMessageQueue],
     ):
         self._run_repository = run_repository
         self._suite_result_repository = suite_result_repository
@@ -78,13 +79,17 @@ class CreateFullRunUsecase:
                 len(saved_tests),
                 suite_result.suite_name,
             )
-        run_created_event = Event("RUN_CREATED", run)
-        self._message_queue.send_event(
-            "run_events",
-            str(create_full_run_dto.project_id),
-            run_created_event,
-            self._run_mapper,
-        )
-        logger.info("Published event %s", run_created_event)
+        if self._message_queue.is_available():
+            logger.info("Message queue is  available, sending RUN_CREATED event")
+            run_created_event = Event("RUN_CREATED", run)
+            self._message_queue.component.send_event(
+                "run_events",
+                str(create_full_run_dto.project_id),
+                run_created_event,
+                self._run_mapper,
+            )
+            logger.info("Published event %s", run_created_event)
+        else:
+            logger.info("Not sending event, message queue is not available")
 
         return run
