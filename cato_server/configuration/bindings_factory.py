@@ -40,6 +40,8 @@ from cato_server.configuration.app_configuration import AppConfiguration
 
 import logging
 
+from cato_server.usecases.create_full_run import CreateFullRunUsecase
+
 logger = logging.getLogger(__name__)
 
 FILE_STORAGE_IN_MEMORY = ":memory:"
@@ -103,6 +105,7 @@ class PinjectBindings(pinject.BindingSpec):
             to_instance=self._bindings.storage_bindings.session_maker_binding,
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
+        bind("create_full_run_usecase", to_class=CreateFullRunUsecase)
 
 
 class BindingsFactory:
