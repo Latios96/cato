@@ -11,6 +11,7 @@ from sqlalchemy.orm import sessionmaker
 from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
+from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image, ImageChannel
 from cato_server.domain.machine_info import MachineInfo
@@ -27,6 +28,7 @@ from cato_server.configuration.bindings_factory import (
     BindingsFactory,
     Bindings,
     PinjectBindings,
+    MessageQueueBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -159,7 +161,10 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()
     storage_bindings.session_maker_binding = sessionmaker_fixture
-    bindings = Bindings(storage_bindings, config)
+    message_queue_bindings = MessageQueueBindings(
+        message_queue_binding=OptionalComponent.empty()
+    )
+    bindings = Bindings(storage_bindings, config, message_queue_bindings)
     pinject_bindings = PinjectBindings(bindings)
 
     app = create_app(config, pinject_bindings)
