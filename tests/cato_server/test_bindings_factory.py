@@ -1,5 +1,8 @@
 from sqlalchemy.orm import sessionmaker
 
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
 from cato_server.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -41,6 +44,7 @@ def test_create_storage_bindings_for_postgres():
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -75,6 +79,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
+        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -100,3 +105,39 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         .id
         == 1
     )
+
+
+CONFIG_FOR_MESSAGE_QUEUE_TESTING = AppConfiguration(
+    port=5000,
+    debug=True,
+    storage_configuration=StorageConfiguration(
+        database_url="sqlite:///:memory:",
+        file_storage_url="some_path",
+    ),
+    logging_configuration=LoggingConfiguration(
+        log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
+        use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+        max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
+        backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
+    ),
+    message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+)
+
+
+def test_create_message_queue_bindings_rabbit_mq_available():
+    bindings_factory = BindingsFactory(CONFIG_FOR_MESSAGE_QUEUE_TESTING)
+    bindings_factory._rabbit_mq_message_queue_is_available = lambda: True
+
+    message_queue_bindings = bindings_factory.create_message_queue_bindings()
+
+    assert message_queue_bindings.message_queue_binding.is_available()
+
+
+def test_create_message_queue_bindings_rabbit_mq_not_available():
+
+    bindings_factory = BindingsFactory(CONFIG_FOR_MESSAGE_QUEUE_TESTING)
+    bindings_factory._rabbit_mq_message_queue_is_available = lambda: False
+
+    message_queue_bindings = bindings_factory.create_message_queue_bindings()
+
+    assert message_queue_bindings.message_queue_binding.empty()

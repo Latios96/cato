@@ -1,10 +1,15 @@
 from dataclasses import dataclass
+
+import pika
 from typing import Type, Any
 
 import pinject
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from cato_server.configuration.optional_component import OptionalComponent
+from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
+from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -61,9 +66,15 @@ class StorageBindings:
 
 
 @dataclass
+class MessageQueueBindings:
+    message_queue_binding: OptionalComponent[AbstractMessageQueue]
+
+
+@dataclass
 class Bindings:
     storage_bindings: StorageBindings
     app_configuration: AppConfiguration
+    message_queue_bindings: MessageQueueBindings
 
 
 class PinjectBindings(pinject.BindingSpec):
@@ -106,7 +117,10 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
         bind("create_full_run_usecase", to_class=CreateFullRunUsecase)
-        bind("message_queue", to_instance="None")
+        bind(
+            "message_queue",
+            to_instance=self._bindings.message_queue_bindings.message_queue_binding,
+        )
 
 
 class BindingsFactory:
@@ -116,7 +130,10 @@ class BindingsFactory:
     def create_bindings(self) -> PinjectBindings:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
-        bindings = Bindings(storage_bindings, self._configuration)
+        message_queue_bindings = self.create_message_queue_bindings()
+        bindings = Bindings(
+            storage_bindings, self._configuration, message_queue_bindings
+        )
         return PinjectBindings(bindings)
 
     def create_storage_bindings(self):
@@ -132,6 +149,10 @@ class BindingsFactory:
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
+
+    def create_message_queue_bindings(self):
+        logger.info("Creating message queue bindings..")
+        return MessageQueueBindings(message_queue_binding=self._get_message_queue())
 
     def _get_session_maker(self):
         return sessionmaker(bind=self._get_engine())
@@ -155,3 +176,29 @@ class BindingsFactory:
         return create_engine(
             database_url, pool_size=pool_size, max_overflow=max_overflow
         )
+
+    def _get_message_queue(self) -> OptionalComponent[AbstractMessageQueue]:
+        if self._rabbit_mq_message_queue_is_available():
+            logger.info(
+                "RabbitMq is available at %s",
+                self._configuration.message_queue_configuration.host,
+            )
+            return OptionalComponent(
+                RabbitMqMessageQueue(
+                    self._configuration.message_queue_configuration.host
+                )
+            )
+        return OptionalComponent.empty()
+
+    def _rabbit_mq_message_queue_is_available(self):
+        connection_parameters = pika.ConnectionParameters(
+            host=self._configuration.message_queue_configuration.host
+        )
+        try:
+            connection = pika.BlockingConnection(connection_parameters)
+            if connection.is_open:
+                connection.close()
+                return True
+        except Exception as error:
+            logger.error(error)
+            return False
