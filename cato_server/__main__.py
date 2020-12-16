@@ -4,7 +4,7 @@ import datetime
 import flask
 import pinject
 from flask.json import JSONEncoder
-from gevent.pywsgi import WSGIServer
+from flask_twisted import Twisted
 from werkzeug.exceptions import HTTPException
 
 import cato
@@ -109,9 +109,10 @@ def main():
 
     app = create_app(config, bindings)
 
-    http_server = WSGIServer(("127.0.0.1", config.port), app)
+    logger.info("Creating Twisted app")
+    Twisted(app)
     logger.info(f"Up and running on http://127.0.0.1:{config.port}")
-    http_server.serve_forever()
+    app.run("127.0.0.1", config.port)
 
 
 def get_config_path(args):
