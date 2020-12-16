@@ -2,12 +2,15 @@ import datetime
 import logging
 
 from cato_api_models.catoapimodels import CreateFullRunDto
+from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
+from cato_server.mappers.run_class_mapper import RunClassMapper
+from cato_server.queues.RabbitMqMessageQueue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
@@ -27,6 +30,8 @@ class CreateFullRunUsecase:
         self._run_repository = run_repository
         self._suite_result_repository = suite_result_repository
         self._test_result_repository = test_result_repository
+        self._message_queue = RabbitMqMessageQueue("localhost")
+        self._run_mapper = RunClassMapper()
 
     def create_full_run(self, create_full_run_dto: CreateFullRunDto):
         run = Run(
@@ -72,4 +77,13 @@ class CreateFullRunUsecase:
                 len(saved_tests),
                 suite_result.suite_name,
             )
+        run_created_event = Event("RUN_CREATED", run)
+        self._message_queue.send_event(
+            "run_events",
+            str(create_full_run_dto.project_id),
+            run_created_event,
+            self._run_mapper,
+        )
+        logger.info("Published event %s", run_created_event)
+
         return run
