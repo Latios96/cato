@@ -1,62 +1,26 @@
 import React, { Component } from "react";
-import Run from "../../models/Run";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
 import { formatTime } from "../../utils";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
+import { IRunDto } from "../../../../cato-api-models/cato-api-models-typescript/src";
+
 interface Props {
-  run: Run;
+  run: IRunDto;
   isCurrentEntry: boolean;
   link: string;
 }
-interface State {
-  status: string;
-}
+
+interface State {}
+
 class RunListEntryComponent extends Component<Props, State> {
   interval: any;
+
   constructor(props: Props) {
     super(props);
     this.state = { status: "" };
   }
-  componentDidUpdate(
-    prevProps: Readonly<Props>,
-    prevState: Readonly<State>,
-    snapshot?: any
-  ) {
-    if (prevProps.run.id !== this.props.run.id) {
-      this.fetchStatus();
-    }
-  }
-
-  componentDidMount() {
-    this.fetchStatus();
-    this.interval = setInterval(() => this.fetchStatus(), 10000);
-  }
-
-  componentWillUnmount() {
-    clearInterval(this.interval);
-  }
-
-  fetchStatusInBg = () => {
-    if (this.state.status === "SUCCESS" || this.state.status === "FAILED") {
-      return;
-    }
-    this.fetchStatus();
-  };
-
-  fetchStatus = () => {
-    fetch(`/api/v1/runs/${this.props.run.id}/status`)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ status: result.status });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  };
 
   render() {
     return (
@@ -70,12 +34,16 @@ class RunListEntryComponent extends Component<Props, State> {
             <div className={styles.runTimingInformation}>
               {formatTime(this.props.run.started_at)}
             </div>
-            {this.renderRunStatus(this.state.status, this.props.isCurrentEntry)}
+            {this.renderRunStatus(
+              this.props.run.status,
+              this.props.isCurrentEntry
+            )}
           </ListGroup.Item>
         </Link>
       </div>
     );
   }
+
   renderRunStatus = (status: string, isCurrentEntry: boolean) => {
     if (status === "NOT_STARTED") {
       return <span>☐</span>;

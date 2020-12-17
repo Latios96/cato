@@ -6,6 +6,7 @@ import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import RunListEntryComponent from "./RunListEntryComponent";
 import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
+import { IRunDto } from "../../../../cato-api-models/cato-api-models-typescript/src";
 
 interface Props {
   projectId: number;
@@ -14,7 +15,7 @@ interface Props {
 
 interface State {
   project: Project | null;
-  runs: Run[];
+  runs: IRunDto[];
   currentSuiteResults: SuiteResult[];
 }
 
@@ -52,7 +53,7 @@ class ProjectRunsView extends Component<Props, State> {
         <h1 className={styles.projectName}>{this.state.project?.name}</h1>
         <div className={styles.runsViewContainer}>
           <ListGroup>
-            {this.state.runs.map((r: Run) => {
+            {this.state.runs.map((r: IRunDto) => {
               return (
                 <RunListEntryComponent
                   key={r.id}
