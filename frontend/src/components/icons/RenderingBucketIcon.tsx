@@ -8,21 +8,19 @@ interface Props {
 }
 
 function RenderingBucketIcon(props: Props) {
-  {
-    return props.isActive ? (
-      <img
-        className={styles.bucketAnimImage}
-        src={bucket_anim_white_on_black}
-        alt={"an animated rendering icon"}
-      />
-    ) : (
-      <img
-        className={styles.bucketAnimImage}
-        src={bucket_anim_black_on_white}
-        alt={"an animated rendering icon"}
-      />
-    );
-  }
+  return props.isActive ? (
+    <img
+      className={styles.bucketAnimImage}
+      src={bucket_anim_white_on_black}
+      alt={"an animated rendering icon"}
+    />
+  ) : (
+    <img
+      className={styles.bucketAnimImage}
+      src={bucket_anim_black_on_white}
+      alt={"an animated rendering icon"}
+    />
+  );
 }
 
 export default RenderingBucketIcon;

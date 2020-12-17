@@ -1,4 +1,4 @@
-import React, { Component, useEffect } from "react";
+import React, { Component } from "react";
 import Run from "../../models/Run";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";

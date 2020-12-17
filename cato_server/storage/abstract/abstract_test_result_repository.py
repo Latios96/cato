@@ -1,10 +1,10 @@
-from typing import Optional, Iterable, Set, Tuple, List, Dict
+from typing import Optional, Iterable, Set, Tuple, Dict
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_server.domain.test_result import TestResult
+from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 
 class TestResultRepository(AbstractRepository):

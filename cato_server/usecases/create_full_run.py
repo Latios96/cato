@@ -2,6 +2,7 @@ import datetime
 import logging
 
 from cato_api_models.catoapimodels import CreateFullRunDto
+from cato_api_models.catoapimodels import RunDto, RunStatusDto
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
@@ -10,7 +11,6 @@ from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
-from cato_server.mappers.run_class_mapper import RunClassMapper
 from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -18,7 +18,6 @@ from cato_server.storage.abstract.abstract_test_result_repository import (
 )
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 logger = logging.getLogger(__name__)
 

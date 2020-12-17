@@ -1,17 +1,17 @@
 import dataclasses
 from collections import defaultdict
-from typing import Optional, Iterable, List, Set, Tuple, Dict
+from typing import Optional, Iterable, Set, Tuple, Dict
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
 
+from cato.domain.test_status import TestStatus
+from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.test_identifier import TestIdentifier
-from cato.domain.test_status import TestStatus
+from cato_server.domain.test_result import TestResult
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.test_result import TestResult
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,

@@ -1,7 +1,5 @@
-import json
 import logging
 from http.client import BAD_REQUEST
-from typing import Iterable
 
 import flask
 from dateutil.parser import parse
@@ -14,7 +12,6 @@ from cato_server.api.validators.run_validators import (
     CreateFullRunValidator,
 )
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.event import Event
 from cato_server.domain.run import Run
 from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
