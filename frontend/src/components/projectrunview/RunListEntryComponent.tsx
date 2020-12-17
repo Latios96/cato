@@ -70,17 +70,17 @@ class RunListEntryComponent extends Component<Props, State> {
             <div className={styles.runTimingInformation}>
               {formatTime(this.props.run.started_at)}
             </div>
-            {this.renderRunStatus(this.state.status)}
+            {this.renderRunStatus(this.state.status, this.props.isCurrentEntry)}
           </ListGroup.Item>
         </Link>
       </div>
     );
   }
-  renderRunStatus = (status: string) => {
+  renderRunStatus = (status: string, isCurrentEntry: boolean) => {
     if (status === "NOT_STARTED") {
       return <span>☐</span>;
     } else if (status === "RUNNING") {
-      return <RenderingBucketIcon />;
+      return <RenderingBucketIcon isActive={isCurrentEntry} />;
     } else if (status === "SUCCESS") {
       return "✔";
     } else if (status === "FAILED") {

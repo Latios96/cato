@@ -14,7 +14,7 @@ function WaitingOrRunningTestResultComponent(props: Props) {
         {props.result.execution_status === "NOT_STARTED" ? (
           "waiting to start"
         ) : (
-          <RenderingBucketIcon />
+          <RenderingBucketIcon isActive={false} />
         )}
       </p>
       <p>
