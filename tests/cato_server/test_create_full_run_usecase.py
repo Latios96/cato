@@ -18,6 +18,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
 from tests.utils import mock_safe
+from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 
 def test_should_create(sessionmaker_fixture, project):
@@ -56,5 +57,16 @@ def test_should_create(sessionmaker_fixture, project):
     assert run.id == 1
     assert run.started_at
     mock_message_queue.component.send_event.assert_called_with(
-        "run_events", str(project.id), Event("RUN_CREATED", run), usecase._run_mapper
+        "run_events",
+        str(project.id),
+        Event(
+            "RUN_CREATED",
+            RunDto(
+                id=run.id,
+                project_id=run.project_id,
+                started_at=run.started_at.isoformat(),
+                status=RunStatusDto.NOT_STARTED,
+            ),
+        ),
+        usecase._run_dto_class_mapper,
     )
