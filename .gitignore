@@ -155,7 +155,7 @@ config.ini
 # Ignore Gradle build output directory
 build
 cato_server/static/*
-log.txt
+log.txt*
 .eslintcache
 cato_api_models/catoapimodels
 cato_api_models/__init__.py
