@@ -172,3 +172,56 @@ def test_find_by_run_id_should_find_empty_list(sessionmaker_fixture, run):
     results = repository.find_by_suite_result(run.id)
 
     assert results == []
+
+
+def test_find_execution_status_by_run_ids_should_find(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    test_result1 = repository.save(test_result)
+    test_result.id = 0
+    test_result2 = repository.save(test_result)
+    test_result.id = 0
+    test_result3 = repository.save(test_result)
+    test_result.id = 1
+
+    results = repository.find_execution_status_by_run_ids({run.id})
+
+    assert results == {
+        run.id: {
+            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
+            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
+            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
+        }
+    }
+
+
+def test_find_execution_status_by_run_ids_should_find_empty_list(
+    sessionmaker_fixture, run
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    results = repository.find_execution_status_by_run_ids({run.id})
+
+    assert results == {}
+
+
+def test_find_execution_status_by_project_id_should_find(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_execution_status_by_project_id(run.project_id)
+
+    assert result == {run.id: {(ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS)}}
+
+
+def test_find_execution_status_by_project_id_should_not_find(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_execution_status_by_project_id(42)
+
+    assert result == {}

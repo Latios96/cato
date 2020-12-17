@@ -1,5 +1,6 @@
 import dataclasses
-from typing import Optional, Iterable
+from collections import defaultdict
+from typing import Optional, Iterable, List, Set, Tuple, Dict
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
 
@@ -148,3 +149,61 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def find_execution_status_by_run_ids(
+        self, run_ids: Set[int]
+    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+        session = self._session_maker()
+
+        results = (
+            session.query(
+                _TestResultMapping.execution_status,
+                _TestResultMapping.status,
+                _RunMapping.id,
+            )
+            .distinct()
+            .join(_SuiteResultMapping.test_results)
+            .join(_RunMapping)
+            .filter(_RunMapping.id.in_(run_ids))
+            .all()
+        )
+        session.close()
+        status_by_run_id = defaultdict(set)
+        for execution_status, test_status, run_id in results:
+            status_by_run_id[run_id].add(
+                (
+                    self._map_execution_status(execution_status),
+                    self._map_test_status(test_status),
+                )
+            )
+
+        return status_by_run_id
+
+    def find_execution_status_by_project_id(
+        self, project_id: int
+    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+        session = self._session_maker()
+
+        results = (
+            session.query(
+                _TestResultMapping.execution_status,
+                _TestResultMapping.status,
+                _RunMapping.id,
+            )
+            .distinct()
+            .join(_SuiteResultMapping.test_results)
+            .join(_RunMapping)
+            .filter(_RunMapping.project_entity_id == project_id)
+            .all()
+        )
+        session.close()
+        status_by_run_id = defaultdict(set)
+        for execution_status, test_status, run_id in results:
+            status_by_run_id[run_id].add(
+                (
+                    self._map_execution_status(execution_status),
+                    self._map_test_status(test_status),
+                )
+            )
+
+        return status_by_run_id
