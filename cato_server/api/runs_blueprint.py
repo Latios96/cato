@@ -1,3 +1,4 @@
+import json
 import logging
 from http.client import BAD_REQUEST
 
@@ -5,6 +6,7 @@ import flask
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
+from cato_api_models.catoapimodels import RunDto, RunStatusDto
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
     CreateFullRunValidator,
@@ -24,7 +26,6 @@ from cato_server.storage.abstract.abstract_test_result_repository import (
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
-from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 logger = logging.getLogger(__name__)
 
@@ -122,10 +123,22 @@ class RunsBlueprint(Blueprint):
         if not self._project_repository.find_by_id(project_id):
             abort(404)
         message_queue = self._message_queue.component
-        logger.info("run_events_for_project")
-        return flask.Response(
-            message_queue.get_event_stream(
-                "run_events", str(project_id), self._run_class_mapper
+
+        def format_sse(events) -> str:
+            for e in events:
+                run = e.value
+                run["status"] = "NOT_STARTED"
+                message = f"event:{e.event_name}\ndata:{json.dumps(run)}\n\n"
+                logger.info("Sending SSE %s", message)
+                yield message
+
+        response = flask.Response(
+            format_sse(
+                message_queue.get_event_stream(
+                    "run_events", str(project_id), self._run_class_mapper
+                )
             ),
             mimetype="text/event-stream",
         )
+        response.headers["Access-Control-Allow-Origin"] = "*"
+        return response
