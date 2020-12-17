@@ -1,3 +1,5 @@
+@import "../../custom.scss";
+
 .runsViewContainer {
   display: flex;
   margin-left: 20px;
@@ -6,6 +8,14 @@
 .runListEntry {
   width: 270px;
   display: flex !important;
+}
+
+.runListEntry:hover {
+  background-color: $cato-black-hovered !important;
+  color: white !important;
+  transition: 0.5s;
+  cursor: pointer !important;
+  transition-timing-function: ease, ease;
 }
 
 .projectName {

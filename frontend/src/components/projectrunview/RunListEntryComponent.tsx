@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import Run from "../../models/Run";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
-import styles from "./ProjectRunsView.module.css";
+import styles from "./ProjectRunsView.module.scss";
 import { formatTime } from "../../utils";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 interface Props {
