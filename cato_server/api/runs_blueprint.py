@@ -58,7 +58,15 @@ class RunsBlueprint(Blueprint):
 
     def run_by_project(self, project_id):
         runs = self._run_repository.find_by_project_id(project_id)
-        return jsonify(runs)
+        run_dicts = list(map(self._run_class_mapper.map_to_dict, runs))
+        status_by_run_id = (
+            self._test_result_repository.find_execution_status_by_project_id(project_id)
+        )
+        for run_dict in run_dicts:
+            run_dict["status"] = RunStatusCalculator().calculate(
+                status_by_run_id.get(run_dict["id"], set())
+            )
+        return jsonify(run_dicts)
 
     def create_run(self):
         request_json = request.get_json()
@@ -76,12 +84,16 @@ class RunsBlueprint(Blueprint):
         return jsonify(run), 201
 
     def status(self, run_id):
-        test_results = self._test_result_repository.find_by_run_id(run_id)
+        status_by_run_id = (
+            self._test_result_repository.find_execution_status_by_run_ids({run_id})
+        )
 
-        if not test_results:
+        if not status_by_run_id.get(run_id):
             abort(404)
 
-        return {"status": RunStatusCalculator().calculate(test_results).name}
+        return {
+            "status": RunStatusCalculator().calculate(status_by_run_id.get(run_id)).name
+        }
 
     def create_full_run(self):
         request_json = request.get_json()
