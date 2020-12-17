@@ -1,17 +1,20 @@
 import json
 import logging
 from http.client import BAD_REQUEST
+from typing import Iterable
 
 import flask
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
 from cato_api_models.catoapimodels import RunDto, RunStatusDto
+from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
     CreateFullRunValidator,
 )
 from cato_server.configuration.optional_component import OptionalComponent
+from cato_server.domain.event import Event
 from cato_server.domain.run import Run
 from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
@@ -123,12 +126,6 @@ class RunsBlueprint(Blueprint):
         if not self._project_repository.find_by_id(project_id):
             abort(404)
         message_queue = self._message_queue.component
-
-        def format_sse(events) -> str:
-            for e in events:
-                message = f"event:{e.event_name}\ndata:{json.dumps(e.value)}\n\n"
-                logger.info("Sending SSE %s", message)
-                yield message
 
         response = flask.Response(
             format_sse(
