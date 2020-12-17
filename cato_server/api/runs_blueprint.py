@@ -15,6 +15,7 @@ from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
 )
 from cato_server.mappers.run_class_mapper import RunClassMapper
+from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -23,6 +24,7 @@ from cato_server.storage.abstract.abstract_test_result_repository import (
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
+from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 logger = logging.getLogger(__name__)
 
@@ -44,6 +46,8 @@ class RunsBlueprint(Blueprint):
         self._message_queue = message_queue
 
         self._run_class_mapper = RunClassMapper()
+        self._run_status_calculator = RunStatusCalculator()
+        self._run_dto_class_mapper = RunDtoClassMapper()
 
         self.route("/runs/project/<project_id>", methods=["GET"])(self.run_by_project)
         self.route("/runs", methods=["POST"])(self.create_run)
@@ -58,15 +62,23 @@ class RunsBlueprint(Blueprint):
 
     def run_by_project(self, project_id):
         runs = self._run_repository.find_by_project_id(project_id)
-        run_dicts = list(map(self._run_class_mapper.map_to_dict, runs))
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(project_id)
         )
-        for run_dict in run_dicts:
-            run_dict["status"] = RunStatusCalculator().calculate(
-                status_by_run_id.get(run_dict["id"], set())
+        run_dtos = []
+        for run in runs:
+            status = self._run_status_calculator.calculate(
+                status_by_run_id.get(run.id, set())
             )
-        return jsonify(run_dicts)
+            run_dtos.append(
+                RunDto(
+                    id=run.id,
+                    project_id=run.id,
+                    started_at=run.started_at.isoformat(),
+                    status=RunStatusDto(status),
+                )
+            )
+        return jsonify(self._run_dto_class_mapper.map_many_to_dict(run_dtos))
 
     def create_run(self):
         request_json = request.get_json()

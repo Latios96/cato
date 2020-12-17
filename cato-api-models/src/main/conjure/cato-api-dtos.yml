@@ -27,3 +27,17 @@ types:
         fields:
           project_id: integer
           test_suites: list<TestSuiteForRunCreation>
+
+      RunStatusDto:
+        values:
+          - NOT_STARTED
+          - RUNNING
+          - SUCCESS
+          - FAILED
+
+      RunDto:
+        fields:
+          id: integer
+          project_id: integer
+          started_at: datetime
+          status: RunStatusDto
