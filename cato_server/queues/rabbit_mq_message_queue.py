@@ -7,6 +7,10 @@ from cato_server.domain.event import Event
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue, T
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class RabbitMqMessageQueue(AbstractMessageQueue):
     def __init__(self, host):
@@ -57,4 +61,6 @@ class RabbitMqMessageQueue(AbstractMessageQueue):
             message = channel.basic_get(queue=queue_name)
             if message != (None, None, None):
                 method, properties, body = message
-                yield body
+                event_dict = json.loads(body)
+                event = Event(event_dict["name"], event_dict["value"])
+                yield event
