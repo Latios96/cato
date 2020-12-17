@@ -1,6 +1,8 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap");
+@import "../../custom.scss";
+
 .header {
-  background-color: black;
+  background-color: $cato-black;
   height: 60px;
   display: flex;
   align-content: flex-start;

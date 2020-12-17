@@ -1,0 +1,7 @@
+$cato-black: #2d2d2d;
+
+$theme-colors: (
+  "primary": $cato-black,
+  "danger": #ff4136,
+);
+@import "../node_modules/bootstrap/scss/bootstrap";

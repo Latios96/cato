@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import styles from "./LinkCard.module.css";
+import styles from "./LinkCard.module.scss";
 
 interface Props {
   name: string;

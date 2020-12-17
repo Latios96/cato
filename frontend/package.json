@@ -15,6 +15,7 @@
     "@types/react-router-dom": "^5.1.6",
     "bootstrap": "^4.5.3",
     "humanize-duration": "^3.24.0",
+    "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-compare-image": "^3.0.2",
