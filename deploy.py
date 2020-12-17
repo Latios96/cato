@@ -19,6 +19,7 @@ def main():
         print("Current commit is not tagged! Please run bumpversion!")
         exit(1)
     version = tag.name[1:]
+
     print(f"Deploy version {version}..")
 
     static_path = os.path.join('cato_server', 'static')
