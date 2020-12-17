@@ -126,16 +126,14 @@ class RunsBlueprint(Blueprint):
 
         def format_sse(events) -> str:
             for e in events:
-                run = e.value
-                run["status"] = "NOT_STARTED"
-                message = f"event:{e.event_name}\ndata:{json.dumps(run)}\n\n"
+                message = f"event:{e.event_name}\ndata:{json.dumps(e.value)}\n\n"
                 logger.info("Sending SSE %s", message)
                 yield message
 
         response = flask.Response(
             format_sse(
                 message_queue.get_event_stream(
-                    "run_events", str(project_id), self._run_class_mapper
+                    "run_events", str(project_id), self._run_dto_class_mapper
                 )
             ),
             mimetype="text/event-stream",

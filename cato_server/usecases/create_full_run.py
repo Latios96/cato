@@ -11,12 +11,14 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.run_class_mapper import RunClassMapper
+from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.abstract_test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ class CreateFullRunUsecase:
         self._suite_result_repository = suite_result_repository
         self._test_result_repository = test_result_repository
         self._message_queue = message_queue
-        self._run_mapper = RunClassMapper()
+        self._run_dto_class_mapper = RunDtoClassMapper()
 
     def create_full_run(self, create_full_run_dto: CreateFullRunDto):
         run = Run(
@@ -81,12 +83,18 @@ class CreateFullRunUsecase:
             )
         if self._message_queue.is_available():
             logger.info("Message queue is  available, sending RUN_CREATED event")
-            run_created_event = Event("RUN_CREATED", run)
+            run_dto = RunDto(
+                id=run.id,
+                project_id=run.id,
+                started_at=run.started_at.isoformat(),
+                status=RunStatusDto.NOT_STARTED,
+            )
+            run_created_event = Event("RUN_CREATED", run_dto)
             self._message_queue.component.send_event(
                 "run_events",
                 str(create_full_run_dto.project_id),
                 run_created_event,
-                self._run_mapper,
+                self._run_dto_class_mapper,
             )
             logger.info("Published event %s", run_created_event)
         else:
