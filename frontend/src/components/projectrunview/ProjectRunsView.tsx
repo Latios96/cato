@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, useEffect } from "react";
 import Run from "../../models/Run";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
@@ -30,7 +30,17 @@ class ProjectRunsView extends Component<Props, State> {
 
   componentDidMount() {
     this.update();
-    this.interval = setInterval(() => this.fetchRuns(), 10000);
+    let eventSource = new EventSource(
+      "http://localhost:5000/api/v1/runs/events/" + this.props.projectId
+    );
+
+    eventSource.addEventListener("RUN_CREATED", (e) => {
+      // @ts-ignore
+      let message = JSON.parse(e.data);
+      let runs = this.state.runs;
+      runs.unshift(message);
+      this.setState({ runs: runs });
+    });
   }
 
   componentWillUnmount() {
