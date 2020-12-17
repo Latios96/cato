@@ -1,15 +1,16 @@
+import logging
 from dataclasses import dataclass
-
-import pika
 from typing import Type, Any
 
+import pika
 import pinject
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
+from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -41,10 +42,6 @@ from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.configuration.app_configuration import AppConfiguration
-
-import logging
-
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
 
 logger = logging.getLogger(__name__)
@@ -167,7 +164,7 @@ class BindingsFactory:
                 Base.metadata.create_all(engine)
             return engine
         pool_size = 10
-        max_overflow = 20
+        max_overflow = 100
         logger.info(
             "Creating engine with pool_size=%s and max_overflow=%s",
             pool_size,
