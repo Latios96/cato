@@ -157,3 +157,8 @@ task lint{
     dependsOn 'lintPython'
     dependsOn ':frontend:lintTypescript'
 }
+
+task buildConjure{
+    dependsOn 'copyConjurePythonModels'
+    dependsOn ':frontend:copyConjureTypescriptModels'
+}
