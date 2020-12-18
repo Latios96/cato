@@ -78,7 +78,19 @@ def test_get_path(sessionmaker_fixture, tmp_path, test_resource_provider):
     path = file_storage.get_path(f)
 
     assert path
-    assert path == os.path.join(str(tmp_path), str(f.hash), "0.png")
+    assert path == os.path.join(
+        str(tmp_path),
+        "7d",
+        "9d",
+        "64",
+        "90",
+        "22",
+        "a6",
+        "5f",
+        "a9",
+        str(f.hash),
+        "0.png",
+    )
 
 
 def test_find_by_id(sessionmaker_fixture, tmp_path, test_resource_provider):
@@ -112,8 +124,14 @@ def test_save_same_file_should_store_one_file_on_disk(
     assert f1.id != f2.id
     assert f1.hash == f2.hash
 
-    assert os.listdir(str(tmp_path)) == [f1.hash]
-    assert os.listdir(os.path.join(str(tmp_path), f1.hash)) == ["0.png"]
+    assert os.listdir(
+        os.path.join(str(tmp_path), "7d", "9d", "64", "90", "22", "a6", "5f", "a9")
+    ) == [f1.hash]
+    assert os.listdir(
+        os.path.join(
+            str(tmp_path), "7d", "9d", "64", "90", "22", "a6", "5f", "a9", f1.hash
+        )
+    ) == ["0.png"]
 
 
 def test_save_different_files_should_store_two_files_on_disk(
@@ -133,9 +151,17 @@ def test_save_different_files_should_store_two_files_on_disk(
     assert f1.id != f2.id
     assert f1.hash != f2.hash
 
-    assert set(os.listdir(str(tmp_path))) == {f1.hash, f2.hash}
-    assert os.listdir(os.path.join(str(tmp_path), f1.hash)) == ["0.png"]
-    assert os.listdir(os.path.join(str(tmp_path), f2.hash)) == ["0.png"]
+    assert set(os.listdir(str(tmp_path))) == {f1.hash[0:2], f2.hash[0:2]}
+    assert os.listdir(
+        os.path.join(
+            str(tmp_path), "7d", "9d", "64", "90", "22", "a6", "5f", "a9", f1.hash
+        )
+    ) == ["0.png"]
+    assert os.listdir(
+        os.path.join(
+            str(tmp_path), "a3", "f9", "d3", "7f", "98", "64", "95", "73", f2.hash
+        )
+    ) == ["0.png"]
 
 
 def test_hash_collision_should_store_into_next_value_counter(
@@ -164,5 +190,11 @@ def test_hash_collision_should_store_into_next_value_counter(
     assert f1.id != f2.id
     assert f1.hash == f2.hash
 
-    assert set(os.listdir(str(tmp_path))) == {f1.hash}
-    assert set(os.listdir(os.path.join(str(tmp_path), f1.hash))) == {"0.png", "1.png"}
+    assert set(os.listdir(str(tmp_path))) == {f1.hash[0:2]}
+    assert set(
+        os.listdir(
+            os.path.join(
+                str(tmp_path), "7d", "9d", "64", "90", "22", "a6", "5f", "a9", f1.hash
+            )
+        )
+    ) == {"0.png", "1.png"}

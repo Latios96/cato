@@ -127,7 +127,18 @@ class SqlAlchemyDeduplicatingFileStorage(
         return True, next_value_counter
 
     def _get_bucket_folder(self, hash):
-        return os.path.join(self._root_path, hash)
+        return os.path.join(
+            self._root_path,
+            hash[0:2],
+            hash[2:4],
+            hash[4:6],
+            hash[6:8],
+            hash[8:10],
+            hash[10:12],
+            hash[12:14],
+            hash[14:16],
+            hash,
+        )
 
     def _existing_entries(self, file):
         names = os.listdir(self._get_bucket_folder(file.hash))
