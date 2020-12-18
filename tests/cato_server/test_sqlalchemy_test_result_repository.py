@@ -225,3 +225,39 @@ def test_find_execution_status_by_project_id_should_not_find(
     result = repository.find_execution_status_by_project_id(42)
 
     assert result == {}
+
+
+def test_test_count_by_run_id_should_find_one(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.test_count_by_run_id(run.id) == 1
+
+
+def test_test_count_by_run_id_should_find_nothing(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.test_count_by_run_id(run.id) == 0
+
+
+def test_failed_test_count_by_run_id_should_find_nothing(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.failed_test_count_by_run_id(run.id) == 0
+
+
+def test_failed_test_count_by_run_id_should_find_nothing_because_only_success(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.failed_test_count_by_run_id(run.id) == 0
+
+
+def test_failed_test_count_by_run_id_should_find_one(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.status = TestStatus.FAILED
+    repository.save(test_result)
+
+    assert repository.failed_test_count_by_run_id(run.id) == 1

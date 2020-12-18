@@ -207,3 +207,30 @@ class SqlAlchemyTestResultRepository(
             )
 
         return status_by_run_id
+
+    def test_count_by_run_id(self, run_id: int) -> int:
+        session = self._session_maker()
+
+        entities = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .count()
+        )
+        session.close()
+        return entities
+
+    def failed_test_count_by_run_id(self, run_id: int) -> int:
+        session = self._session_maker()
+
+        entities = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .filter(_TestResultMapping.status == "FAILED")
+            .count()
+        )
+        session.close()
+        return entities

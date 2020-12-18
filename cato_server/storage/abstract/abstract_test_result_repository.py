@@ -34,3 +34,9 @@ class TestResultRepository(AbstractRepository):
         self, project_id: int
     ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
         raise NotImplementedError()
+
+    def test_count_by_run_id(self, run_id: int) -> int:
+        raise NotImplementedError()
+
+    def failed_test_count_by_run_id(self, run_id: int) -> int:
+        raise NotImplementedError()
