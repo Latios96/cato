@@ -2,7 +2,7 @@ import dataclasses
 from collections import defaultdict
 from typing import Optional, Iterable, Set, Tuple, Dict
 
-from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime
+from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
@@ -211,7 +211,7 @@ class SqlAlchemyTestResultRepository(
     def test_count_by_run_id(self, run_id: int) -> int:
         session = self._session_maker()
 
-        entities = (
+        count = (
             session.query(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
@@ -219,12 +219,12 @@ class SqlAlchemyTestResultRepository(
             .count()
         )
         session.close()
-        return entities
+        return count
 
     def failed_test_count_by_run_id(self, run_id: int) -> int:
         session = self._session_maker()
 
-        entities = (
+        count = (
             session.query(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
@@ -233,4 +233,17 @@ class SqlAlchemyTestResultRepository(
             .count()
         )
         session.close()
-        return entities
+        return count
+
+    def duration_by_run_id(self, run_id: int) -> float:
+        session = self._session_maker()
+
+        summed_duration = (
+            session.query(func.sum(_TestResultMapping.seconds).label("duration"))
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .scalar()
+        )
+        session.close()
+        return summed_duration if summed_duration is not None else 0

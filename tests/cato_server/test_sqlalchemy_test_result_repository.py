@@ -261,3 +261,23 @@ def test_failed_test_count_by_run_id_should_find_one(
     repository.save(test_result)
 
     assert repository.failed_test_count_by_run_id(run.id) == 1
+
+
+def test_duration_by_run_id_single_test(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.duration_by_run_id(run.id) == test_result.seconds
+
+
+def test_duration_by_run_id_multiple_test(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    repository.save(test_result)
+
+    assert repository.duration_by_run_id(run.id) == 10
+
+
+def test_duration_by_run_id_no_tests(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.duration_by_run_id(run.id) == 0

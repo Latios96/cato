@@ -40,3 +40,6 @@ class TestResultRepository(AbstractRepository):
 
     def failed_test_count_by_run_id(self, run_id: int) -> int:
         raise NotImplementedError()
+
+    def duration_by_run_id(self, run_id: int) -> float:
+        raise NotImplementedError()
