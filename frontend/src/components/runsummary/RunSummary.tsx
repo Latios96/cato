@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 import { formatDuration } from "../../utils";
-import { RunStatusDto, RunSummaryDto } from "../../catoapimodels";
-import { Spinner } from "react-bootstrap";
+import { RunSummaryDto } from "../../catoapimodels";
+import { Spinner, Tab, Tabs } from "react-bootstrap";
 
 interface Props {
   runId: number;
@@ -11,12 +11,17 @@ interface Props {
 interface State {
   runSummaryDto: RunSummaryDto | null;
   isLoadingSummary: boolean;
+  currentTab: string;
 }
 
 class RunSummary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { runSummaryDto: null, isLoadingSummary: false };
+    this.state = {
+      runSummaryDto: null,
+      isLoadingSummary: false,
+      currentTab: "suites",
+    };
   }
 
   componentDidMount() {
@@ -66,6 +71,20 @@ class RunSummary extends Component<Props, State> {
         ) : (
           <React.Fragment />
         )}
+        <div className={styles.runContent}>
+          <Tabs
+            id="controlled-tab-example"
+            activeKey={this.state.currentTab}
+            onSelect={(k) => this.setState({ currentTab: k ? k : "suites" })}
+          >
+            <Tab eventKey="suites" title="suites">
+              Suites
+            </Tab>
+            <Tab eventKey="tests" title="tests">
+              Tests
+            </Tab>
+          </Tabs>
+        </div>
       </div>
     );
   }
