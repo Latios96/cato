@@ -20,9 +20,20 @@ task yarnInstallDependencies(type: YarnTask) {
   outputs.file('yarnInstallDependencies')
 }
 
+task copyConjureTypescriptModels {
+    dependsOn(':cato-api-models:compileConjureTypeScript')
+    dependsOn(':cato-api-models:fixTypescriptNames')
+    doLast {
+        copy {
+            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
+            into "${rootDir}/frontend/src/catoapimodels"
+        }
+    }
+}
+
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
-    dependsOn(':cato-api-models:compileConjureTypeScript')
+    dependsOn('copyConjureTypescriptModels')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')
@@ -35,13 +46,3 @@ task lintTypescript(type: YarnTask) {
     outputs.file('esLintSuccess')
 }
 
-task copyConjureTypescriptModels {
-    dependsOn(':cato-api-models:compileConjureTypeScript')
-    dependsOn(':cato-api-models:fixTypescriptNames')
-    doLast {
-        copy {
-            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
-            into "${rootDir}/frontend/src/catoapimodels"
-        }
-    }
-}
