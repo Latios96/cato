@@ -5,6 +5,8 @@ import styles from "./ProjectRunsView.module.scss";
 import { formatTime } from "../../utils";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 import { RunDto } from "../../catoapimodels";
+import { Check2All, Hourglass } from "react-bootstrap-icons";
+import { XCircleIcon } from "@primer/octicons-react";
 
 interface Props {
   run: RunDto;
@@ -46,13 +48,13 @@ class RunListEntryComponent extends Component<Props, State> {
 
   renderRunStatus = (status: string, isCurrentEntry: boolean) => {
     if (status === "NOT_STARTED") {
-      return <span>☐</span>;
+      return <Hourglass size={27} />;
     } else if (status === "RUNNING") {
       return <RenderingBucketIcon isActive={isCurrentEntry} />;
     } else if (status === "SUCCESS") {
-      return "✔";
+      return <Check2All color="green" size={27} />;
     } else if (status === "FAILED") {
-      return "❌";
+      return <XCircleIcon size={27} className={styles.errorIcon} />;
     }
     return <span />;
   };
