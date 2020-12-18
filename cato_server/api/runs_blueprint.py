@@ -5,7 +5,7 @@ import flask
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
-from cato_api_models.catoapimodels import RunDto, RunStatusDto
+from cato_api_models.catoapimodels import RunDto, RunStatusDto, RunSummaryDto
 from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
@@ -18,6 +18,7 @@ from cato_server.mappers.create_full_run_dto_class_mapper import (
 )
 from cato_server.mappers.run_class_mapper import RunClassMapper
 from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
+from cato_server.mappers.run_summary_dto_class_mapper import RunSummaryDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -25,6 +26,7 @@ from cato_server.storage.abstract.abstract_test_result_repository import (
 )
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
 
 logger = logging.getLogger(__name__)
@@ -38,6 +40,7 @@ class RunsBlueprint(Blueprint):
         test_result_repository: TestResultRepository,
         create_full_run_usecase: CreateFullRunUsecase,
         message_queue: OptionalComponent[AbstractMessageQueue],
+        suite_result_repository: SuiteResultRepository,
     ):
         super(RunsBlueprint, self).__init__("runs", __name__)
         self._run_repository = run_repository
@@ -45,15 +48,18 @@ class RunsBlueprint(Blueprint):
         self._test_result_repository = test_result_repository
         self._create_full_run_usecase = create_full_run_usecase
         self._message_queue = message_queue
+        self._suite_result_repository = suite_result_repository
 
         self._run_class_mapper = RunClassMapper()
         self._run_status_calculator = RunStatusCalculator()
         self._run_dto_class_mapper = RunDtoClassMapper()
+        self._run_summary_dto_class_mapper = RunSummaryDtoClassMapper()
 
         self.route("/runs/project/<project_id>", methods=["GET"])(self.run_by_project)
         self.route("/runs", methods=["POST"])(self.create_run)
         self.route("/runs/full", methods=["POST"])(self.create_full_run)
         self.route("/runs/<int:run_id>/status", methods=["GET"])(self.status)
+        self.route("/runs/<int:run_id>/summary", methods=["GET"])(self.summary)
 
         if self._message_queue.is_available():
             logger.info("Message queue is available, adding run events route")
@@ -134,3 +140,36 @@ class RunsBlueprint(Blueprint):
         )
         response.headers["Access-Control-Allow-Origin"] = "*"
         return response
+
+    def summary(self, run_id):
+        run = self._run_repository.find_by_id(run_id)
+        if not run:
+            abort(404)
+        status_by_run_id = (
+            self._test_result_repository.find_execution_status_by_project_id(
+                run.project_id
+            )
+        )
+        status = self._run_status_calculator.calculate(
+            status_by_run_id.get(run.id, set())
+        )
+        run_dto = RunDto(
+            id=run.id,
+            project_id=run.id,
+            started_at=run.started_at.isoformat(),
+            status=RunStatusDto(status),
+        )
+        suite_count = self._suite_result_repository.suite_count_by_run_id(run_id)
+        test_count = self._test_result_repository.test_count_by_run_id(run_id)
+        failed_test_count = self._test_result_repository.failed_test_count_by_run_id(
+            run_id
+        )
+        duration = self._test_result_repository.duration_by_run_id(run_id)
+        run_summary_dto = RunSummaryDto(
+            run=run_dto,
+            suite_count=suite_count,
+            test_count=test_count,
+            failed_test_count=failed_test_count,
+            duration=duration,
+        )
+        return jsonify(self._run_summary_dto_class_mapper.map_to_dict(run_summary_dto))

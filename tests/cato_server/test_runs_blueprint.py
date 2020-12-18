@@ -60,3 +60,27 @@ def test_get_status_404(client, run):
     rv = client.get(f"/api/v1/runs/{run.id}/status")
 
     assert rv.status_code == 404
+
+
+def test_get_run_summary(client, run, test_result):
+    rv = client.get(f"/api/v1/runs/{run.id}/summary")
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "duration": 5.0,
+        "failedTestCount": 0,
+        "run": {
+            "id": 1,
+            "project_id": 1,
+            "started_at": run.started_at.isoformat(),
+            "status": "NOT_STARTED",
+        },
+        "suiteCount": 1,
+        "testCount": 1,
+    }
+
+
+def test_get_run_summary_shold_error(client):
+    rv = client.get("/api/v1/runs/42/summary")
+
+    assert rv.status_code == 404
