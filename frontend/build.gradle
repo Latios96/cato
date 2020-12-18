@@ -12,18 +12,8 @@ task formatTypescript(type: YarnTask) {
     outputs.file('formatTypescriptSuccess')
 }
 
-task copyConjureTypescriptModels {
-    dependsOn(':cato-api-models:compileConjureTypeScript')
-    doLast {
-        copy {
-            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
-            into "${rootDir}/frontend/src/catoapimodels"
-        }
-    }
-}
 
 task yarnInstallDependencies(type: YarnTask) {
-    dependsOn 'copyConjureTypescriptModels'
   args = ['install']
   inputs.file('package.json')
   inputs.file('yarn.lock')
