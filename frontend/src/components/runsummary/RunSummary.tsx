@@ -1,42 +1,47 @@
 import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 import { formatDuration } from "../../utils";
-import { RunDto, RunStatusDto } from "../../catoapimodels";
+import { RunStatusDto, RunSummaryDto } from "../../catoapimodels";
 
 interface Props {
   runId: number;
 }
 
-interface IRunInfoDto {
-  run: RunDto;
-  suiteCount: number;
-  testCount: number;
-  failedTestCount: number;
-  duration: number;
-}
-
 interface State {
-  runInfo: IRunInfoDto;
+  runSummaryDto: RunSummaryDto | null;
 }
 
 class RunSummary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      runInfo: {
-        run: {
-          id: 3,
-          project_id: 3,
-          started_at: "sdfsd",
-          status: RunStatusDto.SUCCESS,
-        },
-        suiteCount: 2,
-        testCount: 22,
-        failedTestCount: 13,
-        duration: 82,
-      },
-    };
+    this.state = { runSummaryDto: null };
   }
+
+  componentDidMount() {
+    this.fetchRunSummary();
+  }
+  componentDidUpdate(
+    prevProps: Readonly<Props>,
+    prevState: Readonly<State>,
+    snapshot?: any
+  ) {
+    if (this.props.runId !== prevProps.runId) {
+      this.fetchRunSummary();
+    }
+  }
+
+  fetchRunSummary = () => {
+    fetch(`/api/v1/runs/${this.props.runId}/summary`)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          this.setState({ runSummaryDto: result });
+        },
+        (error) => {
+          console.log(error);
+        }
+      );
+  };
 
   render() {
     return (
@@ -44,27 +49,34 @@ class RunSummary extends Component<Props, State> {
         <h3 className={styles.runSummaryHeadline}>
           Run Summary: #{this.props.runId}
         </h3>
-        <div className={styles.runSummaryInfoBox}>
-          {this.renderInfoBoxElement(
-            "" + this.state.runInfo.suiteCount,
-            "suites"
-          )}
-          {this.renderInfoBoxElement(
-            "" + this.state.runInfo.testCount,
-            "tests"
-          )}
-          {this.renderInfoBoxElement(
-            "" + this.state.runInfo.failedTestCount,
-            "failed tests"
-          )}
-          {this.renderInfoBoxElement(
-            "" + formatDuration(this.state.runInfo.duration),
-            "duration"
-          )}
-        </div>
+        {this.state.runSummaryDto ? (
+          this.renderInfoBox(this.state.runSummaryDto)
+        ) : (
+          <React.Fragment />
+        )}
       </div>
     );
   }
+
+  renderInfoBox = (runSummaryDto: RunSummaryDto) => {
+    return (
+      <div className={styles.runSummaryInfoBox}>
+        {this.renderInfoBoxElement("" + runSummaryDto.suiteCount, "suites")}
+        {this.renderInfoBoxElement("" + runSummaryDto.testCount, "tests")}
+        {this.renderInfoBoxElement(
+          "" + runSummaryDto.failedTestCount,
+          "failed tests"
+        )}
+        {this.renderInfoBoxElement(
+          "" +
+            formatDuration(
+              runSummaryDto.duration !== "NaN" ? runSummaryDto.duration : 0
+            ),
+          "duration"
+        )}
+      </div>
+    );
+  };
 
   renderInfoBoxElement = (value: string, name: string) => {
     return (
