@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 import { formatDuration } from "../../utils";
 import { RunStatusDto, RunSummaryDto } from "../../catoapimodels";
+import { Spinner } from "react-bootstrap";
 
 interface Props {
   runId: number;
@@ -9,12 +10,13 @@ interface Props {
 
 interface State {
   runSummaryDto: RunSummaryDto | null;
+  isLoadingSummary: boolean;
 }
 
 class RunSummary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { runSummaryDto: null };
+    this.state = { runSummaryDto: null, isLoadingSummary: false };
   }
 
   componentDidMount() {
@@ -31,16 +33,18 @@ class RunSummary extends Component<Props, State> {
   }
 
   fetchRunSummary = () => {
-    fetch(`/api/v1/runs/${this.props.runId}/summary`)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ runSummaryDto: result });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
+    this.setState({ isLoadingSummary: true }, () => {
+      fetch(`/api/v1/runs/${this.props.runId}/summary`)
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            this.setState({ runSummaryDto: result, isLoadingSummary: false });
+          },
+          (error) => {
+            console.log(error);
+          }
+        );
+    });
   };
 
   render() {
@@ -49,7 +53,15 @@ class RunSummary extends Component<Props, State> {
         <h3 className={styles.runSummaryHeadline}>
           Run Summary: #{this.props.runId}
         </h3>
-        {this.state.runSummaryDto ? (
+        {this.state.isLoadingSummary ? (
+          <div className={styles.runSummaryInfoBox}>
+            <div className={styles.infoBoxLoading}>
+              <Spinner animation="border" role="status">
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            </div>
+          </div>
+        ) : this.state.runSummaryDto ? (
           this.renderInfoBox(this.state.runSummaryDto)
         ) : (
           <React.Fragment />
