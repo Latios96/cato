@@ -67,3 +67,14 @@ class SqlAlchemySuiteResultRepository(
         session.close()
         if entity:
             return self.to_domain_object(entity)
+
+    def suite_count_by_run_id(self, run_id: int) -> int:
+        session = self._session_maker()
+
+        count = (
+            session.query(_SuiteResultMapping.id)
+            .filter(self.mapping_cls().run_entity_id == run_id)
+            .count()
+        )
+        session.close()
+        return count
