@@ -4,10 +4,10 @@ import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
 import { formatTime } from "../../utils";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
-import { IRunDto } from "../../../../cato-api-models/cato-api-models-typescript/src";
+import { RunDto } from "../../catoapimodels";
 
 interface Props {
-  run: IRunDto;
+  run: RunDto;
   isCurrentEntry: boolean;
   link: string;
 }

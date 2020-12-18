@@ -1,14 +1,14 @@
 import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 import { formatDuration } from "../../utils";
-import { IRunDto, RunStatusDto } from "../../catoapimodels";
+import { RunDto, RunStatusDto } from "../../catoapimodels";
 
 interface Props {
   runId: number;
 }
 
 interface IRunInfoDto {
-  run: IRunDto;
+  run: RunDto;
   suiteCount: number;
   testCount: number;
   failedTestCount: number;
