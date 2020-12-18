@@ -1,8 +1,8 @@
 import React from "react";
-import TestResult from "../../models/TestResult";
-import { formatDuration, formatTime } from "../../utils";
-import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
-import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
+import TestResult from "../../../models/TestResult";
+import { formatDuration, formatTime } from "../../../utils";
+import DisplayLogComponent from "../../displaylogcomponent/DisplayLogComponent";
+import MultiChannelImageComparison from "../../imagecomparison/MultiChannelImageComparison";
 
 interface Props {
   result: TestResult;

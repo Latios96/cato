@@ -1,7 +1,7 @@
 import React from "react";
-import TestResult from "../../models/TestResult";
-import { formatTime } from "../../utils";
-import RenderingBucketIcon from "../icons/RenderingBucketIcon";
+import TestResult from "../../../models/TestResult";
+import RenderingBucketIcon from "../../icons/RenderingBucketIcon";
+import { formatTime } from "../../../utils";
 
 interface Props {
   result: TestResult;

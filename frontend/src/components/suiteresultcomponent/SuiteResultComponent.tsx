@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import { Card } from "react-bootstrap";
 import SuiteResult from "../../models/SuiteResult";
 import TestResult from "../../models/TestResult";
-import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
 import styles from "./SuiteResultComponent.module.css";
-import FinishedTestResultComponent from "./FinishedTestResultComponent";
+import FinishedTestResultComponent from "./internal/FinishedTestResultComponent";
+import WaitingOrRunningTestResultComponent from "./internal/WaitingOrRunningTestResultComponent";
 interface Props {
   suiteResult: SuiteResult;
 }
