@@ -10,3 +10,7 @@ conjure {
         version = "0.0.0"
     }
 }
+task fixTypescriptNames(type: PythonTask){
+    dependsOn('compileConjureTypeScript')
+    command = 'fix_typescript_names.py'
+}

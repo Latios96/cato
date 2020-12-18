@@ -41,3 +41,11 @@ types:
           project_id: integer
           started_at: datetime
           status: RunStatusDto
+
+      RunSummaryDto:
+        fields:
+          run: RunDto
+          suiteCount: integer
+          testCount: integer
+          failedTestCount: integer
+          duration: double

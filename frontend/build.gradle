@@ -34,3 +34,14 @@ task lintTypescript(type: YarnTask) {
     inputs.dir('src')
     outputs.file('esLintSuccess')
 }
+
+task copyConjureTypescriptModels {
+    dependsOn(':cato-api-models:compileConjureTypeScript')
+    dependsOn(':cato-api-models:fixTypescriptNames')
+    doLast {
+        copy {
+            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
+            into "${rootDir}/frontend/src/catoapimodels"
+        }
+    }
+}

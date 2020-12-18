@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 import { formatDuration } from "../../utils";
-import { IRunDto, RunStatusDto } from "../../generated";
+import { IRunDto, RunStatusDto } from "../../catoapimodels";
 
 interface Props {
   runId: number;
