@@ -5,8 +5,8 @@ import styles from "./ProjectRunsView.module.scss";
 import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import RunListEntryComponent from "./RunListEntryComponent";
-import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
-import { IRunDto } from "../../../../cato-api-models/cato-api-models-typescript/src";
+import RunSummary from "../runsummary/RunSummary";
+import { IRunDto } from "../../generated";
 
 interface Props {
   projectId: number;
@@ -75,9 +75,9 @@ class ProjectRunsView extends Component<Props, State> {
             })}
           </ListGroup>
           <div className={styles.suiteResult}>
-            {this.state.currentSuiteResults.length !== 0
-              ? this.renderSuiteResults(this.state.currentSuiteResults)
-              : this.renderSuiteResultsPlaceholder()}
+            {this.props.currentRunId
+              ? this.renderRunSummary()
+              : this.renderRunSummaryPlaceholder()}
           </div>
         </div>
       </div>
@@ -132,17 +132,19 @@ class ProjectRunsView extends Component<Props, State> {
       );
   };
 
-  renderSuiteResults = (suiteResults: SuiteResult[]) => {
-    return suiteResults.map((suiteResult: SuiteResult) => {
-      return (
-        <div>
-          <SuiteResultComponent suiteResult={suiteResult} />
-        </div>
-      );
-    });
+  renderRunSummary = () => {
+    return (
+      <div>
+        {this.props.currentRunId ? (
+          <RunSummary runId={this.props.currentRunId} />
+        ) : (
+          <React.Fragment />
+        )}
+      </div>
+    );
   };
 
-  renderSuiteResultsPlaceholder = () => {
+  renderRunSummaryPlaceholder = () => {
     return (
       <div>
         <span className={styles.suiteResultsPlaceholder}>
