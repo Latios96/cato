@@ -1,25 +1,25 @@
 import React from "react";
-import TestResult from "../../models/TestResult";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 import { formatTime } from "../../utils";
+import { TestResultDto } from "../../catoapimodels";
 
 interface Props {
-  result: TestResult;
+  result: TestResultDto;
 }
 
 function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
       <p>
-        {props.result.execution_status === "NOT_STARTED" ? (
+        {props.result.executionStatus === "NOT_STARTED" ? (
           "waiting to start"
         ) : (
           <RenderingBucketIcon isActive={false} />
         )}
       </p>
       <p>
-        {props.result.started_at
-          ? "started: " + formatTime(props.result.started_at)
+        {props.result.startedAt
+          ? "started: " + formatTime(props.result.startedAt)
           : ""}
       </p>
     </div>

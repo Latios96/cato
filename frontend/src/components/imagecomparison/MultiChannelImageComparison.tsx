@@ -1,16 +1,15 @@
 import React, { Component } from "react";
 import CatoImage from "../../models/CatoImage";
 import ImageComparison from "./ImageComparison";
+import { ImageDto } from "../../catoapimodels";
 
 interface Props {
-  imageOutputId: number;
-  referenceImageId: number;
+  imageOutput: ImageDto;
+  referenceImage: ImageDto;
 }
 
 interface State {
   imageOutputHasLoaded: boolean;
-  imageOutput: CatoImage | null;
-  referenceImage: CatoImage | null;
   selectedChannel: string;
   width: number;
   height: number;
@@ -21,44 +20,21 @@ class MultiChannelImageComparison extends Component<Props, State> {
     super(props);
     this.state = {
       imageOutputHasLoaded: false,
-      imageOutput: null,
-      referenceImage: null,
       selectedChannel: "rgb",
       width: 0,
       height: 0,
     };
   }
 
-  componentDidMount() {
-    fetch("/api/v1/images/" + this.props.imageOutputId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ imageOutput: result });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-    fetch("/api/v1/images/" + this.props.referenceImageId)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ referenceImage: result });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
+  componentDidMount() {}
 
   render() {
     return (
       <div style={this.state.height ? { height: this.state.height } : {}}>
-        {this.state.imageOutput && this.state.referenceImage ? (
+        {this.props.imageOutput && this.props.referenceImage ? (
           this.renderImageComparison(
-            this.state.imageOutput,
-            this.state.referenceImage
+            this.props.imageOutput,
+            this.props.referenceImage
           )
         ) : (
           <React.Fragment />
@@ -67,10 +43,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   }
 
-  renderImageComparison = (
-    imageOutput: CatoImage,
-    referenceImage: CatoImage
-  ) => {
+  renderImageComparison = (imageOutput: ImageDto, referenceImage: ImageDto) => {
     return (
       <React.Fragment>
         <select onChange={this.handleChange}>
@@ -99,15 +72,15 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   };
 
-  channelFileIdByName = (image: CatoImage, name: string) => {
+  channelFileIdByName = (image: ImageDto, name: string) => {
     let channel = this.channelByName(image, name);
     if (channel === null) {
       return null;
     }
-    return channel.file_id;
+    return channel.fileId;
   };
 
-  channelByName = (image: CatoImage, name: string) => {
+  channelByName = (image: ImageDto, name: string) => {
     let index = image.channels.findIndex((ch) => {
       return ch.name === name;
     });

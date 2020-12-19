@@ -1,29 +1,29 @@
 import React from "react";
-import TestResult from "../../models/TestResult";
 import { formatDuration, formatTime } from "../../utils";
 import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
+import { TestResultDto } from "../../catoapimodels";
 
 interface Props {
-  result: TestResult;
+  result: TestResultDto;
 }
 
 function FinishedTestResultComponent(props: Props) {
   return (
     <div>
       <p>
-        {props.result.started_at
-          ? "started: " + formatTime(props.result.started_at)
+        {props.result.startedAt
+          ? "started: " + formatTime(props.result.startedAt)
           : ""}
       </p>
 
       <p>
-        {props.result.finished_at
-          ? "finished: " + formatTime(props.result.finished_at)
+        {props.result.finishedAt
+          ? "finished: " + formatTime(props.result.finishedAt)
           : ""}
       </p>
       <p>
-        {props.result.seconds != null
+        {props.result.seconds != null && props.result.seconds !== "NaN"
           ? "duration: " + formatDuration(props.result.seconds)
           : ""}
       </p>
@@ -36,22 +36,22 @@ function FinishedTestResultComponent(props: Props) {
   );
 }
 
-function renderFailureInformation(result: TestResult): React.ReactNode {
+function renderFailureInformation(result: TestResultDto): React.ReactNode {
   return (
     <div>
       <p>{"message: " + result.message}</p>
-      <p>Command: "{result.test_command}"</p>
+      <p>Command: "{result.testCommand}"</p>
     </div>
   );
 }
 
-function renderImages(result: TestResult): React.ReactNode {
+function renderImages(result: TestResultDto): React.ReactNode {
   return (
     <React.Fragment>
-      {result.image_output ? (
+      {result.imageOutput && result.referenceImage ? (
         <MultiChannelImageComparison
-          imageOutputId={result.image_output}
-          referenceImageId={result.reference_image ? result.reference_image : 0}
+          imageOutput={result.imageOutput}
+          referenceImage={result.referenceImage}
         />
       ) : (
         ""

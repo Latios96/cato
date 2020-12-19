@@ -1,14 +1,14 @@
 import React, { useEffect, useState } from "react";
-import TestResult from "../../models/TestResult";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
+import { TestResultDto } from "../../catoapimodels";
 
 interface Props {
   resultId: number;
 }
 
 function TestResultComponent(props: Props) {
-  let [result, setResult] = useState<TestResult>();
+  let [result, setResult] = useState<TestResultDto>();
 
   useEffect(() => {
     fetch(`/api/v1/test_results/${props.resultId}`)
@@ -23,8 +23,8 @@ function TestResultComponent(props: Props) {
       );
   }, [props.resultId]);
 
-  let renderTestResult = (testResult: TestResult) => {
-    if (testResult.execution_status === "FINISHED") {
+  let renderTestResult = (testResult: TestResultDto) => {
+    if (testResult.executionStatus === "FINISHED") {
       return <FinishedTestResultComponent result={testResult} />;
     }
     return <WaitingOrRunningTestResultComponent result={testResult} />;
