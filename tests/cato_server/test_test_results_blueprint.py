@@ -283,21 +283,31 @@ def test_get_test_result_by_id(client, test_result):
 
     assert rv.status_code == 200
     assert rv.get_json() == {
-        "execution_status": "NOT_STARTED",
-        "finished_at": test_result.finished_at.isoformat(),
+        "executionStatus": "NOT_STARTED",
+        "finishedAt": test_result.finished_at.isoformat(),
         "id": 1,
-        "image_output": 1,
-        "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+        "imageOutput": {
+            "channels": [{"fileId": 1, "id": 1, "name": "rgb"}],
+            "id": 1,
+            "name": "test.exr",
+            "originalFileId": 1,
+        },
+        "machineInfo": {"cores": 56, "cpu_name": "cpu", "memory": 8},
         "message": "sucess",
-        "reference_image": 1,
+        "referenceImage": {
+            "channels": [{"fileId": 1, "id": 1, "name": "rgb"}],
+            "id": 1,
+            "name": "test.exr",
+            "originalFileId": 1,
+        },
         "seconds": 5.0,
-        "started_at": test_result.started_at.isoformat(),
+        "startedAt": test_result.started_at.isoformat(),
         "status": "SUCCESS",
-        "suite_result_id": 1,
-        "test_command": "my_command",
-        "test_identifier": "my_suite/my_test_name",
-        "test_name": "my_test_name",
-        "test_variables": {"testkey": "test_value"},
+        "suiteResultId": 1,
+        "testCommand": "my_command",
+        "testIdentifier": "my_suite/my_test_name",
+        "testName": "my_test_name",
+        "testVariables": {"testkey": "test_value"},
     }
 
 
