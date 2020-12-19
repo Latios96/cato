@@ -70,7 +70,9 @@ class ProjectRunsView extends Component<Props, State> {
                   key={r.id}
                   run={r}
                   isCurrentEntry={this.isCurrentEntry(r)}
-                  link={`/projects/${this.props.projectId}/runs/${r.id}/suites`}
+                  link={`/projects/${this.props.projectId}/runs/${r.id}/${
+                    this.props.currentTab ? this.props.currentTab : "suites"
+                  }`}
                 />
               );
             })}
