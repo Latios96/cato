@@ -5,6 +5,10 @@
   margin-left: 20px;
 }
 
+.runListContainer {
+  width: 270px;
+}
+
 .runListEntry {
   width: 270px;
   display: flex !important;
@@ -20,6 +24,7 @@
 
 .projectName {
   margin: 25px;
+  height: 48px;
 }
 .suiteResult {
   margin-left: 60px;

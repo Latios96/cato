@@ -63,14 +63,14 @@ class ProjectRunsView extends Component<Props, State> {
       <div>
         <h1 className={styles.projectName}>{this.state.project?.name}</h1>
         <div className={styles.runsViewContainer}>
-          <ListGroup>
+          <ListGroup className={styles.runListContainer}>
             {this.state.runs.map((r: RunDto) => {
               return (
                 <RunListEntryComponent
                   key={r.id}
                   run={r}
                   isCurrentEntry={this.isCurrentEntry(r)}
-                  link={`/projects/${this.props.projectId}/runs/${r.id}`}
+                  link={`/projects/${this.props.projectId}/runs/${r.id}/suites`}
                 />
               );
             })}
