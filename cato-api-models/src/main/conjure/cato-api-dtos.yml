@@ -49,3 +49,46 @@ types:
           testCount: integer
           failedTestCount: integer
           duration: double
+
+      ExecutionStatusDto:
+        values:
+          - NOT_STARTED
+          - RUNNING
+          - FINISHED
+
+      TestStatusDto:
+        values:
+          - SUCCESS
+          - FAILED
+
+
+      ImageChannelDto:
+        fields:
+          id: integer
+          name: string
+          fileId: integer
+
+      ImageDto:
+        fields:
+          id: integer
+          name: string
+          originalFileId: integer
+          channels: list<ImageChannelDto>
+
+      TestResultDto:
+        fields:
+          id: integer
+          suiteResultId: integer
+          testName: string
+          testIdentifier: string
+          testCommand: string
+          testVariables: map<string, string>
+          machineInfo: MachineInfoDto
+          executionStatus: ExecutionStatusDto
+          status: optional<TestStatusDto>
+          seconds: optional<double>
+          message: optional<string>
+          imageOutput: optional<ImageDto>
+          referenceImage: optional<ImageDto>
+          startedAt: optional<datetime>
+          finishedAt: optional<datetime>
