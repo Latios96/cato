@@ -21,7 +21,7 @@ export default function RunSummaryTabComponent(props: Props) {
     setCurrentTab(props.currentTab);
     if (currentTab === "tests") {
       console.log("fetching tests");
-      fetch(`/api/v1/test_results/${props.runId}`)
+      fetch(`/api/v1/test_results/run/${props.runId}`)
         .then((res) => res.json())
         .then(
           (result) => {

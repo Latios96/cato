@@ -5,6 +5,7 @@ import { Spinner } from "react-bootstrap";
 import RunSummaryTabComponent from "./internal/RunSummaryTabComponent";
 import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils";
+import TestResultComponent from "../testresultcomponent/TestResultComponent";
 
 interface Props {
   projectId: number;
@@ -121,9 +122,13 @@ class RunSummary extends Component<Props, State> {
   renderSuiteOrTest = () => {
     return (
       <div className={styles.suiteOrTestContainer}>
-        {this.props.currentTab === "suites"
-          ? `display suite with id ${this.props.suiteOrTestId}`
-          : `display test with id ${this.props.suiteOrTestId}`}
+        {this.props.currentTab === "suites" ? (
+          `display suite with id ${this.props.suiteOrTestId}`
+        ) : (
+          <TestResultComponent
+            resultId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
+          />
+        )}
       </div>
     );
   };

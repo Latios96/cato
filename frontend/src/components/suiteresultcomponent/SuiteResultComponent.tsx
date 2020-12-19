@@ -3,8 +3,8 @@ import { Card } from "react-bootstrap";
 import SuiteResult from "../../models/SuiteResult";
 import TestResult from "../../models/TestResult";
 import styles from "./SuiteResultComponent.module.css";
-import FinishedTestResultComponent from "./internal/FinishedTestResultComponent";
-import WaitingOrRunningTestResultComponent from "./internal/WaitingOrRunningTestResultComponent";
+import FinishedTestResultComponent from "../testresultcomponent/FinishedTestResultComponent";
+import WaitingOrRunningTestResultComponent from "../testresultcomponent/WaitingOrRunningTestResultComponent";
 interface Props {
   suiteResult: SuiteResult;
 }
