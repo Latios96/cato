@@ -64,7 +64,7 @@ export default function RunSummaryTabComponent(props: Props) {
           <ListGroup>
             {suites.map((suite) => {
               return (
-                <Link to={"test"}>
+                <Link to={`suites/${suite.id}`}>
                   <ListGroup.Item className={styles.listEntry}>
                     {suite.suite_name}
                   </ListGroup.Item>
@@ -79,7 +79,7 @@ export default function RunSummaryTabComponent(props: Props) {
           <ListGroup>
             {tests.map((test) => {
               return (
-                <Link to={"test"}>
+                <Link to={`tests/${test.id}`}>
                   <ListGroup.Item className={styles.listEntry}>
                     {test.test_identifier}
                   </ListGroup.Item>

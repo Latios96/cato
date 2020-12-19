@@ -6,6 +6,7 @@ interface Props {
   projectId: number;
   currentRunId: number | null;
   currentTab: string | null;
+  suiteOrTestId: number | null;
 }
 
 function ProjectPage(props: Props) {
@@ -16,6 +17,7 @@ function ProjectPage(props: Props) {
         projectId={props.projectId}
         currentRunId={props.currentRunId}
         currentTab={props.currentTab}
+        suiteOrTestId={props.suiteOrTestId}
       />
     </div>
   );

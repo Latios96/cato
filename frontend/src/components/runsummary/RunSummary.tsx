@@ -10,6 +10,7 @@ interface Props {
   projectId: number;
   runId: number;
   currentTab: string;
+  suiteOrTestId: number | null;
 }
 
 interface State {
@@ -73,13 +74,17 @@ class RunSummary extends Component<Props, State> {
         ) : (
           <React.Fragment />
         )}
-        <div className={styles.runContent}>
-          <RunSummaryTabComponent
-            projectId={this.props.projectId}
-            runId={this.props.runId}
-            currentTab={this.props.currentTab}
-          />
-        </div>
+        {!this.props.suiteOrTestId ? (
+          <div className={styles.runContent}>
+            <RunSummaryTabComponent
+              projectId={this.props.projectId}
+              runId={this.props.runId}
+              currentTab={this.props.currentTab}
+            />
+          </div>
+        ) : (
+          this.renderSuiteOrTest()
+        )}
       </div>
     );
   }
@@ -109,6 +114,16 @@ class RunSummary extends Component<Props, State> {
       <div className={styles.infoBoxElement}>
         <span className={styles.runSummaryInfoBoxValue}>{value}</span>
         <span>{name}</span>
+      </div>
+    );
+  };
+
+  renderSuiteOrTest = () => {
+    return (
+      <div className={styles.suiteOrTestContainer}>
+        {this.props.currentTab === "suites"
+          ? `display suite with id ${this.props.suiteOrTestId}`
+          : `display test with id ${this.props.suiteOrTestId}`}
       </div>
     );
   };

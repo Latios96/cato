@@ -12,6 +12,7 @@ interface Props {
   projectId: number;
   currentRunId: number | null;
   currentTab: string | null;
+  suiteOrTestId: number | null;
 }
 
 interface State {
@@ -145,6 +146,7 @@ class ProjectRunsView extends Component<Props, State> {
             currentTab={
               this.props.currentTab ? this.props.currentTab : "suites"
             }
+            suiteOrTestId={this.props.suiteOrTestId}
           />
         ) : (
           <React.Fragment />

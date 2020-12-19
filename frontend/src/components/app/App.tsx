@@ -14,6 +14,7 @@ interface ProjectPageMatchParams {
   projectId: string;
   runId: string;
   currentTab: string;
+  suiteOrTestId: string;
 }
 
 interface ProjectPageMatchProps
@@ -27,7 +28,7 @@ function App() {
         <Route exact path="/about" component={() => <AboutPage />} />
         <Route
           exact
-          path="/projects/:projectId/runs/:runId?/:currentTab?"
+          path="/projects/:projectId/runs/:runId?/:currentTab?/:suiteOrTestId?"
           component={(props: ProjectPageMatchProps) => {
             return (
               <ProjectPage
@@ -38,6 +39,11 @@ function App() {
                     : null
                 }
                 currentTab={props.match.params.currentTab}
+                suiteOrTestId={
+                  props.match.params.suiteOrTestId != null
+                    ? parseInt(props.match.params.suiteOrTestId)
+                    : null
+                }
               />
             );
           }}
