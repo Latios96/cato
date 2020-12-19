@@ -238,3 +238,39 @@ def test_create_output_failure(client, test_result):
 
     assert rv.status_code == 400
     assert rv.get_json() == {"test_result_id": ["No test result exists for id 42."]}
+
+
+def test_get_test_results_by_run_id_should_find(client, run, test_result):
+    url = f"/api/v1/test_results/{run.id}"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == [
+        {
+            "execution_status": "NOT_STARTED",
+            "finished_at": test_result.finished_at.isoformat(),
+            "id": 1,
+            "image_output": 1,
+            "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+            "message": "sucess",
+            "reference_image": 1,
+            "seconds": 5.0,
+            "started_at": test_result.started_at.isoformat(),
+            "status": "SUCCESS",
+            "suite_result_id": 1,
+            "test_command": "my_command",
+            "test_identifier": "my_suite/my_test_name",
+            "test_name": "my_test_name",
+            "test_variables": {"testkey": "test_value"},
+        }
+    ]
+
+
+def test_get_test_results_by_run_id_should_return_empty_list(client):
+    url = f"/api/v1/test_results/{42}"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == []

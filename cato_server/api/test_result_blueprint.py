@@ -62,6 +62,9 @@ class TestResultsBlueprint(Blueprint):
         self.route("/test_results/<int:test_result_id>", methods=["PATCH"])(
             self.update_test_result
         )
+        self.route("/test_results/<int:run_id>", methods=["GET"])(
+            self.get_test_result_by_run_id
+        )
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id, suite_name, test_name
@@ -167,3 +170,7 @@ class TestResultsBlueprint(Blueprint):
             result = self._test_result_mapper.map_to_dict(result)
             mapped_results.append(result)
         return jsonify(mapped_results)
+
+    def get_test_result_by_run_id(self, run_id: int):
+        test_results = self._test_result_repository.find_by_run_id(run_id)
+        return jsonify(self._test_result_mapper.map_many_to_dict(test_results))
