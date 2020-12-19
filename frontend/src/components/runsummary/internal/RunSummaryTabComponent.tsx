@@ -4,6 +4,9 @@ import React, { useEffect, useState } from "react";
 import SuiteResult from "../../../models/SuiteResult";
 import styles from "./RunSummaryTabComponent.module.scss";
 import TestResult from "../../../models/TestResult";
+import { Check, Check2All, Hourglass } from "react-bootstrap-icons";
+import RenderingBucketIcon from "../../icons/RenderingBucketIcon";
+import { XCircleIcon } from "@primer/octicons-react";
 
 interface Props {
   projectId: number;
@@ -20,12 +23,10 @@ export default function RunSummaryTabComponent(props: Props) {
   useEffect(() => {
     setCurrentTab(props.currentTab);
     if (currentTab === "tests") {
-      console.log("fetching tests");
       fetch(`/api/v1/test_results/run/${props.runId}`)
         .then((res) => res.json())
         .then(
           (result) => {
-            console.log(result);
             setTests(result);
           },
           (error) => {
@@ -38,7 +39,6 @@ export default function RunSummaryTabComponent(props: Props) {
         .then((res) => res.json())
         .then(
           (result) => {
-            console.log(result);
             setSuites(result);
           },
           (error) => {
@@ -48,7 +48,17 @@ export default function RunSummaryTabComponent(props: Props) {
     }
   }, [currentTab, props.currentTab, props.runId]);
 
-  console.log(currentTab, props.runId);
+  let testStatus = (test: TestResult) => {
+    if (test.execution_status === "NOT_STARTED") {
+      return <Hourglass size={27} />;
+    } else if (test.execution_status === "RUNNING") {
+      return <RenderingBucketIcon isActive={false} />;
+    } else if (test.status === "SUCCESS") {
+      return <Check color="green" size={27} />;
+    } else if (test.status === "FAILED") {
+      return <XCircleIcon size={27} className={styles.errorIcon} />;
+    }
+  };
 
   return (
     <Tabs
@@ -81,7 +91,12 @@ export default function RunSummaryTabComponent(props: Props) {
               return (
                 <Link to={`tests/${test.id}`}>
                   <ListGroup.Item className={styles.listEntry}>
-                    {test.test_identifier}
+                    <span className={styles.statusInList}>
+                      {testStatus(test)}
+                    </span>
+                    <span className={styles.nameInList}>
+                      {test.test_identifier}
+                    </span>
                   </ListGroup.Item>
                 </Link>
               );
