@@ -1,0 +1,18 @@
+@import "../../../custom.scss";
+
+.tabContent {
+  margin-top: 30px;
+}
+
+.listEntry {
+  width: 270px;
+  display: flex !important;
+}
+
+.listEntry:hover {
+  background-color: $cato-black-hovered !important;
+  color: white !important;
+  transition: 0.5s;
+  cursor: pointer !important;
+  transition-timing-function: ease, ease;
+}
