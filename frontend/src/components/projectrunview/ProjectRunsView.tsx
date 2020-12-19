@@ -11,6 +11,7 @@ import { RunDto } from "../../catoapimodels";
 interface Props {
   projectId: number;
   currentRunId: number | null;
+  currentTab: string | null;
 }
 
 interface State {
@@ -30,7 +31,7 @@ class ProjectRunsView extends Component<Props, State> {
 
   componentDidMount() {
     this.update();
-    let eventSource = new EventSource(
+    /*let eventSource = new EventSource(
       "http://localhost:5000/api/v1/runs/events/" + this.props.projectId
     );
 
@@ -40,7 +41,7 @@ class ProjectRunsView extends Component<Props, State> {
       let runs = this.state.runs;
       runs.unshift(message);
       this.setState({ runs: runs });
-    });
+    });*/
   }
 
   componentWillUnmount() {
@@ -136,7 +137,13 @@ class ProjectRunsView extends Component<Props, State> {
     return (
       <div>
         {this.props.currentRunId ? (
-          <RunSummary runId={this.props.currentRunId} />
+          <RunSummary
+            projectId={this.props.projectId}
+            runId={this.props.currentRunId}
+            currentTab={
+              this.props.currentTab ? this.props.currentTab : "suites"
+            }
+          />
         ) : (
           <React.Fragment />
         )}

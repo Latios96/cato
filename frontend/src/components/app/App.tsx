@@ -13,6 +13,7 @@ import AboutPage from "../../pages/AboutPage";
 interface ProjectPageMatchParams {
   projectId: string;
   runId: string;
+  currentTab: string;
 }
 
 interface ProjectPageMatchProps
@@ -26,7 +27,7 @@ function App() {
         <Route exact path="/about" component={() => <AboutPage />} />
         <Route
           exact
-          path="/projects/:projectId/runs/:runId?"
+          path="/projects/:projectId/runs/:runId?/:currentTab?"
           component={(props: ProjectPageMatchProps) => {
             return (
               <ProjectPage
@@ -36,6 +37,7 @@ function App() {
                     ? parseInt(props.match.params.runId)
                     : null
                 }
+                currentTab={props.match.params.currentTab}
               />
             );
           }}
