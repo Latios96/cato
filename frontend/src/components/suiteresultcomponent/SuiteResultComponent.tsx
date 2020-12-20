@@ -3,12 +3,14 @@ import { SuiteResultSummaryDto } from "../../catoapimodels";
 import TestResultList from "../suiteandtestslists/TestResultList";
 interface Props {
   suiteId: number;
+  projectId: number;
+  runId: number;
 }
 const SuiteResultComponent = (props: Props) => {
   let [suiteResult, setSuiteResult] = useState<SuiteResultSummaryDto>();
 
   useEffect(() => {
-    fetch(`/api/v1/suite_results/${props.suiteId}/summary`)
+    fetch(`/api/v1/suite_results/${props.suiteId}`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -21,7 +23,13 @@ const SuiteResultComponent = (props: Props) => {
   }, [props.suiteId]);
 
   let renderTestResult = (suiteResult: SuiteResultSummaryDto) => {
-    return <TestResultList testResults={suiteResult.tests} />;
+    return (
+      <TestResultList
+        testResults={suiteResult.tests}
+        projectId={props.projectId}
+        runId={props.runId}
+      />
+    );
   };
 
   return (

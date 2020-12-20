@@ -57,12 +57,20 @@ export default function RunSummaryTabComponent(props: Props) {
     >
       <Tab eventKey="suites" title="Suites">
         <div className={styles.tabContent}>
-          <SuiteResultList suiteResults={suites} />
+          <SuiteResultList
+            suiteResults={suites}
+            projectId={props.projectId}
+            runId={props.runId}
+          />
         </div>
       </Tab>
       <Tab eventKey="tests" title="Tests">
         <div className={styles.tabContent}>
-          <TestResultList testResults={tests} />
+          <TestResultList
+            testResults={tests}
+            projectId={props.projectId}
+            runId={props.runId}
+          />
         </div>
       </Tab>
     </Tabs>

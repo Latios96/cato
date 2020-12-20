@@ -126,6 +126,8 @@ class RunSummary extends Component<Props, State> {
         {this.props.currentTab === "suites" ? (
           <SuiteResultComponent
             suiteId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
+            projectId={this.props.projectId}
+            runId={this.props.runId}
           />
         ) : (
           <TestResultComponent

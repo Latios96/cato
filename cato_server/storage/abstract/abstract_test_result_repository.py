@@ -19,7 +19,7 @@ class TestResultRepository(AbstractRepository):
     ) -> Optional[TestResult]:
         raise NotImplementedError()
 
-    def find_by_suite_result(self, suite_result_id: int) -> Iterable[TestResult]:
+    def find_by_suite_result_id(self, suite_result_id: int) -> Iterable[TestResult]:
         raise NotImplementedError()
 
     def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:

@@ -14,13 +14,17 @@ interface TestResultListListEntry {
 
 interface Props {
   testResults: TestResultListListEntry[];
+  projectId: number;
+  runId: number;
 }
 const TestResultList = (props: Props) => {
   return (
     <ListGroup>
       {props.testResults.map((test) => {
         return (
-          <Link to={`tests/${test.id}`}>
+          <Link
+            to={`/projects/${props.projectId}/runs/${props.runId}/tests/${test.id}`}
+          >
             <ListGroup.Item className={styles.listEntry}>
               <span className={styles.statusInList}>
                 <TestStatus restResult={test} />

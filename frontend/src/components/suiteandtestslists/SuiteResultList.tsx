@@ -7,6 +7,8 @@ import SuiteStatus from "../status/SuiteStatus";
 
 interface Props {
   suiteResults: SuiteResultDto[];
+  projectId: number;
+  runId: number;
 }
 
 const SuiteResultList = (props: Props) => {
@@ -14,7 +16,9 @@ const SuiteResultList = (props: Props) => {
     <ListGroup>
       {props.suiteResults.map((suite) => {
         return (
-          <Link to={`suites/${suite.id}`}>
+          <Link
+            to={`/projects/${props.projectId}/runs/${props.runId}/suites/${suite.id}`}
+          >
             <ListGroup.Item className={styles.listEntry}>
               <span className={styles.statusInList}>
                 <SuiteStatus suiteResult={suite} />

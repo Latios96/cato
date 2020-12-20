@@ -125,7 +125,7 @@ class TestResultsBlueprint(Blueprint):
         return self._map_test_result(test_result)
 
     def get_test_result_by_suite_id(self, suite_id):
-        test_results = self._test_result_repository.find_by_suite_result(suite_id)
+        test_results = self._test_result_repository.find_by_suite_result_id(suite_id)
         return self._map_many_test_results(test_results)
 
     def get_test_result_output(self, test_result_id):

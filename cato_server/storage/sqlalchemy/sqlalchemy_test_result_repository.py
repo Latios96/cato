@@ -126,7 +126,7 @@ class SqlAlchemyTestResultRepository(
         if entity:
             return self.to_domain_object(entity)
 
-    def find_by_suite_result(self, suite_result_id: int) -> Iterable[TestResult]:
+    def find_by_suite_result_id(self, suite_result_id: int) -> Iterable[TestResult]:
         session = self._session_maker()
 
         entities = (
