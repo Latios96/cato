@@ -4,6 +4,7 @@ from typing import Iterable
 
 from flask import Blueprint, jsonify, abort, request
 
+from cato.domain.test_status import TestStatus
 from cato_server.domain.image import ImageChannel
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
@@ -16,6 +17,9 @@ from cato_server.api.validators.test_result_validators import (
     CreateOutputValidator,
 )
 from cato_server.mappers.test_result_dto_class_mapper import TestResultDtoDtoClassMapper
+from cato_server.mappers.test_result_short_summary_dto_class_mapper import (
+    TestResultShortSummaryDtoClassMapper,
+)
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.abstract_image_repository import ImageRepository
 from cato_server.storage.abstract.abstract_test_result_repository import (
@@ -31,6 +35,7 @@ from cato_api_models.catoapimodels import (
     ExecutionStatusDto,
     TestStatusDto,
     MachineInfoDto,
+    TestResultShortSummaryDto,
 )
 
 logger = logging.getLogger(__name__)
@@ -55,6 +60,9 @@ class TestResultsBlueprint(Blueprint):
         self._test_result_mapper = TestResultClassMapper()
         self._output_class_mapper = OutputClassMapper()
         self._test_result_dto_mapper = TestResultDtoDtoClassMapper()
+        self._test_result_short_summary_dto_mapper = (
+            TestResultShortSummaryDtoClassMapper()
+        )
 
         self.route(
             "/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
@@ -192,7 +200,30 @@ class TestResultsBlueprint(Blueprint):
 
     def get_test_result_by_run_id(self, run_id: int):
         test_results = self._test_result_repository.find_by_run_id(run_id)
-        return jsonify(self._test_result_mapper.map_many_to_dict(test_results))
+
+        test_result_short_summary_dtos = []
+        for test_result in test_results:
+            test_result_short_summary_dtos.append(
+                TestResultShortSummaryDto(
+                    id=test_result.id,
+                    name=test_result.test_name,
+                    test_identifier=str(test_result.test_identifier),
+                    execution_status=ExecutionStatusDto(
+                        test_result.execution_status.value
+                    ),
+                    status=TestStatusDto(
+                        test_result.status.value
+                        if test_result.status
+                        else TestStatus.FAILED
+                    ),
+                )
+            )
+
+        return jsonify(
+            self._test_result_short_summary_dto_mapper.map_many_to_dict(
+                test_result_short_summary_dtos
+            )
+        )
 
     def get_test_result_by_id(self, test_result_id):
         result = self._test_result_repository.find_by_id(test_result_id)

@@ -1,12 +1,19 @@
 import React from "react";
-import TestResult from "../../models/TestResult";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import styles from "./SuiteAndTestLists.module.scss";
 import TestStatus from "../status/TestStatus";
+import { ExecutionStatusDto, TestStatusDto } from "../../catoapimodels";
+
+interface TestResultListListEntry {
+  id: number;
+  testIdentifier: string;
+  executionStatus: ExecutionStatusDto;
+  status: TestStatusDto;
+}
 
 interface Props {
-  testResults: TestResult[];
+  testResults: TestResultListListEntry[];
 }
 const TestResultList = (props: Props) => {
   return (
@@ -18,7 +25,7 @@ const TestResultList = (props: Props) => {
               <span className={styles.statusInList}>
                 <TestStatus restResult={test} />
               </span>
-              <span className={styles.nameInList}>{test.test_identifier}</span>
+              <span className={styles.nameInList}>{test.testIdentifier}</span>
             </ListGroup.Item>
           </Link>
         );

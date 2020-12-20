@@ -4,29 +4,29 @@ types:
     objects:
       MachineInfoDto:
         fields:
-          cpu_name: string
+          cpuName: string
           cores: integer
           memory: double
 
       TestForRunCreation:
         fields:
-          test_name: string
-          test_identifier: string
-          test_command: string
-          test_variables: map<string, string>
-          machine_info: MachineInfoDto
+          testName: string
+          testIdentifier: string
+          testCommand: string
+          testVariables: map<string, string>
+          machineInfo: MachineInfoDto
 
       TestSuiteForRunCreation:
         fields:
-          suite_name: string
-          suite_variables: map<string, string>
+          suiteName: string
+          suiteVariables: map<string, string>
           tests: list<TestForRunCreation>
 
 
       CreateFullRunDto:
         fields:
-          project_id: integer
-          test_suites: list<TestSuiteForRunCreation>
+          projectId: integer
+          testSuites: list<TestSuiteForRunCreation>
 
       RunStatusDto:
         values:
@@ -38,8 +38,8 @@ types:
       RunDto:
         fields:
           id: integer
-          project_id: integer
-          started_at: datetime
+          projectId: integer
+          startedAt: datetime
           status: RunStatusDto
 
       RunSummaryDto:
@@ -85,7 +85,7 @@ types:
           testVariables: map<string, string>
           machineInfo: MachineInfoDto
           executionStatus: ExecutionStatusDto
-          status: optional<TestStatusDto>
+          status: TestStatusDto
           seconds: optional<double>
           message: optional<string>
           imageOutput: optional<ImageDto>
@@ -107,3 +107,20 @@ types:
           suiteName: string
           suiteVariables: map<string, string>
           status: SuiteStatusDto
+
+      TestResultShortSummaryDto:
+        fields:
+          id: integer
+          name: string
+          testIdentifier: string
+          executionStatus: ExecutionStatusDto
+          status: TestStatusDto
+
+      SuiteResultSummaryDto:
+        fields:
+          id: integer
+          runId: integer
+          suiteName: string
+          suiteVariables: map<string, string>
+          status: SuiteStatusDto
+          tests: list<TestResultShortSummaryDto>

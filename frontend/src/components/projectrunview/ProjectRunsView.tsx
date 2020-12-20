@@ -165,7 +165,7 @@ class ProjectRunsView extends Component<Props, State> {
     );
   };
 
-  isCurrentEntry = (r: Run) => {
+  isCurrentEntry = (r: RunDto) => {
     return r.id === this.props.currentRunId;
   };
 }

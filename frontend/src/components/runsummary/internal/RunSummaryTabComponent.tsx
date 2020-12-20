@@ -2,8 +2,7 @@ import { useHistory } from "react-router-dom";
 import { Tab, Tabs } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import styles from "./RunSummaryTabComponent.module.scss";
-import TestResult from "../../../models/TestResult";
-import { SuiteResultDto } from "../../../catoapimodels";
+import { SuiteResultDto, TestResultDto } from "../../../catoapimodels";
 import SuiteResultList from "../../suiteandtestslists/SuiteResultList";
 import TestResultList from "../../suiteandtestslists/TestResultList";
 
@@ -16,7 +15,7 @@ interface Props {
 export default function RunSummaryTabComponent(props: Props) {
   const [currentTab, setCurrentTab] = useState(props.currentTab);
   const [suites, setSuites] = useState<SuiteResultDto[]>([]);
-  const [tests, setTests] = useState<TestResult[]>([]);
+  const [tests, setTests] = useState<TestResultDto[]>([]);
   let history = useHistory();
 
   useEffect(() => {

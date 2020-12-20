@@ -6,6 +6,7 @@ import RunSummaryTabComponent from "./internal/RunSummaryTabComponent";
 import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils";
 import TestResultComponent from "../testresultcomponent/TestResultComponent";
+import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
 
 interface Props {
   projectId: number;
@@ -123,7 +124,9 @@ class RunSummary extends Component<Props, State> {
     return (
       <div className={styles.suiteOrTestContainer}>
         {this.props.currentTab === "suites" ? (
-          `display suite with id ${this.props.suiteOrTestId}`
+          <SuiteResultComponent
+            suiteId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
+          />
         ) : (
           <TestResultComponent
             resultId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
