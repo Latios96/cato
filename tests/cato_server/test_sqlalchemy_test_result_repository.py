@@ -281,3 +281,25 @@ def test_duration_by_run_id_no_tests(sessionmaker_fixture, run):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
     assert repository.duration_by_run_id(run.id) == 0
+
+
+def test_find_execution_status_by_suite_ids(
+    sessionmaker_fixture, suite_result, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_execution_status_by_suite_ids({suite_result.id})
+
+    assert result == {
+        suite_result.id: {(ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS)}
+    }
+
+
+def test_find_execution_status_by_suite_ids_should_return_empty(
+    sessionmaker_fixture, suite_result, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_execution_status_by_suite_ids({42})
+
+    assert result == {}

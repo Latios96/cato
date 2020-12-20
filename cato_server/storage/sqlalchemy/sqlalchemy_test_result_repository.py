@@ -247,3 +247,31 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         return summed_duration if summed_duration is not None else 0
+
+    def find_execution_status_by_suite_ids(
+        self, suite_ids: Set[int]
+    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+        session = self._session_maker()
+
+        results = (
+            session.query(
+                _TestResultMapping.execution_status,
+                _TestResultMapping.status,
+                _SuiteResultMapping.id,
+            )
+            .distinct()
+            .join(_SuiteResultMapping.test_results)
+            .filter(_SuiteResultMapping.id.in_(suite_ids))
+            .all()
+        )
+        session.close()
+        status_by_run_id = defaultdict(set)
+        for execution_status, test_status, run_id in results:
+            status_by_run_id[run_id].add(
+                (
+                    self._map_execution_status(execution_status),
+                    self._map_test_status(test_status),
+                )
+            )
+
+        return status_by_run_id
