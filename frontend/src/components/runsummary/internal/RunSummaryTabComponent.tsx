@@ -4,7 +4,7 @@ import React, { useEffect, useState } from "react";
 import SuiteResult from "../../../models/SuiteResult";
 import styles from "./RunSummaryTabComponent.module.scss";
 import TestResult from "../../../models/TestResult";
-import { Check, Check2All, Hourglass } from "react-bootstrap-icons";
+import { Check, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../../icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
 
