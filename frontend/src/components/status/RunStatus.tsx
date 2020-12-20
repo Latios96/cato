@@ -2,7 +2,7 @@ import React from "react";
 import { Check2All, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
-import styles from "../projectrunview/ProjectRunsView.module.scss";
+import styles from "./StatusStyles.module.scss";
 
 interface Props {
   status: string;
