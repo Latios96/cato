@@ -49,3 +49,51 @@ def test_create_suite_result_should_not_create(client, run):
 
     assert rv.status_code == 400
     assert rv.get_json() == {"run_id": ["No run with id 42 exists."]}
+
+
+def test_get_by_id_should_find(client, suite_result):
+    url = f"/api/v1/suite_results/{suite_result.id}"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "id": 1,
+        "runId": 1,
+        "suite_name": "my_suite",
+        "suite_variables": {"key": "value"},
+        "tests": [],
+    }
+
+
+def test_get_by_id_should_find_should_contain_no_tests(
+    client, suite_result, test_result
+):
+    url = f"/api/v1/suite_results/{suite_result.id}"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "id": 1,
+        "runId": 1,
+        "suite_name": "my_suite",
+        "suite_variables": {"key": "value"},
+        "tests": [
+            {
+                "execution_status": "NOT_STARTED",
+                "id": 1,
+                "name": "my_test_name",
+                "status": "SUCCESS",
+                "test_identifier": "my_suite/my_test_name",
+            }
+        ],
+    }
+
+
+def test_get_by_id_should_404(client):
+    url = "/api/v1/suite_results/42"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 404
