@@ -32,7 +32,7 @@ class ProjectRunsView extends Component<Props, State> {
 
   componentDidMount() {
     this.update();
-    /*let eventSource = new EventSource(
+    let eventSource = new EventSource(
       "http://localhost:5000/api/v1/runs/events/" + this.props.projectId
     );
 
@@ -42,7 +42,7 @@ class ProjectRunsView extends Component<Props, State> {
       let runs = this.state.runs;
       runs.unshift(message);
       this.setState({ runs: runs });
-    });*/
+    });
   }
 
   componentWillUnmount() {
