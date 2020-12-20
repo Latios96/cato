@@ -1,12 +1,12 @@
 import { Link, useHistory } from "react-router-dom";
 import { ListGroup, Tab, Tabs } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
-import SuiteResult from "../../../models/SuiteResult";
 import styles from "./RunSummaryTabComponent.module.scss";
 import TestResult from "../../../models/TestResult";
 import { Check, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../../icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
+import { SuiteResultDto } from "../../../catoapimodels";
 
 interface Props {
   projectId: number;
@@ -16,7 +16,7 @@ interface Props {
 
 export default function RunSummaryTabComponent(props: Props) {
   const [currentTab, setCurrentTab] = useState(props.currentTab);
-  const [suites, setSuites] = useState<SuiteResult[]>([]);
+  const [suites, setSuites] = useState<SuiteResultDto[]>([]);
   const [tests, setTests] = useState<TestResult[]>([]);
   let history = useHistory();
 
@@ -60,6 +60,18 @@ export default function RunSummaryTabComponent(props: Props) {
     }
   };
 
+  let suiteStatus = (suite: SuiteResultDto) => {
+    if (suite.status === "NOT_STARTED") {
+      return <Hourglass size={27} />;
+    } else if (suite.status === "RUNNING") {
+      return <RenderingBucketIcon isActive={false} />;
+    } else if (suite.status === "SUCCESS") {
+      return <Check color="green" size={27} />;
+    } else if (suite.status === "FAILED") {
+      return <XCircleIcon size={27} className={styles.errorIcon} />;
+    }
+  };
+
   return (
     <Tabs
       id="controlled-tab-example"
@@ -76,7 +88,10 @@ export default function RunSummaryTabComponent(props: Props) {
               return (
                 <Link to={`suites/${suite.id}`}>
                   <ListGroup.Item className={styles.listEntry}>
-                    {suite.suite_name}
+                    <span className={styles.statusInList}>
+                      {suiteStatus(suite)}
+                    </span>
+                    <span className={styles.nameInList}>{suite.suiteName}</span>
                   </ListGroup.Item>
                 </Link>
               );

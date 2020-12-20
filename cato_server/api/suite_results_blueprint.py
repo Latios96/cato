@@ -4,12 +4,18 @@ from http.client import BAD_REQUEST
 from flask import Blueprint, jsonify, request
 from marshmallow import ValidationError
 
+from cato_server.mappers.suite_result_dto_mapper import SuiteResultDtoDtoClassMapper
+from cato_server.run_status_calculator import RunStatusCalculator
+from cato_server.storage.abstract.abstract_test_result_repository import (
+    TestResultRepository,
+)
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,
 )
+from cato_api_models.catoapimodels import SuiteResultDto, SuiteStatusDto
 
 logger = logging.getLogger(__name__)
 
@@ -23,10 +29,15 @@ class SuiteResultsBlueprint(Blueprint):
         self,
         suite_result_repository: SuiteResultRepository,
         run_repository: RunRepository,
+        test_result_repository: TestResultRepository,
     ):
         super(SuiteResultsBlueprint, self).__init__("suite-results", __name__)
         self._suite_result_repository = suite_result_repository
         self._run_repository = run_repository
+        self._test_result_repository = test_result_repository
+
+        self._status_calculator = RunStatusCalculator()
+        self._suite_result_dto_mapper = SuiteResultDtoDtoClassMapper()
 
         self.route("/suite_results/run/<run_id>", methods=["GET"])(
             self.suite_result_by_run
@@ -35,7 +46,32 @@ class SuiteResultsBlueprint(Blueprint):
 
     def suite_result_by_run(self, run_id):
         suite_results = self._suite_result_repository.find_by_run_id(run_id)
-        return jsonify(suite_results)
+
+        status_by_suite_id = (
+            self._test_result_repository.find_execution_status_by_suite_ids(
+                set(map(lambda x: x.id, suite_results))
+            )
+        )
+
+        suite_result_dtos = []
+        for suite_result in suite_results:
+            suite_result_dtos.append(
+                SuiteResultDto(
+                    id=suite_result.id,
+                    run_id=suite_result.run_id,
+                    suite_name=suite_result.suite_name,
+                    suite_variables=suite_result.suite_variables,
+                    status=SuiteStatusDto(
+                        self._status_calculator.calculate(
+                            status_by_suite_id.get(suite_result.id, set())
+                        ).value
+                    ),
+                )
+            )
+
+        return jsonify(
+            self._suite_result_dto_mapper.map_many_to_dict(suite_result_dtos)
+        )
 
     def create_suite_result(self):
         request_json = request.get_json()

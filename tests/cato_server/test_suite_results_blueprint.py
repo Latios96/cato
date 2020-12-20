@@ -1,4 +1,4 @@
-def test_get_run_by_project_id_should_return(client, suite_result, run):
+def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
     url = "/api/v1/suite_results/run/{}".format(run.id)
 
     rv = client.get(url)
@@ -7,14 +7,15 @@ def test_get_run_by_project_id_should_return(client, suite_result, run):
     assert rv.get_json() == [
         {
             "id": 1,
-            "run_id": 1,
-            "suite_name": "my_suite",
-            "suite_variables": {"key": "value"},
+            "runId": 1,
+            "status": "NOT_STARTED",
+            "suiteName": "my_suite",
+            "suiteVariables": {"key": "value"},
         }
     ]
 
 
-def test_get_run_by_project_id_should_return_empty_list(client):
+def test_get_suite_result_by_run_id_should_return_empty_list(client):
     url = "/api/v1/suite_results/run/42"
 
     rv = client.get(url)
