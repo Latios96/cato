@@ -1,12 +1,11 @@
-import { Link, useHistory } from "react-router-dom";
-import { ListGroup, Tab, Tabs } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
+import { Tab, Tabs } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import styles from "./RunSummaryTabComponent.module.scss";
 import TestResult from "../../../models/TestResult";
-import { Check, Hourglass } from "react-bootstrap-icons";
-import RenderingBucketIcon from "../../icons/RenderingBucketIcon";
-import { XCircleIcon } from "@primer/octicons-react";
 import { SuiteResultDto } from "../../../catoapimodels";
+import SuiteResultList from "../../suiteandtestslists/SuiteResultList";
+import TestResultList from "../../suiteandtestslists/TestResultList";
 
 interface Props {
   projectId: number;
@@ -48,30 +47,6 @@ export default function RunSummaryTabComponent(props: Props) {
     }
   }, [currentTab, props.currentTab, props.runId]);
 
-  let testStatus = (test: TestResult) => {
-    if (test.execution_status === "NOT_STARTED") {
-      return <Hourglass size={27} />;
-    } else if (test.execution_status === "RUNNING") {
-      return <RenderingBucketIcon isActive={false} />;
-    } else if (test.status === "SUCCESS") {
-      return <Check color="green" size={27} />;
-    } else if (test.status === "FAILED") {
-      return <XCircleIcon size={27} className={styles.errorIcon} />;
-    }
-  };
-
-  let suiteStatus = (suite: SuiteResultDto) => {
-    if (suite.status === "NOT_STARTED") {
-      return <Hourglass size={27} />;
-    } else if (suite.status === "RUNNING") {
-      return <RenderingBucketIcon isActive={false} />;
-    } else if (suite.status === "SUCCESS") {
-      return <Check color="green" size={27} />;
-    } else if (suite.status === "FAILED") {
-      return <XCircleIcon size={27} className={styles.errorIcon} />;
-    }
-  };
-
   return (
     <Tabs
       id="controlled-tab-example"
@@ -83,40 +58,12 @@ export default function RunSummaryTabComponent(props: Props) {
     >
       <Tab eventKey="suites" title="Suites">
         <div className={styles.tabContent}>
-          <ListGroup>
-            {suites.map((suite) => {
-              return (
-                <Link to={`suites/${suite.id}`}>
-                  <ListGroup.Item className={styles.listEntry}>
-                    <span className={styles.statusInList}>
-                      {suiteStatus(suite)}
-                    </span>
-                    <span className={styles.nameInList}>{suite.suiteName}</span>
-                  </ListGroup.Item>
-                </Link>
-              );
-            })}
-          </ListGroup>
+          <SuiteResultList suiteResults={suites} />
         </div>
       </Tab>
       <Tab eventKey="tests" title="Tests">
         <div className={styles.tabContent}>
-          <ListGroup>
-            {tests.map((test) => {
-              return (
-                <Link to={`tests/${test.id}`}>
-                  <ListGroup.Item className={styles.listEntry}>
-                    <span className={styles.statusInList}>
-                      {testStatus(test)}
-                    </span>
-                    <span className={styles.nameInList}>
-                      {test.test_identifier}
-                    </span>
-                  </ListGroup.Item>
-                </Link>
-              );
-            })}
-          </ListGroup>
+          <TestResultList testResults={tests} />
         </div>
       </Tab>
     </Tabs>

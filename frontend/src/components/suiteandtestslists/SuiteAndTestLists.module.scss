@@ -1,0 +1,18 @@
+@import "../../custom.scss";
+.listEntry {
+  display: flex !important;
+}
+
+.listEntry:hover {
+  background-color: $cato-black-hovered !important;
+  color: white !important;
+  transition: 0.5s;
+  cursor: pointer !important;
+  transition-timing-function: ease, ease;
+}
+.statusInList {
+  margin-right: 15px;
+}
+
+.nameInList {
+}
