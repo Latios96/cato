@@ -12,14 +12,14 @@ function FinishedTestResultComponent(props: Props) {
   return (
     <div>
       <p>
-        {props.result.startedAt
-          ? "started: " + formatTime(props.result.startedAt)
+        {props.result.started_at
+          ? "started: " + formatTime(props.result.started_at)
           : ""}
       </p>
 
       <p>
-        {props.result.finishedAt
-          ? "finished: " + formatTime(props.result.finishedAt)
+        {props.result.finished_at
+          ? "finished: " + formatTime(props.result.finished_at)
           : ""}
       </p>
       <p>
@@ -40,7 +40,7 @@ function renderFailureInformation(result: TestResultDto): React.ReactNode {
   return (
     <div>
       <p>{"message: " + result.message}</p>
-      <p>Command: "{result.testCommand}"</p>
+      <p>Command: "{result.test_command}"</p>
     </div>
   );
 }
@@ -48,10 +48,10 @@ function renderFailureInformation(result: TestResultDto): React.ReactNode {
 function renderImages(result: TestResultDto): React.ReactNode {
   return (
     <React.Fragment>
-      {result.imageOutput && result.referenceImage ? (
+      {result.image_output && result.reference_image ? (
         <MultiChannelImageComparison
-          imageOutput={result.imageOutput}
-          referenceImage={result.referenceImage}
+          imageOutput={result.image_output}
+          referenceImage={result.reference_image}
         />
       ) : (
         ""

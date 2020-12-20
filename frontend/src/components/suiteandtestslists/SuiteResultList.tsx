@@ -19,7 +19,7 @@ const SuiteResultList = (props: Props) => {
               <span className={styles.statusInList}>
                 <SuiteStatus suiteResult={suite} />
               </span>
-              <span className={styles.nameInList}>{suite.suiteName}</span>
+              <span className={styles.nameInList}>{suite.suite_name}</span>
             </ListGroup.Item>
           </Link>
         );

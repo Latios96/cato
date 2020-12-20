@@ -32,7 +32,7 @@ class RunListEntryComponent extends Component<Props, State> {
           >
             <div className={styles.runNumber}>Run #{this.props.run.id}</div>{" "}
             <div className={styles.runTimingInformation}>
-              {formatTime(this.props.run.startedAt)}
+              {formatTime(this.props.run.started_at)}
             </div>
             <RunStatus
               status={this.props.run.status}

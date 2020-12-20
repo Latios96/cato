@@ -7,10 +7,10 @@ def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
     assert rv.get_json() == [
         {
             "id": 1,
-            "runId": 1,
+            "run_id": 1,
             "status": "NOT_STARTED",
-            "suiteName": "my_suite",
-            "suiteVariables": {"key": "value"},
+            "suite_name": "my_suite",
+            "suite_variables": {"key": "value"},
         }
     ]
 

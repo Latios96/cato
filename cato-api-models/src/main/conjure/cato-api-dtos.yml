@@ -4,29 +4,29 @@ types:
     objects:
       MachineInfoDto:
         fields:
-          cpuName: string
+          cpu_name: string
           cores: integer
           memory: double
 
       TestForRunCreation:
         fields:
-          testName: string
-          testIdentifier: string
-          testCommand: string
-          testVariables: map<string, string>
-          machineInfo: MachineInfoDto
+          test_name: string
+          test_identifier: string
+          test_command: string
+          test_variables: map<string, string>
+          machine_info: MachineInfoDto
 
       TestSuiteForRunCreation:
         fields:
-          suiteName: string
-          suiteVariables: map<string, string>
+          suite_name: string
+          suite_variables: map<string, string>
           tests: list<TestForRunCreation>
 
 
       CreateFullRunDto:
         fields:
-          projectId: integer
-          testSuites: list<TestSuiteForRunCreation>
+          project_id: integer
+          test_suites: list<TestSuiteForRunCreation>
 
       RunStatusDto:
         values:
@@ -38,16 +38,16 @@ types:
       RunDto:
         fields:
           id: integer
-          projectId: integer
-          startedAt: datetime
+          project_id: integer
+          started_at: datetime
           status: RunStatusDto
 
       RunSummaryDto:
         fields:
           run: RunDto
-          suiteCount: integer
-          testCount: integer
-          failedTestCount: integer
+          suite_count: integer
+          test_count: integer
+          failed_test_count: integer
           duration: double
 
       ExecutionStatusDto:
@@ -66,32 +66,32 @@ types:
         fields:
           id: integer
           name: string
-          fileId: integer
+          file_id: integer
 
       ImageDto:
         fields:
           id: integer
           name: string
-          originalFileId: integer
+          original_file_id: integer
           channels: list<ImageChannelDto>
 
       TestResultDto:
         fields:
           id: integer
-          suiteResultId: integer
-          testName: string
-          testIdentifier: string
-          testCommand: string
-          testVariables: map<string, string>
-          machineInfo: MachineInfoDto
-          executionStatus: ExecutionStatusDto
+          suite_result_id: integer
+          test_name: string
+          test_identifier: string
+          test_command: string
+          test_variables: map<string, string>
+          machine_info: MachineInfoDto
+          execution_status: ExecutionStatusDto
           status: TestStatusDto
           seconds: optional<double>
           message: optional<string>
-          imageOutput: optional<ImageDto>
-          referenceImage: optional<ImageDto>
-          startedAt: optional<datetime>
-          finishedAt: optional<datetime>
+          image_output: optional<ImageDto>
+          reference_image: optional<ImageDto>
+          started_at: optional<datetime>
+          finished_at: optional<datetime>
 
       SuiteStatusDto:
         values:
@@ -103,24 +103,24 @@ types:
       SuiteResultDto:
         fields:
           id: integer
-          runId: integer
-          suiteName: string
-          suiteVariables: map<string, string>
+          run_id: integer
+          suite_name: string
+          suite_variables: map<string, string>
           status: SuiteStatusDto
 
       TestResultShortSummaryDto:
         fields:
           id: integer
           name: string
-          testIdentifier: string
-          executionStatus: ExecutionStatusDto
+          test_identifier: string
+          execution_status: ExecutionStatusDto
           status: TestStatusDto
 
       SuiteResultSummaryDto:
         fields:
           id: integer
           runId: integer
-          suiteName: string
-          suiteVariables: map<string, string>
+          suite_name: string
+          suite_variables: map<string, string>
           status: SuiteStatusDto
           tests: list<TestResultShortSummaryDto>

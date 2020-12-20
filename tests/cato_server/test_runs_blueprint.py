@@ -68,15 +68,15 @@ def test_get_run_summary(client, run, test_result):
     assert rv.status_code == 200
     assert rv.get_json() == {
         "duration": 5.0,
-        "failedTestCount": 0,
+        "failed_test_count": 0,
         "run": {
             "id": 1,
             "project_id": 1,
             "started_at": run.started_at.isoformat(),
             "status": "NOT_STARTED",
         },
-        "suiteCount": 1,
-        "testCount": 1,
+        "suite_count": 1,
+        "test_count": 1,
     }
 
 

@@ -335,11 +335,11 @@ def test_create_full_run_success(cato_api_client, project):
                 suite_variables={},
                 tests=[
                     TestForRunCreation(
-                        MachineInfoDto(cpu_name="test", cores=8, memory=8),
-                        "cmd",
-                        "test/identifier",
-                        "test_name",
-                        {},
+                        machine_info=MachineInfoDto(cpu_name="test", cores=8, memory=8),
+                        test_command="cmd",
+                        test_identifier="test/identifier",
+                        test_name="test_name",
+                        test_variables={},
                     )
                 ],
             )

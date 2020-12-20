@@ -94,10 +94,10 @@ class RunSummary extends Component<Props, State> {
   renderInfoBox = (runSummaryDto: RunSummaryDto) => {
     return (
       <div className={styles.runSummaryInfoBox}>
-        {this.renderInfoBoxElement("" + runSummaryDto.suiteCount, "suites")}
-        {this.renderInfoBoxElement("" + runSummaryDto.testCount, "tests")}
+        {this.renderInfoBoxElement("" + runSummaryDto.suite_count, "suites")}
+        {this.renderInfoBoxElement("" + runSummaryDto.test_count, "tests")}
         {this.renderInfoBoxElement(
-          "" + runSummaryDto.failedTestCount,
+          "" + runSummaryDto.failed_test_count,
           "failed tests"
         )}
         {this.renderInfoBoxElement(

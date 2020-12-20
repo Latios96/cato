@@ -11,15 +11,15 @@ function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
       <p>
-        {props.result.executionStatus === "NOT_STARTED" ? (
+        {props.result.execution_status === "NOT_STARTED" ? (
           "waiting to start"
         ) : (
           <RenderingBucketIcon isActive={false} />
         )}
       </p>
       <p>
-        {props.result.startedAt
-          ? "started: " + formatTime(props.result.startedAt)
+        {props.result.started_at
+          ? "started: " + formatTime(props.result.started_at)
           : ""}
       </p>
     </div>

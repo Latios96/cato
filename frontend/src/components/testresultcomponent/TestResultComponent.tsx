@@ -24,7 +24,7 @@ function TestResultComponent(props: Props) {
   }, [props.resultId]);
 
   let renderTestResult = (testResult: TestResultDto) => {
-    if (testResult.executionStatus === "FINISHED") {
+    if (testResult.execution_status === "FINISHED") {
       return <FinishedTestResultComponent result={testResult} />;
     }
     return <WaitingOrRunningTestResultComponent result={testResult} />;

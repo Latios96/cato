@@ -7,8 +7,8 @@ import { ExecutionStatusDto, TestStatusDto } from "../../catoapimodels";
 
 interface TestResultListListEntry {
   id: number;
-  testIdentifier: string;
-  executionStatus: ExecutionStatusDto;
+  test_identifier: string;
+  execution_status: ExecutionStatusDto;
   status: TestStatusDto;
 }
 
@@ -25,7 +25,7 @@ const TestResultList = (props: Props) => {
               <span className={styles.statusInList}>
                 <TestStatus restResult={test} />
               </span>
-              <span className={styles.nameInList}>{test.testIdentifier}</span>
+              <span className={styles.nameInList}>{test.test_identifier}</span>
             </ListGroup.Item>
           </Link>
         );
