@@ -92,3 +92,18 @@ types:
           referenceImage: optional<ImageDto>
           startedAt: optional<datetime>
           finishedAt: optional<datetime>
+
+      SuiteStatusDto:
+        values:
+          - NOT_STARTED
+          - RUNNING
+          - SUCCESS
+          - FAILED
+
+      SuiteResultDto:
+        fields:
+          id: integer
+          runId: integer
+          suiteName: string
+          suiteVariables: map<string, string>
+          status: SuiteStatusDto
