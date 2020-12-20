@@ -122,5 +122,4 @@ types:
           runId: integer
           suite_name: string
           suite_variables: map<string, string>
-          status: SuiteStatusDto
           tests: list<TestResultShortSummaryDto>
