@@ -3,6 +3,7 @@ import datetime
 
 import flask
 import pinject
+import schedule
 from flask.json import JSONEncoder
 from flask_twisted import Twisted
 from werkzeug.exceptions import HTTPException
@@ -21,6 +22,8 @@ from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
+from cato_server.utils.background_scheduler_runner import BackgroundSchedulerRunner
+from cato_server.utils.background_task_creator import BackgroundTaskCreator
 
 logger = cato_server.server_logging.logger
 
@@ -34,7 +37,11 @@ BANNER = r"""
 """
 
 
-def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
+def create_app(
+    app_configuration: AppConfiguration,
+    bindings: PinjectBindings,
+    create_background_tasks=False,
+):
     logger.info(BANNER)
     logger.info("Cato Server Version %s", cato_server.__version__)
     logger.info("Creating Flask app..")
@@ -90,6 +97,13 @@ def create_app(app_configuration: AppConfiguration, bindings: PinjectBindings):
 
     app.json_encoder = CustomJSONEncoder
 
+    if create_background_tasks:
+        logger.info("Created background tasks..")
+        task_creator = obj_graph.provide(BackgroundTaskCreator)
+        task_creator.create()
+        scheduler_runner = BackgroundSchedulerRunner(schedule)
+        scheduler_runner.start()
+
     return app
 
 
@@ -111,7 +125,7 @@ def main():
     bindings_factory: BindingsFactory = BindingsFactory(config)
     bindings = bindings_factory.create_bindings()
 
-    app = create_app(config, bindings)
+    app = create_app(config, bindings, create_background_tasks=True)
 
     logger.info("Creating Twisted app")
     Twisted(app)

@@ -49,6 +49,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
+from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
 
 logger = logging.getLogger(__name__)
 
@@ -129,6 +130,7 @@ class PinjectBindings(pinject.BindingSpec):
             "message_queue",
             to_instance=self._bindings.message_queue_bindings.message_queue_binding,
         )
+        bind("fail_timed_out_tests", to_class=FailTimedOutTests)
 
 
 class BindingsFactory:
