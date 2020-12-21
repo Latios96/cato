@@ -115,3 +115,22 @@ def test_find_by_test_result_id_should_not_find(sessionmaker_fixture, test_resul
     result = repository.find_by_test_result_id(42)
 
     assert result is None
+
+
+def test_delete_by_id_should_delete(sessionmaker_fixture, test_result):
+    repository = SqlAlchemyTestHeartbeatRepository(sessionmaker_fixture)
+    last_beat_datetime = datetime.datetime.now()
+    test_heartbeat = repository.save(
+        TestHeartbeat(id=0, test_result_id=test_result.id, last_beat=last_beat_datetime)
+    )
+
+    repository.delete_by_id(test_heartbeat.id)
+
+    assert not repository.find_by_id(test_heartbeat.id)
+
+
+def test_delete_by_id_should_raise_not_existing(sessionmaker_fixture):
+    repository = SqlAlchemyTestHeartbeatRepository(sessionmaker_fixture)
+
+    with pytest.raises(ValueError):
+        repository.delete_by_id(42)

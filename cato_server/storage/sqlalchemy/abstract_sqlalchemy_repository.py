@@ -69,6 +69,20 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         session.close()
         return self._map_many_to_domain_object(results)
 
+    def delete_by_id(self, id: K):
+        session = self._session_maker()
+        entity = (
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().id == id)
+            .first()
+        )
+        if not entity:
+            session.close()
+            raise ValueError(f"No entity with id {id} exists!")
+        session.delete(entity)
+        session.commit()
+        session.close()
+
     def to_entity(self, domain_object: T) -> E:
         raise NotImplementedError()
 

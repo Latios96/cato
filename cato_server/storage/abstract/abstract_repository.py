@@ -16,3 +16,6 @@ class AbstractRepository(Generic[T, K]):
 
     def find_all(self) -> Iterable[T]:
         raise NotImplementedError()
+
+    def delete_by_id(self, id: K):
+        raise NotImplementedError()
