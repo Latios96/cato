@@ -11,7 +11,6 @@ import sqlalchemy as sa
 # revision identifiers, used by Alembic.
 from sqlalchemy import orm
 
-from cato.domain.image import Image
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     ImageMapping,
     ImageChannelMapping,
