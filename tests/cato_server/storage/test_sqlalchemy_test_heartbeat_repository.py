@@ -87,3 +87,31 @@ def test_find_last_beat_older_than_should_return_empty(
     beats = repository.find_last_beat_older_than(now - datetime.timedelta(weeks=1))
 
     assert beats == []
+
+
+def test_find_by_test_result_id_should_find(sessionmaker_fixture, test_result):
+    repository = SqlAlchemyTestHeartbeatRepository(sessionmaker_fixture)
+    last_beat_datetime = datetime.datetime.now()
+    test_heartbeat = TestHeartbeat(
+        id=0, test_result_id=test_result.id, last_beat=last_beat_datetime
+    )
+    repository.save(test_heartbeat)
+
+    result = repository.find_by_test_result_id(test_result.id)
+
+    assert result == TestHeartbeat(
+        id=1, test_result_id=test_result.id, last_beat=last_beat_datetime
+    )
+
+
+def test_find_by_test_result_id_should_not_find(sessionmaker_fixture, test_result):
+    repository = SqlAlchemyTestHeartbeatRepository(sessionmaker_fixture)
+    last_beat_datetime = datetime.datetime.now()
+    test_heartbeat = TestHeartbeat(
+        id=0, test_result_id=test_result.id, last_beat=last_beat_datetime
+    )
+    repository.save(test_heartbeat)
+
+    result = repository.find_by_test_result_id(42)
+
+    assert result is None
