@@ -60,22 +60,24 @@ class RunSummary extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h3 className={styles.runSummaryHeadline}>
-          Run Summary: #{this.props.runId}
-        </h3>
-        {this.state.isLoadingSummary ? (
-          <div className={styles.runSummaryInfoBox}>
-            <div className={styles.infoBoxLoading}>
-              <Spinner animation="border" role="status">
-                <span className="sr-only">Loading...</span>
-              </Spinner>
+        <div>
+          <h3 className={styles.runSummaryHeadline}>
+            Run Summary: #{this.props.runId}
+          </h3>
+          {this.state.isLoadingSummary ? (
+            <div className={styles.runSummaryInfoBox}>
+              <div className={styles.infoBoxLoading}>
+                <Spinner animation="border" role="status">
+                  <span className="sr-only">Loading...</span>
+                </Spinner>
+              </div>
             </div>
-          </div>
-        ) : this.state.runSummaryDto ? (
-          this.renderInfoBox(this.state.runSummaryDto)
-        ) : (
-          <React.Fragment />
-        )}
+          ) : this.state.runSummaryDto ? (
+            this.renderInfoBox(this.state.runSummaryDto)
+          ) : (
+            <React.Fragment />
+          )}
+        </div>
         {!this.props.suiteOrTestId ? (
           <div className={styles.runContent}>
             <RunSummaryTabComponent

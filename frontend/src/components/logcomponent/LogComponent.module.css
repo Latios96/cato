@@ -4,6 +4,7 @@
   font-size: 14px;
   color: white;
   font-family: "Fira Mono", monospace;
+  max-width: 1000px;
 }
 
 .terminalContent {
