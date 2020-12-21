@@ -21,6 +21,19 @@ class ImageComparison extends Component<Props, State> {
     this.state = { referenceImageLoaded: false, outputImageLoaded: false };
   }
 
+  componentDidUpdate(
+    prevProps: Readonly<Props>,
+    prevState: Readonly<State>,
+    snapshot?: any
+  ) {
+    if (
+      this.props.referenceImageUrl !== prevProps.referenceImageUrl ||
+      this.props.referenceImageUrl !== prevProps.referenceImageUrl
+    ) {
+      this.setState({ referenceImageLoaded: false, outputImageLoaded: false });
+    }
+  }
+
   render() {
     return (
       <div
