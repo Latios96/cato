@@ -11,7 +11,7 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 
 import logging
 
-from cato_server.storage.abstract.abstract_image_repository import ImageRepository
+from cato_server.storage.abstract.image_repository import ImageRepository
 
 logger = logging.getLogger(__name__)
 

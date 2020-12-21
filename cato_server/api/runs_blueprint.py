@@ -21,7 +21,7 @@ from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
 from cato_server.mappers.run_summary_dto_class_mapper import RunSummaryDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.project_repository import ProjectRepository

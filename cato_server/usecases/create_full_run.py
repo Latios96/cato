@@ -13,7 +13,7 @@ from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.run_repository import RunRepository

@@ -12,8 +12,8 @@ from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.abstract_image_repository import ImageRepository
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.output_repository import OutputRepository

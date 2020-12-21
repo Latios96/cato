@@ -9,7 +9,7 @@ from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (

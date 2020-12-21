@@ -4,7 +4,7 @@ import pytest
 
 from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.output_repository import OutputRepository

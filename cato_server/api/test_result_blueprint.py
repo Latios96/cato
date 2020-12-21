@@ -21,8 +21,8 @@ from cato_server.mappers.test_result_short_summary_dto_class_mapper import (
     TestResultShortSummaryDtoClassMapper,
 )
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.abstract_image_repository import ImageRepository
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.output_repository import OutputRepository

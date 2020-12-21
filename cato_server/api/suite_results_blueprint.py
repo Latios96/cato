@@ -9,7 +9,7 @@ from cato_server.mappers.suite_result_summary_dto_mapper import (
     SuiteResultSummaryDtoClassMapper,
 )
 from cato_server.run_status_calculator import RunStatusCalculator
-from cato_server.storage.abstract.abstract_test_result_repository import (
+from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.abstract.run_repository import RunRepository
