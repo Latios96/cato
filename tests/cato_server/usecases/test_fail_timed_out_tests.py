@@ -27,6 +27,7 @@ def test_nothing_to_do_should_do_nothing():
     test_result_repository.save.assert_not_called()
 
 
+now = datetime.datetime.now()
 TIMED_OUT_TEST_RESULT = TestResult(
     id=0,
     suite_result_id=1,
@@ -41,8 +42,8 @@ TIMED_OUT_TEST_RESULT = TestResult(
     message="sucess",
     image_output=2,
     reference_image=3,
-    started_at=datetime.datetime.now(),
-    finished_at=datetime.datetime.now(),
+    started_at=now,
+    finished_at=now,
 )
 
 FAILED_TIMED_OUT_TEST_RESULT = TestResult(
@@ -59,15 +60,15 @@ FAILED_TIMED_OUT_TEST_RESULT = TestResult(
     message="sucess",
     image_output=2,
     reference_image=3,
-    started_at=datetime.datetime.now(),
-    finished_at=datetime.datetime.now(),
+    started_at=now,
+    finished_at=now,
 )
 
 
 def test_should_fail_test():
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     test_heartbeat_repository.find_last_beat_older_than.return_value = [
-        TestHeartbeat(id=1, test_result_id=2, last_beat=datetime.datetime.now())
+        TestHeartbeat(id=1, test_result_id=2, last_beat=now)
     ]
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.find_by_id.return_value = TIMED_OUT_TEST_RESULT
