@@ -5,38 +5,26 @@ import ReactCompareImage from "react-compare-image";
 interface Props {
   outputImageUrl: string;
   referenceImageUrl: string;
-  sizeIsKnownCallback: (width: number, height: number) => void;
+  width: number;
+  height: number;
 }
 
-interface State {
-  imgWidth: number;
-  imgHeight: number;
-}
+interface State {}
 
 class ImageComparison extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.state = { imgHeight: 0, imgWidth: 0 };
   }
 
   render() {
     return (
       <div
         className={styles.imgCompContainer}
-        style={{ maxWidth: this.state.imgWidth }}
+        style={{ maxWidth: this.props.width }}
       >
         <img
           src={this.props.outputImageUrl}
           className={styles.imageSizeCalculator}
-          onLoad={(e) => {
-            let width = e.currentTarget.naturalWidth;
-            let height = e.currentTarget.naturalHeight;
-            this.setState({
-              imgHeight: height,
-              imgWidth: width,
-            });
-            this.props.sizeIsKnownCallback(width, height);
-          }}
           alt={"left"}
         />
         <ReactCompareImage

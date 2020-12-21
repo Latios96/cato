@@ -63,9 +63,8 @@ class MultiChannelImageComparison extends Component<Props, State> {
             "/api/v1/files/" +
             this.channelFileIdByName(referenceImage, this.state.selectedChannel)
           }
-          sizeIsKnownCallback={(width, height) => {
-            this.setState({ width: width, height: height });
-          }}
+          width={imageOutput.width}
+          height={imageOutput.height}
         />
       </React.Fragment>
     );
