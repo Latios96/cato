@@ -78,3 +78,4 @@ def test_should_fail_test():
     fail_timed_out_tests.fail_timed_out_tests()
 
     test_result_repository.save.assert_called_with(FAILED_TIMED_OUT_TEST_RESULT)
+    test_heartbeat_repository.delete_by_id.assert_called_once()

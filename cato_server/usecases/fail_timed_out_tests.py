@@ -48,3 +48,4 @@ class FailTimedOutTests:
                 timed_out_heartbeat.test_result_id,
                 timed_out_heartbeat.last_beat,
             )
+            self._test_heartbeat_repository.delete_by_id(timed_out_heartbeat.id)
