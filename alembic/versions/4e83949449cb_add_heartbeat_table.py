@@ -18,7 +18,7 @@ depends_on = None
 
 def upgrade():
     op.create_table(
-        "test_heartbeart_entity",
+        "test_heartbeat_entity",
         sa.Column("id", sa.Integer, primary_key=True),
         sa.Column(
             "test_result_entity_id",
