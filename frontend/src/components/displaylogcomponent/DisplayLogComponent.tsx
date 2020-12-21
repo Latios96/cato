@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import LogComponent from "../logcomponent/LogComponent";
 import { Button } from "react-bootstrap";
-
+import styles from "./DisplayLogComponent.module.scss";
 interface Props {
   testResultId: number;
 }
@@ -27,7 +27,11 @@ class DisplayLogComponent extends Component<Props, State> {
   render() {
     return (
       <div>
-        <Button onClick={(e) => this.toggle()} disabled={this.state.isLoading}>
+        <Button
+          onClick={(e) => this.toggle()}
+          disabled={this.state.isLoading}
+          className={styles.logButton}
+        >
           {this.getButtonText()}
         </Button>
         {this.state.isOpened && this.state.contentIsLoaded ? (
