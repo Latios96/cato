@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import styles from "./ImageComparison.module.css";
 import ReactCompareImage from "react-compare-image";
+import { Spinner } from "react-bootstrap";
 
 interface Props {
   outputImageUrl: string;
@@ -9,11 +10,15 @@ interface Props {
   height: number;
 }
 
-interface State {}
+interface State {
+  referenceImageLoaded: boolean;
+  outputImageLoaded: boolean;
+}
 
 class ImageComparison extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
+    this.state = { referenceImageLoaded: false, outputImageLoaded: false };
   }
 
   render() {
@@ -23,14 +28,29 @@ class ImageComparison extends Component<Props, State> {
         style={{ maxWidth: this.props.width, height: this.props.height }}
       >
         <img
+          src={this.props.referenceImageUrl}
+          className={styles.imageSizeCalculator}
+          alt={"left"}
+          onLoad={() => this.setState({ referenceImageLoaded: true })}
+        />
+        <img
           src={this.props.outputImageUrl}
           className={styles.imageSizeCalculator}
           alt={"left"}
+          onLoad={() => this.setState({ outputImageLoaded: true })}
         />
-        <ReactCompareImage
-          leftImage={this.props.outputImageUrl}
-          rightImage={this.props.referenceImageUrl}
-        />
+        {this.state.outputImageLoaded && this.state.referenceImageLoaded ? (
+          <ReactCompareImage
+            leftImage={this.props.outputImageUrl}
+            rightImage={this.props.referenceImageUrl}
+          />
+        ) : (
+          <div className={styles.spinner}>
+            <Spinner animation="border" role="status">
+              <span className="sr-only">Loading...</span>
+            </Spinner>
+          </div>
+        )}
       </div>
     );
   }
