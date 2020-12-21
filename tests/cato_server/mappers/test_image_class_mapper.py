@@ -11,6 +11,8 @@ def test_from_dict_with_id():
             "name": "test.exr",
             "original_file_id": 3,
             "channels": [{"id": 1, "image_id": 2, "name": "rgb", "file_id": 3}],
+            "width": 100,
+            "height": 100,
         }
     )
 
@@ -19,6 +21,8 @@ def test_from_dict_with_id():
         name="test.exr",
         original_file_id=3,
         channels=[ImageChannel(id=1, image_id=2, name="rgb", file_id=3)],
+        width=100,
+        height=100,
     )
 
 
@@ -31,6 +35,8 @@ def test_to_dict():
             name="test.exr",
             original_file_id=3,
             channels=[ImageChannel(id=1, image_id=2, name="rgb", file_id=3)],
+            width=100,
+            height=100,
         )
     )
 
@@ -39,4 +45,6 @@ def test_to_dict():
         "name": "test.exr",
         "original_file_id": 3,
         "channels": [{"id": 1, "image_id": 2, "name": "rgb", "file_id": 3}],
+        "width": 100,
+        "height": 100,
     }

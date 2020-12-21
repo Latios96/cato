@@ -17,6 +17,8 @@ class ImageClassMapper(AbstractClassMapper[Image]):
                     json_data["channels"],
                 )
             ),
+            width=json_data["width"],
+            height=json_data["height"],
         )
 
     def map_to_dict(self, the_file: Image) -> Dict:
@@ -30,4 +32,6 @@ class ImageClassMapper(AbstractClassMapper[Image]):
                     the_file.channels,
                 )
             ),
+            "width": the_file.width,
+            "height": the_file.height,
         }

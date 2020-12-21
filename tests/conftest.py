@@ -133,6 +133,8 @@ def stored_image(sessionmaker_fixture, tmp_path, stored_file):
             channels=[
                 ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id)
             ],
+            width=1920,
+            height=1080,
         )
     )
 

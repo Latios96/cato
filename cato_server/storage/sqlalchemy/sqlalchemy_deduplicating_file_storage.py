@@ -71,6 +71,7 @@ class SqlAlchemyDeduplicatingFileStorage(
             id=domain_object.id if domain_object.id else None,
             name=domain_object.name,
             hash=domain_object.hash,
+            value_counter=domain_object.value_counter,
         )
 
     def to_domain_object(self, entity: _FileMapping) -> File:

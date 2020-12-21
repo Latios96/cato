@@ -6,7 +6,7 @@ import pytest
 API_V_IMAGES = "/api/v1/images"
 
 
-def test_upload_file(client, test_resource_provider):
+def test_upload_image(client, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": (open(test_image, "rb"), "test_image_white.jpg")}
     response = client.post(API_V_IMAGES, data=data)
@@ -17,10 +17,12 @@ def test_upload_file(client, test_resource_provider):
         "id": 1,
         "name": "test_image_white.jpg",
         "original_file_id": 1,
+        "width": 100,
+        "height": 100,
     }
 
 
-def test_upload_file_no_filename(client, test_resource_provider):
+def test_upload_image_no_filename(client, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": (open(test_image, "rb"), "")}
     response = client.post(API_V_IMAGES, data=data)
@@ -49,4 +51,6 @@ def test_get_image_found_image(client, test_resource_provider):
         "id": 1,
         "name": "test_image_white.jpg",
         "original_file_id": 1,
+        "width": 100,
+        "height": 100,
     }

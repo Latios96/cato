@@ -76,6 +76,8 @@ class StoreImage:
             name=os.path.basename(path),
             original_file_id=original_file.id,
             channels=channel_files,
+            width=buf.spec().width,
+            height=buf.spec().height,
         )
         logger.info("Saving image %s to db..", image)
         image = self._image_repository.save(image)

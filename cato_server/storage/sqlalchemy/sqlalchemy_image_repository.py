@@ -22,6 +22,8 @@ class ImageMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, nullable=False)
     original_file_entity_id = Column(Integer, ForeignKey("file_entity.id"))
+    width = Column(Integer, nullable=False)
+    height = Column(Integer, nullable=False)
     channels = relationship(ImageChannelMapping)
 
 
@@ -33,6 +35,8 @@ class SqlAlchemyImageRepository(
             id=domain_object.id if domain_object.id else None,
             name=domain_object.name,
             original_file_entity_id=domain_object.original_file_id,
+            width=domain_object.width,
+            height=domain_object.height,
             channels=list(map(self._map_channel_to_entity, domain_object.channels)),
         )
 
@@ -52,6 +56,8 @@ class SqlAlchemyImageRepository(
             name=entity.name,
             original_file_id=entity.original_file_entity_id,
             channels=list(map(self._map_channel_to_domain_object, entity.channels)),
+            width=entity.width,
+            height=entity.height,
         )
 
     def _map_channel_to_domain_object(

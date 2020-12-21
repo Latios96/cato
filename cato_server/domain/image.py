@@ -16,3 +16,5 @@ class Image:
     name: str
     original_file_id: int
     channels: List[ImageChannel]
+    width: int
+    height: int

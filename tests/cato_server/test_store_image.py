@@ -26,6 +26,8 @@ def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path, test_resource_provider):
         name="test_image_white.jpg",
         original_file_id=1,
         channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
+        width=100,
+        height=100,
     )
 
 
@@ -45,6 +47,8 @@ def test_store_rgb_png(sessionmaker_fixture, tmp_path, test_resource_provider):
         name="test_image_white.png",
         original_file_id=1,
         channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
+        width=220,
+        height=224,
     )
 
 
@@ -71,6 +75,8 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path, test_resource_pr
             ImageChannel(id=5, image_id=1, name="samplerInfo", file_id=6),
             ImageChannel(id=6, image_id=1, name="velocity", file_id=7),
         ],
+        width=960,
+        height=540,
     )
 
 

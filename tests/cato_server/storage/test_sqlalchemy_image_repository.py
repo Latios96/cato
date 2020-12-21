@@ -16,6 +16,8 @@ def test_should_save(sessionmaker_fixture, stored_file):
             name="test.exr",
             original_file_id=stored_file.id,
             channels=[],
+            width=1920,
+            height=1080,
         )
     )
 
@@ -24,6 +26,8 @@ def test_should_save(sessionmaker_fixture, stored_file):
         name="test.exr",
         original_file_id=stored_file.id,
         channels=[],
+        width=1920,
+        height=1080,
     )
 
 
@@ -37,6 +41,8 @@ def test_save_should_fail_not_existing_file_id(sessionmaker_fixture, stored_file
                 name="test.exr",
                 original_file_id=42,
                 channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=2)],
+                width=1920,
+                height=1080,
             )
         )
 
@@ -53,6 +59,8 @@ def test_save_should_fail_not_existing_file_id_for_channel(
                 name="test.exr",
                 original_file_id=42,
                 channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=42)],
+                width=1920,
+                height=1080,
             )
         )
 
@@ -74,6 +82,8 @@ def test_should_find(sessionmaker_fixture, stored_file):
             channels=[
                 ImageChannel(id=0, image_id=0, name="rgb", file_id=stored_file.id)
             ],
+            width=1920,
+            height=1080,
         )
     )
 
