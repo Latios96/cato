@@ -13,6 +13,9 @@ from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.test_heartbeat_repository import (
+    TestHeartbeatRepository,
+)
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -39,6 +42,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_test_heartbeat_repository import (
+    SqlAlchemyTestHeartbeatRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -58,6 +64,7 @@ class StorageBindings:
     file_storage_binding: Type[AbstractFileStorage]
     output_repository_binding: Type[OutputRepository]
     image_repository: Type[ImageRepository]
+    test_heartbeat_repository: Type[TestHeartbeatRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -107,6 +114,10 @@ class PinjectBindings(pinject.BindingSpec):
             "image_repository",
             to_class=self._bindings.storage_bindings.image_repository,
         )
+        bind(
+            "test_heartbeat_repository",
+            to_class=self._bindings.storage_bindings.test_heartbeat_repository,
+        )
         bind("root_path", to_instance=self._bindings.storage_bindings.root_path_binding)
         bind(
             "session_maker",
@@ -143,6 +154,7 @@ class BindingsFactory:
             file_storage_binding=SqlAlchemyDeduplicatingFileStorage,
             output_repository_binding=SqlAlchemyOutputRepository,
             image_repository=SqlAlchemyImageRepository,
+            test_heartbeat_repository=SqlAlchemyTestHeartbeatRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
