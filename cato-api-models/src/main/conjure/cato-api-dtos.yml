@@ -74,6 +74,8 @@ types:
           name: string
           original_file_id: integer
           channels: list<ImageChannelDto>
+          width: integer
+          height: integer
 
       TestResultDto:
         fields:

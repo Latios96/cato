@@ -240,6 +240,8 @@ class TestResultsBlueprint(Blueprint):
                 name=image_output.name,
                 original_file_id=image_output.original_file_id,
                 channels=list(map(self._to_channel_dto, image_output.channels)),
+                width=image_output.width,
+                height=image_output.height,
             )
 
         reference_image = self._image_repository.find_by_id(result.reference_image)
@@ -249,6 +251,8 @@ class TestResultsBlueprint(Blueprint):
                 name=reference_image.name,
                 original_file_id=reference_image.original_file_id,
                 channels=list(map(self._to_channel_dto, reference_image.channels)),
+                width=reference_image.width,
+                height=reference_image.height,
             )
 
         test_result_dto = TestResultDto(
