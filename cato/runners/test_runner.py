@@ -10,9 +10,11 @@ from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.image_utils.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
+from cato.reporter.test_heartbeat_reporter import TestHeartbeatReporter
 from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
+from cato_server.domain.test_identifier import TestIdentifier
 
 
 class TestRunner:
@@ -24,16 +26,27 @@ class TestRunner:
         reporter: Reporter,
         output_folder: OutputFolder,
         image_comparator: ImageComparator,
+        test_heartbeat_reporter: TestHeartbeatReporter,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
         self._output_folder = output_folder
         self._variable_processor = VariableProcessor()
         self._image_comparator = image_comparator
+        self._test_heartbeat_reporter = test_heartbeat_reporter
 
     def run_test(self, config: Config, current_suite: TestSuite, test: Test):
         self._reporter.report_start_test(test)
 
+        self._test_heartbeat_reporter.start_sending_heartbeats_for_test(
+            TestIdentifier(current_suite.name, test.name)
+        )
+        result = self._run_test(config, current_suite, test)
+        self._test_heartbeat_reporter.stop()
+
+        return result
+
+    def _run_test(self, config: Config, current_suite: TestSuite, test: Test):
         variables = self._variable_processor.evaluate_variables(
             config, current_suite, test, predefinitions=PREDEFINITIONS
         )
