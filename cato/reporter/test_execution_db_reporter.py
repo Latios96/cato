@@ -150,3 +150,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
     def _copy_to_storage(self, image_path: str) -> int:
         return self._cato_api_client.upload_image(image_path).id
+
+    def report_heartbeat(self, test_identifier: TestIdentifier):
+        self._cato_api_client.heartbeat_test(self._run_id, test_identifier)
