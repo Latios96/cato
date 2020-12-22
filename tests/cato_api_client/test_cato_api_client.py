@@ -372,3 +372,12 @@ def test_create_full_run_failure(cato_api_client):
     )
     with pytest.raises(ValueError):
         cato_api_client.create_full_run(dto)
+
+
+def test_send_test_heartbeat(cato_api_client, test_result):
+    cato_api_client.heartbeat_test(test_result.id)
+
+
+def test_send_test_heartbeat_not_existing_test_id(cato_api_client):
+    with pytest.raises(ValueError):
+        cato_api_client.heartbeat_test(42)

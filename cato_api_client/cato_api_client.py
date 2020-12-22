@@ -20,6 +20,9 @@ from cato_server.mappers.output_class_mapper import OutputClassMapper
 from cato_server.mappers.project_class_mapper import ProjectClassMapper
 from cato_server.mappers.run_class_mapper import RunClassMapper
 from cato_server.mappers.suite_result_class_mapper import SuiteResultClassMapper
+from cato_server.mappers.test_heartbeat_dto_class_mapper import (
+    TestHeartbeatDtoClassMapper,
+)
 from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
 from cato_server.domain.file import File
@@ -153,6 +156,14 @@ class CatoApiClient:
             DictMapper(),
             OutputClassMapper(),
         )
+
+    def heartbeat_test(self, test_result_id: int):
+        url = self._build_url(f"/api/v1/test_heartbeats/{test_result_id}")
+        response = self._http_template.post_for_entity(
+            url, {}, None, TestHeartbeatDtoClassMapper()
+        )
+        if response.status_code() != 200:
+            raise ValueError(f"Something went wrong when sending heartbeat: {response}")
 
     def _build_url(self, url):
         return self._url + quote(url)
