@@ -17,7 +17,9 @@ from tests.utils import mock_safe
 EXAMPLE_PROJECT = "Example Project"
 
 
-def test_should_report_test_start():
+@mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
+def test_should_report_test_start(mock_heartbeat_reporter_class):
+    mock_heartbeat_reporter_class.return_value = mock.MagicMock()
     reporter = mock_safe(Reporter)
     command_runner = mock_safe(CommandRunner)
     output_folder = mock_safe(OutputFolder)
@@ -49,9 +51,10 @@ def test_should_report_test_start():
     command_runner.run.assert_called_with(test.command)
     output_folder.create_folder("output", test_suite, test)
     time.sleep(1)
-    test_execution_reporter.report_heartbeat.assert_called_with(
+    mock_heartbeat_reporter_class.return_value.start_sending_heartbeats_for_test.assert_called_with(
         TestIdentifier("suite", "my_first_test")
     )
+    mock_heartbeat_reporter_class.return_value.stop.assert_called_once()
 
 
 def test_should_replace_placeholder():
