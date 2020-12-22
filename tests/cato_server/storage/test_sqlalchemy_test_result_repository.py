@@ -303,3 +303,27 @@ def test_find_execution_status_by_suite_ids_should_return_empty(
     result = repository.find_execution_status_by_suite_ids({42})
 
     assert result == {}
+
+
+def test_find_by_run_id_and_test_identifier_should_find(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id_and_test_identifier(
+        run.id, test_result.test_identifier
+    )
+
+    assert result == test_result
+
+
+def test_find_by_run_id_and_test_identifier_should_not_find(
+    sessionmaker_fixture, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id_and_test_identifier(
+        42, test_result.test_identifier
+    )
+
+    assert result is None

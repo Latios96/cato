@@ -275,3 +275,20 @@ class SqlAlchemyTestResultRepository(
             )
 
         return status_by_run_id
+
+    def find_by_run_id_and_test_identifier(
+        self, run_id: int, test_identifier: TestIdentifier
+    ) -> Optional[TestResult]:
+        session = self._session_maker()
+
+        entity = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .filter(_TestResultMapping.test_identifier == str(test_identifier))
+            .first()
+        )
+        session.close()
+        if entity:
+            return self.to_domain_object(entity)

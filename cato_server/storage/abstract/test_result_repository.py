@@ -25,6 +25,11 @@ class TestResultRepository(AbstractRepository):
     def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
         raise NotImplementedError()
 
+    def find_by_run_id_and_test_identifier(
+        self, run_id: int, test_identifier: TestIdentifier
+    ) -> Optional[TestResult]:
+        raise NotImplementedError()
+
     def find_execution_status_by_run_ids(
         self, run_ids: Set[int]
     ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
