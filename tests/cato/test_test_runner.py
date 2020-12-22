@@ -6,7 +6,7 @@ from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.image_utils.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
-from cato.reporter.test_heartbeat_reporter import TestHeartbeatReporter
+from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.test_runner import TestRunner
@@ -22,13 +22,13 @@ def test_should_report_test_start():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="suite", tests=[])
@@ -47,10 +47,9 @@ def test_should_report_test_start():
     reporter.report_start_test.assert_called_with(test)
     command_runner.run.assert_called_with(test.command)
     output_folder.create_folder("output", test_suite, test)
-    test_heartbeat_reporter.start_sending_heartbeats_for_test.assert_called_with(
+    test_execution_reporter.report_heartbeat.assert_called_with(
         TestIdentifier("suite", "my_first_test")
     )
-    test_heartbeat_reporter.stop.assert_called_once()
 
 
 def test_should_replace_placeholder():
@@ -59,13 +58,13 @@ def test_should_replace_placeholder():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(
         name="my_first_test",
@@ -96,13 +95,13 @@ def test_should_collect_timing_info():
     output_folder = mock_safe(OutputFolder)
     image_comparator = mock_safe(ImageComparator)
     image_comparator.compare.return_value = True
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
 
@@ -129,13 +128,13 @@ def test_should_have_succeded_with_exit_code_0():
     magic_mock = mock.MagicMock()
     magic_mock.error = False
     image_comparator.compare.return_value = magic_mock
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -160,13 +159,13 @@ def test_should_have_failed_with_exit_code_0():
     output_folder = mock_safe(OutputFolder)
     output_folder.reference_image_exists.return_value = True
     image_comparator = mock_safe(ImageComparator)
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 1, [])
@@ -193,13 +192,13 @@ def test_should_have_failed_with_images_not_equal():
     magic_mock = mock.MagicMock()
     magic_mock.error = True
     image_comparator.compare.return_value = magic_mock
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -228,13 +227,13 @@ def test_should_have_failed_with_missing_reference_image():
     magic_mock = mock.MagicMock()
     magic_mock.error = True
     image_comparator.compare.return_value = magic_mock
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -263,13 +262,13 @@ def test_should_have_failed_with_missing_image_output():
     magic_mock = mock.MagicMock()
     magic_mock.error = True
     image_comparator.compare.return_value = magic_mock
-    test_heartbeat_reporter = mock_safe(TestHeartbeatReporter)
+    test_execution_reporter = mock_safe(TestExecutionReporter)
     test_runner = TestRunner(
         command_runner,
         reporter,
         output_folder,
         image_comparator,
-        test_heartbeat_reporter,
+        test_execution_reporter,
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
