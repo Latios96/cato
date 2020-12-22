@@ -1,3 +1,4 @@
+import time
 from unittest import mock
 
 from cato.domain.config import Config
@@ -47,6 +48,7 @@ def test_should_report_test_start():
     reporter.report_start_test.assert_called_with(test)
     command_runner.run.assert_called_with(test.command)
     output_folder.create_folder("output", test_suite, test)
+    time.sleep(1)
     test_execution_reporter.report_heartbeat.assert_called_with(
         TestIdentifier("suite", "my_first_test")
     )
