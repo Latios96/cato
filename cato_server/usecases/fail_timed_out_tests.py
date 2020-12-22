@@ -40,12 +40,14 @@ class FailTimedOutTests:
             test_result = self._test_result_repository.find_by_id(
                 timed_out_heartbeat.test_result_id
             )
-            test_result.execution_status = ExecutionStatus.FINISHED
-            test_result.status = TestStatus.FAILED
-            self._test_result_repository.save(test_result)
-            logger.info(
-                "Failed test with id %s, last heartbeat was %s",
-                timed_out_heartbeat.test_result_id,
-                timed_out_heartbeat.last_beat,
-            )
+            if test_result.execution_status == ExecutionStatus.RUNNING:
+                test_result.execution_status = ExecutionStatus.FINISHED
+                test_result.status = TestStatus.FAILED
+                self._test_result_repository.save(test_result)
+                logger.info(
+                    "Failed test with id %s, last heartbeat was %s",
+                    timed_out_heartbeat.test_result_id,
+                    timed_out_heartbeat.last_beat,
+                )
+            logger.info("Removing timed out heartbeat %s", timed_out_heartbeat)
             self._test_heartbeat_repository.delete_by_id(timed_out_heartbeat.id)

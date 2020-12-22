@@ -36,7 +36,25 @@ TIMED_OUT_TEST_RESULT = TestResult(
     test_command="my_command",
     test_variables={"testkey": "test_value"},
     machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-    execution_status=ExecutionStatus.NOT_STARTED,
+    execution_status=ExecutionStatus.RUNNING,
+    status=TestStatus.SUCCESS,
+    seconds=5,
+    message="sucess",
+    image_output=2,
+    reference_image=3,
+    started_at=now,
+    finished_at=now,
+)
+
+FINISHED_TEST_RESULT = TestResult(
+    id=0,
+    suite_result_id=1,
+    test_name="my_test_name",
+    test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test_name"),
+    test_command="my_command",
+    test_variables={"testkey": "test_value"},
+    machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+    execution_status=ExecutionStatus.FINISHED,
     status=TestStatus.SUCCESS,
     seconds=5,
     message="sucess",
@@ -79,4 +97,21 @@ def test_should_fail_test():
     fail_timed_out_tests.fail_timed_out_tests()
 
     test_result_repository.save.assert_called_with(FAILED_TIMED_OUT_TEST_RESULT)
+    test_heartbeat_repository.delete_by_id.assert_called_once()
+
+
+def test_not_running_and_timed_out_test_should_not_be_failed():
+    test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
+    test_heartbeat_repository.find_last_beat_older_than.return_value = [
+        TestHeartbeat(id=1, test_result_id=2, last_beat=now)
+    ]
+    test_result_repository = mock_safe(TestResultRepository)
+    test_result_repository.find_by_id.return_value = FINISHED_TEST_RESULT
+    fail_timed_out_tests = FailTimedOutTests(
+        test_result_repository, test_heartbeat_repository
+    )
+
+    fail_timed_out_tests.fail_timed_out_tests()
+
+    test_result_repository.save.assert_not_called()
     test_heartbeat_repository.delete_by_id.assert_called_once()
