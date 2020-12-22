@@ -31,9 +31,7 @@ class FailTimedOutTests:
             self._test_heartbeat_repository.find_last_beat_older_than(timed_out_date)
         )
         if timed_out_heartbeats:
-            logger.info(
-                "Found %s timed out tests, failing them..", timed_out_heartbeats
-            )
+            logger.info("Found %s timed out heartbeats..", timed_out_heartbeats)
         else:
             logger.info("No timed out tests found.")
         for timed_out_heartbeat in timed_out_heartbeats:
