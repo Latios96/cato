@@ -1,11 +1,13 @@
 import argparse
 import datetime
+import signal
 
 import flask
 import pinject
 import schedule
 from flask.json import JSONEncoder
 from flask_twisted import Twisted
+from twisted.internet import reactor
 from werkzeug.exceptions import HTTPException
 
 import cato
@@ -101,8 +103,8 @@ def create_app(
         logger.info("Created background tasks..")
         task_creator = obj_graph.provide(BackgroundTaskCreator)
         task_creator.create()
-        scheduler_runner = BackgroundSchedulerRunner(schedule)
-        scheduler_runner.start()
+        app.scheduler_runner = BackgroundSchedulerRunner(schedule)
+        app.scheduler_runner.start()
 
     return app
 
@@ -126,6 +128,11 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     app = create_app(config, bindings, create_background_tasks=True)
+
+    signal.signal(
+        signal.SIGINT,
+        lambda x, y: (app.scheduler_runner.stop(), reactor.stop(), exit(0)),
+    )
 
     logger.info("Creating Twisted app")
     Twisted(app)
