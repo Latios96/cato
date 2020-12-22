@@ -3,6 +3,7 @@ from typing import List
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
+from cato_server.domain.test_identifier import TestIdentifier
 
 
 class TestExecutionReporter:
@@ -15,4 +16,7 @@ class TestExecutionReporter:
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
     ):
+        raise NotImplementedError()
+
+    def report_heartbeat(self, test_identifier: TestIdentifier):
         raise NotImplementedError()
