@@ -86,8 +86,8 @@ class TestHeartbeatBlueprint(Blueprint):
             logger.info(
                 "Updating existing heartbeat with id %s to %s for test result with id %s",
                 test_heartbeat.id,
-                test_result_id,
                 beat_time,
+                test_result_id,
             )
             test_heartbeat.last_beat = beat_time
         test_heartbeat = self._test_heartbeat_repository.save(test_heartbeat)
