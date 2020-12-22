@@ -4,6 +4,7 @@ import logging
 from flask import Blueprint, jsonify
 
 from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.test_heartbeat_dto_class_mapper import (
     TestHeartbeatDtoClassMapper,
 )
@@ -33,6 +34,10 @@ class TestHeartbeatBlueprint(Blueprint):
         self.route("/test_heartbeats/<int:test_result_id>", methods=["POST"])(
             self.register_heartbeat
         )
+        self.route(
+            "/test_heartbeats/run/<int:run_id>/<string:suite_name>/<string:test_name>",
+            methods=["POST"],
+        )(self.register_heartbeat_by_run_id)
 
     def register_heartbeat(self, test_result_id):
         if not self._test_result_repository.find_by_id(test_result_id):
@@ -43,6 +48,27 @@ class TestHeartbeatBlueprint(Blueprint):
                 400,
             )
 
+        return self._handle_heartbeat_registration(test_result_id)
+
+    def register_heartbeat_by_run_id(self, run_id, suite_name, test_name):
+        test_identifier = TestIdentifier(suite_name, test_name)
+        test_result = self._test_result_repository.find_by_run_id_and_test_identifier(
+            run_id, test_identifier
+        )
+        if not test_result:
+            return (
+                jsonify(
+                    {
+                        "run_id": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                        "test_identifier": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                    }
+                ),
+                400,
+            )
+
+        return self._handle_heartbeat_registration(test_result.id)
+
+    def _handle_heartbeat_registration(self, test_result_id):
         test_heartbeat = self._test_heartbeat_repository.find_by_test_result_id(
             test_result_id
         )

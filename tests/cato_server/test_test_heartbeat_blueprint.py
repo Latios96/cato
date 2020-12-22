@@ -31,3 +31,48 @@ def test_not_existing_test_result_id_should_400(client):
 
     assert rv.status_code == 400
     assert rv.get_json() == {"test_result_id": "No test result found with id 42"}
+
+
+def test_should_create_new_test_heartbeat_for_run_id_and_test_identifier(
+    client, run, test_result
+):
+    rv = client.post(
+        f"/api/v1/test_heartbeats/run/{run.id}/{test_result.test_identifier.suite_name}/{test_result.test_identifier.test_name}"
+    )
+
+    assert rv.status_code == 200
+    json = rv.get_json()
+    assert json["id"] == 1
+    assert json["test_result_id"] == 1
+    assert (
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+    ).seconds < 1
+
+
+def test_should_update_new_test_heartbeat_for_run_id_and_test_identifier(
+    client, run, test_result
+):
+    rv = client.post(
+        f"/api/v1/test_heartbeats/run/{run.id}/{test_result.test_identifier.suite_name}/{test_result.test_identifier.test_name}"
+    )
+    rv = client.post(
+        f"/api/v1/test_heartbeats/run/{run.id}/{test_result.test_identifier.suite_name}/{test_result.test_identifier.test_name}"
+    )
+
+    assert rv.status_code == 200
+    json = rv.get_json()
+    assert json["id"] == 1
+    assert json["test_result_id"] == 1
+    assert (
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+    ).seconds < 1
+
+
+def test_not_existing_test_result_id_should_400_for_run_id_and_test_identifier(client):
+    rv = client.post(f"/api/v1/test_heartbeats/run/42/suite_name/test_name")
+
+    assert rv.status_code == 400
+    assert rv.get_json() == {
+        "run_id": "No test result found with run id 42 and test identifier suite_name/test_name",
+        "test_identifier": "No test result found with run id 42 and test identifier suite_name/test_name",
+    }
