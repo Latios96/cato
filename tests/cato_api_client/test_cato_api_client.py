@@ -374,10 +374,10 @@ def test_create_full_run_failure(cato_api_client):
         cato_api_client.create_full_run(dto)
 
 
-def test_send_test_heartbeat(cato_api_client, test_result):
-    cato_api_client.heartbeat_test(test_result.id)
+def test_send_test_heartbeat(cato_api_client, run, test_result):
+    cato_api_client.heartbeat_test(run.id, test_result.test_identifier)
 
 
 def test_send_test_heartbeat_not_existing_test_id(cato_api_client):
     with pytest.raises(ValueError):
-        cato_api_client.heartbeat_test(42)
+        cato_api_client.heartbeat_test(42, TestIdentifier("suite_name", "test_name"))

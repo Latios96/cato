@@ -157,8 +157,10 @@ class CatoApiClient:
             OutputClassMapper(),
         )
 
-    def heartbeat_test(self, test_result_id: int):
-        url = self._build_url(f"/api/v1/test_heartbeats/{test_result_id}")
+    def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier):
+        url = self._build_url(
+            f"/api/v1/test_heartbeats/run/{run_id}/{test_identifier.suite_name}/{test_identifier.test_name}"
+        )
         response = self._http_template.post_for_entity(
             url, {}, None, TestHeartbeatDtoClassMapper()
         )
