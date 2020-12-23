@@ -252,7 +252,7 @@ def test_get_test_result_by_run_and_identifier_success(
         execution_status=ExecutionStatus.NOT_STARTED,
         status=TestStatus.SUCCESS,
         seconds=5,
-        message="sucess",
+        message="success",
         image_output=1,
         reference_image=1,
         started_at=test_result.started_at,

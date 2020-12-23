@@ -134,7 +134,7 @@ def test_result_factory():
             execution_status=or_default(execution_status, ExecutionStatus.NOT_STARTED),
             status=or_default(status, TestStatus.SUCCESS),
             seconds=or_default(seconds, 5),
-            message=or_default(message, "sucess"),  # todo fix typo
+            message=or_default(message, "success"),
             image_output=or_default(image_output, None),
             reference_image=or_default(reference_image, None),
             started_at=or_default(started_at, datetime.datetime.now()),
@@ -145,24 +145,12 @@ def test_result_factory():
 
 
 @pytest.fixture
-def test_result(sessionmaker_fixture, suite_result, stored_image):
+def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
-    test_result = TestResult(
-        id=0,
+    test_result = test_result_factory(
         suite_result_id=suite_result.id,
-        test_name="my_test_name",
-        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test_name"),
-        test_command="my_command",
-        test_variables={"testkey": "test_value"},
-        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
-        seconds=5,
-        message="sucess",
         image_output=stored_image.id,
         reference_image=stored_image.id,
-        started_at=datetime.datetime.now(),
-        finished_at=datetime.datetime.now(),
     )
     return repository.save(test_result)
 
