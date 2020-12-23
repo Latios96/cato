@@ -1,5 +1,6 @@
 import datetime
 import os
+from typing import Optional, Dict
 
 import humanfriendly
 import pytest
@@ -91,6 +92,56 @@ def suite_result(sessionmaker_fixture, run):
         id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
     )
     return repository.save(suite_result)
+
+
+@pytest.fixture
+def test_result_factory():
+    def or_default(value, default_value):
+        if value is None:
+            return default_value
+        return value
+
+    def factory(
+        id: Optional[int] = None,
+        suite_result_id: Optional[int] = None,
+        test_name: Optional[str] = None,
+        test_identifier: Optional[TestIdentifier] = None,
+        test_command: Optional[str] = None,
+        test_variables: Optional[Dict[str, str]] = None,
+        machine_info: Optional[MachineInfo] = None,
+        execution_status: Optional[ExecutionStatus] = None,
+        status: Optional[TestStatus] = None,
+        seconds: Optional[float] = None,
+        message: Optional[str] = None,
+        image_output: Optional[int] = None,
+        reference_image: Optional[int] = Optional[int],
+        started_at: Optional[datetime.datetime] = None,
+        finished_at: Optional[datetime.datetime] = None,
+    ):
+        return TestResult(
+            id=or_default(id, 0),
+            suite_result_id=or_default(suite_result_id, 0),
+            test_name=or_default(test_name, "my_test_name"),
+            test_identifier=or_default(
+                test_identifier,
+                TestIdentifier(suite_name="my_suite", test_name="my_test_name"),
+            ),
+            test_command=or_default(test_command, "my_command"),
+            test_variables=or_default(test_variables, {"testkey": "test_value"}),
+            machine_info=or_default(
+                machine_info, MachineInfo(cpu_name="cpu", cores=56, memory=8)
+            ),
+            execution_status=or_default(execution_status, ExecutionStatus.NOT_STARTED),
+            status=or_default(status, TestStatus.SUCCESS),
+            seconds=or_default(seconds, 5),
+            message=or_default(message, "sucess"),  # todo fix typo
+            image_output=or_default(image_output, None),
+            reference_image=or_default(reference_image, None),
+            started_at=or_default(started_at, datetime.datetime.now()),
+            finished_at=or_default(finished_at, datetime.datetime.now()),
+        )
+
+    return factory
 
 
 @pytest.fixture
