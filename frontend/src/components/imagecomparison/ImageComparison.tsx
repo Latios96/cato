@@ -28,7 +28,7 @@ class ImageComparison extends Component<Props, State> {
   ) {
     if (
       this.props.referenceImageUrl !== prevProps.referenceImageUrl ||
-      this.props.referenceImageUrl !== prevProps.referenceImageUrl
+      this.props.outputImageUrl !== prevProps.outputImageUrl
     ) {
       this.setState({ referenceImageLoaded: false, outputImageLoaded: false });
     }
