@@ -9,6 +9,8 @@ from cato_server.storage.abstract.test_result_repository import TestResultReposi
 
 import logging
 
+from cato_server.usecases.finish_test import FinishTest
+
 TESTS_TIMEOUT = datetime.timedelta(minutes=2)
 
 logger = logging.getLogger(__name__)
@@ -19,10 +21,11 @@ class FailTimedOutTests:
         self,
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
+        finish_test: FinishTest,
     ):
-
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
+        self._finish_test = finish_test
 
     def fail_timed_out_tests(self):
         logger.info("Checking for timed out tests..")
@@ -33,19 +36,10 @@ class FailTimedOutTests:
         if timed_out_heartbeats:
             logger.info("Found %s timed out heartbeats..", timed_out_heartbeats)
         else:
-            logger.info("No timed out tests found.")
+            logger.info("No timed out heartbeats found.")
         for timed_out_heartbeat in timed_out_heartbeats:
             test_result = self._test_result_repository.find_by_id(
                 timed_out_heartbeat.test_result_id
             )
             if test_result.execution_status == ExecutionStatus.RUNNING:
-                test_result.execution_status = ExecutionStatus.FINISHED
-                test_result.status = TestStatus.FAILED
-                self._test_result_repository.save(test_result)
-                logger.info(
-                    "Failed test with id %s, last heartbeat was %s",
-                    timed_out_heartbeat.test_result_id,
-                    timed_out_heartbeat.last_beat,
-                )
-            logger.info("Removing timed out heartbeat %s", timed_out_heartbeat)
-            self._test_heartbeat_repository.delete_by_id(timed_out_heartbeat.id)
+                self._finish_test.fail_test(test_result.id, "Test timed out!")
