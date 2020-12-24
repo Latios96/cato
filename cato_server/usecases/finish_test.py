@@ -83,6 +83,7 @@ class FinishTest:
             seconds=-1,
             message=message,
         )
+        logger.info("Failed test with id %s", test_result_id)
 
     def _get_finished_time(self):
         return datetime.datetime.now()
