@@ -64,3 +64,12 @@ class CreateOutputSchema(Schema):
 
     test_result_id = ID_FIELD
     text = fields.String(required=True, allow_none=False)
+
+
+class FinishTestResultSchema(Schema):
+    id = ID_FIELD
+    status = EnumField(TestStatus, required=True)
+    seconds = fields.Float(min=0, required=True)
+    message = fields.String(validate=[Length(1)], required=True)
+    image_output = fields.Integer()
+    reference_image = fields.Integer()

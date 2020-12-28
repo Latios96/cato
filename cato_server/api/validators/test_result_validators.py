@@ -2,6 +2,7 @@ from typing import List, Dict
 
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -11,6 +12,7 @@ from cato_server.api.schemas.test_result_schemas import (
     CreateTestResultSchema,
     UpdateTestResultSchema,
     CreateOutputSchema,
+    FinishTestResultSchema,
 )
 from cato_server.api.validators.basic import SchemaValidator
 
@@ -104,6 +106,40 @@ class CreateOutputValidator(SchemaValidator):
                 errors,
                 "test_result_id",
                 f"An output already exists for test result with id {test_result_id}.",
+            )
+
+        return errors
+
+
+class FinishTestResultValidator(SchemaValidator):
+    def __init__(
+        self,
+        test_result_repository: TestResultRepository,
+        image_repository: ImageRepository,
+    ):
+        super(FinishTestResultValidator, self).__init__(FinishTestResultSchema())
+        self._test_result_repository = test_result_repository
+        self._image_repository = image_repository
+
+    def validate(self, data: Dict) -> Dict[str, List[str]]:
+        errors = super(FinishTestResultValidator, self).validate(data)
+
+        test_result = self._test_result_repository.find_by_id(data.get("id"))
+        if not test_result:
+            self.add_error(
+                errors, "id", f"No TestResult with id {data.get('id')} exists!"
+            )
+
+        image_output = data.get("image_output")
+        if image_output and not self._image_repository.find_by_id(image_output):
+            self.add_error(
+                errors, "image_output", f"No image exists for id {image_output}."
+            )
+
+        reference_image = data.get("reference_image")
+        if reference_image and not self._image_repository.find_by_id(reference_image):
+            self.add_error(
+                errors, "reference_image", f"No image exists for id {reference_image}."
             )
 
         return errors

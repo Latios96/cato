@@ -4,6 +4,7 @@ import pytest
 
 from cato.domain.test_status import TestStatus
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -14,6 +15,7 @@ from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
     CreateOutputValidator,
+    FinishTestResultValidator,
 )
 from tests.utils import mock_safe
 
@@ -219,3 +221,74 @@ class TestCreateOutputValidator:
         assert errors == {
             "test_result_id": ["An output already exists for test result with id 1."]
         }
+
+
+class TestFinishTestResultValidator:
+    def test_success(self):
+        test_result_repository = mock_safe(TestResultRepository)
+        image_repository = mock_safe(ImageRepository)
+        finish_test_result_validator = FinishTestResultValidator(
+            test_result_repository, image_repository
+        )
+
+        errors = finish_test_result_validator.validate(
+            {
+                "id": 1,
+                "status": TestStatus.SUCCESS,
+                "message": "test",
+                "seconds": 1,
+                "image_output": 1,
+                "reference_image": 2,
+            }
+        )
+        assert errors == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {
+                    "id": 42,
+                    "status": TestStatus.SUCCESS,
+                    "message": "test",
+                    "seconds": 1,
+                    "image_output": 1,
+                    "reference_image": 2,
+                },
+                {"id": ["No TestResult with id 42 exists!"]},
+            ),
+            (
+                {
+                    "id": 1,
+                    "status": TestStatus.SUCCESS,
+                    "message": "test",
+                    "seconds": 1,
+                    "image_output": 42,
+                    "reference_image": 2,
+                },
+                {"image_output": ["No image exists for id 42."]},
+            ),
+            (
+                {
+                    "id": 1,
+                    "status": TestStatus.SUCCESS,
+                    "message": "test",
+                    "seconds": 1,
+                    "image_output": 1,
+                    "reference_image": 42,
+                },
+                {"reference_image": ["No image exists for id 42."]},
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors):
+        test_result_repository = mock_safe(TestResultRepository)
+        test_result_repository.find_by_id = lambda x: x == 1
+        image_repository = mock_safe(ImageRepository)
+        image_repository.find_by_id = lambda x: x in (1, 2)
+        finish_test_result_validator = FinishTestResultValidator(
+            test_result_repository, image_repository
+        )
+
+        errors = finish_test_result_validator.validate(data)
+        assert errors == expected_errors
