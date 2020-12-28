@@ -20,8 +20,8 @@ class CompareResults:
 
 class ImageComparator:
     def compare(self, left: str, right: str):
-        left_input = ImageBuf(left)
-        right_input = ImageBuf(right)
+        left_input = self._read_image_buffer_checked(left)
+        right_input = self._read_image_buffer_checked(right)
         result = ImageBufAlgo.compare(left_input, right_input, 0.2, 0)
 
         return CompareResults(
@@ -37,3 +37,9 @@ class ImageComparator:
             nfail=result.nfail,
             error=result.error,
         )
+
+    def _read_image_buffer_checked(self, path: str) -> ImageBuf:
+        buf = ImageBuf(path)
+        if not buf.initialized:
+            raise ValueError(f"Could not read image from path {path}: {buf.geterror()}")
+        return buf
