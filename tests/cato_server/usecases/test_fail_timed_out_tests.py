@@ -11,6 +11,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
+from cato_server.usecases.finish_test import FinishTest
 from tests.utils import mock_safe
 
 
@@ -18,13 +19,14 @@ def test_nothing_to_do_should_do_nothing():
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     test_heartbeat_repository.find_last_beat_older_than.return_value = []
     test_result_repository = mock_safe(TestResultRepository)
+    finish_test = mock_safe(FinishTest)
     fail_timed_out_tests = FailTimedOutTests(
-        test_result_repository, test_heartbeat_repository
+        test_result_repository, test_heartbeat_repository, finish_test
     )
 
     fail_timed_out_tests.fail_timed_out_tests()
 
-    test_result_repository.save.assert_not_called()
+    finish_test.fail_test.assert_not_called()
 
 
 now = datetime.datetime.now()
@@ -90,14 +92,14 @@ def test_should_fail_test():
     ]
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.find_by_id.return_value = TIMED_OUT_TEST_RESULT
+    finish_test = mock_safe(FinishTest)
     fail_timed_out_tests = FailTimedOutTests(
-        test_result_repository, test_heartbeat_repository
+        test_result_repository, test_heartbeat_repository, finish_test
     )
 
     fail_timed_out_tests.fail_timed_out_tests()
 
-    test_result_repository.save.assert_called_with(FAILED_TIMED_OUT_TEST_RESULT)
-    test_heartbeat_repository.delete_by_id.assert_called_once()
+    finish_test.fail_test.assert_called_once()
 
 
 def test_not_running_and_timed_out_test_should_not_be_failed():
@@ -107,11 +109,11 @@ def test_not_running_and_timed_out_test_should_not_be_failed():
     ]
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.find_by_id.return_value = FINISHED_TEST_RESULT
+    finish_test = mock_safe(FinishTest)
     fail_timed_out_tests = FailTimedOutTests(
-        test_result_repository, test_heartbeat_repository
+        test_result_repository, test_heartbeat_repository, finish_test
     )
 
     fail_timed_out_tests.fail_timed_out_tests()
 
-    test_result_repository.save.assert_not_called()
-    test_heartbeat_repository.delete_by_id.assert_called_once()
+    finish_test.fail_test.assert_not_called()
