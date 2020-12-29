@@ -25,7 +25,6 @@ from cato_server.domain.test_result import TestResult
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.file_class_mapper import FileClassMapper
 from cato_server.mappers.image_class_mapper import ImageClassMapper
-from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 
 logger = logging.getLogger(__name__)
 
