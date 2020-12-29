@@ -52,8 +52,62 @@ class TestMapFromDict:
         assert result == MachineInfoDto(cpu_name="test", cores=8, memory=4)
 
     def test_should_map_with_dedicated_mapper_to_dict(self, object_mapper):
-        object = {"id": 1, "name": "test"}
+        the_dict = {"id": 1, "name": "test"}
 
-        result = object_mapper.from_dict(object, Project)
+        result = object_mapper.from_dict(the_dict, Project)
 
         assert result == Project(id=1, name="test")
+
+    def test_missing_key(self, object_mapper):
+        the_dict = {"id": 1}
+
+        with pytest.raises(KeyError):
+            object_mapper.from_dict(the_dict, Project)
+
+
+class TestMapToJson:
+    def test_success(self, object_mapper):
+        object = Project(id=1, name="test")
+
+        result = object_mapper.to_json(object)
+
+        assert result == '{"id": 1, "name": "test"}'
+
+
+class TestMapFromJson:
+    def test_success(self, object_mapper):
+        json_str = '{"id": 1, "name": "test"}'
+
+        result = object_mapper.from_json(json_str, Project)
+
+        assert result == Project(id=1, name="test")
+
+
+class TestManyVariants:
+    def test_many_to_dict(self, object_mapper):
+        objects = [Project(id=1, name="test1"), Project(id=2, name="test2")]
+
+        dicts = object_mapper.many_to_dict(objects)
+
+        assert dicts == [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]
+
+    def test_many_to_json(self, object_mapper):
+        objects = [Project(id=1, name="test1"), Project(id=2, name="test2")]
+
+        dicts = object_mapper.many_to_json(objects)
+
+        assert dicts == '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
+
+    def test_many_from_dict(self, object_mapper):
+        the_dicts = [{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]
+
+        objects = object_mapper.many_from_dict(the_dicts, Project)
+
+        assert objects == [Project(id=1, name="test1"), Project(id=2, name="test2")]
+
+    def test_many_from_json(self, object_mapper):
+        json_str = '[{"id": 1, "name": "test1"}, {"id": 2, "name": "test2"}]'
+
+        objects = object_mapper.many_from_json(json_str, Project)
+
+        assert objects == [Project(id=1, name="test1"), Project(id=2, name="test2")]

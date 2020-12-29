@@ -42,22 +42,23 @@ class ObjectMapper:
         return mapper.map_from_dict(the_dict)
 
     def to_json(self, obj: T) -> str:
-        pass
+        return json.dumps(self.to_dict(obj))
 
     def from_json(self, json_str: str, cls: Type[T]) -> T:
-        pass
+        return self.from_dict(json.loads(json_str), cls)
 
     def many_to_dict(self, objs: Iterable[T]) -> Iterable[T]:
-        pass
+        return list(map(self.to_dict, objs))
 
     def many_to_json(self, objs: Iterable[T]) -> str:
-        pass
+        return json.dumps(self.many_to_dict(objs))
 
     def many_from_dict(self, the_dicts: Iterable[Dict], cls: Type[T]) -> Iterable[T]:
-        pass
+        return list(map(lambda x: self.from_dict(x, cls), the_dicts))
 
     def many_from_json(self, json_str: str, cls: Type[T]) -> Iterable[T]:
-        pass
+        the_dicts = json.loads(json_str)
+        return self.many_from_dict(the_dicts, cls)
 
     def _mapper_for_cls(self, cls: Type[T]) -> Optional[AbstractClassMapper[T]]:
         if issubclass(cls, ConjureBeanType):
