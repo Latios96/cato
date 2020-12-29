@@ -30,6 +30,8 @@ class ObjectMapper:
         self._mapper_registry = mapper_registry
 
     def to_dict(self, obj: T) -> Dict:
+        if isinstance(obj, dict):
+            return obj
         mapper = self._mapper_for_cls(obj.__class__)
         if not mapper:
             raise NoMapperFoundException(obj.__class__)
