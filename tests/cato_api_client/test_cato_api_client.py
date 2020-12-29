@@ -34,8 +34,9 @@ class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
 
 
 class FlaskClientHttpTemplate(AbstractHttpTemplate):
-    def __init__(self, client):
+    def __init__(self, client, object_mapper):
         self._client = client
+        self._object_mapper = object_mapper
 
     def _post(self, url, params):
         return self._client.post(url, json=params)
@@ -46,13 +47,17 @@ class FlaskClientHttpTemplate(AbstractHttpTemplate):
     def _patch(self, url, params):
         return self._client.patch(url, json=params)
 
-    def _construct_http_template_response(self, response, response_cls_mapper):
-        return FlaskClientHttpTemplateResponse(response, response_cls_mapper)
+    def _construct_http_template_response(self, response, response_cls):
+        return FlaskClientHttpTemplateResponse(
+            response, response_cls, self._object_mapper
+        )
 
 
 class CatoApiTestClient(CatoApiClient):
-    def __init__(self, url, client):
-        super(CatoApiTestClient, self).__init__(url, FlaskClientHttpTemplate(client))
+    def __init__(self, url, client, object_mapper):
+        super(CatoApiTestClient, self).__init__(
+            url, FlaskClientHttpTemplate(client, object_mapper)
+        )
         self._client = client
 
     def _get(self, url: str) -> Response:
@@ -72,9 +77,11 @@ class CatoApiTestClient(CatoApiClient):
 
 
 @pytest.fixture
-def cato_api_client(app_and_config_fixture, client):
+def cato_api_client(app_and_config_fixture, client, object_mapper):
     pp, config = app_and_config_fixture
-    api_client = CatoApiTestClient(f"http://localhost:{config.port}", client)
+    api_client = CatoApiTestClient(
+        f"http://localhost:{config.port}", client, object_mapper
+    )
     return api_client
 
 

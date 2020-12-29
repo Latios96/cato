@@ -7,12 +7,6 @@ from cato_server.mappers.object_mapper import ObjectMapper, NoMapperFoundExcepti
 from cato_api_models.catoapimodels import MachineInfoDto
 
 
-@pytest.fixture
-def object_mapper():
-    registry = MapperRegistryFactory().create_mapper_registry()
-    return ObjectMapper(registry)
-
-
 class TestMapToDict:
     def test_no_mapper_found_for_cls_should_raise(self):
         mapper_registry = MapperRegistry()
@@ -34,6 +28,13 @@ class TestMapToDict:
         result = object_mapper.to_dict(object)
 
         assert result == {"id": 1, "name": "test"}
+
+    def test_called_with_dict_should_work(self, object_mapper):
+        the_dict = {"key": "value"}
+
+        the_dict = object_mapper.to_dict(the_dict)
+
+        assert the_dict == {"key": "value"}
 
 
 class TestMapFromDict:

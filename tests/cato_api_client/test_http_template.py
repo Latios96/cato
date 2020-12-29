@@ -17,26 +17,22 @@ class Response:
 
 
 @mock.patch("requests.get")
-def test_get_for_entity_success(mock_requests_get):
+def test_get_for_entity_success(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(200, {"id": 1, "name": "test-project"})
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
-    response = http_template.get_for_entity(
-        "/ap1/v1/projects/test-project", ProjectClassMapper()
-    )
+    response = http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
     assert response.status_code() == 200
     assert response.get_entity() == Project(id=1, name="test-project")
 
 
 @mock.patch("requests.get")
-def test_get_for_entity_404(mock_requests_get):
+def test_get_for_entity_404(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(404, None)
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
-    response = http_template.get_for_entity(
-        "/ap1/v1/projects/test-project", ProjectClassMapper()
-    )
+    response = http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
     assert response.status_code() == 404
     with pytest.raises(TypeError):
@@ -44,26 +40,21 @@ def test_get_for_entity_404(mock_requests_get):
 
 
 @mock.patch("requests.get")
-def test_get_for_entity_500(mock_requests_get):
+def test_get_for_entity_500(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(500, None)
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
     with pytest.raises(HttpTemplateException):
-        http_template.get_for_entity(
-            "/ap1/v1/projects/test-project", ProjectClassMapper()
-        )
+        http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
 
 @mock.patch("requests.post")
-def test_post_for_entity_success(mock_requests_post):
+def test_post_for_entity_success(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
     response = http_template.post_for_entity(
-        "/ap1/v1/projects/test-project",
-        Project(id=1, name="test"),
-        ProjectClassMapper(),
-        ProjectClassMapper(),
+        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
     )
 
     assert response.status_code() == 200
@@ -71,15 +62,14 @@ def test_post_for_entity_success(mock_requests_post):
 
 
 @mock.patch("requests.post")
-def test_post_for_entity_404(mock_requests_post):
+def test_post_for_entity_404(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(404, None)
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
     response = http_template.post_for_entity(
         "/ap1/v1/projects/test-project",
         Project(id=1, name="test"),
-        ProjectClassMapper(),
-        ProjectClassMapper(),
+        Project,
     )
 
     assert response.status_code() == 404
@@ -88,15 +78,12 @@ def test_post_for_entity_404(mock_requests_post):
 
 
 @mock.patch("requests.patch")
-def test_patch_for_entity_success(mock_requests_post):
+def test_patch_for_entity_success(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
     response = http_template.patch_for_entity(
-        "/ap1/v1/projects/test-project",
-        Project(id=1, name="test"),
-        ProjectClassMapper(),
-        ProjectClassMapper(),
+        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
     )
 
     assert response.status_code() == 200
@@ -104,15 +91,12 @@ def test_patch_for_entity_success(mock_requests_post):
 
 
 @mock.patch("requests.patch")
-def test_patch_for_entity_404(mock_requests_post):
+def test_patch_for_entity_404(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(404, None)
-    http_template = HttpTemplate()
+    http_template = HttpTemplate(object_mapper)
 
     response = http_template.patch_for_entity(
-        "/ap1/v1/projects/test-project",
-        Project(id=1, name="test"),
-        ProjectClassMapper(),
-        ProjectClassMapper(),
+        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
     )
 
     assert response.status_code() == 404

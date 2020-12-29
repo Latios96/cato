@@ -1,25 +1,29 @@
-from typing import TypeVar, Generic
+from typing import TypeVar, Generic, Type
 
 import requests
 
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 import logging
 
+from cato_server.mappers.object_mapper import ObjectMapper
+
 logger = logging.getLogger(__name__)
 
-T = TypeVar("T")
+B = TypeVar("B")
+R = TypeVar("R")
 
 
-class HttpTemplateResponse(Generic[T]):
-    def __init__(self, response, mapper: AbstractClassMapper[T]):
+class HttpTemplateResponse(Generic[R]):
+    def __init__(self, response, response_cls: Type[R], mapper: ObjectMapper):
         self._response = response
         self._mapper = mapper
+        self._response_cls = response_cls
 
     def status_code(self) -> int:
         raise NotImplementedError()
 
-    def get_entity(self) -> T:
-        return self._mapper.map_from_dict(self.get_json())
+    def get_entity(self) -> R:
+        return self._mapper.from_dict(self.get_json(), self._response_cls)
 
     def get_json(self):
         raise NotImplementedError()
@@ -38,48 +42,44 @@ class HttpTemplateException(Exception):
 
 
 class AbstractHttpTemplate:
+    def __init__(self, object_mapper: ObjectMapper):
+        self._object_mapper = object_mapper
+
     def get_for_entity(
-        self, url: str, response_cls_mapper: AbstractClassMapper[T]
-    ) -> HttpTemplateResponse[T]:
+        self, url: str, response_cls: Type[R]
+    ) -> HttpTemplateResponse[R]:
         logger.debug("Launching GET request to %s ", url)
         response = self._get(url)
         logger.debug("Received response %s", response)
-        return self._handle_response(response, response_cls_mapper)
+        return self._handle_response(response, response_cls)
 
     def post_for_entity(
         self,
-        url,
-        body,
-        body_cls_mapper: AbstractClassMapper[T],
-        response_cls_mapper: AbstractClassMapper,
-    ) -> HttpTemplateResponse[T]:
-        return self._launch_request_with_body(
-            url, body, body_cls_mapper, response_cls_mapper, "POST"
-        )
+        url: str,
+        body: B,
+        response_cls: Type[R],
+    ) -> HttpTemplateResponse[R]:
+        return self._launch_request_with_body(url, body, response_cls, "POST")
 
     def patch_for_entity(
         self,
-        url,
-        body,
-        body_cls_mapper: AbstractClassMapper[T],
-        response_cls_mapper: AbstractClassMapper,
-    ) -> HttpTemplateResponse[T]:
-        return self._launch_request_with_body(
-            url, body, body_cls_mapper, response_cls_mapper, "PATCH"
-        )
+        url: str,
+        body: B,
+        response_cls: Type[R],
+    ) -> HttpTemplateResponse[R]:
+        return self._launch_request_with_body(url, body, response_cls, "PATCH")
 
     def _launch_request_with_body(
         self,
         url,
         body,
-        body_cls_mapper: AbstractClassMapper[T],
-        response_cls_mapper: AbstractClassMapper,
+        response_cls: Type[R],
         method: str,
     ):
         method = method.upper()
         params = body
-        if body_cls_mapper:
-            params = body_cls_mapper.map_to_dict(body)
+        if body:
+            params = self._object_mapper.to_dict(body)
         logger.debug("Launching %s request to %s with json %s", method, url, params)
         assert method in ["POST", "PATCH"]
         if method == "POST":
@@ -89,14 +89,14 @@ class AbstractHttpTemplate:
         logger.debug("Received response %s", response)
         if response.status_code == 500:
             raise HttpTemplateException("Internal Server Error!")
-        return self._construct_http_template_response(response, response_cls_mapper)
+        return self._construct_http_template_response(response, response_cls)
 
     def _handle_response(
-        self, response, response_cls_mapper: AbstractClassMapper[T]
-    ) -> HttpTemplateResponse[T]:
+        self, response, response_cls: Type[R]
+    ) -> HttpTemplateResponse[R]:
         if response.status_code == 500:
             raise HttpTemplateException("Internal Server Error!")
-        return self._construct_http_template_response(response, response_cls_mapper)
+        return self._construct_http_template_response(response, response_cls)
 
     def _post(self, url, params):
         raise NotImplementedError()
@@ -107,9 +107,7 @@ class AbstractHttpTemplate:
     def _patch(self, url, params):
         raise NotImplementedError()
 
-    def _construct_http_template_response(
-        self, response, response_cls_mapper: AbstractClassMapper[T]
-    ):
+    def _construct_http_template_response(self, response, response_cls: Type[R]):
         raise NotImplementedError()
 
 
@@ -124,7 +122,9 @@ class RequestsHttpTemplate(AbstractHttpTemplate):
         return requests.patch(url, json=params)
 
     def _construct_http_template_response(self, response, response_cls_mapper):
-        return RequestsHttpTemplateResponse(response, response_cls_mapper)
+        return RequestsHttpTemplateResponse(
+            response, response_cls_mapper, self._object_mapper
+        )
 
 
 HttpTemplate = RequestsHttpTemplate

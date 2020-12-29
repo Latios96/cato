@@ -7,36 +7,25 @@ import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.test_status import TestStatus
-from cato_server.domain.image import Image
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
-from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.create_full_run_dto_class_mapper import (
-    CreateFullRunDtoClassMapper,
-)
-from cato_server.mappers.file_class_mapper import FileClassMapper
-from cato_server.mappers.finish_test_result_dto_class_mapper import (
-    FinishTestResultDtoClassMapper,
-)
-from cato_server.mappers.image_class_mapper import ImageClassMapper
-from cato_server.mappers.output_class_mapper import OutputClassMapper
-from cato_server.mappers.project_class_mapper import ProjectClassMapper
-from cato_server.mappers.run_class_mapper import RunClassMapper
-from cato_server.mappers.suite_result_class_mapper import SuiteResultClassMapper
-from cato_server.mappers.test_heartbeat_dto_class_mapper import (
-    TestHeartbeatDtoClassMapper,
-)
-from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
-from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
-from cato_server.domain.file import File
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_result import TestResult
+from cato_api_client.http_template import AbstractHttpTemplate
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     FinishTestResultDto,
     TestStatusDto,
+    TestHeartbeatDto,
 )
+from cato_server.domain.file import File
+from cato_server.domain.image import Image
+from cato_server.domain.output import Output
+from cato_server.domain.project import Project
+from cato_server.domain.run import Run
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.file_class_mapper import FileClassMapper
+from cato_server.mappers.image_class_mapper import ImageClassMapper
+from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 
 logger = logging.getLogger(__name__)
 
@@ -50,31 +39,18 @@ class DictMapper(AbstractClassMapper):
 
 
 class CatoApiClient:
-    @staticmethod
-    def from_url(url: str):
-        return CatoApiClient(url, HttpTemplate())
-
-    @staticmethod
-    def from_hostname_and_port(hostname: str, port: int):
-        return CatoApiClient(f"http://{hostname}:{port}", HttpTemplate())
-
     def __init__(self, url, http_template: AbstractHttpTemplate):
         self._url = url
-        if not http_template:
-            self._http_template = HttpTemplate()
-        else:
-            self._http_template = http_template
+        self._http_template = http_template
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
         url = self._build_url("/api/v1/projects/name/{}".format(project_name))
-        return self._find_with_http_template(url, ProjectClassMapper())
+        return self._find_with_http_template(url, Project)
 
     def create_project(self, project_name) -> Project:
         url = self._build_url("/api/v1/projects")
         logger.info("Creating project with name %s..", project_name)
-        return self._create_with_http_template(
-            url, {"name": project_name}, DictMapper(), ProjectClassMapper()
-        )
+        return self._create_with_http_template(url, {"name": project_name}, Project)
 
     def upload_file(self, path: str) -> File:
         if not os.path.exists(path):
@@ -110,9 +86,7 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/suite_results")
         logger.info("Creating suite_result with data %s..", suite_result)
-        return self._create_with_http_template(
-            url, suite_result, SuiteResultClassMapper(), SuiteResultClassMapper()
-        )
+        return self._create_with_http_template(url, suite_result, SuiteResult)
 
     def create_run(self, run: Run) -> Run:
         if run.id:
@@ -120,15 +94,11 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/runs")
         logger.info("Creating run with data %s..", run)
-        return self._create_with_http_template(
-            url, run, RunClassMapper(), RunClassMapper()
-        )
+        return self._create_with_http_template(url, run, Run)
 
     def create_full_run(self, create_full_run_dto: CreateFullRunDto) -> Run:
         url = self._build_url("/api/v1/runs/full")
-        return self._create_with_http_template(
-            url, create_full_run_dto, CreateFullRunDtoClassMapper(), RunClassMapper()
-        )
+        return self._create_with_http_template(url, create_full_run_dto, Run)
 
     def create_test_result(self, test_result: TestResult):
         if test_result.id:
@@ -136,9 +106,7 @@ class CatoApiClient:
 
         url = self._build_url("/api/v1/test_results")
         logger.info("Creating test_result with data %s..", test_result)
-        return self._create_with_http_template(
-            url, test_result, TestResultClassMapper(), TestResultClassMapper()
-        )
+        return self._create_with_http_template(url, test_result, TestResult)
 
     def find_test_result_by_run_id_and_identifier(
         self, run_id: int, test_identifier: TestIdentifier
@@ -148,30 +116,23 @@ class CatoApiClient:
                 run_id, test_identifier.suite_name, test_identifier.test_name
             )
         )
-        return self._find_with_http_template(url, TestResultClassMapper())
+        return self._find_with_http_template(url, TestResult)
 
     def update_test_result(self, test_result):
         url = self._build_url(f"/api/v1/test_results/{test_result.id}")
-        return self._patch_with_http_template(
-            url, test_result, TestResultClassMapper(), TestResultClassMapper()
-        )
+        return self._patch_with_http_template(url, test_result, TestResult)
 
     def upload_output(self, test_result_id: int, output: str):
         url = self._build_url("/api/v1/test_results/output")
         return self._create_with_http_template(
-            url,
-            {"test_result_id": test_result_id, "text": output},
-            DictMapper(),
-            OutputClassMapper(),
+            url, {"test_result_id": test_result_id, "text": output}, Output
         )
 
     def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier):
         url = self._build_url(
             f"/api/v1/test_heartbeats/run/{run_id}/{test_identifier.suite_name}/{test_identifier.test_name}"
         )
-        response = self._http_template.post_for_entity(
-            url, {}, None, TestHeartbeatDtoClassMapper()
-        )
+        response = self._http_template.post_for_entity(url, {}, TestHeartbeatDto)
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
 
@@ -193,9 +154,7 @@ class CatoApiClient:
             image_output=image_output,
             reference_image=reference_image,
         )
-        response = self._http_template.post_for_entity(
-            url, dto, FinishTestResultDtoClassMapper(), None
-        )
+        response = self._http_template.post_for_entity(url, dto, FinishTestResultDto)
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
 
@@ -205,16 +164,8 @@ class CatoApiClient:
     def _get_json(self, reponse):
         return reponse.json()
 
-    def _create_with_http_template(
-        self,
-        url,
-        body,
-        body_mapper: AbstractClassMapper,
-        entity_mapper: AbstractClassMapper,
-    ):
-        response = self._http_template.post_for_entity(
-            url, body, body_mapper, entity_mapper
-        )
+    def _create_with_http_template(self, url, body, response_cls):
+        response = self._http_template.post_for_entity(url, body, response_cls)
         if response.status_code() == 201:
             return response.get_entity()
         raise ValueError(
@@ -228,16 +179,8 @@ class CatoApiClient:
             )
         )
 
-    def _patch_with_http_template(
-        self,
-        url,
-        body,
-        body_mapper: AbstractClassMapper,
-        entity_mapper: AbstractClassMapper,
-    ):
-        response = self._http_template.patch_for_entity(
-            url, body, body_mapper, entity_mapper
-        )
+    def _patch_with_http_template(self, url, body, response_cls):
+        response = self._http_template.patch_for_entity(url, body, response_cls)
         if response.status_code() == 200:
             return response.get_entity()
         raise ValueError(
@@ -269,8 +212,8 @@ class CatoApiClient:
         logger.debug("Received response %s", response)
         return response
 
-    def _find_with_http_template(self, url, entity_mapper: AbstractClassMapper):
-        response = self._http_template.get_for_entity(url, entity_mapper)
+    def _find_with_http_template(self, url, response_cls):
+        response = self._http_template.get_for_entity(url, response_cls)
         if response.status_code() == 404:
             return None
         if response.status_code() == 200:
