@@ -381,3 +381,26 @@ def test_send_test_heartbeat(cato_api_client, run, test_result):
 def test_send_test_heartbeat_not_existing_test_id(cato_api_client):
     with pytest.raises(ValueError):
         cato_api_client.heartbeat_test(42, TestIdentifier("suite_name", "test_name"))
+
+
+def test_finish_test_result_success(cato_api_client, test_result, stored_image):
+    cato_api_client.finish_test(
+        test_result_id=test_result.id,
+        status=TestStatus.SUCCESS,
+        seconds=3,
+        message="my_mesage",
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
+    )
+
+
+def test_finish_test_result_failure(cato_api_client, test_result, stored_image):
+    with pytest.raises(ValueError):
+        cato_api_client.finish_test(
+            test_result_id=test_result.id,
+            status=TestStatus.SUCCESS,
+            seconds=3,
+            message="my_mesage",
+            image_output=42,
+            reference_image=stored_image.id,
+        )

@@ -6,6 +6,7 @@ from urllib.parse import quote
 import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
+from cato.domain.test_status import TestStatus
 from cato_server.domain.image import Image
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
@@ -15,6 +16,9 @@ from cato_server.mappers.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
 )
 from cato_server.mappers.file_class_mapper import FileClassMapper
+from cato_server.mappers.finish_test_result_dto_class_mapper import (
+    FinishTestResultDtoClassMapper,
+)
 from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.mappers.output_class_mapper import OutputClassMapper
 from cato_server.mappers.project_class_mapper import ProjectClassMapper
@@ -28,7 +32,11 @@ from cato_api_client.http_template import HttpTemplate, AbstractHttpTemplate
 from cato_server.domain.file import File
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_result import TestResult
-from cato_api_models.catoapimodels import CreateFullRunDto
+from cato_api_models.catoapimodels import (
+    CreateFullRunDto,
+    FinishTestResultDto,
+    TestStatusDto,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -163,6 +171,30 @@ class CatoApiClient:
         )
         response = self._http_template.post_for_entity(
             url, {}, None, TestHeartbeatDtoClassMapper()
+        )
+        if response.status_code() != 200:
+            raise ValueError(f"Something went wrong when sending heartbeat: {response}")
+
+    def finish_test(
+        self,
+        test_result_id: int,
+        status: TestStatus,
+        seconds: float,
+        message: str,
+        image_output: Optional[int] = None,
+        reference_image: Optional[int] = None,
+    ):
+        url = self._build_url("/api/v1/test_results/finish")
+        dto = FinishTestResultDto(
+            id=test_result_id,
+            status=TestStatusDto(status.value),
+            seconds=seconds,
+            message=message,
+            image_output=image_output,
+            reference_image=reference_image,
+        )
+        response = self._http_template.post_for_entity(
+            url, dto, FinishTestResultDtoClassMapper(), None
         )
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
