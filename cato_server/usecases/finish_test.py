@@ -41,7 +41,9 @@ class FinishTest:
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
     ):
-        logger.info("Finishing test test with id %s", test_result_id, message)
+        logger.info(
+            "Finishing test test with id %s and message %s", test_result_id, message
+        )
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if not test_result:
             raise ValueError(f"No TestResult with id {test_result_id} found!")

@@ -8,6 +8,9 @@ from cato.domain.test_status import TestStatus
 from cato_server.domain.image import ImageChannel
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
+from cato_server.mappers.finish_test_result_dto_class_mapper import (
+    FinishTestResultDtoClassMapper,
+)
 from cato_server.mappers.output_class_mapper import OutputClassMapper
 from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
 from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
@@ -15,6 +18,7 @@ from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,
     CreateOutputValidator,
+    FinishTestResultValidator,
 )
 from cato_server.mappers.test_result_dto_class_mapper import TestResultDtoDtoClassMapper
 from cato_server.mappers.test_result_short_summary_dto_class_mapper import (
@@ -37,6 +41,7 @@ from cato_api_models.catoapimodels import (
     MachineInfoDto,
     TestResultShortSummaryDto,
 )
+from cato_server.usecases.finish_test import FinishTest
 
 logger = logging.getLogger(__name__)
 
@@ -49,6 +54,7 @@ class TestResultsBlueprint(Blueprint):
         file_storage: AbstractFileStorage,
         output_repository: OutputRepository,
         image_repository: ImageRepository,
+        finish_test: FinishTest,
     ):
         super(TestResultsBlueprint, self).__init__("test-results", __name__)
         self._test_result_repository = test_result_repository
@@ -56,6 +62,7 @@ class TestResultsBlueprint(Blueprint):
         self._file_storage = file_storage
         self._output_repository = output_repository
         self._image_repository = image_repository
+        self._finish_test = finish_test
 
         self._test_result_mapper = TestResultClassMapper()
         self._output_class_mapper = OutputClassMapper()
@@ -63,6 +70,7 @@ class TestResultsBlueprint(Blueprint):
         self._test_result_short_summary_dto_mapper = (
             TestResultShortSummaryDtoClassMapper()
         )
+        self._finish_test_result_dto_class_mapper = FinishTestResultDtoClassMapper()
 
         self.route(
             "/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
@@ -92,6 +100,7 @@ class TestResultsBlueprint(Blueprint):
         self.route("/test_results/<int:test_result_id>", methods=["GET"])(
             self.get_test_result_by_id
         )
+        self.route("/test_results/finish", methods=["POST"])(self.finish_test_result)
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id, suite_name, test_name
@@ -282,3 +291,26 @@ class TestResultsBlueprint(Blueprint):
         return ImageChannelDto(
             id=channel.id, name=channel.name, file_id=channel.file_id
         )
+
+    def finish_test_result(self):
+        request_json = request.get_json()
+        errors = FinishTestResultValidator(
+            self._test_result_repository, self._image_repository
+        ).validate(request_json)
+        if errors:
+            return jsonify(errors), BAD_REQUEST
+
+        finish_test_result_dto = (
+            self._finish_test_result_dto_class_mapper.map_from_dict(request_json)
+        )
+
+        self._finish_test.finish_test(
+            finish_test_result_dto.id,
+            TestStatus(finish_test_result_dto.status.value),
+            finish_test_result_dto.seconds,
+            finish_test_result_dto.message,
+            finish_test_result_dto.image_output,
+            finish_test_result_dto.reference_image,
+        )
+
+        return jsonify(success=True), 200

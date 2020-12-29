@@ -1,7 +1,5 @@
 import datetime
 
-import pytest
-
 
 def test_get_test_result_by_suite_and_identifier_should_return(
     client, suite_result, test_result
@@ -311,3 +309,34 @@ def test_get_test_results_by_run_id_should_404(client):
     rv = client.get(url)
 
     assert rv.status_code == 404
+
+
+def test_finish_test_success(client, test_result, stored_image):
+    url = "/api/v1/test_results/finish"
+    data = {
+        "id": test_result.id,
+        "status": "SUCCESS",
+        "seconds": 3,
+        "message": "this is my finishing message",
+        "image_output": stored_image.id,
+        "reference_image": stored_image.id,
+    }
+    rv = client.post(url, json=data)
+
+    assert rv.status_code == 200
+
+
+def test_finish_test_failure(client, test_result, stored_image):
+    url = "/api/v1/test_results/finish"
+    data = {
+        "id": test_result.id,
+        "status": "SUCCESS",
+        "seconds": 3,
+        "message": "this is my finishing message",
+        "image_output": 42,
+        "reference_image": stored_image.id,
+    }
+    rv = client.post(url, json=data)
+
+    assert rv.status_code == 400
+    assert rv.json == {"image_output": ["No image exists for id 42."]}
