@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Dict
+from typing import Optional
 from urllib.parse import quote
 
 import requests
