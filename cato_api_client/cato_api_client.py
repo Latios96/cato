@@ -23,8 +23,6 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.file_class_mapper import FileClassMapper
-from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.mappers.object_mapper import ObjectMapper
 
 logger = logging.getLogger(__name__)

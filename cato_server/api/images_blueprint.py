@@ -2,10 +2,9 @@ import logging
 import os
 import tempfile
 
-from flask import Blueprint, jsonify, request, send_file, abort
+from flask import jsonify, request, send_file, abort
 
 from cato_server.api.base_blueprint import BaseBlueprint
-from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.images.store_image import StoreImage
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage

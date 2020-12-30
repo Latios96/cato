@@ -9,23 +9,22 @@ from sqlalchemy.orm import sessionmaker
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.mappers.mapper_registry import MapperRegistry
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.output_repository import OutputRepository
+from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
-from cato_server.storage.abstract.output_repository import OutputRepository
-from cato_server.storage.abstract.project_repository import ProjectRepository
-from cato_server.storage.abstract.run_repository import RunRepository
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,

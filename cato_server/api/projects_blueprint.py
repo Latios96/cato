@@ -1,13 +1,13 @@
 import logging
 from http.client import BAD_REQUEST
 
-from flask import Blueprint, jsonify, abort, request
+from flask import jsonify, abort, request
 
 from cato_server.api.base_blueprint import BaseBlueprint
+from cato_server.api.validators.project_validators import CreateProjectValidator
 from cato_server.domain.project import Project
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.project_repository import ProjectRepository
-from cato_server.api.validators.project_validators import CreateProjectValidator
 
 logger = logging.getLogger(__name__)
 

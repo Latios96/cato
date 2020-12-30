@@ -1,14 +1,12 @@
 import json
-
-import pika
+import logging
 from typing import Iterable
 
+import pika
+
 from cato_server.domain.event import Event
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue, T
-
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,25 +1,9 @@
 import logging
 from http.client import BAD_REQUEST
 
-from flask import Blueprint, jsonify, request, abort
+from flask import jsonify, request, abort
 from marshmallow import ValidationError
 
-from cato_server.api.base_blueprint import BaseBlueprint
-from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.mappers.suite_result_dto_mapper import SuiteResultDtoDtoClassMapper
-from cato_server.mappers.suite_result_summary_dto_mapper import (
-    SuiteResultSummaryDtoClassMapper,
-)
-from cato_server.run_status_calculator import RunStatusCalculator
-from cato_server.storage.abstract.test_result_repository import (
-    TestResultRepository,
-)
-from cato_server.storage.abstract.run_repository import RunRepository
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.api.validators.suite_result_validators import (
-    CreateSuiteResultValidator,
-)
 from cato_api_models.catoapimodels import (
     SuiteResultDto,
     SuiteStatusDto,
@@ -27,6 +11,18 @@ from cato_api_models.catoapimodels import (
     TestResultShortSummaryDto,
     ExecutionStatusDto,
     TestStatusDto,
+)
+from cato_server.api.base_blueprint import BaseBlueprint
+from cato_server.api.validators.suite_result_validators import (
+    CreateSuiteResultValidator,
+)
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.run_status_calculator import RunStatusCalculator
+from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.test_result_repository import (
+    TestResultRepository,
 )
 
 logger = logging.getLogger(__name__)

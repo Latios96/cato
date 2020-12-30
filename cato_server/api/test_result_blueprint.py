@@ -1,7 +1,7 @@
 import logging
 from http.client import BAD_REQUEST
 
-from flask import Blueprint, jsonify, abort, request, current_app
+from flask import jsonify, abort, request
 
 from cato.domain.test_status import TestStatus
 from cato_api_models.catoapimodels import (

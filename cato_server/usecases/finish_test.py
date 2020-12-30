@@ -1,22 +1,18 @@
 import datetime
+import logging
 from typing import Optional
 
 from cato.domain.test_status import TestStatus
+from cato_api_models.catoapimodels import TestResultFinishedDto
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.mappers.test_result_finished_dto_class_mapper import (
-    TestResultFinishedDtoClassMapper,
-)
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
-from cato_api_models.catoapimodels import TestResultFinishedDto
-
-import logging
 
 logger = logging.getLogger(__name__)
 

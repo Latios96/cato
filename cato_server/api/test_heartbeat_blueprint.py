@@ -1,21 +1,17 @@
 import datetime
 import logging
 
-from flask import Blueprint, jsonify
+from flask import jsonify
 
+from cato_api_models.catoapimodels import TestHeartbeatDto
 from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.mappers.test_heartbeat_dto_class_mapper import (
-    TestHeartbeatDtoClassMapper,
-)
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
-
-from cato_api_models.catoapimodels import TestHeartbeatDto
 
 logger = logging.getLogger(__name__)
 

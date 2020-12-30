@@ -3,7 +3,7 @@ from http.client import BAD_REQUEST
 
 import flask
 from dateutil.parser import parse
-from flask import Blueprint, jsonify, request, abort
+from flask import jsonify, request, abort
 
 from cato_api_models.catoapimodels import (
     RunDto,
