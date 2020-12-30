@@ -4,7 +4,7 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     MachineInfoDto,
 )
-from cato_server.mappers.create_full_run_dto_class_mapper import (
+from cato_server.mappers.internal.create_full_run_dto_class_mapper import (
     CreateFullRunDtoClassMapper,
 )
 

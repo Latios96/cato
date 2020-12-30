@@ -2,10 +2,14 @@ from typing import Dict
 
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.datetime_value_mapper import DateTimeValueMapper
-from cato_server.mappers.execution_status_value_mapper import ExecutionStatusValueMapper
-from cato_server.mappers.machine_info_class_mapper import MachineInfoClassMapper
-from cato_server.mappers.test_status_value_mapper import TestStatusValueMapper
+from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
+from cato_server.mappers.internal.execution_status_value_mapper import (
+    ExecutionStatusValueMapper,
+)
+from cato_server.mappers.internal.machine_info_class_mapper import (
+    MachineInfoClassMapper,
+)
+from cato_server.mappers.internal.test_status_value_mapper import TestStatusValueMapper
 from cato_server.domain.test_result import TestResult
 
 

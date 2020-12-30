@@ -21,7 +21,7 @@ from tests.utils import mock_safe
 from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
 
-def test_should_create(sessionmaker_fixture, project):
+def test_should_create(sessionmaker_fixture, project, object_mapper):
     run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     test_result_repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
@@ -31,6 +31,7 @@ def test_should_create(sessionmaker_fixture, project):
         suite_result_repository,
         test_result_repository,
         mock_message_queue,
+        object_mapper,
     )
 
     run = usecase.create_full_run(
@@ -68,5 +69,5 @@ def test_should_create(sessionmaker_fixture, project):
                 status=RunStatusDto.NOT_STARTED,
             ),
         ),
-        usecase._run_dto_class_mapper,
+        object_mapper,
     )

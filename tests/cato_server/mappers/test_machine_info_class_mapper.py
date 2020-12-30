@@ -1,5 +1,7 @@
 from cato_server.domain.machine_info import MachineInfo
-from cato_server.mappers.machine_info_class_mapper import MachineInfoClassMapper
+from cato_server.mappers.internal.machine_info_class_mapper import (
+    MachineInfoClassMapper,
+)
 
 
 def test_map_from_dict():

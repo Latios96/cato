@@ -1,5 +1,6 @@
-from cato_server.mappers.datetime_value_mapper import DateTimeValueMapper
 import datetime
+
+from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
 
 
 def test_map_from():

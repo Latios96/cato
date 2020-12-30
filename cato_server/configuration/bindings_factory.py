@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_server.mappers.internal.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue

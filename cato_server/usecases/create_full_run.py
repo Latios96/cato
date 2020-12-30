@@ -11,7 +11,7 @@ from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
-from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
@@ -29,12 +29,13 @@ class CreateFullRunUsecase:
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
         message_queue: OptionalComponent[AbstractMessageQueue],
+        object_mapper: ObjectMapper,
     ):
         self._run_repository = run_repository
         self._suite_result_repository = suite_result_repository
         self._test_result_repository = test_result_repository
         self._message_queue = message_queue
-        self._run_dto_class_mapper = RunDtoClassMapper()
+        self._object_mapper = object_mapper
 
     def create_full_run(self, create_full_run_dto: CreateFullRunDto):
         run = Run(
@@ -93,7 +94,7 @@ class CreateFullRunUsecase:
                 "run_events",
                 str(create_full_run_dto.project_id),
                 run_created_event,
-                self._run_dto_class_mapper,
+                self._object_mapper,
             )
             logger.info("Published event %s", run_created_event)
         else:

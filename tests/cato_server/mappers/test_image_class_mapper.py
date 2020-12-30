@@ -1,5 +1,5 @@
 from cato_server.domain.image import ImageChannel, Image
-from cato_server.mappers.image_class_mapper import ImageClassMapper
+from cato_server.mappers.internal.image_class_mapper import ImageClassMapper
 
 
 def test_from_dict_with_id():

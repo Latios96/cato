@@ -1,4 +1,4 @@
-from cato_server.mappers.file_class_mapper import FileClassMapper
+from cato_server.mappers.internal.file_class_mapper import FileClassMapper
 from cato_server.domain.file import File
 
 

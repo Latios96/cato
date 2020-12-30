@@ -22,18 +22,9 @@ from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.object_mapper import ObjectMapper
 
 logger = logging.getLogger(__name__)
-
-
-class DictMapper(AbstractClassMapper):
-    def map_from_dict(self, json_data: Dict) -> Dict:
-        return json_data
-
-    def map_to_dict(self, the_dict: Dict) -> Dict:
-        return the_dict
 
 
 class CatoApiClient:

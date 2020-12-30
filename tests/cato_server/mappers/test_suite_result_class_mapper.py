@@ -1,5 +1,7 @@
-from cato_server.mappers.suite_result_class_mapper import SuiteResultClassMapper
 from cato_server.domain.suite_result import SuiteResult
+from cato_server.mappers.internal.suite_result_class_mapper import (
+    SuiteResultClassMapper,
+)
 
 
 def test_map_from_dict():

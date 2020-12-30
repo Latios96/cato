@@ -33,7 +33,7 @@ from cato_server.configuration.bindings_factory import (
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_server.mappers.internal.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
