@@ -1,7 +1,7 @@
 import pytest
 
 from cato_server.domain.project import Project
-from cato_server.mappers.internal.mapper_registry import MapperRegistry
+from cato_server.mappers.mapper_registry import MapperRegistry
 from cato_server.mappers.object_mapper import ObjectMapper, NoMapperFoundException
 from cato_api_models.catoapimodels import MachineInfoDto
 

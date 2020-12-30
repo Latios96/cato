@@ -1,5 +1,5 @@
 from cato_server.domain.project import Project
-from cato_server.mappers.internal.mapper_registry import MapperRegistry
+from cato_server.mappers.mapper_registry import MapperRegistry
 from cato_server.mappers.internal.project_class_mapper import ProjectClassMapper
 
 

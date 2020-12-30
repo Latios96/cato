@@ -4,7 +4,7 @@ from typing import TypeVar, Dict, Type, Iterable, Optional
 from conjure_python_client import ConjureBeanType, ConjureDecoder, ConjureEncoder
 
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.internal.mapper_registry import MapperRegistry
+from cato_server.mappers.mapper_registry import MapperRegistry
 
 T = TypeVar("T")
 
