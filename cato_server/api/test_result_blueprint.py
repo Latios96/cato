@@ -1,37 +1,9 @@
 import logging
 from http.client import BAD_REQUEST
-from typing import Iterable
 
-from flask import Blueprint, jsonify, abort, request
+from flask import Blueprint, jsonify, abort, request, current_app
 
 from cato.domain.test_status import TestStatus
-from cato_server.domain.image import ImageChannel
-from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
-from cato_server.mappers.finish_test_result_dto_class_mapper import (
-    FinishTestResultDtoClassMapper,
-)
-from cato_server.mappers.output_class_mapper import OutputClassMapper
-from cato_server.mappers.test_result_class_mapper import TestResultClassMapper
-from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
-from cato_server.api.validators.test_result_validators import (
-    CreateTestResultValidator,
-    UpdateTestResultValidator,
-    CreateOutputValidator,
-    FinishTestResultValidator,
-)
-from cato_server.mappers.test_result_dto_class_mapper import TestResultDtoDtoClassMapper
-from cato_server.mappers.test_result_short_summary_dto_class_mapper import (
-    TestResultShortSummaryDtoClassMapper,
-)
-from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.image_repository import ImageRepository
-from cato_server.storage.abstract.test_result_repository import (
-    TestResultRepository,
-)
-from cato_server.storage.abstract.output_repository import OutputRepository
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-
 from cato_api_models.catoapimodels import (
     TestResultDto,
     ImageDto,
@@ -40,13 +12,34 @@ from cato_api_models.catoapimodels import (
     TestStatusDto,
     MachineInfoDto,
     TestResultShortSummaryDto,
+    FinishTestResultDto,
+)
+from cato_server.api.base_blueprint import BaseBlueprint
+from cato_server.api.schemas.test_result_schemas import UpdateTestResultSchema
+from cato_server.api.validators.test_result_validators import (
+    CreateTestResultValidator,
+    UpdateTestResultValidator,
+    CreateOutputValidator,
+    FinishTestResultValidator,
+)
+from cato_server.domain.image import ImageChannel
+from cato_server.domain.output import Output
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
+from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.output_repository import OutputRepository
+from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.test_result_repository import (
+    TestResultRepository,
 )
 from cato_server.usecases.finish_test import FinishTest
 
 logger = logging.getLogger(__name__)
 
 
-class TestResultsBlueprint(Blueprint):
+class TestResultsBlueprint(BaseBlueprint):
     def __init__(
         self,
         test_result_repository: TestResultRepository,
@@ -55,6 +48,7 @@ class TestResultsBlueprint(Blueprint):
         output_repository: OutputRepository,
         image_repository: ImageRepository,
         finish_test: FinishTest,
+        object_mapper: ObjectMapper,
     ):
         super(TestResultsBlueprint, self).__init__("test-results", __name__)
         self._test_result_repository = test_result_repository
@@ -63,14 +57,7 @@ class TestResultsBlueprint(Blueprint):
         self._output_repository = output_repository
         self._image_repository = image_repository
         self._finish_test = finish_test
-
-        self._test_result_mapper = TestResultClassMapper()
-        self._output_class_mapper = OutputClassMapper()
-        self._test_result_dto_mapper = TestResultDtoDtoClassMapper()
-        self._test_result_short_summary_dto_mapper = (
-            TestResultShortSummaryDtoClassMapper()
-        )
-        self._finish_test_result_dto_class_mapper = FinishTestResultDtoClassMapper()
+        self._object_mapper = object_mapper
 
         self.route(
             "/test_results/suite_result/<int:suite_result_id>/<string:suite_name>/<string:test_name>",
@@ -113,7 +100,8 @@ class TestResultsBlueprint(Blueprint):
         )
         if not test_result:
             abort(404)
-        return self._map_test_result(test_result)
+
+        return self.json_response(self._object_mapper.to_json(test_result)), 200
 
     def get_test_result_by_run_id_and_identifier(self, run_id, suite_name, test_name):
         identifier = TestIdentifier(suite_name, test_name)
@@ -131,17 +119,17 @@ class TestResultsBlueprint(Blueprint):
         if not test_result:
             abort(404)
 
-        return self._map_test_result(test_result)
+        return self.json_response(self._object_mapper.to_json(test_result))
 
     def get_test_result_by_suite_id(self, suite_id):
         test_results = self._test_result_repository.find_by_suite_result_id(suite_id)
-        return self._map_many_test_results(test_results)
+        return self.json_response(self._object_mapper.many_to_json(test_results))
 
     def get_test_result_output(self, test_result_id):
         output = self._output_repository.find_by_test_result_id(test_result_id)
         if not output:
             abort(404)
-        return jsonify(output)
+        return self.json_response(self._object_mapper.to_json(output))
 
     def create_test_result(self):
         request_json = request.get_json()
@@ -151,11 +139,11 @@ class TestResultsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        test_result = self._test_result_mapper.map_from_dict(request_json)
+        test_result = self._object_mapper.from_dict(request_json, TestResult)
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
-        return self._map_test_result(test_result, 201)
+        return self.json_response(self._object_mapper.to_json(test_result)), 201
 
     def update_test_result(self, test_result_id):
         request_json = request.get_json()
@@ -172,10 +160,10 @@ class TestResultsBlueprint(Blueprint):
         update_data_keys = UpdateTestResultSchema().load(request_json).keys()
         update_data = {key: request_json[key] for key in update_data_keys}
 
-        test_result_dict = self._test_result_mapper.map_to_dict(test_result)
+        test_result_dict = self._object_mapper.to_dict(test_result)
         logger.info("Updating TestResult with data %s", update_data)
         test_result_dict.update(update_data)
-        test_result = self._test_result_mapper.map_from_dict(test_result_dict)
+        test_result = self._object_mapper.from_dict(test_result_dict, TestResult)
 
         logger.info("Saving updated TestResult %s", test_result)
         self._test_result_repository.save(test_result)
@@ -189,23 +177,12 @@ class TestResultsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        output = self._output_class_mapper.map_from_dict(request_json)
+        output = self._object_mapper.from_dict(request_json, Output)
         logger.info(
             "Saving output for test result with id %s", request_json["test_result_id"]
         )
         output = self._output_repository.save(output)
-        return jsonify(self._output_class_mapper.map_to_dict(output)), 201
-
-    def _map_test_result(self, test_result: TestResult, status=200):
-        test_result = self._test_result_mapper.map_to_dict(test_result)
-        return jsonify(test_result), status
-
-    def _map_many_test_results(self, test_results: Iterable[TestResult]):
-        mapped_results = []
-        for result in test_results:
-            result = self._test_result_mapper.map_to_dict(result)
-            mapped_results.append(result)
-        return jsonify(mapped_results)
+        return self.json_response(self._object_mapper.to_json(output)), 201
 
     def get_test_result_by_run_id(self, run_id: int):
         test_results = self._test_result_repository.find_by_run_id(run_id)
@@ -227,11 +204,8 @@ class TestResultsBlueprint(Blueprint):
                     ),
                 )
             )
-
-        return jsonify(
-            self._test_result_short_summary_dto_mapper.map_many_to_dict(
-                test_result_short_summary_dtos
-            )
+        return self.json_response(
+            self._object_mapper.many_to_json(test_result_short_summary_dtos)
         )
 
     def get_test_result_by_id(self, test_result_id):
@@ -285,7 +259,7 @@ class TestResultsBlueprint(Blueprint):
             started_at=result.started_at.isoformat() if result.started_at else None,
             finished_at=result.finished_at.isoformat() if result.finished_at else None,
         )
-        return jsonify(self._test_result_dto_mapper.map_to_dict(test_result_dto))
+        return self.json_response(self._object_mapper.to_json(test_result_dto))
 
     def _to_channel_dto(self, channel: ImageChannel):
         return ImageChannelDto(
@@ -300,8 +274,8 @@ class TestResultsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        finish_test_result_dto = (
-            self._finish_test_result_dto_class_mapper.map_from_dict(request_json)
+        finish_test_result_dto = self._object_mapper.from_dict(
+            request_json, FinishTestResultDto
         )
 
         self._finish_test.finish_test(

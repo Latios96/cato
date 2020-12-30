@@ -33,7 +33,7 @@ class StoreImage:
         logger.info("Reading image %s", path)
         buf = ImageBuf(path)
         if not buf.initialized:
-            raise ValueError(f"Could not read image from path {path}!")
+            raise ValueError(f"Could not read image from path {path}: {buf.geterror()}")
 
         indices_and_name = self._channel_indices_and_name(buf.spec().channelnames)
 

@@ -5,6 +5,7 @@ from typing import Iterable
 
 from cato_server.domain.event import Event
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue, T
 
 import logging
@@ -21,7 +22,7 @@ class RabbitMqMessageQueue(AbstractMessageQueue):
         exchange_name: str,
         routing_key: str,
         event: Event[T],
-        message_mapper: AbstractClassMapper[T],
+        object_mapper: ObjectMapper,
     ):
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=self._host))
 
@@ -31,7 +32,7 @@ class RabbitMqMessageQueue(AbstractMessageQueue):
 
         event_message = {
             "name": event.event_name,
-            "value": message_mapper.map_to_dict(event.value),
+            "value": object_mapper.to_dict(event.value),
         }
         message = json.dumps(event_message)
         channel.basic_publish(
@@ -43,7 +44,7 @@ class RabbitMqMessageQueue(AbstractMessageQueue):
         self,
         exchange_name: str,
         routing_key: str,
-        message_mapper: AbstractClassMapper[T],
+        object_mapper: ObjectMapper,
     ) -> Iterable[Event[T]]:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=self._host))
         channel = connection.channel()

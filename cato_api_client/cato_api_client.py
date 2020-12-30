@@ -25,6 +25,7 @@ from cato_server.domain.test_result import TestResult
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.file_class_mapper import FileClassMapper
 from cato_server.mappers.image_class_mapper import ImageClassMapper
+from cato_server.mappers.object_mapper import ObjectMapper
 
 logger = logging.getLogger(__name__)
 
@@ -38,9 +39,12 @@ class DictMapper(AbstractClassMapper):
 
 
 class CatoApiClient:
-    def __init__(self, url, http_template: AbstractHttpTemplate):
+    def __init__(
+        self, url, http_template: AbstractHttpTemplate, object_mapper: ObjectMapper
+    ):
         self._url = url
         self._http_template = http_template
+        self._object_mapper = object_mapper
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
         url = self._build_url("/api/v1/projects/name/{}".format(project_name))
@@ -62,7 +66,7 @@ class CatoApiClient:
         response = self._post_form(url, {}, files=files)
 
         if response.status_code == 201:
-            return FileClassMapper().map_from_dict(self._get_json(response))
+            return self._object_mapper.from_dict(self._get_json(response), File)
         raise self._create_value_error_for_bad_request(response)
 
     def upload_image(self, path: str) -> Image:
@@ -76,7 +80,7 @@ class CatoApiClient:
         response = self._post_form(url, {}, files=files)
 
         if response.status_code == 201:
-            return ImageClassMapper().map_from_dict(self._get_json(response))
+            return self._object_mapper.from_dict(self._get_json(response), Image)
         raise self._create_value_error_for_bad_request(response)
 
     def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:

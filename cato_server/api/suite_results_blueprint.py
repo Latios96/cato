@@ -4,6 +4,8 @@ from http.client import BAD_REQUEST
 from flask import Blueprint, jsonify, request, abort
 from marshmallow import ValidationError
 
+from cato_server.api.base_blueprint import BaseBlueprint
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.mappers.suite_result_dto_mapper import SuiteResultDtoDtoClassMapper
 from cato_server.mappers.suite_result_summary_dto_mapper import (
     SuiteResultSummaryDtoClassMapper,
@@ -34,21 +36,21 @@ def run_id_exists(self, id):
     return self._run_repository.find_by_id(id) is not None
 
 
-class SuiteResultsBlueprint(Blueprint):
+class SuiteResultsBlueprint(BaseBlueprint):
     def __init__(
         self,
         suite_result_repository: SuiteResultRepository,
         run_repository: RunRepository,
         test_result_repository: TestResultRepository,
+        object_mapper: ObjectMapper,
     ):
         super(SuiteResultsBlueprint, self).__init__("suite-results", __name__)
         self._suite_result_repository = suite_result_repository
         self._run_repository = run_repository
         self._test_result_repository = test_result_repository
+        self._object_mapper = object_mapper
 
         self._status_calculator = RunStatusCalculator()
-        self._suite_result_dto_mapper = SuiteResultDtoDtoClassMapper()
-        self._suite_result_summary_dto_class_mapper = SuiteResultSummaryDtoClassMapper()
 
         self.route("/suite_results/run/<run_id>", methods=["GET"])(
             self.suite_result_by_run
@@ -82,10 +84,7 @@ class SuiteResultsBlueprint(Blueprint):
                     ),
                 )
             )
-
-        return jsonify(
-            self._suite_result_dto_mapper.map_many_to_dict(suite_result_dtos)
-        )
+        return self.json_response(self._object_mapper.many_to_json(suite_result_dtos))
 
     def create_suite_result(self):
         request_json = request.get_json()
@@ -103,7 +102,7 @@ class SuiteResultsBlueprint(Blueprint):
         )
         suite_result = self._suite_result_repository.save(suite_result)
         logger.info("Created SuiteResult %s", suite_result)
-        return jsonify(suite_result), 201
+        return self.json_response(self._object_mapper.to_json(suite_result)), 201
 
     def _run_id_exists(self, id):
         if self._run_repository.find_by_id(id) is None:
@@ -141,4 +140,4 @@ class SuiteResultsBlueprint(Blueprint):
             suite_variables=suite_result.suite_variables,
             tests=tests_result_short_summary_dtos,
         )
-        return jsonify(self._suite_result_summary_dto_class_mapper.map_to_dict(dto))
+        return self.json_response(self._object_mapper.to_json(dto))

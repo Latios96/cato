@@ -5,6 +5,7 @@ from cato.domain.test_status import TestStatus
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.mappers.test_result_finished_dto_class_mapper import (
     TestResultFinishedDtoClassMapper,
 )
@@ -26,11 +27,12 @@ class FinishTest:
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
         message_queue: OptionalComponent[AbstractMessageQueue],
+        object_mapper: ObjectMapper,
     ):
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
         self._message_queue = message_queue
-        self._test_result_finished_class_mapper = TestResultFinishedDtoClassMapper()
+        self._object_mapper = object_mapper
 
     def finish_test(
         self,
@@ -74,7 +76,7 @@ class FinishTest:
                 "test_result_events",
                 str(test_result.suite_result_id),
                 event,
-                self._test_result_finished_class_mapper,
+                self._object_mapper,
             )
 
     def fail_test(self, test_result_id: int, message: str):

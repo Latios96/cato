@@ -5,7 +5,13 @@ import flask
 from dateutil.parser import parse
 from flask import Blueprint, jsonify, request, abort
 
-from cato_api_models.catoapimodels import RunDto, RunStatusDto, RunSummaryDto
+from cato_api_models.catoapimodels import (
+    RunDto,
+    RunStatusDto,
+    RunSummaryDto,
+    CreateFullRunDto,
+)
+from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
@@ -13,26 +19,21 @@ from cato_server.api.validators.run_validators import (
 )
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.run import Run
-from cato_server.mappers.create_full_run_dto_class_mapper import (
-    CreateFullRunDtoClassMapper,
-)
-from cato_server.mappers.run_class_mapper import RunClassMapper
-from cato_server.mappers.run_dto_class_mapper import RunDtoClassMapper
-from cato_server.mappers.run_summary_dto_class_mapper import RunSummaryDtoClassMapper
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
-from cato_server.storage.abstract.test_result_repository import (
-    TestResultRepository,
-)
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.test_result_repository import (
+    TestResultRepository,
+)
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
 
 logger = logging.getLogger(__name__)
 
 
-class RunsBlueprint(Blueprint):
+class RunsBlueprint(BaseBlueprint):
     def __init__(
         self,
         run_repository: RunRepository,
@@ -41,6 +42,7 @@ class RunsBlueprint(Blueprint):
         create_full_run_usecase: CreateFullRunUsecase,
         message_queue: OptionalComponent[AbstractMessageQueue],
         suite_result_repository: SuiteResultRepository,
+        object_mapper: ObjectMapper,
     ):
         super(RunsBlueprint, self).__init__("runs", __name__)
         self._run_repository = run_repository
@@ -49,11 +51,9 @@ class RunsBlueprint(Blueprint):
         self._create_full_run_usecase = create_full_run_usecase
         self._message_queue = message_queue
         self._suite_result_repository = suite_result_repository
+        self._object_mapper = object_mapper
 
-        self._run_class_mapper = RunClassMapper()
         self._run_status_calculator = RunStatusCalculator()
-        self._run_dto_class_mapper = RunDtoClassMapper()
-        self._run_summary_dto_class_mapper = RunSummaryDtoClassMapper()
 
         self.route("/runs/project/<project_id>", methods=["GET"])(self.run_by_project)
         self.route("/runs", methods=["POST"])(self.create_run)
@@ -85,7 +85,7 @@ class RunsBlueprint(Blueprint):
                     status=RunStatusDto(status),
                 )
             )
-        return jsonify(self._run_dto_class_mapper.map_many_to_dict(run_dtos))
+        return self.json_response(self._object_mapper.many_to_json(run_dtos))
 
     def create_run(self):
         request_json = request.get_json()
@@ -100,7 +100,7 @@ class RunsBlueprint(Blueprint):
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)
-        return jsonify(run), 201
+        return self.json_response(self._object_mapper.to_json(run)), 201
 
     def status(self, run_id):
         status_by_run_id = (
@@ -120,10 +120,12 @@ class RunsBlueprint(Blueprint):
         if errors:
             return jsonify(errors), BAD_REQUEST
 
-        create_full_run_dto = CreateFullRunDtoClassMapper().map_from_dict(request_json)
+        create_full_run_dto = self._object_mapper.from_dict(
+            request_json, CreateFullRunDto
+        )
 
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
-        return jsonify(self._run_class_mapper.map_to_dict(run)), 201
+        return self.json_response(self._object_mapper.to_json(run)), 201
 
     def run_events_for_project(self, project_id):
         if not self._project_repository.find_by_id(project_id):
@@ -133,7 +135,7 @@ class RunsBlueprint(Blueprint):
         response = flask.Response(
             format_sse(
                 message_queue.get_event_stream(
-                    "run_events", str(project_id), self._run_dto_class_mapper
+                    "run_events", str(project_id), self._object_mapper
                 )
             ),
             mimetype="text/event-stream",
@@ -172,4 +174,4 @@ class RunsBlueprint(Blueprint):
             failed_test_count=failed_test_count,
             duration=duration,
         )
-        return jsonify(self._run_summary_dto_class_mapper.map_to_dict(run_summary_dto))
+        return self.json_response(self._object_mapper.to_json(run_summary_dto))

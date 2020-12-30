@@ -15,7 +15,7 @@ from cato_server.usecases.finish_test import FinishTest
 from tests.utils import mock_safe
 
 
-def test_should_finish(test_result_factory):
+def test_should_finish(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
     started_at = datetime.datetime.now()
     finished_at = datetime.datetime.now()
@@ -28,7 +28,7 @@ def test_should_finish(test_result_factory):
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue
+        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
     )
     finish_test._get_finished_time = lambda: finished_at
 
@@ -58,7 +58,7 @@ def test_should_finish(test_result_factory):
     message_queue.component.send_event.assert_called_once()
 
 
-def test_should_raise_no_test_result_with_id():
+def test_should_raise_no_test_result_with_id(object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.find_by_id.return_value = None
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
@@ -67,7 +67,7 @@ def test_should_raise_no_test_result_with_id():
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue
+        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
     )
 
     with pytest.raises(ValueError):
@@ -81,7 +81,7 @@ def test_should_raise_no_test_result_with_id():
         )
 
 
-def test_should_fail_test(test_result_factory):
+def test_should_fail_test(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
     started_at = datetime.datetime.now()
     finished_at = datetime.datetime.now()
@@ -94,7 +94,7 @@ def test_should_fail_test(test_result_factory):
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue
+        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
     )
     finish_test._get_finished_time = lambda: finished_at
 

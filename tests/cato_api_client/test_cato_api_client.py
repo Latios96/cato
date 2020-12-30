@@ -56,7 +56,7 @@ class FlaskClientHttpTemplate(AbstractHttpTemplate):
 class CatoApiTestClient(CatoApiClient):
     def __init__(self, url, client, object_mapper):
         super(CatoApiTestClient, self).__init__(
-            url, FlaskClientHttpTemplate(client, object_mapper)
+            url, FlaskClientHttpTemplate(client, object_mapper), object_mapper
         )
         self._client = client
 

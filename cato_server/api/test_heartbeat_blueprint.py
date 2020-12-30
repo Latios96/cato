@@ -3,8 +3,10 @@ import logging
 
 from flask import Blueprint, jsonify
 
+from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.mappers.test_heartbeat_dto_class_mapper import (
     TestHeartbeatDtoClassMapper,
 )
@@ -18,18 +20,19 @@ from cato_api_models.catoapimodels import TestHeartbeatDto
 logger = logging.getLogger(__name__)
 
 
-class TestHeartbeatBlueprint(Blueprint):
+class TestHeartbeatBlueprint(BaseBlueprint):
     def __init__(
         self,
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
+        object_mapper: ObjectMapper,
     ):
         super(TestHeartbeatBlueprint, self).__init__("test_heartbeats", __name__)
 
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
 
-        self._test_heartbeat_dto_class_mapper = TestHeartbeatDtoClassMapper()
+        self._object_mapper = object_mapper
 
         self.route("/test_heartbeats/<int:test_result_id>", methods=["POST"])(
             self.register_heartbeat
@@ -96,6 +99,4 @@ class TestHeartbeatBlueprint(Blueprint):
             test_result_id=test_heartbeat.test_result_id,
             last_beat=test_heartbeat.last_beat.isoformat(),
         )
-        return jsonify(
-            self._test_heartbeat_dto_class_mapper.map_to_dict(test_heartbeat_dto)
-        )
+        return self.json_response(self._object_mapper.to_json(test_heartbeat_dto))

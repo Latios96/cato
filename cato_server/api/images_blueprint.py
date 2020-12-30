@@ -4,21 +4,27 @@ import tempfile
 
 from flask import Blueprint, jsonify, request, send_file, abort
 
+from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.mappers.image_class_mapper import ImageClassMapper
 from cato_server.images.store_image import StoreImage
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 
 logger = logging.getLogger(__name__)
 
 
-class ImagesBlueprint(Blueprint):
+class ImagesBlueprint(BaseBlueprint):
     def __init__(
-        self, file_storage: AbstractFileStorage, image_repository: ImageRepository
+        self,
+        file_storage: AbstractFileStorage,
+        image_repository: ImageRepository,
+        object_mapper: ObjectMapper,
     ):
         super(ImagesBlueprint, self).__init__("images", __name__)
         self._file_storage = file_storage
         self._image_repository = image_repository
+        self._object_mapper = object_mapper
 
         self.route("images", methods=["POST"])(self.upload_file)
         self.route("images/original_file/<int:file_id>", methods=["GET"])(
@@ -40,7 +46,7 @@ class ImagesBlueprint(Blueprint):
 
             logger.info("Deleting tmpdir %s", tmpdirname)
 
-        return jsonify(image), 201
+        return self.json_response(self._object_mapper.to_json(image)), 201
 
     def get_original_image_file(self, file_id: int):
         image = self._image_repository.find_by_id(file_id)
@@ -54,4 +60,4 @@ class ImagesBlueprint(Blueprint):
         image = self._image_repository.find_by_id(image_id)
         if not image:
             abort(404)
-        return jsonify(ImageClassMapper().map_to_dict(image)), 200
+        return self.json_response(self._object_mapper.to_json(image)), 200

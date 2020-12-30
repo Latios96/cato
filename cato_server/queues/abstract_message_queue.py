@@ -2,6 +2,7 @@ from typing import TypeVar, Iterable
 
 from cato_server.domain.event import Event
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_server.mappers.object_mapper import ObjectMapper
 
 T = TypeVar("T")
 
@@ -12,7 +13,7 @@ class AbstractMessageQueue:
         exchange_name: str,
         routing_key: str,
         event: Event[T],
-        value_mapper: AbstractClassMapper[T],
+        object_mapper: ObjectMapper,
     ):
         raise NotImplementedError()
 
@@ -20,6 +21,6 @@ class AbstractMessageQueue:
         self,
         exchange_name: str,
         routing_key: str,
-        value_mapper: AbstractClassMapper[T],
+        object_mapper: ObjectMapper,
     ) -> Iterable[Event[T]]:
         raise NotImplementedError()
