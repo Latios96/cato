@@ -1,7 +1,5 @@
 import argparse
 
-from sqlalchemy.testing.config import Config
-
 import cato_server.server_logging
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
