@@ -118,7 +118,7 @@ build.dependsOn('poetryBuild')
 install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPythonCheck(type: PythonTask){
-    command = '-m black cato cato_server tests cato_api_client alembic --check'
+    command = '-m black cato cato_server tests cato_api_client --check'
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
@@ -127,7 +127,7 @@ task formatPythonCheck(type: PythonTask){
 }
 
 task formatPython(type:PythonTask){
-    command = '-m black cato cato_server tests cato_api_client alembic'
+    command = '-m black cato cato_server tests cato_api_client'
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
