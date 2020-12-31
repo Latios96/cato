@@ -16,10 +16,10 @@ depends_on = None
 
 
 def upgrade():
-    with op.batch_alter_table("image_entity") as batch_op:
-        batch_op.alter_column("file_entity", "md5_hash", new_column_name="hash")
+    with op.batch_alter_table("file_entity") as batch_op:
+        batch_op.alter_column("md5_hash", new_column_name="hash")
 
 
 def downgrade():
-    with op.batch_alter_table("image_entity") as batch_op:
-        batch_op.alter_column("file_entity", "hash", new_column_name="md5_hash")
+    with op.batch_alter_table("file_entity") as batch_op:
+        batch_op.alter_column("hash", new_column_name="md5_hash")
