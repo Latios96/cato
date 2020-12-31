@@ -6,7 +6,6 @@ Create Date: 2020-11-25 10:51:26.227083
 
 """
 from alembic import op
-import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
@@ -17,8 +16,10 @@ depends_on = None
 
 
 def upgrade():
-    op.alter_column("file_entity", "md5_hash", new_column_name="hash")
+    with op.batch_alter_table("image_entity") as batch_op:
+        batch_op.alter_column("file_entity", "md5_hash", new_column_name="hash")
 
 
 def downgrade():
-    op.alter_column("file_entity", "hash", new_column_name="md5_hash")
+    with op.batch_alter_table("image_entity") as batch_op:
+        batch_op.alter_column("file_entity", "hash", new_column_name="md5_hash")
