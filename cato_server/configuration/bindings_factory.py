@@ -198,17 +198,16 @@ class BindingsFactory:
         )
 
     def _get_message_queue(self) -> OptionalComponent[AbstractMessageQueue]:
-        if self._rabbit_mq_message_queue_is_available():
-            logger.info(
-                "RabbitMq is available at %s",
-                self._configuration.message_queue_configuration.host,
-            )
-            return OptionalComponent(
-                RabbitMqMessageQueue(
-                    self._configuration.message_queue_configuration.host
-                )
-            )
-        return OptionalComponent.empty()
+        if not self._rabbit_mq_message_queue_is_available():
+            logger.info("RabbitMq is not available")
+            return OptionalComponent.empty()
+        logger.info(
+            "RabbitMq is available at %s",
+            self._configuration.message_queue_configuration.host,
+        )
+        return OptionalComponent(
+            RabbitMqMessageQueue(self._configuration.message_queue_configuration.host)
+        )
 
     def _rabbit_mq_message_queue_is_available(self):
         connection_parameters = pika.ConnectionParameters(
@@ -220,6 +219,6 @@ class BindingsFactory:
                 connection.close()
                 return True
         except Exception as error:
-            logger.error("Error when connecting to RabbitMQ")
+            logger.error("Error when connecting to RabbitMQ:")
             logger.error(error)
             return False
