@@ -17,7 +17,8 @@ depends_on = None
 
 
 def upgrade():
-    op.drop_column("test_result_entity", "output")
+    with op.batch_alter_table("test_result_entity") as batch_op:
+        batch_op.drop_column("output")
 
 
 def downgrade():

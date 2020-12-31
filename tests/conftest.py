@@ -61,9 +61,11 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
-    cursor = dbapi_connection.cursor()
-    cursor.execute("PRAGMA foreign_keys=ON")
-    cursor.close()
+    is_postgres = hasattr(dbapi_connection, "info")
+    if not is_postgres:
+        cursor = dbapi_connection.cursor()
+        cursor.execute("PRAGMA foreign_keys=ON")
+        cursor.close()
 
 
 @pytest.fixture

@@ -27,14 +27,21 @@ depends_on = None
 
 
 def upgrade():
-    op.add_column(
-        "test_result_entity",
-        sa.Column("image_output_id", sa.Integer(), sa.ForeignKey("image_entity.id")),
-    )
-    op.add_column(
-        "test_result_entity",
-        sa.Column("reference_image_id", sa.Integer(), sa.ForeignKey("image_entity.id")),
-    )
+    with op.batch_alter_table("test_result_entity", schema=None) as batch_op:
+        batch_op.add_column(
+            sa.Column(
+                "image_output_id",
+                sa.Integer(),
+                sa.ForeignKey("image_entity.id", name="image_output_id_fk"),
+            ),
+        )
+        batch_op.add_column(
+            sa.Column(
+                "reference_image_id",
+                sa.Integer(),
+                sa.ForeignKey("image_entity.id", name="reference_image_id_fk"),
+            ),
+        )
     conn = op.get_bind()
     res = conn.execute(
         "select id, image_output, reference_image from test_result_entity"
