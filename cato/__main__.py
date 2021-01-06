@@ -22,8 +22,9 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
-from cato_api_client import cato_api_client
+from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
+from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
 
@@ -39,6 +40,7 @@ def create_object_graph():
             cato.utils.machine_info_collector,
             cato.reporter.stats_calculator,
             cato_api_client,
+            http_template,
         ],
         binding_specs=[TestExecutionReporterBindings()],
     )
@@ -49,6 +51,10 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
         bind("http_template", to_class=HttpTemplate)
         bind("url", to_instance="http://127.0.0.1:5000")
+        bind(
+            "mapper_registry",
+            to_instance=MapperRegistryFactory().create_mapper_registry(),
+        )
 
 
 def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: bool):
