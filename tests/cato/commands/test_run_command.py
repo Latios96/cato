@@ -3,6 +3,8 @@
 # test identifier
 import copy
 import datetime
+import logging
+from unittest.mock import call
 
 import pytest
 
@@ -44,11 +46,13 @@ def test_should_run_all_suites_and_tests():
     mock_test_suite_runner = mock_safe(TestSuiteRunner)
     mock_timing_report_generator = mock_safe(TimingReportGenerator)
     mock_end_message_generator = mock_safe(EndMessageGenerator)
+    mock_logger = mock_safe(logging.Logger)
     run_command = RunCommand(
         mock_json_config_parser,
         mock_test_suite_runner,
         mock_timing_report_generator,
         mock_end_message_generator,
+        mock_logger,
     )
     mock_json_config_parser.parse.return_value = config
     started_at = datetime.datetime.now()
@@ -73,12 +77,17 @@ def test_should_run_all_suites_and_tests():
         )
     ]
     mock_test_suite_runner.run_test_suites.return_value = result
+    mock_timing_report_generator.generate.return_value = "Timing report"
+    mock_end_message_generator.generate_end_message.return_value = "End message"
 
     run_command.run("my_path", None, None)
 
     mock_test_suite_runner.run_test_suites.assert_called_with(config)
     mock_timing_report_generator.generate.assert_called_with(result)
     mock_end_message_generator.generate_end_message.assert_called_with(result)
+    mock_logger.info.assert_has_calls(
+        [call(""), call("Timing report"), call(""), call("End message")]
+    )
 
 
 def test_should_filter_by_suite_name():
@@ -87,11 +96,13 @@ def test_should_filter_by_suite_name():
     mock_test_suite_runner = mock_safe(TestSuiteRunner)
     mock_timing_report_generator = mock_safe(TimingReportGenerator)
     mock_end_message_generator = mock_safe(EndMessageGenerator)
+    mock_logger = mock_safe(logging.Logger)
     run_command = RunCommand(
         mock_json_config_parser,
         mock_test_suite_runner,
         mock_timing_report_generator,
         mock_end_message_generator,
+        mock_logger,
     )
     mock_json_config_parser.parse.return_value = config
 
@@ -108,11 +119,13 @@ def test_should_filter_by_test_identifier():
     mock_test_suite_runner = mock_safe(TestSuiteRunner)
     mock_timing_report_generator = mock_safe(TimingReportGenerator)
     mock_end_message_generator = mock_safe(EndMessageGenerator)
+    mock_logger = mock_safe(logging.Logger)
     run_command = RunCommand(
         mock_json_config_parser,
         mock_test_suite_runner,
         mock_timing_report_generator,
         mock_end_message_generator,
+        mock_logger,
     )
     mock_json_config_parser.parse.return_value = config
 
@@ -128,12 +141,14 @@ def test_should_filter_by_invalid_test_identifier_str():
     mock_json_config_parser = mock_safe(JsonConfigParser)
     mock_test_suite_runner = mock_safe(TestSuiteRunner)
     mock_timing_report_generator = mock_safe(TimingReportGenerator)
-    mock_end_message_generator = mock_safe(EndMessageGenerator)
+    mock_end_message_generator = (mock_safe(EndMessageGenerator),)
+    mock_logger = mock_safe(logging.Logger)
     run_command = RunCommand(
         mock_json_config_parser,
         mock_test_suite_runner,
         mock_timing_report_generator,
         mock_end_message_generator,
+        mock_logger,
     )
     mock_json_config_parser.parse.return_value = config
 

@@ -9,8 +9,6 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_server.domain.test_identifier import TestIdentifier
 
-logger = logging.getLogger(__name__)
-
 
 class RunCommand(BaseCliCommand):
     def __init__(
@@ -19,11 +17,13 @@ class RunCommand(BaseCliCommand):
         test_suite_runner: TestSuiteRunner,
         timing_report_generator: TimingReportGenerator,
         end_message_generator: EndMessageGenerator,
+        logger: logging.Logger,
     ):
         self._json_config_parser = json_config_parser
         self._test_suite_runner = test_suite_runner
         self._timing_report_generator = timing_report_generator
         self._end_message_generator = end_message_generator
+        self._logger = logger
 
     def run(
         self, path: str, suite_name: Optional[str], test_identifier_str: Optional[str]
@@ -41,8 +41,8 @@ class RunCommand(BaseCliCommand):
 
         result = self._test_suite_runner.run_test_suites(config)
 
-        logger.info("")
-        logger.info(self._timing_report_generator.generate(result))
+        self._logger.info("")
+        self._logger.info(self._timing_report_generator.generate(result))
 
-        logger.info("")
-        logger.info(self._end_message_generator.generate_end_message(result))
+        self._logger.info("")
+        self._logger.info(self._end_message_generator.generate_end_message(result))
