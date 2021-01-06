@@ -15,7 +15,6 @@ from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
 from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
 from tests.utils import mock_safe
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,

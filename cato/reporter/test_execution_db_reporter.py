@@ -1,7 +1,7 @@
 import datetime
 import logging
 
-from typing import List, Optional
+from typing import List
 
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
