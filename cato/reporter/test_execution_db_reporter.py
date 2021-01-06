@@ -81,6 +81,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
         run = self._cato_api_client.create_full_run(create_full_run_dto)
         logger.info("Created run %s", run)
         self._run_id = run.id
+        logger.info(
+            "You can find your run at %s",
+            self._cato_api_client.generate_run_url(project.id, run.id),
+        )
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         if self._run_id is None:
