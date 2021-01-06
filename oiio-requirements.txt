@@ -1,3 +1,4 @@
 https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-win_amd64.whl ; sys.platform=='win32'
 https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-macosx_10_13_x86_64.whl ; sys.platform=='darwin'
 https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-linux_x86_64.whl ; sys.platform=='linux'
+conjure_python_client
