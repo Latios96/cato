@@ -38,13 +38,16 @@ class ImagesBlueprint(BaseBlueprint):
 
         store_image = StoreImage(self._file_storage, self._image_repository)
 
-        with tempfile.TemporaryDirectory() as tmpdirname:
-            tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
-            uploaded_file.save(tmp_path)
-            image = store_image.store_image(tmp_path)
+        try:
+            with tempfile.TemporaryDirectory() as tmpdirname:
+                tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
+                uploaded_file.save(tmp_path)
+                image = store_image.store_image(tmp_path)
 
-            logger.info("Deleting tmpdir %s", tmpdirname)
-
+                logger.info("Deleting tmpdir %s", tmpdirname)
+        except Exception as e:
+            logger.error(e, exc_info=True)
+            return jsonify({"message": "Error when saving image"}), 400
         return self.json_response(self._object_mapper.to_json(image)), 201
 
     def get_original_image_file(self, file_id: int):

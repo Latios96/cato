@@ -54,3 +54,12 @@ def test_get_image_found_image(client, test_resource_provider):
         "width": 100,
         "height": 100,
     }
+
+
+def test_upload_unsupported_file(client, test_resource_provider):
+    test_file = test_resource_provider.resource_by_name("unsupported-file.txt")
+    data = {"file": (open(test_file, "rb"), "test_file.txt")}
+
+    response = client.post(API_V_IMAGES, data=data)
+
+    assert response.status_code == 400
