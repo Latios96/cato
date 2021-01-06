@@ -30,7 +30,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
-        self._run_id: Optional[int] = None
+        self._run_id = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         logger.info("Reporting execution start to server..")
@@ -87,9 +87,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
         )
 
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
-        if self._run_id is None:
-            raise RuntimeError("start_execution has to be called first!")
-
         test_identifier = TestIdentifier(current_suite.name, test.name)
         test_result = self._cato_api_client.find_test_result_by_run_id_and_identifier(
             self._run_id, test_identifier
@@ -111,8 +108,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
     ):
-        if self._run_id is None:
-            raise RuntimeError("start_execution has to be called first!")
         test_identifier = TestIdentifier(
             current_suite.name, test_execution_result.test.name
         )
@@ -157,3 +152,13 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
     def report_heartbeat(self, test_identifier: TestIdentifier):
         self._cato_api_client.heartbeat_test(self._run_id, test_identifier)
+
+    @property
+    def _run_id(self) -> int:
+        if self.__run_id_value is None:
+            raise RuntimeError("start_execution has to be called first!")
+        return self.__run_id_value
+
+    @_run_id.setter
+    def _run_id(self, run_id: int):
+        self.__run_id_value = run_id

@@ -287,3 +287,25 @@ def test_report_test_result_should_report_without_images(test_result_factory):
         test_result.id, "thisismyoutput"
     )
     mock_cato_api_client.upload_image.assert_not_called()
+
+
+def test_report_test_result_no_run_id_should_fail():
+    mock_machine_info_collector = mock_safe(MachineInfoCollector)
+    mock_cato_api_client = mock_safe(CatoApiClient)
+    test_execution_db_reporter = TestExecutionDbReporter(
+        mock_machine_info_collector, mock_cato_api_client
+    )
+    test_execution_result = TestExecutionResult(
+        test=SUITES[0].tests[0],
+        status=TestStatus.SUCCESS,
+        output=["this", "is", "my", "output"],
+        seconds=4,
+        message="",
+        image_output=None,
+        reference_image=None,
+        started_at=datetime.datetime.now(),
+        finished_at=datetime.datetime.now(),
+    )
+
+    with pytest.raises(RuntimeError):
+        test_execution_db_reporter.report_test_result(SUITES[0], test_execution_result)
