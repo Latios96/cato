@@ -5,14 +5,10 @@ import os
 import pinject
 
 import cato
+from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
-from cato.domain.test_suite import (
-    iterate_suites_and_tests,
-    count_tests,
-    count_suites,
-)
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
@@ -72,18 +68,10 @@ def update_missing_reference_images(path):
 
 
 def list_tests(path):
-    path = config_path(path)
-    logger.info(path)
-    config_parser = JsonConfigParser()
-    config = config_parser.parse(path)
+    obj_graph = create_object_graph()
+    list_tests_command = obj_graph.provide(ListTestsCommand)
 
-    logger.info(
-        f"Found {count_tests(config.test_suites)} tests in {count_suites(config.test_suites)} suites:"
-    )
-    logger.info("")
-
-    for suite, test in iterate_suites_and_tests(config.test_suites):
-        logger.info(f"{suite.name}/{test.name}")
+    list_tests_command.list_tests(path)
 
 
 def update_reference(path, test_identifier):
