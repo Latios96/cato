@@ -1,29 +1,24 @@
 import argparse
-import json
 import logging
 import os
 
 import pinject
 
 import cato
+from cato.commands.run_command import RunCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_template_generator import ConfigTemplateGenerator
-from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import (
     iterate_suites_and_tests,
     count_tests,
     count_suites,
-    filter_by_suite_name,
-    filter_by_test_identifier,
 )
-from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
-from cato.reporter.timing_report_generator import TimingReportGenerator
-from cato.runners.test_suite_runner import TestSuiteRunner
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
+from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
@@ -57,37 +52,11 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         )
 
 
-def run(path: str, suite_name: str, test_identifier_str: str, dump_report_json: bool):
-    path = config_path(path)
-
-    config_parser = JsonConfigParser()
-    config = config_parser.parse(path)
-
+def run(path: str, suite_name: str, test_identifier_str: str):
     obj_graph = create_object_graph()
-    test_suite_runner = obj_graph.provide(TestSuiteRunner)
+    run_command = obj_graph.provide(RunCommand)
 
-    if suite_name:
-        config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
-    if test_identifier_str:
-        config.test_suites = filter_by_test_identifier(
-            config.test_suites, TestIdentifier.from_string(test_identifier_str)
-        )
-
-    result = test_suite_runner.run_test_suites(config)
-
-    timing_report_generator = TimingReportGenerator()
-    logger.info("")
-    logger.info(timing_report_generator.generate(result))
-
-    generator = obj_graph.provide(EndMessageGenerator)
-    logger.info("")
-    logger.info(generator.generate_end_message(result))
-
-    report_data = {"result": [x.to_dict() for x in result]}
-
-    if dump_report_json:
-        with open("report.json", "w") as f:
-            json.dump(report_data, f)
+    run_command.run(path, suite_name, test_identifier_str)
 
 
 def update_missing_reference_images(path):
@@ -164,11 +133,6 @@ def main():
         "--test-identifier",
         help="Identifier of test to run. Example: suite_name/test_name",
     )
-    run_parser.add_argument(
-        "--dump-report-json",
-        action="store_true",
-        help="Dump report data as json (usefull for debugging report generation)",
-    )
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
         help="Updates missing reference images after a test run",
@@ -195,7 +159,7 @@ def main():
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path, args.suite, args.test_identifier, args.dump_report_json)
+        run(args.path, args.suite, args.test_identifier)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":
