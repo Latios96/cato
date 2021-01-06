@@ -35,6 +35,9 @@ class RequestsHttpTemplateResponse(HttpTemplateResponse):
     def get_json(self):
         return self._response.json()
 
+    def __str__(self):
+        return str(self._response)
+
 
 class HttpTemplateException(Exception):
     pass
