@@ -15,8 +15,8 @@ class ListTestsCommand(BaseCliCommand):
         self._logger = logger
 
     def list_tests(self, path: str):
+        path = self._config_path(path)
         config = self._json_config_parser.parse(path)
-
         self._logger.info(
             f"Found {count_tests(config.test_suites)} tests in {count_suites(config.test_suites)} suites:"
         )
