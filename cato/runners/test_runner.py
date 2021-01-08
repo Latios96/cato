@@ -63,7 +63,7 @@ class TestRunner:
 
         start = datetime.datetime.now()
 
-        self._reporter.report_message('Command: "{}"'.format(command))
+        self._reporter.report_test_command('Command: "{}"'.format(command))
         command_result = self._command_runner.run(command)
 
         end = datetime.datetime.now()
