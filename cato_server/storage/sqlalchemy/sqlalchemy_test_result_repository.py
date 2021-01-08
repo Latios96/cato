@@ -292,3 +292,20 @@ class SqlAlchemyTestResultRepository(
         session.close()
         if entity:
             return self.to_domain_object(entity)
+
+    def find_by_run_id_filter_by_test_status(
+        self, run_id: int, test_status: TestStatus
+    ):
+        session = self._session_maker()
+
+        entities = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .filter(_TestResultMapping.status == self._map_test_status(test_status))
+            .all()
+        )
+        session.close()
+
+        return self._map_many_to_domain_object(entities)

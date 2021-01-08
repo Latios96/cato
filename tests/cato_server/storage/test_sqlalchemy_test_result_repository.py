@@ -327,3 +327,33 @@ def test_find_by_run_id_and_test_identifier_should_not_find(
     )
 
     assert result is None
+
+
+def test_find_by_run_id_filter_by_test_status_should_not_find_not_existing_run_id(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id_filter_by_test_status(42, TestStatus.SUCCESS)
+
+    assert result == []
+
+
+def test_find_by_run_id_filter_by_test_status_should_not_find_not_matching_status(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.FAILED)
+
+    assert result == []
+
+
+def test_find_by_run_id_filter_by_test_status_should_find(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.SUCCESS)
+
+    assert result == [test_result]

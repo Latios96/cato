@@ -53,3 +53,8 @@ class TestResultRepository(AbstractRepository):
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
         raise NotImplementedError()
+
+    def find_by_run_id_filter_by_test_status(
+        self, run_id: int, test_status: TestStatus
+    ):
+        raise NotImplementedError()
