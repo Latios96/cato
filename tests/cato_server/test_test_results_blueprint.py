@@ -340,3 +340,30 @@ def test_finish_test_failure(client, test_result, stored_image):
 
     assert rv.status_code == 400
     assert rv.json == {"image_output": ["No image exists for id 42."]}
+
+
+def test_should_find_by_run_id_and_test_status(client, run, test_result):
+    url = f"/api/v1/test_results/run/{run.id}/test_status/SUCCESS"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json == ["my_suite/my_test_name"]
+
+
+def test_should_not_find_by_run_id_and_test_status(client, run, test_result):
+    url = f"/api/v1/test_results/run/{run.id}/test_status/FAILED"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json == []
+
+
+def test_invalid_test_status(client, run, test_result):
+    url = f"/api/v1/test_results/run/{run.id}/test_status/dd"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 400
+    assert rv.json == {"test_status": "Not a valid test status: dd."}

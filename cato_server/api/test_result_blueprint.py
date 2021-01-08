@@ -84,6 +84,10 @@ class TestResultsBlueprint(BaseBlueprint):
             self.get_test_result_by_run_id
         )
 
+        self.route(
+            "/test_results/run/<int:run_id>/test_status/<test_status>", methods=["GET"]
+        )(self.get_test_result_by_run_id_and_test_status)
+
         self.route("/test_results/<int:test_result_id>", methods=["GET"])(
             self.get_test_result_by_id
         )
@@ -288,3 +292,21 @@ class TestResultsBlueprint(BaseBlueprint):
         )
 
         return jsonify(success=True), 200
+
+    def get_test_result_by_run_id_and_test_status(self, run_id, test_status):
+        try:
+            test_status = TestStatus(test_status)
+        except ValueError:
+            return (
+                jsonify({"test_status": f"Not a valid test status: {test_status}."}),
+                400,
+            )
+        test_results = (
+            self._test_result_repository.find_by_run_id_filter_by_test_status(
+                run_id, test_status
+            )
+        )
+
+        test_identifiers = list(map(lambda x: str(x.test_identifier), test_results))
+
+        return jsonify(test_identifiers), 200
