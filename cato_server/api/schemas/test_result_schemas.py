@@ -70,6 +70,6 @@ class FinishTestResultSchema(Schema):
     id = ID_FIELD
     status = EnumField(TestStatus, required=True)
     seconds = fields.Float(min=0, required=True)
-    message = fields.String(validate=[Length(1)], required=True)
+    message = fields.String(validate=[Length(0)], required=True)
     image_output = fields.Integer()
     reference_image = fields.Integer()
