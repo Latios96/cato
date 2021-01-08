@@ -25,3 +25,7 @@ snapshots[
 [INFO]  
 [INFO]  My_first_test_Suite/My_first_test
 """
+
+snapshots["test_update_missing_reference_images_should_have_no_effect 1"] = ""
+
+snapshots["test_update_reference_should_have_no_effect 1"] = ""

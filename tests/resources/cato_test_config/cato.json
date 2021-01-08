@@ -1,0 +1,14 @@
+{
+  "project_name": "Example",
+  "suites": [
+    {
+      "name": "My_first_test_Suite",
+      "tests": [
+        {
+          "name": "My_first_test",
+          "command": "python --version"
+        }
+      ]
+    }
+  ]
+}

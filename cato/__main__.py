@@ -36,6 +36,8 @@ def create_object_graph():
             cato.commands.config_template_command,
             cato.commands.list_tests_command,
             cato.commands.run_command,
+            cato.commands.update_missing_reference_images_command,
+            cato.commands.update_missing_reference_image,
         ],
         binding_specs=[TestExecutionReporterBindings()],
     )
@@ -80,7 +82,7 @@ def update_reference(path, test_identifier):
     obj_graph = create_object_graph()
     update_reference_image_command = obj_graph.provide(UpdateReferenceImageCommand)
 
-    update_reference_image_command.update(test_identifier)
+    update_reference_image_command.update(path, test_identifier)
 
 
 def config_template(path: str):
@@ -150,7 +152,6 @@ def main():
     elif args.command == "list-tests":
         list_tests(args.path)
     elif args.command == "update-reference":
-        logger.info(args)
         update_reference(args.path, args.test_identifier)
     else:
         logger.error(f"No method found to run command {args.command}")
