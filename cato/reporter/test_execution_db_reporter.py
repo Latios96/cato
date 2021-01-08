@@ -79,7 +79,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         )
         logger.info("Reporting execution of %s suites", len(suites))
         run = self._cato_api_client.create_full_run(create_full_run_dto)
-        logger.info("Created run %s", run)
+        logger.debug("Created run %s", run)
         self._run_id = run.id
         logger.info(
             "You can find your run at %s",
@@ -102,7 +102,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         test_result.execution_status = ExecutionStatus.RUNNING
         test_result.started_at = datetime.datetime.now()
 
-        logger.info(f"Reporting execution start of test {test_identifier}..")
+        logger.debug(f"Reporting execution start of test {test_identifier}..")
         self._cato_api_client.update_test_result(test_result)
 
     def report_test_result(
