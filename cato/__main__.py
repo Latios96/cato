@@ -2,6 +2,10 @@ import argparse
 import logging
 
 import pinject
+from typing import Type, TypeVar
+
+from pinject.object_graph import ObjectGraph
+
 import cato
 from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
@@ -12,6 +16,7 @@ from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
+from cato.reporter.verbose_mode import VerboseMode
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -20,6 +25,12 @@ PATH_TO_CONFIG_FILE = "Path to config file"
 is_executed_as_module = __name__ != "__main__"
 if is_executed_as_module:
     logger = logging.getLogger(__name__)  # noqa: F811
+
+T = TypeVar("T")
+
+
+def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
+    return obj_graph.provide(cls)
 
 
 def create_object_graph():
@@ -54,11 +65,13 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("logger", to_instance=logger)
 
 
-def run(path: str, suite_name: str, test_identifier_str: str):
+def run(path: str, suite_name: str, test_identifier_str: str, verbose: int):
     obj_graph = create_object_graph()
-    run_command = obj_graph.provide(RunCommand)
+    run_command = provide_safe(obj_graph, RunCommand)
 
-    run_command.run(path, suite_name, test_identifier_str)
+    verbose_mode = VerboseMode.in_range(verbose)
+
+    run_command.run(path, suite_name, test_identifier_str, verbose_mode)
 
 
 def update_missing_reference_images(path):
@@ -110,6 +123,8 @@ def main():
         "--test-identifier",
         help="Identifier of test to run. Example: suite_name/test_name",
     )
+    run_parser.add_argument("-v", "--verbose", action="count", default=1)
+
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
         help="Updates missing reference images after a test run",
@@ -136,7 +151,7 @@ def main():
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path, args.suite, args.test_identifier)
+        run(args.path, args.suite, args.test_identifier, args.verbose)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":

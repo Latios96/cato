@@ -17,7 +17,9 @@ from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.end_message_generator import EndMessageGenerator
+from cato.reporter.reporter import Reporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
+from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
 from tests.utils import mock_safe
 
@@ -48,12 +50,14 @@ class TestRunCommand:
         self.mock_timing_report_generator = mock_safe(TimingReportGenerator)
         self.mock_end_message_generator = mock_safe(EndMessageGenerator)
         self.mock_logger = mock_safe(logging.Logger)
+        self.mock_reporter = mock_safe(Reporter)
         self.run_command = RunCommand(
             self.mock_json_config_parser,
             self.mock_test_suite_runner,
             self.mock_timing_report_generator,
             self.mock_end_message_generator,
             self.mock_logger,
+            self.mock_reporter,
         )
         self.mock_json_config_parser.parse.return_value = self.config
 
@@ -85,7 +89,7 @@ class TestRunCommand:
             "End message"
         )
 
-        self.run_command.run("my_path", None, None)
+        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
         self.mock_timing_report_generator.generate.assert_called_with(result)
@@ -93,16 +97,19 @@ class TestRunCommand:
         self.mock_logger.info.assert_has_calls(
             [call(""), call("Timing report"), call(""), call("End message")]
         )
+        self.mock_reporter.set_verbose_mode.assert_called_with(VerboseMode.DEFAULT)
 
     def test_should_filter_by_suite_name(self):
-        self.run_command.run("my_path", "not existing name", None)
+        self.run_command.run("my_path", "not existing name", None, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
 
         assert self.config.test_suites == []
 
     def test_should_filter_by_test_identifier(self):
-        self.run_command.run("my_path", None, "not_existing_suite/test")
+        self.run_command.run(
+            "my_path", None, "not_existing_suite/test", VerboseMode.DEFAULT
+        )
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
 
@@ -110,4 +117,6 @@ class TestRunCommand:
 
     def test_should_filter_by_invalid_test_identifier_str(self):
         with pytest.raises(ValueError):
-            self.run_command.run("my_path", None, "not_existing_suite")
+            self.run_command.run(
+                "my_path", None, "not_existing_suite", VerboseMode.DEFAULT
+            )
