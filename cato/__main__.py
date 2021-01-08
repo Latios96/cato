@@ -5,10 +5,10 @@ import os
 import pinject
 
 import cato
+from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
 from cato.config.config_file_parser import JsonConfigParser
-from cato.config.config_template_generator import ConfigTemplateGenerator
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato.runners.update_reference_images import UpdateReferenceImage
@@ -32,6 +32,9 @@ def create_object_graph():
             cato.reporter.stats_calculator,
             cato_api_client,
             http_template,
+            cato.commands.config_template_command,
+            cato.commands.list_tests_command,
+            cato.commands.run_command,
         ],
         binding_specs=[TestExecutionReporterBindings()],
     )
@@ -87,10 +90,10 @@ def update_reference(path, test_identifier):
 
 
 def config_template(path: str):
-    path = config_path(path)
+    obj_graph = create_object_graph()
+    config_template_command = obj_graph.provide(ConfigTemplateCommand)
 
-    with open(path, "w") as f:
-        ConfigTemplateGenerator().write(f)
+    config_template_command.create_template(path)
 
 
 def config_path(path):
