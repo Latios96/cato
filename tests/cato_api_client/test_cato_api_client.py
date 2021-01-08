@@ -32,6 +32,9 @@ class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
     def get_json(self):
         return self._response.get_json()
 
+    def text(self):
+        return self._response.data
+
 
 class FlaskClientHttpTemplate(AbstractHttpTemplate):
     def __init__(self, client, object_mapper):

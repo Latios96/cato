@@ -27,6 +27,9 @@ class HttpTemplateResponse(Generic[R]):
     def get_json(self):
         raise NotImplementedError()
 
+    def text(self):
+        raise NotImplementedError()
+
 
 class RequestsHttpTemplateResponse(HttpTemplateResponse):
     def status_code(self):
@@ -37,6 +40,9 @@ class RequestsHttpTemplateResponse(HttpTemplateResponse):
 
     def __str__(self):
         return str(self._response)
+
+    def text(self):
+        return self._response.text
 
 
 class HttpTemplateException(Exception):
