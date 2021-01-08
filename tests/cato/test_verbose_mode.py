@@ -26,3 +26,20 @@ def test_includes(mode1, mode2):
 )
 def test_not_includes(mode1, mode2):
     assert not mode1.includes(mode2)
+
+
+@pytest.mark.parametrize(
+    "value,expected_verbose_mode",
+    [
+        (-100, VerboseMode.DEFAULT),
+        (-1, VerboseMode.DEFAULT),
+        (0, VerboseMode.DEFAULT),
+        (1, VerboseMode.DEFAULT),
+        (2, VerboseMode.VERBOSE),
+        (3, VerboseMode.VERY_VERBOSE),
+        (4, VerboseMode.VERY_VERBOSE),
+        (100, VerboseMode.VERY_VERBOSE),
+    ],
+)
+def test_in_range(value, expected_verbose_mode):
+    assert VerboseMode.in_range(value) == expected_verbose_mode
