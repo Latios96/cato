@@ -3,6 +3,7 @@ import os
 
 import pytest
 
+from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -36,6 +37,5 @@ def config_fixture():
 @pytest.fixture
 def config_file_fixture(tmp_path, config_fixture):
     path = os.path.join(str(tmp_path), "cato.json")
-    with open(path, "w") as f:
-        f.write(json.dumps(config_fixture.CONFIG))
+    ConfigFileWriter().write_to_file(path, config_fixture.CONFIG)
     return path
