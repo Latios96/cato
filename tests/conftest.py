@@ -137,7 +137,7 @@ def test_result_factory():
             ),
             execution_status=or_default(execution_status, ExecutionStatus.NOT_STARTED),
             status=or_default(status, TestStatus.SUCCESS),
-            seconds=or_default(seconds, 5),
+            seconds=or_default(seconds, 5.0),
             message=or_default(message, "success"),
             image_output=or_default(image_output, None),
             reference_image=or_default(reference_image, None),
