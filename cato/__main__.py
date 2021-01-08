@@ -13,7 +13,6 @@ from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
-from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -21,7 +20,7 @@ from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 PATH_TO_CONFIG_FILE = "Path to config file"
 is_executed_as_module = __name__ != "__main__"
 if is_executed_as_module:
-    logger = logging.getLogger(__name__)
+    logger = logging.getLogger(__name__)  # noqa: F811
 
 
 def create_object_graph():
