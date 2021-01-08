@@ -23,7 +23,7 @@ class TestHeartbeatReporter:
             @classmethod
             def run(cls):
                 while not self._cease_continuous_run.is_set():
-                    logger.info("Sending heartbeat for %s", test_identifier)
+                    logger.debug("Sending heartbeat for %s", test_identifier)
                     self._test_execution_reporter.report_heartbeat(test_identifier)
                     time.sleep(HEARTBEAT_INTERVAL_IN_SECONDS)
 
