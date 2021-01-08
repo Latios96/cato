@@ -10,7 +10,7 @@ class ConfigTemplateCommand(BaseCliCommand):
         self,
         path: str,
     ):
-        path = self.config_path(path)
+        path = self._config_path(path)
 
         with open(path, "w") as f:
             self._config_template_generator.write(f)

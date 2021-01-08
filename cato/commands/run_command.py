@@ -28,7 +28,7 @@ class RunCommand(BaseCliCommand):
     def run(
         self, path: str, suite_name: Optional[str], test_identifier_str: Optional[str]
     ):
-        path = self.config_path(path)
+        path = self._config_path(path)
 
         config = self._json_config_parser.parse(path)
 
