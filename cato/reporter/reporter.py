@@ -5,11 +5,18 @@ import humanfriendly
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
+from cato.reporter.verbose_mode import VerboseMode
 
 logger = logging.getLogger(__name__)
 
 
 class Reporter:
+    def __init__(self):
+        self._verbose_mode = VerboseMode.DEFAULT
+
+    def set_verbose_mode(self, verbose_mode: VerboseMode):
+        self._verbose_mode = verbose_mode
+
     def report_message(self, message):
         logger.info(message)
 
