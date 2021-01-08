@@ -8,13 +8,14 @@ import cato
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
-from cato.config.config_file_parser import JsonConfigParser
+from cato.commands.update_missing_reference_image import UpdateReferenceImageCommand
+from cato.commands.update_missing_reference_images_command import (
+    UpdateMissingReferenceImagesCommand,
+)
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
-from cato.runners.update_reference_images import UpdateReferenceImage
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
-from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
@@ -59,15 +60,12 @@ def run(path: str, suite_name: str, test_identifier_str: str):
 
 
 def update_missing_reference_images(path):
-    path = config_path(path)
-
-    config_parser = JsonConfigParser()
-    config = config_parser.parse(path)
-
     obj_graph = create_object_graph()
-    update_missing = obj_graph.provide(UpdateMissingReferenceImages)
+    update_missing_reference_images_command = obj_graph.provide(
+        UpdateMissingReferenceImagesCommand
+    )
 
-    update_missing.update(config)
+    update_missing_reference_images_command.update(path)
 
 
 def list_tests(path):
@@ -78,15 +76,10 @@ def list_tests(path):
 
 
 def update_reference(path, test_identifier):
-    path = config_path(path)
-
-    config_parser = JsonConfigParser()
-    config = config_parser.parse(path)
-
     obj_graph = create_object_graph()
-    update_reference = obj_graph.provide(UpdateReferenceImage)
+    update_reference_image_command = obj_graph.provide(UpdateReferenceImageCommand)
 
-    update_reference.update(config, TestIdentifier.from_string(test_identifier))
+    update_reference_image_command.update(test_identifier)
 
 
 def config_template(path: str):
