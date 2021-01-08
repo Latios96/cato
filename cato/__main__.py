@@ -3,8 +3,8 @@ import logging
 import os
 
 import pinject
-
 import cato
+from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
@@ -19,8 +19,9 @@ from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
-
-logger = logging.getLogger(__name__)
+is_executed_as_module = __name__ != "__main__"
+if is_executed_as_module:
+    logger = logging.getLogger(__name__)
 
 
 def create_object_graph():
@@ -50,6 +51,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
         )
+        bind("logger", to_instance=logger)
 
 
 def run(path: str, suite_name: str, test_identifier_str: str):
