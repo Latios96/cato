@@ -8,6 +8,11 @@ from snapshottest import Snapshot
 snapshots = Snapshot()
 
 snapshots[
+    "test_config_file_template 1"
+] = """[INFO]  Wrote config file to SOME_RANDOM_DIR/cato.json
+"""
+
+snapshots[
     "test_list_tests_command_from_cwd 1"
 ] = """[INFO]  Found 1 tests in 1 suites:
 [INFO]  
