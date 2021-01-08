@@ -41,3 +41,11 @@ class Reporter:
                 use_aliases=True,
             )
         )
+
+    def report_test_command(self, command: str):
+        if self._verbose_mode.includes(VerboseMode.VERBOSE):
+            self.report_message(command)
+
+    def report_command_output(self, output_line: str):
+        if self._verbose_mode.includes(VerboseMode.VERY_VERBOSE):
+            self.report_message(output_line)
