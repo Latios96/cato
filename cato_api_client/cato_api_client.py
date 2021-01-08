@@ -148,7 +148,9 @@ class CatoApiClient:
         )
         response = self._http_template.post_for_entity(url, dto, FinishTestResultDto)
         if response.status_code() != 200:
-            raise ValueError(f"Something went wrong when sending heartbeat: {response}")
+            raise ValueError(
+                f"Something went wrong when finishing test: {response.status_code()}, {response.text()}"
+            )
 
     def generate_run_url(self, project_id: int, run_id: int):
         return f"{self._url}/#/projects/{project_id}/runs/{run_id}"
