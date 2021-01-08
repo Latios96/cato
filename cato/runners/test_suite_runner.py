@@ -40,7 +40,7 @@ class TestSuiteRunner:
                 self._test_execution_reporter.report_test_execution_start(suite, test)
                 result = self._test_runner.run_test(config, suite, test)
                 if result.status == TestStatus.SUCCESS:
-                    self._reporter.report_test_sucess(result)
+                    self._reporter.report_test_success(result)
                 else:
                     self._reporter.report_test_failure(result)
                     suite_status = TestStatus.FAILED

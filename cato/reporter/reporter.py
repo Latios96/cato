@@ -26,7 +26,7 @@ class Reporter:
     def report_start_test(self, test: Test):
         self.report_message(f"Running {test.name}..")
 
-    def report_test_sucess(self, result: TestExecutionResult):
+    def report_test_success(self, result: TestExecutionResult):
         self.report_message(
             emoji.emojize(
                 f"{result.test.name} succeeded in {humanfriendly.format_timespan(result.seconds)} :white_check_mark:",
