@@ -92,15 +92,6 @@ def config_template(path: str):
     config_template_command.create_template(path)
 
 
-def config_path(path):
-    if not path:
-        path = os.getcwd()
-    path = os.path.abspath(path)
-    if os.path.isdir(path):
-        path = os.path.join(path, "cato.json")
-    return path
-
-
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
