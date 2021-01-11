@@ -157,7 +157,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
     def report_heartbeat(self, test_identifier: TestIdentifier):
         self._cato_api_client.heartbeat_test(self._run_id, test_identifier)
 
-    def report_test_execution_end(  # todo remove and move to run command
+    def report_test_execution_end(
         self, last_run_information_repository: LastRunInformationRepository
     ):
         last_run_id = LastRunInformation(last_run_id=self._run_id)
