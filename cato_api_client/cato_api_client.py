@@ -155,6 +155,15 @@ class CatoApiClient:
     def generate_run_url(self, project_id: int, run_id: int):
         return f"{self._url}/#/projects/{project_id}/runs/{run_id}"
 
+    def get_test_results_by_run_id_and_test_status(
+        self, run_id: int, test_status: TestStatus
+    ):
+        url = self._build_url(
+            f"/api/v1/test_results/run/{run_id}/test_status/{test_status.value}"
+        )
+
+        return self._find_many_with_http_template(url, TestIdentifier)
+
     def _build_url(self, url):
         return self._url + quote(url)
 
@@ -215,6 +224,23 @@ class CatoApiClient:
             return None
         if response.status_code() == 200:
             return response.get_entity()
+        raise ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in response.get_json().items()
+                    ]
+                )
+            )
+        )
+
+    def _find_many_with_http_template(self, url, response_cls):
+        response = self._http_template.get_for_entity(url, response_cls)
+        if response.status_code() == 404:
+            return None
+        if response.status_code() == 200:
+            return response.get_entities()
         raise ValueError(
             "Bad parameters: {}".format(
                 " ".join(

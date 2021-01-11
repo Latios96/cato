@@ -414,3 +414,23 @@ def test_finish_test_result_failure(cato_api_client, test_result, stored_image):
             image_output=42,
             reference_image=stored_image.id,
         )
+
+
+def test_get_test_results_by_run_id_and_test_status_should_find(
+    cato_api_client, run, test_result
+):
+    identifiers = cato_api_client.get_test_results_by_run_id_and_test_status(
+        run.id, TestStatus.SUCCESS
+    )
+
+    assert identifiers == [test_result.test_identifier]
+
+
+def test_get_test_results_by_run_id_and_test_status_should_not_find(
+    cato_api_client, run, test_result
+):
+    identifiers = cato_api_client.get_test_results_by_run_id_and_test_status(
+        run.id, TestStatus.FAILED
+    )
+
+    assert identifiers == []
