@@ -9,7 +9,7 @@ class LastRunInformation:
     last_run_id: int
 
 
-class CatoLastRunInformationRepository:
+class LastRunInformationRepository:
     def __init__(self, path):
         self._path = path
 
