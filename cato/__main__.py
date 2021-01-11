@@ -15,6 +15,9 @@ from cato.commands.update_missing_reference_image import UpdateReferenceImageCom
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
+from cato.file_system_abstractions.last_run_information_repository import (
+    LastRunInformationRepository,
+)
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato_api_client import cato_api_client, http_template
@@ -63,15 +66,27 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
             to_instance=MapperRegistryFactory().create_mapper_registry(),
         )
         bind("logger", to_instance=logger)
+        bind(
+            "last_run_information_repository_factory",
+            to_instance=lambda x: LastRunInformationRepository(x),
+        )
 
 
-def run(path: str, suite_name: str, test_identifier_str: str, verbose: int):
+def run(
+    path: str,
+    suite_name: str,
+    test_identifier_str: str,
+    only_failed: bool,
+    verbose: int,
+):
     obj_graph = create_object_graph()
     run_command = provide_safe(obj_graph, RunCommand)
 
     verbose_mode = VerboseMode.in_range(verbose)
 
-    run_command.run(path, suite_name, test_identifier_str, verbose_mode)
+    run_command.run(
+        path, suite_name, test_identifier_str, bool(only_failed), verbose_mode
+    )
 
 
 def update_missing_reference_images(path):
@@ -124,6 +139,7 @@ def main():
         help="Identifier of test to run. Example: suite_name/test_name",
     )
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
+    run_parser.add_argument("--only-failed", action="store_true")
 
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
@@ -151,7 +167,7 @@ def main():
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path, args.suite, args.test_identifier, args.verbose)
+        run(args.path, args.suite, args.test_identifier, args.only_failed, args.verbose)
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":

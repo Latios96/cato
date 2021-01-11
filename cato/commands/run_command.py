@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Callable
 import logging
 
 from cato.commands.base_command import BaseCliCommand
@@ -31,7 +31,9 @@ class RunCommand(BaseCliCommand):
         end_message_generator: EndMessageGenerator,
         logger: logging.Logger,
         reporter: Reporter,
-        last_run_information_repository: LastRunInformationRepository,
+        last_run_information_repository_factory: Callable[
+            [str], LastRunInformationRepository
+        ],
         cato_api_client: CatoApiClient,
     ):
         self._json_config_parser = json_config_parser
@@ -40,7 +42,9 @@ class RunCommand(BaseCliCommand):
         self._end_message_generator = end_message_generator
         self._logger = logger
         self._reporter = reporter
-        self._last_run_information_repository = last_run_information_repository
+        self._last_run_information_repository_factory = (
+            last_run_information_repository_factory
+        )
         self._cato_api_client = cato_api_client
 
     def run(
@@ -58,9 +62,8 @@ class RunCommand(BaseCliCommand):
 
         last_run_information = None
         if only_failed:
-            last_run_information = (
-                self._last_run_information_repository.read_last_run_information()
-            )
+            repo = self._last_run_information_repository_factory(config.output_folder)
+            last_run_information = repo.read_last_run_information()
 
         if suite_name:
             config.test_suites = filter_by_suite_name(config.test_suites, suite_name)

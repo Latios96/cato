@@ -68,7 +68,7 @@ class TestRunCommand:
             self.mock_end_message_generator,
             self.mock_logger,
             self.mock_reporter,
-            self.mock_last_run_information_repository,
+            lambda x: self.mock_last_run_information_repository,
             self.mock_cato_api_client,
         )
         self.mock_json_config_parser.parse.return_value = self.config
