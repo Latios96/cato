@@ -11,7 +11,6 @@ from cato.domain.test_suite import (
 )
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
-    LastRunInformation,
 )
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.reporter import Reporter
