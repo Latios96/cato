@@ -1,6 +1,8 @@
-import React, { Component } from "react";
+import React, { ChangeEvent, Component } from "react";
 import ImageComparison from "./ImageComparison";
 import { ImageDto } from "../../catoapimodels";
+import { Form } from "react-bootstrap";
+import styles from "./MultiChannelImageComparion.module.scss";
 
 interface Props {
   imageOutput: ImageDto;
@@ -45,7 +47,12 @@ class MultiChannelImageComparison extends Component<Props, State> {
   renderImageComparison = (imageOutput: ImageDto, referenceImage: ImageDto) => {
     return (
       <React.Fragment>
-        <select onChange={this.handleChange}>
+        <Form.Control
+          className={styles.selectChannel}
+          as="select"
+          custom
+          onChange={this.handleChange}
+        >
           {imageOutput.channels.map((channel) => {
             return (
               <option key={channel.id} value={channel.name}>
@@ -53,7 +60,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
               </option>
             );
           })}
-        </select>
+        </Form.Control>
         <ImageComparison
           outputImageUrl={
             "/api/v1/files/" +
@@ -88,7 +95,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     return image.channels[index];
   };
 
-  handleChange = (event: React.FormEvent<HTMLSelectElement>) => {
+  handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let selectedChannel = event.currentTarget.value;
     this.setState({ selectedChannel: selectedChannel });
   };
