@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Type
+from typing import TypeVar, Generic, Type, Iterable
 
 import requests
 
@@ -23,6 +23,9 @@ class HttpTemplateResponse(Generic[R]):
 
     def get_entity(self) -> R:
         return self._mapper.from_dict(self.get_json(), self._response_cls)
+
+    def get_entities(self) -> Iterable[R]:
+        return self._mapper.many_from_dict(self.get_json(), self._response_cls)
 
     def get_json(self):
         raise NotImplementedError()

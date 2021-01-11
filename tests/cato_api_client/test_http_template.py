@@ -27,6 +27,22 @@ def test_get_for_entity_success(mock_requests_get, object_mapper):
 
 
 @mock.patch("requests.get")
+def test_get_many_for_entity_success(mock_requests_get, object_mapper):
+    mock_requests_get.return_value = Response(
+        200, [{"id": 1, "name": "test-project"}, {"id": 2, "name": "test-project"}]
+    )
+    http_template = HttpTemplate(object_mapper)
+
+    response = http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
+
+    assert response.status_code() == 200
+    assert response.get_entities() == [
+        Project(id=1, name="test-project"),
+        Project(id=2, name="test-project"),
+    ]
+
+
+@mock.patch("requests.get")
 def test_get_for_entity_404(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(404, None)
     http_template = HttpTemplate(object_mapper)
