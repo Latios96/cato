@@ -13,7 +13,7 @@ interface Props {
 function FinishedTestResultComponent(props: Props) {
   return (
     <div className={styles.finishedTestResultContainer}>
-      <InfoBox>
+      <InfoBox className={styles.infoBox}>
         <InfoBoxElement
           value={formatTime(props.result.started_at)}
           title={"started"}
