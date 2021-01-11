@@ -8,6 +8,7 @@
   border: 1px solid #707070;
   border-radius: 3px;
   display: flex;
+  width: fit-content;
 }
 .infoBoxElement {
   display: flex;
@@ -37,5 +38,4 @@
 }
 .suiteOrTestContainer {
   margin-top: 97px;
-  border: 1px solid grey;
 }

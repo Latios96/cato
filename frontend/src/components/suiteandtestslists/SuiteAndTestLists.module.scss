@@ -1,6 +1,7 @@
 @import "../../custom.scss";
 .listEntry {
   display: flex !important;
+  width: fit-content;
 }
 
 .listEntry:hover {

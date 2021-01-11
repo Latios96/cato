@@ -3,14 +3,14 @@ import { formatDuration, formatTime } from "../../utils";
 import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
 import { TestResultDto } from "../../catoapimodels";
-
+import styles from "./FinishedTestResultComponent.module.scss";
 interface Props {
   result: TestResultDto;
 }
 
 function FinishedTestResultComponent(props: Props) {
   return (
-    <div>
+    <div className={styles.finishedTestResultContainer}>
       <p>
         {props.result.started_at
           ? "started: " + formatTime(props.result.started_at)
