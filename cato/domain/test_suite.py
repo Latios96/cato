@@ -1,4 +1,4 @@
-from typing import List, Iterable, Tuple, Dict
+from typing import List, Iterable, Tuple, Dict, Set
 
 import attr
 
@@ -53,3 +53,23 @@ def filter_by_test_identifier(
             continue
         return [TestSuite(name=suite.name, tests=[test], variables=suite.variables)]
     return []
+
+
+def filter_by_test_identifiers(
+    suites: List[TestSuite], test_identifiers: List[TestIdentifier]
+):
+    suites_by_name: Dict[str, TestSuite] = {}
+    for suite, test in iterate_suites_and_tests(suites):
+        for test_identifier in test_identifiers:
+            if suite.name != test_identifier.suite_name:
+                continue
+            if test.name != test_identifier.test_name:
+                continue
+            filtered_suite = suites_by_name.get(suite.name)
+            if not filtered_suite:
+                filtered_suite = TestSuite(
+                    name=suite.name, tests=[], variables=suite.variables
+                )
+                suites_by_name[suite.name] = filtered_suite
+            filtered_suite.tests.append(test)
+    return list(suites_by_name.values())
