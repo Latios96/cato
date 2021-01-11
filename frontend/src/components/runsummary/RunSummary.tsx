@@ -7,6 +7,9 @@ import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils";
 import TestResultComponent from "../testresultcomponent/TestResultComponent";
 import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
+import InfoBox from "../infobox/InfoBox";
+import { Info } from "react-bootstrap-icons";
+import InfoBoxElement from "../infobox/InfoBoxElement";
 
 interface Props {
   projectId: number;
@@ -95,30 +98,26 @@ class RunSummary extends Component<Props, State> {
 
   renderInfoBox = (runSummaryDto: RunSummaryDto) => {
     return (
-      <div className={styles.runSummaryInfoBox}>
-        {this.renderInfoBoxElement("" + runSummaryDto.suite_count, "suites")}
-        {this.renderInfoBoxElement("" + runSummaryDto.test_count, "tests")}
-        {this.renderInfoBoxElement(
-          "" + runSummaryDto.failed_test_count,
-          "failed tests"
-        )}
-        {this.renderInfoBoxElement(
-          "" +
+      <InfoBox>
+        <InfoBoxElement
+          value={"" + runSummaryDto.suite_count}
+          title={"suites"}
+        />
+        <InfoBoxElement value={"" + runSummaryDto.test_count} title={"tests"} />
+        <InfoBoxElement
+          value={"" + runSummaryDto.failed_test_count}
+          title={"failed tests"}
+        />
+        <InfoBoxElement
+          value={
+            "" +
             formatDuration(
               runSummaryDto.duration !== "NaN" ? runSummaryDto.duration : 0
-            ),
-          "duration"
-        )}
-      </div>
-    );
-  };
-
-  renderInfoBoxElement = (value: string, name: string) => {
-    return (
-      <div className={styles.infoBoxElement}>
-        <span className={styles.runSummaryInfoBoxValue}>{value}</span>
-        <span>{name}</span>
-      </div>
+            )
+          }
+          title={"duration"}
+        />
+      </InfoBox>
     );
   };
 
