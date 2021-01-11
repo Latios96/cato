@@ -3,6 +3,9 @@ from typing import List
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
+from cato.file_system_abstractions.last_run_information_repository import (
+    LastRunInformationRepository,
+)
 from cato_server.domain.test_identifier import TestIdentifier
 
 
@@ -21,5 +24,7 @@ class TestExecutionReporter:
     def report_heartbeat(self, test_identifier: TestIdentifier):
         raise NotImplementedError()
 
-    def report_test_execution_end(self):
+    def report_test_execution_end(
+        self, last_run_information_repository: LastRunInformationRepository
+    ):
         raise NotImplementedError()

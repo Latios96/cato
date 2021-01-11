@@ -3,12 +3,22 @@ import logging
 
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.test_suite import filter_by_suite_name, filter_by_test_identifier
+from cato.domain.test_status import TestStatus
+from cato.domain.test_suite import (
+    filter_by_suite_name,
+    filter_by_test_identifier,
+    filter_by_test_identifiers,
+)
+from cato.file_system_abstractions.last_run_information_repository import (
+    LastRunInformationRepository,
+    LastRunInformation,
+)
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.reporter import Reporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
+from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.test_identifier import TestIdentifier
 
 
@@ -21,6 +31,8 @@ class RunCommand(BaseCliCommand):
         end_message_generator: EndMessageGenerator,
         logger: logging.Logger,
         reporter: Reporter,
+        last_run_information_repository: LastRunInformationRepository,
+        cato_api_client: CatoApiClient,
     ):
         self._json_config_parser = json_config_parser
         self._test_suite_runner = test_suite_runner
@@ -28,6 +40,8 @@ class RunCommand(BaseCliCommand):
         self._end_message_generator = end_message_generator
         self._logger = logger
         self._reporter = reporter
+        self._last_run_information_repository = last_run_information_repository
+        self._cato_api_client = cato_api_client
 
     def run(
         self,
@@ -41,11 +55,25 @@ class RunCommand(BaseCliCommand):
 
         config = self._json_config_parser.parse(path)
 
+        last_run_information = (
+            self._last_run_information_repository.read_last_run_information()
+        )
+
         if suite_name:
             config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
         if test_identifier_str:
             config.test_suites = filter_by_test_identifier(
                 config.test_suites, TestIdentifier.from_string(test_identifier_str)
+            )
+
+        if last_run_information:
+            failed_test_identifiers = (
+                self._cato_api_client.get_test_results_by_run_id_and_test_status(
+                    last_run_information.last_run_id, TestStatus.FAILED
+                )
+            )
+            config.test_suites = filter_by_test_identifiers(
+                config.test_suites, failed_test_identifiers
             )
 
         result = self._test_suite_runner.run_test_suites(config)

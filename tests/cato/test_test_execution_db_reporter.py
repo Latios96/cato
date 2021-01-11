@@ -46,7 +46,6 @@ class TestTestExecutionDbReporter:
         self.test_execution_db_reporter = TestExecutionDbReporter(
             self.mock_machine_info_collector,
             self.mock_cato_api_client,
-            self.mock_last_run_information_repository,
         )
 
     def test_start_execution_not_existing_project_should_create(self):
@@ -277,7 +276,9 @@ class TestTestExecutionDbReporter:
     def test_should_write_last_run_id(self):
         self.test_execution_db_reporter._run_id = 2
 
-        self.test_execution_db_reporter.report_test_execution_end()
+        self.test_execution_db_reporter.report_test_execution_end(
+            self.mock_last_run_information_repository
+        )
 
         self.mock_last_run_information_repository.write_last_run_information.assert_called_with(
             LastRunInformation(last_run_id=2)

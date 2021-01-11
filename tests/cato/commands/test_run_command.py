@@ -16,11 +16,17 @@ from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato.file_system_abstractions.last_run_information_repository import (
+    LastRunInformationRepository,
+    LastRunInformation,
+)
 from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.reporter import Reporter
 from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
+from cato_api_client.cato_api_client import CatoApiClient
+from cato_server.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
 TEST = Test(
@@ -51,6 +57,10 @@ class TestRunCommand:
         self.mock_end_message_generator = mock_safe(EndMessageGenerator)
         self.mock_logger = mock_safe(logging.Logger)
         self.mock_reporter = mock_safe(Reporter)
+        self.mock_last_run_information_repository = mock_safe(
+            LastRunInformationRepository
+        )
+        self.mock_cato_api_client = mock_safe(CatoApiClient)
         self.run_command = RunCommand(
             self.mock_json_config_parser,
             self.mock_test_suite_runner,
@@ -58,6 +68,8 @@ class TestRunCommand:
             self.mock_end_message_generator,
             self.mock_logger,
             self.mock_reporter,
+            self.mock_last_run_information_repository,
+            self.mock_cato_api_client,
         )
         self.mock_json_config_parser.parse.return_value = self.config
 
@@ -120,3 +132,35 @@ class TestRunCommand:
             self.run_command.run(
                 "my_path", None, "not_existing_suite", VerboseMode.DEFAULT
             )
+
+    def test_existing_last_run_information_should_filter_no_tests_executed(self):
+        self.mock_last_run_information_repository.read_last_run_information.return_value = LastRunInformation(
+            last_run_id=2
+        )
+        self.mock_cato_api_client.get_test_results_by_run_id_and_test_status.return_value = (
+            []
+        )
+
+        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
+
+        self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
+        assert self.config.test_suites == []
+
+    def test_existing_last_run_information_should_filter_one_test_executed(self):
+        self.mock_last_run_information_repository.read_last_run_information.return_value = LastRunInformation(
+            last_run_id=2
+        )
+        self.mock_cato_api_client.get_test_results_by_run_id_and_test_status.return_value = [
+            TestIdentifier.from_string("My_first_test_Suite/My_first_test")
+        ]
+
+        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
+
+        self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
+        assert self.config.test_suites == [
+            TestSuite(
+                name="My_first_test_Suite",
+                tests=[TEST],
+                variables={"my_var": "from_suite"},
+            )
+        ]
