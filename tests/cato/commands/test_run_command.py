@@ -101,7 +101,7 @@ class TestRunCommand:
             "End message"
         )
 
-        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
+        self.run_command.run("my_path", None, None, False, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
         self.mock_timing_report_generator.generate.assert_called_with(result)
@@ -112,7 +112,9 @@ class TestRunCommand:
         self.mock_reporter.set_verbose_mode.assert_called_with(VerboseMode.DEFAULT)
 
     def test_should_filter_by_suite_name(self):
-        self.run_command.run("my_path", "not existing name", None, VerboseMode.DEFAULT)
+        self.run_command.run(
+            "my_path", "not existing name", None, False, VerboseMode.DEFAULT
+        )
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
 
@@ -120,7 +122,7 @@ class TestRunCommand:
 
     def test_should_filter_by_test_identifier(self):
         self.run_command.run(
-            "my_path", None, "not_existing_suite/test", VerboseMode.DEFAULT
+            "my_path", None, "not_existing_suite/test", False, VerboseMode.DEFAULT
         )
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
@@ -130,7 +132,7 @@ class TestRunCommand:
     def test_should_filter_by_invalid_test_identifier_str(self):
         with pytest.raises(ValueError):
             self.run_command.run(
-                "my_path", None, "not_existing_suite", VerboseMode.DEFAULT
+                "my_path", None, "not_existing_suite", False, VerboseMode.DEFAULT
             )
 
     def test_existing_last_run_information_should_filter_no_tests_executed(self):
@@ -141,7 +143,7 @@ class TestRunCommand:
             []
         )
 
-        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
+        self.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
         assert self.config.test_suites == []
@@ -154,7 +156,7 @@ class TestRunCommand:
             TestIdentifier.from_string("My_first_test_Suite/My_first_test")
         ]
 
-        self.run_command.run("my_path", None, None, VerboseMode.DEFAULT)
+        self.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
         assert self.config.test_suites == [
@@ -164,3 +166,16 @@ class TestRunCommand:
                 variables={"my_var": "from_suite"},
             )
         ]
+
+    def test_existing_last_run_information_should_not_use(self):
+        self.mock_last_run_information_repository.read_last_run_information.return_value = LastRunInformation(
+            last_run_id=2
+        )
+        self.mock_cato_api_client.get_test_results_by_run_id_and_test_status.return_value = [
+            TestIdentifier.from_string("My_first_test_Suite/My_first_test")
+        ]
+
+        self.run_command.run("my_path", None, None, False, VerboseMode.DEFAULT)
+
+        self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
+        assert self.config.test_suites == CONFIG.test_suites

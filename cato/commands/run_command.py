@@ -48,6 +48,7 @@ class RunCommand(BaseCliCommand):
         path: str,
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
+        only_failed: bool,
         verbose_mode: VerboseMode,
     ):
         self._reporter.set_verbose_mode(verbose_mode)
@@ -55,9 +56,11 @@ class RunCommand(BaseCliCommand):
 
         config = self._json_config_parser.parse(path)
 
-        last_run_information = (
-            self._last_run_information_repository.read_last_run_information()
-        )
+        last_run_information = None
+        if only_failed:
+            last_run_information = (
+                self._last_run_information_repository.read_last_run_information()
+            )
 
         if suite_name:
             config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
