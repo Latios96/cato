@@ -6,6 +6,10 @@ from typing import List
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
+from cato.file_system_abstractions.last_run_information_repository import (
+    LastRunInformationRepository,
+    LastRunInformation,
+)
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
@@ -27,9 +31,11 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self,
         machine_info_collector: MachineInfoCollector,
         cato_api_client: CatoApiClient,
+        last_run_information_repository: LastRunInformationRepository,
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
+        self._last_run_information_repository = last_run_information_repository
         self._run_id = None
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
@@ -152,6 +158,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
     def report_heartbeat(self, test_identifier: TestIdentifier):
         self._cato_api_client.heartbeat_test(self._run_id, test_identifier)
+
+    def report_test_execution_end(self):
+        last_run_id = LastRunInformation(last_run_id=self._run_id)
+        self._last_run_information_repository.write_last_run_information(last_run_id)
 
     @property
     def _run_id(self) -> int:

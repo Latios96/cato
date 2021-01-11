@@ -20,3 +20,6 @@ class TestExecutionReporter:
 
     def report_heartbeat(self, test_identifier: TestIdentifier):
         raise NotImplementedError()
+
+    def report_test_execution_end(self):
+        raise NotImplementedError()
