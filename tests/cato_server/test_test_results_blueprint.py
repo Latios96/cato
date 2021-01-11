@@ -348,7 +348,7 @@ def test_should_find_by_run_id_and_test_status(client, run, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.json == ["my_suite/my_test_name"]
+    assert rv.json == [{"suite_name": "my_suite", "test_name": "my_test_name"}]
 
 
 def test_should_not_find_by_run_id_and_test_status(client, run, test_result):

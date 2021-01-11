@@ -307,6 +307,9 @@ class TestResultsBlueprint(BaseBlueprint):
             )
         )
 
-        test_identifiers = list(map(lambda x: str(x.test_identifier), test_results))
+        test_identifiers = list(map(lambda x: x.test_identifier, test_results))
 
-        return jsonify(test_identifiers), 200
+        return (
+            self.json_response(self._object_mapper.many_to_json(test_identifiers)),
+            200,
+        )
