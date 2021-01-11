@@ -38,7 +38,7 @@ class ImageComparison extends Component<Props, State> {
     return (
       <div
         className={styles.imgCompContainer}
-        style={{ maxWidth: this.props.width, height: this.props.height }}
+        style={{ maxWidth: this.props.width }}
       >
         <img
           src={this.props.referenceImageUrl}
