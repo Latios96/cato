@@ -4,6 +4,8 @@ import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
 import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";
+import InfoBox from "../infobox/InfoBox";
+import InfoBoxElement from "../infobox/InfoBoxElement";
 interface Props {
   result: TestResultDto;
 }
@@ -11,22 +13,20 @@ interface Props {
 function FinishedTestResultComponent(props: Props) {
   return (
     <div className={styles.finishedTestResultContainer}>
-      <p>
-        {props.result.started_at
-          ? "started: " + formatTime(props.result.started_at)
-          : ""}
-      </p>
-
-      <p>
-        {props.result.finished_at
-          ? "finished: " + formatTime(props.result.finished_at)
-          : ""}
-      </p>
-      <p>
-        {props.result.seconds != null && props.result.seconds !== "NaN"
-          ? "duration: " + formatDuration(props.result.seconds)
-          : ""}
-      </p>
+      <InfoBox>
+        <InfoBoxElement
+          value={formatTime(props.result.started_at)}
+          title={"started"}
+        />
+        <InfoBoxElement
+          value={formatTime(props.result.finished_at)}
+          title={"finished"}
+        />
+        <InfoBoxElement
+          value={formatDuration(props.result.seconds)}
+          title={"duration"}
+        />
+      </InfoBox>
       {props.result.status === "FAILED"
         ? renderFailureInformation(props.result)
         : ""}
