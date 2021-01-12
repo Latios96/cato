@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDuration, formatTime } from "../../utils";
+import { formatDuration } from "../../utils";
 import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
 import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
 import { TestResultDto } from "../../catoapimodels";

@@ -8,7 +8,6 @@ import { formatDuration } from "../../utils";
 import TestResultComponent from "../testresultcomponent/TestResultComponent";
 import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
 import InfoBox from "../infobox/InfoBox";
-import { Info } from "react-bootstrap-icons";
 import InfoBoxElement from "../infobox/InfoBoxElement";
 
 interface Props {

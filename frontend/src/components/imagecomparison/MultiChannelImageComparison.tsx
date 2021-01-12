@@ -1,4 +1,4 @@
-import React, { ChangeEvent, Component } from "react";
+import React, { Component } from "react";
 import ImageComparison from "./ImageComparison";
 import { ImageDto } from "../../catoapimodels";
 import { Form } from "react-bootstrap";
