@@ -32,6 +32,15 @@ class ImageComparison extends Component<Props, State> {
       heightForRendering: 0,
     };
   }
+  componentDidMount() {
+    let containerElement = document.getElementById(this.generateId());
+    if (containerElement) {
+      let width = containerElement.clientWidth;
+      let aspectRatio = this.props.height / this.props.width;
+      let initialHeight = width * aspectRatio;
+      this.setState({ heightForRendering: initialHeight });
+    }
+  }
 
   componentDidUpdate(
     prevProps: Readonly<Props>,
@@ -51,7 +60,6 @@ class ImageComparison extends Component<Props, State> {
       }
       this.setState({ isSwapping: true });
     }
-
     if (
       this.props.referenceImageUrl !== prevProps.referenceImageUrl ||
       this.props.outputImageUrl !== prevProps.outputImageUrl
@@ -66,7 +74,7 @@ class ImageComparison extends Component<Props, State> {
         id={this.generateId()}
         className={styles.imgCompContainer}
         style={
-          this.state.isSwapping
+          this.state.heightForRendering
             ? {
                 maxWidth: this.props.width,
                 height: this.state.heightForRendering,
