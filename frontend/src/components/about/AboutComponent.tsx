@@ -23,9 +23,9 @@ const AboutComponent = () => {
       </Spinner>
     );
 
-  if (error) return <div>"An error has occurred: " + error</div>;
+  if (error) return <div>{"An error has occurred: " + error}</div>;
 
-  if (!data) return <div>"Error occurred, data is undefined"</div>;
+  if (!data) return <div>Error occurred, data is undefined</div>;
 
   return (
     <div className={styles.about}>
