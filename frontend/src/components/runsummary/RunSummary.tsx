@@ -134,8 +134,6 @@ class RunSummary extends Component<Props, State> {
             resultId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
             projectId={this.props.projectId}
             runId={this.props.runId}
-            suiteId={42}
-            suiteName={"test"}
           />
         )}
       </div>

@@ -2,15 +2,12 @@ import React, { useEffect, useState } from "react";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
 import { TestResultDto } from "../../catoapimodels";
-import { Breadcrumb } from "react-bootstrap";
 import TestResultBreadCrumb from "../testresultbreadcrumb/TestResultBreadCrumb";
 
 interface Props {
   resultId: number;
   projectId: number;
   runId: number;
-  suiteId: number;
-  suiteName: string;
 }
 
 function TestResultComponent(props: Props) {
@@ -41,8 +38,8 @@ function TestResultComponent(props: Props) {
       <TestResultBreadCrumb
         projectId={props.projectId}
         runId={props.runId}
-        suiteId={props.suiteId}
-        suiteName={props.suiteName}
+        suiteId={result ? result.suite_result_id : 0}
+        suiteName={result ? result.test_identifier.split("/")[0] : ""}
         testName={result ? result.test_name : ""}
       />
       {result ? renderTestResult(result) : <React.Fragment />}
