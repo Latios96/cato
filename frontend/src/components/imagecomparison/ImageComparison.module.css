@@ -1,6 +1,7 @@
 .imgCompContainer {
   display: flex;
   margin: auto;
+  background-color: black;
 }
 
 .imgCompContainer img {

@@ -72,6 +72,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
           }
           width={imageOutput.width}
           height={imageOutput.height}
+          identifier={"test"}
         />
       </React.Fragment>
     );
