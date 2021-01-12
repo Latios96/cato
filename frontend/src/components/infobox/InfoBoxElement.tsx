@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "../runsummary/RunSummary.module.scss";
+import styles from "./InfoBox.module.scss";
 interface Props {
   value: string;
   title: string;
@@ -7,7 +7,7 @@ interface Props {
 const InfoBoxElement = (props: Props) => {
   return (
     <div className={styles.infoBoxElement}>
-      <span className={styles.runSummaryInfoBoxValue}>{props.value}</span>
+      <span className={styles.infoBoxValue}>{props.value}</span>
       <span>{props.title}</span>
     </div>
   );
