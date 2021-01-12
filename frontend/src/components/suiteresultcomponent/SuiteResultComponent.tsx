@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { SuiteResultSummaryDto } from "../../catoapimodels";
 import TestResultList from "../suiteandtestslists/TestResultList";
-import { Breadcrumb } from "react-bootstrap";
-import { Link } from "react-bootstrap-icons";
 import TestResultBreadCrumb from "../testresultbreadcrumb/TestResultBreadCrumb";
 interface Props {
   suiteId: number;
