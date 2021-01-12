@@ -1,45 +1,42 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
+import { useQuery } from "react-query";
 import styles from "./AboutComponent.module.css";
-
-interface Props {}
+import { Spinner } from "react-bootstrap";
+import axios from "axios";
 
 const FRONTEND_VERSION = "0.29.0";
 
-interface State {
-  backendVersion: string;
+interface AboutInformation {
+  version: string;
 }
 
-class AboutComponent extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { backendVersion: "" };
-  }
+const AboutComponent = () => {
+  const { isLoading, error, data } = useQuery<AboutInformation, string>(
+    "about",
+    () => fetch("/api/v1/about").then((res) => res.json())
+  );
 
-  componentDidMount() {
-    fetch("/api/v1/about")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ backendVersion: result.version });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  }
-
-  render() {
+  if (isLoading)
     return (
-      <div className={styles.about}>
-        <div>
-          <span>Cato Server:</span> <span>{this.state.backendVersion}</span>
-        </div>
-        <div>
-          <span>Frontend:</span> <span>{FRONTEND_VERSION}</span>
-        </div>
-      </div>
+      <Spinner animation="border" role="status">
+        <span className="sr-only">Loading...</span>
+      </Spinner>
     );
-  }
-}
+
+  if (error) return <div>"An error has occurred: " + error</div>;
+
+  if (!data) return <div>"Error occurred, data is undefined"</div>;
+
+  return (
+    <div className={styles.about}>
+      <div>
+        <span>Cato Server:</span> <span>{data.version}</span>
+      </div>
+      <div>
+        <span>Frontend:</span> <span>{FRONTEND_VERSION}</span>
+      </div>
+    </div>
+  );
+};
 
 export default AboutComponent;
