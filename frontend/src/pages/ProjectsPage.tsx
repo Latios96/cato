@@ -1,15 +1,14 @@
 import React from "react";
-import Header from "../components/header/Header";
 import ProjectsView from "../components/projectsview/ProjectsView";
+import BasicPage from "./BasicPage";
 
 interface Props {}
 
 function ProjectsPage(props: Props) {
   return (
-    <div>
-      <Header />
+    <BasicPage>
       <ProjectsView />
-    </div>
+    </BasicPage>
   );
 }
 

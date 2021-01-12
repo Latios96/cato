@@ -1,6 +1,6 @@
 import React from "react";
-import Header from "../components/header/Header";
 import ProjectRunsView from "../components/projectrunview/ProjectRunsView";
+import BasicPage from "./BasicPage";
 
 interface Props {
   projectId: number;
@@ -11,15 +11,14 @@ interface Props {
 
 function ProjectPage(props: Props) {
   return (
-    <div>
-      <Header />
+    <BasicPage>
       <ProjectRunsView
         projectId={props.projectId}
         currentRunId={props.currentRunId}
         currentTab={props.currentTab}
         suiteOrTestId={props.suiteOrTestId}
       />
-    </div>
+    </BasicPage>
   );
 }
 
