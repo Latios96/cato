@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { SuiteResultSummaryDto } from "../../catoapimodels";
 import TestResultList from "../suiteandtestslists/TestResultList";
+import { Breadcrumb } from "react-bootstrap";
+import { Link } from "react-bootstrap-icons";
+import TestResultBreadCrumb from "../testresultbreadcrumb/TestResultBreadCrumb";
 interface Props {
   suiteId: number;
   projectId: number;
@@ -34,6 +37,12 @@ const SuiteResultComponent = (props: Props) => {
 
   return (
     <div>
+      <TestResultBreadCrumb
+        projectId={props.projectId}
+        runId={props.runId}
+        suiteId={props.suiteId}
+        suiteName={suiteResult ? suiteResult.suite_name : ""}
+      />
       {suiteResult ? renderTestResult(suiteResult) : <React.Fragment />}
     </div>
   );
