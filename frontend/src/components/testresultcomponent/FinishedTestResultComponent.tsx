@@ -6,6 +6,7 @@ import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";
 import InfoBox from "../infobox/InfoBox";
 import InfoBoxElement from "../infobox/InfoBoxElement";
+import FailureMessageBox from "../failuremessagebox/FailureMessageBox";
 interface Props {
   result: TestResultDto;
 }
@@ -29,12 +30,7 @@ function FinishedTestResultComponent(props: Props) {
 }
 
 function renderFailureInformation(result: TestResultDto): React.ReactNode {
-  return (
-    <div>
-      <p>{"message: " + result.message}</p>
-      <p>Command: "{result.test_command}"</p>
-    </div>
-  );
+  return <FailureMessageBox message={result.message} />;
 }
 
 function renderImages(result: TestResultDto): React.ReactNode {
