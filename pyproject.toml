@@ -56,6 +56,8 @@ flake8 = "^3.8.4"
 flake8-print = "^4.0.0"
 GitPython = "^3.1.11"
 snapshottest = "^0.6.0"
+selenium = "^3.141.0"
+chromedriver-py = "87.0.4280.88"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
