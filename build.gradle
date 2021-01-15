@@ -112,7 +112,7 @@ task copyFrontendToBuild {
 task poetryBuild(type: PythonTask){
     dependsOn 'pythonInstall'
     dependsOn 'pythonUnitTests'
-    check.dependsOn('pythonIntegrationTests')
+    dependsOn('pythonIntegrationTests')
     dependsOn 'copyFrontendToBuild'
     command = '-m poetry build'
     inputs.dir('cato')
