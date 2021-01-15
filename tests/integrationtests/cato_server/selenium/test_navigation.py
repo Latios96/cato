@@ -1,53 +1,76 @@
-def test_project_page_should_navigate_to_project(live_server, selenium_driver, project):
-    navigate_to_home(live_server, selenium_driver)
-    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
-    when_clicking_card_it_should_navigate_to_project_page(selenium_driver)
-    the_project_name_should_be_visible(project, selenium_driver)
-    when_clicking_on_cato_in_header_it_should_navigate_to_home(
-        live_server, selenium_driver
-    )
-    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
+class StatelessSeleniumTest:
+    class ProjectsPage:
+        def __init__(self, stateless_test):
+            self.stateless_test = stateless_test
+
+        def the_link_card_for_the_project_should_be_displayed(self):
+            link_card = self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "LinkCard_cardContentDiv"
+            )
+            assert link_card.text == self.stateless_test.project.name
+
+        def when_clicking_card_it_should_navigate_to_project_page(self):
+            link_card = self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "LinkCard_cardContentDiv"
+            )
+            link_card.click()
+
+    class ProjectPage:
+        def __init__(self, stateless_test):
+            self.stateless_test = stateless_test
+
+        def the_project_name_should_be_visible(self):
+            project_name = self.stateless_test.selenium_driver.find_element_by_tag_name(
+                "h1"
+            )
+            assert project_name.text == self.stateless_test.project.name
+
+    def __init__(self, live_server, selenium_driver, project):
+        self.live_server = live_server
+        self.selenium_driver = selenium_driver
+        self.project = project
+        self.projects_page = self.ProjectsPage(self)
+        self.project_page = self.ProjectPage(self)
+
+    def execute(self):
+        raise NotImplementedError()
+
+    def navigate_to_home(self):
+        self.selenium_driver.get(self.live_server.server_url())
+
+    def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
+        header_link = self.selenium_driver.find_element_by_css_module_class_name(
+            "Header_logoCato"
+        )
+        header_link.click()
+        assert self.selenium_driver.current_url == self.live_server.server_url() + "/#/"
 
 
-def test_nagivate_back_and_forward(live_server, selenium_driver, project):
-    navigate_to_home(live_server, selenium_driver)
-    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
-    when_clicking_card_it_should_navigate_to_project_page(selenium_driver)
-    the_project_name_should_be_visible(project, selenium_driver)
-    selenium_driver.back()
-    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
-    selenium_driver.forward()
-    the_project_name_should_be_visible(project, selenium_driver)
+class ProjectPageShouldNavigateToProjectTest(StatelessSeleniumTest):
+    def execute(self):
+        self.navigate_to_home()
+        self.projects_page.the_link_card_for_the_project_should_be_displayed()
+        self.projects_page.when_clicking_card_it_should_navigate_to_project_page()
+        self.project_page.the_project_name_should_be_visible()
+        self.when_clicking_on_cato_in_header_it_should_navigate_to_home()
+        self.projects_page.the_link_card_for_the_project_should_be_displayed()
 
 
-def when_clicking_on_cato_in_header_it_should_navigate_to_home(
-    live_server, selenium_driver
-):
-    header_link = selenium_driver.find_element_by_css_module_class_name(
-        "Header_logoCato"
-    )
-    header_link.click()
-    assert selenium_driver.current_url == live_server.server_url() + "/#/"
+class NavigateBackAndForwardShouldWorkTest(StatelessSeleniumTest):
+    def execute(self):
+        self.navigate_to_home()
+        self.projects_page.the_link_card_for_the_project_should_be_displayed()
+        self.projects_page.when_clicking_card_it_should_navigate_to_project_page()
+        self.project_page.the_project_name_should_be_visible()
+        self.selenium_driver.back()
+        self.projects_page.the_link_card_for_the_project_should_be_displayed()
+        self.selenium_driver.forward()
+        self.project_page.the_project_name_should_be_visible()
 
 
-def the_project_name_should_be_visible(project, selenium_driver):
-    project_name = selenium_driver.find_element_by_tag_name("h1")
-    assert project_name.text == project.name
+def test_navigation(live_server, selenium_driver, project):
+    test = ProjectPageShouldNavigateToProjectTest(live_server, selenium_driver, project)
+    test.execute()
 
-
-def when_clicking_card_it_should_navigate_to_project_page(selenium_driver):
-    link_card = selenium_driver.find_element_by_css_module_class_name(
-        "LinkCard_cardContentDiv"
-    )
-    link_card.click()
-
-
-def the_link_card_for_the_project_should_be_displayed(project, selenium_driver):
-    link_card = selenium_driver.find_element_by_css_module_class_name(
-        "LinkCard_cardContentDiv"
-    )
-    assert link_card.text == project.name
-
-
-def navigate_to_home(live_server, selenium_driver):
-    selenium_driver.get(live_server.server_url())
+    test = NavigateBackAndForwardShouldWorkTest(live_server, selenium_driver, project)
+    test.execute()
