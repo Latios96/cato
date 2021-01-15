@@ -61,7 +61,11 @@ class ProjectRunsView extends Component<Props, State> {
   render() {
     return (
       <div>
-        <h1 className={styles.projectName}>{this.state.project?.name}</h1>
+        {this.state.project ? (
+          <h1 className={styles.projectName}>{this.state.project.name}</h1>
+        ) : (
+          ""
+        )}
         <div className={styles.runsViewContainer}>
           <ListGroup className={styles.runListContainer}>
             {this.state.runs.map((r: RunDto) => {
