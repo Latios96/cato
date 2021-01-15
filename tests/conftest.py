@@ -4,24 +4,13 @@ from typing import Optional, Dict
 
 import humanfriendly
 import pytest
+import sqlalchemy
 from random_open_port import random_port
-from sqlalchemy import create_engine, event
+from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.pool import StaticPool
 
-from cato_server.configuration.message_queue_configuration import (
-    MessageQueueConfiguration,
-)
-from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.image import Image, ImageChannel
-from cato_server.domain.machine_info import MachineInfo
-from cato_server.domain.output import Output
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -32,7 +21,20 @@ from cato_server.configuration.bindings_factory import (
     MessageQueueBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.message_queue_configuration import (
+    MessageQueueConfiguration,
+)
+from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.image import Image, ImageChannel
+from cato_server.domain.machine_info import MachineInfo
+from cato_server.domain.output import Output
+from cato_server.domain.project import Project
+from cato_server.domain.run import Run
+from cato_server.domain.suite_result import SuiteResult
+from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
@@ -69,8 +71,10 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
 
 
 @pytest.fixture
-def sessionmaker_fixture():
-    engine = create_engine("sqlite:///:memory:", echo=True)
+def sessionmaker_fixture(tmp_path):
+    engine = sqlalchemy.create_engine(
+        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
+    )
     Base.metadata.create_all(engine)
     return sessionmaker(bind=engine)
 
