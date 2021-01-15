@@ -9,6 +9,17 @@ def test_project_page_should_navigate_to_project(live_server, selenium_driver, p
     the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
 
 
+def test_nagivate_back_and_forward(live_server, selenium_driver, project):
+    navigate_to_home(live_server, selenium_driver)
+    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
+    when_clicking_card_it_should_navigate_to_project_page(selenium_driver)
+    the_project_name_should_be_visible(project, selenium_driver)
+    selenium_driver.back()
+    the_link_card_for_the_project_should_be_displayed(project, selenium_driver)
+    selenium_driver.forward()
+    the_project_name_should_be_visible(project, selenium_driver)
+
+
 def when_clicking_on_cato_in_header_it_should_navigate_to_home(
     live_server, selenium_driver
 ):
