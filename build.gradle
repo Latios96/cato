@@ -89,6 +89,7 @@ task pythonUnitTests(type: PythonTask){
 
 task pythonIntegrationTests(type: PythonTask){
     dependsOn 'pythonInstall'
+    dependsOn 'pythonUnitTests'
     dependsOn 'copyFrontendToBuild'
     command = "-m pytest tests/integrationtests"
     inputs.dir('cato')
@@ -111,6 +112,7 @@ task copyFrontendToBuild {
 task poetryBuild(type: PythonTask){
     dependsOn 'pythonInstall'
     dependsOn 'pythonUnitTests'
+    check.dependsOn('pythonIntegrationTests')
     dependsOn 'copyFrontendToBuild'
     command = '-m poetry build'
     inputs.dir('cato')
