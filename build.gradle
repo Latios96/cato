@@ -77,9 +77,20 @@ task pythonInstall{
     dependsOn 'installOiio'
 }
 
-task pytest(type: PythonTask){
+task pythonUnitTests(type: PythonTask){
     dependsOn 'pythonInstall'
-    command = "-m pytest tests"
+    command = "-m pytest tests/unittests"
+    inputs.dir('cato')
+    inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    inputs.dir('tests')
+    outputs.file('pytestOutput')
+}
+
+task pythonIntegrationTests(type: PythonTask){
+    dependsOn 'pythonInstall'
+    dependsOn 'copyFrontendToBuild'
+    command = "-m pytest tests/integrationtests"
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
@@ -99,7 +110,8 @@ task copyFrontendToBuild {
 
 task poetryBuild(type: PythonTask){
     dependsOn 'pythonInstall'
-    dependsOn 'pytest'
+    dependsOn 'pythonUnitTests'
+    dependsOn 'pythonIntegrationTests'
     dependsOn 'copyFrontendToBuild'
     command = '-m poetry build'
     inputs.dir('cato')
@@ -112,7 +124,8 @@ task poetryBuild(type: PythonTask){
 }
 
 install.dependsOn('pythonInstall')
-check.dependsOn('pytest')
+check.dependsOn('pythonUnitTests')
+check.dependsOn('pythonIntegrationTests')
 build.dependsOn('poetryBuild')
 
 install.dependsOn(':frontend:yarnInstallDependencies')
