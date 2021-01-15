@@ -37,6 +37,9 @@ class StatelessSeleniumTest:
 
     def navigate_to_home(self):
         self.selenium_driver.get(self.live_server.server_url())
+        self.selenium_driver.find_element_by_css_module_class_name(
+            "LinkCard_cardContentDiv"
+        )
 
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
         header_link = self.selenium_driver.find_element_by_css_module_class_name(
