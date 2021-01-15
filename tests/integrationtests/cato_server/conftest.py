@@ -1,3 +1,4 @@
+import os
 import socket
 import threading
 import time
@@ -7,6 +8,7 @@ import requests
 from chromedriver_py import binary_path
 from flask import request
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 
 
 class LiveServer:
@@ -84,7 +86,12 @@ class MyChromeDriver(webdriver.Chrome):
 
 @pytest.fixture
 def selenium_driver():
-    driver = MyChromeDriver(executable_path=binary_path)
+    chrome_options = Options()
+    chrome_options.add_argument("--headless")
+    driver = MyChromeDriver(
+        executable_path=binary_path,
+        options=chrome_options if os.environ.get("CI") else None,
+    )
     driver.implicitly_wait(5)
     yield driver
     driver.close()
