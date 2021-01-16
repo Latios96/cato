@@ -2,6 +2,7 @@ import time
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
+from selenium.webdriver.support.select import Select
 
 from tests.integrationtests.cato_server.conftest import MyChromeDriver
 
@@ -249,6 +250,48 @@ class TestResultPage:
         except NoSuchElementException:
             pass
 
+    def channel_dropdown_should_contain_channels(self, channels):
+        dropdown = (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "MultiChannelImageComparion_selectChannel"
+            )
+        )
+        options = dropdown.find_elements_by_tag_name("option")
+        for i, channel in enumerate(channels):
+            assert options[i].text == channel
+
+    def change_channel_to_alpha(self):
+        dropdown = Select(
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "MultiChannelImageComparion_selectChannel"
+            )
+        )
+        dropdown.select_by_visible_text("alpha")
+
+    def alpha_image_should_be_shown(self):
+        images = self.stateless_test.selenium_driver.find_element_by_id(
+            "ImageCompariontest"
+        ).find_elements_by_tag_name("img")
+        assert (
+            images[0].get_attribute("src")
+            == self.stateless_test.live_server.server_url() + "/api/v1/files/2"
+        )
+
+    def rgb_channel_should_be_selected_and_shown(self):
+        dropdown = Select(
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "MultiChannelImageComparion_selectChannel"
+            )
+        )
+        assert dropdown.first_selected_option.text == "rgb"
+        images = self.stateless_test.selenium_driver.find_element_by_id(
+            "ImageCompariontest"
+        ).find_elements_by_tag_name("img")
+        assert (
+            images[0].get_attribute("src")
+            == self.stateless_test.live_server.server_url() + "/api/v1/files/1"
+        )
+
 
 class ReadOnlySeleniumTest:
     def __init__(
@@ -357,6 +400,11 @@ class TestResultFunctionality(ReadOnlySeleniumTest):
         self.test_result_page.clicking_show_log_should_show_log()
         self.test_result_page.clicking_show_log_should_hide_log()
 
+        self.test_result_page.rgb_channel_should_be_selected_and_shown()
+        self.test_result_page.channel_dropdown_should_contain_channels(["rgb", "alpha"])
+        self.test_result_page.change_channel_to_alpha()
+        self.test_result_page.alpha_image_should_be_shown()
+
     def navigate_to_test(self):
         self.selenium_driver.get(
             self.live_server.server_url() + "/#/projects/1/runs/1/tests/1"
@@ -385,7 +433,7 @@ def test_read_only_tests(live_server, selenium_driver, project, finished_test_re
     test.execute()
 
 
-def test_test_page(
+def test_test_result_page(
     live_server,
     selenium_driver,
     project,
