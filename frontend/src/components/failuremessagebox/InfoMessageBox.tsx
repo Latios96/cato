@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./FailureMessageBox.module.scss";
-import { ExclamationCircleFill } from "react-bootstrap-icons";
+import { Hourglass } from "react-bootstrap-icons";
 interface Props {
   message: string | null | undefined;
 }
-const FailureMessageBox = (props: Props) => {
+const InfoMessageBox = (props: Props) => {
   return (
-    <div className={styles.failureMessageBox}>
-      <ExclamationCircleFill size={22} />
+    <div className={styles.infoMessageBox}>
+      <Hourglass size={27} />
       <span className={styles.messageText}>{props.message}</span>
     </div>
   );
 };
 
-export default FailureMessageBox;
+export default InfoMessageBox;

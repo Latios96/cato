@@ -1,7 +1,8 @@
 import React from "react";
-import RenderingBucketIcon from "../icons/RenderingBucketIcon";
 import { formatTime } from "../../utils";
 import { TestResultDto } from "../../catoapimodels";
+import InfoMessageBox from "../failuremessagebox/InfoMessageBox";
+import IsRenderingMessageBox from "../failuremessagebox/IsRenderingMessageBox";
 
 interface Props {
   result: TestResultDto;
@@ -11,10 +12,10 @@ function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
       <p>
-        {props.result.execution_status === "NOT_STARTED" ? (
-          "waiting to start"
+        {props.result.execution_status !== "NOT_STARTED" ? (
+          <InfoMessageBox message={"waiting to start..."} />
         ) : (
-          <RenderingBucketIcon isActive={false} />
+          <IsRenderingMessageBox startedAt={props.result.started_at} />
         )}
       </p>
       <p>
