@@ -3,6 +3,7 @@ import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
 import LinkCard from "../linkcard/LinkCard";
 import PlaceHolderText from "../placeholdertext/PlaceHolderText";
+import { Helmet } from "react-helmet";
 
 interface Props {}
 
@@ -24,6 +25,9 @@ class ProjectsView extends Component<Props, State> {
   render() {
     return (
       <div className={styles.projectsView}>
+        <Helmet>
+          <title>Cato</title>
+        </Helmet>
         {this.state.projects.length
           ? this.renderProjects()
           : this.renderPlaceholder()}

@@ -289,6 +289,7 @@ class ReadOnlySeleniumTest:
         self.selenium_driver.find_element_by_css_module_class_name(
             "LinkCard_cardContentDiv"
         )
+        assert self.selenium_driver.title == "Cato"
 
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
         header_link = self.selenium_driver.find_element_by_css_module_class_name(
@@ -302,6 +303,8 @@ class ReadOnlySeleniumTest:
         self.home_page.the_link_card_for_the_project_should_be_displayed()
         self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
+        time.sleep(0.5)
+        assert self.selenium_driver.title == self.project.name
 
 
 class ProjectPageShouldNavigateToProjectTest(ReadOnlySeleniumTest):

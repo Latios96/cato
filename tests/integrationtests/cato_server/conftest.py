@@ -94,4 +94,4 @@ def selenium_driver():
     )
     driver.implicitly_wait(5)
     yield driver
-    driver.close()
+    # driver.close()

@@ -6,6 +6,7 @@ import Project from "../../models/Project";
 import RunListEntryComponent from "./RunListEntryComponent";
 import RunSummary from "../runsummary/RunSummary";
 import { RunDto } from "../../catoapimodels";
+import { Helmet } from "react-helmet";
 
 interface Props {
   projectId: number;
@@ -61,6 +62,9 @@ class ProjectRunsView extends Component<Props, State> {
   render() {
     return (
       <div>
+        <Helmet>
+          <title>{this.state.project ? this.state.project.name : "Cato"}</title>
+        </Helmet>
         {this.state.project ? (
           <h1 className={styles.projectName}>{this.state.project.name}</h1>
         ) : (
