@@ -61,11 +61,7 @@ class ProjectPage:
             )
         )
         run_number.click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/suites"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites")
 
 
 class RunView:
@@ -98,11 +94,7 @@ class RunView:
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[0].click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/suites/1"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites/1")
 
     def the_breadcrumb_should_be_shown(self):
         time.sleep(0.5)
@@ -131,11 +123,7 @@ class RunView:
         )
 
         suite_list[0].click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/tests/1"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests/1")
 
     def the_breadcrumb_should_be_shown_and_show_test_name(self):
         time.sleep(0.5)
@@ -159,11 +147,7 @@ class RunView:
             )
         )
         breadcrumb_entries[1].click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/suites/1"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites/1")
 
     def should_navigate_to_run_by_breadcrumb(self):
         time.sleep(0.5)
@@ -173,20 +157,13 @@ class RunView:
             )
         )
         breadcrumb_entries[0].click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url() + "/#/projects/1/runs/1"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
 
     def select_tests_tab(self):
         self.stateless_test.selenium_driver.find_element_by_id(
             "controlled-tab-example-tab-tests"
         ).click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/tests"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests")
 
     def the_tests_tab_should_display_one_entry(self):
         time.sleep(0.5)
@@ -203,11 +180,7 @@ class RunView:
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[1].click()
-        assert (
-            self.stateless_test.selenium_driver.current_url
-            == self.stateless_test.live_server.server_url()
-            + "/#/projects/1/runs/1/tests/1"
-        )
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests/1")
 
 
 class TestResultPage:
@@ -309,6 +282,9 @@ class ReadOnlySeleniumTest:
     def execute(self):
         raise NotImplementedError()
 
+    def assert_current_url_is(self, url):
+        assert self.selenium_driver.current_url == self.live_server.server_url() + url
+
     def navigate_to_home(self):
         self.selenium_driver.get(self.live_server.server_url())
         self.selenium_driver.find_element_by_css_module_class_name(
@@ -320,7 +296,7 @@ class ReadOnlySeleniumTest:
             "Header_logoCato"
         )
         header_link.click()
-        assert self.selenium_driver.current_url == self.live_server.server_url() + "/#/"
+        self.assert_current_url_is("/#/")
 
     def navigate_to_project_page(self):
         self.navigate_to_home()
