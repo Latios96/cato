@@ -1,5 +1,5 @@
 class StatelessSeleniumTest:
-    class ProjectsPage:
+    class HomePage:
         def __init__(self, stateless_test):
             self.stateless_test = stateless_test
 
@@ -9,7 +9,7 @@ class StatelessSeleniumTest:
             )
             assert link_card.text == self.stateless_test.project.name
 
-        def when_clicking_card_it_should_navigate_to_project_page(self):
+        def when_clicking_the_card_it_should_navigate_to_project_page(self):
             link_card = self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
                 "LinkCard_cardContentDiv"
             )
@@ -29,7 +29,7 @@ class StatelessSeleniumTest:
         self.live_server = live_server
         self.selenium_driver = selenium_driver
         self.project = project
-        self.projects_page = self.ProjectsPage(self)
+        self.home_page = self.HomePage(self)
         self.project_page = self.ProjectPage(self)
 
     def execute(self):
@@ -52,21 +52,21 @@ class StatelessSeleniumTest:
 class ProjectPageShouldNavigateToProjectTest(StatelessSeleniumTest):
     def execute(self):
         self.navigate_to_home()
-        self.projects_page.the_link_card_for_the_project_should_be_displayed()
-        self.projects_page.when_clicking_card_it_should_navigate_to_project_page()
+        self.home_page.the_link_card_for_the_project_should_be_displayed()
+        self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
         self.when_clicking_on_cato_in_header_it_should_navigate_to_home()
-        self.projects_page.the_link_card_for_the_project_should_be_displayed()
+        self.home_page.the_link_card_for_the_project_should_be_displayed()
 
 
 class NavigateBackAndForwardShouldWorkTest(StatelessSeleniumTest):
     def execute(self):
         self.navigate_to_home()
-        self.projects_page.the_link_card_for_the_project_should_be_displayed()
-        self.projects_page.when_clicking_card_it_should_navigate_to_project_page()
+        self.home_page.the_link_card_for_the_project_should_be_displayed()
+        self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
         self.selenium_driver.back()
-        self.projects_page.the_link_card_for_the_project_should_be_displayed()
+        self.home_page.the_link_card_for_the_project_should_be_displayed()
         self.selenium_driver.forward()
         self.project_page.the_project_name_should_be_visible()
 
