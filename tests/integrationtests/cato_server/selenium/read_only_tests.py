@@ -1,3 +1,10 @@
+import time
+
+from selenium.webdriver.chrome.webdriver import WebDriver
+
+from tests.integrationtests.cato_server.conftest import MyChromeDriver
+
+
 class HomePage:
     def __init__(self, stateless_test):
         self.stateless_test = stateless_test
@@ -37,15 +44,181 @@ class ProjectPage:
         )
         assert placeholder.text == "Please select a run"
 
+    def should_display_run_list(self):
+        run_number = (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "ProjectRunsView_runNumber"
+            )
+        )
+        assert run_number.text == "Run #1"
+
+    def select_run(self):
+        run_number = (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "ProjectRunsView_runNumber"
+            )
+        )
+        run_number.click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/suites"
+        )
+
+
+class RunView:
+    def __init__(self, stateless_test):
+        self.stateless_test = stateless_test
+
+    def should_show_run_headline(self):
+        run_summary_headline = (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "RunSummary_runSummaryHeadline"
+            )
+        )
+        assert run_summary_headline.text == "Run Summary: #1"
+
+    def the_suites_tab_should_be_selected(self):
+        suites_tab = self.stateless_test.selenium_driver.find_element_by_id(
+            "controlled-tab-example-tab-suites"
+        )
+        assert suites_tab.get_attribute("class") == "nav-item nav-link active"
+
+    def the_suites_tab_should_display_one_entry(self):
+        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+        assert len(suite_list) == 1
+        assert suite_list[0].find_elements_by_tag_name("span")[1].text == "my_suite"
+
+    def clicking_on_suite_entry_should_show_suite_tests(self):
+        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+        suite_list[0].click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/suites/1"
+        )
+
+    def the_breadcrumb_should_be_shown(self):
+        time.sleep(0.5)
+        breadcrumb_entries = (
+            self.stateless_test.selenium_driver.find_elements_by_class_name(
+                "breadcrumb-item"
+            )
+        )
+        assert len(breadcrumb_entries) == 2
+        assert breadcrumb_entries[0].find_element_by_tag_name("a").text == "Run #1"
+        assert breadcrumb_entries[1].find_element_by_tag_name("a").text == "my_suite"
+
+    def the_suites_tests_should_be_shown(self):
+        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+        assert len(suite_list) == 1
+        assert (
+            suite_list[0].find_elements_by_tag_name("span")[1].text
+            == "my_suite/my_test_name"
+        )
+
+    def clicking_on_test_name_in_test_list_should_show_test(self):
+        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+
+        suite_list[0].click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/tests/1"
+        )
+
+    def the_breadcrumb_should_be_shown_and_show_test_name(self):
+        time.sleep(0.5)
+        breadcrumb_entries = (
+            self.stateless_test.selenium_driver.find_elements_by_class_name(
+                "breadcrumb-item"
+            )
+        )
+        assert len(breadcrumb_entries) == 3
+        assert breadcrumb_entries[0].find_element_by_tag_name("a").text == "Run #1"
+        assert breadcrumb_entries[1].find_element_by_tag_name("a").text == "my_suite"
+        assert (
+            breadcrumb_entries[2].find_element_by_tag_name("a").text == "my_test_name"
+        )
+
+    def should_navigate_to_suite_by_breadcrumb(self):
+        time.sleep(0.5)
+        breadcrumb_entries = (
+            self.stateless_test.selenium_driver.find_elements_by_class_name(
+                "breadcrumb-item"
+            )
+        )
+        breadcrumb_entries[1].click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/suites/1"
+        )
+
+    def should_navigate_to_run_by_breadcrumb(self):
+        time.sleep(0.5)
+        breadcrumb_entries = (
+            self.stateless_test.selenium_driver.find_elements_by_class_name(
+                "breadcrumb-item"
+            )
+        )
+        breadcrumb_entries[0].click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url() + "/#/projects/1/runs/1"
+        )
+
+    def select_tests_tab(self):
+        self.stateless_test.selenium_driver.find_element_by_id(
+            "controlled-tab-example-tab-tests"
+        ).click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/tests"
+        )
+
+    def the_tests_tab_should_display_one_entry(self):
+        time.sleep(0.5)
+        tests_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+        assert (
+            tests_list[1].find_elements_by_tag_name("span")[1].text
+            == "my_suite/my_test_name"
+        )
+
+    def clicking_on_test_name_in_test_tab_should_show_test(self):
+        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+            f'[class^="SuiteAndTestLists_listEntry"]'
+        )
+        suite_list[1].click()
+        assert (
+            self.stateless_test.selenium_driver.current_url
+            == self.stateless_test.live_server.server_url()
+            + "/#/projects/1/runs/1/tests/1"
+        )
+
 
 class ReadOnlySeleniumTest:
-    def __init__(self, live_server, selenium_driver, project, test_result):
+    def __init__(
+        self, live_server, selenium_driver: MyChromeDriver, project, test_result
+    ):
         self.live_server = live_server
         self.selenium_driver = selenium_driver
         self.project = project
         self.test_result = test_result
         self.home_page = HomePage(self)
         self.project_page = ProjectPage(self)
+        self.run_view = RunView(self)
 
     def execute(self):
         raise NotImplementedError()
@@ -98,6 +271,39 @@ class DisplayProjectPage(ReadOnlySeleniumTest):
         self.project_page.select_a_run_placeholder_should_be_visible()
 
 
+class ProjectPageNavigation(ReadOnlySeleniumTest):
+    def execute(self):
+        self.navigate_to_project_page_and_select_run()
+
+        self.navigate_to_test_and_back_by_suites()
+
+        self.navigate_to_test_and_back_by_tests()
+
+    def navigate_to_project_page_and_select_run(self):
+        self.navigate_to_project_page()
+        self.project_page.select_a_run_placeholder_should_be_visible()
+        self.project_page.should_display_run_list()
+        self.project_page.select_run()
+
+    def navigate_to_test_and_back_by_suites(self):
+        self.run_view.should_show_run_headline()
+        self.run_view.the_suites_tab_should_be_selected()
+        self.run_view.the_suites_tab_should_display_one_entry()
+        self.run_view.clicking_on_suite_entry_should_show_suite_tests()
+        self.run_view.the_breadcrumb_should_be_shown()
+        self.run_view.the_suites_tests_should_be_shown()
+        self.run_view.clicking_on_test_name_in_test_list_should_show_test()
+        self.run_view.the_breadcrumb_should_be_shown_and_show_test_name()
+        self.run_view.should_navigate_to_suite_by_breadcrumb()
+        self.run_view.should_navigate_to_run_by_breadcrumb()
+        self.run_view.the_suites_tab_should_be_selected()
+
+    def navigate_to_test_and_back_by_tests(self):
+        self.run_view.select_tests_tab()
+        self.run_view.the_tests_tab_should_display_one_entry()
+        self.run_view.clicking_on_test_name_in_test_tab_should_show_test()
+
+
 def test_read_only_tests(live_server, selenium_driver, project, test_result):
     test = ProjectPageShouldNavigateToProjectTest(
         live_server, selenium_driver, project, test_result
@@ -109,7 +315,8 @@ def test_read_only_tests(live_server, selenium_driver, project, test_result):
     )
     test.execute()
 
-
-def test_display(live_server, selenium_driver, project, test_result):
     test = DisplayProjectPage(live_server, selenium_driver, project, test_result)
+    test.execute()
+
+    test = ProjectPageNavigation(live_server, selenium_driver, project, test_result)
     test.execute()
