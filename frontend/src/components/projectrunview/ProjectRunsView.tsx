@@ -7,6 +7,7 @@ import RunListEntryComponent from "./RunListEntryComponent";
 import RunSummary from "../runsummary/RunSummary";
 import { RunDto } from "../../catoapimodels";
 import { Helmet } from "react-helmet";
+import { renderIf } from "../utils";
 
 interface Props {
   projectId: number;
@@ -65,11 +66,9 @@ class ProjectRunsView extends Component<Props, State> {
         <Helmet>
           <title>{this.state.project ? this.state.project.name : "Cato"}</title>
         </Helmet>
-        {this.state.project ? (
-          <h1 className={styles.projectName}>{this.state.project.name}</h1>
-        ) : (
-          ""
-        )}
+        {renderIf(this.state.project, (project) => {
+          return <h1 className={styles.projectName}>{project.name}</h1>;
+        })}
         <div className={styles.runsViewContainer}>
           <ListGroup className={styles.runListContainer}>
             {this.state.runs.map((r: RunDto) => {
