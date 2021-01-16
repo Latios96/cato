@@ -184,7 +184,13 @@ def stored_file(sessionmaker_fixture, tmp_path, test_resource_provider):
 
 
 @pytest.fixture()
-def stored_image(sessionmaker_fixture, tmp_path, stored_file):
+def stored_file_alpha(sessionmaker_fixture, tmp_path, test_resource_provider):
+    repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
+    return repository.save_file(test_resource_provider.resource_by_name("test.exr"))
+
+
+@pytest.fixture()
+def stored_image(sessionmaker_fixture, tmp_path, stored_file, stored_file_alpha):
     repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     return repository.save(
         Image(
@@ -192,7 +198,10 @@ def stored_image(sessionmaker_fixture, tmp_path, stored_file):
             name="test.exr",
             original_file_id=stored_file.id,
             channels=[
-                ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id)
+                ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id),
+                ImageChannel(
+                    id=0, name="alpha", image_id=0, file_id=stored_file_alpha.id
+                ),
             ],
             width=1920,
             height=1080,

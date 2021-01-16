@@ -275,7 +275,10 @@ def test_get_test_result_by_id(client, test_result):
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
         "image_output": {
-            "channels": [{"file_id": 1, "id": 1, "name": "rgb"}],
+            "channels": [
+                {"file_id": 1, "id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "name": "alpha"},
+            ],
             "id": 1,
             "name": "test.exr",
             "original_file_id": 1,
@@ -285,7 +288,10 @@ def test_get_test_result_by_id(client, test_result):
         "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
         "message": "success",
         "reference_image": {
-            "channels": [{"file_id": 1, "id": 1, "name": "rgb"}],
+            "channels": [
+                {"file_id": 1, "id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "name": "alpha"},
+            ],
             "id": 1,
             "name": "test.exr",
             "original_file_id": 1,
