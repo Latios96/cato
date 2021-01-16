@@ -1,5 +1,6 @@
 import time
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.webdriver import WebDriver
 
 from tests.integrationtests.cato_server.conftest import MyChromeDriver
@@ -208,6 +209,47 @@ class RunView:
         )
 
 
+class TestResultPage:
+    def __init__(self, stateless_test):
+        self.stateless_test = stateless_test
+
+    def should_display_test_duration(self, duration):
+        assert (
+            self.stateless_test.selenium_driver.find_element_by_id(
+                "test-duration-value"
+            ).text
+            == duration
+        )
+
+    def show_log_button_should_be_visible(self):
+        assert self.get_log_button()
+
+    def get_log_button(self):
+        return (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "DisplayLogComponent_logButton"
+            )
+        )
+
+    def clicking_show_log_should_show_log(self):
+        self.get_log_button().click()
+        assert (
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "LogComponent_terminalContent"
+            )
+        )
+
+    def clicking_show_log_should_hide_log(self):
+        self.get_log_button().click()
+        time.sleep(0.5)
+        try:
+            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+                "LogComponent_terminalContent"
+            )
+        except NoSuchElementException:
+            pass
+
+
 class ReadOnlySeleniumTest:
     def __init__(
         self, live_server, selenium_driver: MyChromeDriver, project, test_result
@@ -219,6 +261,7 @@ class ReadOnlySeleniumTest:
         self.home_page = HomePage(self)
         self.project_page = ProjectPage(self)
         self.run_view = RunView(self)
+        self.test_result_page = TestResultPage(self)
 
     def execute(self):
         raise NotImplementedError()
@@ -304,19 +347,52 @@ class ProjectPageNavigation(ReadOnlySeleniumTest):
         self.run_view.clicking_on_test_name_in_test_tab_should_show_test()
 
 
-def test_read_only_tests(live_server, selenium_driver, project, test_result):
+class TestResultFunctionality(ReadOnlySeleniumTest):
+    def execute(self):
+        self.navigate_to_test()
+
+        self.test_result_page.should_display_test_duration("5 seconds")
+
+        self.test_result_page.show_log_button_should_be_visible()
+        self.test_result_page.clicking_show_log_should_show_log()
+        self.test_result_page.clicking_show_log_should_hide_log()
+
+    def navigate_to_test(self):
+        self.selenium_driver.get(
+            self.live_server.server_url() + "/#/projects/1/runs/1/tests/1"
+        )
+
+
+def test_read_only_tests(live_server, selenium_driver, project, finished_test_result):
     test = ProjectPageShouldNavigateToProjectTest(
-        live_server, selenium_driver, project, test_result
+        live_server, selenium_driver, project, finished_test_result
     )
     test.execute()
 
     test = NavigateBackAndForwardShouldWorkTest(
-        live_server, selenium_driver, project, test_result
+        live_server, selenium_driver, project, finished_test_result
     )
     test.execute()
 
-    test = DisplayProjectPage(live_server, selenium_driver, project, test_result)
+    test = DisplayProjectPage(
+        live_server, selenium_driver, project, finished_test_result
+    )
     test.execute()
 
-    test = ProjectPageNavigation(live_server, selenium_driver, project, test_result)
+    test = ProjectPageNavigation(
+        live_server, selenium_driver, project, finished_test_result
+    )
+    test.execute()
+
+
+def test_test_page(
+    live_server,
+    selenium_driver,
+    project,
+    finished_test_result,
+    output_for_finished_test,
+):
+    test = TestResultFunctionality(
+        live_server, selenium_driver, project, finished_test_result
+    )
     test.execute()

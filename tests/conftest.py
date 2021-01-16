@@ -163,6 +163,20 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
     return repository.save(test_result)
 
 
+@pytest.fixture
+def finished_test_result(
+    sessionmaker_fixture, test_result_factory, suite_result, stored_image
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result = test_result_factory(
+        suite_result_id=suite_result.id,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
+        execution_status=ExecutionStatus.FINISHED,
+    )
+    return repository.save(test_result)
+
+
 @pytest.fixture()
 def stored_file(sessionmaker_fixture, tmp_path, test_resource_provider):
     repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
@@ -191,6 +205,14 @@ def output(sessionmaker_fixture, test_result):
     repository = SqlAlchemyOutputRepository(sessionmaker_fixture)
     return repository.save(
         Output(id=0, test_result_id=test_result.id, text="This is a long text")
+    )
+
+
+@pytest.fixture()
+def output_for_finished_test(sessionmaker_fixture, finished_test_result):
+    repository = SqlAlchemyOutputRepository(sessionmaker_fixture)
+    return repository.save(
+        Output(id=0, test_result_id=finished_test_result.id, text="This is a long text")
     )
 
 
