@@ -1,7 +1,6 @@
 import time
 
 from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.chrome.webdriver import WebDriver
 from selenium.webdriver.support.select import Select
 
 from tests.integrationtests.cato_server.conftest import MyChromeDriver
