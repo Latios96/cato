@@ -3,12 +3,18 @@ import styles from "./InfoBox.module.scss";
 interface Props {
   value: string;
   title: string;
+  id?: string;
 }
 const InfoBoxElement = (props: Props) => {
   return (
     <div className={styles.infoBoxElement}>
-      <span className={styles.infoBoxValue}>{props.value}</span>
-      <span>{props.title}</span>
+      <span
+        id={props.id ? `${props.id}-value` : ""}
+        className={styles.infoBoxValue}
+      >
+        {props.value}
+      </span>
+      <span id={props.id ? `${props.id}-value` : ""}>{props.title}</span>
     </div>
   );
 };

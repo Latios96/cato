@@ -16,6 +16,7 @@ function FinishedTestResultComponent(props: Props) {
     <div className={styles.finishedTestResultContainer}>
       <InfoBox className={styles.infoBox}>
         <InfoBoxElement
+          id={"test-duration"}
           value={formatDuration(props.result.seconds)}
           title={"duration"}
         />
