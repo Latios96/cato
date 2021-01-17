@@ -12,6 +12,7 @@
 .runListEntry {
   width: 270px;
   display: flex !important;
+  z-index: 0 !important;
 }
 
 .runListEntry:hover {
