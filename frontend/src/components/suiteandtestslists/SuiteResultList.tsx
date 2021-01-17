@@ -45,7 +45,7 @@ const SuiteResultList = (props: Props) => {
     );
   };
 
-  if (!props.suiteResults.length) {
+  if (props.suiteResults.length === 0) {
     return renderPlaceholder();
   }
   return renderList();

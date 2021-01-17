@@ -53,7 +53,7 @@ const TestResultList = (props: Props) => {
     );
   };
 
-  if (!props.testResults.length) {
+  if (props.testResults.length === 0) {
     return renderPlaceholder();
   }
   return renderList();
