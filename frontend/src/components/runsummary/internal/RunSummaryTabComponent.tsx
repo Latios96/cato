@@ -79,6 +79,7 @@ export default function RunSummaryTabComponent(props: Props) {
               suiteResults={suites}
               projectId={props.projectId}
               runId={props.runId}
+              isLoading={isLoading}
             />
           )}
         </div>
@@ -92,6 +93,7 @@ export default function RunSummaryTabComponent(props: Props) {
               testResults={tests}
               projectId={props.projectId}
               runId={props.runId}
+              isLoading={isLoading}
             />
           )}
         </div>
