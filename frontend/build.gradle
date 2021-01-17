@@ -31,9 +31,19 @@ task copyConjureTypescriptModels {
     }
 }
 
+task yarnTest(type: YarnTask) {
+    dependsOn('yarnInstallDependencies')
+    dependsOn('copyConjureTypescriptModels')
+    args = ['test']
+    inputs.dir('public')
+    inputs.dir('src')
+    outputs.file('yarnTest')
+}
+
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
     dependsOn('copyConjureTypescriptModels')
+    dependsOn('yarnTest')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')
