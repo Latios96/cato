@@ -7,6 +7,7 @@ import styles from "./FinishedTestResultComponent.module.scss";
 import InfoBox from "../infobox/InfoBox";
 import InfoBoxElement from "../infobox/InfoBoxElement";
 import FailureMessageBox from "../failuremessagebox/FailureMessageBox";
+import ImageComparison from "../imagecomparison/ImageComparison";
 interface Props {
   result: TestResultDto;
 }
@@ -38,7 +39,7 @@ function renderImages(result: TestResultDto): React.ReactNode {
   return (
     <React.Fragment>
       {result.image_output && result.reference_image ? (
-        <MultiChannelImageComparison
+        <ImageComparison
           imageOutput={result.image_output}
           referenceImage={result.reference_image}
         />
