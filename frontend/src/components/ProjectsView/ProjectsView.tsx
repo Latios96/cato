@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
-import LinkCard from "../linkcard/LinkCard";
-import PlaceHolderText from "../placeholdertext/PlaceHolderText";
+import LinkCard from "../LinkCard/LinkCard";
+import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
 import { Helmet } from "react-helmet";
 
 interface Props {}

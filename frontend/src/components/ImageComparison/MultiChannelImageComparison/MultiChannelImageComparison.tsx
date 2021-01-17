@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import ImageComparison from "./SingleChannelComparison";
-import { ImageDto } from "../../catoapimodels";
+import ImageComparison from "../SingleChannelComparison/SingleChannelComparison";
+import { ImageDto } from "../../../catoapimodels";
 import { Form } from "react-bootstrap";
 import styles from "./MultiChannelImageComparion.module.scss";
 

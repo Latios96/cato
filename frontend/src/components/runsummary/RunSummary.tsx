@@ -5,10 +5,10 @@ import { Spinner } from "react-bootstrap";
 import RunSummaryTabComponent from "./internal/RunSummaryTabComponent";
 import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils";
-import TestResultComponent from "../testresultcomponent/TestResultComponent";
-import SuiteResultComponent from "../suiteresultcomponent/SuiteResultComponent";
-import InfoBox from "../infobox/InfoBox";
-import InfoBoxElement from "../infobox/InfoBoxElement";
+import TestResultComponent from "../TestResultComponent/TestResultComponent";
+import SuiteResultComponent from "../SuiteResultComponent/SuiteResultComponent";
+import InfoBox from "../InfoBox/InfoBox";
+import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
 
 interface Props {
   projectId: number;

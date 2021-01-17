@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./FailureMessageBox.module.scss";
-import RenderingBucketIcon from "../icons/RenderingBucketIcon";
+import RenderingBucketIcon from "../Icons/RenderingBucketIcon";
 import { formatTime } from "../../utils";
 interface Props {
   startedAt: string | undefined | null;

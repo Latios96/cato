@@ -4,7 +4,7 @@ import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
 import { formatTime } from "../../utils";
 import { RunDto } from "../../catoapimodels";
-import RunStatus from "../status/RunStatus";
+import RunStatus from "../Status/RunStatus";
 
 interface Props {
   run: RunDto;

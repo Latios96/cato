@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import LogComponent from "../logcomponent/LogComponent";
+import LogComponent from "../LogComponent/LogComponent";
 import { Button } from "react-bootstrap";
 import styles from "./DisplayLogComponent.module.scss";
 interface Props {

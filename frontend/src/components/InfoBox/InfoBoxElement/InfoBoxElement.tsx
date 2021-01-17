@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./InfoBox.module.scss";
+import styles from "./InfoBoxElement.module.scss";
 interface Props {
   value: string;
   title: string;

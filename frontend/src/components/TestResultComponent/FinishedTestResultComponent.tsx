@@ -1,13 +1,12 @@
 import React from "react";
 import { formatDuration } from "../../utils";
-import DisplayLogComponent from "../displaylogcomponent/DisplayLogComponent";
-import MultiChannelImageComparison from "../imagecomparison/MultiChannelImageComparison";
+import DisplayLogComponent from "../DisplayLogComponent/DisplayLogComponent";
 import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";
-import InfoBox from "../infobox/InfoBox";
-import InfoBoxElement from "../infobox/InfoBoxElement";
-import FailureMessageBox from "../failuremessagebox/FailureMessageBox";
-import ImageComparison from "../imagecomparison/ImageComparison";
+import InfoBox from "../InfoBox/InfoBox";
+import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
+import FailureMessageBox from "../FailureMessageBox/FailureMessageBox";
+import ImageComparison from "../ImageComparison/ImageComparison";
 interface Props {
   result: TestResultDto;
 }

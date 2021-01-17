@@ -3,8 +3,8 @@ import { Spinner, Tab, Tabs } from "react-bootstrap";
 import React, { useEffect, useState } from "react";
 import styles from "./RunSummaryTabComponent.module.scss";
 import { SuiteResultDto, TestResultDto } from "../../../catoapimodels";
-import SuiteResultList from "../../suiteandtestslists/SuiteResultList";
-import TestResultList from "../../suiteandtestslists/TestResultList";
+import SuiteResultList from "../../SuiteAndTestsLists/SuiteResultList";
+import TestResultList from "../../SuiteAndTestsLists/TestResultList";
 
 interface Props {
   projectId: number;

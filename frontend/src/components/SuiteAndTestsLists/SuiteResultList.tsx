@@ -2,28 +2,22 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import styles from "./SuiteAndTestLists.module.scss";
-import TestStatus from "../status/TestStatus";
-import { ExecutionStatusDto, TestStatusDto } from "../../catoapimodels";
-import PlaceHolderText from "../placeholdertext/PlaceHolderText";
-
-interface TestResultListListEntry {
-  id: number;
-  test_identifier: string;
-  execution_status: ExecutionStatusDto;
-  status: TestStatusDto;
-}
+import { SuiteResultDto } from "../../catoapimodels";
+import SuiteStatus from "../Status/SuiteStatus";
+import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
 
 interface Props {
-  testResults: TestResultListListEntry[];
+  suiteResults: SuiteResultDto[];
   projectId: number;
   runId: number;
 }
-const TestResultList = (props: Props) => {
+
+const SuiteResultList = (props: Props) => {
   let renderPlaceholder = () => {
     return (
       <div className={styles.placeholderContainer}>
         <PlaceHolderText
-          text={"No tests found"}
+          text={"No suites found"}
           className={styles.placeholder}
         />
       </div>
@@ -33,18 +27,16 @@ const TestResultList = (props: Props) => {
   let renderList = () => {
     return (
       <ListGroup>
-        {props.testResults.map((test) => {
+        {props.suiteResults.map((suite) => {
           return (
             <Link
-              to={`/projects/${props.projectId}/runs/${props.runId}/tests/${test.id}`}
+              to={`/projects/${props.projectId}/runs/${props.runId}/suites/${suite.id}`}
             >
               <ListGroup.Item className={styles.listEntry}>
                 <span className={styles.statusInList}>
-                  <TestStatus restResult={test} />
+                  <SuiteStatus suiteResult={suite} />
                 </span>
-                <span className={styles.nameInList}>
-                  {test.test_identifier}
-                </span>
+                <span className={styles.nameInList}>{suite.suite_name}</span>
               </ListGroup.Item>
             </Link>
           );
@@ -53,10 +45,10 @@ const TestResultList = (props: Props) => {
     );
   };
 
-  if (props.testResults.length === 0) {
+  if (props.suiteResults.length === 0) {
     return renderPlaceholder();
   }
   return renderList();
 };
 
-export default TestResultList;
+export default SuiteResultList;

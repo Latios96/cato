@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
 import { TestResultDto } from "../../catoapimodels";
-import TestResultBreadCrumb from "../testresultbreadcrumb/TestResultBreadCrumb";
+import TestResultBreadCrumb from "../TestResultBreadCrumb/TestResultBreadCrumb";
 
 interface Props {
   resultId: number;

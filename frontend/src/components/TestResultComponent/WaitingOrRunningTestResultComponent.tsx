@@ -1,8 +1,8 @@
 import React from "react";
 import { formatTime } from "../../utils";
 import { TestResultDto } from "../../catoapimodels";
-import InfoMessageBox from "../failuremessagebox/InfoMessageBox";
-import IsRenderingMessageBox from "../failuremessagebox/IsRenderingMessageBox";
+import InfoMessageBox from "../FailureMessageBox/InfoMessageBox";
+import IsRenderingMessageBox from "../FailureMessageBox/IsRenderingMessageBox";
 
 interface Props {
   result: TestResultDto;

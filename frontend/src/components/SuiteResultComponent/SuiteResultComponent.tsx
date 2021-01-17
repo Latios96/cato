@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { SuiteResultSummaryDto } from "../../catoapimodels";
-import TestResultList from "../suiteandtestslists/TestResultList";
-import TestResultBreadCrumb from "../testresultbreadcrumb/TestResultBreadCrumb";
+import TestResultList from "../SuiteAndTestsLists/TestResultList";
+import TestResultBreadCrumb from "../TestResultBreadCrumb/TestResultBreadCrumb";
 interface Props {
   suiteId: number;
   projectId: number;

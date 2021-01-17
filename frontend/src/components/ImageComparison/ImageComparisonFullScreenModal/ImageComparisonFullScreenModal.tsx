@@ -2,8 +2,8 @@ import React from "react";
 import Modal from "react-modal";
 import { X } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
-import { ImageDto } from "../../catoapimodels";
-import MultiChannelImageComparison from "./MultiChannelImageComparison";
+import { ImageDto } from "../../../catoapimodels";
+import MultiChannelImageComparison from "../MultiChannelImageComparison/MultiChannelImageComparison";
 import styles from "./ImageComparisonFullScreenModal.module.scss";
 
 interface Props {

@@ -1,5 +1,5 @@
 import React from "react";
-import ProjectRunsView from "../components/projectrunview/ProjectRunsView";
+import ProjectRunsView from "../components/ProjectRunView/ProjectRunsView";
 import BasicPage from "./BasicPage";
 
 interface Props {

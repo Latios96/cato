@@ -1,6 +1,6 @@
 import React from "react";
 import { Check2All, Hourglass } from "react-bootstrap-icons";
-import RenderingBucketIcon from "../icons/RenderingBucketIcon";
+import RenderingBucketIcon from "../Icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
 import styles from "./StatusStyles.module.scss";
 

@@ -4,7 +4,7 @@ import styles from "./ProjectRunsView.module.scss";
 import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import RunListEntryComponent from "./RunListEntryComponent";
-import RunSummary from "../runsummary/RunSummary";
+import RunSummary from "../RunSummary/RunSummary";
 import { RunDto } from "../../catoapimodels";
 import { Helmet } from "react-helmet";
 import { renderIf } from "../utils";
