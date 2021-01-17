@@ -19,7 +19,10 @@ const ImageComparison = (props: Props) => {
       />
 
       <div className={styles.fullscreenButtonContainer}>
-        <Button onClick={() => setModalOpen(true)}>
+        <Button
+          id="app-open-image-comparison-modal"
+          onClick={() => setModalOpen(true)}
+        >
           <Fullscreen />
         </Button>
       </div>

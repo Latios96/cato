@@ -16,13 +16,17 @@ interface Props {
 const ImageComparisonFullScreenModal = (props: Props) => {
   return (
     <Modal
+      id="app-image-comparison-modal"
       isOpen={props.modalIsOpen}
       className={styles.modal}
       overlayClassName={styles.modalOverlay}
       onRequestClose={props.onCloseRequest}
     >
       <div className={styles.closeButtonContainer}>
-        <Button onClick={props.onCloseRequest}>
+        <Button
+          id="app-close-image-comparison-modal"
+          onClick={props.onCloseRequest}
+        >
           <X size={22} />
         </Button>
       </div>

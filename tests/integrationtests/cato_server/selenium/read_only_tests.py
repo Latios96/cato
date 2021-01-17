@@ -264,6 +264,31 @@ class TestResultPage:
             == self.stateless_test.live_server.server_url() + "/api/v1/files/1"
         )
 
+    def click_full_screen_button(self):
+        button = self.stateless_test.selenium_driver.find_element_by_id(
+            "app-open-image-comparison-modal"
+        )
+        button.click()
+
+    def image_comparison_modal_should_be_shown(self):
+        assert self.stateless_test.selenium_driver.find_element_by_id(
+            "app-image-comparison-modal"
+        )
+
+    def click_image_comparison_close_modal_button(self):
+        button = self.stateless_test.selenium_driver.find_element_by_id(
+            "app-close-image-comparison-modal"
+        )
+        button.click()
+
+    def image_comparison_modal_should_not_be_shown(self):
+        try:
+            self.stateless_test.selenium_driver.find_element_by_id(
+                "app-image-comparison-modal"
+            )
+        except NoSuchElementException:
+            pass
+
 
 class ReadOnlySeleniumTest:
     def __init__(
@@ -382,6 +407,11 @@ class TestResultFunctionality(ReadOnlySeleniumTest):
         self.test_result_page.channel_dropdown_should_contain_channels(["rgb", "alpha"])
         self.test_result_page.change_channel_to_alpha()
         self.test_result_page.alpha_image_should_be_shown()
+
+        self.test_result_page.click_full_screen_button()
+        self.test_result_page.image_comparison_modal_should_be_shown()
+        self.test_result_page.click_image_comparison_close_modal_button()
+        self.test_result_page.image_comparison_modal_should_not_be_shown()
 
     def navigate_to_test(self):
         self.selenium_driver.get(
