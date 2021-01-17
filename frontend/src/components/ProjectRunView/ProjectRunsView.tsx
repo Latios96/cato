@@ -33,17 +33,6 @@ class ProjectRunsView extends Component<Props, State> {
 
   componentDidMount() {
     this.update();
-    let eventSource = new EventSource(
-      "http://localhost:5000/api/v1/runs/events/" + this.props.projectId
-    );
-
-    eventSource.addEventListener("RUN_CREATED", (e) => {
-      // @ts-ignore
-      let message = JSON.parse(e.data);
-      let runs = this.state.runs;
-      runs.unshift(message);
-      this.setState({ runs: runs });
-    });
   }
 
   componentWillUnmount() {
