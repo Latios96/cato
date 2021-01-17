@@ -24,6 +24,7 @@
     "react-compare-image": "^3.0.2",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
+    "react-modal": "^3.12.1",
     "react-query": "^3.5.12",
     "react-router-dom": "^5.2.0",
     "react-scripts": "4.0.1",
@@ -59,6 +60,7 @@
   "devDependencies": {
     "@types/enzyme": "^3.10.8",
     "@types/react-helmet": "^6.1.0",
+    "@types/react-modal": "^3.10.6",
     "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
     "enzyme": "^3.11.0",
     "enzyme-to-json": "^3.6.1",
