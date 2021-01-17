@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import styles from "./ImageComparison.module.css";
+import styles from "./SingleChannelComparison.module.css";
 import ReactCompareImage from "react-compare-image";
 import { Spinner } from "react-bootstrap";
 
@@ -20,7 +20,7 @@ interface State {
   heightForRendering: number;
 }
 
-class ImageComparison extends Component<Props, State> {
+class SingleChannelComparison extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -139,4 +139,4 @@ class ImageComparison extends Component<Props, State> {
   };
 }
 
-export default ImageComparison;
+export default SingleChannelComparison;
