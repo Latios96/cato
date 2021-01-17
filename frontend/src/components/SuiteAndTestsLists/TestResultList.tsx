@@ -17,6 +17,7 @@ interface Props {
   testResults: TestResultListListEntry[];
   projectId: number;
   runId: number;
+  isLoading: boolean;
 }
 const TestResultList = (props: Props) => {
   let renderPlaceholder = () => {
@@ -53,7 +54,7 @@ const TestResultList = (props: Props) => {
     );
   };
 
-  if (props.testResults.length === 0) {
+  if (!props.testResults.length && !props.isLoading) {
     return renderPlaceholder();
   }
   return renderList();

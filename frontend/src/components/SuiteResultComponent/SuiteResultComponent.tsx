@@ -29,6 +29,7 @@ const SuiteResultComponent = (props: Props) => {
         testResults={suiteResult.tests}
         projectId={props.projectId}
         runId={props.runId}
+        isLoading={false}
       />
     );
   };

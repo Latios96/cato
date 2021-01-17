@@ -10,6 +10,7 @@ interface Props {
   suiteResults: SuiteResultDto[];
   projectId: number;
   runId: number;
+  isLoading: boolean;
 }
 
 const SuiteResultList = (props: Props) => {
@@ -45,7 +46,7 @@ const SuiteResultList = (props: Props) => {
     );
   };
 
-  if (props.suiteResults.length === 0) {
+  if (!props.suiteResults.length && !props.isLoading) {
     return renderPlaceholder();
   }
   return renderList();
