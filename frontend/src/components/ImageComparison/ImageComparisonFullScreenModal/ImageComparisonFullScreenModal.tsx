@@ -31,6 +31,7 @@ const ImageComparisonFullScreenModal = (props: Props) => {
         </Button>
       </div>
       <MultiChannelImageComparison
+        id={"modal"}
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
       />

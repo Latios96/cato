@@ -2,6 +2,8 @@ import React, { Component } from "react";
 import styles from "./SingleChannelComparison.module.css";
 import ReactCompareImage from "react-compare-image";
 import { Spinner } from "react-bootstrap";
+import { CompareModes } from "../CompareModes";
+import ImageDiff from "../ImageDiff/ImageDiff";
 
 interface Props {
   outputImageUrl: string;
@@ -9,6 +11,7 @@ interface Props {
   width: number;
   height: number;
   identifier: string;
+  mode: CompareModes;
 }
 
 interface State {
@@ -96,10 +99,17 @@ class SingleChannelComparison extends Component<Props, State> {
         />
         {(this.state.outputImageLoaded && this.state.referenceImageLoaded) ||
         this.state.isSwapping ? (
-          <ReactCompareImage
-            leftImage={this.state.outputImageUrlToRender}
-            rightImage={this.state.referenceImageUrlToRender}
-          />
+          this.props.mode === CompareModes.SWIPE ? (
+            <ReactCompareImage
+              leftImage={this.state.outputImageUrlToRender}
+              rightImage={this.state.referenceImageUrlToRender}
+            />
+          ) : (
+            <ImageDiff
+              leftImage={this.state.outputImageUrlToRender}
+              rightImage={this.state.referenceImageUrlToRender}
+            />
+          )
         ) : (
           <div className={styles.spinner}>
             <Spinner animation="border" role="status" variant={"light"}>
@@ -111,7 +121,6 @@ class SingleChannelComparison extends Component<Props, State> {
     );
   }
   checkLoadedReferenceImage = () => {
-    console.log("loaded");
     this.setState({ referenceImageLoaded: true });
     if (this.state.outputImageLoaded) {
       console.log(this.props.outputImageUrl);
@@ -123,7 +132,6 @@ class SingleChannelComparison extends Component<Props, State> {
     }
   };
   checkOutputImageLoaded = () => {
-    console.log("loaded");
     this.setState({ outputImageLoaded: true });
     if (this.state.referenceImageLoaded) {
       console.log(this.props.outputImageUrl);

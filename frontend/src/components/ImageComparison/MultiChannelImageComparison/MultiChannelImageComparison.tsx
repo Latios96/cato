@@ -1,12 +1,14 @@
 import React, { Component } from "react";
-import ImageComparison from "../SingleChannelComparison/SingleChannelComparison";
+import SingleChannelComparison from "../SingleChannelComparison/SingleChannelComparison";
 import { ImageDto } from "../../../catoapimodels";
 import { Form } from "react-bootstrap";
 import styles from "./MultiChannelImageComparion.module.scss";
+import { CompareModes } from "../CompareModes";
 
 interface Props {
   imageOutput: ImageDto;
   referenceImage: ImageDto;
+  id: string;
 }
 
 interface State {
@@ -14,6 +16,7 @@ interface State {
   selectedChannel: string;
   width: number;
   height: number;
+  selectedMode: CompareModes;
 }
 
 class MultiChannelImageComparison extends Component<Props, State> {
@@ -24,6 +27,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
       selectedChannel: "rgb",
       width: 0,
       height: 0,
+      selectedMode: CompareModes.SWIPE,
     };
   }
 
@@ -47,21 +51,43 @@ class MultiChannelImageComparison extends Component<Props, State> {
   renderImageComparison = (imageOutput: ImageDto, referenceImage: ImageDto) => {
     return (
       <React.Fragment>
-        <Form.Control
-          className={styles.selectChannel}
-          as="select"
-          custom
-          onChange={this.handleChange}
-        >
-          {imageOutput.channels.map((channel) => {
-            return (
-              <option key={channel.id} value={channel.name}>
-                {channel.name}
-              </option>
-            );
-          })}
-        </Form.Control>
-        <ImageComparison
+        <form>
+          <Form.Control
+            className={styles.selectChannel}
+            as="select"
+            custom
+            onChange={this.handleChange}
+          >
+            {imageOutput.channels.map((channel) => {
+              return (
+                <option key={channel.id} value={channel.name}>
+                  {channel.name}
+                </option>
+              );
+            })}
+          </Form.Control>
+
+          <Form.Check
+            id={"selected-swipe-mode-swipe" + this.props.id}
+            inline
+            label="Swipe"
+            name={"CompareMode"}
+            type={"radio"}
+            checked={this.state.selectedMode === CompareModes.SWIPE}
+            onChange={() => this.setState({ selectedMode: CompareModes.SWIPE })}
+            onClick={(e) => console.log("clicjed")}
+          />
+          <Form.Check
+            id={"selected-swipe-mode-diff" + this.props.id}
+            inline
+            label="Diff"
+            name={"CompareMode"}
+            type={"radio"}
+            checked={this.state.selectedMode === CompareModes.DIFF}
+            onChange={() => this.setState({ selectedMode: CompareModes.DIFF })}
+          />
+        </form>
+        <SingleChannelComparison
           outputImageUrl={
             "/api/v1/files/" +
             this.channelFileIdByName(imageOutput, this.state.selectedChannel)
@@ -73,6 +99,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
           width={imageOutput.width}
           height={imageOutput.height}
           identifier={"test"}
+          mode={this.state.selectedMode}
         />
       </React.Fragment>
     );

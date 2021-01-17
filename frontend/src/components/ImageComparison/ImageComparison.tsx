@@ -14,6 +14,7 @@ const ImageComparison = (props: Props) => {
   return (
     <div>
       <MultiChannelImageComparison
+        id={"default-compare"}
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
       />
