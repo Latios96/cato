@@ -7,8 +7,9 @@ interface Props {
 const ImageDiff = (props: Props) => {
   return (
     <div className={styles.diffContainer}>
-      <img className={styles.diffImage} src={props.leftImage} />
+      <img alt="left" className={styles.diffImage} src={props.leftImage} />
       <img
+        alt="left"
         className={`${styles.diffImage} ${styles.diffImageDifference}`}
         src={props.rightImage}
       />
