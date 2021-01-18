@@ -36,7 +36,7 @@ def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
     return obj_graph.provide(cls)
 
 
-def create_object_graph():
+def create_object_graph(url: Optional[str] = None):
     return pinject.new_object_graph(
         modules=[
             cato,
@@ -52,7 +52,7 @@ def create_object_graph():
             cato.commands.update_missing_reference_images_command,
             cato.commands.update_missing_reference_image,
         ],
-        binding_specs=[TestExecutionReporterBindings("http://127.0.0.1:5000")],
+        binding_specs=[TestExecutionReporterBindings(url)],
     )
 
 
@@ -81,8 +81,9 @@ def run(
     test_identifier_str: str,
     only_failed: bool,
     verbose: int,
+    url: str,
 ):
-    obj_graph = create_object_graph()
+    obj_graph = create_object_graph(url)
     run_command = provide_safe(obj_graph, RunCommand)
 
     verbose_mode = VerboseMode.in_range(verbose)
@@ -141,6 +142,7 @@ def main():
         "--test-identifier",
         help="Identifier of test to run. Example: suite_name/test_name",
     )
+    run_parser.add_argument("-u", "--url", help="url to server", required=True)
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
     run_parser.add_argument("--only-failed", action="store_true")
 
@@ -170,7 +172,14 @@ def main():
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
-        run(args.path, args.suite, args.test_identifier, args.only_failed, args.verbose)
+        run(
+            args.path,
+            args.suite,
+            args.test_identifier,
+            args.only_failed,
+            args.verbose,
+            args.url,
+        )
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
     elif args.command == "list-tests":
