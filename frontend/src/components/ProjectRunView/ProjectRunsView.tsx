@@ -28,6 +28,7 @@ class ProjectRunsView extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = { project: null, runs: [], currentSuiteResults: [] };
+
     this.interval = 0;
   }
 
@@ -55,9 +56,11 @@ class ProjectRunsView extends Component<Props, State> {
         <Helmet>
           <title>{this.state.project ? this.state.project.name : "Cato"}</title>
         </Helmet>
+
         {renderIf(this.state.project, (project) => {
           return <h1 className={styles.projectName}>{project.name}</h1>;
         })}
+
         <div className={styles.runsViewContainer}>
           <ListGroup className={styles.runListContainer}>
             {this.state.runs.map((r: RunDto) => {
