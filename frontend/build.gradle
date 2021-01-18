@@ -51,7 +51,7 @@ task yarnBuild(type: YarnTask) {
 }
 
 task lintTypescript(type: YarnTask) {
-    args = ['run', 'eslint',  'src']
+    args = ['run', 'eslint',  'src', '--max-warnings=0']
     inputs.dir('src')
     outputs.file('esLintSuccess')
 }
