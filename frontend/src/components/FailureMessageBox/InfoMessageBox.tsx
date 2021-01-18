@@ -7,7 +7,7 @@ interface Props {
 const InfoMessageBox = (props: Props) => {
   return (
     <div className={styles.infoMessageBox}>
-      <Hourglass size={27} />
+      <Hourglass data-testid={"running-hourglas"} size={27} />
       <span className={styles.messageText}>{props.message}</span>
     </div>
   );

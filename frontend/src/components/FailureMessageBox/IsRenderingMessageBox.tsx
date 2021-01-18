@@ -10,7 +10,7 @@ const IsRenderingMessageBox = (props: Props) => {
     <div className={styles.infoMessageBox}>
       <RenderingBucketIcon isActive={false} />
       <span className={styles.messageText}>{`started: ${
-        props.startedAt ? formatTime(props.startedAt) : "unkown"
+        props.startedAt ? formatTime(props.startedAt) : "unknown"
       }`}</span>
     </div>
   );

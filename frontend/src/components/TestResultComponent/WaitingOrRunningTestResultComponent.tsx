@@ -11,18 +11,11 @@ interface Props {
 function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
-      <p>
-        {props.result.execution_status !== "NOT_STARTED" ? (
-          <InfoMessageBox message={"waiting to start..."} />
-        ) : (
-          <IsRenderingMessageBox startedAt={props.result.started_at} />
-        )}
-      </p>
-      <p>
-        {props.result.started_at
-          ? "started: " + formatTime(props.result.started_at)
-          : ""}
-      </p>
+      {props.result.execution_status === "NOT_STARTED" ? (
+        <InfoMessageBox message={"waiting to start..."} />
+      ) : (
+        <IsRenderingMessageBox startedAt={props.result.started_at} />
+      )}
     </div>
   );
 }
