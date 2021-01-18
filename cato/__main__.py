@@ -2,7 +2,7 @@ import argparse
 import logging
 
 import pinject
-from typing import Type, TypeVar
+from typing import Type, TypeVar, Optional
 
 from pinject.object_graph import ObjectGraph
 
@@ -52,15 +52,18 @@ def create_object_graph():
             cato.commands.update_missing_reference_images_command,
             cato.commands.update_missing_reference_image,
         ],
-        binding_specs=[TestExecutionReporterBindings()],
+        binding_specs=[TestExecutionReporterBindings("http://127.0.0.1:5000")],
     )
 
 
 class TestExecutionReporterBindings(pinject.BindingSpec):
+    def __init__(self, url: Optional[str]):
+        self._url = url
+
     def configure(self, bind):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
         bind("http_template", to_class=HttpTemplate)
-        bind("url", to_instance="http://127.0.0.1:5000")
+        bind("url", to_instance=self._url)
         bind(
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
