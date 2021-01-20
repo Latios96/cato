@@ -58,7 +58,7 @@ def create_object_graph(url: Optional[str] = None):
 
 class TestExecutionReporterBindings(pinject.BindingSpec):
     def __init__(self, url: Optional[str]):
-        self._url = url
+        self._url = url if url else "<not given>"
 
     def configure(self, bind):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
