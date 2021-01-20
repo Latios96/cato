@@ -1,8 +1,9 @@
 import React from "react";
-import { formatTime } from "../../utils";
 import { TestResultDto } from "../../catoapimodels";
-import InfoMessageBox from "../FailureMessageBox/InfoMessageBox";
-import IsRenderingMessageBox from "../FailureMessageBox/IsRenderingMessageBox";
+import {
+  NotStartedMessageBox,
+  IsRenderingMessageBox,
+} from "./MessageBoxes/MessageBoxes";
 
 interface Props {
   result: TestResultDto;
@@ -12,7 +13,7 @@ function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
       {props.result.execution_status === "NOT_STARTED" ? (
-        <InfoMessageBox message={"waiting to start..."} />
+        <NotStartedMessageBox />
       ) : (
         <IsRenderingMessageBox startedAt={props.result.started_at} />
       )}

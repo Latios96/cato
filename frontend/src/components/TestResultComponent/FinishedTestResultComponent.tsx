@@ -5,8 +5,8 @@ import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
-import FailureMessageBox from "../FailureMessageBox/FailureMessageBox";
 import ImageComparison from "../ImageComparison/ImageComparison";
+import { FailureMessageBox } from "./MessageBoxes/MessageBoxes";
 interface Props {
   result: TestResultDto;
 }
