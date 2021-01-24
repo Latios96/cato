@@ -5,6 +5,13 @@ import sys
 
 from typing import Dict
 
+import pytest
+
+from cato.config.config_file_writer import ConfigFileWriter
+from cato.domain.config import Config
+from cato.domain.test import Test
+from cato.domain.test_suite import TestSuite
+
 
 @contextlib.contextmanager
 def change_cwd(path):
@@ -20,6 +27,7 @@ def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = 
             command,
             stderr=subprocess.STDOUT,
             universal_newlines=True,
+            encoding="utf-8"
         )
 
         if trimmers:
@@ -57,7 +65,7 @@ def test_config_file_template(snapshot, tmp_path):
 
 
 def test_update_missing_reference_images_should_have_no_effect(
-    snapshot, test_resource_provider
+        snapshot, test_resource_provider
 ):
     snapshot_output(
         snapshot,
@@ -79,3 +87,48 @@ def test_update_reference_should_have_no_effect(snapshot, test_resource_provider
         ],
         workdir=test_resource_provider.resource_by_name("cato_test_config"),
     )
+
+
+@pytest.fixture
+def run_config(tmp_path, test_resource_provider):
+    test1 = Test(
+        name="PythonOutputVersion", # copy image script
+        command=f"python {os.path.join(os.path.dirname(__file__), 'copy_image.py')} {test_resource_provider.resource_by_name('test_image_black.png')} {{@image_output_png}}",
+        variables={"reference_image_png": test_resource_provider.resource_by_name('test_image_black.png')},
+    )
+    python_test_suite = TestSuite(
+        name="PythonTestSuite",
+        tests=[test1],
+        variables={},
+    )
+    config = Config(
+        project_name="EXAMPLE_PROJECT",
+        path="test",
+        test_suites=[python_test_suite],
+        output_folder="output",
+        variables={"my_var": "from_config"},
+    )
+    path = os.path.join(str(tmp_path), "cato.json")
+    ConfigFileWriter().write_to_file(path, config)
+    return path
+
+
+# normal run
+# verbose
+# suite
+# test identifier
+# only failed
+
+
+def test_run_command(live_server, snapshot, run_config,test_resource_provider):
+    snapshot_output(
+        snapshot,
+        [sys.executable, "-m", "cato", "run", "--path", run_config, "-u", live_server.server_url(), "-v"],
+        workdir=os.path.dirname(os.path.dirname(run_config)),
+        trimmers={
+            live_server.server_url(): "<SERVER-URL>",
+            os.path.join(os.path.dirname(__file__), 'copy_image.py'): "<TEST-SCRIPT-PATH>",
+            test_resource_provider.resource_by_name('test_image_black.png'): "<REFERENCE-IMAGE>"
+        }
+    )
+    # verify on server

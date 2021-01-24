@@ -3,7 +3,7 @@ import time
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.select import Select
 
-from tests.integrationtests.cato_server.conftest import MyChromeDriver
+from tests.integrationtests.conftest import MyChromeDriver
 
 
 class HomePage:
