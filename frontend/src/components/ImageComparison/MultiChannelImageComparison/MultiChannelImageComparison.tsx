@@ -4,6 +4,7 @@ import { ImageDto } from "../../../catoapimodels";
 import { Form } from "react-bootstrap";
 import styles from "./MultiChannelImageComparion.module.scss";
 import { CompareModes } from "../CompareModes";
+import AlphaButton from "../AlphaButton/AlphaButton";
 
 interface Props {
   imageOutput: ImageDto;
@@ -17,6 +18,7 @@ interface State {
   width: number;
   height: number;
   selectedMode: CompareModes;
+  channelBeforeAlpha: string;
 }
 
 class MultiChannelImageComparison extends Component<Props, State> {
@@ -28,6 +30,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
       width: 0,
       height: 0,
       selectedMode: CompareModes.SWIPE,
+      channelBeforeAlpha: "rgb",
     };
   }
 
@@ -57,6 +60,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
             as="select"
             custom
             onChange={this.handleChange}
+            value={this.state.selectedChannel}
           >
             {imageOutput.channels.map((channel) => {
               return (
@@ -66,6 +70,11 @@ class MultiChannelImageComparison extends Component<Props, State> {
               );
             })}
           </Form.Control>
+
+          <AlphaButton
+            isToggled={this.state.selectedChannel === "alpha"}
+            onClick={() => this.toggleAlpha()}
+          />
 
           <Form.Check
             id={"selected-swipe-mode-swipe" + this.props.id}
@@ -126,6 +135,26 @@ class MultiChannelImageComparison extends Component<Props, State> {
   handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
     let selectedChannel = event.currentTarget.value;
     this.setState({ selectedChannel: selectedChannel });
+  };
+
+  toggleAlpha = () => {
+    const hasAlpha =
+      this.channelByName(this.props.referenceImage, "alpha") !== null;
+    if (!hasAlpha) {
+      return;
+    }
+    const isAlpha = this.state.selectedChannel === "alpha";
+    if (isAlpha) {
+      this.setState({
+        channelBeforeAlpha: this.state.selectedChannel,
+        selectedChannel: this.state.channelBeforeAlpha,
+      });
+      return;
+    }
+    this.setState({
+      channelBeforeAlpha: this.state.selectedChannel,
+      selectedChannel: "alpha",
+    });
   };
 }
 

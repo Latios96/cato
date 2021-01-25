@@ -1,0 +1,21 @@
+.buttonBg {
+  border: 1px solid #ced4da;
+  width: 38px;
+  height: 38px;
+  border-radius: 3px;
+  display: inline-flex;
+  margin-right: 12px;
+}
+.buttonBgEnabled {
+  background-color: black;
+}
+.buttonBg:hover {
+  cursor: pointer;
+}
+.icon {
+  margin: auto;
+  color: black;
+}
+.iconEnabled {
+  color: white;
+}
