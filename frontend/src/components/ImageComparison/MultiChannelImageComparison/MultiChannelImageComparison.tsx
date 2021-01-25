@@ -74,6 +74,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
           <AlphaButton
             isToggled={this.state.selectedChannel === "alpha"}
             onClick={() => this.toggleAlpha()}
+            clickable={this.hasAlpha()}
           />
 
           <Form.Check
@@ -138,9 +139,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
   };
 
   toggleAlpha = () => {
-    const hasAlpha =
-      this.channelByName(this.props.referenceImage, "alpha") !== null;
-    if (!hasAlpha) {
+    if (!this.hasAlpha()) {
       return;
     }
     const isAlpha = this.state.selectedChannel === "alpha";
@@ -155,6 +154,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
       channelBeforeAlpha: this.state.selectedChannel,
       selectedChannel: "alpha",
     });
+  };
+
+  hasAlpha = () => {
+    return this.channelByName(this.props.referenceImage, "alpha") !== null;
   };
 }
 

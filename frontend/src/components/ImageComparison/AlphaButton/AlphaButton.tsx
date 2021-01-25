@@ -5,6 +5,7 @@ import styles from "./AlphaButton.module.scss";
 interface Props {
   isToggled: boolean;
   onClick: () => void;
+  clickable: boolean;
 }
 
 const AlphaButton = (props: Props) => {
@@ -12,7 +13,7 @@ const AlphaButton = (props: Props) => {
     <div
       className={`${styles.buttonBg} ${
         props.isToggled ? styles.buttonBgEnabled : ""
-      }`}
+      } ${props.clickable ? styles.buttonBgClickable : ""}`}
       onClick={props.onClick}
     >
       <CircleFill
