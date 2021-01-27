@@ -32,6 +32,7 @@ class LiveServer:
         class ScheduleThread(threading.Thread):
             @classmethod
             def run(cls):
+                print(f"Running server on port {self._port}")
                 self._app.run(port=self._port, use_reloader=False)
 
         continuous_thread = ScheduleThread()
