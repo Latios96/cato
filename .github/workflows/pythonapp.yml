@@ -4,7 +4,6 @@ on: [push]
 
 jobs:
   build:
-    
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,5 +20,5 @@ jobs:
       run: chmod +x gradlew
     - name: Build with Gradle
       run: ./gradlew build --info
-    - name: Build with Gradle
+    - name: Lint with Gradle
       run: ./gradlew lint --info
