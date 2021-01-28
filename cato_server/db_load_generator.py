@@ -2,7 +2,7 @@ import argparse
 import datetime
 import random
 import time
-from multiprocessing import Pool
+from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Iterable
 
 import pinject
@@ -69,10 +69,9 @@ class DbLoadGenerator:
 
     def generate_load(self):
         project_names = ["V-Ray", "Arnold", "Renderman", "Manuka"]
-        #with Pool(5) as p:
-        #    print(p.map(self._generate_project, project_names))
+        executor = ThreadPoolExecutor()
         for project_name in project_names:
-            self._generate_project(project_name)
+            executor.submit(lambda: self._generate_project(project_name))
 
     def _generate_project(self, project_name):
         logger.info("Generating project %s", project_name)
