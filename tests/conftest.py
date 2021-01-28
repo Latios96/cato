@@ -1,11 +1,11 @@
 import datetime
 import os
+import socketserver
 from typing import Optional, Dict
 
 import humanfriendly
 import pytest
 import sqlalchemy
-from random_open_port import random_port
 from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
@@ -229,8 +229,15 @@ def output_for_finished_test(sessionmaker_fixture, finished_test_result):
     )
 
 
+def random_port():
+    with socketserver.TCPServer(("localhost", 0), None) as s:
+        random_port = s.server_address[1]
+    return random_port
+
+
 @pytest.fixture()
 def app_and_config_fixture(sessionmaker_fixture, tmp_path):
+
     config = AppConfiguration(
         port=random_port(),
         debug=True,
