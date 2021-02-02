@@ -13,6 +13,7 @@
   width: 270px;
   display: flex !important;
   z-index: 0 !important;
+  padding: 0.4rem 1.25rem !important;
 }
 
 .runListEntry:hover {
@@ -33,7 +34,7 @@
 }
 .runNumber {
   font-weight: bold;
-  font-size: 18px;
+  font-size: 17px;
   margin-right: 10px;
   width: 110px;
 }
