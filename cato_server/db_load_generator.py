@@ -291,6 +291,11 @@ class DbLoadGenerator:
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--config", help="path to config.ini")
+    parser.add_argument(
+        "--preset",
+        help="load preset to use. Available options are: low, mid, high, default is low",
+    )
+    parser.add_argument("--threaded", action="store_true", help="use threading")
     args = parser.parse_args()
 
     path = get_config_path(args)
@@ -313,7 +318,9 @@ def main():
         modules=[cato, cato_server], binding_specs=[bindings]
     )
 
-    obj_graph.provide(DbLoadGenerator).generate_load("low", threaded=False)
+    obj_graph.provide(DbLoadGenerator).generate_load(
+        args.preset if args.preset else "low", threaded=args.threaded
+    )
 
 
 def get_config_path(args):
