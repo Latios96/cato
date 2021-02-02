@@ -1,9 +1,6 @@
-import contextlib
 import os
 import subprocess
 import sys
-
-from typing import Dict
 
 import pytest
 import requests
@@ -12,27 +9,7 @@ from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
-
-
-@contextlib.contextmanager
-def change_cwd(path):
-    old_cwd = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(old_cwd)
-
-
-def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = None):
-    with change_cwd(workdir if workdir else os.getcwd()):
-        output = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, universal_newlines=True, encoding="utf-8"
-        )
-
-        if trimmers:
-            for key, value in trimmers.items():
-                output = output.replace(key, value)
-
-        snapshot.assert_match(output)
+from tests.integrationtests.utils import change_cwd, snapshot_output
 
 
 def test_list_tests_command_from_path(snapshot, config_file_fixture):
