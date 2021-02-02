@@ -35,13 +35,26 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 
 logger = cato_server.server_logging.logger
 
-MULTIPLIER = 1000
-
-RUNS_PER_PROJECT = 12 * MULTIPLIER
-
-SUITES_PER_RUN = 50
-
-TESTS_PERS_SUITE = 15
+PRESETS = {
+    "low": {
+        "project_names": ["V-Ray"],
+        "runs_per_project": 10,
+        "suites_per_run": 5,
+        "tests_per_suite": 15,
+    },
+    "mid": {
+        "project_names": ["V-Ray"],
+        "runs_per_project": 100,
+        "suites_per_run": 20,
+        "tests_per_suite": 25,
+    },
+    "high": {
+        "project_names": ["V-Ray", "Arnold", "Renderman", "Manuka"],
+        "runs_per_project": 1200,
+        "suites_per_run": 50,
+        "tests_per_suite": 15,
+    },
+}
 
 fake = Faker()
 
@@ -67,11 +80,26 @@ class DbLoadGenerator:
         self.reference_image = None
         self.output_image = None
 
-    def generate_load(self):
-        project_names = ["V-Ray", "Arnold", "Renderman", "Manuka"]
-        executor = ThreadPoolExecutor()
-        for project_name in project_names:
-            executor.submit(lambda: self._generate_project(project_name))
+    def generate_load(self, preset: str, threaded=True):
+        self.current_preset = PRESETS[preset]
+        project_count = len(self.current_preset["project_names"])
+        run_count = project_count * self.current_preset["runs_per_project"]
+        suite_count = self.current_preset["suites_per_run"] * run_count
+        test_result_count = self.current_preset["tests_per_suite"] * suite_count
+        logger.info(
+            "Generating total %s projects, %s runs, %s suites and %s test results..",
+            project_count,
+            run_count,
+            suite_count,
+            test_result_count,
+        )
+        if threaded:
+            executor = ThreadPoolExecutor()
+            for project_name in self.current_preset["project_names"]:
+                executor.submit(lambda: self._generate_project(project_name))
+            return
+
+        self._generate_project(self.current_preset["project_names"][0])
 
     def _generate_project(self, project_name):
         logger.info("Generating project %s", project_name)
@@ -83,7 +111,7 @@ class DbLoadGenerator:
         runs = self._run_repository.insert_many(
             [
                 Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
-                for x in range(RUNS_PER_PROJECT)
+                for x in range(self.current_preset["runs_per_project"])
             ]
         )
         self._generate_suites(runs, project.name)
@@ -113,7 +141,7 @@ class DbLoadGenerator:
         ]
         suites = []
         for i, run in enumerate(runs):
-            for i in range(SUITES_PER_RUN):
+            for i in range(self.current_preset["suites_per_run"]):
                 suite_name = f"{random.choice(choices)} {random.choice(choices)}"
                 suites.append(
                     SuiteResult(
@@ -126,9 +154,11 @@ class DbLoadGenerator:
         self._generate_test_results(suites, project_name)
 
     def _generate_test_results(self, suites: Iterable[SuiteResult], project_name):
-        total_count = len(suites) * TESTS_PERS_SUITE
-        logger.info("Generating %s, test results..", total_count)
-        test_names = [fake.name() for x in range(TESTS_PERS_SUITE)]
+        total_count = len(suites) * self.current_preset["tests_per_suite"]
+        logger.info("Generating %s test results..", total_count)
+        test_names = [
+            fake.name() for x in range(self.current_preset["tests_per_suite"])
+        ]
 
         results_to_save = []
 
@@ -136,7 +166,6 @@ class DbLoadGenerator:
         start = time.time()
         for suite in suites:
             for test_name in test_names:
-                # todo generate output text
                 reference_image = self._generate_reference_image(
                     project_name, suite.suite_name, test_name
                 )
@@ -232,7 +261,6 @@ class DbLoadGenerator:
                 project_name + " " + suite_name + " " + test_name + " " + random,
                 fill=(255, 255, 0),
             )
-            # todo use tobytes? so we can keep this in memory?
             path = "output.png"
             img.save(path)
 
@@ -285,7 +313,7 @@ def main():
         modules=[cato, cato_server], binding_specs=[bindings]
     )
 
-    obj_graph.provide(DbLoadGenerator).generate_load()
+    obj_graph.provide(DbLoadGenerator).generate_load("low", threaded=False)
 
 
 def get_config_path(args):
