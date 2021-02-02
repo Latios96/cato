@@ -13,7 +13,7 @@ export function formatTime(datestr: string | null | undefined): string {
 export function formatDuration(
   durationInSeconds: number | "NaN" | undefined | null
 ): string {
-  if (!durationInSeconds || durationInSeconds === "NaN") {
+  if (durationInSeconds == null || durationInSeconds === "NaN") {
     return "";
   }
   return humanizeDuration(durationInSeconds * 1000, { round: true });
