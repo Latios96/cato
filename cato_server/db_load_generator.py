@@ -94,6 +94,7 @@ class DbLoadGenerator:
             test_result_count,
         )
         if threaded:
+            logger.info("Using %s threads", self.current_preset["project_names"])
             executor = ThreadPoolExecutor()
             for project_name in self.current_preset["project_names"]:
                 executor.submit(lambda: self._generate_project(project_name))
