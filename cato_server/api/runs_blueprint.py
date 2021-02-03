@@ -12,6 +12,7 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
 )
 from cato_server.api.base_blueprint import BaseBlueprint
+from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
@@ -22,6 +23,7 @@ from cato_server.domain.run import Run
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -68,6 +70,9 @@ class RunsBlueprint(BaseBlueprint):
             )
 
     def runs_by_project(self, project_id):
+        page_request = page_request_from_request(request.args)
+        if page_request:
+            return self.runs_by_project_paged(project_id, page_request)
         runs = self._run_repository.find_by_project_id(project_id)
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(project_id)
@@ -86,6 +91,34 @@ class RunsBlueprint(BaseBlueprint):
                 )
             )
         return self.json_response(self._object_mapper.many_to_json(run_dtos))
+
+    def runs_by_project_paged(self, project_id: int, page_request: PageRequest):
+        run_page = self._run_repository.find_by_project_id_with_paging(
+            project_id, page_request
+        )
+        status_by_run_id = (
+            self._test_result_repository.find_execution_status_by_project_id(project_id)
+        )
+        run_dtos = []
+        for run in run_page.entities:
+            status = self._run_status_calculator.calculate(
+                status_by_run_id.get(run.id, set())
+            )
+            run_dtos.append(
+                RunDto(
+                    id=run.id,
+                    project_id=run.id,
+                    started_at=run.started_at.isoformat(),
+                    status=RunStatusDto(status),
+                )
+            )
+        page = Page(
+            page_number=page_request.page_number,
+            page_size=page_request.page_size,
+            total_pages=run_page.total_pages,
+            entities=run_dtos,
+        )
+        return self.json_response(self._object_mapper.to_json(page))
 
     def create_run(self):
         request_json = request.get_json()
