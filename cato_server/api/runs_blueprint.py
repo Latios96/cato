@@ -55,7 +55,7 @@ class RunsBlueprint(BaseBlueprint):
 
         self._run_status_calculator = RunStatusCalculator()
 
-        self.route("/runs/project/<project_id>", methods=["GET"])(self.run_by_project)
+        self.route("/runs/project/<project_id>", methods=["GET"])(self.runs_by_project)
         self.route("/runs", methods=["POST"])(self.create_run)
         self.route("/runs/full", methods=["POST"])(self.create_full_run)
         self.route("/runs/<int:run_id>/status", methods=["GET"])(self.status)
@@ -67,7 +67,7 @@ class RunsBlueprint(BaseBlueprint):
                 self.run_events_for_project
             )
 
-    def run_by_project(self, project_id):
+    def runs_by_project(self, project_id):
         runs = self._run_repository.find_by_project_id(project_id)
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(project_id)
