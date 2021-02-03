@@ -73,15 +73,13 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
     def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
         session = self._session_maker()
-        results = self._pageginate(
-            session.query(self.mapping_cls()), page_request
-        ).all()
-        total_count = session.query(self.mapping_cls()).count()
+
+        page = self._pageginate(
+            session, session.query(self.mapping_cls()), page_request
+        )
 
         session.close()
-        return Page.from_page_request(
-            page_request, total_count, self._map_many_to_domain_object(results)
-        )
+        return page
 
     def delete_by_id(self, id: K):
         session = self._session_maker()
@@ -113,5 +111,10 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
     def _map_many_to_domain_object(self, entities):
         return [self.to_domain_object(x) for x in entities]
 
-    def _pageginate(self, query, page_request):
-        return query.limit(page_request.page_size).offset(page_request.offset)
+    def _pageginate(self, session, query, page_request) -> Page[T]:
+        results = query.limit(page_request.page_size).offset(page_request.offset).all()
+        total_count = session.query(self.mapping_cls()).count()
+        page = Page.from_page_request(
+            page_request, total_count, self._map_many_to_domain_object(results)
+        )
+        return page
