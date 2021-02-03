@@ -19,8 +19,31 @@ class TestPageRequest:
 
         assert page_request.offset == 10
 
+    @pytest.mark.parametrize("page_number,page_size", [(0, 10), (-1, 10), (1, -1)])
+    def test_construct_invalid(self, page_number, page_size):
+        with pytest.raises(ValueError):
+            PageRequest(page_number, page_size)
+
+    @pytest.mark.parametrize("page_number,page_size", [(1, 10), (1, 0), (50, 9999)])
+    def test_construct_valid(self, page_number, page_size):
+        PageRequest(page_number, page_size)
+
 
 class TestPage:
+    @pytest.mark.parametrize(
+        "page_number,page_size,total_pages",
+        [(0, 10, 1), (-1, 10, 1), (1, -1, 1), (1, 1, 0), (1, 1, -1)],
+    )
+    def test_construct_invalid(self, page_number, page_size, total_pages):
+        with pytest.raises(ValueError):
+            Page(page_number, page_size, total_pages, [])
+
+    @pytest.mark.parametrize(
+        "page_number,page_size,total_pages", [(1, 10, 1), (1, 0, 1), (50, 9999, 20)]
+    )
+    def test_construct_valid(self, page_number, page_size, total_pages):
+        Page(page_number, page_size, total_pages, [])
+
     def test_from_page_request(self):
         page_request = PageRequest.first(10)
         entities = [1, 2, 3]
