@@ -15,6 +15,7 @@ from cato_server.mappers.internal.image_class_mapper import ImageClassMapper
 from cato_server.mappers.internal.machine_info_class_mapper import (
     MachineInfoClassMapper,
 )
+from cato_server.mappers.internal.page_class_mapper import PageClassMapper
 from cato_server.mappers.internal.test_identifier_class_mapper import (
     TestIdentifierClassMapper,
 )
@@ -26,6 +27,7 @@ from cato_server.mappers.internal.suite_result_class_mapper import (
     SuiteResultClassMapper,
 )
 from cato_server.mappers.internal.test_result_class_mapper import TestResultClassMapper
+from cato_server.storage.abstract.page import Page
 
 
 class MapperRegistryFactory:
@@ -42,5 +44,6 @@ class MapperRegistryFactory:
         mapper_registry.register_mapper(SuiteResult, SuiteResultClassMapper())
         mapper_registry.register_mapper(TestResult, TestResultClassMapper())
         mapper_registry.register_mapper(TestIdentifier, TestIdentifierClassMapper())
+        mapper_registry.register_mapper(Page, PageClassMapper(mapper_registry))
 
         return mapper_registry

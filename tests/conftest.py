@@ -237,7 +237,6 @@ def random_port():
 
 @pytest.fixture()
 def app_and_config_fixture(sessionmaker_fixture, tmp_path):
-
     config = AppConfiguration(
         port=random_port(),
         debug=True,
@@ -288,9 +287,13 @@ def test_resource_provider():
 
 
 @pytest.fixture
-def object_mapper():
-    registry = MapperRegistryFactory().create_mapper_registry()
-    return ObjectMapper(registry)
+def mapper_registry():
+    return MapperRegistryFactory().create_mapper_registry()
+
+
+@pytest.fixture
+def object_mapper(mapper_registry):
+    return ObjectMapper(mapper_registry)
 
 
 class ConfigFixture:
