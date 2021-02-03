@@ -1,5 +1,4 @@
 import math
-from dataclasses import dataclass
 from typing import TypeVar, Generic, List
 
 import attr
@@ -13,12 +12,12 @@ class PageRequest:
     page_size: int = attr.ib()
 
     @page_number.validator
-    def check(self, attribute, value):
+    def validate_page_number(self, attribute, value):
         if value < 1:
             raise ValueError("page_number can not be less than 1.")
 
     @page_size.validator
-    def check(self, attribute, value):
+    def validate_page_size(self, attribute, value):
         if value < 0:
             raise ValueError("page_size can not be less than 0.")
 
@@ -39,17 +38,17 @@ class Page(Generic[T]):
     entities: List[T] = attr.ib()
 
     @page_number.validator
-    def check(self, attribute, value):
+    def validate_page_number(self, attribute, value):
         if value < 1:
             raise ValueError("page_number can not be less than 1.")
 
     @page_size.validator
-    def check(self, attribute, value):
+    def validate_page_size(self, attribute, value):
         if value < 0:
             raise ValueError("page_size can not be less than 0.")
 
     @total_pages.validator
-    def check(self, attribute, value):
+    def validate_total_pages(self, attribute, value):
         if value < 1:
             raise ValueError("total_pages can not be less than 1.")
 
