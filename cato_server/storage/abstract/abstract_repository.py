@@ -1,5 +1,7 @@
 from typing import Generic, TypeVar, Optional, Iterable
 
+from cato_server.storage.abstract.page import PageRequest, Page
+
 T = TypeVar("T")
 K = TypeVar("K")
 
@@ -15,6 +17,9 @@ class AbstractRepository(Generic[T, K]):
         raise NotImplementedError()
 
     def find_all(self) -> Iterable[T]:
+        raise NotImplementedError()
+
+    def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
         raise NotImplementedError()
 
     def delete_by_id(self, id: K):
