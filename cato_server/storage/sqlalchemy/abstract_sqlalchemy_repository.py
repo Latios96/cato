@@ -3,6 +3,8 @@ from typing import TypeVar, Generic, Optional, Iterable, Callable
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
+from cato_server.storage.abstract.page import PageRequest, Page
+
 T = TypeVar("T")
 K = TypeVar("K")
 E = TypeVar("E")
@@ -68,6 +70,21 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
         session.close()
         return self._map_many_to_domain_object(results)
+
+    def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
+        session = self._session_maker()
+        results = (
+            session.query(self.mapping_cls())
+            .limit(page_request.page_size)
+            .offset(page_request.offset)
+            .all()
+        )
+        total_count = session.query(self.mapping_cls()).count()
+
+        session.close()
+        return Page.from_page_request(
+            page_request, total_count, self._map_many_to_domain_object(results)
+        )
 
     def delete_by_id(self, id: K):
         session = self._session_maker()
