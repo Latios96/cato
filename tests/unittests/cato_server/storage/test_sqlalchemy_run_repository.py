@@ -4,6 +4,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_server.domain.run import Run
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
     _RunMapping,
@@ -83,3 +84,28 @@ def test_find_by_project_id_should_find_correct(sessionmaker_fixture, project):
     run = repository.save(run)
 
     assert repository.find_by_project_id(project.id) == [run]
+
+
+def test_find_by_project_id_paginate_should_find_empty(sessionmaker_fixture):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+    page_request = PageRequest.first(10)
+    assert repository.find_by_project_id_with_paging(
+        10, page_request
+    ) == Page.from_page_request(
+        page_request=page_request, total_entity_count=0, entities=[]
+    )
+
+
+def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, project):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = repository.save(run)
+
+    page_request = PageRequest.first(10)
+    assert repository.find_by_project_id_with_paging(
+        project.id, page_request
+    ) == Page.from_page_request(
+        page_request=page_request, total_entity_count=0, entities=[run]
+    )

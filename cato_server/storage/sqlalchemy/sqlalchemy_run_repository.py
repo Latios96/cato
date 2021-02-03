@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
 from cato_server.domain.run import Run
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
@@ -50,3 +51,19 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
 
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def find_by_project_id_with_paging(
+        self, id: int, page_request: PageRequest
+    ) -> Page[Run]:
+        session = self._session_maker()
+
+        page = self._pageginate(
+            session,
+            session.query(self.mapping_cls()).filter(
+                self.mapping_cls().project_entity_id == id
+            ),
+            page_request,
+        )
+
+        session.close()
+        return page
