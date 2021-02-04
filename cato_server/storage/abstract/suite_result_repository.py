@@ -5,9 +5,6 @@ from cato_server.domain.suite_result import SuiteResult
 
 
 class SuiteResultRepository(AbstractRepository):
-    def save(self, run: SuiteResult) -> SuiteResult:
-        raise NotImplementedError()
-
     def find_by_id(self, id: int) -> Optional[SuiteResult]:
         raise NotImplementedError()
 
