@@ -5,6 +5,7 @@ from conjure_python_client import ConjureBeanType, ConjureDecoder, ConjureEncode
 
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_server.storage.abstract.page import Page
 
 T = TypeVar("T")
 
@@ -32,6 +33,10 @@ class ObjectMapper:
     def to_dict(self, obj: T) -> Dict:
         if isinstance(obj, dict):
             return obj
+        if isinstance(obj, Page):
+            raise RuntimeError(
+                "ObjectMapper can not map Page instances, use PageMapper instead!"
+            )
         mapper = self._mapper_for_cls(obj.__class__)
         if not mapper:
             raise NoMapperFoundException(obj.__class__)

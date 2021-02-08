@@ -4,6 +4,7 @@ from cato_server.domain.project import Project
 from cato_server.mappers.mapper_registry import MapperRegistry
 from cato_server.mappers.object_mapper import ObjectMapper, NoMapperFoundException
 from cato_api_models.catoapimodels import MachineInfoDto
+from cato_server.storage.abstract.page import Page
 
 
 class TestMapToDict:
@@ -111,3 +112,15 @@ class TestManyVariants:
         objects = object_mapper.many_from_json(json_str, Project)
 
         assert objects == [Project(id=1, name="test1"), Project(id=2, name="test2")]
+
+
+def test_no_page_instances(object_mapper):
+    with pytest.raises(RuntimeError):
+        object_mapper.to_dict(
+            Page(
+                page_number=1,
+                page_size=10,
+                total_pages=1,
+                entities=[Project(id=0, name="test")],
+            )
+        )
