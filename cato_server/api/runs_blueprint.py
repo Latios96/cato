@@ -21,6 +21,7 @@ from cato_server.api.validators.run_validators import (
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.run import Run
 from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.mappers.page_mapper import PageMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.page import PageRequest, Page
@@ -45,6 +46,7 @@ class RunsBlueprint(BaseBlueprint):
         message_queue: OptionalComponent[AbstractMessageQueue],
         suite_result_repository: SuiteResultRepository,
         object_mapper: ObjectMapper,
+        page_mapper: PageMapper,
     ):
         super(RunsBlueprint, self).__init__("runs", __name__)
         self._run_repository = run_repository
@@ -54,6 +56,7 @@ class RunsBlueprint(BaseBlueprint):
         self._message_queue = message_queue
         self._suite_result_repository = suite_result_repository
         self._object_mapper = object_mapper
+        self._page_mapper = page_mapper
 
         self._run_status_calculator = RunStatusCalculator()
 
@@ -118,7 +121,7 @@ class RunsBlueprint(BaseBlueprint):
             total_pages=run_page.total_pages,
             entities=run_dtos,
         )
-        return self.json_response(self._object_mapper.to_json(page))
+        return self.json_response(self._page_mapper.to_json(page))
 
     def create_run(self):
         request_json = request.get_json()

@@ -1,10 +1,10 @@
 from cato_server.domain.project import Project
-from cato_server.mappers.internal.page_class_mapper import PageClassMapper
+from cato_server.mappers.page_mapper import PageMapper
 from cato_server.storage.abstract.page import Page
 
 
-def test_map_empty_to_dict(mapper_registry):
-    page_class_mapper = PageClassMapper(mapper_registry)
+def test_map_empty_to_dict(object_mapper):
+    page_class_mapper = PageMapper(object_mapper)
     page = Page(
         page_number=1,
         page_size=10,
@@ -12,7 +12,7 @@ def test_map_empty_to_dict(mapper_registry):
         entities=[],
     )
 
-    result = page_class_mapper.map_to_dict(page)
+    result = page_class_mapper.to_dict(page)
 
     assert result == {
         "entities": [],
@@ -22,8 +22,8 @@ def test_map_empty_to_dict(mapper_registry):
     }
 
 
-def test_map_to_dict(mapper_registry):
-    page_class_mapper = PageClassMapper(mapper_registry)
+def test_map_to_dict(object_mapper):
+    page_class_mapper = PageMapper(object_mapper)
     page = Page(
         page_number=1,
         page_size=10,
@@ -31,7 +31,7 @@ def test_map_to_dict(mapper_registry):
         entities=[Project(id=0, name="test")],
     )
 
-    result = page_class_mapper.map_to_dict(page)
+    result = page_class_mapper.to_dict(page)
 
     assert result == {
         "entities": [{"id": 0, "name": "test"}],
@@ -41,19 +41,20 @@ def test_map_to_dict(mapper_registry):
     }
 
 
-def test_in_object_mapper(object_mapper):
-    page = Page(
-        page_number=1,
-        page_size=10,
-        total_pages=1,
-        entities=[Project(id=0, name="test")],
-    )
-
-    result = object_mapper.to_dict(page)
-
-    assert result == {
+def test_map_from_dict(object_mapper):
+    page_class_mapper = PageMapper(object_mapper)
+    page_dict = {
         "entities": [{"id": 0, "name": "test"}],
         "page_number": 1,
         "page_size": 10,
         "total_pages": 1,
     }
+
+    page = page_class_mapper.from_dict(page_dict, Project)
+
+    assert page == Page(
+        page_number=1,
+        page_size=10,
+        total_pages=1,
+        entities=[Project(id=0, name="test")],
+    )

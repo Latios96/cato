@@ -11,6 +11,7 @@ from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.mappers.page_mapper import PageMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
@@ -136,6 +137,7 @@ class PinjectBindings(pinject.BindingSpec):
         bind("fail_timed_out_tests", to_class=FailTimedOutTests)
         bind("finish_test", to_class=FinishTest)
         bind("object_mapper", to_class=ObjectMapper)
+        bind("page_mapper", to_class=PageMapper)
         bind(
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
