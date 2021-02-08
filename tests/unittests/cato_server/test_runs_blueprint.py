@@ -22,6 +22,41 @@ def test_get_run_by_project_id_should_return_empty_list(client, project):
     assert rv.get_json() == []
 
 
+def test_get_run_by_project_id_paged_should_return(client, project, run):
+    url = "/api/v1/runs/project/{}?page_number=1&page_size=10".format(project.id)
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "entities": [
+            {
+                "id": 1,
+                "project_id": 1,
+                "started_at": run.started_at.isoformat(),
+                "status": "NOT_STARTED",
+            }
+        ],
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+    }
+
+
+def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
+    url = "/api/v1/runs/project/{}?page_number=1&page_size=10".format(project.id)
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "entities": [],
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+    }
+
+
 def test_create_run_success(client, project):
     started_at = datetime.datetime.now()
 
