@@ -8,6 +8,8 @@ import RunSummary from "../RunSummary/RunSummary";
 import { RunDto } from "../../catoapimodels";
 import { Helmet } from "react-helmet";
 import { renderIf } from "../utils";
+import SimplePaginationControls from "../Pagination/SimplePaginationControls";
+import { Page, PageRequest, requestFirstPageOfSize } from "../Pagination/Page";
 
 interface Props {
   projectId: number;
@@ -18,7 +20,7 @@ interface Props {
 
 interface State {
   project: Project | null;
-  runs: RunDto[];
+  runs?: Page<RunDto>;
   currentSuiteResults: SuiteResult[];
 }
 
@@ -27,7 +29,7 @@ class ProjectRunsView extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { project: null, runs: [], currentSuiteResults: [] };
+    this.state = { project: null, runs: undefined, currentSuiteResults: [] };
 
     this.interval = 0;
   }
@@ -62,20 +64,36 @@ class ProjectRunsView extends Component<Props, State> {
         })}
 
         <div className={styles.runsViewContainer}>
-          <ListGroup className={styles.runListContainer}>
-            {this.state.runs.map((r: RunDto) => {
-              return (
-                <RunListEntryComponent
-                  key={r.id}
-                  run={r}
-                  isCurrentEntry={this.isCurrentEntry(r)}
-                  link={`/projects/${this.props.projectId}/runs/${r.id}/${
-                    this.props.currentTab ? this.props.currentTab : "suites"
-                  }`}
+          <div>
+            {this.state.runs ? (
+              <React.Fragment>
+                <SimplePaginationControls
+                  currentPage={this.state.runs}
+                  pageChangedCallback={(pageRequest) =>
+                    this.fetchRuns(pageRequest)
+                  }
                 />
-              );
-            })}
-          </ListGroup>
+                <ListGroup className={styles.runListContainer}>
+                  {this.state.runs.entities.map((r: RunDto) => {
+                    return (
+                      <RunListEntryComponent
+                        key={r.id}
+                        run={r}
+                        isCurrentEntry={this.isCurrentEntry(r)}
+                        link={`/projects/${this.props.projectId}/runs/${r.id}/${
+                          this.props.currentTab
+                            ? this.props.currentTab
+                            : "suites"
+                        }`}
+                      />
+                    );
+                  })}
+                </ListGroup>
+              </React.Fragment>
+            ) : (
+              <React.Fragment />
+            )}
+          </div>
           <div className={styles.suiteResult}>
             {this.props.currentRunId
               ? this.renderRunSummary()
@@ -88,7 +106,7 @@ class ProjectRunsView extends Component<Props, State> {
 
   update = () => {
     this.fetchProject();
-    this.fetchRuns();
+    this.fetchRuns(requestFirstPageOfSize(25));
     this.fetchSuiteResults();
   };
 
@@ -105,12 +123,17 @@ class ProjectRunsView extends Component<Props, State> {
       );
   };
 
-  fetchRuns = () => {
-    fetch("/api/v1/runs/project/" + this.props.projectId)
+  fetchRuns = (pageRequest: PageRequest) => {
+    fetch(
+      "/api/v1/runs/project/" +
+        this.props.projectId +
+        `?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+    )
       .then((res) => res.json())
       .then(
         (result) => {
-          this.setState({ runs: result.reverse() });
+          result.entities.reverse();
+          this.setState({ runs: result });
         },
         (error) => {
           console.log(error);

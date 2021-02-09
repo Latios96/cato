@@ -113,7 +113,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
     def _pageginate(self, session, query, page_request) -> Page[T]:
         results = query.limit(page_request.page_size).offset(page_request.offset).all()
-        total_count = session.query(self.mapping_cls()).count()
+        total_count = query.count()
         page = Page.from_page_request(
             page_request, total_count, self._map_many_to_domain_object(results)
         )

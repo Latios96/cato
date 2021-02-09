@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { PageRequest } from "./PageRequest";
-import { ControllablePage } from "./Page";
+import { ControllablePage, PageRequest } from "./Page";
 
 interface PaginationControls {
   currentPage: ControllablePage;
