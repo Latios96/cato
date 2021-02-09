@@ -17,6 +17,7 @@ describe("SimplePaginationControls", () => {
       expect(getByRole("previous")).toHaveAttribute("disabled", "");
       expect(getByRole("next")).toBeEnabled();
     });
+
     it("should disable 'next page' on last page", () => {
       const { getByRole } = render(
         <SimplePaginationControls currentPage={lastPageWithSomePlaces} />
@@ -47,11 +48,25 @@ describe("SimplePaginationControls", () => {
 
   describe("changing pages", () => {
     it("should change to previous page", () => {
-      const { getByRole } = render(
+      const { getByRole, getByText } = render(
         <SimplePaginationControls currentPage={middlePage} />
       );
+      expect(getByText("5-5 of 10")).toBeInTheDocument();
 
       getByRole("previous").click();
+
+      expect(getByText("4-4 of 10")).toBeInTheDocument();
+    });
+
+    it("should change to next page", () => {
+      const { getByRole, getByText } = render(
+        <SimplePaginationControls currentPage={middlePage} />
+      );
+      expect(getByText("5-5 of 10")).toBeInTheDocument();
+
+      getByRole("next").click();
+
+      expect(getByText("6-6 of 10")).toBeInTheDocument();
     });
   });
 });

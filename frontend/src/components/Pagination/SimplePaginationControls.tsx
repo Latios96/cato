@@ -1,15 +1,20 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
-import { Page } from "./Page";
+import {
+  firstEntityOnPage,
+  lastEntityOnPage,
+  Page,
+  PageRequest,
+  totalEntities,
+} from "./Page";
 import { usePagination } from "./usePagination";
-import { PageRequest } from "./PageRequest";
 
 interface Props<T extends Object> {
   currentPage: Page<T>;
 }
 
 const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
-  const usePaginationControls = usePagination(
+  const controls = usePagination(
     props.currentPage,
     props.currentPage.page_size,
     (pageRequest: PageRequest) => {}
@@ -18,16 +23,20 @@ const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
   return (
     <div>
       <span>
-        {firstElement}-{lastElement} of {totalElements}
+        {firstEntityOnPage(controls.currentPage)}-
+        {lastEntityOnPage(controls.currentPage)} of{" "}
+        {totalEntities(controls.currentPage)}
       </span>
       <Pagination size={"sm"}>
         <Pagination.Prev
           role={"previous"}
-          disabled={usePaginationControls.isFirstPage()}
+          disabled={controls.isFirstPage()}
+          onClick={() => controls.previousPage()}
         />
         <Pagination.Next
           role={"next"}
-          disabled={usePaginationControls.isLastPage()}
+          disabled={controls.isLastPage()}
+          onClick={() => controls.nextPage()}
         />
       </Pagination>
     </div>
