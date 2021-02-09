@@ -38,7 +38,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test --watchAll=false",
     "eject": "react-scripts eject",
-    "format": "prettier src -w"
+    "format": "prettier src -w",
+    "lint": "eslint src --max-warnings=0"
   },
   "eslintConfig": {
     "extends": [
