@@ -21,9 +21,11 @@ export function requestFirstPageOfSize(size: number): PageRequest {
 export function firstEntityOnPage(page: ControllablePage) {
   return page.page_size * (page.page_number - 1) + 1;
 }
+
 export function lastEntityOnPage(page: ControllablePage) {
-  return page.page_size * page.page_number + 1;
+  return page.page_size * page.page_number;
 }
+
 export function totalEntities(page: ControllablePage) {
   return page.page_size * page.total_pages;
 }
