@@ -1,9 +1,13 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { Page } from "./Page";
 import { PageRequest } from "./PageRequest";
-
-interface PaginationControls<T extends Object> {
-  currentPage: Page<T>;
+interface ControllablePage {
+  page_number: number;
+  page_size: number;
+  total_pages: number;
+}
+interface PaginationControls {
+  currentPage: ControllablePage;
   elementsPerPage: number;
   setElementsPerPage: (elements: number) => void;
   nextPage: () => void;
@@ -12,12 +16,12 @@ interface PaginationControls<T extends Object> {
   isLastPage: () => boolean;
 }
 
-export function usePagination<T extends Object>(
-  initialPage: Page<T>,
+export function usePagination(
+  initialPage: ControllablePage,
   initialElementsPerPage: number,
   pageChangedCallback: (pageRequest: PageRequest) => void
-): PaginationControls<T> {
-  const [currentPage, setCurrentPage] = useState<Page<T>>(initialPage);
+): PaginationControls {
+  const [currentPage, setCurrentPage] = useState<ControllablePage>(initialPage);
   const [elementsPerPage, setElementsPerPage] = useState<number>(
     initialElementsPerPage
   );
@@ -34,10 +38,12 @@ export function usePagination<T extends Object>(
     if (isLastPage()) {
       return;
     }
-    const newPage: PageRequest = {
+    const newPage: ControllablePage = {
       page_number: currentPage.page_number + 1,
       page_size: elementsPerPage,
+      total_pages: currentPage.total_pages,
     };
+    setCurrentPage(newPage);
     pageChangedCallback(newPage);
   };
 
@@ -45,10 +51,12 @@ export function usePagination<T extends Object>(
     if (isFirstPage()) {
       return;
     }
-    const newPage: PageRequest = {
+    const newPage: ControllablePage = {
       page_number: currentPage.page_number - 1,
       page_size: elementsPerPage,
+      total_pages: currentPage.total_pages,
     };
+    setCurrentPage(newPage);
     pageChangedCallback(newPage);
   };
 

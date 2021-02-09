@@ -1,4 +1,4 @@
-import { renderHook } from "@testing-library/react-hooks";
+import { act, renderHook } from "@testing-library/react-hooks";
 import { usePagination } from "./usePagination";
 import { PageRequest } from "./PageRequest";
 
@@ -12,6 +12,27 @@ const smallPage = {
 const firstPage = {
   page_number: 1,
   page_size: 10,
+  total_pages: 10,
+  entities: [{ id: 1, name: "test" }],
+};
+
+const middlePage = {
+  page_number: 5,
+  page_size: 1,
+  total_pages: 10,
+  entities: [{ id: 1, name: "test" }],
+};
+
+const lastPageWithSomePlaces = {
+  page_number: 10,
+  page_size: 5,
+  total_pages: 10,
+  entities: [{ id: 1, name: "test" }],
+};
+
+const lastPageFittingExactly = {
+  page_number: 10,
+  page_size: 1,
   total_pages: 10,
   entities: [{ id: 1, name: "test" }],
 };
@@ -45,12 +66,6 @@ describe("usePagination hook", () => {
     });
 
     it("should mark the page as last page when elements fit exactly on page", () => {
-      const lastPageFittingExactly = {
-        page_number: 10,
-        page_size: 1,
-        total_pages: 10,
-        entities: [{ id: 1, name: "test" }],
-      };
       const { result } = renderHook(() =>
         usePagination(
           lastPageFittingExactly,
@@ -64,12 +79,6 @@ describe("usePagination hook", () => {
     });
 
     it("should mark the page as last page when page has empty places", () => {
-      const lastPageWithSomePlaces = {
-        page_number: 10,
-        page_size: 5,
-        total_pages: 10,
-        entities: [{ id: 1, name: "test" }],
-      };
       const { result } = renderHook(() =>
         usePagination(
           lastPageWithSomePlaces,
@@ -83,18 +92,8 @@ describe("usePagination hook", () => {
     });
 
     it("should mark middle page as middle page", () => {
-      const lastPageWithSomePlaces = {
-        page_number: 5,
-        page_size: 1,
-        total_pages: 10,
-        entities: [{ id: 1, name: "test" }],
-      };
       const { result } = renderHook(() =>
-        usePagination(
-          lastPageWithSomePlaces,
-          10,
-          (pageRequest: PageRequest) => {}
-        )
+        usePagination(middlePage, 10, (pageRequest: PageRequest) => {})
       );
 
       expect(result.current.isFirstPage()).toBe(false);
@@ -103,12 +102,147 @@ describe("usePagination hook", () => {
   });
 
   describe("change page", () => {
-    it("should change nothing when calling previos page on first page", () => {});
-    it("should change nothing when calling next page on last page", () => {});
-    it("should change to next page when calling next page on first page", () => {});
-    it("should change to previous page when calling previous page on last page", () => {});
-    it("should change to next page when calling next page on middle page", () => {});
-    it("should change to previous page when calling previous page on middle page", () => {});
+    it("should change nothing when calling previous page on small first page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(smallPage, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.previousPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual(smallPage);
+      expect(mockCallBack.mock.calls.length).toEqual(0);
+    });
+
+    it("should change nothing when calling next page on small first page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(smallPage, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.nextPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual(smallPage);
+      expect(mockCallBack.mock.calls.length).toEqual(0);
+    });
+
+    it("should change nothing when calling previous page on first page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(firstPage, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.previousPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual(firstPage);
+      expect(mockCallBack.mock.calls.length).toEqual(0);
+    });
+
+    it("should change nothing when calling next page on last page fitting exactly", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(lastPageFittingExactly, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.nextPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual(lastPageFittingExactly);
+      expect(mockCallBack.mock.calls.length).toEqual(0);
+    });
+
+    it("should change nothing when calling next page on last page with some places", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(lastPageWithSomePlaces, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.nextPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual(lastPageWithSomePlaces);
+      expect(mockCallBack.mock.calls.length).toEqual(0);
+    });
+
+    it("should change to next page when calling next page on first page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(firstPage, 10, mockCallBack)
+      );
+
+      act(() => {
+        result.current.nextPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual({
+        page_number: 2,
+        page_size: firstPage.page_size,
+        total_pages: firstPage.total_pages,
+      });
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
+
+    it("should change to previous page when calling previous page on last page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(lastPageFittingExactly, 1, mockCallBack)
+      );
+
+      act(() => {
+        result.current.previousPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual({
+        page_number: 9,
+        page_size: lastPageFittingExactly.page_size,
+        total_pages: lastPageFittingExactly.total_pages,
+      });
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
+
+    it("should change to next page when calling next page on middle page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(middlePage, middlePage.page_size, mockCallBack)
+      );
+
+      act(() => {
+        result.current.nextPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual({
+        page_number: 6,
+        page_size: middlePage.page_size,
+        total_pages: middlePage.total_pages,
+      });
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
+
+    it("should change to previous page when calling previous page on middle page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(middlePage, middlePage.page_size, mockCallBack)
+      );
+
+      act(() => {
+        result.current.previousPage();
+      });
+
+      expect(result.current.currentPage).toStrictEqual({
+        page_number: 4,
+        page_size: middlePage.page_size,
+        total_pages: middlePage.total_pages,
+      });
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
   });
 
   describe("change elements per page", () => {
