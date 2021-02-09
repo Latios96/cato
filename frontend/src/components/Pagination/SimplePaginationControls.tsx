@@ -14,8 +14,12 @@ const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
     props.currentPage.page_size,
     (pageRequest: PageRequest) => {}
   );
+
   return (
     <div>
+      <span>
+        {firstElement}-{lastElement} of {totalElements}
+      </span>
       <Pagination size={"sm"}>
         <Pagination.Prev
           role={"previous"}
