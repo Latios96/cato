@@ -113,7 +113,7 @@ describe("usePagination hook", () => {
       });
 
       expect(result.current.currentPage).toStrictEqual(smallPage);
-      expect(mockCallBack.mock.calls.length).toEqual(0);
+      expect(mockCallBack).not.toHaveBeenCalled();
     });
 
     it("should change nothing when calling next page on small first page", () => {
@@ -127,7 +127,7 @@ describe("usePagination hook", () => {
       });
 
       expect(result.current.currentPage).toStrictEqual(smallPage);
-      expect(mockCallBack.mock.calls.length).toEqual(0);
+      expect(mockCallBack).not.toHaveBeenCalled();
     });
 
     it("should change nothing when calling previous page on first page", () => {
@@ -141,7 +141,7 @@ describe("usePagination hook", () => {
       });
 
       expect(result.current.currentPage).toStrictEqual(firstPage);
-      expect(mockCallBack.mock.calls.length).toEqual(0);
+      expect(mockCallBack).not.toHaveBeenCalled();
     });
 
     it("should change nothing when calling next page on last page fitting exactly", () => {
@@ -155,7 +155,7 @@ describe("usePagination hook", () => {
       });
 
       expect(result.current.currentPage).toStrictEqual(lastPageFittingExactly);
-      expect(mockCallBack.mock.calls.length).toEqual(0);
+      expect(mockCallBack).not.toHaveBeenCalled();
     });
 
     it("should change nothing when calling next page on last page with some places", () => {
@@ -169,7 +169,7 @@ describe("usePagination hook", () => {
       });
 
       expect(result.current.currentPage).toStrictEqual(lastPageWithSomePlaces);
-      expect(mockCallBack.mock.calls.length).toEqual(0);
+      expect(mockCallBack).not.toHaveBeenCalled();
     });
 
     it("should change to next page when calling next page on first page", () => {
