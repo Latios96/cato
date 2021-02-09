@@ -1,10 +1,7 @@
 import { useState } from "react";
 import { PageRequest } from "./PageRequest";
-interface ControllablePage {
-  page_number: number;
-  page_size: number;
-  total_pages: number;
-}
+import { ControllablePage } from "./Page";
+
 interface PaginationControls {
   currentPage: ControllablePage;
   elementsPerPage: number;
