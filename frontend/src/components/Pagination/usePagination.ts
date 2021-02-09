@@ -1,5 +1,4 @@
-import { useCallback, useState } from "react";
-import { Page } from "./Page";
+import { useState } from "react";
 import { PageRequest } from "./PageRequest";
 interface ControllablePage {
   page_number: number;
