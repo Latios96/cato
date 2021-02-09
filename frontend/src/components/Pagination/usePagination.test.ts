@@ -246,7 +246,22 @@ describe("usePagination hook", () => {
   });
 
   describe("change elements per page", () => {
-    //first page
-    //last page
+    it("should change elements per page", () => {
+      const mockCallBack = jest.fn();
+      const { result } = renderHook(() =>
+        usePagination(smallPage, middlePage.page_size, mockCallBack)
+      );
+
+      act(() => {
+        result.current.changeCurrentElementsPerPage(11);
+      });
+
+      expect(result.current.currentPage).toStrictEqual({
+        page_number: smallPage.page_number,
+        page_size: 11,
+        total_pages: smallPage.total_pages,
+      });
+      expect(mockCallBack.mock.calls.length).toEqual(1);
+    });
   });
 });

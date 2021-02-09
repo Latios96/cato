@@ -9,7 +9,7 @@ interface ControllablePage {
 interface PaginationControls {
   currentPage: ControllablePage;
   elementsPerPage: number;
-  setElementsPerPage: (elements: number) => void;
+  changeCurrentElementsPerPage: (elements: number) => void;
   nextPage: () => void;
   previousPage: () => void;
   isFirstPage: () => boolean;
@@ -63,7 +63,16 @@ export function usePagination(
   return {
     currentPage: currentPage,
     elementsPerPage: elementsPerPage,
-    setElementsPerPage: setElementsPerPage,
+    changeCurrentElementsPerPage: (count: number) => {
+      setElementsPerPage(count);
+      const newPage = {
+        page_number: currentPage.page_number,
+        page_size: count,
+        total_pages: currentPage.total_pages,
+      };
+      setCurrentPage(newPage);
+      pageChangedCallback(newPage);
+    },
     nextPage: nextPage,
     previousPage: previousPage,
     isFirstPage: isFirstPage,
