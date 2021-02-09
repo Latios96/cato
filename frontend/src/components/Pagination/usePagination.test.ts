@@ -182,12 +182,13 @@ describe("usePagination hook", () => {
         result.current.nextPage();
       });
 
-      expect(result.current.currentPage).toStrictEqual({
+      const newPage = {
         page_number: 2,
         page_size: firstPage.page_size,
         total_pages: firstPage.total_pages,
-      });
-      expect(mockCallBack.mock.calls.length).toEqual(1);
+      };
+      expect(result.current.currentPage).toStrictEqual(newPage);
+      expect(mockCallBack).toHaveBeenCalledWith(newPage);
     });
 
     it("should change to previous page when calling previous page on last page", () => {
@@ -200,12 +201,13 @@ describe("usePagination hook", () => {
         result.current.previousPage();
       });
 
-      expect(result.current.currentPage).toStrictEqual({
+      const newPage = {
         page_number: 9,
         page_size: lastPageFittingExactly.page_size,
         total_pages: lastPageFittingExactly.total_pages,
-      });
-      expect(mockCallBack.mock.calls.length).toEqual(1);
+      };
+      expect(result.current.currentPage).toStrictEqual(newPage);
+      expect(mockCallBack).toHaveBeenCalledWith(newPage);
     });
 
     it("should change to next page when calling next page on middle page", () => {
@@ -218,12 +220,13 @@ describe("usePagination hook", () => {
         result.current.nextPage();
       });
 
-      expect(result.current.currentPage).toStrictEqual({
+      const newPage = {
         page_number: 6,
         page_size: middlePage.page_size,
         total_pages: middlePage.total_pages,
-      });
-      expect(mockCallBack.mock.calls.length).toEqual(1);
+      };
+      expect(result.current.currentPage).toStrictEqual(newPage);
+      expect(mockCallBack).toHaveBeenCalledWith(newPage);
     });
 
     it("should change to previous page when calling previous page on middle page", () => {
@@ -236,12 +239,13 @@ describe("usePagination hook", () => {
         result.current.previousPage();
       });
 
-      expect(result.current.currentPage).toStrictEqual({
+      const newPage = {
         page_number: 4,
         page_size: middlePage.page_size,
         total_pages: middlePage.total_pages,
-      });
-      expect(mockCallBack.mock.calls.length).toEqual(1);
+      };
+      expect(result.current.currentPage).toStrictEqual(newPage);
+      expect(mockCallBack).toHaveBeenCalledWith(newPage);
     });
   });
 
@@ -256,12 +260,13 @@ describe("usePagination hook", () => {
         result.current.changeCurrentElementsPerPage(11);
       });
 
-      expect(result.current.currentPage).toStrictEqual({
+      const newPage = {
         page_number: smallPage.page_number,
         page_size: 11,
         total_pages: smallPage.total_pages,
-      });
-      expect(mockCallBack.mock.calls.length).toEqual(1);
+      };
+      expect(result.current.currentPage).toStrictEqual(newPage);
+      expect(mockCallBack).toHaveBeenCalledWith(newPage);
     });
   });
 });
