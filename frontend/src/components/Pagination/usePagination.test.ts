@@ -1,41 +1,13 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { usePagination } from "./usePagination";
 import { PageRequest } from "./PageRequest";
-
-const smallPage = {
-  page_number: 1,
-  page_size: 10,
-  total_pages: 1,
-  entities: [{ id: 1, name: "test" }],
-};
-
-const firstPage = {
-  page_number: 1,
-  page_size: 10,
-  total_pages: 10,
-  entities: [{ id: 1, name: "test" }],
-};
-
-const middlePage = {
-  page_number: 5,
-  page_size: 1,
-  total_pages: 10,
-  entities: [{ id: 1, name: "test" }],
-};
-
-const lastPageWithSomePlaces = {
-  page_number: 10,
-  page_size: 5,
-  total_pages: 10,
-  entities: [{ id: 1, name: "test" }],
-};
-
-const lastPageFittingExactly = {
-  page_number: 10,
-  page_size: 1,
-  total_pages: 10,
-  entities: [{ id: 1, name: "test" }],
-};
+import {
+  firstPage,
+  lastPageFittingExactly,
+  lastPageWithSomePlaces,
+  middlePage,
+  smallPage,
+} from "./PaginationTestData";
 
 describe("usePagination hook", () => {
   it("should have the initial page", () => {
