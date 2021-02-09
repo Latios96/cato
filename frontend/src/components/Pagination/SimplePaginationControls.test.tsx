@@ -11,7 +11,10 @@ describe("SimplePaginationControls", () => {
   describe("button state handling", () => {
     it("should disable 'previous page' on first page", () => {
       const { getByRole } = render(
-        <SimplePaginationControls currentPage={firstPage} />
+        <SimplePaginationControls
+          currentPage={firstPage}
+          pageChangedCallback={jest.fn()}
+        />
       );
 
       expect(getByRole("previous")).toHaveAttribute("disabled", "");
@@ -20,7 +23,10 @@ describe("SimplePaginationControls", () => {
 
     it("should disable 'next page' on last page", () => {
       const { getByRole } = render(
-        <SimplePaginationControls currentPage={lastPageWithSomePlaces} />
+        <SimplePaginationControls
+          currentPage={lastPageWithSomePlaces}
+          pageChangedCallback={jest.fn()}
+        />
       );
 
       expect(getByRole("previous")).toBeEnabled();
@@ -29,7 +35,10 @@ describe("SimplePaginationControls", () => {
 
     it("should disable 'next page' and 'previous page' on small first page", () => {
       const { getByRole } = render(
-        <SimplePaginationControls currentPage={smallPage} />
+        <SimplePaginationControls
+          currentPage={smallPage}
+          pageChangedCallback={jest.fn()}
+        />
       );
 
       expect(getByRole("previous")).toHaveAttribute("disabled", "");
@@ -38,7 +47,10 @@ describe("SimplePaginationControls", () => {
 
     it("should enable 'next page' and 'previous page' on middle page", () => {
       const { getByRole } = render(
-        <SimplePaginationControls currentPage={middlePage} />
+        <SimplePaginationControls
+          currentPage={middlePage}
+          pageChangedCallback={jest.fn()}
+        />
       );
 
       expect(getByRole("previous")).toBeEnabled();
@@ -49,7 +61,10 @@ describe("SimplePaginationControls", () => {
   describe("changing pages", () => {
     it("should change to previous page", () => {
       const { getByRole, getByText } = render(
-        <SimplePaginationControls currentPage={middlePage} />
+        <SimplePaginationControls
+          currentPage={middlePage}
+          pageChangedCallback={jest.fn()}
+        />
       );
       expect(getByText("5-5 of 10")).toBeInTheDocument();
 
@@ -60,7 +75,10 @@ describe("SimplePaginationControls", () => {
 
     it("should change to next page", () => {
       const { getByRole, getByText } = render(
-        <SimplePaginationControls currentPage={middlePage} />
+        <SimplePaginationControls
+          currentPage={middlePage}
+          pageChangedCallback={jest.fn()}
+        />
       );
       expect(getByText("5-5 of 10")).toBeInTheDocument();
 
