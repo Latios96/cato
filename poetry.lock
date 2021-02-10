@@ -186,7 +186,7 @@ python-versions = ">=2.6, !=3.0.*, !=3.1.*"
 
 [[package]]
 name = "emoji"
-version = "0.6.0"
+version = "1.2.0"
 description = "Emoji for Python"
 category = "main"
 optional = false
@@ -993,7 +993,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "3752aa3b27a482de0100f4a80ef2c849703e1904e79cf7e6502285dc139a0d7a"
+content-hash = "bf3e83fbe83158d7bc34c8294a99af4f06ca253f6886edf1045577aa7db87a4b"
 
 [metadata.files]
 alembic = [
@@ -1147,7 +1147,8 @@ decorator = [
     {file = "decorator-4.4.2.tar.gz", hash = "sha256:e3a62f0520172440ca0dcc823749319382e377f37f140a0b99ef45fecb84bfe7"},
 ]
 emoji = [
-    {file = "emoji-0.6.0.tar.gz", hash = "sha256:e42da4f8d648f8ef10691bc246f682a1ec6b18373abfd9be10ec0b398823bd11"},
+    {file = "emoji-1.2.0-py3-none-any.whl", hash = "sha256:6b19b65da8d6f30551eead1705539cc0eadcd9e33a6ecbc421a29b87f96287eb"},
+    {file = "emoji-1.2.0.tar.gz", hash = "sha256:496f432058567985838c13d67dde84ca081614a8286c0b9cdc7d63dfa89d51a3"},
 ]
 faker = [
     {file = "Faker-5.8.0-py3-none-any.whl", hash = "sha256:0783729c61501d52efea2967aff6e6fcb8370f0f6b5a558f2a81233642ae529a"},
