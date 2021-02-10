@@ -21,7 +21,7 @@ db_load_generator = 'cato_server.db_load_generator:main'
 
 [tool.poetry.dependencies]
 python = "^3.7"
-emoji = "^0.6.0"
+emoji = "^1.2.0"
 pinject = "^0.14.1"
 jsonschema = "^3.2.0"
 contexttimer = "^0.3.3"
