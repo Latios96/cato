@@ -564,13 +564,14 @@ test = ["allpairspy", "click", "faker", "pytest (>=6.0.1)", "pytest-md-report (>
 
 [[package]]
 name = "pika"
-version = "1.1.0"
+version = "1.2.0"
 description = "Pika Python AMQP Client Library"
 category = "main"
 optional = false
 python-versions = "*"
 
 [package.extras]
+gevent = ["gevent"]
 tornado = ["tornado"]
 twisted = ["twisted"]
 
@@ -992,7 +993,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "b54a8d5ec15d658e961d7cb7e9e2d2d1ccfbdb3eefac59aa036c86b1ff13ec7b"
+content-hash = "1c23ebea9a4717e374f3ccf65eb121bc43433b397d1c5953cb9239f3fcf03694"
 
 [metadata.files]
 alembic = [
@@ -1396,8 +1397,8 @@ pathvalidate = [
     {file = "pathvalidate-2.3.2.tar.gz", hash = "sha256:378c8b319838a255c00ab37f664686b75f0aabea4444d6c5a34effbec6738285"},
 ]
 pika = [
-    {file = "pika-1.1.0-py2.py3-none-any.whl", hash = "sha256:4e1a1a6585a41b2341992ec32aadb7a919d649eb82904fd8e4a4e0871c8cf3af"},
-    {file = "pika-1.1.0.tar.gz", hash = "sha256:9fa76ba4b65034b878b2b8de90ff8660a59d925b087c5bb88f8fdbb4b64a1dbf"},
+    {file = "pika-1.2.0-py2.py3-none-any.whl", hash = "sha256:59da6701da1aeaf7e5e93bb521cc03129867f6e54b7dd352c4b3ecb2bd7ec624"},
+    {file = "pika-1.2.0.tar.gz", hash = "sha256:f023d6ac581086b124190cb3dc81dd581a149d216fa4540ac34f9be1e3970b89"},
 ]
 pillow = [
     {file = "Pillow-8.1.0-cp36-cp36m-macosx_10_10_x86_64.whl", hash = "sha256:d355502dce85ade85a2511b40b4c61a128902f246504f7de29bbeec1ae27933a"},
