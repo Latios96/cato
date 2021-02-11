@@ -43,7 +43,7 @@ pathvalidate = "^2.3.1"
 pika = "^1.2.0"
 future = "^0.18.2"
 Flask-Twisted = "^0.1.2"
-schedule = "^0.6.0"
+schedule = "^1.0.0"
 psycopg2-binary = "^2.8.6"
 
 [tool.poetry.dev-dependencies]
