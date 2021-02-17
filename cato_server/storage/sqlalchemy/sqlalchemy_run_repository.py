@@ -46,6 +46,8 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         entities = (
             session.query(self.mapping_cls())
             .filter(self.mapping_cls().project_entity_id == id)
+            .order_by(self.mapping_cls().started_at.desc())
+            .order_by(self.mapping_cls().id.desc())
             .all()
         )
 
@@ -59,9 +61,10 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
 
         page = self._pageginate(
             session,
-            session.query(self.mapping_cls()).filter(
-                self.mapping_cls().project_entity_id == id
-            ),
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().project_entity_id == id)
+            .order_by(self.mapping_cls().started_at.desc())
+            .order_by(self.mapping_cls().id.desc()),
             page_request,
         )
 

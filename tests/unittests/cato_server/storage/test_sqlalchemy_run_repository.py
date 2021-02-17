@@ -118,8 +118,8 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
 ):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
-    run = repository.save(run)
-    repository.insert_many(
+    repository.save(run)
+    runs = repository.insert_many(
         [
             Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
             for x in range(20)
@@ -131,5 +131,29 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
     assert repository.find_by_project_id_with_paging(
         project.id, page_request
     ) == Page.from_page_request(
-        page_request=page_request, total_entity_count=21, entities=[run]
+        page_request=page_request, total_entity_count=21, entities=[runs[19]]
+    )
+
+
+def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
+    sessionmaker_fixture, project
+):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = repository.save(run)
+    runs = repository.insert_many(
+        [
+            Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+            for x in range(20)
+        ]
+    )
+
+    page_request = PageRequest(page_size=5, page_number=2)
+
+    assert repository.find_by_project_id_with_paging(
+        project.id, page_request
+    ) == Page.from_page_request(
+        page_request=page_request,
+        total_entity_count=21,
+        entities=[runs[14], runs[13], runs[12], runs[11], runs[10]],
     )

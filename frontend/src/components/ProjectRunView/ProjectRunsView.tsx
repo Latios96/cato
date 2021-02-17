@@ -132,7 +132,6 @@ class ProjectRunsView extends Component<Props, State> {
       .then((res) => res.json())
       .then(
         (result) => {
-          result.entities.reverse();
           this.setState({ runs: result });
         },
         (error) => {
