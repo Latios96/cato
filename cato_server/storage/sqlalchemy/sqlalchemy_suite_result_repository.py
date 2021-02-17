@@ -50,7 +50,7 @@ class SqlAlchemySuiteResultRepository(
         entities = (
             session.query(self.mapping_cls())
             .filter(self.mapping_cls().run_entity_id == run_id)
-            .order_by(asc(collate(self.mapping_cls().suite_name, "NOCASE")))
+            .order_by(self.mapping_cls().suite_name)
             .all()
         )
         session.close()
