@@ -149,6 +149,7 @@ dmypy.json
 sonarqube.bat
 alembic.ini
 config.ini
+config_load.ini
 # Ignore Gradle project-specific cache directory
 .gradle
 
