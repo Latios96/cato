@@ -1,6 +1,6 @@
 from typing import Optional, Iterable
 
-from sqlalchemy import Column, Integer, ForeignKey, String, JSON
+from sqlalchemy import Column, Integer, ForeignKey, String, JSON, asc, collate
 from sqlalchemy.orm import relationship
 
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -50,6 +50,7 @@ class SqlAlchemySuiteResultRepository(
         entities = (
             session.query(self.mapping_cls())
             .filter(self.mapping_cls().run_entity_id == run_id)
+            .order_by(asc(collate(self.mapping_cls().suite_name, "NOCASE")))
             .all()
         )
         session.close()
