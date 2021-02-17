@@ -113,7 +113,7 @@ def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, p
     )
 
 
-def test_find_by_project_id_paginate_should_find_correct_max_count_exeding_page(
+def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
     sessionmaker_fixture, project
 ):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
