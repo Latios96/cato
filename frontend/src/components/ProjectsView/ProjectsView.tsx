@@ -4,6 +4,7 @@ import styles from "./ProjectsView.module.css";
 import LinkCard from "../LinkCard/LinkCard";
 import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
 import { Helmet } from "react-helmet";
+import _ from "lodash";
 
 interface Props {}
 
@@ -40,6 +41,7 @@ class ProjectsView extends Component<Props, State> {
       .then((res) => res.json())
       .then(
         (result) => {
+          result = _.sortBy(result, [(p: Project) => p.name.toLowerCase()]);
           this.setState({ projects: result, isLoading: false });
         },
         (error) => {
