@@ -24,6 +24,42 @@ def test_get_suite_result_by_run_id_should_return_empty_list(client):
     assert rv.get_json() == []
 
 
+def test_get_suite_by_project_id_paged_should_return(client, suite_result, run):
+    url = "/api/v1/suite_results/run/{}?page_number=1&page_size=10".format(run.id)
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "entities": [
+            {
+                "id": 1,
+                "run_id": 1,
+                "status": "NOT_STARTED",
+                "suite_name": "my_suite",
+                "suite_variables": {"key": "value"},
+            }
+        ],
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+    }
+
+
+def test_get_suite_by_project_id_pages_should_return_empty_page(client, project):
+    url = "/api/v1/suite_results/run/{}?page_number=1&page_size=10".format(project.id)
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "entities": [],
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+    }
+
+
 def test_create_suite_result_should_create(client, run):
     url = "/api/v1/suite_results"
 
