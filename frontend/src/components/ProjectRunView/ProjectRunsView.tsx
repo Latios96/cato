@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
-import SuiteResult from "../../models/SuiteResult";
 import Project from "../../models/Project";
 import RunListEntryComponent from "./RunListEntryComponent";
 import RunSummary from "../RunSummary/RunSummary";
