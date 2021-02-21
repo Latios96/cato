@@ -25,41 +25,41 @@ export default function RunSummaryTabComponent(props: Props) {
   const [isLoading, setIsLoading] = useState(true);
   let history = useHistory();
 
-  const fetchTests = () => {
-    fetch(`/api/v1/test_results/run/${props.runId}`)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setTests(result);
-          setIsLoading(false);
-        },
-        (error) => {
-          console.log(error);
-          setIsLoading(false);
-        }
-      );
-  };
-
-  const fetchSuites = (pageRequest: PageRequest) => {
-    fetch(
-      `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          setSuites(result);
-          setIsLoading(false);
-        },
-        (error) => {
-          console.log(error);
-          setIsLoading(false);
-        }
-      );
-  };
-
   useEffect(() => {
     setCurrentTab(props.currentTab);
     setIsLoading(true);
+
+    const fetchTests = () => {
+      fetch(`/api/v1/test_results/run/${props.runId}`)
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setTests(result);
+            setIsLoading(false);
+          },
+          (error) => {
+            console.log(error);
+            setIsLoading(false);
+          }
+        );
+    };
+
+    const fetchSuites = (pageRequest: PageRequest) => {
+      fetch(
+        `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+      )
+        .then((res) => res.json())
+        .then(
+          (result) => {
+            setSuites(result);
+            setIsLoading(false);
+          },
+          (error) => {
+            console.log(error);
+            setIsLoading(false);
+          }
+        );
+    };
 
     if (currentTab === "tests") {
       fetchTests();
@@ -89,7 +89,7 @@ export default function RunSummaryTabComponent(props: Props) {
     >
       <Tab eventKey="suites" title="Suites">
         <div className={styles.tabContent}>
-          {isLoading || suites == undefined ? (
+          {isLoading || suites === undefined ? (
             renderSpinner()
           ) : (
             <>
