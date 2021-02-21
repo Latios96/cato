@@ -21,7 +21,6 @@ interface Props {
 interface State {
   project: Project | null;
   runs?: Page<RunDto>;
-  currentSuiteResults: SuiteResult[];
 }
 
 class ProjectRunsView extends Component<Props, State> {
@@ -29,7 +28,7 @@ class ProjectRunsView extends Component<Props, State> {
 
   constructor(props: Props) {
     super(props);
-    this.state = { project: null, runs: undefined, currentSuiteResults: [] };
+    this.state = { project: null, runs: undefined };
 
     this.interval = 0;
   }
@@ -40,16 +39,6 @@ class ProjectRunsView extends Component<Props, State> {
 
   componentWillUnmount() {
     clearInterval(this.interval);
-  }
-
-  componentDidUpdate(
-    prevProps: Readonly<Props>,
-    prevState: Readonly<State>,
-    snapshot?: any
-  ) {
-    if (prevProps.currentRunId !== this.props.currentRunId) {
-      this.fetchSuiteResults();
-    }
   }
 
   render() {
@@ -107,7 +96,6 @@ class ProjectRunsView extends Component<Props, State> {
   update = () => {
     this.fetchProject();
     this.fetchRuns(requestFirstPageOfSize(25));
-    this.fetchSuiteResults();
   };
 
   fetchProject = () => {
@@ -133,22 +121,6 @@ class ProjectRunsView extends Component<Props, State> {
       .then(
         (result) => {
           this.setState({ runs: result });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  };
-
-  fetchSuiteResults = () => {
-    fetch(
-      "/api/v1/suite_results/run/" +
-        (this.props.currentRunId ? this.props.currentRunId : "0")
-    )
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({ currentSuiteResults: result });
         },
         (error) => {
           console.log(error);
