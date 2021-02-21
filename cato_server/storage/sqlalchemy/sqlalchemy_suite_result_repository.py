@@ -3,6 +3,7 @@ from typing import Optional, Iterable
 from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
 
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
@@ -55,6 +56,21 @@ class SqlAlchemySuiteResultRepository(
         )
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def find_by_run_id_with_paging(
+        self, run_id: int, page_request: PageRequest
+    ) -> Page[SuiteResult]:
+        session = self._session_maker()
+
+        page = self._pageginate(
+            session,
+            session.query(self.mapping_cls())
+            .filter(self.mapping_cls().run_entity_id == run_id)
+            .order_by(self.mapping_cls().suite_name),
+            page_request,
+        )
+        session.close()
+        return page
 
     def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
         session = self._session_maker()

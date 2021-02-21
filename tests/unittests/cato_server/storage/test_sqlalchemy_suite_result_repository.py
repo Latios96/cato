@@ -2,6 +2,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_server.domain.suite_result import SuiteResult
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
     _SuiteResultMapping,
@@ -94,6 +95,28 @@ def test_find_by_run_id_should_not_find(sessionmaker_fixture):
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
 
     assert not repository.find_by_run_id(100)
+
+
+def test_find_by_run_id_with_paging_should_find_empty(sessionmaker_fixture):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    page_request = PageRequest(1, 10)
+
+    assert repository.find_by_run_id_with_paging(
+        100, page_request
+    ) == Page.from_page_request(page_request, 0, [])
+
+
+def test_find_by_run_id_with_paging_should_find_correct(sessionmaker_fixture, run):
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_result = SuiteResult(
+        id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
+    )
+    saved_suite_result = repository.save(suite_result)
+    page_request = PageRequest(1, 10)
+
+    assert repository.find_by_run_id_with_paging(
+        run.id, page_request
+    ) == Page.from_page_request(page_request, 1, [saved_suite_result])
 
 
 def test_find_by_run_id_and_name_should_find(sessionmaker_fixture, run):
