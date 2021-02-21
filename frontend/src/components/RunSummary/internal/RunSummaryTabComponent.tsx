@@ -5,6 +5,12 @@ import styles from "./RunSummaryTabComponent.module.scss";
 import { SuiteResultDto, TestResultDto } from "../../../catoapimodels";
 import SuiteResultList from "../../SuiteAndTestsLists/SuiteResultList";
 import TestResultList from "../../SuiteAndTestsLists/TestResultList";
+import SimplePaginationControls from "../../Pagination/SimplePaginationControls";
+import {
+  Page,
+  PageRequest,
+  requestFirstPageOfSize,
+} from "../../Pagination/Page";
 
 interface Props {
   projectId: number;
@@ -14,40 +20,51 @@ interface Props {
 
 export default function RunSummaryTabComponent(props: Props) {
   const [currentTab, setCurrentTab] = useState(props.currentTab);
-  const [suites, setSuites] = useState<SuiteResultDto[]>([]);
+  const [suites, setSuites] = useState<Page<SuiteResultDto>>();
   const [tests, setTests] = useState<TestResultDto[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   let history = useHistory();
 
+  const fetchTests = () => {
+    fetch(`/api/v1/test_results/run/${props.runId}`)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setTests(result);
+          setIsLoading(false);
+        },
+        (error) => {
+          console.log(error);
+          setIsLoading(false);
+        }
+      );
+  };
+
+  const fetchSuites = (pageRequest: PageRequest) => {
+    fetch(
+      `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+    )
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setSuites(result);
+          setIsLoading(false);
+        },
+        (error) => {
+          console.log(error);
+          setIsLoading(false);
+        }
+      );
+  };
+
   useEffect(() => {
     setCurrentTab(props.currentTab);
     setIsLoading(true);
+
     if (currentTab === "tests") {
-      fetch(`/api/v1/test_results/run/${props.runId}`)
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            setTests(result);
-            setIsLoading(false);
-          },
-          (error) => {
-            console.log(error);
-            setIsLoading(false);
-          }
-        );
+      fetchTests();
     } else {
-      fetch(`/api/v1/suite_results/run/${props.runId}`)
-        .then((res) => res.json())
-        .then(
-          (result) => {
-            setSuites(result);
-            setIsLoading(false);
-          },
-          (error) => {
-            console.log(error);
-            setIsLoading(false);
-          }
-        );
+      fetchSuites(requestFirstPageOfSize(25));
     }
   }, [currentTab, props.currentTab, props.runId]);
 
@@ -72,15 +89,21 @@ export default function RunSummaryTabComponent(props: Props) {
     >
       <Tab eventKey="suites" title="Suites">
         <div className={styles.tabContent}>
-          {isLoading ? (
+          {isLoading || suites == undefined ? (
             renderSpinner()
           ) : (
-            <SuiteResultList
-              suiteResults={suites}
-              projectId={props.projectId}
-              runId={props.runId}
-              isLoading={isLoading}
-            />
+            <>
+              <SimplePaginationControls
+                currentPage={suites}
+                pageChangedCallback={(pageRequest) => fetchSuites(pageRequest)}
+              />
+              <SuiteResultList
+                suiteResults={suites.entities}
+                projectId={props.projectId}
+                runId={props.runId}
+                isLoading={isLoading}
+              />
+            </>
           )}
         </div>
       </Tab>
