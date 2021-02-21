@@ -95,7 +95,22 @@ export default function RunSummaryTabComponent(props: Props) {
             <>
               <SimplePaginationControls
                 currentPage={suites}
-                pageChangedCallback={(pageRequest) => fetchSuites(pageRequest)}
+                pageChangedCallback={(pageRequest) => {
+                  fetch(
+                    `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+                  )
+                    .then((res) => res.json())
+                    .then(
+                      (result) => {
+                        setSuites(result);
+                        setIsLoading(false);
+                      },
+                      (error) => {
+                        console.log(error);
+                        setIsLoading(false);
+                      }
+                    );
+                }}
               />
               <SuiteResultList
                 suiteResults={suites.entities}
