@@ -119,7 +119,7 @@ class SuiteResultsBlueprint(BaseBlueprint):
         page = Page(
             page_number=page_request.page_number,
             page_size=page_request.page_size,
-            total_pages=suite_results_page.total_pages,
+            total_entity_count=suite_results_page.total_entity_count,
             entities=suite_result_dtos,
         )
         return self.json_response(self._page_mapper.to_json(page))

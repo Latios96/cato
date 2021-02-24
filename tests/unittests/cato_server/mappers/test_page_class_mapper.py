@@ -8,7 +8,7 @@ def test_map_empty_to_dict(object_mapper):
     page = Page(
         page_number=1,
         page_size=10,
-        total_pages=1,
+        total_entity_count=1,
         entities=[],
     )
 
@@ -18,7 +18,7 @@ def test_map_empty_to_dict(object_mapper):
         "entities": [],
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 1,
     }
 
 
@@ -27,7 +27,7 @@ def test_map_to_dict(object_mapper):
     page = Page(
         page_number=1,
         page_size=10,
-        total_pages=1,
+        total_entity_count=1,
         entities=[Project(id=0, name="test")],
     )
 
@@ -37,7 +37,7 @@ def test_map_to_dict(object_mapper):
         "entities": [{"id": 0, "name": "test"}],
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 1,
     }
 
 
@@ -47,7 +47,7 @@ def test_map_from_dict(object_mapper):
         "entities": [{"id": 0, "name": "test"}],
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 1,
     }
 
     page = page_class_mapper.from_dict(page_dict, Project)
@@ -55,6 +55,6 @@ def test_map_from_dict(object_mapper):
     assert page == Page(
         page_number=1,
         page_size=10,
-        total_pages=1,
+        total_entity_count=1,
         entities=[Project(id=0, name="test")],
     )

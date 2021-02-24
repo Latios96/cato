@@ -275,7 +275,7 @@ def test_get_test_results_by_run_id_paginated_should_find(client, run, test_resu
     assert rv.get_json() == {
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 1,
         "entities": [
             {
                 "execution_status": "NOT_STARTED",
@@ -297,7 +297,7 @@ def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
     assert rv.get_json() == {
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 0,
         "entities": [],
     }
 

@@ -39,7 +39,7 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
         ],
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 1,
     }
 
 
@@ -53,7 +53,7 @@ def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
         "entities": [],
         "page_number": 1,
         "page_size": 10,
-        "total_pages": 1,
+        "total_entity_count": 0,
     }
 
 

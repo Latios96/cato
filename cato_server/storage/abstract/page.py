@@ -34,7 +34,7 @@ class PageRequest:
 class Page(Generic[T]):
     page_number: int = attr.ib()
     page_size: int = attr.ib()
-    total_pages: int = attr.ib()
+    total_entity_count: int = attr.ib()
     entities: List[T] = attr.ib()
 
     @page_number.validator
@@ -47,21 +47,18 @@ class Page(Generic[T]):
         if value < 0:
             raise ValueError("page_size can not be less than 0.")
 
-    @total_pages.validator
-    def validate_total_pages(self, attribute, value):
-        if value < 1:
-            raise ValueError("total_pages can not be less than 1.")
+    @total_entity_count.validator
+    def validate_total_entity_count(self, attribute, value):
+        if value < 0:
+            raise ValueError("total_pages can not be less than 0.")
 
     @staticmethod
     def from_page_request(
         page_request: PageRequest, total_entity_count: int, entities: List[T]
     ):
-        total_pages = math.ceil(total_entity_count / page_request.page_size)
-        if total_pages == 0:
-            total_pages = 1
         return Page(
             page_number=page_request.page_number,
             page_size=page_request.page_size,
-            total_pages=total_pages,
+            total_entity_count=total_entity_count,
             entities=entities,
         )

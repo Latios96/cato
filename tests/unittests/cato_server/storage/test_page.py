@@ -31,18 +31,19 @@ class TestPageRequest:
 
 class TestPage:
     @pytest.mark.parametrize(
-        "page_number,page_size,total_pages",
-        [(0, 10, 1), (-1, 10, 1), (1, -1, 1), (1, 1, 0), (1, 1, -1)],
+        "page_number,page_size,total_entity_count",
+        [(0, 10, 1), (-1, 10, 1), (1, -1, 1), (1, 1, -1)],
     )
-    def test_construct_invalid(self, page_number, page_size, total_pages):
+    def test_construct_invalid(self, page_number, page_size, total_entity_count):
         with pytest.raises(ValueError):
-            Page(page_number, page_size, total_pages, [])
+            Page(page_number, page_size, total_entity_count, [])
 
     @pytest.mark.parametrize(
-        "page_number,page_size,total_pages", [(1, 10, 1), (1, 0, 1), (50, 9999, 20)]
+        "page_number,page_size,total_entity_count",
+        [(1, 10, 1), (1, 0, 1), (50, 9999, 20)],
     )
-    def test_construct_valid(self, page_number, page_size, total_pages):
-        Page(page_number, page_size, total_pages, [])
+    def test_construct_valid(self, page_number, page_size, total_entity_count):
+        Page(page_number, page_size, total_entity_count, [])
 
     def test_from_page_request(self):
         page_request = PageRequest.first(10)
@@ -50,15 +51,4 @@ class TestPage:
 
         page = Page.from_page_request(page_request, 10, entities)
 
-        assert page == Page(1, 10, 1, entities)
-
-    @pytest.mark.parametrize(
-        "total_entity_count,total_pages",
-        [(0, 1), (1, 1), (9, 1), (10, 1), (11, 2), (50, 5), (100, 10)],
-    )
-    def test_correct_total_page_count(self, total_entity_count, total_pages):
-        page_request = PageRequest.first(10)
-        entities = [1, 2, 3]
-
-        page = Page.from_page_request(page_request, total_entity_count, entities)
-        assert page == Page(1, 10, total_pages, entities)
+        assert page == Page(1, 10, 10, entities)

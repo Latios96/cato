@@ -183,7 +183,7 @@ def test_find_by_run_id_paginated_should_find_single_test(
     results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
 
     assert results == Page(
-        page_number=1, page_size=10, total_pages=1, entities=[test_result]
+        page_number=1, page_size=10, total_entity_count=1, entities=[test_result]
     )
 
 
@@ -204,7 +204,7 @@ def test_find_by_run_id_paginated_should_find_multiple(
     assert results == Page(
         page_number=1,
         page_size=10,
-        total_pages=1,
+        total_entity_count=4,
         entities=[test_result, test_result1, test_result2, test_result3],
     )
 
@@ -214,7 +214,9 @@ def test_find_by_run_id_paginated_should_find_empty_list(sessionmaker_fixture, r
 
     results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
 
-    assert results == Page(page_number=1, page_size=10, total_pages=1, entities=[])
+    assert results == Page(
+        page_number=1, page_size=10, total_entity_count=0, entities=[]
+    )
 
 
 def test_find_execution_status_by_run_ids_should_find(

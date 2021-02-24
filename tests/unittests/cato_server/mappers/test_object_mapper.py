@@ -120,7 +120,7 @@ def test_no_page_instances(object_mapper):
             Page(
                 page_number=1,
                 page_size=10,
-                total_pages=1,
+                total_entity_count=1,
                 entities=[Project(id=0, name="test")],
             )
         )

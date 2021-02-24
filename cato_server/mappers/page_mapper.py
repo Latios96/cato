@@ -15,7 +15,7 @@ class PageMapper:
         return {
             "page_number": page.page_number,
             "page_size": page.page_size,
-            "total_pages": page.total_pages,
+            "total_entity_count": page.total_entity_count,
             "entities": self._object_mapper.many_to_dict(page.entities),
         }
 
@@ -23,7 +23,7 @@ class PageMapper:
         return Page(
             page_number=the_dict["page_number"],
             page_size=the_dict["page_size"],
-            total_pages=the_dict["total_pages"],
+            total_entity_count=the_dict["total_entity_count"],
             entities=self._object_mapper.many_from_dict(the_dict["entities"], cls),
         )
 

@@ -118,7 +118,7 @@ class RunsBlueprint(BaseBlueprint):
         page = Page(
             page_number=page_request.page_number,
             page_size=page_request.page_size,
-            total_pages=run_page.total_pages,
+            total_entity_count=run_page.total_entity_count,
             entities=run_dtos,
         )
         return self.json_response(self._page_mapper.to_json(page))
