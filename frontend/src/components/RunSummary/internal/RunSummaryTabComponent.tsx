@@ -21,7 +21,7 @@ interface Props {
 export default function RunSummaryTabComponent(props: Props) {
   const [currentTab, setCurrentTab] = useState(props.currentTab);
   const [suites, setSuites] = useState<Page<SuiteResultDto>>();
-  const [tests, setTests] = useState<TestResultDto[]>([]);
+  const [tests, setTests] = useState<Page<TestResultDto>>();
   const [isLoading, setIsLoading] = useState(true);
   let history = useHistory();
 
@@ -29,8 +29,10 @@ export default function RunSummaryTabComponent(props: Props) {
     setCurrentTab(props.currentTab);
     setIsLoading(true);
 
-    const fetchTests = () => {
-      fetch(`/api/v1/test_results/run/${props.runId}`)
+    const fetchTests = (pageRequest: PageRequest) => {
+      fetch(
+        `/api/v1/test_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+      )
         .then((res) => res.json())
         .then(
           (result) => {
@@ -60,11 +62,11 @@ export default function RunSummaryTabComponent(props: Props) {
           }
         );
     };
-
+    const firstPage = requestFirstPageOfSize(25);
     if (currentTab === "tests") {
-      fetchTests();
+      fetchTests(firstPage);
     } else {
-      fetchSuites(requestFirstPageOfSize(25));
+      fetchSuites(firstPage);
     }
   }, [currentTab, props.currentTab, props.runId]);
 
@@ -96,13 +98,11 @@ export default function RunSummaryTabComponent(props: Props) {
               <SimplePaginationControls
                 currentPage={suites}
                 pageChangedCallback={(pageRequest) => {
-                  fetch(
-                    `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
-                  )
+                  fetch(`/api/v1/test_results/run/${props.runId}`)
                     .then((res) => res.json())
                     .then(
                       (result) => {
-                        setSuites(result);
+                        setTests(result);
                         setIsLoading(false);
                       },
                       (error) => {
@@ -124,15 +124,36 @@ export default function RunSummaryTabComponent(props: Props) {
       </Tab>
       <Tab eventKey="tests" title="Tests">
         <div className={styles.tabContent}>
-          {isLoading ? (
+          {isLoading || tests === undefined ? (
             renderSpinner()
           ) : (
-            <TestResultList
-              testResults={tests}
-              projectId={props.projectId}
-              runId={props.runId}
-              isLoading={isLoading}
-            />
+            <>
+              <SimplePaginationControls
+                currentPage={tests}
+                pageChangedCallback={(pageRequest) => {
+                  fetch(
+                    `/api/v1/test_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+                  )
+                    .then((res) => res.json())
+                    .then(
+                      (result) => {
+                        setTests(result);
+                        setIsLoading(false);
+                      },
+                      (error) => {
+                        console.log(error);
+                        setIsLoading(false);
+                      }
+                    );
+                }}
+              />
+              <TestResultList
+                testResults={tests.entities}
+                projectId={props.projectId}
+                runId={props.runId}
+                isLoading={isLoading}
+              />
+            </>
           )}
         </div>
       </Tab>
