@@ -1,5 +1,7 @@
 import datetime
 
+from cato_server.storage.abstract.page import Page
+
 
 def test_get_test_result_by_suite_and_identifier_should_return(
     client, suite_result, test_result
@@ -262,6 +264,42 @@ def test_get_test_results_by_run_id_should_return_empty_list(client):
 
     assert rv.status_code == 200
     assert rv.get_json() == []
+
+
+def test_get_test_results_by_run_id_paginated_should_find(client, run, test_result):
+    url = f"/api/v1/test_results/run/{run.id}?page_number=1&page_size=10"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+        "entities": [
+            {
+                "execution_status": "NOT_STARTED",
+                "id": 1,
+                "name": "my_test_name",
+                "status": "SUCCESS",
+                "test_identifier": "my_suite/my_test_name",
+            }
+        ],
+    }
+
+
+def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
+    url = f"/api/v1/test_results/run/{42}?page_number=1&page_size=10"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.get_json() == {
+        "page_number": 1,
+        "page_size": 10,
+        "total_pages": 1,
+        "entities": [],
+    }
 
 
 def test_get_test_result_by_id(client, test_result):

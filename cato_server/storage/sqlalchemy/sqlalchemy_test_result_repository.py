@@ -154,7 +154,7 @@ class SqlAlchemyTestResultRepository(
 
     def find_by_run_id_with_paging(
         self, run_id: int, page_request: PageRequest
-    ) -> Page[SuiteResult]:
+    ) -> Page[TestResult]:
         session = self._session_maker()
 
         page = self._pageginate(

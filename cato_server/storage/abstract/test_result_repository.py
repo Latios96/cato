@@ -23,7 +23,7 @@ class TestResultRepository(AbstractRepository):
 
     def find_by_run_id_with_paging(
         self, run_id: int, page_request: PageRequest
-    ) -> Page[SuiteResult]:
+    ) -> Page[TestResult]:
         raise NotImplementedError()
 
     def find_by_run_id_and_test_identifier(
