@@ -2,9 +2,11 @@ from typing import Optional, Iterable, Set, Tuple, Dict
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
+from cato_server.storage.abstract.page import PageRequest, Page
 
 
 class TestResultRepository(AbstractRepository):
@@ -17,6 +19,11 @@ class TestResultRepository(AbstractRepository):
         raise NotImplementedError()
 
     def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
+        raise NotImplementedError()
+
+    def find_by_run_id_with_paging(
+        self, run_id: int, page_request: PageRequest
+    ) -> Page[SuiteResult]:
         raise NotImplementedError()
 
     def find_by_run_id_and_test_identifier(
