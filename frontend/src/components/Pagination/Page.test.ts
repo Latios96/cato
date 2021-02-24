@@ -3,7 +3,7 @@ import {
   firstEntityOnPage,
   lastEntityOnPage,
   requestFirstPageOfSize,
-  totalEntities,
+  totalPages,
 } from "./Page";
 import each from "jest-each";
 
@@ -47,7 +47,7 @@ describe("Page", () => {
       {
         page_number: 1,
         page_size: 10,
-        total_pages: 10,
+        total_entity_count: 100,
       },
     ],
     [
@@ -55,7 +55,15 @@ describe("Page", () => {
       {
         page_number: 2,
         page_size: 10,
-        total_pages: 10,
+        total_entity_count: 20,
+      },
+    ],
+    [
+      18,
+      {
+        page_number: 2,
+        page_size: 10,
+        total_entity_count: 18,
       },
     ],
   ]).it(
@@ -66,13 +74,24 @@ describe("Page", () => {
       expect(first).toBe(lastEntity);
     }
   );
-  it("should return total entity count correctly", () => {
-    const count = totalEntities({
-      page_number: 1,
-      page_size: 10,
-      total_pages: 10,
-    });
+  each([
+    [0, 1],
+    [1, 1],
+    [9, 1],
+    [10, 1],
+    [11, 2],
+    [50, 5],
+    [100, 10],
+  ]).it(
+    "should calculate total page count for %s entites correctly",
+    (totalEntityCount: number, totalPageCount: number) => {
+      const first = totalPages({
+        page_number: 1,
+        page_size: 10,
+        total_entity_count: totalEntityCount,
+      });
 
-    expect(count).toBe(100);
-  });
+      expect(first).toBe(totalPageCount);
+    }
+  );
 });

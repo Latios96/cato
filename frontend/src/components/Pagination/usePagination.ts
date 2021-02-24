@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ControllablePage, PageRequest } from "./Page";
+import { ControllablePage, PageRequest, totalPages } from "./Page";
 
 interface PaginationControls {
   currentPage: ControllablePage;
@@ -26,7 +26,7 @@ export function usePagination(
   };
 
   const isLastPage = (): boolean => {
-    return currentPage.page_number === currentPage.total_pages;
+    return currentPage.page_number === totalPages(currentPage);
   };
 
   const nextPage = () => {
@@ -36,7 +36,7 @@ export function usePagination(
     const newPage: ControllablePage = {
       page_number: currentPage.page_number + 1,
       page_size: elementsPerPage,
-      total_pages: currentPage.total_pages,
+      total_entity_count: currentPage.total_entity_count,
     };
     setCurrentPage(newPage);
     pageChangedCallback(newPage);
@@ -49,7 +49,7 @@ export function usePagination(
     const newPage: ControllablePage = {
       page_number: currentPage.page_number - 1,
       page_size: elementsPerPage,
-      total_pages: currentPage.total_pages,
+      total_entity_count: currentPage.total_entity_count,
     };
     setCurrentPage(newPage);
     pageChangedCallback(newPage);
@@ -63,7 +63,7 @@ export function usePagination(
       const newPage = {
         page_number: currentPage.page_number,
         page_size: count,
-        total_pages: currentPage.total_pages,
+        total_entity_count: currentPage.total_entity_count,
       };
       setCurrentPage(newPage);
       pageChangedCallback(newPage);

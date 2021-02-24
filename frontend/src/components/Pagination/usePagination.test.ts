@@ -54,7 +54,7 @@ describe("usePagination hook", () => {
       const { result } = renderHook(() =>
         usePagination(
           lastPageWithSomePlaces,
-          10,
+          5,
           (pageRequest: PageRequest) => {}
         )
       );
@@ -157,7 +157,7 @@ describe("usePagination hook", () => {
       const newPage = {
         page_number: 2,
         page_size: firstPage.page_size,
-        total_pages: firstPage.total_pages,
+        total_entity_count: firstPage.total_entity_count,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -176,7 +176,7 @@ describe("usePagination hook", () => {
       const newPage = {
         page_number: 9,
         page_size: lastPageFittingExactly.page_size,
-        total_pages: lastPageFittingExactly.total_pages,
+        total_entity_count: lastPageFittingExactly.total_entity_count,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -195,7 +195,7 @@ describe("usePagination hook", () => {
       const newPage = {
         page_number: 6,
         page_size: middlePage.page_size,
-        total_pages: middlePage.total_pages,
+        total_entity_count: middlePage.total_entity_count,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -214,7 +214,7 @@ describe("usePagination hook", () => {
       const newPage = {
         page_number: 4,
         page_size: middlePage.page_size,
-        total_pages: middlePage.total_pages,
+        total_entity_count: middlePage.total_entity_count,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -235,7 +235,7 @@ describe("usePagination hook", () => {
       const newPage = {
         page_number: smallPage.page_number,
         page_size: 11,
-        total_pages: smallPage.total_pages,
+        total_entity_count: smallPage.total_entity_count,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);

@@ -1,12 +1,6 @@
 import React from "react";
 import { Pagination } from "react-bootstrap";
-import {
-  firstEntityOnPage,
-  lastEntityOnPage,
-  Page,
-  PageRequest,
-  totalEntities,
-} from "./Page";
+import { firstEntityOnPage, lastEntityOnPage, Page, PageRequest } from "./Page";
 import { usePagination } from "./usePagination";
 import styles from "./SimplePaginationControl.module.scss";
 
@@ -28,7 +22,7 @@ const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
         <span className={styles.elementsOnPage}>
           {firstEntityOnPage(controls.currentPage)}-
           {lastEntityOnPage(controls.currentPage)} of{" "}
-          {totalEntities(controls.currentPage)}
+          {controls.currentPage.total_entity_count}
         </span>
         <Pagination size={"sm"}>
           <Pagination.Prev
