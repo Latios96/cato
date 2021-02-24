@@ -1,4 +1,5 @@
 import os
+import subprocess
 
 import pytest
 from alembic import command
@@ -15,9 +16,15 @@ def test_db_migrator():
     db_migrator.migrate()
 
 
-@pytest.mark.skip
+def can_not_launch_postgres():
+    try:
+        return subprocess.call(["pg_ctl", "--version"]) != 0
+    except Exception as e:
+        return True
+
+
+@pytest.mark.skipif(can_not_launch_postgres(), reason="No pg_ctl executable found")
 def test_example_postgres(postgresql, test_resource_provider):
-    # requires pytest-postgresql
     connection = f"postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}"
 
     config_path = test_resource_provider.resource_by_name(
@@ -29,7 +36,12 @@ def test_example_postgres(postgresql, test_resource_provider):
         "alembic",
         "script_location",
         os.path.join(
-            os.path.dirname(os.path.dirname(os.path.dirname(config_path))), "alembic"
+            os.path.dirname(os.path.dirname(os.path.dirname(config_path))),
+            "cato_server",
+            "storage",
+            "sqlalchemy",
+            "migrations",
+            "alembic",
         ),
     )
 
