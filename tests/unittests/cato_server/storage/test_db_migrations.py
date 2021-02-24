@@ -23,7 +23,12 @@ def can_not_launch_postgres():
         return True
 
 
-@pytest.mark.skipif(can_not_launch_postgres(), reason="No pg_ctl executable found")
+requires_postgres = pytest.mark.skipif(
+    can_not_launch_postgres(), reason="No pg_ctl executable found"
+)
+
+
+@requires_postgres
 def test_example_postgres(postgresql, test_resource_provider):
     connection = f"postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}"
 
