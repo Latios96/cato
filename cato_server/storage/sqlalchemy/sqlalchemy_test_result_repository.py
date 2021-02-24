@@ -7,7 +7,6 @@ from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTim
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
-from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.storage.abstract.page import PageRequest, Page
