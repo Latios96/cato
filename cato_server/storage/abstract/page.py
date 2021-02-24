@@ -1,4 +1,3 @@
-import math
 from typing import TypeVar, Generic, List
 
 import attr
