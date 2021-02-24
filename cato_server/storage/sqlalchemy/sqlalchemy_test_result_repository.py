@@ -7,8 +7,10 @@ from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTim
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.machine_info import MachineInfo
+from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -149,6 +151,22 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def find_by_run_id_with_paging(
+        self, run_id: int, page_request: PageRequest
+    ) -> Page[SuiteResult]:
+        session = self._session_maker()
+
+        page = self._pageginate(
+            session,
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id),
+            page_request,
+        )
+        session.close()
+        return page
 
     def find_execution_status_by_run_ids(
         self, run_ids: Set[int]

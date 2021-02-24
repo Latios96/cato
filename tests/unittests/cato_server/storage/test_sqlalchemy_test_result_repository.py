@@ -8,6 +8,7 @@ from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_result import TestResult
+from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -146,7 +147,7 @@ def test_find_by_suite_result_not_found(sessionmaker_fixture, suite_result):
 def test_find_by_run_id_should_find_single_test(sessionmaker_fixture, run, test_result):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    results = repository.find_by_suite_result_id(run.id)
+    results = repository.find_by_run_id(run.id)
 
     assert results == [test_result]
 
@@ -161,7 +162,7 @@ def test_find_by_run_id_should_find_multiple(sessionmaker_fixture, run, test_res
     test_result3 = repository.save(test_result)
     test_result.id = 1
 
-    results = repository.find_by_suite_result_id(run.id)
+    results = repository.find_by_run_id(run.id)
 
     assert results == [test_result, test_result1, test_result2, test_result3]
 
@@ -169,9 +170,51 @@ def test_find_by_run_id_should_find_multiple(sessionmaker_fixture, run, test_res
 def test_find_by_run_id_should_find_empty_list(sessionmaker_fixture, run):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    results = repository.find_by_suite_result_id(run.id)
+    results = repository.find_by_run_id(run.id)
 
     assert results == []
+
+
+def test_find_by_run_id_paginated_should_find_single_test(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
+
+    assert results == Page(
+        page_number=1, page_size=10, total_pages=1, entities=[test_result]
+    )
+
+
+def test_find_by_run_id_paginated_should_find_multiple(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    test_result1 = repository.save(test_result)
+    test_result.id = 0
+    test_result2 = repository.save(test_result)
+    test_result.id = 0
+    test_result3 = repository.save(test_result)
+    test_result.id = 1
+
+    results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
+
+    assert results == Page(
+        page_number=1,
+        page_size=10,
+        total_pages=1,
+        entities=[test_result, test_result1, test_result2, test_result3],
+    )
+
+
+def test_find_by_run_id_paginated_should_find_empty_list(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
+
+    assert results == Page(page_number=1, page_size=10, total_pages=1, entities=[])
 
 
 def test_find_execution_status_by_run_ids_should_find(
