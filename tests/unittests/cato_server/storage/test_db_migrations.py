@@ -16,7 +16,7 @@ def test_db_migrator_sqlite():
 def can_not_launch_postgres():
     try:
         return subprocess.call(["pg_ctl", "--version"]) != 0
-    except Exception as e:
+    except FileNotFoundError as e:
         return True
 
 
