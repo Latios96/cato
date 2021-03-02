@@ -21,7 +21,7 @@
     "node-sass": "4.14.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
-    "react-bootstrap-icons": "^1.1.0",
+    "react-bootstrap-icons": "^1.4.0",
     "react-compare-image": "^3.0.2",
     "react-dom": "^17.0.1",
     "react-helmet": "^6.1.0",
