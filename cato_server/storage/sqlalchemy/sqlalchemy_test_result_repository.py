@@ -141,13 +141,13 @@ class SqlAlchemyTestResultRepository(
     def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
         session = self._session_maker()
 
-        entities = (
+        entities = self._order_by_case_insensitive(
             session.query(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .all()
-        )
+            .filter(_RunMapping.id == run_id),
+            self.mapping_cls().test_name,
+        ).all()
         session.close()
         return list(map(self.to_domain_object, entities))
 
@@ -158,10 +158,13 @@ class SqlAlchemyTestResultRepository(
 
         page = self._pageginate(
             session,
-            session.query(_TestResultMapping)
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id),
+            self._order_by_case_insensitive(
+                session.query(_TestResultMapping)
+                .join(_SuiteResultMapping)
+                .join(_RunMapping)
+                .filter(_RunMapping.id == run_id),
+                self.mapping_cls().test_name,
+            ),
             page_request,
         )
         session.close()
@@ -315,14 +318,14 @@ class SqlAlchemyTestResultRepository(
     ):
         session = self._session_maker()
 
-        entities = (
+        entities = self._order_by_case_insensitive(
             session.query(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id)
-            .filter(_TestResultMapping.status == self._map_test_status(test_status))
-            .all()
-        )
+            .filter(_TestResultMapping.status == self._map_test_status(test_status)),
+            self.mapping_cls().test_name,
+        ).all()
         session.close()
 
         return self._map_many_to_domain_object(entities)

@@ -175,6 +175,21 @@ def test_find_by_run_id_should_find_empty_list(sessionmaker_fixture, run):
     assert results == []
 
 
+def test_find_by_run_id_should_return_correct_order(
+    sessionmaker_fixture, run, suite_result, order_test_data, test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    for name in order_test_data.wrong_order:
+        repository.save(
+            test_result_factory(test_name=name, suite_result_id=suite_result.id)
+        )
+
+    results = repository.find_by_run_id(run.id)
+    names = list(map(lambda x: x.test_name.lower(), results))
+
+    assert names == order_test_data.correct_order_lowercase
+
+
 def test_find_by_run_id_paginated_should_find_single_test(
     sessionmaker_fixture, run, test_result
 ):
@@ -217,6 +232,21 @@ def test_find_by_run_id_paginated_should_find_empty_list(sessionmaker_fixture, r
     assert results == Page(
         page_number=1, page_size=10, total_entity_count=0, entities=[]
     )
+
+
+def test_find_by_run_id_paginated_should_return_correct_order(
+    sessionmaker_fixture, run, suite_result, order_test_data, test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    for name in order_test_data.wrong_order:
+        repository.save(
+            test_result_factory(test_name=name, suite_result_id=suite_result.id)
+        )
+
+    results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
+    names = list(map(lambda x: x.test_name.lower(), results.entities))
+
+    assert names == order_test_data.correct_order_lowercase
 
 
 def test_find_execution_status_by_run_ids_should_find(
@@ -402,3 +432,22 @@ def test_find_by_run_id_filter_by_test_status_should_find(
     result = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.SUCCESS)
 
     assert result == [test_result]
+
+
+def test_find_by_run_id_filter_by_test_status_should_return_correct_order(
+    sessionmaker_fixture, run, suite_result, order_test_data, test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    for name in order_test_data.wrong_order:
+        repository.save(
+            test_result_factory(
+                test_name=name,
+                suite_result_id=suite_result.id,
+                status=TestStatus.FAILED,
+            )
+        )
+
+    results = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.FAILED)
+    names = list(map(lambda x: x.test_name.lower(), results))
+
+    assert names == order_test_data.correct_order_lowercase
