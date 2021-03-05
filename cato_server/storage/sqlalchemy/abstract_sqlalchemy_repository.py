@@ -1,5 +1,6 @@
 from typing import TypeVar, Generic, Optional, Iterable, Callable
 
+from sqlalchemy import asc, collate
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
@@ -118,3 +119,9 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
             page_request, total_count, self._map_many_to_domain_object(results)
         )
         return page
+
+    def _order_by_case_insensitive(self, query, attr):
+        if "sqlite" in query.session.bind.driver:
+            return query.order_by(asc(collate(attr, "NOCASE")))
+        else:
+            return query.order_by(attr)

@@ -1,6 +1,6 @@
 from typing import Optional, Iterable
 
-from sqlalchemy import Column, Integer, ForeignKey, String, JSON, collate, asc
+from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
 
 from cato_server.storage.abstract.page import PageRequest, Page
@@ -45,16 +45,10 @@ class SqlAlchemySuiteResultRepository(
     def mapping_cls(self):
         return _SuiteResultMapping
 
-    def order_by_case_insensitive(self, query, attr):
-        if "sqlite" in query.session.bind.driver:
-            return query.order_by(asc(collate(attr, "NOCASE")))
-        else:
-            return query.order_by(attr)
-
     def find_by_run_id(self, run_id: int) -> Iterable[SuiteResult]:
         session = self._session_maker()
 
-        entities = self.order_by_case_insensitive(
+        entities = self._order_by_case_insensitive(
             session.query(self.mapping_cls()).filter(
                 self.mapping_cls().run_entity_id == run_id
             ),
@@ -70,7 +64,7 @@ class SqlAlchemySuiteResultRepository(
 
         page = self._pageginate(
             session,
-            self.order_by_case_insensitive(
+            self._order_by_case_insensitive(
                 session.query(self.mapping_cls()).filter(
                     self.mapping_cls().run_entity_id == run_id
                 ),
