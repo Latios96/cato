@@ -58,7 +58,7 @@ GitPython = "^3.1.11"
 snapshottest = "^0.6.0"
 selenium = "^3.141.0"
 chromedriver-py = "87.0.4280.88"
-Pillow = "^8.1.0"
+Pillow = "^8.1.1"
 Faker = "^6.4.1"
 pytest-postgresql = "^2.6.1"
 
