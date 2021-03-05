@@ -178,7 +178,7 @@ def test_result_factory():
         seconds: Optional[float] = None,
         message: Optional[str] = None,
         image_output: Optional[int] = None,
-        reference_image: Optional[int] = Optional[int],
+        reference_image: Optional[int] = None,
         started_at: Optional[datetime.datetime] = None,
         finished_at: Optional[datetime.datetime] = None,
     ):
