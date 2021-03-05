@@ -7,13 +7,6 @@ from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 
 
-def test_db_migrator_sqlite():
-    db_migrator = DbMigrator(
-        StorageConfiguration(file_storage_url="", database_url="sqlite:///:memory:")
-    )
-    db_migrator.migrate()
-
-
 def find_pg_ctl(ver: str) -> Optional[Path]:
     candidates = list(Path(f"/usr/lib/postgresql/{ver}/").glob("**/bin/pg_ctl"))
     if candidates:
@@ -33,9 +26,8 @@ requires_postgres = pytest.mark.skipif(
 
 
 @requires_postgres
-def test_db_migrator_postgresql(postgresql):
-    connection = f"postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}"
+def test_db_migrator(db_connection_string):
     db_migrator = DbMigrator(
-        StorageConfiguration(file_storage_url="", database_url=connection)
+        StorageConfiguration(file_storage_url="", database_url=db_connection_string)
     )
     db_migrator.migrate()
