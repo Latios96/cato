@@ -38,8 +38,10 @@ class ExampleRepository(
 
 
 class TestPaging:
-    def test_find_all_with_paging_first_page_page_is_empty(self, sessionmaker_fixture):
-        repository = ExampleRepository(sessionmaker_fixture)
+    def test_find_all_with_paging_first_page_page_is_empty(
+        self, storage_test_sessionmaker
+    ):
+        repository = ExampleRepository(storage_test_sessionmaker)
         page_request = PageRequest.first(20)
 
         page = repository.find_all_with_paging(page_request)
@@ -62,9 +64,9 @@ class TestPaging:
         ],
     )
     def test_find_all_with_paging_first_page_page(
-        self, total_entity_count, page, on_page, sessionmaker_fixture
+        self, total_entity_count, page, on_page, storage_test_sessionmaker
     ):
-        repository = ExampleRepository(sessionmaker_fixture)
+        repository = ExampleRepository(storage_test_sessionmaker)
         repository.insert_many(
             [ExampleClass(id=0, name="test") for x in range(total_entity_count)]
         )
