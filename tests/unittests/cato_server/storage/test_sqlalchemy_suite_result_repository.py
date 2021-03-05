@@ -97,8 +97,10 @@ def test_find_by_run_id_should_not_find(sessionmaker_fixture):
     assert not repository.find_by_run_id(100)
 
 
-def test_find_by_run_id_should_find_in_correct_order(sessionmaker_fixture, run):
-    names = ["zzz", "c", "B", "A", "M", "a"]
+def test_find_by_run_id_should_find_in_correct_order(
+    sessionmaker_fixture, run, order_test_data
+):
+    names = order_test_data.wrong_order
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     suite_results = [
         SuiteResult(id=0, run_id=run.id, suite_name=x, suite_variables={"key": "value"})
@@ -109,13 +111,13 @@ def test_find_by_run_id_should_find_in_correct_order(sessionmaker_fixture, run):
     result = repository.find_by_run_id(run.id)
     result_names = list(map(lambda x: x.suite_name.lower(), result))
 
-    assert result_names == ["a", "a", "b", "c", "m", "zzz"]
+    assert result_names == order_test_data.correct_order_lowercase
 
 
 def test_find_by_run_id_with_paging_should_find_in_correct_order(
-    sessionmaker_fixture, run
+    sessionmaker_fixture, run, order_test_data
 ):
-    names = ["zzz", "c", "B", "A", "M", "a"]
+    names = order_test_data.wrong_order
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     suite_results = [
         SuiteResult(id=0, run_id=run.id, suite_name=x, suite_variables={"key": "value"})
@@ -126,7 +128,7 @@ def test_find_by_run_id_with_paging_should_find_in_correct_order(
     result = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
     result_names = list(map(lambda x: x.suite_name.lower(), result.entities))
 
-    assert result_names == ["a", "a", "b", "c", "m", "zzz"]
+    assert result_names == order_test_data.correct_order_lowercase
 
 
 def test_find_by_run_id_with_paging_should_find_empty(sessionmaker_fixture):
