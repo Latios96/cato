@@ -45,21 +45,21 @@ class SqlAlchemySuiteResultRepository(
     def mapping_cls(self):
         return _SuiteResultMapping
 
+    def order_by_case_insensitive(self, query, attr):
+        if "sqlite" in query.session.bind.driver:
+            return query.order_by(asc(collate(attr, "NOCASE")))
+        else:
+            return query.order_by(attr)
+
     def find_by_run_id(self, run_id: int) -> Iterable[SuiteResult]:
         session = self._session_maker()
 
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().run_entity_id == run_id
-        )
-
-        if "sqlite" in session.bind.driver:
-            query = query.order_by(
-                asc(collate(self.mapping_cls().suite_name, "NOCASE"))
-            )
-        else:
-            query = query.order_by(self.mapping_cls().suite_name)
-
-        entities = query.all()
+        entities = self.order_by_case_insensitive(
+            session.query(self.mapping_cls()).filter(
+                self.mapping_cls().run_entity_id == run_id
+            ),
+            self.mapping_cls().suite_name,
+        ).all()
         session.close()
         return list(map(self.to_domain_object, entities))
 
@@ -68,18 +68,16 @@ class SqlAlchemySuiteResultRepository(
     ) -> Page[SuiteResult]:
         session = self._session_maker()
 
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().run_entity_id == run_id
+        page = self._pageginate(
+            session,
+            self.order_by_case_insensitive(
+                session.query(self.mapping_cls()).filter(
+                    self.mapping_cls().run_entity_id == run_id
+                ),
+                self.mapping_cls().suite_name,
+            ),
+            page_request,
         )
-
-        if "sqlite" in session.bind.driver:
-            query = query.order_by(
-                asc(collate(self.mapping_cls().suite_name, "NOCASE"))
-            )
-        else:
-            query = query.order_by(self.mapping_cls().suite_name)
-
-        page = self._pageginate(session, query, page_request)
         session.close()
         return page
 
