@@ -3,13 +3,11 @@ name: CI
 on: [push]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
+  build_ubuntu:
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         python: [3.7]
-        os: [windows-latest, ubuntu-latest, macos-latest]
-
     steps:
     - uses: actions/checkout@v1
     - name: Set up Python ${{ matrix.python }}
@@ -22,3 +20,37 @@ jobs:
       run: ./gradlew build --info
     - name: Lint with Gradle
       run: ./gradlew lint --info
+
+  build_macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python: [ 3.7 ]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew build --info
+      - name: Lint with Gradle
+        run: ./gradlew lint --info
+
+  build_windows:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python: [ 3.7 ]
+    steps:
+      - uses: actions/checkout@v1
+      - name: Set up Python ${{ matrix.python }}
+        uses: actions/setup-python@v1
+        with:
+          python-version: ${{ matrix.python }}
+      - name: Build with Gradle
+        run: .\gradlew build --info
+      - name: Lint with Gradle
+        run: .\gradlew lint --info
