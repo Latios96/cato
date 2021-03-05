@@ -1,4 +1,5 @@
-import subprocess
+from pathlib import Path
+from typing import Optional
 
 import pytest
 
@@ -13,11 +14,17 @@ def test_db_migrator_sqlite():
     db_migrator.migrate()
 
 
+def find_pg_ctl(ver: str) -> Optional[Path]:
+    candidates = list(Path(f"/usr/lib/postgresql/{ver}/").glob("**/bin/pg_ctl"))
+    if candidates:
+        return candidates[0]
+
+
 def can_not_launch_postgres():
-    try:
-        return subprocess.call(["pg_ctl", "--version"]) != 0
-    except FileNotFoundError as e:
+    ctl = find_pg_ctl("12")
+    if not ctl:
         return True
+    return False
 
 
 requires_postgres = pytest.mark.skipif(
