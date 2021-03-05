@@ -1,6 +1,7 @@
 import datetime
 import os
 import socketserver
+from pathlib import Path
 from typing import Optional, Dict
 
 import humanfriendly
@@ -74,11 +75,62 @@ def set_sqlite_pragma(dbapi_connection, connection_record):
         cursor.close()
 
 
+def find_pg_ctl(ver: str) -> Optional[Path]:
+    candidates = list(Path(f"/usr/lib/postgresql/{ver}/").glob("**/bin/pg_ctl"))
+    if candidates:
+        return candidates[0]
+
+
+def postgres_available():
+    ctl = find_pg_ctl("12")
+    if ctl:
+        return True
+    print("Postgres is not available!")
+    return False
+
+
+databases = ["sqlite", "postgres"] if postgres_available() else ["sqlite"]
+
+
+def pytest_generate_tests(metafunc):
+    metafunc_module = str(metafunc.cls)
+    has_connection_ficture = "db_connection" in metafunc.fixturenames
+    is_storage_test = "test_abstract_sqlalchemy_repository" in metafunc_module
+    if has_connection_ficture and is_storage_test:
+        metafunc.parametrize("db_connection", databases)
+
+
 @pytest.fixture
-def sessionmaker_fixture(tmp_path):
-    engine = sqlalchemy.create_engine(
-        "sqlite://", connect_args={"check_same_thread": False}, poolclass=StaticPool
-    )
+def db_connection():
+    return "default"
+
+
+if postgres_available:
+
+    @pytest.fixture
+    def db_connection_string(db_connection, postgresql):
+        if "postgres" in db_connection:
+            return f"postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}"
+        return "sqlite:///:memory:"
+
+
+else:
+
+    @pytest.fixture
+    def db_connection_string(db_connection):
+        return "sqlite:///:memory:"
+
+
+@pytest.fixture
+def sessionmaker_fixture(db_connection_string):
+    if "sqlite" in db_connection_string:
+        engine = sqlalchemy.create_engine(
+            db_connection_string,
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+    else:
+        engine = sqlalchemy.create_engine(db_connection_string)
     Base.metadata.create_all(engine)
     return sessionmaker(bind=engine)
 
