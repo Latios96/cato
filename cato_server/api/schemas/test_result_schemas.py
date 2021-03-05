@@ -1,3 +1,4 @@
+import humanfriendly
 from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from marshmallow.validate import Length
 from marshmallow_enum import EnumField
@@ -63,7 +64,11 @@ class CreateOutputSchema(Schema):
         unknown = EXCLUDE
 
     test_result_id = ID_FIELD
-    text = fields.String(required=True, allow_none=False)
+    text = fields.String(
+        required=True,
+        allow_none=False,
+        validate=[Length(max=humanfriendly.parse_size("10mb"))],
+    )
 
 
 class FinishTestResultSchema(Schema):

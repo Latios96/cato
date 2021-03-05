@@ -1,5 +1,6 @@
 import datetime
 
+import humanfriendly
 import pytest
 
 from cato_server.api.schemas.test_result_schemas import (
@@ -378,11 +379,21 @@ class TestCreateTestResultSchema:
         assert errors == expected_errors
 
 
+STRING_WITH_MAX_SIZE = "".join(["x" for x in range(humanfriendly.parse_size("10mb"))])
+
+
 class TestCreateOutputSchema:
     def test_success(self):
         schema = CreateOutputSchema()
 
         errors = schema.validate({"test_result_id": 1, "text": "This is a long text"})
+
+        assert errors == {}
+
+    def test_success_max_length_string(self):
+        schema = CreateOutputSchema()
+
+        errors = schema.validate({"test_result_id": 1, "text": STRING_WITH_MAX_SIZE})
 
         assert errors == {}
 
@@ -403,6 +414,10 @@ class TestCreateOutputSchema:
             (
                 {"test_result_id": 1, "text": ["This is a long text"]},
                 {"text": ["Not a valid string."]},
+            ),
+            (
+                {"test_result_id": 1, "text": STRING_WITH_MAX_SIZE + "x"},
+                {"text": ["Longer than maximum length 10000000."]},
             ),
         ],
     )
