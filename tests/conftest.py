@@ -93,9 +93,9 @@ databases = ["sqlite", "postgres"] if postgres_available() else ["sqlite"]
 
 
 def pytest_generate_tests(metafunc):
-    metafunc_module = str(metafunc.cls)
+    metafunc_module = str(metafunc.module)
     has_connection_ficture = "db_connection" in metafunc.fixturenames
-    is_storage_test = "test_abstract_sqlalchemy_repository" in metafunc_module
+    is_storage_test = "cato_server.storage" in metafunc_module
     if has_connection_ficture and is_storage_test:
         metafunc.parametrize("db_connection", databases)
 
@@ -105,7 +105,7 @@ def db_connection():
     return "default"
 
 
-if postgres_available:
+if postgres_available():
 
     @pytest.fixture
     def db_connection_string(db_connection, postgresql):
