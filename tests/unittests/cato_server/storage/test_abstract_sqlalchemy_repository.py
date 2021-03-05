@@ -7,8 +7,6 @@ from cato_server.storage.abstract.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     Base,
     AbstractSqlAlchemyRepository,
-    E,
-    T,
 )
 
 
