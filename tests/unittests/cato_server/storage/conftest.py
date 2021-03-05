@@ -25,10 +25,13 @@ def db_connection_string(db_connection, postgresql):
 
 @pytest.fixture
 def storage_test_sessionmaker(db_connection_string):
-    engine = sqlalchemy.create_engine(
-        db_connection_string,
-        connect_args={"check_same_thread": False},
-        poolclass=StaticPool,
-    )
+    if "sqlite" in db_connection_string:
+        engine = sqlalchemy.create_engine(
+            db_connection_string,
+            connect_args={"check_same_thread": False},
+            poolclass=StaticPool,
+        )
+    else:
+        engine = sqlalchemy.create_engine(db_connection_string)
     Base.metadata.create_all(engine)
     return sessionmaker(bind=engine)
