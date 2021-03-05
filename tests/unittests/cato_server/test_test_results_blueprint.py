@@ -1,7 +1,5 @@
 import datetime
 
-from cato_server.storage.abstract.page import Page
-
 
 def test_get_test_result_by_suite_and_identifier_should_return(
     client, suite_result, test_result
