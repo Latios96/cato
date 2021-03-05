@@ -1,5 +1,6 @@
 import dataclasses
 from collections import defaultdict
+import datetime
 from typing import Optional, Iterable, Set, Tuple, Dict
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
@@ -265,8 +266,25 @@ class SqlAlchemyTestResultRepository(
             .filter(_RunMapping.id == run_id)
             .scalar()
         )
+        summed_duration = summed_duration if summed_duration is not None else 0
+
+        start_points_of_started_tests = (
+            session.query(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .filter(_TestResultMapping.execution_status == "RUNNING")
+            .all()
+        )
+        now = datetime.datetime.now()
+        additional_durations = list(
+            map(lambda x: (now - x.started_at).seconds, start_points_of_started_tests)
+        )
+
+        total_duration = summed_duration + sum(additional_durations)
+
         session.close()
-        return summed_duration if summed_duration is not None else 0
+        return total_duration
 
     def find_execution_status_by_suite_ids(
         self, suite_ids: Set[int]

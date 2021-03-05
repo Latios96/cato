@@ -358,6 +358,18 @@ def test_duration_by_run_id_no_tests(sessionmaker_fixture, run):
     assert repository.duration_by_run_id(run.id) == 0
 
 
+def test_duration_by_run_id_respect_running_tests(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    test_result.execution_status = ExecutionStatus.RUNNING
+    test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
+    repository.save(test_result)
+
+    assert repository.duration_by_run_id(run.id) == 20
+
+
 def test_find_execution_status_by_suite_ids(
     sessionmaker_fixture, suite_result, test_result
 ):
