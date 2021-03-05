@@ -97,6 +97,38 @@ def test_find_by_run_id_should_not_find(sessionmaker_fixture):
     assert not repository.find_by_run_id(100)
 
 
+def test_find_by_run_id_should_find_in_correct_order(sessionmaker_fixture, run):
+    names = ["zzz", "c", "B", "A", "M", "a"]
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_results = [
+        SuiteResult(id=0, run_id=run.id, suite_name=x, suite_variables={"key": "value"})
+        for x in names
+    ]
+
+    repository.insert_many(suite_results)
+    result = repository.find_by_run_id(run.id)
+    result_names = list(map(lambda x: x.suite_name.lower(), result))
+
+    assert result_names == ["a", "a", "b", "c", "m", "zzz"]
+
+
+def test_find_by_run_id_with_paging_should_find_in_correct_order(
+    sessionmaker_fixture, run
+):
+    names = ["zzz", "c", "B", "A", "M", "a"]
+    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    suite_results = [
+        SuiteResult(id=0, run_id=run.id, suite_name=x, suite_variables={"key": "value"})
+        for x in names
+    ]
+
+    repository.insert_many(suite_results)
+    result = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
+    result_names = list(map(lambda x: x.suite_name.lower(), result.entities))
+
+    assert result_names == ["a", "a", "b", "c", "m", "zzz"]
+
+
 def test_find_by_run_id_with_paging_should_find_empty(sessionmaker_fixture):
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     page_request = PageRequest(1, 10)

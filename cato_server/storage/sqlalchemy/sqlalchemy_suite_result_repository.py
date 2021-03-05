@@ -1,6 +1,6 @@
 from typing import Optional, Iterable
 
-from sqlalchemy import Column, Integer, ForeignKey, String, JSON
+from sqlalchemy import Column, Integer, ForeignKey, String, JSON, collate, asc
 from sqlalchemy.orm import relationship
 
 from cato_server.storage.abstract.page import PageRequest, Page
@@ -48,12 +48,18 @@ class SqlAlchemySuiteResultRepository(
     def find_by_run_id(self, run_id: int) -> Iterable[SuiteResult]:
         session = self._session_maker()
 
-        entities = (
-            session.query(self.mapping_cls())
-            .filter(self.mapping_cls().run_entity_id == run_id)
-            .order_by(self.mapping_cls().suite_name)
-            .all()
+        query = session.query(self.mapping_cls()).filter(
+            self.mapping_cls().run_entity_id == run_id
         )
+
+        if "sqlite" in session.bind.driver:
+            query = query.order_by(
+                asc(collate(self.mapping_cls().suite_name, "NOCASE"))
+            )
+        else:
+            query = query.order_by(self.mapping_cls().suite_name)
+
+        entities = query.all()
         session.close()
         return list(map(self.to_domain_object, entities))
 
@@ -62,13 +68,18 @@ class SqlAlchemySuiteResultRepository(
     ) -> Page[SuiteResult]:
         session = self._session_maker()
 
-        page = self._pageginate(
-            session,
-            session.query(self.mapping_cls())
-            .filter(self.mapping_cls().run_entity_id == run_id)
-            .order_by(self.mapping_cls().suite_name),
-            page_request,
+        query = session.query(self.mapping_cls()).filter(
+            self.mapping_cls().run_entity_id == run_id
         )
+
+        if "sqlite" in session.bind.driver:
+            query = query.order_by(
+                asc(collate(self.mapping_cls().suite_name, "NOCASE"))
+            )
+        else:
+            query = query.order_by(self.mapping_cls().suite_name)
+
+        page = self._pageginate(session, query, page_request)
         session.close()
         return page
 
