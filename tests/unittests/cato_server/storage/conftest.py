@@ -1,3 +1,5 @@
+from pathlib import Path
+from typing import Optional
 import pytest
 import sqlalchemy
 from sqlalchemy.orm import sessionmaker
@@ -6,9 +8,26 @@ from sqlalchemy.pool import StaticPool
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 
 
+def find_pg_ctl(ver: str) -> Optional[Path]:
+    candidates = list(Path(f"/usr/lib/postgresql/{ver}/").glob("**/bin/pg_ctl"))
+    if candidates:
+        return candidates[0]
+
+
+def postgres_available():
+    ctl = find_pg_ctl("12")
+    if ctl:
+        return True
+    print("Postgres is not available!")
+    return False
+
+
+databases = ["sqlite", "postgres"] if postgres_available() else ["sqlite"]
+
+
 def pytest_generate_tests(metafunc):
     if "db_connection" in metafunc.fixturenames:
-        metafunc.parametrize("db_connection", ["sqlite", "postgres"])
+        metafunc.parametrize("db_connection", databases)
 
 
 @pytest.fixture
