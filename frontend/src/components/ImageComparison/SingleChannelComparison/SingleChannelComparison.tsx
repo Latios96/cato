@@ -98,8 +98,7 @@ class SingleChannelComparison extends Component<Props, State> {
             alt={"left"}
             onLoad={this.checkOutputImageLoaded}
           />
-          <span className={styles.referenceText}>Reference</span>
-          <span className={styles.outputText}>Output</span>
+
           {(this.state.outputImageLoaded && this.state.referenceImageLoaded) ||
           this.state.isSwapping ? (
             this.props.mode === CompareModes.SWIPE ? (
@@ -120,6 +119,8 @@ class SingleChannelComparison extends Component<Props, State> {
               </Spinner>
             </div>
           )}
+          <span className={styles.referenceText}>Reference</span>
+          <span className={styles.outputText}>Output</span>
         </div>
       </div>
     );

@@ -21,14 +21,12 @@
 .referenceText {
   position: absolute;
   color: white;
-  z-index: 500;
   top: 8px;
   left: 16px;
 }
 .outputText {
   position: absolute;
   color: white;
-  z-index: 500;
   top: 8px;
   right: 16px;
 }
