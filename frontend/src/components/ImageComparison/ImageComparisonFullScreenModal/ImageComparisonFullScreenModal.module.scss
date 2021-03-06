@@ -15,3 +15,7 @@
   bottom: 0;
   background-color: rgba(0, 0, 0, 0.8);
 }
+
+.buttonNoShadowOnFocus:focus {
+  box-shadow: none !important;
+}

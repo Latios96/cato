@@ -26,6 +26,8 @@ const ImageComparisonFullScreenModal = (props: Props) => {
         <Button
           id="app-close-image-comparison-modal"
           onClick={props.onCloseRequest}
+          variant={"link"}
+          className={styles.buttonNoShadowOnFocus}
         >
           <X size={22} />
         </Button>
