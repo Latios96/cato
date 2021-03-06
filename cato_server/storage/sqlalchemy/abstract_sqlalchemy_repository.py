@@ -124,4 +124,4 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         if "sqlite" in query.session.bind.driver:
             return query.order_by(asc(collate(attr, "NOCASE")))
         else:
-            return query.order_by(asc(collate(attr, "C")))
+            return query.order_by(asc(collate(attr, "en-US-x-icu")))
