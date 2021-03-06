@@ -79,7 +79,7 @@ task pythonInstall{
 
 task pythonUnitTests(type: PythonTask){
     dependsOn 'pythonInstall'
-    command = "-m pytest tests/unittests"
+    command = "-m pytest tests/unittests -v"
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
