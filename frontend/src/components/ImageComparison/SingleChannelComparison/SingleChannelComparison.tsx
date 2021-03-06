@@ -73,50 +73,54 @@ class SingleChannelComparison extends Component<Props, State> {
 
   render() {
     return (
-      <div
-        id={this.generateId()}
-        className={styles.imgCompContainer}
-        style={
-          this.state.heightForRendering
-            ? {
-                maxWidth: this.props.width,
-                height: this.state.heightForRendering,
-              }
-            : { maxWidth: this.props.width }
-        }
-      >
-        <img
-          src={this.props.referenceImageUrl}
-          className={styles.imageSizeCalculator}
-          alt={"left"}
-          onLoad={this.checkLoadedReferenceImage}
-        />
-        <img
-          src={this.props.outputImageUrl}
-          className={styles.imageSizeCalculator}
-          alt={"left"}
-          onLoad={this.checkOutputImageLoaded}
-        />
-        {(this.state.outputImageLoaded && this.state.referenceImageLoaded) ||
-        this.state.isSwapping ? (
-          this.props.mode === CompareModes.SWIPE ? (
-            <ReactCompareImage
-              leftImage={this.state.outputImageUrlToRender}
-              rightImage={this.state.referenceImageUrlToRender}
-            />
+      <div>
+        <div
+          id={this.generateId()}
+          className={styles.imgCompContainer}
+          style={
+            this.state.heightForRendering
+              ? {
+                  maxWidth: this.props.width,
+                  height: this.state.heightForRendering,
+                }
+              : { maxWidth: this.props.width }
+          }
+        >
+          <img
+            src={this.props.referenceImageUrl}
+            className={styles.imageSizeCalculator}
+            alt={"left"}
+            onLoad={this.checkLoadedReferenceImage}
+          />
+          <img
+            src={this.props.outputImageUrl}
+            className={styles.imageSizeCalculator}
+            alt={"left"}
+            onLoad={this.checkOutputImageLoaded}
+          />
+          <span className={styles.referenceText}>Reference</span>
+          <span className={styles.outputText}>Output</span>
+          {(this.state.outputImageLoaded && this.state.referenceImageLoaded) ||
+          this.state.isSwapping ? (
+            this.props.mode === CompareModes.SWIPE ? (
+              <ReactCompareImage
+                leftImage={this.state.outputImageUrlToRender}
+                rightImage={this.state.referenceImageUrlToRender}
+              />
+            ) : (
+              <ImageDiff
+                leftImage={this.state.outputImageUrlToRender}
+                rightImage={this.state.referenceImageUrlToRender}
+              />
+            )
           ) : (
-            <ImageDiff
-              leftImage={this.state.outputImageUrlToRender}
-              rightImage={this.state.referenceImageUrlToRender}
-            />
-          )
-        ) : (
-          <div className={styles.spinner}>
-            <Spinner animation="border" role="status" variant={"light"}>
-              <span className="sr-only">Loading...</span>
-            </Spinner>
-          </div>
-        )}
+            <div className={styles.spinner}>
+              <Spinner animation="border" role="status" variant={"light"}>
+                <span className="sr-only">Loading...</span>
+              </Spinner>
+            </div>
+          )}
+        </div>
       </div>
     );
   }
