@@ -22,7 +22,7 @@ class JsonConfigParser:
             data["project_name"],
             os.path.dirname(path),
             self._transform_suites(data),
-            output_folder=os.getcwd(),
+            output_folder=os.getcwd(),  # todo fix this
             variables=data["variables"] if data.get("variables") else {},
         )
 
