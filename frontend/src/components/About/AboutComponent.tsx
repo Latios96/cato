@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import styles from "./AboutComponent.module.css";
 import { Spinner } from "react-bootstrap";
 
-const FRONTEND_VERSION = "0.33.0";
+const FRONTEND_VERSION = "0.34.0";
 
 interface AboutInformation {
   version: string;
