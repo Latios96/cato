@@ -1,4 +1,6 @@
 https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-win_amd64.whl ; sys.platform=='win32'
-https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-macosx_10_13_x86_64.whl ; sys.platform=='darwin'
-https://github.com/fredrikaverpil/oiio-python/releases/download/2.0.5%2B20190203/oiio-2.0.5-cp37-none-linux_x86_64.whl ; sys.platform=='linux'
+https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp37-none-linux_x86_64.whl ; sys.platform=='linux' and python_version=='3.7'
+https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp37-none-macosx_11_1_x86_64.whl ; sys.platform=='darwin' and python_version=='3.7'
+https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp38-none-linux_x86_64.whl ; sys.platform=='linux' and python_version=='3.8'
+https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp38-none-macosx_11_1_x86_64.whl ; sys.platform=='darwin' and python_version=='3.8'
 conjure_python_client
