@@ -119,3 +119,15 @@ def test_get_run_summary_shold_error(client):
     rv = client.get("/api/v1/runs/42/summary")
 
     assert rv.status_code == 404
+
+
+def test_run_id_exists_success(client, run):
+    rv = client.get(f"/api/v1/runs/{run.id}/exists")
+
+    assert rv.status_code == 200
+
+
+def test_run_id_exists_failure(client):
+    rv = client.get("/api/v1/runs/42/exists")
+
+    assert rv.status_code == 404

@@ -61,6 +61,7 @@ class RunsBlueprint(BaseBlueprint):
         self._run_status_calculator = RunStatusCalculator()
 
         self.route("/runs/project/<project_id>", methods=["GET"])(self.runs_by_project)
+        self.route("/runs/<int:run_id>/exists", methods=["GET"])(self.run_id_exists)
         self.route("/runs", methods=["POST"])(self.create_run)
         self.route("/runs/full", methods=["POST"])(self.create_full_run)
         self.route("/runs/<int:run_id>/status", methods=["GET"])(self.status)
@@ -122,6 +123,13 @@ class RunsBlueprint(BaseBlueprint):
             entities=run_dtos,
         )
         return self.json_response(self._page_mapper.to_json(page))
+
+    def run_id_exists(self, run_id):
+        run = self._run_repository.find_by_id(run_id)
+        if not run:
+            abort(404)
+
+        return jsonify(success=True), 200
 
     def create_run(self):
         request_json = request.get_json()
