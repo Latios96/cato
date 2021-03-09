@@ -78,6 +78,9 @@ class CatoApiTestClient(CatoApiClient):
     def _get_json(self, reponse):
         return reponse.get_json()
 
+    def _get_url(self, url):
+        return self._client.get(url.replace(self._url, ""))
+
 
 @pytest.fixture
 def cato_api_client(app_and_config_fixture, client, object_mapper):
@@ -434,3 +437,11 @@ def test_get_test_results_by_run_id_and_test_status_should_not_find(
     )
 
     assert identifiers == []
+
+
+def test_run_id_exists_success(cato_api_client, run):
+    assert cato_api_client.run_id_exists(run.id)
+
+
+def test_run_id_exists_failure(cato_api_client):
+    assert not cato_api_client.run_id_exists(42)

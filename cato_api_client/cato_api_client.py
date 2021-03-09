@@ -110,6 +110,15 @@ class CatoApiClient:
         )
         return self._find_with_http_template(url, TestResult)
 
+    def run_id_exists(self, run_id: int) -> bool:
+        url = self._build_url("/api/v1/runs/{}/exists".format(run_id))
+        response = self._get_url(url)
+        if response.status_code == 200:
+            return True
+        elif response.status_code == 404:
+            return False
+        raise ValueError(f"Something went wrong: {response}")
+
     def update_test_result(self, test_result):
         url = self._build_url(f"/api/v1/test_results/{test_result.id}")
         return self._patch_with_http_template(url, test_result, TestResult)
@@ -251,3 +260,9 @@ class CatoApiClient:
                 )
             )
         )
+
+    def _get_url(self, url):
+        logger.debug("Launching GET request to %s", url)
+        response = requests.post(url)
+        logger.debug("Received response %s", response)
+        return response
