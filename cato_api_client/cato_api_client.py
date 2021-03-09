@@ -263,6 +263,6 @@ class CatoApiClient:
 
     def _get_url(self, url):
         logger.debug("Launching GET request to %s", url)
-        response = requests.post(url)
+        response = requests.get(url)
         logger.debug("Received response %s", response)
         return response
