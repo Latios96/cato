@@ -8,10 +8,10 @@ from cato.domain.config import Config
 
 class ConfigEncoder:
     def __init__(
-        self, config_file_writer: ConfigFileWriter, config_file_parser: JsonConfigParser
+        self, config_file_writer: ConfigFileWriter, json_config_parser: JsonConfigParser
     ):
         self._config_file_writer = config_file_writer
-        self._config_file_parser = config_file_parser
+        self._config_file_parser = json_config_parser
 
     def encode(self, config: Config) -> bytes:
         string_io = StringIO()
