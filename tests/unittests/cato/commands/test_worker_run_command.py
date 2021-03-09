@@ -3,7 +3,7 @@ import logging
 
 import pytest
 
-from cato.commands.worker_command import WorkerCommand
+from cato.commands.worker_run_command import WorkerRunCommand
 from cato.config.config_encoder import ConfigEncoder
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
@@ -15,14 +15,14 @@ from cato.runners.test_runner import TestRunner
 from tests.utils import mock_safe
 
 
-class TestWorkerCommand:
+class TestWorkerRunCommand:
     def setup_method(self, method):
         self.config_encoder = ConfigEncoder(ConfigFileWriter(), JsonConfigParser())
         self.mock_test_execution_reporter = mock_safe(TestExecutionReporter)
         self.mock_test_runner = mock_safe(TestRunner)
         self.mock_reporter = mock_safe(Reporter)
         self.mock_logger = mock_safe(logging.Logger)
-        self.worker_command = WorkerCommand(
+        self.worker_command = WorkerRunCommand(
             self.config_encoder,
             self.mock_test_execution_reporter,
             self.mock_test_runner,

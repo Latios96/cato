@@ -120,3 +120,21 @@ def test_run_command(live_server, snapshot, run_config, test_resource_provider):
             "test_identifier": "PythonTestSuite/PythonOutputVersion",
         }
     ]
+
+
+def test_worker_run_command(live_server, snapshot, run_config):
+    with change_cwd(os.path.dirname(os.path.dirname(run_config))):
+        output = subprocess.call(
+            [
+                sys.executable,
+                "-m",
+                "cato",
+                "worker-run",
+                "-config",
+                "-test_identifier",
+                "-run_id",
+                "-resource_path",
+            ],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )

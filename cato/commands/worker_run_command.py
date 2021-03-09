@@ -14,7 +14,7 @@ from cato.runners.test_runner import TestRunner
 from cato_server.domain.test_identifier import TestIdentifier
 
 
-class WorkerCommand(BaseCliCommand):
+class WorkerRunCommand(BaseCliCommand):
     def __init__(
         self,
         config_encoder: ConfigEncoder,
@@ -34,11 +34,11 @@ class WorkerCommand(BaseCliCommand):
         encoded_config: str,
         test_identifier_str: str,
         run_id: int,
-        config_file_path: str,
+        resource_path: str,
     ):
-        if os.path.isdir(config_file_path):
-            config_file_path = os.path.join("config.ini")
-        config = self._config_encoder.decode(encoded_config.encode(), config_file_path)
+        if os.path.isdir(resource_path):
+            resource_path = os.path.join("config.ini")
+        config = self._config_encoder.decode(encoded_config.encode(), resource_path)
 
         config.test_suites = filter_by_test_identifier(
             config.test_suites, TestIdentifier.from_string(test_identifier_str)
