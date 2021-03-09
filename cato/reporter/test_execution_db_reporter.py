@@ -37,6 +37,8 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._run_id = None
 
     def use_run_id(self, run_id: int):
+        if not self._cato_api_client.run_id_exists(run_id):
+            raise ValueError(f"No run with id {run_id} exists!")
         self._run_id = run_id
 
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):

@@ -288,3 +288,9 @@ class TestTestExecutionDbReporter:
         self.test_execution_db_reporter.use_run_id(10)
 
         assert self.test_execution_db_reporter._run_id == 10
+
+    def test_use_not_existing_run_id_should_fail(self):
+        self.mock_cato_api_client.run_id_exists.return_value = False
+
+        with pytest.raises(ValueError):
+            self.test_execution_db_reporter.use_run_id(10)
