@@ -36,6 +36,9 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._cato_api_client = cato_api_client
         self._run_id = None
 
+    def use_run_id(self, run_id: int):
+        self._run_id = run_id
+
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         logger.info("Reporting execution start to server..")
         project = self._cato_api_client.get_project_by_name(project_name)
@@ -166,7 +169,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
     @property
     def _run_id(self) -> int:
         if self.__run_id_value is None:
-            raise RuntimeError("start_execution has to be called first!")
+            raise RuntimeError("run_id has to be set first!")
         return self.__run_id_value
 
     @_run_id.setter

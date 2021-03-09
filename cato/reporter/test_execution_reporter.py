@@ -13,6 +13,9 @@ class TestExecutionReporter:
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         raise NotImplementedError()
 
+    def use_run_id(self, run_id: int):
+        raise NotImplementedError()
+
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         raise NotImplementedError()
 

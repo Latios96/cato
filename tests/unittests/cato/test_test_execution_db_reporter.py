@@ -283,3 +283,8 @@ class TestTestExecutionDbReporter:
         self.mock_last_run_information_repository.write_last_run_information.assert_called_with(
             LastRunInformation(last_run_id=2)
         )
+
+    def test_use_run_id(self):
+        self.test_execution_db_reporter.use_run_id(10)
+
+        assert self.test_execution_db_reporter._run_id == 10
