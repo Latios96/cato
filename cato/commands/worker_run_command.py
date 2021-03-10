@@ -5,7 +5,6 @@ from cato.commands.base_command import BaseCliCommand
 from cato.config.config_encoder import ConfigEncoder
 from cato.domain.config import Config
 from cato.domain.test import Test
-from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
@@ -57,8 +56,6 @@ class WorkerRunCommand(BaseCliCommand):
         self._execute_test(config, suite, test)
 
     def _execute_test(self, config: Config, suite: TestSuite, test: Test):
-        test_identifier = TestIdentifier(suite.name, test.name)
-
         self._test_execution_reporter.report_test_execution_start(suite, test)
 
         result = self._test_runner.run_test(config, suite, test)
