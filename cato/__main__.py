@@ -15,6 +15,8 @@ from cato.commands.update_missing_reference_image import UpdateReferenceImageCom
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
+from cato.commands.worker_run_command import WorkerRunCommand
+from cato.config.config_encoder import ConfigEncoder  # noqa: F401
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
@@ -51,6 +53,8 @@ def create_object_graph(url: Optional[str] = None):
             cato.commands.run_command,
             cato.commands.update_missing_reference_images_command,
             cato.commands.update_missing_reference_image,
+            cato.config.config_encoder,
+            cato.config.config_file_parser,
         ],
         binding_specs=[TestExecutionReporterBindings(url)],
     )
@@ -123,6 +127,19 @@ def config_template(path: str):
     config_template_command.create_template(path)
 
 
+def worker_run(
+    url: str,
+    encoded_config: str,
+    test_identifier_str: str,
+    run_id: int,
+    resource_path: str,
+):
+    obj_graph = create_object_graph(url)
+    worker_command = provide_safe(obj_graph, WorkerRunCommand)
+
+    worker_command.execute(encoded_config, test_identifier_str, run_id, resource_path)
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -162,10 +179,34 @@ def main():
         help="Identifier of test to run. Example: suite_name/test_name",
     )
     update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
     )
     list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
+    worker_execute_command_parser = commands_subparser.add_parser(
+        "worker-run",
+        help="Tun test in a distributed environment. Not for direct human use",
+        parents=[parent_parser],
+    )
+    worker_execute_command_parser.add_argument(
+        "-u", "--url", help="url to server", required=True
+    )
+    worker_execute_command_parser.add_argument(
+        "-config", required=True, help="base64 encoded config JSON"
+    )
+    worker_execute_command_parser.add_argument(
+        "-test-identifier", required=True, help="Identifier of the test to run"
+    )
+    worker_execute_command_parser.add_argument(
+        "-run-id", required=True, type=int, help="run id to report to"
+    )
+    worker_execute_command_parser.add_argument(
+        "-resource-path",
+        required=True,
+        help="folder where tests resources (scenes etc) are located",
+    )
 
     args = main_parser.parse_args()
 
@@ -186,6 +227,10 @@ def main():
         list_tests(args.path)
     elif args.command == "update-reference":
         update_reference(args.path, args.test_identifier)
+    elif args.command == "worker-run":
+        worker_run(
+            args.url, args.config, args.test_identifier, args.run_id, args.resource_path
+        )
     else:
         logger.error(f"No method found to run command {args.command}")
 
