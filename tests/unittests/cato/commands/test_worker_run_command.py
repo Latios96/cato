@@ -71,9 +71,6 @@ class TestWorkerRunCommand:
         )
         self.mock_test_runner.run_test.assert_called_once()
         self.mock_reporter.report_test_success.assert_called_once()
-        self.mock_logger.info.assert_called_with(
-            f"Test My_first_test_Suite/My_first_test passed in f{execution_result.seconds}"
-        )
 
     def test_test_run_failure(self, config_fixture):
         config_str = self.config_encoder.encode(config_fixture.CONFIG)
@@ -100,6 +97,3 @@ class TestWorkerRunCommand:
         )
         self.mock_test_runner.run_test.assert_called_once()
         self.mock_reporter.report_test_failure.assert_called_once()
-        self.mock_logger.info.assert_called_with(
-            f"Test My_first_test_Suite/My_first_test failed in f{execution_result.seconds}: f{execution_result.message}"
-        )

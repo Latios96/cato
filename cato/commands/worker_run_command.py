@@ -65,23 +65,9 @@ class WorkerRunCommand(BaseCliCommand):
 
         if result.status == TestStatus.SUCCESS:
             self._reporter.report_test_success(result)
-            self._success_message(test_identifier, result)
         else:
             self._reporter.report_test_failure(result)
-            self._failure_message(test_identifier, result)
 
         self._test_execution_reporter.report_test_result(suite, result)
 
-    def _success_message(
-        self, test_identifier: TestIdentifier, result: TestExecutionResult
-    ):
-        self._logger.info("")
-        self._logger.info(f"Test {test_identifier} passed in f{result.seconds}")
-
-    def _failure_message(
-        self, test_identifier: TestIdentifier, result: TestExecutionResult
-    ):
-        self._logger.info("")
-        self._logger.info(
-            f"Test {test_identifier} failed in f{result.seconds}: f{result.message}"
-        )
+        self._logger.info("Done.")
