@@ -5,10 +5,18 @@ import sys
 import pytest
 import requests
 
+from cato.config.config_encoder import ConfigEncoder
+from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
+from cato.utils.machine_info_collector import MachineInfoCollector
+from cato_api_client.cato_api_client import CatoApiClient
+from cato_api_client.http_template import HttpTemplate
+from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_server.mappers.object_mapper import ObjectMapper
 from tests.integrationtests.utils import change_cwd, snapshot_output
 
 
@@ -123,18 +131,37 @@ def test_run_command(live_server, snapshot, run_config, test_resource_provider):
 
 
 def test_worker_run_command(live_server, snapshot, run_config):
+    object_mapper = ObjectMapper(MapperRegistryFactory().create_mapper_registry())
+    execution_reporter = TestExecutionDbReporter(
+        MachineInfoCollector(),
+        CatoApiClient(
+            live_server.server_url(), HttpTemplate(object_mapper), object_mapper
+        ),
+    )
+    parser = JsonConfigParser()
+    config = parser.parse(run_config)
+    execution_reporter.start_execution("test", config.test_suites)
+    config_encoder = ConfigEncoder(ConfigFileWriter(), parser)
+
     with change_cwd(os.path.dirname(os.path.dirname(run_config))):
-        output = subprocess.call(
+        exit_code = subprocess.call(
             [
                 sys.executable,
                 "-m",
                 "cato",
                 "worker-run",
+                "-u",
+                live_server.server_url(),
                 "-config",
-                "-test_identifier",
-                "-run_id",
-                "-resource_path",
+                config_encoder.encode(config).decode(),
+                "-test-identifier",
+                "PythonTestSuite/PythonOutputVersion",
+                "-run-id",
+                "{}".format(execution_reporter._run_id),
+                "-resource-path",
+                os.getcwd(),
             ],
             stderr=subprocess.STDOUT,
             universal_newlines=True,
         )
+        assert exit_code == 0
