@@ -29,3 +29,13 @@ snapshots[
 snapshots["test_update_missing_reference_images_should_have_no_effect 1"] = ""
 
 snapshots["test_update_reference_should_have_no_effect 1"] = ""
+
+snapshots["test_worker_run_command 1"] = [
+    """[INFO]  Running PythonOutputVersion..
+[INFO]  PythonOutputVersion succeeded in 0.12 seconds
+[INFO]  
+[INFO]  Test PythonTestSuite/PythonOutputVersion passed in 0.12 seconds
+[INFO]  Reporting test result of test PythonTestSuite/PythonOutputVersion..
+[INFO]  Uploading output of test PythonTestSuite/PythonOutputVersion..
+"""
+]

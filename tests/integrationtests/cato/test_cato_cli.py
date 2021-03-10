@@ -17,7 +17,7 @@ from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
-from tests.integrationtests.utils import change_cwd, snapshot_output
+from tests.integrationtests.utils import change_cwd, snapshot_output, run_command
 
 
 def test_list_tests_command_from_path(snapshot, config_file_fixture):
@@ -143,25 +143,31 @@ def test_worker_run_command(live_server, snapshot, run_config):
     execution_reporter.start_execution("test", config.test_suites)
     config_encoder = ConfigEncoder(ConfigFileWriter(), parser)
 
-    with change_cwd(os.path.dirname(os.path.dirname(run_config))):
-        exit_code = subprocess.call(
-            [
-                sys.executable,
-                "-m",
-                "cato",
-                "worker-run",
-                "-u",
-                live_server.server_url(),
-                "-config",
-                config_encoder.encode(config).decode(),
-                "-test-identifier",
-                "PythonTestSuite/PythonOutputVersion",
-                "-run-id",
-                "{}".format(execution_reporter._run_id),
-                "-resource-path",
-                os.getcwd(),
-            ],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
-        assert exit_code == 0
+    command = [
+        sys.executable,
+        "-m",
+        "cato",
+        "worker-run",
+        "-u",
+        live_server.server_url(),
+        "-config",
+        config_encoder.encode(config).decode(),
+        "-test-identifier",
+        "PythonTestSuite/PythonOutputVersion",
+        "-run-id",
+        "{}".format(execution_reporter._run_id),
+        "-resource-path",
+        os.getcwd(),
+    ]
+
+    stdout, stderr, exit_code = run_command(
+        command,
+        os.path.dirname(os.path.dirname(run_config)),
+        trimmers={
+            "succeeded in.*": "succeeded in 0.12 seconds",
+            "passed in.*": "passed in 0.12 seconds",
+        },
+    )
+
+    assert exit_code == 0
+    snapshot.assert_match(stderr)
