@@ -20,7 +20,7 @@
     "lodash": "^4.17.20",
     "node-sass": "4.14.1",
     "react": "^17.0.1",
-    "react-bootstrap": "^1.4.0",
+    "react-bootstrap": "^1.5.2",
     "react-bootstrap-icons": "^1.1.0",
     "react-compare-image": "^3.0.2",
     "react-dom": "^17.0.1",
