@@ -9,7 +9,6 @@ from cato_server.api.schemas.general import (
     ID_FIELD,
     FILE_PATH_FIELD,
     NAME_FIELD,
-    VARIABLES_FIELD,
     OPTIONAL_VARIABLES_FIELD,
 )
 

@@ -3,7 +3,6 @@ import logging
 from typing import IO
 
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 
 logger = logging.getLogger(__name__)
 
