@@ -4,9 +4,13 @@ from typing import Type, Any
 
 import pika
 import pinject
+import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from cato.config.config_encoder import ConfigEncoder
+from cato.config.config_file_parser import JsonConfigParser
+from cato.config.config_file_writer import ConfigFileWriter
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -14,6 +18,13 @@ from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.mappers.page_mapper import PageMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
+from cato_server.schedulers.abstract_scheduler_submitter import (
+    AbstractSchedulerSubmitter,
+)
+from cato_server.schedulers.deadline.deadline_api import DeadlineApi
+from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
+    DeadlineSchedulerSubmitter,
+)
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
@@ -80,10 +91,16 @@ class MessageQueueBindings:
 
 
 @dataclass
+class SchedulerBindings:
+    scheduler_submitter_binding: OptionalComponent[AbstractSchedulerSubmitter]
+
+
+@dataclass
 class Bindings:
     storage_bindings: StorageBindings
     app_configuration: AppConfiguration
     message_queue_bindings: MessageQueueBindings
+    scheduler_bindings: SchedulerBindings
 
 
 class PinjectBindings(pinject.BindingSpec):
@@ -142,6 +159,10 @@ class PinjectBindings(pinject.BindingSpec):
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
         )
+        bind(
+            "scheduler_submitter",
+            to_instance=self._bindings.scheduler_bindings.scheduler_submitter_binding,
+        )
 
 
 class BindingsFactory:
@@ -152,8 +173,12 @@ class BindingsFactory:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
         message_queue_bindings = self.create_message_queue_bindings()
+        scheduler_bindings = self.create_scheduler_bindings()
         bindings = Bindings(
-            storage_bindings, self._configuration, message_queue_bindings
+            storage_bindings,
+            self._configuration,
+            message_queue_bindings,
+            scheduler_bindings,
         )
         return PinjectBindings(bindings)
 
@@ -224,3 +249,36 @@ class BindingsFactory:
             logger.error("Error when connecting to RabbitMQ:")
             logger.error(error)
             return False
+
+    def create_scheduler_bindings(self):
+        return SchedulerBindings(
+            scheduler_submitter_binding=self._create_scheduler_submitter()
+        )
+
+    def _create_scheduler_submitter(self):
+        scheduler_name = self._configuration.scheduler_configuration.name
+        if not scheduler_name or scheduler_name == "None":
+            logger.info(f'Scheduler with name "{scheduler_name}" is not available')
+            return OptionalComponent.empty()
+        if scheduler_name == "Deadline":
+            url = self._configuration.scheduler_configuration.url
+            logger.info(
+                'Scheduler "Deadline" is available at %s',
+                url,
+            )
+            if self._deadline_is_available(url):
+                return OptionalComponent(
+                    DeadlineSchedulerSubmitter(
+                        ConfigEncoder(ConfigFileWriter(), JsonConfigParser()),
+                        url,
+                        DeadlineApi(url),
+                    )
+                )
+            logger.info('Scheduler "Deadline" is not available')
+            return OptionalComponent.empty()
+        logger.info(f'Scheduler is not available, unknown name "{scheduler_name}"')
+        return OptionalComponent.empty()
+
+    def _deadline_is_available(self, url: str):
+        response = requests.get(url + "/api/users?NamesOnly=true")
+        return response.status_code == 200

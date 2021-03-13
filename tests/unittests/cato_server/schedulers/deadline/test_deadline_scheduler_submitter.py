@@ -3,7 +3,7 @@ import requests
 from cato.config.config_encoder import ConfigEncoder
 from cato.config.config_file_parser import JsonConfigParser
 from cato.domain.test import Test
-from cato_server.schedulers.abstract_scheduler_submitter import SubmissionInfo
+from cato_server.schedulers.submission_info import SubmissionInfo
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_job import DeadlineJob
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (

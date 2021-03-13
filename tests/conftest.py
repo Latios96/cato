@@ -24,6 +24,7 @@ from cato_server.configuration.bindings_factory import (
     Bindings,
     PinjectBindings,
     MessageQueueBindings,
+    SchedulerBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.message_queue_configuration import (
@@ -308,7 +309,12 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
     message_queue_bindings = MessageQueueBindings(
         message_queue_binding=OptionalComponent.empty()
     )
-    bindings = Bindings(storage_bindings, config, message_queue_bindings)
+    scheduler_bindings = SchedulerBindings(
+        scheduler_submitter_binding=OptionalComponent.empty()
+    )
+    bindings = Bindings(
+        storage_bindings, config, message_queue_bindings, scheduler_bindings
+    )
     pinject_bindings = PinjectBindings(bindings)
 
     app = create_app(config, pinject_bindings)

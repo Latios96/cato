@@ -3,7 +3,10 @@ from sqlalchemy.orm import sessionmaker
 from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
-from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.scheduler_configuration import (
+    SchedulerConfiguration,
+    DeadlineSchedulerConfiguration,
+)
 from cato_server.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -138,10 +141,69 @@ def test_create_message_queue_bindings_rabbit_mq_available():
 
 
 def test_create_message_queue_bindings_rabbit_mq_not_available():
-
     bindings_factory = BindingsFactory(CONFIG_FOR_MESSAGE_QUEUE_TESTING)
     bindings_factory._rabbit_mq_message_queue_is_available = lambda: False
 
     message_queue_bindings = bindings_factory.create_message_queue_bindings()
 
     assert message_queue_bindings.message_queue_binding.empty()
+
+
+def test_create_scheduler_bindings_no_scheduler():
+    config = AppConfiguration(
+        port=5000,
+        debug=True,
+        storage_configuration=StorageConfiguration(
+            database_url="sqlite:///:memory:",
+            file_storage_url="some_path",
+        ),
+        logging_configuration=LoggingConfiguration(
+            log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
+            use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+            max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
+            backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
+        ),
+        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+        scheduler_configuration=SchedulerConfiguration(),
+    )
+    bindings_factory = BindingsFactory(config)
+
+    scheduler_bindings = bindings_factory.create_scheduler_bindings()
+
+    assert scheduler_bindings.scheduler_submitter_binding.empty()
+
+
+CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
+    port=5000,
+    debug=True,
+    storage_configuration=StorageConfiguration(
+        database_url="sqlite:///:memory:",
+        file_storage_url="some_path",
+    ),
+    logging_configuration=LoggingConfiguration(
+        log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
+        use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
+        max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
+        backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
+    ),
+    message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+    scheduler_configuration=DeadlineSchedulerConfiguration("test"),
+)
+
+
+def test_create_scheduler_bindings_with_deadline():
+    bindings_factory = BindingsFactory(CONFIG_FOR_DEADLINE_TESTING)
+    bindings_factory._deadline_is_available = lambda x: True
+
+    scheduler_bindings = bindings_factory.create_scheduler_bindings()
+
+    assert scheduler_bindings.scheduler_submitter_binding.is_available()
+
+
+def test_create_scheduler_bindings_deadline_not_available():
+    bindings_factory = BindingsFactory(CONFIG_FOR_DEADLINE_TESTING)
+    bindings_factory._deadline_is_available = lambda x: True
+
+    scheduler_bindings = bindings_factory.create_scheduler_bindings()
+
+    assert scheduler_bindings.scheduler_submitter_binding.empty()
