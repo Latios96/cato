@@ -45,6 +45,7 @@ class SubmissionInfoSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
+    config = fields.Nested(ConfigSchema, required=True)
     run_id = ID_FIELD
     resource_path = FILE_PATH_FIELD
     executable = FILE_PATH_FIELD

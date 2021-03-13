@@ -1,16 +1,8 @@
-from dataclasses import dataclass
-from cato.domain.config import Config
 import logging
 
+from cato_server.schedulers.submission_info import SubmissionInfo
+
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class SubmissionInfo:
-    config: Config
-    run_id: int
-    resource_path: str
-    executable: str
 
 
 class AbstractSchedulerSubmitter:

@@ -14,7 +14,12 @@ from tests.unittests.cato.test_config_file_parser import (
 
 class TestSubmissionInfoSchema:
     def test_success(self):
-        data = {"run_id": 2, "resource_path": "some/path", "executable": "some/path"}
+        data = {
+            "config": VALID_CONFIG,
+            "run_id": 2,
+            "resource_path": "some/path",
+            "executable": "some/path",
+        }
         schema = SubmissionInfoSchema()
 
         errors = schema.validate(data)
@@ -27,6 +32,7 @@ class TestSubmissionInfoSchema:
             (
                 {},
                 {
+                    "config": ["Missing data for required field."],
                     "executable": ["Missing data for required field."],
                     "resource_path": ["Missing data for required field."],
                     "run_id": ["Missing data for required field."],
@@ -35,6 +41,7 @@ class TestSubmissionInfoSchema:
             (
                 {"run_id": "test", "resource_path": "|", "executable": "|"},
                 {
+                    "config": ["Missing data for required field."],
                     "executable": [
                         "invalid char found: invalids=('|'), value='|', "
                         "reason=INVALID_CHARACTER, target-platform=Windows"

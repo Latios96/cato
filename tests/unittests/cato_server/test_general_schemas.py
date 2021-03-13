@@ -23,7 +23,6 @@ from cato_server.api.schemas.general import (
         (VARIABLES_FIELD, {"key": "value"}),
         (OPTIONAL_VARIABLES_FIELD, {}),
         (OPTIONAL_VARIABLES_FIELD, {"key": "value"}),
-        (OPTIONAL_VARIABLES_FIELD, None),
         (FILE_PATH_FIELD, "my-name22"),
     ],
 )
