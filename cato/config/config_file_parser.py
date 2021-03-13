@@ -22,7 +22,7 @@ class JsonConfigParser:
         validate(instance=data, schema=schema)
         return Config(
             data["project_name"],
-            os.path.dirname(path),
+            os.path.dirname(path),  # todo fix this, problems for distributed testing
             self._transform_suites(data),
             output_folder=os.getcwd(),  # todo fix this
             variables=data["variables"] if data.get("variables") else {},
