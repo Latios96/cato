@@ -15,7 +15,7 @@ class JsonConfigParser:
             stream = open(path)
         data = self._read_json_from_stream(stream)
 
-        return self.parse_dict(data, path)
+        return self.parse_dict(path, data)
 
     def parse_dict(self, path: str, data: Dict):
         schema = self._read_json_from_file(self._schema_path())
