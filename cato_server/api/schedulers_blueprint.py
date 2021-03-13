@@ -29,7 +29,12 @@ class SchedulersBlueprint(Blueprint):
         self._scheduler_submitter = scheduler_submitter
         self._json_config_parser = json_config_parser
 
-        self.route("/schedulers/submit", methods=["POST"])(self.submit_tests)
+        if self._scheduler_submitter.is_available():
+            self.route("/schedulers/submit", methods=["POST"])(self.submit_tests)
+        else:
+            self.route("/schedulers/submit", methods=["POST"])(
+                self.submit_tests_placeholder
+            )
 
     def submit_tests(self):
         request_json = request.get_json()
@@ -52,3 +57,6 @@ class SchedulersBlueprint(Blueprint):
             resource_path=request_json["resource_path"],
             executable=request_json["executable"],
         )
+
+    def submit_tests_placeholder(self):
+        return jsonify(message="No scheduler is available!"), 404
