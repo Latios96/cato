@@ -1,6 +1,6 @@
 import dataclasses
 import json
-from typing import IO
+from typing import IO, Dict
 
 import attr
 
@@ -23,3 +23,7 @@ class ConfigFileWriter:
 
     def write_to_stream(self, stream: IO, config: Config):
         json.dump(config.for_json(), stream, cls=EnhancedJSONEncoder, indent=2)
+
+    def write_to_dict(self, config: Config) -> Dict:
+        json_str = json.dumps(config.for_json(), cls=EnhancedJSONEncoder)
+        return json.loads(json_str)

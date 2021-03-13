@@ -10,6 +10,7 @@ from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
+
 TEST_JSON = "test/test.json"
 
 EXAMPLE_PROJECT = "example project"
@@ -28,6 +29,24 @@ VALID_CONFIG = {
         }
     ],
 }
+
+EXPECTED_VALID_CONFIG = Config(
+    project_name=EXAMPLE_PROJECT,
+    path="test",
+    test_suites=[
+        TestSuite(
+            name="My_first_test_Suite",
+            tests=[
+                Test(
+                    name="My_first_test",
+                    command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    variables={},
+                )
+            ],
+        )
+    ],
+    output_folder=os.getcwd(),
+)
 
 VALID_CONFIG_WITH_VARIABLES = {
     "project_name": EXAMPLE_PROJECT,
@@ -81,23 +100,7 @@ def test_success():
 
     suites = json_config_parser.parse(TEST_JSON, StringIO(json.dumps(VALID_CONFIG)))
 
-    assert suites == Config(
-        project_name=EXAMPLE_PROJECT,
-        path="test",
-        test_suites=[
-            TestSuite(
-                name="My_first_test_Suite",
-                tests=[
-                    Test(
-                        name="My_first_test",
-                        command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-                        variables={},
-                    )
-                ],
-            )
-        ],
-        output_folder=os.getcwd(),
-    )
+    assert suites == EXPECTED_VALID_CONFIG
 
 
 def test_success_with_variables():
@@ -160,3 +163,18 @@ def test_failure():
 
     with pytest.raises(ValidationError):
         json_config_parser.parse("test", StringIO(json.dumps(INVALID_CONFIG)))
+
+
+def test_success_parse_dict():
+    json_config_parser = JsonConfigParser()
+
+    suites = json_config_parser.parse_dict(TEST_JSON, VALID_CONFIG)
+
+    assert suites == EXPECTED_VALID_CONFIG
+
+
+def test_failure_parse_dict():
+    json_config_parser = JsonConfigParser()
+
+    with pytest.raises(ValidationError):
+        json_config_parser.parse_dict(TEST_JSON, INVALID_CONFIG)

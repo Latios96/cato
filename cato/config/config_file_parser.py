@@ -1,6 +1,6 @@
 import json
 import os
-from typing import IO, List
+from typing import IO, List, Dict
 
 from jsonschema import validate
 
@@ -13,11 +13,13 @@ class JsonConfigParser:
     def parse(self, path, stream: IO = None) -> Config:
         if not stream:
             stream = open(path)
-        schema = self._read_json_from_file(self._schema_path())
         data = self._read_json_from_stream(stream)
 
-        validate(instance=data, schema=schema)
+        return self.parse_dict(data, path)
 
+    def parse_dict(self, path: str, data: Dict):
+        schema = self._read_json_from_file(self._schema_path())
+        validate(instance=data, schema=schema)
         return Config(
             data["project_name"],
             os.path.dirname(path),
