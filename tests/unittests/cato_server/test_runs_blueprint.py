@@ -115,7 +115,7 @@ def test_get_run_summary(client, run, test_result):
     }
 
 
-def test_get_run_summary_shold_error(client):
+def test_get_run_summary_should_error(client):
     rv = client.get("/api/v1/runs/42/summary")
 
     assert rv.status_code == 404
