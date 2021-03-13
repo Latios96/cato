@@ -32,6 +32,7 @@ FILE_PATH_FIELD = fields.Str(
     required=True, validate=[Length(min=1), _validate_filepath]
 )
 VARIABLES_FIELD = fields.Dict(required=True, validate=_is_str_str_dict)
+OPTIONAL_VARIABLES_FIELD = fields.Dict(validate=_is_str_str_dict)
 
 
 class MachineInfoSchema(Schema):

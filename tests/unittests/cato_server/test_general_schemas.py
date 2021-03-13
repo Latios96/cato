@@ -7,6 +7,7 @@ from cato_server.api.schemas.general import (
     VARIABLES_FIELD,
     MachineInfoSchema,
     FILE_PATH_FIELD,
+    OPTIONAL_VARIABLES_FIELD,
 )
 
 
@@ -20,6 +21,9 @@ from cato_server.api.schemas.general import (
         (NAME_FIELD, "22"),
         (VARIABLES_FIELD, {}),
         (VARIABLES_FIELD, {"key": "value"}),
+        (OPTIONAL_VARIABLES_FIELD, {}),
+        (OPTIONAL_VARIABLES_FIELD, {"key": "value"}),
+        (OPTIONAL_VARIABLES_FIELD, None),
         (FILE_PATH_FIELD, "my-name22"),
     ],
 )
@@ -52,6 +56,7 @@ def test_field_success(field, value):
             ],
         ),
         (VARIABLES_FIELD, [], ["Not a valid mapping type."]),
+        (OPTIONAL_VARIABLES_FIELD, [], ["Not a valid mapping type."]),
         (
             VARIABLES_FIELD,
             {"key": ["val", "ue"]},
