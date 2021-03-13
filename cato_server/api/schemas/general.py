@@ -1,7 +1,7 @@
 import pathvalidate
 from marshmallow import fields, ValidationError, Schema, EXCLUDE
 from marshmallow.validate import Regexp, Length, Range
-from pathvalidate import validate_filename
+from pathvalidate import validate_filename, validate_filepath
 
 REGEX_VALID_NAME = Regexp(r"^[A-Za-z0-9_\-]+$")
 
@@ -19,8 +19,18 @@ def _validate_filename(name):
         raise ValidationError(str(e))
 
 
+def _validate_filepath(name):
+    try:
+        validate_filepath(name)
+    except pathvalidate.ValidationError as e:
+        raise ValidationError(str(e))
+
+
 ID_FIELD = fields.Integer(required=True, validate=[Range(min=0)])
 NAME_FIELD = fields.Str(required=True, validate=[Length(min=1), _validate_filename])
+FILE_PATH_FIELD = fields.Str(
+    required=True, validate=[Length(min=1), _validate_filepath]
+)
 VARIABLES_FIELD = fields.Dict(required=True, validate=_is_str_str_dict)
 
 

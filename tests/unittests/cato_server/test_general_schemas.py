@@ -6,6 +6,7 @@ from cato_server.api.schemas.general import (
     NAME_FIELD,
     VARIABLES_FIELD,
     MachineInfoSchema,
+    FILE_PATH_FIELD,
 )
 
 
@@ -19,6 +20,7 @@ from cato_server.api.schemas.general import (
         (NAME_FIELD, "22"),
         (VARIABLES_FIELD, {}),
         (VARIABLES_FIELD, {"key": "value"}),
+        (FILE_PATH_FIELD, "my-name22"),
     ],
 )
 def test_field_success(field, value):
@@ -54,6 +56,13 @@ def test_field_success(field, value):
             VARIABLES_FIELD,
             {"key": ["val", "ue"]},
             ["Not a mapping of str->str: key=['val', 'ue']"],
+        ),
+        (
+            FILE_PATH_FIELD,
+            "my|name",
+            [
+                "invalid char found: invalids=('|'), value='my|name', reason=INVALID_CHARACTER, target-platform=Windows"
+            ],
         ),
     ],
 )
