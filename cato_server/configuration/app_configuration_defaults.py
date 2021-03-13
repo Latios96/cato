@@ -3,6 +3,7 @@ from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
+from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 TEN_MEGABYTES = 10_000_000
@@ -30,4 +31,5 @@ class AppConfigurationDefaults:
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
             message_queue_configuration=MessageQueueConfiguration(host="localhost"),
+            scheduler_configuration=SchedulerConfiguration(),
         )

@@ -30,6 +30,7 @@ from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
 from cato_server.configuration.optional_component import OptionalComponent
+from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image, ImageChannel
@@ -299,6 +300,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
         message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
+        scheduler_configuration=SchedulerConfiguration(),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

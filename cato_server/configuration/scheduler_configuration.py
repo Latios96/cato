@@ -2,11 +2,11 @@ from dataclasses import dataclass
 
 
 @dataclass
-class SchedulerConfiguration(object):
+class SchedulerConfiguration:
     name = "None"
 
 
 @dataclass
-class DeadlineSchedulerConfiguration(object):
+class DeadlineSchedulerConfiguration(SchedulerConfiguration):
     name = "Deadline"
     url: str

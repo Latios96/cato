@@ -3,6 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
+from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -45,6 +46,7 @@ def test_create_storage_bindings_for_postgres():
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
         message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+        scheduler_configuration=SchedulerConfiguration(),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -80,6 +82,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
         message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+        scheduler_configuration=SchedulerConfiguration(),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -121,6 +124,7 @@ CONFIG_FOR_MESSAGE_QUEUE_TESTING = AppConfiguration(
         backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
     ),
     message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
+    scheduler_configuration=SchedulerConfiguration(),
 )
 
 
