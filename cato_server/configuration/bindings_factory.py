@@ -163,6 +163,10 @@ class PinjectBindings(pinject.BindingSpec):
             "scheduler_submitter",
             to_instance=self._bindings.scheduler_bindings.scheduler_submitter_binding,
         )
+        bind(
+            "json_config_parser",
+            to_class=JsonConfigParser,
+        )
 
 
 class BindingsFactory:

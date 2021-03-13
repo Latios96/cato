@@ -44,6 +44,9 @@ from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.schedulers.abstract_scheduler_submitter import (
+    AbstractSchedulerSubmitter,
+)
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -66,6 +69,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from tests.utils import mock_safe
 
 
 @event.listens_for(Engine, "connect")
@@ -290,7 +294,12 @@ def random_port():
 
 
 @pytest.fixture()
-def app_and_config_fixture(sessionmaker_fixture, tmp_path):
+def mocked_scheduler_submitter():
+    return mock_safe(AbstractSchedulerSubmitter)
+
+
+@pytest.fixture()
+def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_submitter):
     config = AppConfiguration(
         port=random_port(),
         debug=True,
@@ -310,7 +319,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path):
         message_queue_binding=OptionalComponent.empty()
     )
     scheduler_bindings = SchedulerBindings(
-        scheduler_submitter_binding=OptionalComponent.empty()
+        scheduler_submitter_binding=OptionalComponent(mocked_scheduler_submitter)
     )
     bindings = Bindings(
         storage_bindings, config, message_queue_bindings, scheduler_bindings
