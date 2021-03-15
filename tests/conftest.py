@@ -366,28 +366,29 @@ def object_mapper(mapper_registry):
 
 
 class ConfigFixture:
-    TEST = Test(
-        name="My_first_test",
-        command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-        variables={"frame": "7"},
-    )
-    TEST_SUITE = TestSuite(
-        name="My_first_test_Suite",
-        tests=[TEST],
-        variables={"my_var": "from_suite"},
-    )
-    CONFIG = Config(
-        project_name="EXAMPLE_PROJECT",
-        path="test",
-        test_suites=[TEST_SUITE],
-        output_folder="output",
-        variables={"my_var": "from_config"},
-    )
+    def __init__(self):
+        self.TEST = Test(
+            name="My_first_test",
+            command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+            variables={"frame": "7"},
+        )
+        self.TEST_SUITE = TestSuite(
+            name="My_first_test_Suite",
+            tests=[self.TEST],
+            variables={"my_var": "from_suite"},
+        )
+        self.CONFIG = Config(
+            project_name="EXAMPLE_PROJECT",
+            path="test",
+            test_suites=[self.TEST_SUITE],
+            output_folder="output",
+            variables={"my_var": "from_config"},
+        )
 
 
 @pytest.fixture
 def config_fixture():
-    return ConfigFixture
+    return ConfigFixture()
 
 
 @pytest.fixture
