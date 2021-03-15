@@ -130,6 +130,24 @@ def test_run_command(live_server, snapshot, run_config, test_resource_provider):
     ]
 
 
+def test_submit_command(live_server, snapshot, run_config, test_resource_provider):
+    with change_cwd(os.path.dirname(os.path.dirname(run_config))):
+        output = subprocess.call(
+            [
+                sys.executable,
+                "-m",
+                "cato",
+                "submit",
+                "--path",
+                run_config,
+                "-u",
+                live_server.server_url(),
+            ],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+        )
+
+
 def test_worker_run_command(live_server, snapshot, run_config):
     object_mapper = ObjectMapper(MapperRegistryFactory().create_mapper_registry())
     execution_reporter = TestExecutionDbReporter(

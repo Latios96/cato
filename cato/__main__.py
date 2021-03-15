@@ -11,6 +11,7 @@ from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
+from cato.commands.submit_command import SubmitCommand
 from cato.commands.update_missing_reference_image import UpdateReferenceImageCommand
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
@@ -97,6 +98,19 @@ def run(
     )
 
 
+def submit(
+    path: str,
+    suite_name: str,
+    test_identifier_str: str,
+    only_failed: bool,
+    url: str,
+):
+    obj_graph = create_object_graph(url)
+    submit_command = provide_safe(obj_graph, SubmitCommand)
+
+    submit_command.run(path, suite_name, test_identifier_str, bool(only_failed))
+
+
 def update_missing_reference_images(path):
     obj_graph = create_object_graph()
     update_missing_reference_images_command = obj_graph.provide(
@@ -150,6 +164,7 @@ def main():
     config_template_parser.add_argument(
         "path", help="folder where to create the config file"
     )
+
     run_parser = commands_subparser.add_parser(
         "run", help="Run a config file", parents=[parent_parser]
     )
@@ -162,6 +177,20 @@ def main():
     run_parser.add_argument("-u", "--url", help="url to server", required=True)
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
     run_parser.add_argument("--only-failed", action="store_true")
+
+    submit_parser = commands_subparser.add_parser(
+        "submit",
+        help="Submit tests from a config file to scheduler",
+        parents=[parent_parser],
+    )
+    submit_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    submit_parser.add_argument("--suite", help="Suite to run")
+    submit_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
+    submit_parser.add_argument("-u", "--url", help="url to server", required=True)
+    submit_parser.add_argument("--only-failed", action="store_true")
 
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
@@ -219,6 +248,14 @@ def main():
             args.test_identifier,
             args.only_failed,
             args.verbose,
+            args.url,
+        )
+    elif args.command == "submit":
+        submit(
+            args.path,
+            args.suite,
+            args.test_identifier,
+            args.only_failed,
             args.url,
         )
     elif args.command == "update-missing-reference-images":
