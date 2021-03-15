@@ -11,6 +11,7 @@ from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
+from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from tests.conftest import random_port
 from tests.integrationtests.utils import change_cwd
@@ -27,6 +28,7 @@ def test_run_db_load_test(tmp_path, snapshot):
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
         message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
+        scheduler_configuration=SchedulerConfiguration(),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)
