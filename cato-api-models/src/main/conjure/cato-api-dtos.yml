@@ -144,3 +144,7 @@ types:
       TestResultFinishedDto:
         fields:
           id: integer
+
+      ApiSuccess:
+        fields:
+          success: boolean
