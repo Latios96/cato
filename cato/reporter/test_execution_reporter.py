@@ -16,6 +16,9 @@ class TestExecutionReporter:
     def use_run_id(self, run_id: int):
         raise NotImplementedError()
 
+    def run_id(self) -> int:
+        raise NotImplementedError()
+
     def report_test_execution_start(self, current_suite: TestSuite, test: Test):
         raise NotImplementedError()
 

@@ -294,3 +294,8 @@ class TestTestExecutionDbReporter:
 
         with pytest.raises(ValueError):
             self.test_execution_db_reporter.use_run_id(10)
+
+    def test_run_id(self):
+        self.test_execution_db_reporter.use_run_id(10)
+
+        assert self.test_execution_db_reporter.run_id() == 10

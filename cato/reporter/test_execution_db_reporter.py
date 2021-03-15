@@ -41,6 +41,9 @@ class TestExecutionDbReporter(TestExecutionReporter):
             raise ValueError(f"No run with id {run_id} exists!")
         self._run_id = run_id
 
+    def run_id(self) -> int:
+        return self._run_id
+
     def start_execution(self, project_name: str, test_suites: List[TestSuite]):
         logger.info("Reporting execution start to server..")
         project = self._cato_api_client.get_project_by_name(project_name)
