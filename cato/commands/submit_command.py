@@ -3,24 +3,17 @@ import os
 import sys
 from typing import Optional, Callable
 
-from cato.commands.base_command import BaseCliCommand
+from cato.commands.run_command_interface import RunCommandInterface
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.test_status import TestStatus
-from cato.domain.test_suite import (
-    filter_by_suite_name,
-    filter_by_test_identifier,
-    filter_by_test_identifiers,
-)
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.schedulers.submission_info import SubmissionInfo
 
 
-class SubmitCommand(BaseCliCommand):
+class SubmitCommand(RunCommandInterface):
     def __init__(
         self,
         json_config_parser: JsonConfigParser,
@@ -31,6 +24,11 @@ class SubmitCommand(BaseCliCommand):
         cato_api_client: CatoApiClient,
         test_execution_reporter: TestExecutionReporter,
     ):
+        super(SubmitCommand, self).__init__(
+            json_config_parser,
+            last_run_information_repository_factory,
+            cato_api_client,
+        )
         self._json_config_parser = json_config_parser
         self._logger = logger
         self._last_run_information_repository_factory = (
@@ -46,31 +44,9 @@ class SubmitCommand(BaseCliCommand):
         test_identifier_str: Optional[str],
         only_failed: bool,
     ):
-        path = self._config_path(path)
-
-        config = self._json_config_parser.parse(path)
-
-        last_run_information = None
-        if only_failed:
-            repo = self._last_run_information_repository_factory(config.output_folder)
-            last_run_information = repo.read_last_run_information()
-
-        if suite_name:
-            config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
-        if test_identifier_str:
-            config.test_suites = filter_by_test_identifier(
-                config.test_suites, TestIdentifier.from_string(test_identifier_str)
-            )
-
-        if last_run_information:
-            failed_test_identifiers = (
-                self._cato_api_client.get_test_results_by_run_id_and_test_status(
-                    last_run_information.last_run_id, TestStatus.FAILED
-                )
-            )
-            config.test_suites = filter_by_test_identifiers(
-                config.test_suites, failed_test_identifiers
-            )
+        config = self._prepare_config(
+            path, suite_name, test_identifier_str, only_failed
+        )
 
         if not config.test_suites:
             raise ValueError("At least one TestSuite is required!")

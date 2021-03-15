@@ -1,14 +1,8 @@
-from typing import Optional, Callable
 import logging
+from typing import Optional, Callable
 
-from cato.commands.base_command import BaseCliCommand
+from cato.commands.run_command_interface import RunCommandInterface
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.test_status import TestStatus
-from cato.domain.test_suite import (
-    filter_by_suite_name,
-    filter_by_test_identifier,
-    filter_by_test_identifiers,
-)
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
@@ -18,10 +12,9 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.test_identifier import TestIdentifier
 
 
-class RunCommand(BaseCliCommand):
+class RunCommand(RunCommandInterface):
     def __init__(
         self,
         json_config_parser: JsonConfigParser,
@@ -35,16 +28,16 @@ class RunCommand(BaseCliCommand):
         ],
         cato_api_client: CatoApiClient,
     ):
-        self._json_config_parser = json_config_parser
+        super(RunCommand, self).__init__(
+            json_config_parser,
+            last_run_information_repository_factory,
+            cato_api_client,
+        )
+        self._reporter = reporter
         self._test_suite_runner = test_suite_runner
         self._timing_report_generator = timing_report_generator
         self._end_message_generator = end_message_generator
         self._logger = logger
-        self._reporter = reporter
-        self._last_run_information_repository_factory = (
-            last_run_information_repository_factory
-        )
-        self._cato_api_client = cato_api_client
 
     def run(
         self,
@@ -55,31 +48,9 @@ class RunCommand(BaseCliCommand):
         verbose_mode: VerboseMode,
     ):
         self._reporter.set_verbose_mode(verbose_mode)
-        path = self._config_path(path)
-
-        config = self._json_config_parser.parse(path)
-
-        last_run_information = None
-        if only_failed:
-            repo = self._last_run_information_repository_factory(config.output_folder)
-            last_run_information = repo.read_last_run_information()
-
-        if suite_name:
-            config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
-        if test_identifier_str:
-            config.test_suites = filter_by_test_identifier(
-                config.test_suites, TestIdentifier.from_string(test_identifier_str)
-            )
-
-        if last_run_information:
-            failed_test_identifiers = (
-                self._cato_api_client.get_test_results_by_run_id_and_test_status(
-                    last_run_information.last_run_id, TestStatus.FAILED
-                )
-            )
-            config.test_suites = filter_by_test_identifiers(
-                config.test_suites, failed_test_identifiers
-            )
+        config = self._prepare_config(
+            path, suite_name, test_identifier_str, only_failed
+        )
 
         result = self._test_suite_runner.run_test_suites(config)
 
