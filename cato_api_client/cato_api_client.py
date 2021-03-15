@@ -13,6 +13,7 @@ from cato_api_models.catoapimodels import (
     FinishTestResultDto,
     TestStatusDto,
     TestHeartbeatDto,
+    ApiSuccess,
 )
 from cato_server.domain.file import File
 from cato_server.domain.image import Image
@@ -23,6 +24,7 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
+from cato_server.schedulers.submission_info import SubmissionInfo
 
 logger = logging.getLogger(__name__)
 
@@ -111,7 +113,9 @@ class CatoApiClient:
         return self._find_with_http_template(url, TestResult)
 
     def run_id_exists(self, run_id: int) -> bool:
-        url = self._build_url("/api/v1/runs/{}/exists".format(run_id))
+        url = self._build_url(
+            "/api/v1/runs/{}/exists".format(run_id)
+        )  # todo use ApiSuccess class
         response = self._get_url(url)
         if response.status_code == 200:
             return True
@@ -172,6 +176,14 @@ class CatoApiClient:
         )
 
         return self._find_many_with_http_template(url, TestIdentifier)
+
+    def submit_to_scheduler(self, submission_info: SubmissionInfo):
+        url = self._build_url("/api/v1/schedulers/submit")
+        response = self._http_template.post_for_entity(url, submission_info, ApiSuccess)
+        if response.status_code() != 200 or not response.get_entity().success:
+            raise ValueError(
+                f"Something went wrong when submitting to scheduler: {response.status_code()}, {response.text()}"
+            )
 
     def _build_url(self, url):
         return self._url + quote(url)

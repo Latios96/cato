@@ -23,6 +23,7 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     MachineInfoDto,
 )
+from cato_server.schedulers.submission_info import SubmissionInfo
 
 
 class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
@@ -445,3 +446,14 @@ def test_run_id_exists_success(cato_api_client, run):
 
 def test_run_id_exists_failure(cato_api_client):
     assert not cato_api_client.run_id_exists(42)
+
+
+def test_submit_to_scheduler_success(cato_api_client, config_fixture, run):
+    submission_info = SubmissionInfo(
+        config=config_fixture.CONFIG,
+        run_id=run.id,
+        resource_path="resource_path",
+        executable=r"python.exe",
+    )
+
+    cato_api_client.submit_to_scheduler(submission_info)
