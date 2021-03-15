@@ -24,6 +24,11 @@ from cato_server.api.schemas.general import (
         (OPTIONAL_VARIABLES_FIELD, {}),
         (OPTIONAL_VARIABLES_FIELD, {"key": "value"}),
         (FILE_PATH_FIELD, "my-name22"),
+        (FILE_PATH_FIELD, "C:\python.exe"),
+        (FILE_PATH_FIELD, "C://python.exe"),
+        (FILE_PATH_FIELD, r"C:\python.exe"),
+        (FILE_PATH_FIELD, "C:\\python.exe"),
+        (FILE_PATH_FIELD, "py/thon.exe"),
     ],
 )
 def test_field_success(field, value):
