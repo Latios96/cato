@@ -18,3 +18,11 @@ class Config:
             "suites": self.test_suites,
             "variables": self.variables,
         }
+
+    @property
+    def suite_count(self):
+        return len(self.test_suites)
+
+    @property
+    def test_count(self):
+        return sum(map(lambda x: len(x.tests), self.test_suites))
