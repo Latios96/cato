@@ -23,6 +23,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
 )
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.verbose_mode import VerboseMode
+from cato.utils.url_format import format_url
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -40,6 +41,7 @@ def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
 
 
 def create_object_graph(url: Optional[str] = None):
+    url = format_url(url)
     return pinject.new_object_graph(
         modules=[
             cato,
