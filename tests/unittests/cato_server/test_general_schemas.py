@@ -1,3 +1,5 @@
+import sys
+
 import pytest
 from marshmallow import Schema
 
@@ -24,14 +26,29 @@ from cato_server.api.schemas.general import (
         (OPTIONAL_VARIABLES_FIELD, {}),
         (OPTIONAL_VARIABLES_FIELD, {"key": "value"}),
         (FILE_PATH_FIELD, "my-name22"),
-        (FILE_PATH_FIELD, "C:\python.exe"),
-        (FILE_PATH_FIELD, "C://python.exe"),
-        (FILE_PATH_FIELD, r"C:\python.exe"),
-        (FILE_PATH_FIELD, "C:\\python.exe"),
         (FILE_PATH_FIELD, "py/thon.exe"),
     ],
 )
 def test_field_success(field, value):
+    class TestSchema(Schema):
+        field_to_test = field
+
+    errors = TestSchema().validate({"field_to_test": value})
+
+    assert errors == {}
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="only supported on windows")
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        (FILE_PATH_FIELD, "C:\python.exe"),
+        (FILE_PATH_FIELD, "C://python.exe"),
+        (FILE_PATH_FIELD, r"C:\python.exe"),
+        (FILE_PATH_FIELD, "C:\\python.exe"),
+    ],
+)
+def test_field_success_windows(field, value):
     class TestSchema(Schema):
         field_to_test = field
 
