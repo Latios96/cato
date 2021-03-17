@@ -34,6 +34,7 @@ snapshots["test_submit_command 1"] = [
 [INFO]  Collecting machine info..
 [INFO]  Reporting execution of 1 suites
 [INFO]  You can find your run at http://localhost:12345/#/projects/2/runs/2
+[INFO]  Submitting to scheduler..
 [INFO]  Submitted 1 suite with 1 test to scheduler.
 """
 ]

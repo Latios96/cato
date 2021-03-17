@@ -62,6 +62,7 @@ class SubmitCommand(RunCommandInterface):
             executable=sys.executable,
         )
 
+        self._logger.info("Submitting to scheduler..")
         self._cato_api_client.submit_to_scheduler(submission_info)
 
         self._logger.info(
