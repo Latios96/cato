@@ -7,10 +7,10 @@ from snapshottest import Snapshot
 
 snapshots = Snapshot()
 
-snapshots[
-    "test_config_file_template 1"
-] = """[INFO]  Wrote config file to SOME_RANDOM_DIR/cato.json
+snapshots["test_config_file_template 1"] = [
+    """[INFO]  Wrote config file to SOME_RANDOM_DIR/cato.json
 """
+]
 
 snapshots[
     "test_list_tests_command_from_cwd 1"
@@ -44,6 +44,8 @@ snapshots["test_update_reference_should_have_no_effect 1"] = ""
 
 snapshots["test_worker_run_command 1"] = [
     """[INFO]  Running PythonOutputVersion..
+[INFO]  Command: <some command>
+[INFO]  Copy <a> to <b>
 [INFO]  PythonOutputVersion succeeded in 0.12 seconds
 [INFO]  Reporting test result of test PythonTestSuite/PythonOutputVersion..
 [INFO]  Uploading output of test PythonTestSuite/PythonOutputVersion..

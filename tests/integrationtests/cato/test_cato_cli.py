@@ -42,7 +42,7 @@ def test_config_file_template(snapshot, tmp_path):
         [sys.executable, "-m", "cato", "config-template", "."],
         workdir=str(tmp_path),
         trimmers={
-            os.path.join(str(tmp_path), "cato.json"): "SOME_RANDOM_DIR/cato.json"
+            "Wrote config file to .*cato\.json": "Wrote config file to SOME_RANDOM_DIR/cato.json"
         },
     )
 
@@ -184,6 +184,8 @@ def test_worker_run_command(live_server, snapshot, run_config):
         trimmers={
             "succeeded in.*": "succeeded in 0.12 seconds",
             "passed in.*": "passed in 0.12 seconds",
+            "Command: .*": "Command: <some command>",
+            "Copy .* to .*": "Copy <a> to <b>",
         },
     )
 
