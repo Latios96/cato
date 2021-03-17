@@ -30,6 +30,7 @@ const SuiteResultComponent = (props: Props) => {
         projectId={props.projectId}
         runId={props.runId}
         isLoading={false}
+        displayOnlyTestName={true}
       />
     );
   };

@@ -18,6 +18,7 @@ interface Props {
   projectId: number;
   runId: number;
   isLoading: boolean;
+  displayOnlyTestName?: boolean;
 }
 const TestResultList = (props: Props) => {
   let renderPlaceholder = () => {
@@ -44,7 +45,9 @@ const TestResultList = (props: Props) => {
                   <TestStatus restResult={test} />
                 </span>
                 <span className={styles.nameInList}>
-                  {test.test_identifier}
+                  {!!props.displayOnlyTestName
+                    ? test.test_identifier.split("/")[1]
+                    : test.test_identifier}
                 </span>
               </ListGroup.Item>
             </Link>
