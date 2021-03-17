@@ -13,19 +13,6 @@ def change_cwd(path):
     os.chdir(old_cwd)
 
 
-def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = None):
-    with change_cwd(workdir if workdir else os.getcwd()):
-        output = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, universal_newlines=True, encoding="utf-8"
-        )
-
-        if trimmers:
-            for key, value in trimmers.items():
-                output = output.replace(key, value)
-
-        snapshot.assert_match(output)
-
-
 def _trim_output(output, trimmers: Dict[str, str]):
     if trimmers:
         output = output.split(r"\n")
@@ -33,6 +20,18 @@ def _trim_output(output, trimmers: Dict[str, str]):
             output = list(map(lambda x: re.sub(pattern, replacement, x), output))
 
     return output
+
+
+def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = None):
+    with change_cwd(workdir if workdir else os.getcwd()):
+        output = subprocess.check_output(
+            command, stderr=subprocess.STDOUT, universal_newlines=True, encoding="utf-8"
+        )
+
+        if trimmers:
+            output = _trim_output(output, trimmers)
+
+        snapshot.assert_match(output)
 
 
 def run_command(
