@@ -166,7 +166,7 @@ def main():
     )
 
     run_parser = commands_subparser.add_parser(
-        "run", help="Run a config file", parents=[parent_parser]
+        "run", help="Execute tests from a config file", parents=[parent_parser]
     )
     run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
     run_parser.add_argument("--suite", help="Suite to run")
