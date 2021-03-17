@@ -88,6 +88,7 @@ class ProjectRunsView extends Component<Props, State> {
               : this.renderRunSummaryPlaceholder()}
           </div>
         </div>
+        <div className={styles.footer}></div>
       </div>
     );
   }
