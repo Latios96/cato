@@ -3,8 +3,6 @@ import { useQuery } from "react-query";
 import styles from "./AboutComponent.module.css";
 import { Spinner } from "react-bootstrap";
 
-const FRONTEND_VERSION = "0.34.0";
-
 interface AboutInformation {
   version: string;
 }
@@ -30,9 +28,6 @@ const AboutComponent = () => {
     <div className={styles.about}>
       <div>
         <span>Cato Server:</span> <span>{data.version}</span>
-      </div>
-      <div>
-        <span>Frontend:</span> <span>{FRONTEND_VERSION}</span>
       </div>
     </div>
   );
