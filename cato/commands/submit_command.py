@@ -58,8 +58,12 @@ class SubmitCommand(RunCommandInterface):
         submission_info = SubmissionInfo(
             config=config,
             run_id=self._test_execution_reporter.run_id(),
-            resource_path=os.path.join(config.path, "config.ini"),
+            resource_path=os.path.join(config.path),
             executable=sys.executable,
         )
 
         self._cato_api_client.submit_to_scheduler(submission_info)
+
+        self._logger.info(
+            f"Submitted {config.suite_count} suite{'s' if config.suite_count > 1 else ''} with {config.test_count} test{'s' if config.test_count > 1 else ''} to scheduler."
+        )

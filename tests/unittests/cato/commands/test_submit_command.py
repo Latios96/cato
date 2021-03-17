@@ -56,9 +56,12 @@ class TestSubmitCommand:
             SubmissionInfo(
                 config=self.config,
                 run_id=42,
-                resource_path=os.path.join("test", "config.ini"),
+                resource_path=os.path.join("test"),
                 executable=sys.executable,
             )
+        )
+        self.mock_logger.info.assert_called_with(
+            f"Submitted 1 suite with 1 test to scheduler."
         )
 
     def test_should_raise_value_error_if_no_tests_match_suite_name(self):
