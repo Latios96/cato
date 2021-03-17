@@ -131,21 +131,21 @@ def test_run_command(live_server, snapshot, run_config, test_resource_provider):
 
 
 def test_submit_command(live_server, snapshot, run_config, test_resource_provider):
-    with change_cwd(os.path.dirname(os.path.dirname(run_config))):
-        output = subprocess.call(
-            [
-                sys.executable,
-                "-m",
-                "cato",
-                "submit",
-                "--path",
-                run_config,
-                "-u",
-                live_server.server_url(),
-            ],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
+    snapshot_output(
+        snapshot,
+        [
+            sys.executable,
+            "-m",
+            "cato",
+            "submit",
+            "--path",
+            run_config,
+            "-u",
+            live_server.server_url(),
+        ],
+        workdir=test_resource_provider.resource_by_name("cato_test_config"),
+        trimmers={r"localhost:\d+": "localhost:12345"},
+    )
 
 
 def test_worker_run_command(live_server, snapshot, run_config):

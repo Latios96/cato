@@ -26,6 +26,18 @@ snapshots[
 [INFO]  My_first_test_Suite/My_first_test
 """
 
+snapshots["test_submit_command 1"] = [
+    """[INFO]  Reporting execution start to server..
+[INFO]  No project with name EXAMPLE_PROJECT exists, creating one..
+[INFO]  Created project Project(id=2, name='EXAMPLE_PROJECT')
+[INFO]  Creating run..
+[INFO]  Collecting machine info..
+[INFO]  Reporting execution of 1 suites
+[INFO]  You can find your run at http://localhost:12345/#/projects/2/runs/2
+[INFO]  Submitted 1 suite with 1 test to scheduler.
+"""
+]
+
 snapshots["test_update_missing_reference_images_should_have_no_effect 1"] = ""
 
 snapshots["test_update_reference_should_have_no_effect 1"] = ""
