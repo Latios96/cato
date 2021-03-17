@@ -1,4 +1,3 @@
-import logging
 from typing import Optional, Callable
 
 from cato.commands.base_command import BaseCliCommand
@@ -13,11 +12,6 @@ from cato.domain.test_suite import (
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
-from cato.reporter.end_message_generator import EndMessageGenerator
-from cato.reporter.reporter import Reporter
-from cato.reporter.timing_report_generator import TimingReportGenerator
-from cato.reporter.verbose_mode import VerboseMode
-from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.test_identifier import TestIdentifier
 
