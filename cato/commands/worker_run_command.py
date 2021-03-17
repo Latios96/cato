@@ -9,6 +9,7 @@ from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
+from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_runner import TestRunner
 from cato_server.domain.test_identifier import TestIdentifier
 
@@ -35,8 +36,9 @@ class WorkerRunCommand(BaseCliCommand):
         run_id: int,
         resource_path: str,
     ):
+        self._reporter.set_verbose_mode(VerboseMode.VERY_VERBOSE)
         if os.path.isdir(resource_path):
-            resource_path = os.path.join("config.ini")
+            resource_path = os.path.join(resource_path, "cato.json")
         config = self._config_encoder.decode(encoded_config.encode(), resource_path)
 
         config.test_suites = filter_by_test_identifier(
