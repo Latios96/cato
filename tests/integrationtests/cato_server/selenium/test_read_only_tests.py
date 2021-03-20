@@ -111,10 +111,7 @@ class RunView:
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         assert len(suite_list) == 1
-        assert (
-            suite_list[0].find_elements_by_tag_name("span")[1].text
-            == "my_suite/my_test_name"
-        )
+        assert suite_list[0].find_elements_by_tag_name("span")[1].text == "my_test_name"
 
     def clicking_on_test_name_in_test_list_should_show_test(self):
         suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
