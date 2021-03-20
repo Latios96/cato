@@ -1,4 +1,4 @@
-from cato.commands.update_missing_reference_image import UpdateReferenceImageCommand
+from cato.commands.update_reference_image_command import UpdateReferenceImageCommand
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
