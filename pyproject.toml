@@ -61,6 +61,7 @@ chromedriver-py = "89.0.4389.23"
 Pillow = "^8.1.0"
 Faker = "^6.4.1"
 pytest-postgresql = "^2.6.1"
+pytest-bdd = "^4.0.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
