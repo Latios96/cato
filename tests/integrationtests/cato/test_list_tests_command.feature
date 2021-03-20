@@ -3,7 +3,7 @@ Feature: List tests described in a config file
 
   Scenario: In Folder with cato.json
     Given A folder with a valid cato.json
-    When I change to this folder
+    And I changed to this folder
     And I run the list-tests command
     Then I should see the test identifiers of the config on the terminal
 

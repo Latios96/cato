@@ -36,12 +36,12 @@ def step_impl(scenario_context, test_resource_provider):
     )
 
 
-@given("I change to this folder")
+@given("I changed to this folder")
 def step_impl(scenario_context, dir_changer):
     os.chdir(scenario_context["config_folder"])
 
 
-@given("I run the list-tests command with the path to the config")
+@when("I run the list-tests command with the path to the config")
 def step_impl(scenario_context):
     config_path = os.path.join(scenario_context["config_folder"], "cato.json")
     scenario_context["command_result"] = run_cato_command(
