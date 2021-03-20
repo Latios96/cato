@@ -1,0 +1,18 @@
+{
+  "project_name": "CatoIntegrationTests",
+  "suites": [
+    {
+      "name": "WriteImages",
+      "tests": [
+        {
+          "name": "write_white_image",
+          "command": "python {@test_resources}/write.py \"{@image_output_png}\" white"
+        },
+        {
+          "name": "write_black_image",
+          "command": "python {@test_resources}/write.py \"{@image_output_png}\" black"
+        }
+      ]
+    }
+  ]
+}
