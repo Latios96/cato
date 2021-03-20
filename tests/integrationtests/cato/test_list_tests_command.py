@@ -1,21 +1,8 @@
 import os
 
-import pytest
 from pytest_bdd import scenario, given, when, then
 
 from tests.integrationtests.command_fixture import run_cato_command
-
-
-@pytest.fixture
-def scenario_context():
-    return {}
-
-
-@pytest.fixture
-def dir_changer():
-    old_dir = os.getcwd()
-    yield
-    os.chdir(old_dir)
 
 
 @scenario("test_list_tests_command.feature", "In Folder with cato.json")
