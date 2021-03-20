@@ -1,4 +1,3 @@
-# Created by Jan at 17.03.2021
 Feature: List tests described in a config file
 
   Scenario: In Folder with cato.json
