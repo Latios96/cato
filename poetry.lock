@@ -126,6 +126,14 @@ optional = false
 python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*"
 
 [[package]]
+name = "checksumdir"
+version = "1.2.0"
+description = "Compute a single hash of the file contents of a directory."
+category = "dev"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[[package]]
 name = "chromedriver-py"
 version = "89.0.4389.23"
 description = "chromedriver binaries for all platforms"
@@ -1094,7 +1102,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "7cb9447fc47325b91c206fc3003f0ac12a33802579a63fc57a0f6d7440f7c33c"
+content-hash = "6b39c66fffe03fb506752c96fddce691016168bcc5fb440f1d312f96340a74a6"
 
 [metadata.files]
 alembic = [
@@ -1174,6 +1182,10 @@ cffi = [
 chardet = [
     {file = "chardet-4.0.0-py2.py3-none-any.whl", hash = "sha256:f864054d66fd9118f2e67044ac8981a54775ec5b67aed0441892edb553d21da5"},
     {file = "chardet-4.0.0.tar.gz", hash = "sha256:0d6f53a15db4120f2b08c94f11e7d93d2c911ee118b6b30a04ec3ee8310179fa"},
+]
+checksumdir = [
+    {file = "checksumdir-1.2.0-py3-none-any.whl", hash = "sha256:77687e16da95970c94061c74ef2e13666c4b6e0e8c90a5eaf0c8f7591332cf01"},
+    {file = "checksumdir-1.2.0.tar.gz", hash = "sha256:10bfd7518da5a14b0e9ac03e9ad105f0e70f58bba52b6e9aa2f21a3f73c7b5a8"},
 ]
 chromedriver-py = [
     {file = "chromedriver-py-89.0.4389.23.tar.gz", hash = "sha256:145e1c094bc132201638e2961bb8cf10ccf5e1064ce8badcc084bab2d4834d0c"},
