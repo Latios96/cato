@@ -52,6 +52,7 @@ def step_impl(scenario_context):
 def step_impl(scenario_context, tmp_path):
     config_folder = str(tmp_path)
     scenario_context["config_folder"] = config_folder
+    scenario_context["config_path"] = os.path.join(str(tmp_path), "cato.json")
     with open(scenario_context["config_path"], "w") as f:
         f.write("Hello world")
 
