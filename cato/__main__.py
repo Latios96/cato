@@ -41,7 +41,8 @@ def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
 
 
 def create_object_graph(url: Optional[str] = None):
-    url = format_url(url)
+    if url:
+        url = format_url(url)
     return pinject.new_object_graph(
         modules=[
             cato,
