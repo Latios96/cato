@@ -3,7 +3,7 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from difflib import SequenceMatcher
-from typing import List
+from typing import List, Optional
 
 
 @dataclass
@@ -17,11 +17,14 @@ class CommandResult:
                 return True
         return False
 
-    def output_contains_line_matching(self, pattern_to_contain: str) -> bool:
+    def output_contains_line_matching(
+        self, pattern_to_contain: str
+    ) -> Optional[re.Match]:
         for line in self.output:
-            if re.search(pattern_to_contain, line) is not None:
-                return True
-        return False
+            match = re.match(pattern_to_contain, line)
+            if match is not None:
+                return match
+        return None
 
     def output_contains_lines(self, lines_to_contain: List[str]) -> bool:
         clean_output = list(map(lambda x: x.rstrip("\n"), self.output))
