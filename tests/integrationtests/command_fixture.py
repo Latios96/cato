@@ -42,6 +42,7 @@ def run_command(cmd: List[str]) -> CommandResult:
         stderr=subprocess.STDOUT,
         universal_newlines=True,
         shell=True,
+        encoding="utf-8",
     )
 
     stdout = popen.stdout
@@ -50,6 +51,7 @@ def run_command(cmd: List[str]) -> CommandResult:
         lines_iterator = iter(stdout.readline, "")
         for line in lines_iterator:
             output_lines.append(line)
+            print(line.rstrip("\n"))
     stdout.close()
     return_code = popen.wait()
     return CommandResult(exit_code=return_code, output=output_lines)
