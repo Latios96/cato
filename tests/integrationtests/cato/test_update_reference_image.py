@@ -62,47 +62,60 @@ def hash_file(path):
     return hashlib.md5(open(path, "rb").read()).hexdigest()
 
 
+def hash_directory(path):
+    return dirhash(path, "md5")
+
+
+@pytest.fixture
+def create_result_path(scenario_context):
+    def f(suite_name, test_name):
+        return os.path.join(
+            scenario_context["config_folder"],
+            "result",
+            suite_name,
+            test_name,
+            test_name + ".png",
+        )
+
+    return f
+
+
+@pytest.fixture
+def create_reference_path(scenario_context):
+    def f(suite_name, test_name):
+        return os.path.join(
+            scenario_context["config_folder"], suite_name, test_name, "reference.png"
+        )
+
+    return f
+
+
 @given("an output image for a test")
-def step_impl(scenario_context):
-    image_path = os.path.join(
-        scenario_context["config_folder"],
-        "result",
-        "WriteImages",
-        "write_white_image",
-        "write_white_image.png",
-    )
+def step_impl(scenario_context, create_result_path):
+    image_path = create_result_path("WriteImages", "write_white_image")
     write_image(image_path)
     scenario_context["output_image"] = image_path
     scenario_context["output_image_checksum"] = hash_file(image_path)
 
 
 @given("reference images for other tests")
-def step_impl(scenario_context):
+def step_impl(scenario_context, create_reference_path):
     reference_image_folder = os.path.join(
         scenario_context["config_folder"], "WriteImages"
     )
-    image_path = os.path.join(
-        reference_image_folder,
-        "write_black_image",
-        "write_black_image.png",
-    )
 
+    image_path = create_reference_path("WriteImages", "write_black_image")
     write_image(image_path, (0, 0, 0))
 
     scenario_context["other_tests_reference_image"] = image_path
     scenario_context["other_tests_reference_checksum"] = hash_file(image_path)
     scenario_context["reference_image_folder"] = reference_image_folder
-    scenario_context["reference_dir_checksum"] = dirhash(reference_image_folder, "md5")
+    scenario_context["reference_dir_checksum"] = hash_directory(reference_image_folder)
 
 
 @given("a reference image exists for the test")
-def step_impl(scenario_context):
-    image_path = os.path.join(
-        scenario_context["config_folder"],
-        "WriteImages",
-        "write_white_image",
-        "write_white_image.png",
-    )
+def step_impl(scenario_context, create_reference_path):
+    image_path = create_reference_path("WriteImages", "write_white_image")
 
     write_image(image_path, (1, 1, 1))
 
@@ -131,14 +144,8 @@ def step_impl(scenario_context, dir_changer):
 
 
 @then("the output image should be stored as reference image")
-def step_impl(scenario_context):
-    reference_image_path = os.path.join(
-        scenario_context["config_folder"],
-        "result",
-        "WriteImages",
-        "write_white_image",
-        "write_white_image.png",
-    )
+def step_impl(scenario_context, create_reference_path):
+    reference_image_path = create_reference_path("WriteImages", "write_white_image")
 
     assert os.path.exists(reference_image_path)
 
@@ -156,6 +163,6 @@ def step_impl(scenario_context):
 
 @then("all reference images should be untouched")
 def step_impl(scenario_context):
-    assert scenario_context["reference_dir_checksum"] == dirhash(
-        scenario_context["reference_image_folder"], "md5"
+    assert scenario_context["reference_dir_checksum"] == hash_directory(
+        scenario_context["reference_image_folder"]
     )
