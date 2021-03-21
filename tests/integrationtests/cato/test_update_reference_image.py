@@ -32,6 +32,14 @@ def test_update_not_existing_test():
     pass
 
 
+@scenario(
+    "test_update_missing_reference_images.feature",
+    "Updating missing reference image",
+)
+def test_update_not_existing():
+    pass
+
+
 @given("a cato.json file with tests")
 def step_impl(cato_config):
     pass
@@ -129,3 +137,21 @@ def step_impl(scenario_context):
     assert scenario_context["reference_dir_checksum"] == hash_directory(
         scenario_context["reference_image_folder"]
     )
+
+
+@given("no reference image for a test")
+def step_impl():
+    pass
+
+
+@when("I run the update missing reference images command")
+def step_impl(scenario_context):
+    os.chdir(scenario_context["config_folder"])
+
+    command_result = run_cato_command(
+        [
+            "update-missing-reference-images",
+        ]
+    )
+
+    assert command_result.exit_code == 0
