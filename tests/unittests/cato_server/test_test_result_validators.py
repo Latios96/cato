@@ -224,14 +224,9 @@ class TestCreateOutputValidator:
 
 
 class TestFinishTestResultValidator:
-    def test_success(self):
-        test_result_repository = mock_safe(TestResultRepository)
-        image_repository = mock_safe(ImageRepository)
-        finish_test_result_validator = FinishTestResultValidator(
-            test_result_repository, image_repository
-        )
-
-        errors = finish_test_result_validator.validate(
+    @pytest.mark.parametrize(
+        "data",
+        [
             {
                 "id": 1,
                 "status": TestStatus.SUCCESS,
@@ -239,8 +234,41 @@ class TestFinishTestResultValidator:
                 "seconds": 1,
                 "image_output": 1,
                 "reference_image": 2,
-            }
+            },
+            {
+                "id": 1,
+                "status": TestStatus.SUCCESS,
+                "message": "test",
+                "seconds": 1,
+                "image_output": None,
+                "reference_image": None,
+            },
+            {
+                "id": 1,
+                "status": TestStatus.SUCCESS,
+                "message": "test",
+                "seconds": 1,
+                "image_output": 1,
+                "reference_image": None,
+            },
+            {
+                "id": 1,
+                "status": TestStatus.SUCCESS,
+                "message": "test",
+                "seconds": 1,
+                "image_output": None,
+                "reference_image": 2,
+            },
+        ],
+    )
+    def test_success(self, data):
+        test_result_repository = mock_safe(TestResultRepository)
+        image_repository = mock_safe(ImageRepository)
+        finish_test_result_validator = FinishTestResultValidator(
+            test_result_repository, image_repository
         )
+
+        errors = finish_test_result_validator.validate(data)
         assert errors == {}
 
     @pytest.mark.parametrize(

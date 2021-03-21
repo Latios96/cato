@@ -76,5 +76,5 @@ class FinishTestResultSchema(Schema):
     status = EnumField(TestStatus, required=True)
     seconds = fields.Float(min=0, required=True)
     message = fields.String(validate=[Length(0)], required=True)
-    image_output = fields.Integer()
-    reference_image = fields.Integer()
+    image_output = fields.Integer(required=False, allow_none=True)
+    reference_image = fields.Integer(required=False, allow_none=True)
