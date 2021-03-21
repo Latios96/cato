@@ -1,8 +1,6 @@
 import hashlib
 import os
-import shutil
 
-import pytest
 from PIL import Image
 from checksumdir import dirhash
 from pytest_bdd import scenario, given, when, then
@@ -34,17 +32,6 @@ def test_update_not_existing_test():
     pass
 
 
-@pytest.fixture
-def cato_config(tmp_path, test_resource_provider, scenario_context):
-    config_folder = os.path.join(str(tmp_path), "config_folder")
-    shutil.copytree(
-        test_resource_provider.resource_by_name("cato_cmd_integ_tests"), config_folder
-    )
-
-    scenario_context["config_folder"] = config_folder
-    scenario_context["config_path"] = os.path.join(config_folder, "cato.json")
-
-
 @given("a cato.json file with tests")
 def step_impl(cato_config):
     pass
@@ -64,30 +51,6 @@ def hash_file(path):
 
 def hash_directory(path):
     return dirhash(path, "md5")
-
-
-@pytest.fixture
-def create_result_path(scenario_context):
-    def f(suite_name, test_name):
-        return os.path.join(
-            scenario_context["config_folder"],
-            "result",
-            suite_name,
-            test_name,
-            test_name + ".png",
-        )
-
-    return f
-
-
-@pytest.fixture
-def create_reference_path(scenario_context):
-    def f(suite_name, test_name):
-        return os.path.join(
-            scenario_context["config_folder"], suite_name, test_name, "reference.png"
-        )
-
-    return f
 
 
 @given("an output image for a test")
