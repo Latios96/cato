@@ -23,18 +23,25 @@ export const ProjectsViewStateless = (props: Props) => {
         <Spinner
           animation="border"
           role="LoadingIndicator"
-          className={styles.spinner}
+          className={styles.centered}
         >
           <span className="sr-only">Loading...</span>
         </Spinner>
       </div>
     );
   } else if (hasError) {
-    return <div className={styles.projectsView}>{props.fetchResult.error}</div>;
+    return (
+      <div className={styles.projectsView}>
+        <span className={styles.centered}>{props.fetchResult.error}</span>
+      </div>
+    );
   } else if (emptyProjectsLists) {
     return (
       <div className={styles.projectsView}>
-        <PlaceHolderText text={"No projects found"} className={""} />
+        <PlaceHolderText
+          text={"No projects found"}
+          className={styles.centered}
+        />
       </div>
     );
   } else if (props.fetchResult.data) {
