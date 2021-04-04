@@ -1,70 +1,62 @@
-import React, { Component } from "react";
+import React from "react";
 import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
 import LinkCard from "../LinkCard/LinkCard";
 import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
-import { Helmet } from "react-helmet";
 import _ from "lodash";
+import { FetchResult, useFetch } from "../utils";
+import { Spinner } from "react-bootstrap";
 
-interface Props {}
-
-interface State {
-  projects: Project[];
-  isLoading: boolean;
+interface Props {
+  fetchResult: FetchResult<Project[]>;
 }
 
-class ProjectsView extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = { projects: [], isLoading: true };
-  }
+export const ProjectsViewStateless = (props: Props) => {
+  const isLoading = props.fetchResult.isLoading;
+  const hasError = !!props.fetchResult.error;
+  const emptyProjectsLists =
+    props.fetchResult.data && props.fetchResult.data.length === 0;
 
-  componentDidMount() {
-    this.fetchProjects();
-  }
-
-  render() {
+  if (isLoading) {
     return (
       <div className={styles.projectsView}>
-        <Helmet>
-          <title>Cato</title>
-        </Helmet>
-        {this.state.projects.length
-          ? this.renderProjects()
-          : this.renderPlaceholder()}
+        <Spinner
+          animation="border"
+          role="LoadingIndicator"
+          className={styles.spinner}
+        >
+          <span className="sr-only">Loading...</span>
+        </Spinner>
+      </div>
+    );
+  } else if (hasError) {
+    return <div className={styles.projectsView}>{props.fetchResult.error}</div>;
+  } else if (emptyProjectsLists) {
+    return (
+      <div className={styles.projectsView}>
+        <PlaceHolderText text={"No projects found"} className={""} />
+      </div>
+    );
+  } else if (props.fetchResult.data) {
+    return (
+      <div className={styles.projectsView}>
+        {" "}
+        {_.sortBy(props.fetchResult.data, [
+          (p: Project) => p.name.toLowerCase(),
+        ]).map((p: Project) => {
+          return (
+            <div key={p.id} className={styles.projectsViewProjectComponent}>
+              <LinkCard name={p.name} linkTo={`/projects/${p.id}/runs`} />
+            </div>
+          );
+        })}
       </div>
     );
   }
+  return <></>;
+};
 
-  fetchProjects = () => {
-    fetch("/api/v1/projects")
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          result = _.sortBy(result, [(p: Project) => p.name.toLowerCase()]);
-          this.setState({ projects: result, isLoading: false });
-        },
-        (error) => {
-          console.log(error);
-        }
-      );
-  };
-
-  renderProjects = () => {
-    return this.state.projects.map((p: Project) => {
-      return (
-        <div key={p.id} className={styles.projectsViewProjectComponent}>
-          <LinkCard name={p.name} linkTo={`/projects/${p.id}/runs`} />
-        </div>
-      );
-    });
-  };
-  renderPlaceholder = () => {
-    if (!this.state.isLoading) {
-      return <PlaceHolderText text={"No projects found"} className={""} />;
-    }
-    return <React.Fragment />;
-  };
-}
-
-export default ProjectsView;
+export const ProjectsView = () => {
+  const fetchResult = useFetch<Project[]>("/api/v1/projects");
+  return <ProjectsViewStateless fetchResult={fetchResult} />;
+};
