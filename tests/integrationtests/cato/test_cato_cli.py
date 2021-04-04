@@ -144,7 +144,7 @@ def test_submit_command(live_server, snapshot, run_config, test_resource_provide
             live_server.server_url(),
         ],
         workdir=test_resource_provider.resource_by_name("cato_test_config"),
-        trimmers={r"localhost:\d+": "localhost:12345"},
+        trimmers={r"127.0.0.1:\d+": "127.0.0.1:12345"},
     )
 
 

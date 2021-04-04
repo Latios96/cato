@@ -68,7 +68,7 @@ class LiveServer:
         requests.get(self.server_url() + "/shutdown")
 
     def server_url(self):
-        return f"http://localhost:{self._port}"
+        return f"http://127.0.0.1:{self._port}"
 
 
 @pytest.fixture
