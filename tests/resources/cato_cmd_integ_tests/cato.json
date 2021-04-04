@@ -6,11 +6,11 @@
       "tests": [
         {
           "name": "write_white_image",
-          "command": "python {@test_resources}/write.py \"{@image_output_png}\" white"
+          "command": "python {@config_path}/WriteImages/write.py \"{@image_output_png}\" white"
         },
         {
           "name": "write_black_image",
-          "command": "python {@test_resources}/write.py \"{@image_output_png}\" black"
+          "command": "python {@config_path}/WriteImages/write.py \"{@image_output_png}\" black"
         }
       ]
     }
