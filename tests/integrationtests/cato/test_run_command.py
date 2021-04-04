@@ -56,10 +56,10 @@ def step_impl(scenario_context):
 @then("Failure Messages for missing reference image should be printed")
 def step_impl(scenario_context):
     assert scenario_context["command_result"].output_contains_line_matching(
-        "write_white_image failed ❌: Reference image <not found> does not exist!"
+        "write_white_image failed .*: Reference image <not found> does not exist!"
     )
     assert scenario_context["command_result"].output_contains_line_matching(
-        "write_black_image failed ❌: Reference image <not found> does not exist!"
+        "write_black_image failed .*: Reference image <not found> does not exist!"
     )
 
 
