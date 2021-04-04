@@ -12,7 +12,7 @@ from tests.integrationtests.command_fixture import run_cato_command
     "test_update_reference_image.feature",
     "Updating reference image which did not exist before",
 )
-def test_update_not_existing():
+def test_update_not_existing_before():
     pass
 
 
