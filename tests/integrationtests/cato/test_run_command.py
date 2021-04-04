@@ -1,16 +1,25 @@
 import os
+import sys
 
 import requests
 from pytest_bdd import scenario, given, when, then
 
-from tests.integrationtests.command_fixture import run_cato_command
+from tests.integrationtests.command_fixture import run_cato_command, run_command
 
 
 @scenario(
     "test_run_command.feature",
     "Run all tests the first time should fail because of missing reference images",
 )
-def test_update_not_existing():
+def test_all_test_failing_not_existing_reference_images():
+    pass
+
+
+@scenario(
+    "test_run_command.feature",
+    "Run all tests should succeed",
+)
+def test_all_test_succeed():
     pass
 
 
@@ -41,7 +50,7 @@ def step_impl(scenario_context):
 
 @then("A failure message should be printed")
 def step_impl(scenario_context):
-    assert scenario_context["command_result"].output_contains_line("2  failed   ❌")
+    assert scenario_context["command_result"].output_contains_line_matching("2  failed")
 
 
 @then("Failure Messages for missing reference image should be printed")
@@ -77,6 +86,77 @@ def step_impl(live_server, scenario_context):
             "id": 1,
             "name": "write_white_image",
             "status": "FAILED",
+            "test_identifier": "WriteImages/write_white_image",
+        },
+    ]
+
+
+@given("reference images exist for the tests")
+def step_impl(scenario_context):
+    cato_cmd = [
+        sys.executable,
+        os.path.join(scenario_context["config_folder"], "WriteImages", "write.py"),
+        os.path.join(
+            scenario_context["config_folder"],
+            "WriteImages",
+            "write_white_image",
+            "reference.png",
+        ),
+        "white",
+    ]
+    result = run_command(cato_cmd)
+    assert result.exit_code == 0
+
+    cato_cmd = [
+        sys.executable,
+        os.path.join(scenario_context["config_folder"], "WriteImages", "write.py"),
+        os.path.join(
+            scenario_context["config_folder"],
+            "WriteImages",
+            "write_black_image",
+            "reference.png",
+        ),
+        "black",
+    ]
+    result = run_command(cato_cmd)
+    assert result.exit_code == 0
+
+
+@then("no failure message should be printed")
+def step_impl(scenario_context):
+    assert not scenario_context["command_result"].output_contains_line_matching(
+        ".* failed"
+    )
+
+
+@then("a success message should be printed")
+def step_impl(scenario_context):
+    assert not scenario_context["command_result"].output_contains_line("2 succeded ✅")
+
+
+@then("the success result should be available at the server")
+def step_impl(scenario_context, live_server):
+    match = scenario_context["command_result"].output_contains_line_matching(
+        "You can find your run at http://127.0.0.1:\d+/#/projects/\d+/runs/(\d+)"
+    )
+    assert match
+    run_id = match.group(1)
+    url = live_server.server_url() + "/api/v1/test_results/run/" + run_id
+    response = requests.get(url)
+    assert response.status_code == 200
+    assert response.json() == [
+        {
+            "execution_status": "FINISHED",
+            "id": 2,
+            "name": "write_black_image",
+            "status": "SUCCESS",
+            "test_identifier": "WriteImages/write_black_image",
+        },
+        {
+            "execution_status": "FINISHED",
+            "id": 1,
+            "name": "write_white_image",
+            "status": "SUCCESS",
             "test_identifier": "WriteImages/write_white_image",
         },
     ]

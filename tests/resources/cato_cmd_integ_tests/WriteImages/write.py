@@ -1,3 +1,4 @@
+import os
 import sys
 
 from PIL import Image
@@ -8,5 +9,8 @@ if __name__ == "__main__":
         "RGB",
         (800, 600),
     )
+    directory = os.path.dirname(sys.argv[1])
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     img.save(sys.argv[1], "PNG")
     pass
