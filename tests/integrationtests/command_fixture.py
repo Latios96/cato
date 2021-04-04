@@ -21,7 +21,7 @@ class CommandResult:
         self, pattern_to_contain: str
     ) -> Optional[re.Match]:
         for line in self.output:
-            match = re.match(pattern_to_contain, line)
+            match = re.search(pattern_to_contain, line)
             if match is not None:
                 return match
         return None
