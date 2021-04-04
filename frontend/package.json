@@ -66,9 +66,6 @@
     "@types/lodash": "^4.14.168",
     "@types/react-helmet": "^6.1.0",
     "@types/react-modal": "^3.10.6",
-    "@wojtekmaj/enzyme-adapter-react-17": "^0.4.1",
-    "enzyme": "^3.11.0",
-    "enzyme-to-json": "^3.6.1",
     "jest-each": "^26.6.2",
     "prettier": "^2.2.1"
   },
