@@ -6,13 +6,16 @@
       "tests": [
         {
           "name": "write_white_image",
-          "command": "python {@config_path}/WriteImages/write.py \"{@image_output_png}\" white"
+          "command": "{@python_exe} {@config_path}/WriteImages/write.py \"{@image_output_png}\" white"
         },
         {
           "name": "write_black_image",
-          "command": "python {@config_path}/WriteImages/write.py \"{@image_output_png}\" black"
+          "command": "{@python_exe} {@config_path}/WriteImages/write.py \"{@image_output_png}\" black"
         }
       ]
     }
-  ]
+  ],
+  "variables": {
+    "python_exe": "python"
+  }
 }
