@@ -32,7 +32,7 @@ def step_impl(cato_config):
 def step_impl(scenario_context, dir_changer, live_server):
     os.chdir(scenario_context["config_folder"])
 
-    result = run_cato_command(["run", "-u", live_server.server_url(), "-v"])
+    result = run_cato_command(["run", "-u", live_server.server_url(), "-vvv"])
     scenario_context["command_result"] = result
 
     assert result.exit_code == 0
