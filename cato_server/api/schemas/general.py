@@ -21,7 +21,7 @@ def _validate_filename(name):
 
 def _validate_filepath(name):
     try:
-        validate_filepath(name, platform="auto")
+        validate_filepath(name, platform="universal")
     except pathvalidate.ValidationError as e:
         raise ValidationError(str(e))
 
