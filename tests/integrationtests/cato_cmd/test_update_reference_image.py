@@ -145,7 +145,7 @@ def step_impl():
 
 
 @when("I run the update missing reference images command")
-def step_impl(scenario_context):
+def step_impl(scenario_context, dir_changer):
     os.chdir(scenario_context["config_folder"])
 
     command_result = run_cato_command(

@@ -60,6 +60,8 @@ def step_impl(scenario_context, tmp_path):
 @then("the cato.json should be overriden with template")
 def step_impl(scenario_context):
     with open(scenario_context["config_path"]) as f:
+        conent = f.read()
+    with open(scenario_context["config_path"]) as f:
         content = json.load(f)
 
     assert content == TEMPLATE
