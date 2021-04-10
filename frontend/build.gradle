@@ -40,10 +40,28 @@ task yarnTest(type: YarnTask) {
     outputs.file('yarnTest')
 }
 
+task yarnBuildStory(type: YarnTask) {
+    dependsOn('yarnInstallDependencies')
+    dependsOn('copyConjureTypescriptModels')
+    args = ['build-storybook']
+    inputs.dir('public')
+    inputs.dir('src')
+    outputs.file('yarnBuildStory')
+}
+
+task yarnLokiTest(type: YarnTask) {
+    args = ['loki','--requireReference','--reactUri','file:./storybook-static']
+    dependsOn('yarnBuildStory')
+    inputs.dir('public')
+    inputs.dir('src')
+    outputs.file('yarnBuildStory')
+}
+
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
     dependsOn('copyConjureTypescriptModels')
     dependsOn('yarnTest')
+    dependsOn('yarnLokiTest')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')
