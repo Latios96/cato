@@ -83,13 +83,6 @@ def test_field_success_windows(field, value):
             {"key": ["val", "ue"]},
             ["Not a mapping of str->str: key=['val', 'ue']"],
         ),
-        (
-            FILE_PATH_FIELD,
-            "my|name",
-            [
-                "invalid char found: invalids=('|'), value='my|name', reason=INVALID_CHARACTER, target-platform=Windows"
-            ],
-        ),
     ],
 )
 def test_field_failure(field, value, expected_errors):

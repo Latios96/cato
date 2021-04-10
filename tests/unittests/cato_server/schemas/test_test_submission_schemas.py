@@ -37,22 +37,7 @@ class TestSubmissionInfoSchema:
                     "resource_path": ["Missing data for required field."],
                     "run_id": ["Missing data for required field."],
                 },
-            ),
-            (
-                {"run_id": "test", "resource_path": "|", "executable": "|"},
-                {
-                    "config": ["Missing data for required field."],
-                    "executable": [
-                        "invalid char found: invalids=('|'), value='|', "
-                        "reason=INVALID_CHARACTER, target-platform=Windows"
-                    ],
-                    "resource_path": [
-                        "invalid char found: invalids=('|'), value='|', "
-                        "reason=INVALID_CHARACTER, target-platform=Windows"
-                    ],
-                    "run_id": ["Not a valid integer."],
-                },
-            ),
+            )
         ],
     )
     def test_failure_required_fields(self, data, expected_errors):

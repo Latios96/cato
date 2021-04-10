@@ -20,10 +20,14 @@ def _validate_filename(name):
 
 
 def _validate_filepath(name):
-    try:
-        validate_filepath(name, platform="universal")
-    except pathvalidate.ValidationError as e:
-        raise ValidationError(str(e))
+    error = None
+    for platform in ["Linux", "macOS", "Windows"]:
+        try:
+            validate_filepath(name, platform=platform)
+            return True
+        except pathvalidate.ValidationError as e:
+            error = e
+    raise ValidationError(str(error))
 
 
 ID_FIELD = fields.Integer(required=True, validate=[Range(min=0)])
