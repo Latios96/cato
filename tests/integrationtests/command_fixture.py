@@ -38,6 +38,8 @@ class CommandResult:
 
 
 def run_command(cmd: List[str]) -> CommandResult:
+    if sys.platform == "linux":
+        cmd = " ".join(cmd)
     output_lines = []
     popen = subprocess.Popen(
         cmd,
