@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 export function renderIf<T>(
   value: T | null | undefined,
   renderCallback: (value: T) => JSX.Element
@@ -22,23 +22,25 @@ export function useFetch<T>(url: string): FetchResult<T> {
     error: undefined,
   });
 
-  fetch(url)
-    .then((res) => res.json())
-    .then(
-      (result) => {
-        setFetchResult({
-          isLoading: false,
-          data: result,
-          error: undefined,
-        });
-      },
-      (error) =>
-        setFetchResult({
-          isLoading: false,
-          data: undefined,
-          error: error,
-        })
-    );
+  useEffect(() => {
+    fetch(url)
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setFetchResult({
+            isLoading: false,
+            data: result,
+            error: undefined,
+          });
+        },
+        (error) =>
+          setFetchResult({
+            isLoading: false,
+            data: undefined,
+            error: error,
+          })
+      );
+  }, [url, setFetchResult]);
 
   return fetchResult;
 }
