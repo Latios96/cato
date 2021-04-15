@@ -41,6 +41,9 @@
 .runTimingInformation {
   font-weight: 100;
   width: 153px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
 }
 .suiteResultsPlaceholder {
   font-weight: 100;
