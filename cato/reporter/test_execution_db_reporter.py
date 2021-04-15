@@ -20,7 +20,6 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
 )
 from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.run import Run
 from cato_server.domain.test_identifier import TestIdentifier
 
 logger = logging.getLogger(__name__)
