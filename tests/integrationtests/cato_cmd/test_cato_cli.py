@@ -118,7 +118,7 @@ def test_run_command(live_server, snapshot, run_config, test_resource_provider):
         )
 
     assert requests.get(
-        live_server.server_url() + "/api/v1/test_results/run/2"
+        live_server.server_url() + "/api/v1/test_results/run/1"
     ).json() == [
         {
             "execution_status": "FINISHED",
