@@ -61,7 +61,6 @@ task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
     dependsOn('copyConjureTypescriptModels')
     dependsOn('yarnTest')
-    dependsOn('yarnLokiTest')
     args = ['build']
     inputs.dir('public')
     inputs.dir('src')
