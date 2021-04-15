@@ -93,6 +93,7 @@ class TestTestExecutionDbReporter:
             )
         )
         assert self.test_execution_db_reporter._run_id == 5
+        self.mock_cato_api_client.create_run.assert_not_called()
 
     def test_report_test_execution_start_should_report(self, test_result_factory):
         self.test_execution_db_reporter._run_id = 5
