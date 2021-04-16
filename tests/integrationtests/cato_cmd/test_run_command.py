@@ -65,15 +65,9 @@ def step_impl(scenario_context):
 
 @then("the result should be available at the server")
 def step_impl(live_server, scenario_context):
-    match = scenario_context["command_result"].output_contains_line_matching(
-        "You can find your run at http://127.0.0.1:\d+/#/projects/\d+/runs/(\d+)"
-    )
-    assert match
-    run_id = match.group(1)
-    url = live_server.server_url() + "/api/v1/test_results/run/" + run_id
-    response = requests.get(url)
-    assert response.status_code == 200
-    assert response.json() == [
+    run_id = _parse_run_id_from_output(scenario_context)
+    run_json = _read_run_from_server(live_server, run_id)
+    assert run_json == [
         {
             "execution_status": "FINISHED",
             "id": 2,
@@ -136,15 +130,9 @@ def step_impl(scenario_context):
 
 @then("the success result should be available at the server")
 def step_impl(scenario_context, live_server):
-    match = scenario_context["command_result"].output_contains_line_matching(
-        "You can find your run at http://127.0.0.1:\d+/#/projects/\d+/runs/(\d+)"
-    )
-    assert match
-    run_id = match.group(1)
-    url = live_server.server_url() + "/api/v1/test_results/run/" + run_id
-    response = requests.get(url)
-    assert response.status_code == 200
-    assert response.json() == [
+    run_id = _parse_run_id_from_output(scenario_context)
+    run_json = _read_run_from_server(live_server, run_id)
+    assert run_json == [
         {
             "execution_status": "FINISHED",
             "id": 2,
@@ -160,3 +148,20 @@ def step_impl(scenario_context, live_server):
             "test_identifier": "WriteImages/write_white_image",
         },
     ]
+
+
+def _read_run_from_server(live_server, run_id):
+    url = live_server.server_url() + "/api/v1/test_results/run/" + run_id
+    response = requests.get(url)
+    assert response.status_code == 200
+    json = response.json()
+    return json
+
+
+def _parse_run_id_from_output(scenario_context):
+    match = scenario_context["command_result"].output_contains_line_matching(
+        "You can find your run at http://127.0.0.1:\d+/#/projects/\d+/runs/(\d+)"
+    )
+    assert match
+    run_id = match.group(1)
+    return run_id
