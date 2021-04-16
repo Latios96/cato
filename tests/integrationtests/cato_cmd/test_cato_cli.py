@@ -1,9 +1,7 @@
 import os
-import subprocess
 import sys
 
 import pytest
-import requests
 
 from cato.config.config_encoder import ConfigEncoder
 from cato.config.config_file_parser import JsonConfigParser
@@ -17,7 +15,7 @@ from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import HttpTemplate
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
-from tests.integrationtests.utils import change_cwd, snapshot_output, run_command
+from tests.integrationtests.utils import snapshot_output, run_command
 
 
 @pytest.fixture
