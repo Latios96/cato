@@ -48,36 +48,6 @@ def run_config(tmp_path, test_resource_provider):
     return path
 
 
-def test_run_command(live_server, snapshot, run_config, test_resource_provider):
-    with change_cwd(os.path.dirname(os.path.dirname(run_config))):
-        output = subprocess.call(
-            [
-                sys.executable,
-                "-m",
-                "cato",
-                "run",
-                "--path",
-                run_config,
-                "-u",
-                live_server.server_url(),
-            ],
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-        )
-
-    assert requests.get(
-        live_server.server_url() + "/api/v1/test_results/run/1"
-    ).json() == [
-        {
-            "execution_status": "FINISHED",
-            "id": 1,
-            "name": "PythonOutputVersion",
-            "status": "SUCCESS",
-            "test_identifier": "PythonTestSuite/PythonOutputVersion",
-        }
-    ]
-
-
 @pytest.mark.skipif(
     sys.platform != "win32", reason="not working on linux, to be removed anyway"
 )
