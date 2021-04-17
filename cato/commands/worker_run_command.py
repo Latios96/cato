@@ -11,42 +11,37 @@ from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_runner import TestRunner
+from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.test_identifier import TestIdentifier
 
 
 class WorkerRunCommand(BaseCliCommand):
     def __init__(
         self,
-        config_encoder: ConfigEncoder,
         test_execution_reporter: TestExecutionReporter,
         test_runner: TestRunner,
         reporter: Reporter,
         logger: logging.Logger,
+        cato_api_client: CatoApiClient,
     ):
-        self._config_encoder = config_encoder
         self._test_execution_reporter = test_execution_reporter
         self._test_runner = test_runner
         self._reporter = reporter
         self._logger = logger
+        self._cato_api_client = cato_api_client
 
     def execute(
         self,
-        encoded_config: str,
+        submission_info_id: int,
         test_identifier_str: str,
-        run_id: int,
-        resource_path: str,
     ):
         self._reporter.set_verbose_mode(VerboseMode.VERY_VERBOSE)
-        if os.path.isdir(resource_path):
-            resource_path = os.path.join(resource_path, "cato.json")
-        c = self._config_encoder.decode(encoded_config.encode(), resource_path)
-        config = RunConfig(  # todo fix this
-            project_name=c.project_name,
-            resource_path=os.path.dirname(resource_path),
-            test_suites=c.test_suites,
-            output_folder=os.getcwd(),
-            variables=c.variables,
+        submission_info = self._cato_api_client.get_submission_info_by_id(
+            submission_info_id
         )
+        if not submission_info:
+            raise ValueError("Invalid submission info id: {}".format(submission_info))
+        config = submission_info.config
 
         config.test_suites = filter_by_test_identifier(
             config.test_suites, TestIdentifier.from_string(test_identifier_str)
@@ -60,11 +55,16 @@ class WorkerRunCommand(BaseCliCommand):
         suite = config.test_suites[0]
         test = config.test_suites[0].tests[0]
 
-        self._test_execution_reporter.use_run_id(run_id)
+        self._test_execution_reporter.use_run_id(submission_info.run_id)
 
-        self._execute_test(config, suite, test)
+        run_config = RunConfig.from_config(
+            config,
+            submission_info.resource_path,
+            os.path.join(submission_info.resource_path, "output"),
+        )  # todo use temporary folder for output
+        self._execute_test(run_config, suite, test)
 
-    def _execute_test(self, config: Config, suite: TestSuite, test: Test):
+    def _execute_test(self, config: RunConfig, suite: TestSuite, test: Test):
         self._test_execution_reporter.report_test_execution_start(suite, test)
 
         result = self._test_runner.run_test(config, suite, test)

@@ -67,18 +67,22 @@ def test_submit_command(live_server, snapshot, run_config, test_resource_provide
     )
 
 
-def test_worker_run_command(live_server, snapshot, run_config):
-    object_mapper = ObjectMapper(MapperRegistryFactory().create_mapper_registry())
-    execution_reporter = TestExecutionDbReporter(
-        MachineInfoCollector(),
-        CatoApiClient(
-            live_server.server_url(), HttpTemplate(object_mapper), object_mapper
-        ),
+def test_worker_run_command(live_server, snapshot, run_config, test_resource_provider):
+    snapshot_output(
+        snapshot,
+        [
+            sys.executable,
+            "-m",
+            "cato",
+            "submit",
+            "--path",
+            run_config,
+            "-u",
+            live_server.server_url(),
+        ],
+        workdir=test_resource_provider.resource_by_name("cato_test_config"),
+        trimmers={r"127.0.0.1:\d+": "127.0.0.1:12345"},
     )
-    parser = JsonConfigParser()
-    config = parser.parse(run_config)
-    execution_reporter.start_execution("test", config.test_suites)
-    config_encoder = ConfigEncoder(ConfigFileWriter(), parser)
 
     command = [
         sys.executable,
@@ -87,14 +91,10 @@ def test_worker_run_command(live_server, snapshot, run_config):
         "worker-run",
         "-u",
         live_server.server_url(),
-        "-config",
-        config_encoder.encode(config).decode(),
+        "-submission-info-id",
+        "1",
         "-test-identifier",
         "PythonTestSuite/PythonOutputVersion",
-        "-run-id",
-        "{}".format(execution_reporter._run_id),
-        "-resource-path",
-        os.getcwd(),
     ]
 
     stdout, stderr, exit_code = run_command(

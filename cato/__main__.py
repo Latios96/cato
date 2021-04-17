@@ -146,15 +146,13 @@ def config_template(path: str):
 
 def worker_run(
     url: str,
-    encoded_config: str,
+    submission_info_id: int,
     test_identifier_str: str,
-    run_id: int,
-    resource_path: str,
 ):
     obj_graph = create_object_graph(url)
     worker_command = provide_safe(obj_graph, WorkerRunCommand)
 
-    worker_command.execute(encoded_config, test_identifier_str, run_id, resource_path)
+    worker_command.execute(submission_info_id, test_identifier_str)
 
 
 def main():
@@ -226,18 +224,10 @@ def main():
         "-u", "--url", help="url to server", required=True
     )
     worker_execute_command_parser.add_argument(
-        "-config", required=True, help="base64 encoded config JSON"
+        "-submission-info-id", required=True, type=int, help="run id to report to"
     )
     worker_execute_command_parser.add_argument(
         "-test-identifier", required=True, help="Identifier of the test to run"
-    )
-    worker_execute_command_parser.add_argument(
-        "-run-id", required=True, type=int, help="run id to report to"
-    )
-    worker_execute_command_parser.add_argument(
-        "-resource-path",
-        required=True,
-        help="folder where tests resources (scenes etc) are located",
     )
 
     args = main_parser.parse_args()
@@ -268,9 +258,7 @@ def main():
     elif args.command == "update-reference":
         update_reference(args.path, args.test_identifier)
     elif args.command == "worker-run":
-        worker_run(
-            args.url, args.config, args.test_identifier, args.run_id, args.resource_path
-        )
+        worker_run(args.url, args.submission_info_id, args.test_identifier)
     else:
         logger.error(f"No method found to run command {args.command}")
 
