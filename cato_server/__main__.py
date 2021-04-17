@@ -19,6 +19,7 @@ from cato_server.api.images_blueprint import ImagesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.schedulers_blueprint import SchedulersBlueprint
+from cato_server.api.submission_infos_blueprint import SubmissionInfosBlueprint
 from cato_server.api.suite_results_blueprint import SuiteResultsBlueprint
 from cato_server.api.test_heartbeat_blueprint import TestHeartbeatBlueprint
 from cato_server.api.test_result_blueprint import TestResultsBlueprint
@@ -79,6 +80,9 @@ def create_app(
         obj_graph.provide(TestHeartbeatBlueprint), url_prefix="/api/v1"
     )
     app.register_blueprint(obj_graph.provide(SchedulersBlueprint), url_prefix="/api/v1")
+    app.register_blueprint(
+        obj_graph.provide(SubmissionInfosBlueprint), url_prefix="/api/v1"
+    )
 
     @app.errorhandler(Exception)
     def handle_500(e):

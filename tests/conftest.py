@@ -12,6 +12,7 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
@@ -39,6 +40,7 @@ from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
+from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
@@ -62,6 +64,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
+    SqlAlchemySubmissionInfoRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
@@ -285,6 +290,21 @@ def output_for_finished_test(sessionmaker_fixture, finished_test_result):
     return repository.save(
         Output(id=0, test_result_id=finished_test_result.id, text="This is a long text")
     )
+
+
+@pytest.fixture()
+def submission_info(sessionmaker_fixture, run, config_fixture):
+    repository = SqlAlchemySubmissionInfoRepository(
+        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter()
+    )
+    sub_info = SubmissionInfo(
+        id=0,
+        config=config_fixture.CONFIG,
+        run_id=run.id,
+        resource_path="resource_path",
+        executable="executable",
+    )
+    return repository.save(sub_info)
 
 
 def random_port():
