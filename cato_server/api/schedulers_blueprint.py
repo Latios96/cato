@@ -50,9 +50,7 @@ class SchedulersBlueprint(Blueprint):
 
     def _read_submission_info(self, request_json):
         return SubmissionInfo(
-            config=self._json_config_parser.parse_dict(
-                "some/path", request_json["config"]
-            ),
+            config=self._json_config_parser.parse_dict(request_json["config"]),
             run_id=request_json["run_id"],
             resource_path=request_json["resource_path"],
             executable=request_json["executable"],

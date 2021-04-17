@@ -15,9 +15,9 @@ class JsonConfigParser:
             stream = open(path)
         data = self._read_json_from_stream(stream)
 
-        return self.parse_dict(path, data)
+        return self.parse_dict(data)
 
-    def parse_dict(self, path: str, data: Dict):  # todo remove path
+    def parse_dict(self, data: Dict):
         schema = self._read_json_from_file(self._schema_path())
         validate(instance=data, schema=schema)
         return Config(

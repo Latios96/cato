@@ -162,7 +162,7 @@ def test_failure():
 def test_success_parse_dict():
     json_config_parser = JsonConfigParser()
 
-    suites = json_config_parser.parse_dict(TEST_JSON, VALID_CONFIG)
+    suites = json_config_parser.parse_dict(VALID_CONFIG)
 
     assert suites == EXPECTED_VALID_CONFIG
 
@@ -171,4 +171,4 @@ def test_failure_parse_dict():
     json_config_parser = JsonConfigParser()
 
     with pytest.raises(ValidationError):
-        json_config_parser.parse_dict(TEST_JSON, INVALID_CONFIG)
+        json_config_parser.parse_dict(INVALID_CONFIG)

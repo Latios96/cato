@@ -25,7 +25,7 @@ class SubmissionInfoClassMapper(AbstractClassMapper[SubmissionInfo]):
         }
 
     def _map_config_from_dict(self, json_data: Dict):
-        return JsonConfigParser().parse_dict("this/is/a/random/path", json_data)
+        return JsonConfigParser().parse_dict(json_data)
 
     def _map_config_to_dict(self, config: Config):
         return ConfigFileWriter().write_to_dict(config)

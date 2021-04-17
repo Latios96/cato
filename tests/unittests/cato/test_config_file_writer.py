@@ -41,6 +41,6 @@ def test_write_to_dict_and_read_back_is_equal():
     config_dict = config_file_writer.write_to_dict(CONFIG)
 
     config_file_parser = JsonConfigParser()
-    parsed_result = config_file_parser.parse_dict("test/my_path", config_dict)
+    parsed_result = config_file_parser.parse_dict(config_dict)
 
     assert parsed_result == CONFIG
