@@ -458,3 +458,15 @@ def test_submit_to_scheduler_success(cato_api_client, config_fixture, run):
     )
 
     cato_api_client.submit_to_scheduler(submission_info)
+
+
+def test_find_submission_info_by_id(cato_api_client, submission_info):
+    found_info = cato_api_client.get_submission_info_by_id(submission_info.id)
+
+    assert found_info == submission_info
+
+
+def test_find_submission_info_by_not_existing_id(cato_api_client):
+    found_info = cato_api_client.get_submission_info_by_id(42)
+
+    assert found_info == None

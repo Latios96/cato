@@ -185,6 +185,10 @@ class CatoApiClient:
                 f"Something went wrong when submitting to scheduler: {response.status_code()}, {response.text()}"
             )
 
+    def get_submission_info_by_id(self, submission_info_id: int) -> SubmissionInfo:
+        url = self._build_url("/api/v1/submission_infos/{}".format(submission_info_id))
+        return self._find_with_http_template(url, SubmissionInfo)
+
     def _build_url(self, url):
         return self._url + quote(url)
 
