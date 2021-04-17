@@ -1,4 +1,4 @@
-from flask import Blueprint, abort
+from flask import abort
 
 from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.mappers.object_mapper import ObjectMapper

@@ -1,8 +1,5 @@
-import os
-
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.config import RunConfig
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 
 

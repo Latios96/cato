@@ -2,8 +2,7 @@ import logging
 import os
 
 from cato.commands.base_command import BaseCliCommand
-from cato.config.config_encoder import ConfigEncoder
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import filter_by_test_identifier, TestSuite

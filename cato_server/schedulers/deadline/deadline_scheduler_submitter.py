@@ -1,7 +1,6 @@
-from cato.config.config_encoder import ConfigEncoder
-from cato.domain.test_suite import iterate_suites_and_tests
 import logging
 
+from cato.domain.test_suite import iterate_suites_and_tests
 from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_job import DeadlineJob

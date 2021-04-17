@@ -1,4 +1,3 @@
-import os
 from typing import Optional, Callable
 
 from cato.commands.base_command import BaseCliCommand

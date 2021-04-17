@@ -8,7 +8,6 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from cato.config.config_encoder import ConfigEncoder
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
 from cato_server.configuration.app_configuration import AppConfiguration
