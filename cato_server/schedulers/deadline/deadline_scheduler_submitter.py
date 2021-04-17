@@ -18,8 +18,11 @@ class DeadlineSchedulerSubmitter:
         jobs = []
         for suite, test in iterate_suites_and_tests(submission_info.config.test_suites):
             job = self._create_job(submission_info, suite, test)
-            jobs.append(job)  # todo logging
+            jobs.append(job)
+
+        logger.info("Submitting %s jobs to Deadline..", len(jobs))
         self._deadline_api.submit_jobs(jobs)
+        logger.info("Successfully submitted %s jobs to Deadline", len(jobs))
 
     def _create_job(self, submission_info, suite, test) -> DeadlineJob:
         job_info = self._create_job_info(submission_info, suite, test)
