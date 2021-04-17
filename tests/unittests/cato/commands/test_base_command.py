@@ -1,10 +1,11 @@
 import os
+from unittest import mock
 
 from cato.commands.base_command import BaseCliCommand
 
 
 def test_config_path_should_use_cwd():
-    base_command = BaseCliCommand()
+    base_command = BaseCliCommand(mock.MagicMock())
 
     path = base_command._config_path(None)
 
@@ -12,7 +13,7 @@ def test_config_path_should_use_cwd():
 
 
 def test_config_path_should_use_provided_file():
-    base_command = BaseCliCommand()
+    base_command = BaseCliCommand(mock.MagicMock())
 
     path = base_command._config_path(os.path.join("my_folder", "catoo.json"))
 
@@ -20,7 +21,7 @@ def test_config_path_should_use_provided_file():
 
 
 def test_config_path_should_use_provided_folder(tmp_path):
-    base_command = BaseCliCommand()
+    base_command = BaseCliCommand(mock.MagicMock())
 
     path = base_command._config_path(str(tmp_path))
 

@@ -26,7 +26,7 @@ class RunCommandInterface(BaseCliCommand):
         ],
         cato_api_client: CatoApiClient,
     ):
-        self._json_config_parser = json_config_parser
+        super(RunCommandInterface, self).__init__(json_config_parser)
         self._last_run_information_repository_factory = (
             last_run_information_repository_factory
         )
@@ -64,17 +64,4 @@ class RunCommandInterface(BaseCliCommand):
                 config.test_suites, failed_test_identifiers
             )
 
-        return config
-
-    def _read_config(self, path):
-        # todo here is the magic where a run config is created
-        # todo add option to pass resources folder as argument
-        c = self._json_config_parser.parse(path)
-        config = RunConfig(
-            project_name=c.project_name,
-            path=os.path.dirname(path),
-            test_suites=c.test_suites,
-            output_folder=os.getcwd(),
-            variables=c.variables,
-        )
         return config
