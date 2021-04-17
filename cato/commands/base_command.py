@@ -17,6 +17,7 @@ class BaseCliCommand(object):
         return path
 
     def _read_config(self, config_path: str) -> RunConfig:
+        config_path = self._config_path(config_path)
         config = self._json_config_parser.parse(config_path)
         # todo add option to pass resources folder as argument
         return RunConfig(
