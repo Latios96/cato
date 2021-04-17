@@ -289,7 +289,6 @@ class BindingsFactory:
                 )
                 return OptionalComponent(
                     DeadlineSchedulerSubmitter(
-                        ConfigEncoder(ConfigFileWriter(), JsonConfigParser()),
                         url,
                         DeadlineApi(url),
                     )
