@@ -10,10 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class DeadlineSchedulerSubmitter:
-    def __init__(
-        self, config_encoder: ConfigEncoder, deadline_url, deadline_api: DeadlineApi
-    ):
-        self._config_encoder = config_encoder
+    def __init__(self, deadline_url, deadline_api: DeadlineApi):
         self._deadline_url = deadline_url
         self._deadline_api = deadline_api
 
@@ -21,7 +18,7 @@ class DeadlineSchedulerSubmitter:
         jobs = []
         for suite, test in iterate_suites_and_tests(submission_info.config.test_suites):
             job = self._create_job(submission_info, suite, test)
-            jobs.append(job)
+            jobs.append(job)  # todo logging
         self._deadline_api.submit_jobs(jobs)
 
     def _create_job(self, submission_info, suite, test) -> DeadlineJob:
@@ -59,13 +56,9 @@ class DeadlineSchedulerSubmitter:
             "worker-run",
             "-u",
             "http://localhost:5000",  # todo get from config
-            "-config",
-            self._config_encoder.encode(submission_info.config).decode(),
+            "-submission-info-id",
+            "{}".format(submission_info.id),
             "-test-identifier",
             '"{}"'.format(test_identifier_str),
-            "-run-id",
-            "{}".format(submission_info.run_id),
-            "-resource-path",
-            '"{}"'.format(submission_info.resource_path),
         ]
         return command
