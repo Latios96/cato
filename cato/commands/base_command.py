@@ -22,7 +22,7 @@ class BaseCliCommand(object):
         # todo add option to pass resources folder as argument
         return RunConfig(
             project_name=config.project_name,
-            path=os.path.dirname(config_path),
+            resource_path=os.path.dirname(config_path),
             test_suites=config.test_suites,
             output_folder=os.getcwd(),
             variables=config.variables,

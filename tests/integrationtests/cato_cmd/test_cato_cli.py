@@ -36,7 +36,7 @@ def run_config(tmp_path, test_resource_provider):
     )
     config = RunConfig(
         project_name="EXAMPLE_PROJECT",
-        path="test",
+        resource_path="test",
         test_suites=[python_test_suite],
         output_folder="output",
         variables={"my_var": "from_config"},

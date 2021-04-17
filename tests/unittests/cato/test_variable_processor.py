@@ -18,7 +18,7 @@ EXAMPLE_PROJECT = "Example project"
 def test_evaluate_variables_no_custom_vars():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
     )
@@ -32,7 +32,7 @@ def test_evaluate_variables_no_custom_vars():
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -48,7 +48,7 @@ def test_evaluate_variables_no_custom_vars():
 def test_evaluate_variables_custom_image_output():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
     )
@@ -73,7 +73,7 @@ def test_evaluate_variables_custom_image_output():
         "frame": "7",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -99,7 +99,7 @@ def test_format_command():
 def test_evaluate_variables_variables_from_config():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
         variables={"test_variable": "my_value"},
@@ -114,7 +114,7 @@ def test_evaluate_variables_variables_from_config():
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -131,7 +131,7 @@ def test_evaluate_variables_variables_from_config():
 def test_evaluate_variables_variables_from_suite():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
     )
@@ -147,7 +147,7 @@ def test_evaluate_variables_variables_from_suite():
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -164,7 +164,7 @@ def test_evaluate_variables_variables_from_suite():
 def test_evaluate_variables_variables_from_config_override_by_suite():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
@@ -183,7 +183,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -200,7 +200,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
 def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by_test():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
@@ -221,7 +221,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
@@ -238,7 +238,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
 def test_evaluate_variables_maya_predefinition():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="config_path",
+        resource_path="config_path",
         test_suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
@@ -261,7 +261,7 @@ def test_evaluate_variables_maya_predefinition():
         "frame": "0001",
         "test_name": test.name,
         "suite_name": suite.name,
-        "config_path": config.path,
+        "config_path": config.resource_path,
         "output_folder": "test",
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,

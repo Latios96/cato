@@ -41,7 +41,7 @@ TEST_SUITE = TestSuite(
 )
 CONFIG = RunConfig(
     project_name="EXAMPLE_PROJECT",
-    path="test",
+    resource_path="test",
     test_suites=[TEST_SUITE],
     output_folder="output",
     variables={"my_var": "from_config"},

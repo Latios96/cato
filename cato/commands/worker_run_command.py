@@ -42,7 +42,7 @@ class WorkerRunCommand(BaseCliCommand):
         c = self._config_encoder.decode(encoded_config.encode(), resource_path)
         config = RunConfig(  # todo fix this
             project_name=c.project_name,
-            path=os.path.dirname(resource_path),
+            resource_path=os.path.dirname(resource_path),
             test_suites=c.test_suites,
             output_folder=os.getcwd(),
             variables=c.variables,

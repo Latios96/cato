@@ -17,7 +17,7 @@ class VariableProcessor:
             "frame": "0001",
             "test_name": test.name,
             "suite_name": current_suite.name,
-            "config_path": config.path,
+            "config_path": config.resource_path,
             "output_folder": config.output_folder,
             "test_resources": "{@config_path}/{@suite_name}/{@test_name}",
             "reference_image_no_extension": "{@test_resources}/reference",

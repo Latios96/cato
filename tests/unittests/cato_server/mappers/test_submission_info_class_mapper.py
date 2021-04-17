@@ -71,7 +71,7 @@ def test_map_from_dict(config_fixture):
     }
 
     submission_info = SubmissionInfoClassMapper().map_from_dict(the_dict)
-    config_fixture.CONFIG.path = "this/is/a/random"
+    config_fixture.CONFIG.resource_path = "this/is/a/random"
     config_fixture.CONFIG.output_folder = os.getcwd()
 
     assert submission_info == SubmissionInfo(

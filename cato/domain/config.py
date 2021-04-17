@@ -29,7 +29,7 @@ class Config:
 @dataclass
 class RunConfig:
     project_name: str
-    path: str  # todo rename to resource path
+    resource_path: str  # todo rename to resource path
     test_suites: List[TestSuite]
     output_folder: str
     variables: Dict[str, str] = field(default_factory=dict)
@@ -53,7 +53,7 @@ class RunConfig:
     def from_config(cls, config: Config, resource_path: str, output_folder: str):
         return RunConfig(
             project_name=config.project_name,
-            path=resource_path,
+            resource_path=resource_path,
             test_suites=config.test_suites,
             output_folder=output_folder,
             variables=config.variables,

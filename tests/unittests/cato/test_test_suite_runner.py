@@ -37,7 +37,7 @@ def test_run_empty_suites_should_fail():
         test_suite_runner.run_test_suites(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
-                path="",
+                resource_path="",
                 test_suites=[],
                 output_folder="output",
             )
@@ -59,7 +59,7 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="",
+        resource_path="",
         test_suites=[test_suite],
         output_folder="output",
     )
@@ -88,7 +88,7 @@ def test_run_suite_should_return_correctly_collected_results():
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
-        path="",
+        resource_path="",
         test_suites=[test_suite],
         output_folder="output",
     )
