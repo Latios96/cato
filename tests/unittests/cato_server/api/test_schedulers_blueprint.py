@@ -17,6 +17,7 @@ def test_success(client, run, mocked_scheduler_submitter):
     assert response.json == {"success": True}
     assert response.status_code == 200
     expected_info = SubmissionInfo(
+        id=0,
         config=JsonConfigParser().parse_dict(VALID_CONFIG),
         run_id=run.id,
         resource_path="some/path",

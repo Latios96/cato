@@ -10,6 +10,7 @@ from cato_server.domain.submission_info import SubmissionInfo
 class SubmissionInfoClassMapper(AbstractClassMapper[SubmissionInfo]):
     def map_from_dict(self, json_data: Dict) -> SubmissionInfo:
         return SubmissionInfo(
+            id=json_data["id"],
             config=self._map_config_from_dict(json_data["config"]),
             run_id=json_data["run_id"],
             resource_path=json_data["resource_path"],
@@ -18,6 +19,7 @@ class SubmissionInfoClassMapper(AbstractClassMapper[SubmissionInfo]):
 
     def map_to_dict(self, submission_info: SubmissionInfo) -> Dict:
         return {
+            "id": submission_info.id,
             "config": self._map_config_to_dict(submission_info.config),
             "run_id": submission_info.run_id,
             "resource_path": submission_info.resource_path,

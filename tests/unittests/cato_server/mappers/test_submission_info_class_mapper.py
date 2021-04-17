@@ -8,6 +8,7 @@ from cato_server.domain.submission_info import SubmissionInfo
 
 def test_map_to_dict(config_fixture):
     submission_info = SubmissionInfo(
+        id=0,
         config=config_fixture.CONFIG,
         run_id=42,
         resource_path="resource_path",
@@ -17,6 +18,7 @@ def test_map_to_dict(config_fixture):
     the_dict = SubmissionInfoClassMapper().map_to_dict(submission_info)
 
     assert the_dict == {
+        "id": 0,
         "config": {
             "project_name": "EXAMPLE_PROJECT",
             "suites": [
@@ -45,6 +47,7 @@ def test_map_to_dict(config_fixture):
 
 def test_map_from_dict(config_fixture):
     the_dict = {
+        "id": 0,
         "config": {
             "project_name": "EXAMPLE_PROJECT",
             "suites": [
@@ -75,6 +78,7 @@ def test_map_from_dict(config_fixture):
     config_fixture.CONFIG.output_folder = os.getcwd()
 
     assert submission_info == SubmissionInfo(
+        id=0,
         config=config_fixture.CONFIG,
         run_id=42,
         resource_path="resource_path",

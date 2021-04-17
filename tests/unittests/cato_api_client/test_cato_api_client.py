@@ -450,6 +450,7 @@ def test_run_id_exists_failure(cato_api_client):
 
 def test_submit_to_scheduler_success(cato_api_client, config_fixture, run):
     submission_info = SubmissionInfo(
+        id=0,
         config=config_fixture.CONFIG,
         run_id=run.id,
         resource_path="resource_path",

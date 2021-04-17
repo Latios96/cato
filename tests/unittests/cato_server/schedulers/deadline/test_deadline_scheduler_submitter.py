@@ -20,6 +20,7 @@ class TestDeadlineSchedulerSubmitter:
 
     def test_should_submit_single_job_successfully(self, config_fixture):
         submission_info = SubmissionInfo(
+            id=0,
             config=config_fixture.CONFIG,
             run_id=42,
             resource_path="my/resource/folder",
@@ -58,6 +59,7 @@ class TestDeadlineSchedulerSubmitter:
             )
         )
         submission_info = SubmissionInfo(
+            id=0,
             config=config_fixture.CONFIG,
             run_id=42,
             resource_path="my/resource/folder",
