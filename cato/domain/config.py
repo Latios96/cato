@@ -29,7 +29,7 @@ class Config:
 @dataclass
 class RunConfig:
     project_name: str
-    path: str
+    path: str  # todo rename to resource path
     test_suites: List[TestSuite]
     output_folder: str
     variables: Dict[str, str] = field(default_factory=dict)
@@ -48,3 +48,16 @@ class RunConfig:
     @property
     def test_count(self):
         return sum(map(lambda x: len(x.tests), self.test_suites))
+
+    @classmethod
+    def from_config(cls, config: Config, resource_path: str, output_folder: str):
+        return RunConfig(
+            project_name=config.project_name,
+            path=resource_path,
+            test_suites=config.test_suites,
+            output_folder=output_folder,
+            variables=config.variables,
+        )
+
+    def to_config(self) -> Config:
+        return Config(self.project_name, self.test_suites, self.variables)
