@@ -17,14 +17,12 @@ class JsonConfigParser:
 
         return self.parse_dict(path, data)
 
-    def parse_dict(self, path: str, data: Dict):
+    def parse_dict(self, path: str, data: Dict):  # todo remove path
         schema = self._read_json_from_file(self._schema_path())
         validate(instance=data, schema=schema)
         return Config(
             data["project_name"],
-            os.path.dirname(path),  # todo fix this, problems for distributed testing
             self._transform_suites(data),
-            output_folder=os.getcwd(),  # todo fix this
             variables=data["variables"] if data.get("variables") else {},
         )
 

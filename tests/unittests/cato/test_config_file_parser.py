@@ -32,7 +32,6 @@ VALID_CONFIG = {
 
 EXPECTED_VALID_CONFIG = Config(
     project_name=EXAMPLE_PROJECT,
-    path="test",
     test_suites=[
         TestSuite(
             name="My_first_test_Suite",
@@ -45,7 +44,6 @@ EXPECTED_VALID_CONFIG = Config(
             ],
         )
     ],
-    output_folder=os.getcwd(),
 )
 
 VALID_CONFIG_WITH_VARIABLES = {
@@ -112,7 +110,6 @@ def test_success_with_variables():
 
     assert suites == Config(
         project_name=EXAMPLE_PROJECT,
-        path="test",
         test_suites=[
             TestSuite(
                 name="My_first_test_Suite",
@@ -125,7 +122,6 @@ def test_success_with_variables():
                 ],
             )
         ],
-        output_folder=os.getcwd(),
     )
 
 
@@ -139,7 +135,6 @@ def test_success_with_variables_in_config_and_suite():
 
     assert suites == Config(
         project_name=EXAMPLE_PROJECT,
-        path="test",
         test_suites=[
             TestSuite(
                 name="My_first_test_Suite",
@@ -153,7 +148,6 @@ def test_success_with_variables_in_config_and_suite():
                 variables={"my_var": "from_suite"},
             )
         ],
-        output_folder=os.getcwd(),
         variables={"my_var": "from_config"},
     )
 

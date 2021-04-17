@@ -2,7 +2,7 @@ import os
 import shutil
 
 from cato import logger
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import iterate_suites_and_tests, filter_by_test_identifier
 from cato.file_system_abstractions.output_folder import OutputFolder
@@ -14,7 +14,7 @@ class UpdateReferenceImage:
         self._output_folder = output_folder
         self._copy_file = copy_file
 
-    def update(self, config: Config, test_identifier: TestIdentifier):
+    def update(self, config: RunConfig, test_identifier: TestIdentifier):
         filtered = filter_by_test_identifier(config.test_suites, test_identifier)
         for suite, test in iterate_suites_and_tests(filtered):
             variable_processor = VariableProcessor()

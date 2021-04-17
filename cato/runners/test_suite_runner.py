@@ -1,6 +1,6 @@
 from typing import List, Callable
 
-from cato.domain.config import Config
+from cato.domain.config import RunConfig
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
@@ -30,7 +30,7 @@ class TestSuiteRunner:
             last_run_information_repository_factory
         )
 
-    def run_test_suites(self, config: Config) -> List[TestSuiteExecutionResult]:
+    def run_test_suites(self, config: RunConfig) -> List[TestSuiteExecutionResult]:
 
         if not config.test_suites:
             raise ValueError("At least one TestSuite is required!")

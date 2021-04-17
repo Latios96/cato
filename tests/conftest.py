@@ -13,7 +13,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from cato.config.config_file_writer import ConfigFileWriter
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
@@ -378,6 +378,11 @@ class ConfigFixture:
             variables={"my_var": "from_suite"},
         )
         self.CONFIG = Config(
+            project_name="EXAMPLE_PROJECT",
+            test_suites=[self.TEST_SUITE],
+            variables={"my_var": "from_config"},
+        )
+        self.RUN_CONFIG = RunConfig(
             project_name="EXAMPLE_PROJECT",
             path="test",
             test_suites=[self.TEST_SUITE],

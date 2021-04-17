@@ -6,7 +6,7 @@ import pytest
 from cato.config.config_encoder import ConfigEncoder
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
@@ -34,7 +34,7 @@ def run_config(tmp_path, test_resource_provider):
         tests=[test1],
         variables={},
     )
-    config = Config(
+    config = RunConfig(
         project_name="EXAMPLE_PROJECT",
         path="test",
         test_suites=[python_test_suite],

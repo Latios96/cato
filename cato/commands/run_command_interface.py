@@ -1,8 +1,9 @@
+import os
 from typing import Optional, Callable
 
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.config import Config
+from cato.domain.config import RunConfig
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import (
     filter_by_suite_name,
@@ -37,10 +38,9 @@ class RunCommandInterface(BaseCliCommand):
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
         only_failed: bool,
-    ) -> Config:
+    ) -> RunConfig:
         path = self._config_path(path)
-
-        config = self._json_config_parser.parse(path)
+        config = self._read_config(path)
 
         last_run_information = None
         if only_failed:
@@ -64,4 +64,17 @@ class RunCommandInterface(BaseCliCommand):
                 config.test_suites, failed_test_identifiers
             )
 
+        return config
+
+    def _read_config(self, path):
+        # todo here is the magic where a run config is created
+        # todo add option to pass resources folder as argument
+        c = self._json_config_parser.parse(path)
+        config = RunConfig(
+            project_name=c.project_name,
+            path=os.path.dirname(path),
+            test_suites=c.test_suites,
+            output_folder=os.getcwd(),
+            variables=c.variables,
+        )
         return config

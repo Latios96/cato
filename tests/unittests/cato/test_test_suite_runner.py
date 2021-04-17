@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -35,7 +35,7 @@ def test_run_empty_suites_should_fail():
 
     with pytest.raises(ValueError):
         test_suite_runner.run_test_suites(
-            Config(
+            RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 path="",
                 test_suites=[],
@@ -57,7 +57,7 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
@@ -86,7 +86,7 @@ def test_run_suite_should_return_correctly_collected_results():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],

@@ -43,6 +43,7 @@ class TestSubmitCommand:
             self.mock_test_execution_reporter,
         )
         self.mock_json_config_parser.parse.return_value = self.config
+        self.submit_command._read_config = lambda x: self.config
 
     def test_should_submit_all_tests(self):
         self.mock_test_execution_reporter.run_id.return_value = 42

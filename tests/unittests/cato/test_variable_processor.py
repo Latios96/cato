@@ -1,4 +1,4 @@
-from cato.domain.config import Config
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
@@ -16,7 +16,7 @@ EXAMPLE_PROJECT = "Example project"
 
 
 def test_evaluate_variables_no_custom_vars():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -46,7 +46,7 @@ def test_evaluate_variables_no_custom_vars():
 
 
 def test_evaluate_variables_custom_image_output():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -97,7 +97,7 @@ def test_format_command():
 
 
 def test_evaluate_variables_variables_from_config():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -129,7 +129,7 @@ def test_evaluate_variables_variables_from_config():
 
 
 def test_evaluate_variables_variables_from_suite():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -162,7 +162,7 @@ def test_evaluate_variables_variables_from_suite():
 
 
 def test_evaluate_variables_variables_from_config_override_by_suite():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -198,7 +198,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
 
 
 def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by_test():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],
@@ -236,7 +236,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
 
 
 def test_evaluate_variables_maya_predefinition():
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="config_path",
         test_suites=[],

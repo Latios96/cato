@@ -17,9 +17,7 @@ suites = [suite1, suite2]
 
 CONFIG = Config(
     project_name="Example project",
-    path="test",
     test_suites=suites,
-    output_folder=os.getcwd(),
     variables={"my_var": "value"},
 )
 

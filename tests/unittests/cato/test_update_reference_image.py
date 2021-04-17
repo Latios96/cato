@@ -1,6 +1,6 @@
 from unittest import mock
 
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
@@ -19,7 +19,7 @@ def test_should_update():
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
@@ -40,7 +40,7 @@ def test_should_not_update_because_image_output_missing():
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
@@ -66,7 +66,7 @@ def test_user_supplied_paths_are_checked():
         },
     )
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],

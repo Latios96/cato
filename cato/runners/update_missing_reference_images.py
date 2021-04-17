@@ -3,7 +3,7 @@ import shutil
 from typing import Callable
 
 from cato import logger
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test_suite import iterate_suites_and_tests
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_processor import VariableProcessor
@@ -18,7 +18,7 @@ class UpdateMissingReferenceImages:
         self._output_folder = output_folder
         self._copy_file = copy_file
 
-    def update(self, config: Config):
+    def update(self, config: RunConfig):
         for suite, test in iterate_suites_and_tests(config.test_suites):
             variable_processor = VariableProcessor()
             variables = variable_processor.evaluate_variables(config, suite, test)

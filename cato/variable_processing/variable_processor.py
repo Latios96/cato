@@ -1,6 +1,6 @@
 from typing import Dict, Optional, List
 
-from cato.domain.config import Config
+from cato.domain.config import RunConfig
 from cato.variable_processing.variable_predefinition import VariablePredefinition
 from cato.vendor import lucidity
 
@@ -8,7 +8,7 @@ from cato.vendor import lucidity
 class VariableProcessor:
     def evaluate_variables(
         self,
-        config: Config,
+        config: RunConfig,
         current_suite,
         test,
         predefinitions: Optional[List[VariablePredefinition]] = None,

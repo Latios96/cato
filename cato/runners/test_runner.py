@@ -2,7 +2,7 @@ import datetime
 
 import emoji
 
-from cato.domain.config import Config
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -36,7 +36,7 @@ class TestRunner:
         self._image_comparator = image_comparator
         self._test_execution_reporter = test_execution_reporter
 
-    def run_test(self, config: Config, current_suite: TestSuite, test: Test):
+    def run_test(self, config: RunConfig, current_suite: TestSuite, test: Test):
         self._reporter.report_start_test(test)
         test_heartbeat_reporter = TestHeartbeatReporter(self._test_execution_reporter)
 
@@ -52,7 +52,7 @@ class TestRunner:
 
         return result
 
-    def _run_test(self, config: Config, current_suite: TestSuite, test: Test):
+    def _run_test(self, config: RunConfig, current_suite: TestSuite, test: Test):
         variables = self._variable_processor.evaluate_variables(
             config, current_suite, test, predefinitions=PREDEFINITIONS
         )

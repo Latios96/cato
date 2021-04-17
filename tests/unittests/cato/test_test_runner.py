@@ -1,7 +1,7 @@
 import time
 from unittest import mock
 
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
@@ -37,7 +37,7 @@ def test_should_report_test_start(mock_heartbeat_reporter_class):
     test_suite = TestSuite(name="suite", tests=[])
 
     test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -78,7 +78,7 @@ def test_should_replace_placeholder():
     )
 
     test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -111,7 +111,7 @@ def test_should_collect_timing_info():
     test = Test(name="my_first_test", command="dummy_command", variables={})
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -145,7 +145,7 @@ def test_should_have_succeded_with_exit_code_0():
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -176,7 +176,7 @@ def test_should_have_failed_with_exit_code_0():
     command_runner.run.return_value = CommandResult("dummy_command", 1, [])
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -209,7 +209,7 @@ def test_should_have_failed_with_images_not_equal():
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -244,7 +244,7 @@ def test_should_have_failed_with_missing_reference_image():
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],
@@ -279,7 +279,7 @@ def test_should_have_failed_with_missing_image_output():
     command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
     result = test_runner.run_test(
-        Config(
+        RunConfig(
             project_name=EXAMPLE_PROJECT,
             path="test",
             test_suites=[],

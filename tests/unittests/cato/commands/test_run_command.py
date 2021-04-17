@@ -10,7 +10,7 @@ import pytest
 
 from cato.commands.run_command import RunCommand
 from cato.config.config_file_parser import JsonConfigParser
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -39,7 +39,7 @@ TEST_SUITE = TestSuite(
     tests=[TEST],
     variables={"my_var": "from_suite"},
 )
-CONFIG = Config(
+CONFIG = RunConfig(
     project_name="EXAMPLE_PROJECT",
     path="test",
     test_suites=[TEST_SUITE],
@@ -72,6 +72,7 @@ class TestRunCommand:
             self.mock_cato_api_client,
         )
         self.mock_json_config_parser.parse.return_value = self.config
+        self.run_command._read_config = lambda x: self.config
 
     def test_should_run_all_suites_and_tests(self):
         started_at = datetime.datetime.now()

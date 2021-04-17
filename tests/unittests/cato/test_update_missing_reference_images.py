@@ -1,7 +1,7 @@
 from unittest import mock
 from unittest.mock import call
 
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
@@ -22,7 +22,7 @@ def test_should_update_missing():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
@@ -45,7 +45,7 @@ def test_should_not_update_because_exists():
     )
     test = Test(name="my_first_test", command="dummy_command", variables={})
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],
@@ -73,7 +73,7 @@ def test_user_supplied_paths_are_checked():
         },
     )
     test_suite = TestSuite(name="example", tests=[test])
-    config = Config(
+    config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         path="",
         test_suites=[test_suite],

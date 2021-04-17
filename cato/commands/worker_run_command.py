@@ -3,7 +3,7 @@ import os
 
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_encoder import ConfigEncoder
-from cato.domain.config import Config
+from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import filter_by_test_identifier, TestSuite
@@ -39,7 +39,14 @@ class WorkerRunCommand(BaseCliCommand):
         self._reporter.set_verbose_mode(VerboseMode.VERY_VERBOSE)
         if os.path.isdir(resource_path):
             resource_path = os.path.join(resource_path, "cato.json")
-        config = self._config_encoder.decode(encoded_config.encode(), resource_path)
+        c = self._config_encoder.decode(encoded_config.encode(), resource_path)
+        config = RunConfig(  # todo fix this
+            project_name=c.project_name,
+            path=os.path.dirname(resource_path),
+            test_suites=c.test_suites,
+            output_folder=os.getcwd(),
+            variables=c.variables,
+        )
 
         config.test_suites = filter_by_test_identifier(
             config.test_suites, TestIdentifier.from_string(test_identifier_str)

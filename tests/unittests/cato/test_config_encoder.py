@@ -33,6 +33,4 @@ def test_should_decode(config_encoder, config_fixture):
         "test/path",
     )
 
-    assert decoded_config.path == "test"
-    decoded_config.output_folder = "output"  # todo fix
     assert decoded_config == config_fixture.CONFIG
