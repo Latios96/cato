@@ -30,6 +30,9 @@ from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.submission_info_repository import (
+    SubmissionInfoRepository,
+)
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
@@ -52,6 +55,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
+    SqlAlchemySubmissionInfoRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
@@ -81,6 +87,7 @@ class StorageBindings:
     output_repository_binding: Type[OutputRepository]
     image_repository: Type[ImageRepository]
     test_heartbeat_repository: Type[TestHeartbeatRepository]
+    submission_info_repository: Type[SubmissionInfoRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -164,8 +171,16 @@ class PinjectBindings(pinject.BindingSpec):
             to_instance=self._bindings.scheduler_bindings.scheduler_submitter_binding,
         )
         bind(
+            "config_file_writer",
+            to_class=ConfigFileWriter,
+        )
+        bind(
             "json_config_parser",
             to_class=JsonConfigParser,
+        )
+        bind(
+            "submission_info_repository",
+            to_class=self._bindings.storage_bindings.submission_info_repository,
         )
 
 
@@ -197,6 +212,7 @@ class BindingsFactory:
             output_repository_binding=SqlAlchemyOutputRepository,
             image_repository=SqlAlchemyImageRepository,
             test_heartbeat_repository=SqlAlchemyTestHeartbeatRepository,
+            submission_info_repository=SqlAlchemySubmissionInfoRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )

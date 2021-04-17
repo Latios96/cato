@@ -13,6 +13,9 @@ from cato_server.schedulers.abstract_scheduler_submitter import (
 )
 from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.submission_info_repository import (
+    SubmissionInfoRepository,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -23,11 +26,13 @@ class SchedulersBlueprint(Blueprint):
         run_repository: RunRepository,
         scheduler_submitter: OptionalComponent[AbstractSchedulerSubmitter],
         json_config_parser: JsonConfigParser,
+        submission_info_repository: SubmissionInfoRepository,
     ):
         super(SchedulersBlueprint, self).__init__("schedulers", __name__)
         self._run_repository = run_repository
         self._scheduler_submitter = scheduler_submitter
         self._json_config_parser = json_config_parser
+        self._submission_info_repository = submission_info_repository
 
         if self._scheduler_submitter.is_available():
             self.route("/schedulers/submit", methods=["POST"])(self.submit_tests)
@@ -43,6 +48,7 @@ class SchedulersBlueprint(Blueprint):
             return jsonify(errors), BAD_REQUEST
 
         submission_info = self._read_submission_info(request_json)
+        submission_info = self._submission_info_repository.save(submission_info)
 
         self._scheduler_submitter.component.submit_tests(submission_info)
 
