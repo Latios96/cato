@@ -1,6 +1,6 @@
 import logging
 
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 logger = logging.getLogger(__name__)
 

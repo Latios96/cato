@@ -10,7 +10,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
 )
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 
 class SubmitCommand(RunCommandInterface):

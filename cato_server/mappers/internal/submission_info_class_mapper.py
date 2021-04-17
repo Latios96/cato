@@ -4,7 +4,7 @@ from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import Config
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 
 class SubmissionInfoClassMapper(AbstractClassMapper[SubmissionInfo]):

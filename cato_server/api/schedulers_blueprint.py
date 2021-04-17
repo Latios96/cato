@@ -11,7 +11,7 @@ from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.storage.abstract.run_repository import RunRepository
 
 logger = logging.getLogger(__name__)

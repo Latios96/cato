@@ -23,7 +23,7 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     MachineInfoDto,
 )
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 
 class FlaskClientHttpTemplateResponse(HttpTemplateResponse):

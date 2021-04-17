@@ -24,7 +24,7 @@ from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 logger = logging.getLogger(__name__)
 

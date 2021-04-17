@@ -3,7 +3,7 @@ import os
 from cato_server.mappers.internal.submission_info_class_mapper import (
     SubmissionInfoClassMapper,
 )
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 
 def test_map_to_dict(config_fixture):

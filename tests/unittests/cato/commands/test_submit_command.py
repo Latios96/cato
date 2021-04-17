@@ -17,7 +17,7 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.test_identifier import TestIdentifier
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 from tests.unittests.cato.commands.test_run_command import CONFIG
 from tests.utils import mock_safe
 

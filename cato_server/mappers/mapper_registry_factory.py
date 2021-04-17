@@ -29,7 +29,7 @@ from cato_server.mappers.internal.suite_result_class_mapper import (
     SuiteResultClassMapper,
 )
 from cato_server.mappers.internal.test_result_class_mapper import TestResultClassMapper
-from cato_server.schedulers.submission_info import SubmissionInfo
+from cato_server.domain.submission_info import SubmissionInfo
 
 
 class MapperRegistryFactory:
