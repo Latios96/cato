@@ -19,6 +19,7 @@ class VariableProcessor:
             "suite_name": current_suite.name,
             "config_path": config.resource_path,
             "output_folder": config.output_folder,
+            "suite_resources": "{@config_path}/{@suite_name}",
             "test_resources": "{@config_path}/{@suite_name}/{@test_name}",
             "reference_image_no_extension": "{@test_resources}/reference",
             "reference_image_png": "{@reference_image_no_extension}.png",

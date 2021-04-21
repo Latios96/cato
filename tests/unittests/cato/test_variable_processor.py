@@ -11,6 +11,7 @@ IMAGE_OUTPUT_EXR = "test/result/my_test_suite/test_name/test_name.exr"
 IMAGE_OUTPUT_PNG = "test/result/my_test_suite/test_name/test_name.png"
 IMAGE_OUTPUT_NO_EXTENSION = "test/result/my_test_suite/test_name/test_name"
 IMAGE_OUTPUT_FOLDER = "test/result/my_test_suite/test_name"
+SUITE_RESOURCES = "config_path/my_test_suite"
 TEST_RESOURCES = "config_path/my_test_suite/test_name"
 EXAMPLE_PROJECT = "Example project"
 
@@ -34,6 +35,7 @@ def test_evaluate_variables_no_custom_vars():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -75,6 +77,7 @@ def test_evaluate_variables_custom_image_output():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -116,6 +119,7 @@ def test_evaluate_variables_variables_from_config():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -149,6 +153,7 @@ def test_evaluate_variables_variables_from_suite():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -185,6 +190,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -223,6 +229,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
@@ -263,6 +270,7 @@ def test_evaluate_variables_maya_predefinition():
         "suite_name": suite.name,
         "config_path": config.resource_path,
         "output_folder": "test",
+        "suite_resources": SUITE_RESOURCES,
         "test_resources": TEST_RESOURCES,
         "image_output_folder": IMAGE_OUTPUT_FOLDER,
         "image_output_no_extension": IMAGE_OUTPUT_NO_EXTENSION,
