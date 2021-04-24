@@ -145,6 +145,10 @@ types:
         fields:
           id: integer
 
+      TestResultStartedDto:
+        fields:
+          id: integer
+
       ApiSuccess:
         fields:
           success: boolean
