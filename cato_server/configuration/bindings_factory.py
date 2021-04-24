@@ -70,6 +70,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 from cato_server.usecases.create_full_run import CreateFullRunUsecase
 from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
 from cato_server.usecases.finish_test import FinishTest
+from cato_server.usecases.start_test import StartTest
 
 logger = logging.getLogger(__name__)
 
@@ -159,6 +160,7 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("fail_timed_out_tests", to_class=FailTimedOutTests)
         bind("finish_test", to_class=FinishTest)
+        bind("start_test", to_class=StartTest)
         bind("object_mapper", to_class=ObjectMapper)
         bind("page_mapper", to_class=PageMapper)
         bind(

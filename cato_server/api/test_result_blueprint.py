@@ -13,6 +13,8 @@ from cato_api_models.catoapimodels import (
     MachineInfoDto,
     TestResultShortSummaryDto,
     FinishTestResultDto,
+    ApiSuccess,
+    StartTestResultDto,
 )
 from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.api.page_utils import page_request_from_request
@@ -22,6 +24,7 @@ from cato_server.api.validators.test_result_validators import (
     UpdateTestResultValidator,
     CreateOutputValidator,
     FinishTestResultValidator,
+    StartTestResultValidator,
 )
 from cato_server.domain.image import ImageChannel
 from cato_server.domain.output import Output
@@ -38,6 +41,7 @@ from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.usecases.finish_test import FinishTest
+from cato_server.usecases.start_test import StartTest
 
 logger = logging.getLogger(__name__)
 
@@ -51,6 +55,7 @@ class TestResultsBlueprint(BaseBlueprint):
         output_repository: OutputRepository,
         image_repository: ImageRepository,
         finish_test: FinishTest,
+        start_test: StartTest,
         object_mapper: ObjectMapper,
         page_mapper: PageMapper,
     ):
@@ -61,6 +66,7 @@ class TestResultsBlueprint(BaseBlueprint):
         self._output_repository = output_repository
         self._image_repository = image_repository
         self._finish_test = finish_test
+        self._start_test = start_test
         self._object_mapper = object_mapper
         self._page_mapper = page_mapper
 
@@ -97,6 +103,7 @@ class TestResultsBlueprint(BaseBlueprint):
             self.get_test_result_by_id
         )
         self.route("/test_results/finish", methods=["POST"])(self.finish_test_result)
+        self.route("/test_results/start", methods=["POST"])(self.start_test_result)
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id, suite_name, test_name
@@ -325,6 +332,25 @@ class TestResultsBlueprint(BaseBlueprint):
         )
 
         return jsonify(success=True), 200
+
+    def start_test_result(self):
+        request_json = request.get_json()
+        errors = StartTestResultValidator(self._test_result_repository).validate(
+            request_json
+        )
+        if errors:
+            return jsonify(errors), BAD_REQUEST
+
+        start_test_result_dto = self._object_mapper.from_dict(
+            request_json, StartTestResultDto
+        )
+
+        self._start_test.start_test(start_test_result_dto.id)
+
+        return (
+            self.json_response(self._object_mapper.to_json(ApiSuccess(success=True))),
+            200,
+        )
 
     def get_test_result_by_run_id_and_test_status(self, run_id, test_status):
         try:

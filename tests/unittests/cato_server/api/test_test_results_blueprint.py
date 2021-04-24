@@ -409,3 +409,24 @@ def test_invalid_test_status(client, run, test_result):
 
     assert rv.status_code == 400
     assert rv.json == {"test_status": "Not a valid test status: dd."}
+
+
+def test_start_test_success(client, test_result):
+    url = "/api/v1/test_results/start"
+    data = {
+        "id": test_result.id,
+    }
+    rv = client.post(url, json=data)
+
+    assert rv.status_code == 200
+
+
+def test_start_test_failure(client):
+    url = "/api/v1/test_results/start"
+    data = {
+        "id": 42,
+    }
+    rv = client.post(url, json=data)
+
+    assert rv.status_code == 400
+    assert rv.json == {"id": ["No TestResult with id 42 exists!"]}
