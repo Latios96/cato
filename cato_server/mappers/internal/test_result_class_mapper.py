@@ -30,7 +30,9 @@ class TestResultClassMapper(AbstractClassMapper):
             test_variables=the_dict["test_variables"],
             machine_info=self._machine_info_class_mapper.map_from_dict(
                 the_dict["machine_info"]
-            ),
+            )
+            if the_dict.get("machine_info")
+            else None,
             execution_status=self._execution_status_value_wrapper.map_from(
                 the_dict["execution_status"]
             ),
@@ -62,9 +64,6 @@ class TestResultClassMapper(AbstractClassMapper):
         data["test_identifier"] = str(test_result.test_identifier)
         data["test_command"] = test_result.test_command
         data["test_variables"] = test_result.test_variables
-        data["machine_info"] = MachineInfoClassMapper().map_to_dict(
-            test_result.machine_info
-        )
         data["execution_status"] = test_result.execution_status.name
 
     def _map_optional_attrs(self, test_result, data):
@@ -84,3 +83,7 @@ class TestResultClassMapper(AbstractClassMapper):
             data["started_at"] = test_result.started_at.isoformat()
         if test_result.finished_at:
             data["finished_at"] = test_result.finished_at.isoformat()
+        if test_result.machine_info:
+            data["machine_info"] = MachineInfoClassMapper().map_to_dict(
+                test_result.machine_info
+            )
