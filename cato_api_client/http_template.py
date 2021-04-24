@@ -13,8 +13,7 @@ R = TypeVar("R")
 
 
 class HttpTemplateResponse(Generic[R]):
-    def __init__(self, response, response_cls: Type[R], mapper: ObjectMapper):
-        self._response = response
+    def __init__(self, response_cls: Type[R], mapper: ObjectMapper) -> None:
         self._mapper = mapper
         self._response_cls = response_cls
 
@@ -35,6 +34,12 @@ class HttpTemplateResponse(Generic[R]):
 
 
 class RequestsHttpTemplateResponse(HttpTemplateResponse):
+    def __init__(
+        self, response: requests.Response, response_cls: Type[R], mapper: ObjectMapper
+    ) -> None:
+        super(RequestsHttpTemplateResponse, self).__init__(response_cls, mapper)
+        self._response = response
+
     def status_code(self):
         return self._response.status_code
 
@@ -82,15 +87,13 @@ class AbstractHttpTemplate:
 
     def _launch_request_with_body(
         self,
-        url,
-        body,
+        url: str,
+        body: B,
         response_cls: Type[R],
         method: str,
-    ):
+    ) -> HttpTemplateResponse[R]:
         method = method.upper()
-        params = body
-        if body:
-            params = self._object_mapper.to_dict(body)
+        params = self._object_mapper.to_dict(body)
         logger.debug("Launching %s request to %s with json %s", method, url, params)
         assert method in ["POST", "PATCH"]
         if method == "POST":
@@ -103,7 +106,7 @@ class AbstractHttpTemplate:
         return self._construct_http_template_response(response, response_cls)
 
     def _handle_response(
-        self, response, response_cls: Type[R]
+        self, response: HttpTemplateResponse, response_cls: Type[R]
     ) -> HttpTemplateResponse[R]:
         if response.status_code == 500:
             raise HttpTemplateException("Internal Server Error!")
@@ -118,7 +121,9 @@ class AbstractHttpTemplate:
     def _patch(self, url, params):
         raise NotImplementedError()
 
-    def _construct_http_template_response(self, response, response_cls: Type[R]):
+    def _construct_http_template_response(
+        self, response: HttpTemplateResponse, response_cls: Type[R]
+    ) -> HttpTemplateResponse[R]:
         raise NotImplementedError()
 
 

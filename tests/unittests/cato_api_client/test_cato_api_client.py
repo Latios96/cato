@@ -27,6 +27,10 @@ from cato_server.domain.submission_info import SubmissionInfo
 
 
 class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
+    def __init__(self, response, response_cls, mapper) -> None:
+        super(FlaskClientHttpTemplateResponse, self).__init__(response_cls, mapper)
+        self._response = response
+
     def status_code(self) -> int:
         return self._response.status_code
 

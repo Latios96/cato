@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional
+from typing import Optional, Type, TypeVar, Iterable
 from urllib.parse import quote
 
 import requests
@@ -28,11 +28,14 @@ from cato_server.domain.submission_info import SubmissionInfo
 
 logger = logging.getLogger(__name__)
 
+T = TypeVar("T")
+R = TypeVar("R")
+
 
 class CatoApiClient:
     def __init__(
-        self, url, http_template: AbstractHttpTemplate, object_mapper: ObjectMapper
-    ):
+        self, url: str, http_template: AbstractHttpTemplate, object_mapper: ObjectMapper
+    ) -> None:
         self._url = url
         self._http_template = http_template
         self._object_mapper = object_mapper
@@ -41,7 +44,7 @@ class CatoApiClient:
         url = self._build_url("/api/v1/projects/name/{}".format(project_name))
         return self._find_with_http_template(url, Project)
 
-    def create_project(self, project_name) -> Project:
+    def create_project(self, project_name: str) -> Project:
         url = self._build_url("/api/v1/projects")
         logger.info("Creating project with name %s..", project_name)
         return self._create_with_http_template(url, {"name": project_name}, Project)
@@ -94,7 +97,7 @@ class CatoApiClient:
         url = self._build_url("/api/v1/runs/full")
         return self._create_with_http_template(url, create_full_run_dto, Run)
 
-    def create_test_result(self, test_result: TestResult):
+    def create_test_result(self, test_result: TestResult) -> TestResult:
         if test_result.id:
             raise ValueError(f"Id of TestResult is not 0, was {test_result.id}")
 
@@ -127,13 +130,13 @@ class CatoApiClient:
         url = self._build_url(f"/api/v1/test_results/{test_result.id}")
         return self._patch_with_http_template(url, test_result, TestResult)
 
-    def upload_output(self, test_result_id: int, output: str):
+    def upload_output(self, test_result_id: int, output: str) -> Output:
         url = self._build_url("/api/v1/test_results/output")
         return self._create_with_http_template(
             url, {"test_result_id": test_result_id, "text": output}, Output
         )
 
-    def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier):
+    def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier) -> None:
         url = self._build_url(
             f"/api/v1/test_heartbeats/run/{run_id}/{test_identifier.suite_name}/{test_identifier.test_name}"
         )
@@ -149,7 +152,7 @@ class CatoApiClient:
         message: str,
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
-    ):
+    ) -> None:
         url = self._build_url("/api/v1/test_results/finish")
         dto = FinishTestResultDto(
             id=test_result_id,
@@ -165,19 +168,19 @@ class CatoApiClient:
                 f"Something went wrong when finishing test: {response.status_code()}, {response.text()}"
             )
 
-    def generate_run_url(self, project_id: int, run_id: int):
+    def generate_run_url(self, project_id: int, run_id: int) -> str:
         return f"{self._url}/#/projects/{project_id}/runs/{run_id}"
 
     def get_test_results_by_run_id_and_test_status(
         self, run_id: int, test_status: TestStatus
-    ):
+    ) -> Optional[Iterable[TestIdentifier]]:
         url = self._build_url(
             f"/api/v1/test_results/run/{run_id}/test_status/{test_status.value}"
         )
 
         return self._find_many_with_http_template(url, TestIdentifier)
 
-    def submit_to_scheduler(self, submission_info: SubmissionInfo):
+    def submit_to_scheduler(self, submission_info: SubmissionInfo) -> None:
         url = self._build_url("/api/v1/schedulers/submit")
         response = self._http_template.post_for_entity(url, submission_info, ApiSuccess)
         if response.status_code() != 200 or not response.get_entity().success:
@@ -185,7 +188,9 @@ class CatoApiClient:
                 f"Something went wrong when submitting to scheduler: {response.status_code()}, {response.text()}"
             )
 
-    def get_submission_info_by_id(self, submission_info_id: int) -> SubmissionInfo:
+    def get_submission_info_by_id(
+        self, submission_info_id: int
+    ) -> Optional[SubmissionInfo]:
         url = self._build_url("/api/v1/submission_infos/{}".format(submission_info_id))
         return self._find_with_http_template(url, SubmissionInfo)
 
@@ -195,7 +200,7 @@ class CatoApiClient:
     def _get_json(self, reponse):
         return reponse.json()
 
-    def _create_with_http_template(self, url, body, response_cls):
+    def _create_with_http_template(self, url: str, body: T, response_cls: Type[R]) -> R:
         response = self._http_template.post_for_entity(url, body, response_cls)
         if response.status_code() == 201:
             return response.get_entity()
@@ -243,7 +248,7 @@ class CatoApiClient:
         logger.debug("Received response %s", response)
         return response
 
-    def _find_with_http_template(self, url, response_cls):
+    def _find_with_http_template(self, url: str, response_cls: Type[T]) -> Optional[T]:
         response = self._http_template.get_for_entity(url, response_cls)
         if response.status_code() == 404:
             return None
@@ -260,7 +265,9 @@ class CatoApiClient:
             )
         )
 
-    def _find_many_with_http_template(self, url, response_cls):
+    def _find_many_with_http_template(
+        self, url: str, response_cls: Type[T]
+    ) -> Optional[Iterable[T]]:
         response = self._http_template.get_for_entity(url, response_cls)
         if response.status_code() == 404:
             return None
