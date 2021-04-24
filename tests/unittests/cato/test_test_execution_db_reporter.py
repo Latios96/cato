@@ -108,9 +108,7 @@ class TestTestExecutionDbReporter:
             SUITES[0], SUITES[0].tests[0]
         )
 
-        self.mock_cato_api_client.update_test_result.assert_called_with(test_result)
-        assert test_result.execution_status == ExecutionStatus.RUNNING
-        assert test_result.started_at
+        self.mock_cato_api_client.start_test.assert_called_with(test_result.id)
 
     def test_report_test_execution_start_no_test_result_should_exit(
         self, test_result_factory

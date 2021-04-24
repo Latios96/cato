@@ -114,11 +114,8 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
             return
 
-        test_result.execution_status = ExecutionStatus.RUNNING
-        test_result.started_at = datetime.datetime.now()
-
         logger.debug(f"Reporting execution start of test {test_identifier}..")
-        self._cato_api_client.update_test_result(test_result)
+        self._cato_api_client.start_test(test_result.id)
 
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
