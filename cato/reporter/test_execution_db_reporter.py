@@ -1,6 +1,4 @@
-import datetime
 import logging
-
 from typing import List
 
 from cato.domain.test import Test
@@ -19,7 +17,6 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
 )
-from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_identifier import TestIdentifier
 
 logger = logging.getLogger(__name__)
