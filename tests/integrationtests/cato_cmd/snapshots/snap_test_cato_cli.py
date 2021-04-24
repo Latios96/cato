@@ -31,7 +31,6 @@ snapshots["test_submit_command 1"] = [
 [INFO]  No project with name EXAMPLE_PROJECT exists, creating one..
 [INFO]  Created project Project(id=2, name='EXAMPLE_PROJECT')
 [INFO]  Creating run..
-[INFO]  Collecting machine info..
 [INFO]  Reporting execution of 1 suite and 1 test
 [INFO]  You can find your run at http://127.0.0.1:12345/#/projects/2/runs/1
 [INFO]  Submitting to scheduler..
@@ -48,7 +47,6 @@ snapshots["test_worker_run_command 1"] = [
 [INFO]  No project with name EXAMPLE_PROJECT exists, creating one..
 [INFO]  Created project Project(id=2, name='EXAMPLE_PROJECT')
 [INFO]  Creating run..
-[INFO]  Collecting machine info..
 [INFO]  Reporting execution of 1 suite and 1 test
 [INFO]  You can find your run at http://127.0.0.1:12345/#/projects/2/runs/1
 [INFO]  Submitting to scheduler..
