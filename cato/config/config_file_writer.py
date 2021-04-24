@@ -1,6 +1,6 @@
 import dataclasses
 import json
-from typing import IO, Dict, cast
+from typing import IO, Dict
 
 import attr
 

@@ -1,9 +1,8 @@
 import argparse
 import logging
+from typing import Type, TypeVar, Optional
 
 import pinject
-from typing import Type, TypeVar, Optional, cast
-
 from pinject.object_graph import ObjectGraph
 
 import cato
@@ -12,10 +11,10 @@ from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
 from cato.commands.submit_command import SubmitCommand
-from cato.commands.update_reference_image_command import UpdateReferenceImageCommand
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
+from cato.commands.update_reference_image_command import UpdateReferenceImageCommand
 from cato.commands.worker_run_command import WorkerRunCommand
 from cato.config.config_encoder import ConfigEncoder  # noqa: F401
 from cato.file_system_abstractions.last_run_information_repository import (
