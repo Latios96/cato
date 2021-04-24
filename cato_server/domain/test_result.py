@@ -16,7 +16,7 @@ class TestResult:
     test_identifier: TestIdentifier
     test_command: str
     test_variables: Dict[str, str]
-    machine_info: Optional[MachineInfo]
+    machine_info: Optional[MachineInfo] = None
     execution_status: ExecutionStatus = ExecutionStatus.NOT_STARTED
     status: Optional[TestStatus] = None
     seconds: Optional[float] = None

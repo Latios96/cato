@@ -123,14 +123,9 @@ class TestCreateFullRunValidator:
                         "tests": [
                             {
                                 "test_name": "test_name",
-                                "test_identifier": "test/identifier",
+                                "testd_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "machine_info": {
-                                    "cpu_nsame": "test",
-                                    "cores": 8,
-                                    "memory": 8,
-                                },
                             }
                         ],
                     }
@@ -142,11 +137,7 @@ class TestCreateFullRunValidator:
             "test_suites": {
                 0: {
                     "tests": {
-                        0: {
-                            "machine_info": {
-                                "cpu_name": ["Missing data " "for required " "field."]
-                            }
-                        }
+                        0: {"test_identifier": ["Missing data for " "required field."]}
                     }
                 }
             }

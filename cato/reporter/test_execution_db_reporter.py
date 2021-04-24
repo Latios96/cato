@@ -49,13 +49,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
             logger.info("Created project %s", project)
 
         logger.info("Creating run..")
-        logger.info("Collecting machine info..")
-        machine_info = self._machine_info_collector.collect()
-        machine_info_dto = catoapimodels_MachineInfoDto(
-            cpu_name=machine_info.cpu_name,
-            cores=machine_info.cores,
-            memory=machine_info.memory,
-        )
 
         suites = []
         for test_suite in test_suites:
@@ -67,7 +60,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
                         test_identifier=str(TestIdentifier(test_suite.name, test.name)),
                         test_command=test.command,
                         test_variables=test.variables,
-                        machine_info=machine_info_dto,
                     )
                 )
             suites.append(

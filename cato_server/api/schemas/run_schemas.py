@@ -28,7 +28,6 @@ class TestForRunCreationSchema(Schema):
     )
     test_command = fields.String(required=True, validate=[Length(1)])
     test_variables = VARIABLES_FIELD
-    machine_info = fields.Nested(MachineInfoSchema, required=True)
 
 
 class TestSuiteForRunCreationSchema(Schema):

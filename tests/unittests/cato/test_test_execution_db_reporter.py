@@ -39,6 +39,9 @@ SUITES = [
 class TestTestExecutionDbReporter:
     def setup_method(self, method):
         self.mock_machine_info_collector = mock_safe(MachineInfoCollector)
+        self.mock_machine_info_collector.collect.return_value = MachineInfo(
+            cpu_name="my_cpu", cores=8, memory=8
+        )
         self.mock_cato_api_client = mock_safe(CatoApiClient)
         self.mock_last_run_information_repository = mock_safe(
             LastRunInformationRepository
@@ -49,9 +52,6 @@ class TestTestExecutionDbReporter:
         )
 
     def test_start_execution_not_existing_project_should_create(self):
-        self.mock_machine_info_collector.collect.return_value = MachineInfo(
-            cpu_name="my_cpu", cores=8, memory=8
-        )
         self.mock_cato_api_client.get_project_by_name.return_value = None
 
         self.test_execution_db_reporter.start_execution("my_project_name", SUITES)
@@ -59,8 +59,6 @@ class TestTestExecutionDbReporter:
         self.mock_cato_api_client.create_project.assert_called_with("my_project_name")
 
     def test_start_execution_should_create_full_run(self):
-        machine_info = MachineInfo(cpu_name="my_cpu", cores=8, memory=8)
-        self.mock_machine_info_collector.collect.return_value = machine_info
         self.mock_cato_api_client.get_project_by_name.return_value = Project(
             id=1, name="my_project_name"
         )
@@ -78,9 +76,6 @@ class TestTestExecutionDbReporter:
                         suite_name="my_suite",
                         tests=[
                             TestForRunCreation(
-                                machine_info=MachineInfoDto(
-                                    cpu_name="my_cpu", cores=8, memory=8
-                                ),
                                 test_command="my_command",
                                 test_identifier="my_suite/my_test",
                                 test_name="my_test",

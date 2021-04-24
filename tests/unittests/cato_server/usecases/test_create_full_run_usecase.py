@@ -43,7 +43,6 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
                     suite_variables={},
                     tests=[
                         TestForRunCreation(
-                            MachineInfoDto(cpu_name="test", cores=8, memory=8),
                             "cmd",
                             "test/identifier",
                             "test_name",
@@ -71,3 +70,4 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
         ),
         object_mapper,
     )
+    assert test_result_repository.find_by_id(1).machine_info == None

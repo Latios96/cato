@@ -66,11 +66,6 @@ class CreateFullRunUsecase:
                         ),
                         test_command=test_dto.test_command,
                         test_variables=test_dto.test_variables,
-                        machine_info=MachineInfo(
-                            cpu_name=test_dto.machine_info.cpu_name,
-                            cores=test_dto.machine_info.cores,
-                            memory=test_dto.machine_info.memory,
-                        ),
                         execution_status=ExecutionStatus.NOT_STARTED,
                         seconds=0,
                     )
