@@ -298,21 +298,6 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifi
     assert result is None
 
 
-def test_update_test_result(cato_api_client, test_result):
-    test_result.status = TestStatus.FAILED
-
-    result = cato_api_client.update_test_result(test_result)
-
-    assert result == test_result
-
-
-def test_update_test_failure(cato_api_client, test_result):
-    test_result.reference_image = 42
-
-    with pytest.raises(ValueError):
-        cato_api_client.update_test_result(test_result)
-
-
 def test_upload_output_success(cato_api_client, test_result):
     output = cato_api_client.upload_output(test_result.id, "my text")
 

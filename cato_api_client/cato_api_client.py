@@ -127,10 +127,6 @@ class CatoApiClient:
             return False
         raise ValueError(f"Something went wrong: {response}")
 
-    def update_test_result(self, test_result):
-        url = self._build_url(f"/api/v1/test_results/{test_result.id}")
-        return self._patch_with_http_template(url, test_result, TestResult)
-
     def upload_output(self, test_result_id: int, output: str) -> Output:
         url = self._build_url("/api/v1/test_results/output")
         return self._create_with_http_template(
