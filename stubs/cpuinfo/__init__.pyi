@@ -1,0 +1,1 @@
+from cpuinfo.cpuinfo import *
