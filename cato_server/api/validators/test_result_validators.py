@@ -13,6 +13,7 @@ from cato_server.api.schemas.test_result_schemas import (
     UpdateTestResultSchema,
     CreateOutputSchema,
     FinishTestResultSchema,
+    StartTestResultSchema,
 )
 from cato_server.api.validators.basic import SchemaValidator
 
@@ -140,6 +141,26 @@ class FinishTestResultValidator(SchemaValidator):
         if reference_image and not self._image_repository.find_by_id(reference_image):
             self.add_error(
                 errors, "reference_image", f"No image exists for id {reference_image}."
+            )
+
+        return errors
+
+
+class StartTestResultValidator(SchemaValidator):
+    def __init__(
+        self,
+        test_result_repository: TestResultRepository,
+    ):
+        super(StartTestResultValidator, self).__init__(StartTestResultSchema())
+        self._test_result_repository = test_result_repository
+
+    def validate(self, data: Dict) -> Dict[str, List[str]]:
+        errors = super(StartTestResultValidator, self).validate(data)
+
+        test_result = self._test_result_repository.find_by_id(data.get("id"))
+        if not test_result:
+            self.add_error(
+                errors, "id", f"No TestResult with id {data.get('id')} exists!"
             )
 
         return errors

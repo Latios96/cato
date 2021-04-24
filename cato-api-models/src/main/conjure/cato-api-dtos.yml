@@ -141,6 +141,10 @@ types:
           image_output: optional<integer>
           reference_image: optional<integer>
 
+      StartTestResultDto:
+        fields:
+          id: integer
+
       TestResultFinishedDto:
         fields:
           id: integer

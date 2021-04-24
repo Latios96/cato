@@ -78,3 +78,7 @@ class FinishTestResultSchema(Schema):
     message = fields.String(validate=[Length(0)], required=True)
     image_output = fields.Integer(required=False, allow_none=True)
     reference_image = fields.Integer(required=False, allow_none=True)
+
+
+class StartTestResultSchema(Schema):
+    id = ID_FIELD

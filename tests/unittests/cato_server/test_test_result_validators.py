@@ -16,6 +16,7 @@ from cato_server.api.validators.test_result_validators import (
     UpdateTestResultValidator,
     CreateOutputValidator,
     FinishTestResultValidator,
+    StartTestResultValidator,
 )
 from tests.utils import mock_safe
 
@@ -319,4 +320,40 @@ class TestFinishTestResultValidator:
         )
 
         errors = finish_test_result_validator.validate(data)
+        assert errors == expected_errors
+
+
+class TestStartTestResultValidator:
+    @pytest.mark.parametrize(
+        "data",
+        [
+            {
+                "id": 1,
+            },
+        ],
+    )
+    def test_success(self, data):
+        test_result_repository = mock_safe(TestResultRepository)
+        start_test_result_validator = StartTestResultValidator(test_result_repository)
+
+        errors = start_test_result_validator.validate(data)
+        assert errors == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {
+                    "id": 42,
+                },
+                {"id": ["No TestResult with id 42 exists!"]},
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors):
+        test_result_repository = mock_safe(TestResultRepository)
+        test_result_repository.find_by_id = lambda x: x == 1
+        start_test_result_validator = StartTestResultValidator(test_result_repository)
+
+        errors = start_test_result_validator.validate(data)
         assert errors == expected_errors
