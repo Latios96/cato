@@ -8,7 +8,7 @@ from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_server.storage.abstract.page import PageRequest, Page
 
 
-class TestResultRepository(AbstractRepository):
+class TestResultRepository(AbstractRepository[TestResult, int]):
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
