@@ -43,6 +43,35 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image):
     assert test_result_save == test_result
 
 
+def test_save_success_no_machine_info(sessionmaker_fixture, suite_result, stored_image):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    start_time = datetime.datetime.now()
+    end_time = datetime.datetime.now()
+    test_result = TestResult(
+        id=0,
+        suite_result_id=suite_result.id,
+        test_name="my_test_name",
+        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
+        test_command="my_command",
+        test_variables={"testkey": "test_value"},
+        machine_info=None,
+        execution_status=ExecutionStatus.NOT_STARTED,
+        status=TestStatus.SUCCESS,
+        seconds=5,
+        message="sucess",
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
+        started_at=start_time,
+        finished_at=end_time,
+    )
+
+    test_result_save = repository.save(test_result)
+
+    test_result.id = test_result_save.id
+
+    assert test_result_save == test_result
+
+
 def test_save_no_suite_result(sessionmaker_fixture, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()

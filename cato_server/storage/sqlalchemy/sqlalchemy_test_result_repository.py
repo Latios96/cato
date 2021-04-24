@@ -33,7 +33,7 @@ class _TestResultMapping(Base):
     test_identifier = Column(String, nullable=False)
     test_command = Column(String, nullable=False)
     test_variables = Column(JSON, nullable=False)
-    machine_info = Column(JSON, nullable=False)
+    machine_info = Column(JSON, nullable=True)
     execution_status = Column(String, nullable=True)
     status = Column(String, nullable=True)
     seconds = Column(Float, nullable=False)
@@ -58,7 +58,9 @@ class SqlAlchemyTestResultRepository(
             test_identifier=str(domain_object.test_identifier),
             test_command=domain_object.test_command,
             test_variables=domain_object.test_variables,
-            machine_info=dataclasses.asdict(domain_object.machine_info),
+            machine_info=dataclasses.asdict(domain_object.machine_info)
+            if domain_object.machine_info
+            else None,
             execution_status=domain_object.execution_status.name
             if domain_object.execution_status
             else None,
@@ -85,7 +87,7 @@ class SqlAlchemyTestResultRepository(
                 memory=entity.machine_info["memory"],
             )
             if entity.machine_info
-            else MachineInfo("", 0, 0),
+            else None,
             execution_status=self._map_execution_status(entity.execution_status),
             status=self._map_test_status(entity.status),
             seconds=entity.seconds,
