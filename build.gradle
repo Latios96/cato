@@ -91,7 +91,7 @@ task pythonIntegrationTests(type: PythonTask){
     dependsOn 'pythonInstall'
     dependsOn 'pythonUnitTests'
     dependsOn 'copyFrontendToBuild'
-    command = "-m pytest tests/integrationtests"
+    command = "-m pytest tests/integrationtests -v"
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
