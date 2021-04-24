@@ -22,6 +22,7 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     MachineInfoDto,
+    StartTestResultDto,
 )
 from cato_server.domain.submission_info import SubmissionInfo
 
@@ -460,9 +461,18 @@ def test_find_submission_info_by_not_existing_id(cato_api_client):
 
 
 def test_start_test_success(cato_api_client, test_result):
-    cato_api_client.start_test(test_result.id)
+    cato_api_client.start_test(
+        StartTestResultDto(
+            id=test_result.id,
+            machine_info=MachineInfoDto(cpu_name="Intel", cores=1, memory=1),
+        )
+    )
 
 
 def test_start_test_failure(cato_api_client):
     with pytest.raises(ValueError):
-        cato_api_client.start_test(43)
+        cato_api_client.start_test(
+            StartTestResultDto(
+                id=43, machine_info=MachineInfoDto(cpu_name="Intel", cores=1, memory=1)
+            )
+        )

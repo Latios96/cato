@@ -32,7 +32,7 @@ class CreateTestResultSchema(Schema):
     )
     test_command = fields.String(required=True, validate=[Length(1)])
     test_variables = VARIABLES_FIELD
-    machine_info = fields.Nested(MachineInfoSchema, required=True)
+    machine_info = fields.Nested(MachineInfoSchema, required=False)
     execution_status = EnumField(ExecutionStatus, required=True)
     status = EnumField(TestStatus)
     output = fields.List(fields.String())
@@ -82,3 +82,4 @@ class FinishTestResultSchema(Schema):
 
 class StartTestResultSchema(Schema):
     id = ID_FIELD
+    machine_info = fields.Nested(MachineInfoSchema, required=True)

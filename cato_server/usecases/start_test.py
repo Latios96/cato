@@ -4,6 +4,7 @@ import logging
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
@@ -25,7 +26,7 @@ class StartTest:
         self._message_queue = message_queue
         self._object_mapper = object_mapper
 
-    def start_test(self, test_result_id: int):
+    def start_test(self, test_result_id: int, machine_info: MachineInfo):
         logger.info("Starting test test with id %s", test_result_id)
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if not test_result:
@@ -37,6 +38,7 @@ class StartTest:
 
         test_result.execution_status = ExecutionStatus.RUNNING
         test_result.started_at = datetime.datetime.now()
+        test_result.machine_info = machine_info
 
         if test_was_already_started:
             self._reset_possible_data_from_previous_run(test_result)

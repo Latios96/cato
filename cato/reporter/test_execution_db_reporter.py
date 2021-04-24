@@ -15,7 +15,10 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
+    StartTestResultDto,
+    MachineInfoDto,
 )
+from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.test_identifier import TestIdentifier
 
 logger = logging.getLogger(__name__)
@@ -30,6 +33,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
         self._run_id = None
+        self._machine_info = None
 
     def use_run_id(self, run_id: int):
         if not self._cato_api_client.run_id_exists(run_id):
@@ -103,7 +107,16 @@ class TestExecutionDbReporter(TestExecutionReporter):
             return
 
         logger.debug(f"Reporting execution start of test {test_identifier}..")
-        self._cato_api_client.start_test(test_result.id)
+        machine_info = self._get_machine_info()
+        machine_info_dto = MachineInfoDto(
+            cpu_name=machine_info.cpu_name,
+            cores=machine_info.cores,
+            memory=machine_info.memory,
+        )
+        start_test_result = StartTestResultDto(
+            id=test_result.id, machine_info=machine_info_dto
+        )
+        self._cato_api_client.start_test(start_test_result)
 
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
@@ -168,3 +181,9 @@ class TestExecutionDbReporter(TestExecutionReporter):
     @_run_id.setter
     def _run_id(self, run_id: int):
         self.__run_id_value = run_id
+
+    def _get_machine_info(self) -> MachineInfo:
+        if not self._machine_info:
+            logger.info("Collecting machine info..")
+            self._machine_info = self._machine_info_collector.collect()
+        return self._machine_info

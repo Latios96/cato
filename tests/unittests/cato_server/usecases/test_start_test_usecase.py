@@ -5,6 +5,7 @@ import pytest
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
+from cato_server.domain.machine_info import MachineInfo
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
@@ -21,6 +22,7 @@ class TestStartTest:
         self.object_mapper = ObjectMapper(
             MapperRegistryFactory().create_mapper_registry()
         )
+        self.machine_info = MachineInfo("cpu_name", 1, 1)
         self.start_test_usecase = StartTest(
             self.test_result_repository,
             self.message_queue,
@@ -31,7 +33,7 @@ class TestStartTest:
         self.test_result_repository.find_by_id.return_value = None
 
         with pytest.raises(ValueError):
-            self.start_test_usecase.start_test(42)
+            self.start_test_usecase.start_test(42, MachineInfo("cpu_name", 1, 1))
 
         self.test_result_repository.save.assert_not_called()
 
@@ -46,11 +48,12 @@ class TestStartTest:
         event_dto = TestResultStartedDto(test_result.id)
         event = Event("TEST_RESULT_STARTED", event_dto)
 
-        self.start_test_usecase.start_test(1)
+        self.start_test_usecase.start_test(1, MachineInfo("cpu_name", 1, 1))
 
         self.test_result_repository.save.assert_called_with(test_result)
         assert test_result.execution_status == ExecutionStatus.RUNNING
         assert test_result.started_at is not None
+        assert test_result.machine_info == self.machine_info
         self.message_queue.component.send_event.assert_called_with(
             "test_result_events",
             str(test_result.suite_result_id),
@@ -65,8 +68,9 @@ class TestStartTest:
         test_result.started_at = datetime.datetime.now()
         test_result.execution_status = ExecutionStatus.RUNNING
         self.test_result_repository.find_by_id.return_value = test_result
+        assert test_result.machine_info != self.machine_info
 
-        self.start_test_usecase.start_test(1)
+        self.start_test_usecase.start_test(1, self.machine_info)
 
         self.test_result_repository.save.assert_called_with(test_result)
         self.message_queue.component.send_event.assert_called_once()
@@ -78,3 +82,4 @@ class TestStartTest:
         assert test_result.image_output == None
         assert test_result.reference_image == None
         assert test_result.finished_at == None
+        assert test_result.machine_info == self.machine_info

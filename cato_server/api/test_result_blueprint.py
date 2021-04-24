@@ -25,6 +25,7 @@ from cato_server.api.validators.test_result_validators import (
     StartTestResultValidator,
 )
 from cato_server.domain.image import ImageChannel
+from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
@@ -316,7 +317,13 @@ class TestResultsBlueprint(BaseBlueprint):
             request_json, StartTestResultDto
         )
 
-        self._start_test.start_test(start_test_result_dto.id)
+        machine_info_dto = start_test_result_dto.machine_info
+        machine_info = MachineInfo(
+            cpu_name=machine_info_dto.cpu_name,
+            cores=machine_info_dto.cores,
+            memory=machine_info_dto.memory,
+        )
+        self._start_test.start_test(start_test_result_dto.id, machine_info)
 
         return (
             self.json_response(self._object_mapper.to_json(ApiSuccess(success=True))),

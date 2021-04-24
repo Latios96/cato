@@ -329,6 +329,11 @@ class TestStartTestResultValidator:
         [
             {
                 "id": 1,
+                "machine_info": {
+                    "cpu_name": "test",
+                    "cores": 8,
+                    "memory": 8,
+                },
             },
         ],
     )
@@ -345,6 +350,11 @@ class TestStartTestResultValidator:
             (
                 {
                     "id": 42,
+                    "machine_info": {
+                        "cpu_name": "test",
+                        "cores": 8,
+                        "memory": 8,
+                    },
                 },
                 {"id": ["No TestResult with id 42 exists!"]},
             ),

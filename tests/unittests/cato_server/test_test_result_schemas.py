@@ -6,6 +6,7 @@ import pytest
 from cato_server.api.schemas.test_result_schemas import (
     CreateTestResultSchema,
     CreateOutputSchema,
+    StartTestResultSchema,
 )
 
 
@@ -18,7 +19,6 @@ class TestCreateTestResultSchema:
             "test_identifier": "my_suite/test_identifier",
             "test_command": "my_command",
             "test_variables": {"key": "value"},
-            "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
             "execution_status": "NOT_STARTED",
         }
 
@@ -34,7 +34,6 @@ class TestCreateTestResultSchema:
             "test_identifier": "my_suite/test_identifier",
             "test_command": "my_command",
             "test_variables": {"key": "value"},
-            "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
             "execution_status": "NOT_STARTED",
             "status": "SUCCESS",
             "output": ["1", "2", "3"],
@@ -57,7 +56,6 @@ class TestCreateTestResultSchema:
                 {},
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "suite_result_id": ["Missing data for required field."],
                     "test_command": ["Missing data for required field."],
                     "test_identifier": ["Missing data for required field."],
@@ -69,7 +67,6 @@ class TestCreateTestResultSchema:
                 {"suite_result_id": "wurst"},
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "suite_result_id": ["Not a valid integer."],
                     "test_command": ["Missing data for required field."],
                     "test_identifier": ["Missing data for required field."],
@@ -81,7 +78,6 @@ class TestCreateTestResultSchema:
                 {"suite_result_id": 1, "test_name": ":"},
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "test_command": ["Missing data for required field."],
                     "test_identifier": ["Missing data for required field."],
                     "test_name": [
@@ -98,7 +94,6 @@ class TestCreateTestResultSchema:
                 },
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "test_command": ["Missing data for required field."],
                     "test_identifier": [
                         'String "wurst" is not a valid TestIdentifier.'
@@ -115,7 +110,6 @@ class TestCreateTestResultSchema:
                 },
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "test_command": ["Shorter than minimum length 1."],
                     "test_variables": ["Missing data for required field."],
                 },
@@ -130,7 +124,6 @@ class TestCreateTestResultSchema:
                 },
                 {
                     "execution_status": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
                     "test_variables": ["Not a mapping of str->str: key=['val', 'ue']"],
                 },
             ),
@@ -141,46 +134,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_name",
                     "test_command": "test_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {},
-                },
-                {
-                    "execution_status": ["Missing data for required field."],
-                    "machine_info": {
-                        "cores": ["Missing data for required field."],
-                        "cpu_name": ["Missing data for required field."],
-                        "memory": ["Missing data for required field."],
-                    },
-                },
-            ),
-            (
-                {
-                    "suite_result_id": 1,
-                    "test_name": "test_name",
-                    "test_identifier": "my_suite/test_name",
-                    "test_command": "test_command",
-                    "test_variables": {"key": "value"},
-                    "machine_info": {"cores": 8},
-                },
-                {
-                    "execution_status": ["Missing data for required field."],
-                    "machine_info": {
-                        "cpu_name": ["Missing data for required field."],
-                        "memory": ["Missing data for required field."],
-                    },
-                },
-            ),
-            (
-                {
-                    "suite_result_id": 1,
-                    "test_name": "test_name",
-                    "test_identifier": "my_suite/test_name",
-                    "test_command": "test_command",
-                    "test_variables": {"key": "value"},
-                    "machine_info": {
-                        "cores": 8,
-                        "memory": 24,
-                        "cpu_name": "Intel Xeon",
-                    },
                 },
                 {
                     "execution_status": ["Missing data for required field."],
@@ -193,11 +146,18 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_name",
                     "test_command": "test_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {
-                        "cores": 8,
-                        "memory": 24,
-                        "cpu_name": "Intel Xeon",
-                    },
+                },
+                {
+                    "execution_status": ["Missing data for required field."],
+                },
+            ),
+            (
+                {
+                    "suite_result_id": 1,
+                    "test_name": "test_name",
+                    "test_identifier": "my_suite/test_name",
+                    "test_command": "test_command",
+                    "test_variables": {"key": "value"},
                     "execution_status": "wurst",
                 },
                 {
@@ -223,7 +183,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "test",
                 },
@@ -236,7 +195,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": [1, 2, 3],
@@ -256,7 +214,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -271,7 +228,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -287,7 +243,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -303,7 +258,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -320,7 +274,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -338,7 +291,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -357,7 +309,6 @@ class TestCreateTestResultSchema:
                     "test_identifier": "my_suite/test_identifier",
                     "test_command": "my_command",
                     "test_variables": {"key": "value"},
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
                     "execution_status": "NOT_STARTED",
                     "status": "SUCCESS",
                     "output": ["1", "2", "3"],
@@ -423,6 +374,73 @@ class TestCreateOutputSchema:
     )
     def test_failure(self, data, expected_errors):
         schema = CreateOutputSchema()
+
+        errors = schema.validate(data)
+
+        assert errors == expected_errors
+
+
+class TestStartTestResultSchema:
+    def test_success(self):
+        schema = StartTestResultSchema()
+
+        errors = schema.validate(
+            {"id": 42, "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24}}
+        )
+
+        assert errors == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {},
+                {
+                    "id": ["Missing data for required field."],
+                    "machine_info": ["Missing data for required field."],
+                },
+            ),
+            (
+                {
+                    "id": "w",
+                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
+                },
+                {"id": ["Not a valid integer."]},
+            ),
+            (
+                {
+                    "id": 42,
+                    "machine_info": {"cpu_wname": "Intel", "cores": 8, "memory": 24},
+                },
+                {"machine_info": {"cpu_name": ["Missing data for required field."]}},
+            ),
+            (
+                {
+                    "id": 42,
+                    "machine_info": {
+                        "cpu_name": "Intel",
+                        "cores": "eight",
+                        "memory": 24,
+                    },
+                },
+                {"machine_info": {"cores": ["Not a valid integer."]}},
+            ),
+            (
+                {
+                    "id": 42,
+                    "machine_info": {"cpu_name": "Intel", "cores": -8, "memory": -24},
+                },
+                {
+                    "machine_info": {
+                        "cores": ["Must be greater than or equal to 1."],
+                        "memory": ["Must be greater than or equal to 0."],
+                    }
+                },
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors):
+        schema = StartTestResultSchema()
 
         errors = schema.validate(data)
 

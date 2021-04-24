@@ -375,6 +375,11 @@ def test_start_test_success(client, test_result):
     url = "/api/v1/test_results/start"
     data = {
         "id": test_result.id,
+        "machine_info": {
+            "cpu_name": "test",
+            "cores": 8,
+            "memory": 8,
+        },
     }
     rv = client.post(url, json=data)
 
@@ -385,6 +390,11 @@ def test_start_test_failure(client):
     url = "/api/v1/test_results/start"
     data = {
         "id": 42,
+        "machine_info": {
+            "cpu_name": "test",
+            "cores": 8,
+            "memory": 8,
+        },
     }
     rv = client.post(url, json=data)
 

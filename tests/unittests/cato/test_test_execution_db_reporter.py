@@ -25,6 +25,7 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     MachineInfoDto,
+    StartTestResultDto,
 )
 
 SUITES = [
@@ -103,7 +104,12 @@ class TestTestExecutionDbReporter:
             SUITES[0], SUITES[0].tests[0]
         )
 
-        self.mock_cato_api_client.start_test.assert_called_with(test_result.id)
+        self.mock_cato_api_client.start_test.assert_called_with(
+            StartTestResultDto(
+                id=test_result.id,
+                machine_info=MachineInfoDto(cpu_name="my_cpu", cores=8, memory=8),
+            )
+        )
 
     def test_report_test_execution_start_no_test_result_should_exit(
         self, test_result_factory

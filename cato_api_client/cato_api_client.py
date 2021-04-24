@@ -141,12 +141,11 @@ class CatoApiClient:
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
 
-    def start_test(self, test_result_id: int) -> None:
+    def start_test(self, start_test_dto: StartTestResultDto) -> None:
         url = self._build_url("/api/v1/test_results/start")
-        dto = StartTestResultDto(
-            id=test_result_id,
+        response = self._http_template.post_for_entity(
+            url, start_test_dto, StartTestResultDto
         )
-        response = self._http_template.post_for_entity(url, dto, StartTestResultDto)
         if response.status_code() != 200:
             raise ValueError(
                 f"Something went wrong when starting test: {response.status_code()}, {response.text()}"
