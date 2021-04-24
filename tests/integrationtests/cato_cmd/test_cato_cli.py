@@ -3,18 +3,10 @@ import sys
 
 import pytest
 
-from cato.config.config_encoder import ConfigEncoder
-from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
-from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
-from cato.utils.machine_info_collector import MachineInfoCollector
-from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_client.http_template import HttpTemplate
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
-from cato_server.mappers.object_mapper import ObjectMapper
 from tests.integrationtests.utils import snapshot_output, run_command
 
 
