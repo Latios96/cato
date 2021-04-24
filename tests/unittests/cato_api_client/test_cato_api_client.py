@@ -474,3 +474,12 @@ def test_find_submission_info_by_not_existing_id(cato_api_client):
     found_info = cato_api_client.get_submission_info_by_id(42)
 
     assert found_info == None
+
+
+def test_start_test_success(cato_api_client, test_result):
+    cato_api_client.start_test(test_result.id)
+
+
+def test_start_test_failure(cato_api_client):
+    with pytest.raises(ValueError):
+        cato_api_client.start_test(43)

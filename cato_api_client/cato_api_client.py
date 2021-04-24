@@ -14,6 +14,7 @@ from cato_api_models.catoapimodels import (
     TestStatusDto,
     TestHeartbeatDto,
     ApiSuccess,
+    StartTestResultDto,
 )
 from cato_server.domain.file import File
 from cato_server.domain.image import Image
@@ -143,6 +144,17 @@ class CatoApiClient:
         response = self._http_template.post_for_entity(url, {}, TestHeartbeatDto)
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
+
+    def start_test(self, test_result_id: int) -> None:
+        url = self._build_url("/api/v1/test_results/start")
+        dto = StartTestResultDto(
+            id=test_result_id,
+        )
+        response = self._http_template.post_for_entity(url, dto, StartTestResultDto)
+        if response.status_code() != 200:
+            raise ValueError(
+                f"Something went wrong when starting test: {response.status_code()}, {response.text()}"
+            )
 
     def finish_test(
         self,
