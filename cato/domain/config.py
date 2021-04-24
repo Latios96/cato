@@ -29,7 +29,7 @@ class Config:
 @dataclass
 class RunConfig:
     project_name: str
-    resource_path: str  # todo rename to resource path
+    resource_path: str
     test_suites: List[TestSuite]
     output_folder: str
     variables: Dict[str, str] = field(default_factory=dict)
