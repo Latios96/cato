@@ -88,9 +88,6 @@ class TestResultsBlueprint(BaseBlueprint):
             self.create_test_result_output
         )
         self.route("/test_results", methods=["POST"])(self.create_test_result)
-        self.route("/test_results/<int:test_result_id>", methods=["PATCH"])(
-            self.update_test_result
-        )
         self.route("/test_results/run/<int:run_id>", methods=["GET"])(
             self.get_test_result_by_run_id
         )
@@ -160,30 +157,6 @@ class TestResultsBlueprint(BaseBlueprint):
         test_result = self._test_result_repository.save(test_result)
         logger.info("Created TestResult %s", test_result)
         return self.json_response(self._object_mapper.to_json(test_result)), 201
-
-    def update_test_result(self, test_result_id):
-        request_json = request.get_json()
-        errors = UpdateTestResultValidator(
-            self._suite_result_repository, self._file_storage
-        ).validate(request_json)
-        if errors:
-            return jsonify(errors), BAD_REQUEST
-
-        test_result = self._test_result_repository.find_by_id(test_result_id)
-        if not test_result:
-            abort(404)
-
-        update_data_keys = UpdateTestResultSchema().load(request_json).keys()
-        update_data = {key: request_json[key] for key in update_data_keys}
-
-        test_result_dict = self._object_mapper.to_dict(test_result)
-        logger.info("Updating TestResult with data %s", update_data)
-        test_result_dict.update(update_data)
-        test_result = self._object_mapper.from_dict(test_result_dict, TestResult)
-
-        logger.info("Saving updated TestResult %s", test_result)
-        self._test_result_repository.save(test_result)
-        return jsonify(test_result_dict), 200
 
     def create_test_result_output(self):
         request_json = request.get_json()
