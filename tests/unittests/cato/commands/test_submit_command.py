@@ -57,7 +57,7 @@ class TestSubmitCommand:
         self.mock_cato_api_client.submit_to_scheduler.assert_called_with(
             SubmissionInfo(
                 id=0,
-                config=self.config,
+                config=self.config.to_config(),
                 run_id=42,
                 resource_path=os.path.join("test"),
                 executable=sys.executable,

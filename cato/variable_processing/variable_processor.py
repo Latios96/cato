@@ -40,7 +40,7 @@ class VariableProcessor:
 
         templates: Dict[str, lucidity.Template] = {}
         for name, content in default_variables.items():
-            template = lucidity.Template(name, str)
+            template = lucidity.Template(name, content)
             template.template_resolver = templates
             templates[name] = template
 
