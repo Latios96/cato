@@ -57,7 +57,7 @@ def filter_by_test_identifier(
 
 def filter_by_test_identifiers(
     suites: List[TestSuite], test_identifiers: List[TestIdentifier]
-):
+) -> List[TestSuite]:
     suites_by_name: Dict[str, TestSuite] = {}
     for suite, test in iterate_suites_and_tests(suites):
         for test_identifier in test_identifiers:

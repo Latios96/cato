@@ -1,6 +1,8 @@
 from typing import Dict, Optional, List
 
 from cato.domain.config import RunConfig
+from cato.domain.test import Test
+from cato.domain.test_suite import TestSuite
 from cato.variable_processing.variable_predefinition import VariablePredefinition
 from cato.vendor import lucidity
 
@@ -9,8 +11,8 @@ class VariableProcessor:
     def evaluate_variables(
         self,
         config: RunConfig,
-        current_suite,
-        test,
+        current_suite: TestSuite,
+        test: Test,
         predefinitions: Optional[List[VariablePredefinition]] = None,
     ) -> Dict[str, str]:
         default_variables = {
@@ -49,7 +51,7 @@ class VariableProcessor:
 
         return formatted
 
-    def format_command(self, command: str, variables: Dict[str, str]):
+    def format_command(self, command: str, variables: Dict[str, str]) -> str:
         templates = {}
         for name, str in variables.items():
             template = lucidity.Template(name, str)

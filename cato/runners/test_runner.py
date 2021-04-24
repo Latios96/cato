@@ -36,7 +36,9 @@ class TestRunner:
         self._image_comparator = image_comparator
         self._test_execution_reporter = test_execution_reporter
 
-    def run_test(self, config: RunConfig, current_suite: TestSuite, test: Test):
+    def run_test(
+        self, config: RunConfig, current_suite: TestSuite, test: Test
+    ) -> TestExecutionResult:
         self._reporter.report_start_test(test)
         test_heartbeat_reporter = TestHeartbeatReporter(self._test_execution_reporter)
 
@@ -52,7 +54,9 @@ class TestRunner:
 
         return result
 
-    def _run_test(self, config: RunConfig, current_suite: TestSuite, test: Test):
+    def _run_test(
+        self, config: RunConfig, current_suite: TestSuite, test: Test
+    ) -> TestExecutionResult:
         variables = self._variable_processor.evaluate_variables(
             config, current_suite, test, predefinitions=PREDEFINITIONS
         )

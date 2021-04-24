@@ -19,7 +19,7 @@ class CompareResults:
 
 
 class ImageComparator:
-    def compare(self, left: str, right: str):
+    def compare(self, left: str, right: str) -> CompareResults:
         left_input = self._read_image_buffer_checked(left)
         right_input = self._read_image_buffer_checked(right)
         result = ImageBufAlgo.compare(left_input, right_input, 0.2, 0)

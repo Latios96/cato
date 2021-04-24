@@ -13,7 +13,7 @@ class ConfigTemplateCommand(BaseCliCommand):
     def create_template(
         self,
         path: str,
-    ):
+    ) -> None:
         path = self._config_path(path)
 
         with open(path, "w") as f:

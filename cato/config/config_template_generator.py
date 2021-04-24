@@ -35,5 +35,5 @@ TEMPLATE = {
 
 
 class ConfigTemplateGenerator:
-    def write(self, stream: IO):
+    def write(self, stream: IO) -> None:
         stream.write(json.dumps(TEMPLATE, indent=2))

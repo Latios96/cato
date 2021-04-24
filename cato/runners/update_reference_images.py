@@ -10,11 +10,11 @@ from cato_server.domain.test_identifier import TestIdentifier
 
 
 class UpdateReferenceImage:
-    def __init__(self, output_folder: OutputFolder, copy_file=shutil.copy):
+    def __init__(self, output_folder: OutputFolder, copy_file=shutil.copy) -> None:
         self._output_folder = output_folder
         self._copy_file = copy_file
 
-    def update(self, config: RunConfig, test_identifier: TestIdentifier):
+    def update(self, config: RunConfig, test_identifier: TestIdentifier) -> None:
         filtered = filter_by_test_identifier(config.test_suites, test_identifier)
         for suite, test in iterate_suites_and_tests(filtered):
             variable_processor = VariableProcessor()

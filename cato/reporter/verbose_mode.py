@@ -1,3 +1,4 @@
+from __future__ import annotations
 from enum import Enum
 
 
@@ -7,7 +8,7 @@ class VerboseMode(Enum):
     VERY_VERBOSE = 3
 
     @staticmethod
-    def in_range(value: int):
+    def in_range(value: int) -> VerboseMode:
         if value < 1:
             value = 1
         if value > 3:

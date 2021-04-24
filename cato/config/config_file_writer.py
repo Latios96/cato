@@ -17,11 +17,11 @@ class EnhancedJSONEncoder(json.JSONEncoder):
 
 
 class ConfigFileWriter:
-    def write_to_file(self, path: str, config: Config):
+    def write_to_file(self, path: str, config: Config) -> None:
         with open(path, "w") as f:
             self.write_to_stream(f, config)
 
-    def write_to_stream(self, stream: IO, config: Config):
+    def write_to_stream(self, stream: IO, config: Config) -> None:
         json.dump(config.for_json(), stream, cls=EnhancedJSONEncoder, indent=2)
 
     def write_to_dict(self, config: Config) -> Dict:

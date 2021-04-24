@@ -40,7 +40,7 @@ def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
     return obj_graph.provide(cls)
 
 
-def create_object_graph(url: Optional[str] = None):
+def create_object_graph(url: Optional[str] = None) -> ObjectGraph:
     if url:
         url = format_url(url)
     return pinject.new_object_graph(
@@ -90,7 +90,7 @@ def run(
     only_failed: bool,
     verbose: int,
     url: str,
-):
+) -> None:
     obj_graph = create_object_graph(url)
     run_command = provide_safe(obj_graph, RunCommand)
 
@@ -107,7 +107,7 @@ def submit(
     test_identifier_str: str,
     only_failed: bool,
     url: str,
-):
+) -> None:
     obj_graph = create_object_graph(url)
     submit_command = provide_safe(obj_graph, SubmitCommand)
 
@@ -137,7 +137,7 @@ def update_reference(path, test_identifier):
     update_reference_image_command.update(path, test_identifier)
 
 
-def config_template(path: str):
+def config_template(path: str) -> None:
     obj_graph = create_object_graph()
     config_template_command = obj_graph.provide(ConfigTemplateCommand)
 
@@ -148,7 +148,7 @@ def worker_run(
     url: str,
     submission_info_id: int,
     test_identifier_str: str,
-):
+) -> None:
     obj_graph = create_object_graph(url)
     worker_command = provide_safe(obj_graph, WorkerRunCommand)
 

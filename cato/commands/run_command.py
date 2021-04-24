@@ -46,7 +46,7 @@ class RunCommand(RunCommandInterface):
         test_identifier_str: Optional[str],
         only_failed: bool,
         verbose_mode: VerboseMode,
-    ):
+    ) -> None:
         self._reporter.set_verbose_mode(verbose_mode)
         config = self._prepare_config(
             path, suite_name, test_identifier_str, only_failed

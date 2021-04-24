@@ -14,7 +14,7 @@ class ListTestsCommand(BaseCliCommand):
         self._json_config_parser = json_config_parser
         self._logger = logger
 
-    def list_tests(self, path: str):
+    def list_tests(self, path: str) -> None:
         path = self._config_path(path)
         config = self._json_config_parser.parse(path)
         self._logger.info(

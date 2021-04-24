@@ -18,7 +18,7 @@ class UpdateMissingReferenceImages:
         self._output_folder = output_folder
         self._copy_file = copy_file
 
-    def update(self, config: RunConfig):
+    def update(self, config: RunConfig) -> None:
         for suite, test in iterate_suites_and_tests(config.test_suites):
             variable_processor = VariableProcessor()
             variables = variable_processor.evaluate_variables(config, suite, test)

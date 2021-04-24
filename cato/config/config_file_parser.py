@@ -17,7 +17,7 @@ class JsonConfigParser:
 
         return self.parse_dict(data)
 
-    def parse_dict(self, data: Dict):
+    def parse_dict(self, data: Dict) -> Config:
         schema = self._read_json_from_file(self._schema_path())
         validate(instance=data, schema=schema)
         return Config(
@@ -30,7 +30,7 @@ class JsonConfigParser:
         with open(path) as f:
             return json.load(f)
 
-    def _read_json_from_stream(self, stream) -> dict:
+    def _read_json_from_stream(self, stream: IO) -> dict:
         return json.load(stream)
 
     def _schema_path(self) -> str:
@@ -51,7 +51,7 @@ class JsonConfigParser:
 
         return suites
 
-    def _transform_test(self, suite) -> List[Test]:
+    def _transform_test(self, suite: Dict) -> List[Test]:
         tests = []
         for test in suite["tests"]:
             tests.append(

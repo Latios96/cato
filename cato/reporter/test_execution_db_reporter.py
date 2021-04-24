@@ -1,5 +1,5 @@
 import logging
-from typing import List
+from typing import List, Optional
 
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
@@ -32,10 +32,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
-        self._run_id = None
-        self._machine_info = None
+        self._run_id: Optional[int] = None
+        self._machine_info: Optional[MachineInfo] = None
 
-    def use_run_id(self, run_id: int):
+    def use_run_id(self, run_id: int) -> None:
         if not self._cato_api_client.run_id_exists(run_id):
             raise ValueError(f"No run with id {run_id} exists!")
         self._run_id = run_id
@@ -93,7 +93,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             self._cato_api_client.generate_run_url(project.id, run.id),
         )
 
-    def report_test_execution_start(self, current_suite: TestSuite, test: Test):
+    def report_test_execution_start(self, current_suite: TestSuite, test: Test) -> None:
         test_identifier = TestIdentifier(current_suite.name, test.name)
         test_result = self._cato_api_client.find_test_result_by_run_id_and_identifier(
             self._run_id, test_identifier
@@ -120,7 +120,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
     def report_test_result(
         self, current_suite: TestSuite, test_execution_result: TestExecutionResult
-    ):
+    ) -> None:
         test_identifier = TestIdentifier(
             current_suite.name, test_execution_result.test.name
         )
@@ -163,12 +163,12 @@ class TestExecutionDbReporter(TestExecutionReporter):
             test_result.id, "".join(test_execution_result.output)
         )
 
-    def report_heartbeat(self, test_identifier: TestIdentifier):
+    def report_heartbeat(self, test_identifier: TestIdentifier) -> None:
         self._cato_api_client.heartbeat_test(self._run_id, test_identifier)
 
     def report_test_execution_end(
         self, last_run_information_repository: LastRunInformationRepository
-    ):
+    ) -> None:
         last_run_id = LastRunInformation(last_run_id=self._run_id)
         last_run_information_repository.write_last_run_information(last_run_id)
 
@@ -179,7 +179,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         return self.__run_id_value
 
     @_run_id.setter
-    def _run_id(self, run_id: int):
+    def _run_id(self, run_id: int) -> None:
         self.__run_id_value = run_id
 
     def _get_machine_info(self) -> MachineInfo:

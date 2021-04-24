@@ -33,7 +33,7 @@ class WorkerRunCommand(BaseCliCommand):
         self,
         submission_info_id: int,
         test_identifier_str: str,
-    ):
+    ) -> None:
         self._reporter.set_verbose_mode(VerboseMode.VERY_VERBOSE)
         submission_info = self._cato_api_client.get_submission_info_by_id(
             submission_info_id
@@ -63,7 +63,7 @@ class WorkerRunCommand(BaseCliCommand):
         )  # todo use temporary folder for output
         self._execute_test(run_config, suite, test)
 
-    def _execute_test(self, config: RunConfig, suite: TestSuite, test: Test):
+    def _execute_test(self, config: RunConfig, suite: TestSuite, test: Test) -> None:
         self._test_execution_reporter.report_test_execution_start(suite, test)
 
         result = self._test_runner.run_test(config, suite, test)

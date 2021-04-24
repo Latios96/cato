@@ -59,6 +59,8 @@ class RunCommandInterface(BaseCliCommand):
                     last_run_information.last_run_id, TestStatus.FAILED
                 )
             )
+            if not failed_test_identifiers:
+                failed_test_identifiers = []
             config.test_suites = filter_by_test_identifiers(
                 config.test_suites, failed_test_identifiers
             )

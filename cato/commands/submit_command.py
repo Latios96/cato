@@ -43,7 +43,7 @@ class SubmitCommand(RunCommandInterface):
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
         only_failed: bool,
-    ):
+    ) -> None:
         config = self._prepare_config(
             path, suite_name, test_identifier_str, only_failed
         )

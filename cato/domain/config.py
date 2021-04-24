@@ -1,3 +1,4 @@
+from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import List, Dict
 
@@ -50,7 +51,9 @@ class RunConfig:
         return sum(map(lambda x: len(x.tests), self.test_suites))
 
     @classmethod
-    def from_config(cls, config: Config, resource_path: str, output_folder: str):
+    def from_config(
+        cls, config: Config, resource_path: str, output_folder: str
+    ) -> RunConfig:
         return RunConfig(
             project_name=config.project_name,
             resource_path=resource_path,
