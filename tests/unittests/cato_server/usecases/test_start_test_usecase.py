@@ -1,3 +1,5 @@
+import datetime
+
 import pytest
 
 from cato_server.domain.execution_status import ExecutionStatus
@@ -32,3 +34,23 @@ class TestStartTest:
         self.test_result_repository.save.assert_called_with(test_result)
         assert test_result.execution_status == ExecutionStatus.RUNNING
         assert test_result.started_at is not None
+
+    def test_starting_an_existing_which_was_started_at_least_once_should_reset_data(
+        self, test_result_factory
+    ):
+        test_result = test_result_factory()
+        test_result.started_at = datetime.datetime.now()
+        test_result.execution_status = ExecutionStatus.RUNNING
+        self.test_result_repository.find_by_id.return_value = test_result
+
+        self.start_test_usecase.start_test(1)
+
+        self.test_result_repository.save.assert_called_with(test_result)
+        assert test_result.execution_status == ExecutionStatus.RUNNING
+        assert test_result.started_at is not None
+        assert test_result.status == None
+        assert test_result.seconds == None
+        assert test_result.message == None
+        assert test_result.image_output == None
+        assert test_result.reference_image == None
+        assert test_result.finished_at == None
