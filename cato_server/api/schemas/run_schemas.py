@@ -5,7 +5,6 @@ from cato_server.api.schemas.general import (
     ID_FIELD,
     NAME_FIELD,
     VARIABLES_FIELD,
-    MachineInfoSchema,
 )
 from cato_server.api.schemas.test_result_schemas import is_test_identifier
 

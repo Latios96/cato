@@ -11,7 +11,6 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_models._impl import catoapimodels_MachineInfoDto
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
