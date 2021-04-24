@@ -55,9 +55,9 @@ class SubmitCommand(RunCommandInterface):
             config.project_name, config.test_suites
         )
 
-        submission_info = SubmissionInfo(  # todo use correct config
+        submission_info = SubmissionInfo(
             id=0,
-            config=config,
+            config=config.to_config(),
             run_id=self._test_execution_reporter.run_id(),
             resource_path=os.path.join(config.resource_path),
             executable=sys.executable,
