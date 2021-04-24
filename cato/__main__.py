@@ -2,7 +2,7 @@ import argparse
 import logging
 
 import pinject
-from typing import Type, TypeVar, Optional
+from typing import Type, TypeVar, Optional, cast
 
 from pinject.object_graph import ObjectGraph
 
@@ -26,6 +26,7 @@ from cato.reporter.verbose_mode import VerboseMode
 from cato.utils.url_format import format_url
 from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
+from cato_common.utils.typing import safe_cast
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
@@ -37,7 +38,7 @@ T = TypeVar("T")
 
 
 def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
-    return obj_graph.provide(cls)
+    return safe_cast(cls, obj_graph.provide(cls))
 
 
 def create_object_graph(url: Optional[str] = None) -> ObjectGraph:

@@ -1,10 +1,11 @@
 import dataclasses
 import json
-from typing import IO, Dict
+from typing import IO, Dict, cast
 
 import attr
 
 from cato.domain.config import Config
+from cato_common.utils.typing import safe_cast
 
 
 class EnhancedJSONEncoder(json.JSONEncoder):
@@ -26,4 +27,4 @@ class ConfigFileWriter:
 
     def write_to_dict(self, config: Config) -> Dict:
         json_str = json.dumps(config.for_json(), cls=EnhancedJSONEncoder)
-        return json.loads(json_str)
+        return safe_cast(dict, json.loads(json_str))

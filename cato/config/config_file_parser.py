@@ -1,16 +1,17 @@
 import json
 import os
-from typing import IO, List, Dict
+from typing import IO, List, Dict, cast
 
 from jsonschema import validate
 
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato_common.utils.typing import safe_cast
 
 
 class JsonConfigParser:
-    def parse(self, path, stream: IO = None) -> Config:
+    def parse(self, path: str, stream: IO = None) -> Config:
         if not stream:
             stream = open(path)
         data = self._read_json_from_stream(stream)
@@ -26,12 +27,12 @@ class JsonConfigParser:
             variables=data["variables"] if data.get("variables") else {},
         )
 
-    def _read_json_from_file(self, path) -> dict:
+    def _read_json_from_file(self, path: str) -> dict:
         with open(path) as f:
-            return json.load(f)
+            return safe_cast(dict, json.load(f))
 
     def _read_json_from_stream(self, stream: IO) -> dict:
-        return json.load(stream)
+        return safe_cast(dict, json.load(stream))
 
     def _schema_path(self) -> str:
         return os.path.join(os.path.dirname(__file__), "schema.json")

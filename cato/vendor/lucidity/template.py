@@ -8,6 +8,8 @@ import re
 import functools
 from collections import defaultdict
 
+from typing import Dict
+
 import cato.vendor.lucidity.error
 
 # Type of a RegexObject for isinstance check.
@@ -168,7 +170,7 @@ class Template(object):
                 "Path {0!r} did not match template pattern.".format(path)
             )
 
-    def format(self, data):
+    def format(self, data: Dict) -> str:
         """Return a path formatted by applying *data* to this template.
 
         Raise :py:class:`~lucidity.error.FormatError` if *data* does not

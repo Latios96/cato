@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Type, TypeVar, Iterable
+from typing import Optional, Type, TypeVar, Iterable, List
 from urllib.parse import quote
 
 import requests
@@ -180,7 +180,7 @@ class CatoApiClient:
 
     def get_test_results_by_run_id_and_test_status(
         self, run_id: int, test_status: TestStatus
-    ) -> Optional[Iterable[TestIdentifier]]:
+    ) -> Optional[List[TestIdentifier]]:
         url = self._build_url(
             f"/api/v1/test_results/run/{run_id}/test_status/{test_status.value}"
         )

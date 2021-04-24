@@ -18,7 +18,7 @@ def iterate_suite_results(
 
 
 class TimingReportGenerator:
-    def generate(self, suite_results: List[TestSuiteExecutionResult]):
+    def generate(self, suite_results: List[TestSuiteExecutionResult]) -> str:
         entries = []
 
         for suite_result, test_result in iterate_suite_results(suite_results):

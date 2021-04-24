@@ -13,7 +13,7 @@ class UpdateReferenceImageCommand(BaseCliCommand):
         super(UpdateReferenceImageCommand, self).__init__(json_config_parser)
         self._update_reference_image = update_reference_image
 
-    def update(self, path, test_identifier: str):
+    def update(self, path: str, test_identifier: str) -> None:
         config = self._read_config(path)
 
         self._update_reference_image.update(

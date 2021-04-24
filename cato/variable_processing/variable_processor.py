@@ -38,8 +38,8 @@ class VariableProcessor:
         default_variables.update(current_suite.variables)
         default_variables.update(test.variables)
 
-        templates = {}
-        for name, str in default_variables.items():
+        templates: Dict[str, lucidity.Template] = {}
+        for name, content in default_variables.items():
             template = lucidity.Template(name, str)
             template.template_resolver = templates
             templates[name] = template
@@ -52,7 +52,7 @@ class VariableProcessor:
         return formatted
 
     def format_command(self, command: str, variables: Dict[str, str]) -> str:
-        templates = {}
+        templates: Dict[str, lucidity.Template] = {}
         for name, str in variables.items():
             template = lucidity.Template(name, str)
             template.template_resolver = templates

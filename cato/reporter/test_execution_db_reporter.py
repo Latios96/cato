@@ -32,7 +32,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
-        self._run_id: Optional[int] = None
+        self.__run_id_value: Optional[int] = None
         self._machine_info: Optional[MachineInfo] = None
 
     def use_run_id(self, run_id: int) -> None:
@@ -43,7 +43,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
     def run_id(self) -> int:
         return self._run_id
 
-    def start_execution(self, project_name: str, test_suites: List[TestSuite]):
+    def start_execution(self, project_name: str, test_suites: List[TestSuite]) -> None:
         logger.info("Reporting execution start to server..")
         project = self._cato_api_client.get_project_by_name(project_name)
         if not project:

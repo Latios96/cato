@@ -12,6 +12,6 @@ class UpdateMissingReferenceImagesCommand(BaseCliCommand):
         super(UpdateMissingReferenceImagesCommand, self).__init__(json_config_parser)
         self._update_missing_reference_images = update_missing_reference_images
 
-    def update(self, path: str):
+    def update(self, path: str) -> None:
         config = self._read_config(path)
         self._update_missing_reference_images.update(config)

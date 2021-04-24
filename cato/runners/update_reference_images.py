@@ -1,6 +1,8 @@
 import os
 import shutil
 
+from typing import Callable, Union
+
 from cato import logger
 from cato.domain.config import RunConfig
 from cato.domain.test_suite import iterate_suites_and_tests, filter_by_test_identifier
@@ -10,7 +12,13 @@ from cato_server.domain.test_identifier import TestIdentifier
 
 
 class UpdateReferenceImage:
-    def __init__(self, output_folder: OutputFolder, copy_file=shutil.copy) -> None:
+    def __init__(
+        self,
+        output_folder: OutputFolder,
+        copy_file: Callable[
+            [Union[str, os.PathLike], Union[str, os.PathLike]], str
+        ] = shutil.copy,
+    ) -> None:
         self._output_folder = output_folder
         self._copy_file = copy_file
 

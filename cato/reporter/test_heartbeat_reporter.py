@@ -1,5 +1,6 @@
 import threading
 import time
+from typing import Optional
 
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato_server.domain.test_identifier import TestIdentifier
@@ -14,9 +15,11 @@ logger = logging.getLogger(__name__)
 class TestHeartbeatReporter:
     def __init__(self, test_execution_reporter: TestExecutionReporter):
         self._test_execution_reporter = test_execution_reporter
-        self._cease_continuous_run = None
+        self._cease_continuous_run: Optional[threading.Event] = None
 
-    def start_sending_heartbeats_for_test(self, test_identifier: TestIdentifier):
+    def start_sending_heartbeats_for_test(
+        self, test_identifier: TestIdentifier
+    ) -> threading.Event:
         self._cease_continuous_run = threading.Event()
 
         class ScheduleThread(threading.Thread):
