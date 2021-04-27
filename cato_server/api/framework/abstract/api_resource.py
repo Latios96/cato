@@ -1,4 +1,6 @@
-class AbstractBaseResource:
+from collections import Callable
 
-    def add_route(self, url, method, handler):
+
+class AbstractBaseResource:
+    def add_route(self, url: str, method: str, handler: Callable) -> None:
         raise NotImplementedError()
