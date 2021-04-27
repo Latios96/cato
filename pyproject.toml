@@ -45,6 +45,8 @@ future = "^0.18.2"
 Flask-Twisted = "^0.1.2"
 schedule = "^1.0.0"
 psycopg2-binary = "^2.8.6"
+fastapi = "^0.63.0"
+uvicorn = "^0.13.4"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
