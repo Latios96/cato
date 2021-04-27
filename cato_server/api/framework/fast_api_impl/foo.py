@@ -2,8 +2,8 @@ import inspect
 
 
 def my_func(my_arg, my_kwarg=None):
-    print("my_arg: " + my_arg)
-    print("my_kwarg: " + my_kwarg)
+    print("my_arg: " + my_arg)  # noqa: T001
+    print("my_kwarg: " + my_kwarg)  # noqa: T001
 
 
 if __name__ == "__main__":
