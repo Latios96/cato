@@ -15,5 +15,5 @@ class AbstractTestClient:
     def get(self, url: str) -> AbstractResponse:
         raise NotImplementedError()
 
-    def post(self, url: str) -> AbstractResponse:
+    def post(self, url: str, data: Dict = None) -> AbstractResponse:
         raise NotImplementedError()

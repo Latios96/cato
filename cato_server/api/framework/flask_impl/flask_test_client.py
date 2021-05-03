@@ -27,5 +27,5 @@ class FlaskTestClient(AbstractTestClient):
     def get(self, url: str) -> AbstractResponse:
         return FlaskResponse(self._test_client.get(url))
 
-    def post(self, url: str) -> AbstractResponse:
-        return FlaskResponse(self._test_client.post(url))
+    def post(self, url: str, data: Dict = None) -> AbstractResponse:
+        return FlaskResponse(self._test_client.post(url, json=data))

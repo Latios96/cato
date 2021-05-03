@@ -1,4 +1,5 @@
 from cato_server.api.framework.abstract.api_resource import AbstractBaseResource
+from cato_server.api.framework.abstract.test_client import AbstractTestClient
 
 
 class AbstractApiProvider:
@@ -10,7 +11,7 @@ class AbstractApiProvider:
     def run(self) -> None:
         raise NotImplementedError()
 
-    def test_client(self):
+    def test_client(self) -> AbstractTestClient:
         raise NotImplementedError()
 
     def _verify_url_prefix(self, url_prefix: str) -> None:

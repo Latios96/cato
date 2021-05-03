@@ -17,10 +17,11 @@ class FastApiAbstractBaseResource(AbstractBaseResource, APIRouter):
             # load path params from request and convert to int of needed
             # construct arguments and call
             args = inspect.getfullargspec(handler)
+            constructed_args = {}
             if "request" in args.args:
-                return await handler(FastApiRequest(request))
-            else:
-                return handler()
+                constructed_args["request"] = FastApiRequest(request)
+
+            return await handler(**constructed_args)
 
         # regex um parameter zu finden:
         # "<((int|string|float|uuid):)?(\w+)>"
@@ -33,3 +34,5 @@ class FastApiAbstractBaseResource(AbstractBaseResource, APIRouter):
 
         if method == "GET":
             self.get(url)(wrapped_handler)
+        elif method == "POST":
+            self.post(url)(wrapped_handler)

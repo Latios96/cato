@@ -29,5 +29,5 @@ class FastApiTestClient(AbstractTestClient):
     def get(self, url: str) -> AbstractResponse:
         return FastApiResponse(self._test_client.get(url))
 
-    def post(self, url: str) -> AbstractResponse:
-        return FastApiResponse(self._test_client.post(url))
+    def post(self, url: str, data: Dict = None) -> AbstractResponse:
+        return FastApiResponse(self._test_client.post(url, json=data))
