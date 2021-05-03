@@ -1,3 +1,6 @@
+import pytest
+
+from cato_server.api.framework.abstract.api_provider import AbstractApiProvider
 from cato_server.api.framework.fast_api_impl.fast_api_api_provider import (
     FastApiApiProvider,
 )
@@ -20,3 +23,19 @@ def pytest_generate_tests(metafunc):
                 (FastApiApiProvider, FastApiAbstractBaseResource),
             ],
         )
+
+
+@pytest.fixture
+def api_provider_implementation():
+    return FlaskApiProvider, FlaskAbstractBaseResource
+
+
+@pytest.fixture
+def api_provider_fixture(api_provider_implementation):
+    ApiProvider, BaseResource = api_provider_implementation
+    return ApiProvider()
+
+
+@pytest.fixture
+def api_provider_client(api_provider_fixture: AbstractApiProvider):
+    return api_provider_fixture.test_client()
