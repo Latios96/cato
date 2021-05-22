@@ -22,7 +22,14 @@ class FastApiAbstractBaseResource(AbstractBaseResource, APIRouter):
             else:
                 return handler()
 
-        # regex um <(((int):)?.+)>
+        # regex um parameter zu finden:
+        # "<((int|string|float|uuid):)?(\w+)>"
+        #
+        # suchen:
+        # print(re.search(regex, test_str).groups())
+        #
+        # Flask Syntax zu FastApi konvertieren:
+        # print(re.sub(regex, r"{\g<3>}",test_str))
 
         if method == "GET":
             self.get(url)(wrapped_handler)
