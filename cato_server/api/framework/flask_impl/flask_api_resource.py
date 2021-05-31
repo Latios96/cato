@@ -13,9 +13,11 @@ class FlaskAbstractBaseResource(AbstractBaseResource, BaseBlueprint):
         super(FlaskAbstractBaseResource, self).__init__("test", __name__)
 
     def add_route(self, url, method, handler):
-        def my_handler():
+        def my_handler(*called_args, **kwargs):
             args = inspect.getfullargspec(handler)
             constructed_args = {}
+            constructed_args.update(kwargs)
+
             if "request" in args.args:
                 constructed_args["request"] = FlaskRequest(request)
 
