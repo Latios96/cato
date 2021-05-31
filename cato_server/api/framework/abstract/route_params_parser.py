@@ -4,7 +4,7 @@ from enum import Enum
 
 from typing import List
 
-PARAM_PATTERN = re.compile("<((int|string|uuid):)?(\w+)>")
+PARAM_PATTERN = re.compile(r"<((int|string|uuid):)?(\w+)>")
 
 
 class RouteParamType(Enum):
