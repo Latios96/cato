@@ -13,7 +13,7 @@ def test_get_test_result_by_suite_and_identifier_should_return(
     rv = client.get(url)
 
     assert rv.status_code == 200
-    json = rv.get_json()
+    json = rv.json()
     assert json["id"] == 1
     assert json.get("output") is None
 
@@ -34,7 +34,7 @@ def test_get_test_result_by_suite_id_should_return(client, suite_result, test_re
     rv = client.get(url)
 
     assert rv.status_code == 200
-    json = rv.get_json()
+    json = rv.json()
     assert len(json) == 1
     assert json[0]["id"] == 1
     assert json[0].get("output") is None
@@ -48,7 +48,7 @@ def test_get_test_result_by_suite_id_should_return_empty_list(
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == []
+    assert rv.json() == []
 
 
 def test_get_test_result_output_should_return(client, test_result, output):
@@ -57,7 +57,7 @@ def test_get_test_result_output_should_return(client, test_result, output):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "id": 1,
         "test_result_id": 1,
         "text": "This is a long text",
@@ -92,7 +92,7 @@ def test_create_test_result_success(client, suite_result, stored_image):
         },
     )
 
-    assert rv.get_json() == {
+    assert rv.json() == {
         "execution_status": "NOT_STARTED",
         "finished_at": finished_at,
         "id": 1,
@@ -130,7 +130,7 @@ def test_create_test_result_failure(client, suite_result, stored_file):
         },
     )
 
-    assert rv.get_json() == {"suite_result_id": ["No suite result exists for id 5."]}
+    assert rv.json() == {"suite_result_id": ["No suite result exists for id 5."]}
     assert rv.status_code == 400
 
 
@@ -142,7 +142,7 @@ def test_get_test_result_by_run_and_identifier_success(
     )
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "execution_status": "NOT_STARTED",
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
@@ -182,7 +182,7 @@ def test_create_output_success(client, test_result):
     )
 
     assert rv.status_code == 201
-    assert rv.get_json() == {
+    assert rv.json() == {
         "id": 1,
         "test_result_id": test_result.id,
         "text": "my text",
@@ -195,7 +195,7 @@ def test_create_output_failure(client, test_result):
     )
 
     assert rv.status_code == 400
-    assert rv.get_json() == {"test_result_id": ["No test result exists for id 42."]}
+    assert rv.json() == {"test_result_id": ["No test result exists for id 42."]}
 
 
 def test_get_test_results_by_run_id_should_find(client, run, test_result):
@@ -204,7 +204,7 @@ def test_get_test_results_by_run_id_should_find(client, run, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == [
+    assert rv.json() == [
         {
             "execution_status": "NOT_STARTED",
             "id": 1,
@@ -221,7 +221,7 @@ def test_get_test_results_by_run_id_should_return_empty_list(client):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == []
+    assert rv.json() == []
 
 
 def test_get_test_results_by_run_id_paginated_should_find(client, run, test_result):
@@ -230,7 +230,7 @@ def test_get_test_results_by_run_id_paginated_should_find(client, run, test_resu
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "page_number": 1,
         "page_size": 10,
         "total_entity_count": 1,
@@ -252,7 +252,7 @@ def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "page_number": 1,
         "page_size": 10,
         "total_entity_count": 0,
@@ -266,7 +266,7 @@ def test_get_test_result_by_id(client, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "execution_status": "NOT_STARTED",
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
@@ -341,7 +341,7 @@ def test_finish_test_failure(client, test_result, stored_image):
     rv = client.post(url, json=data)
 
     assert rv.status_code == 400
-    assert rv.json == {"image_output": ["No image exists for id 42."]}
+    assert rv.json() == {"image_output": ["No image exists for id 42."]}
 
 
 def test_should_find_by_run_id_and_test_status(client, run, test_result):
@@ -350,7 +350,7 @@ def test_should_find_by_run_id_and_test_status(client, run, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.json == [{"suite_name": "my_suite", "test_name": "my_test_name"}]
+    assert rv.json() == [{"suite_name": "my_suite", "test_name": "my_test_name"}]
 
 
 def test_should_not_find_by_run_id_and_test_status(client, run, test_result):
@@ -359,7 +359,7 @@ def test_should_not_find_by_run_id_and_test_status(client, run, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.json == []
+    assert rv.json() == []
 
 
 def test_invalid_test_status(client, run, test_result):
@@ -368,7 +368,7 @@ def test_invalid_test_status(client, run, test_result):
     rv = client.get(url)
 
     assert rv.status_code == 400
-    assert rv.json == {"test_status": "Not a valid test status: dd."}
+    assert rv.json() == {"test_status": "Not a valid test status: dd."}
 
 
 def test_start_test_success(client, test_result):
@@ -399,4 +399,4 @@ def test_start_test_failure(client):
     rv = client.post(url, json=data)
 
     assert rv.status_code == 400
-    assert rv.json == {"id": ["No TestResult with id 42 exists!"]}
+    assert rv.json() == {"id": ["No TestResult with id 42 exists!"]}
