@@ -5,15 +5,18 @@ import signal
 import flask
 import pinject
 import schedule
+import uvicorn
+from fastapi import FastAPI
 from flask.json import JSONEncoder
 from flask_twisted import Twisted
+from starlette.staticfiles import StaticFiles
 from twisted.internet import reactor
 from werkzeug.exceptions import HTTPException
 
 import cato
 import cato_server
 import cato_server.server_logging
-from cato_server.api.about_blueprint import AboutBlueprint
+from cato_server.api.about_blueprint import AboutRouter
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
@@ -53,57 +56,13 @@ def create_app(
         modules=[cato, cato_server], binding_specs=[bindings]
     )
 
-    app = flask.Flask(__name__, static_url_path="/")
+    app = FastAPI()
 
-    if app_configuration.debug is True:
-        logger.info("Configuring app to run in debug mode")
-        app.config["DEBUG"] = True
+    app.include_router(obj_graph.provide(AboutRouter), prefix="/api/v1")
 
-    @app.route("/", defaults={"path": ""})
-    @app.route("/<string:path>")
-    @app.route("/<path:path>")
-    def index(path):
-        return app.send_static_file("index.html")
+    app.mount("/", StaticFiles(directory="static", html=True), name="static")
 
-    app.register_blueprint(obj_graph.provide(ProjectsBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(obj_graph.provide(FilesBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(
-        obj_graph.provide(TestResultsBlueprint), url_prefix="/api/v1"
-    )
-    app.register_blueprint(obj_graph.provide(RunsBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(
-        obj_graph.provide(SuiteResultsBlueprint), url_prefix="/api/v1"
-    )
-    app.register_blueprint(obj_graph.provide(AboutBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(obj_graph.provide(ImagesBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(
-        obj_graph.provide(TestHeartbeatBlueprint), url_prefix="/api/v1"
-    )
-    app.register_blueprint(obj_graph.provide(SchedulersBlueprint), url_prefix="/api/v1")
-    app.register_blueprint(
-        obj_graph.provide(SubmissionInfosBlueprint), url_prefix="/api/v1"
-    )
-
-    @app.errorhandler(Exception)
-    def handle_500(e):
-        if isinstance(e, HTTPException):
-            return e
-        logger.error(e, exc_info=True)
-        return "Internal Server Error", 500
-
-    class CustomJSONEncoder(JSONEncoder):
-        def default(self, obj):
-            try:
-                if isinstance(obj, datetime.datetime):
-                    return obj.isoformat()
-                iterable = iter(obj)
-            except TypeError:
-                pass
-            else:
-                return list(iterable)
-            return JSONEncoder.default(self, obj)
-
-    app.json_encoder = CustomJSONEncoder
+    print([{"path": route.path, "name": route.name} for route in app.routes])
 
     if create_background_tasks:
         logger.info("Created background tasks..")
@@ -137,13 +96,11 @@ def main():
 
     signal.signal(
         signal.SIGINT,
-        lambda x, y: (app.scheduler_runner.stop(), reactor.stop(), exit(0)),
+        lambda x, y: (app.scheduler_runner.stop(), exit(0)),
     )
 
-    logger.info("Creating Twisted app")
-    Twisted(app)
-    logger.info(f"Up and running on http://127.0.0.1:{config.port}")
-    app.run("127.0.0.1", config.port)
+    logger.info(f"Starting on http://127.0.0.1:{config.port}")
+    uvicorn.run(app, host="127.0.0.1", port=config.port)
 
 
 def get_config_path(args):
