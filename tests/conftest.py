@@ -11,6 +11,7 @@ from sqlalchemy import event
 from sqlalchemy.engine import Engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
+from starlette.testclient import TestClient
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
@@ -359,8 +360,7 @@ def app_fixture(app_and_config_fixture):
 
 @pytest.fixture
 def client(app_fixture):
-    with app_fixture.test_client() as client:
-        yield client
+    return TestClient(app_fixture)
 
 
 @pytest.fixture

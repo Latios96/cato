@@ -1,5 +1,6 @@
 import argparse
 import datetime
+import os.path
 import signal
 
 import flask
@@ -19,7 +20,7 @@ import cato_server.server_logging
 from cato_server.api.about_blueprint import AboutRouter
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
-from cato_server.api.projects_blueprint import ProjectsBlueprint
+from cato_server.api.projects_blueprint import ProjectsRouter
 from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.schedulers_blueprint import SchedulersBlueprint
 from cato_server.api.submission_infos_blueprint import SubmissionInfosBlueprint
@@ -59,8 +60,10 @@ def create_app(
     app = FastAPI()
 
     app.include_router(obj_graph.provide(AboutRouter), prefix="/api/v1")
+    app.include_router(obj_graph.provide(ProjectsRouter), prefix="/api/v1")
 
-    app.mount("/", StaticFiles(directory="static", html=True), name="static")
+    static_directory = os.path.join(os.path.dirname(__file__), "static")
+    app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")
 
     print([{"path": route.path, "name": route.name} for route in app.routes])
 
