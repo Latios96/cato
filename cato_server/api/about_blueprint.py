@@ -8,9 +8,9 @@ from cato_server.configuration.app_configuration import AppConfiguration
 logger = logging.getLogger(__name__)
 
 
-class AboutRouter(APIRouter):
+class AboutBlueprint(APIRouter):
     def __init__(self, app_configuration: AppConfiguration):
-        super(AboutRouter, self).__init__()
+        super(AboutBlueprint, self).__init__()
         self._app_configuration = app_configuration
 
         self.get("/about")(self.about)

@@ -5,7 +5,6 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
-from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.api.validators.project_validators import CreateProjectValidator
 from cato_server.domain.project import Project
 from cato_server.mappers.object_mapper import ObjectMapper
@@ -14,11 +13,11 @@ from cato_server.storage.abstract.project_repository import ProjectRepository
 logger = logging.getLogger(__name__)
 
 
-class ProjectsRouter(APIRouter):
+class ProjectsBlueprint(APIRouter):
     def __init__(
         self, project_repository: ProjectRepository, object_mapper: ObjectMapper
     ):
-        super(ProjectsRouter, self).__init__()
+        super(ProjectsBlueprint, self).__init__()
         self._project_repository = project_repository
         self._object_mapper = object_mapper
 
