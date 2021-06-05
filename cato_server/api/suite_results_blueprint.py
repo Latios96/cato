@@ -1,8 +1,10 @@
 import logging
 from http.client import BAD_REQUEST
 
-from flask import jsonify, request, abort
+from fastapi import APIRouter
 from marshmallow import ValidationError
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
 
 from cato_api_models.catoapimodels import (
     SuiteResultDto,
@@ -35,7 +37,7 @@ def run_id_exists(self, id):
     return self._run_repository.find_by_id(id) is not None
 
 
-class SuiteResultsBlueprint(BaseBlueprint):
+class SuiteResultsBlueprint(APIRouter):
     def __init__(
         self,
         suite_result_repository: SuiteResultRepository,
@@ -44,7 +46,7 @@ class SuiteResultsBlueprint(BaseBlueprint):
         object_mapper: ObjectMapper,
         page_mapper: PageMapper,
     ):
-        super(SuiteResultsBlueprint, self).__init__("suite-results", __name__)
+        super(SuiteResultsBlueprint, self).__init__()
         self._suite_result_repository = suite_result_repository
         self._run_repository = run_repository
         self._test_result_repository = test_result_repository
@@ -53,16 +55,12 @@ class SuiteResultsBlueprint(BaseBlueprint):
 
         self._status_calculator = RunStatusCalculator()
 
-        self.route("/suite_results/run/<run_id>", methods=["GET"])(
-            self.suite_result_by_run
-        )
-        self.route("/suite_results/<suite_id>", methods=["GET"])(
-            self.suite_result_by_id
-        )
-        self.route("/suite_results", methods=["POST"])(self.create_suite_result)
+        self.get("/suite_results/run/{run_id}")(self.suite_result_by_run)
+        self.get("/suite_results/{suite_id}")(self.suite_result_by_id)
+        self.post("/suite_results")(self.create_suite_result)
 
-    def suite_result_by_run(self, run_id):
-        page_request = page_request_from_request(request.args)
+    def suite_result_by_run(self, run_id: int, request: Request):
+        page_request = page_request_from_request(request.query_params)
         if page_request:
             return self._suite_result_by_run_paged(run_id, page_request)
         suite_results = self._suite_result_repository.find_by_run_id(run_id)
@@ -88,7 +86,7 @@ class SuiteResultsBlueprint(BaseBlueprint):
                     ),
                 )
             )
-        return self.json_response(self._object_mapper.many_to_json(suite_result_dtos))
+        return JSONResponse(content=self._object_mapper.many_to_dict(suite_result_dtos))
 
     def _suite_result_by_run_paged(self, run_id: int, page_request: PageRequest):
         suite_results_page = self._suite_result_repository.find_by_run_id_with_paging(
@@ -122,15 +120,15 @@ class SuiteResultsBlueprint(BaseBlueprint):
             total_entity_count=suite_results_page.total_entity_count,
             entities=suite_result_dtos,
         )
-        return self.json_response(self._page_mapper.to_json(page))
+        return JSONResponse(content=self._page_mapper.to_dict(page))
 
-    def create_suite_result(self):
-        request_json = request.get_json()
+    async def create_suite_result(self, request: Request):
+        request_json = await request.json()
         errors = CreateSuiteResultValidator(
             self._run_repository, self._suite_result_repository
         ).validate(request_json)
         if errors:
-            return jsonify(errors), BAD_REQUEST
+            return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
         suite_result = SuiteResult(
             id=0,
@@ -140,7 +138,9 @@ class SuiteResultsBlueprint(BaseBlueprint):
         )
         suite_result = self._suite_result_repository.save(suite_result)
         logger.info("Created SuiteResult %s", suite_result)
-        return self.json_response(self._object_mapper.to_json(suite_result)), 201
+        return JSONResponse(
+            content=self._object_mapper.to_dict(suite_result), status_code=201
+        )
 
     def _run_id_exists(self, id):
         if self._run_repository.find_by_id(id) is None:
@@ -154,7 +154,7 @@ class SuiteResultsBlueprint(BaseBlueprint):
     def suite_result_by_id(self, suite_id):
         suite_result = self._suite_result_repository.find_by_id(suite_id)
         if not suite_result:
-            abort(404)
+            return Response(status_code=404)
 
         tests = self._test_result_repository.find_by_suite_result_id(suite_id)
         tests_result_short_summary_dtos = []
@@ -178,4 +178,4 @@ class SuiteResultsBlueprint(BaseBlueprint):
             suite_variables=suite_result.suite_variables,
             tests=tests_result_short_summary_dtos,
         )
-        return self.json_response(self._object_mapper.to_json(dto))
+        return JSONResponse(content=self._object_mapper.to_dict(dto))

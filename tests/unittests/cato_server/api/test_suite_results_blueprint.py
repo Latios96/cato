@@ -4,7 +4,7 @@ def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == [
+    assert rv.json() == [
         {
             "id": 1,
             "run_id": 1,
@@ -21,7 +21,7 @@ def test_get_suite_result_by_run_id_should_return_empty_list(client):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == []
+    assert rv.json() == []
 
 
 def test_get_suite_by_project_id_paged_should_return(client, suite_result, run):
@@ -30,7 +30,7 @@ def test_get_suite_by_project_id_paged_should_return(client, suite_result, run):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "entities": [
             {
                 "id": 1,
@@ -52,7 +52,7 @@ def test_get_suite_by_project_id_pages_should_return_empty_page(client, project)
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "entities": [],
         "page_number": 1,
         "page_size": 10,
@@ -68,7 +68,7 @@ def test_create_suite_result_should_create(client, run):
     rv = client.post(url, json=data)
 
     assert rv.status_code == 201
-    assert rv.get_json() == {
+    assert rv.json() == {
         "id": 1,
         "run_id": 1,
         "suite_name": "my_suite",
@@ -84,7 +84,7 @@ def test_create_suite_result_should_not_create(client, run):
     rv = client.post(url, json=data)
 
     assert rv.status_code == 400
-    assert rv.get_json() == {"run_id": ["No run with id 42 exists."]}
+    assert rv.json() == {"run_id": ["No run with id 42 exists."]}
 
 
 def test_get_by_id_should_find(client, suite_result):
@@ -93,7 +93,7 @@ def test_get_by_id_should_find(client, suite_result):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "id": 1,
         "runId": 1,
         "suite_name": "my_suite",
@@ -110,7 +110,7 @@ def test_get_by_id_should_find_should_contain_no_tests(
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "id": 1,
         "runId": 1,
         "suite_name": "my_suite",
