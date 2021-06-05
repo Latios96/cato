@@ -1,7 +1,9 @@
 import logging
 from http.client import BAD_REQUEST
 
-from flask import Blueprint, request, jsonify
+from fastapi import APIRouter
+from starlette.requests import Request
+from starlette.responses import JSONResponse
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato_server.api.validators.test_submission_validators import (
@@ -20,7 +22,7 @@ from cato_server.storage.abstract.submission_info_repository import (
 logger = logging.getLogger(__name__)
 
 
-class SchedulersBlueprint(Blueprint):
+class SchedulersBlueprint(APIRouter):
     def __init__(
         self,
         run_repository: RunRepository,
@@ -28,31 +30,29 @@ class SchedulersBlueprint(Blueprint):
         json_config_parser: JsonConfigParser,
         submission_info_repository: SubmissionInfoRepository,
     ):
-        super(SchedulersBlueprint, self).__init__("schedulers", __name__)
+        super(SchedulersBlueprint, self).__init__()
         self._run_repository = run_repository
         self._scheduler_submitter = scheduler_submitter
         self._json_config_parser = json_config_parser
         self._submission_info_repository = submission_info_repository
 
         if self._scheduler_submitter.is_available():
-            self.route("/schedulers/submit", methods=["POST"])(self.submit_tests)
+            self.post("/schedulers/submit")(self.submit_tests)
         else:
-            self.route("/schedulers/submit", methods=["POST"])(
-                self.submit_tests_placeholder
-            )
+            self.post("/schedulers/submit")(self.submit_tests_placeholder)
 
-    def submit_tests(self):
-        request_json = request.get_json()
+    async def submit_tests(self, request: Request):
+        request_json = await request.json()
         errors = SubmissionInfoValidator(self._run_repository).validate(request_json)
         if errors:
-            return jsonify(errors), BAD_REQUEST
+            return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
         submission_info = self._read_submission_info(request_json)
         submission_info = self._submission_info_repository.save(submission_info)
 
         self._scheduler_submitter.component.submit_tests(submission_info)
 
-        return jsonify(success=True), 200
+        return JSONResponse(content={"success": True})
 
     def _read_submission_info(self, request_json):
         return SubmissionInfo(
@@ -64,4 +64,6 @@ class SchedulersBlueprint(Blueprint):
         )
 
     def submit_tests_placeholder(self):
-        return jsonify(message="No scheduler is available!"), 404
+        return JSONResponse(
+            content={"message": "No scheduler is available!"}, status_code=404
+        )

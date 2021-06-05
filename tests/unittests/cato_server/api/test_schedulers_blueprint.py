@@ -14,7 +14,7 @@ def test_success(client, run, mocked_scheduler_submitter):
         },
     )
 
-    assert response.json == {"success": True}
+    assert response.json() == {"success": True}
     assert response.status_code == 200
     expected_info = SubmissionInfo(
         id=1,
@@ -37,6 +37,6 @@ def test_invalid_run_id_should_return_400(client, mocked_scheduler_submitter):
         },
     )
 
-    assert response.json == {"run_id": ["No run exists for id 3."]}
+    assert response.json() == {"run_id": ["No run exists for id 3."]}
     assert response.status_code == 400
     mocked_scheduler_submitter.submit_tests.assert_not_called()
