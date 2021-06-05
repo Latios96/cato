@@ -61,6 +61,7 @@ def create_app(
 
     app.include_router(obj_graph.provide(AboutBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(ProjectsBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(FilesBlueprint), prefix="/api/v1")
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
     app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")

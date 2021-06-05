@@ -1,43 +1,51 @@
 import logging
 import os
+import shutil
 import tempfile
 
-from flask import Blueprint, jsonify, request, send_file
+from fastapi import APIRouter, UploadFile
+from fastapi.params import File
+from starlette.responses import FileResponse, JSONResponse
 
 from cato.image_utils.image_conversion import ImageConverter
+from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 
 logger = logging.getLogger(__name__)
 
 
-class FilesBlueprint(Blueprint):
-    def __init__(self, file_storage: AbstractFileStorage):
-        super(FilesBlueprint, self).__init__("files", __name__)
+class FilesBlueprint(APIRouter):
+    def __init__(self, file_storage: AbstractFileStorage, object_mapper: ObjectMapper):
+        super(FilesBlueprint, self).__init__()
         self._file_storage = file_storage
+        self._object_mapper = object_mapper
 
-        self.route("/files/<int:file_id>", methods=["GET"])(self.get_file)
-        self.route("files", methods=["POST"])(self.upload_file)
+        self.get("/files/{file_id}")(self.get_file)
+        self.post("/files")(self.upload_file)
 
-    def upload_file(self):
-        uploaded_file = request.files["file"]
+    def upload_file(self, file: UploadFile = File(...)):
+        uploaded_file = file
         if not uploaded_file.filename:
-            return jsonify({"file": "Filename can not be empty!"}), 400
+            return JSONResponse(
+                content={"file": "Filename can not be empty!"}, status_code=400
+            )
 
         extension = os.path.splitext(uploaded_file.filename)[1].lower()
         if extension not in [".png", ".jpg", "jpeg"] and extension:
             f = self._convert_and_save(uploaded_file)
         else:
             f = self._file_storage.save_stream(
-                uploaded_file.filename, uploaded_file.stream
+                uploaded_file.filename, uploaded_file.file
             )
         logger.info("Saved file %s to %s", uploaded_file.filename, f)
-        return jsonify(f), 201
+        return JSONResponse(content=self._object_mapper.to_dict(f), status_code=201)
 
     def _convert_and_save(self, uploaded_file):
         logger.info("Converting image %s to png..", uploaded_file.filename)
         with tempfile.TemporaryDirectory() as tmpdirname:
             tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
-            uploaded_file.save(tmp_path)
+            with open(tmp_path, "wb") as tmp:
+                shutil.copyfileobj(uploaded_file.file, tmp)
             target_path = os.path.splitext(tmp_path)[0] + ".png"
 
             converter = ImageConverter()
@@ -53,5 +61,5 @@ class FilesBlueprint(Blueprint):
         file = self._file_storage.find_by_id(file_id)
         file_path = self._file_storage.get_path(file)
         if file and os.path.exists(file_path):
-            return send_file(file_path, attachment_filename=file.name)
-        return jsonify({"file_id": "No file found!"}), 404
+            return FileResponse(path=file_path, filename=file.name)
+        return JSONResponse(content={"file_id": "No file found!"}, status_code=404)
