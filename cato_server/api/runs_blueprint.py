@@ -3,7 +3,9 @@ from http.client import BAD_REQUEST
 
 import flask
 from dateutil.parser import parse
-from flask import jsonify, request, abort
+from fastapi import APIRouter
+from starlette.requests import Request
+from starlette.responses import JSONResponse, Response
 
 from cato_api_models.catoapimodels import (
     RunDto,
@@ -11,7 +13,6 @@ from cato_api_models.catoapimodels import (
     RunSummaryDto,
     CreateFullRunDto,
 )
-from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
@@ -36,7 +37,7 @@ from cato_server.usecases.create_full_run import CreateFullRunUsecase
 logger = logging.getLogger(__name__)
 
 
-class RunsBlueprint(BaseBlueprint):
+class RunsBlueprint(APIRouter):
     def __init__(
         self,
         run_repository: RunRepository,
@@ -48,7 +49,7 @@ class RunsBlueprint(BaseBlueprint):
         object_mapper: ObjectMapper,
         page_mapper: PageMapper,
     ):
-        super(RunsBlueprint, self).__init__("runs", __name__)
+        super(RunsBlueprint, self).__init__()
         self._run_repository = run_repository
         self._project_repository = project_repository
         self._test_result_repository = test_result_repository
@@ -60,12 +61,12 @@ class RunsBlueprint(BaseBlueprint):
 
         self._run_status_calculator = RunStatusCalculator()
 
-        self.route("/runs/project/<project_id>", methods=["GET"])(self.runs_by_project)
-        self.route("/runs/<int:run_id>/exists", methods=["GET"])(self.run_id_exists)
-        self.route("/runs", methods=["POST"])(self.create_run)
-        self.route("/runs/full", methods=["POST"])(self.create_full_run)
-        self.route("/runs/<int:run_id>/status", methods=["GET"])(self.status)
-        self.route("/runs/<int:run_id>/summary", methods=["GET"])(self.summary)
+        self.get("/runs/project/{project_id}")(self.runs_by_project)
+        self.get("/runs/{run_id}/exists")(self.run_id_exists)
+        self.post("/runs")(self.create_run)
+        self.post("/runs/full")(self.create_full_run)
+        self.get("/runs/{run_id}/status")(self.status)
+        self.get("/runs/{run_id}/summary")(self.summary)
 
         if self._message_queue.is_available():
             logger.info("Message queue is available, adding run events route")
@@ -73,8 +74,8 @@ class RunsBlueprint(BaseBlueprint):
                 self.run_events_for_project
             )
 
-    def runs_by_project(self, project_id):
-        page_request = page_request_from_request(request.args)
+    def runs_by_project(self, project_id: int, request: Request):
+        page_request = page_request_from_request(request.query_params)
         if page_request:
             return self.runs_by_project_paged(project_id, page_request)
         runs = self._run_repository.find_by_project_id(project_id)
@@ -94,7 +95,7 @@ class RunsBlueprint(BaseBlueprint):
                     status=RunStatusDto(status),
                 )
             )
-        return self.json_response(self._object_mapper.many_to_json(run_dtos))
+        return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
 
     def runs_by_project_paged(self, project_id: int, page_request: PageRequest):
         run_page = self._run_repository.find_by_project_id_with_paging(
@@ -122,20 +123,20 @@ class RunsBlueprint(BaseBlueprint):
             total_entity_count=run_page.total_entity_count,
             entities=run_dtos,
         )
-        return self.json_response(self._page_mapper.to_json(page))
+        return JSONResponse(content=self._page_mapper.to_dict(page))
 
     def run_id_exists(self, run_id):
         run = self._run_repository.find_by_id(run_id)
         if not run:
-            abort(404)
+            return Response(status_code=404)
 
-        return jsonify(success=True), 200
+        return JSONResponse(content={"succes": True}, status_code=200)
 
-    def create_run(self):
-        request_json = request.get_json()
+    async def create_run(self, request: Request):
+        request_json = await request.json()
         errors = CreateRunValidator(self._project_repository).validate(request_json)
         if errors:
-            return jsonify(errors), BAD_REQUEST
+            return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
         run = Run(
             id=0,
@@ -144,36 +145,40 @@ class RunsBlueprint(BaseBlueprint):
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)
-        return self.json_response(self._object_mapper.to_json(run)), 201
+        return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
-    def status(self, run_id):
+    def status(self, run_id: int):
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_run_ids({run_id})
         )
 
         if not status_by_run_id.get(run_id):
-            abort(404)
+            return Response(status_code=404)
 
-        return {
-            "status": RunStatusCalculator().calculate(status_by_run_id.get(run_id)).name
-        }
+        return JSONResponse(
+            content={
+                "status": RunStatusCalculator()
+                .calculate(status_by_run_id.get(run_id))
+                .name
+            }
+        )
 
-    def create_full_run(self):
-        request_json = request.get_json()
+    async def create_full_run(self, request: Request):
+        request_json = await request.json()
         errors = CreateFullRunValidator(self._project_repository).validate(request_json)
         if errors:
-            return jsonify(errors), BAD_REQUEST
+            return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
         create_full_run_dto = self._object_mapper.from_dict(
             request_json, CreateFullRunDto
         )
 
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
-        return self.json_response(self._object_mapper.to_json(run)), 201
+        return JSONResponse(content=self._object_mapper.to_json(run), status_code=201)
 
     def run_events_for_project(self, project_id):
         if not self._project_repository.find_by_id(project_id):
-            abort(404)
+            return Response(status_code=404)
         message_queue = self._message_queue.component
 
         response = flask.Response(
@@ -190,7 +195,7 @@ class RunsBlueprint(BaseBlueprint):
     def summary(self, run_id):
         run = self._run_repository.find_by_id(run_id)
         if not run:
-            abort(404)
+            return Response(status_code=404)
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(
                 run.project_id
@@ -218,4 +223,4 @@ class RunsBlueprint(BaseBlueprint):
             failed_test_count=failed_test_count,
             duration=duration,
         )
-        return self.json_response(self._object_mapper.to_json(run_summary_dto))
+        return JSONResponse(content=self._object_mapper.to_dict(run_summary_dto))

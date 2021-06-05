@@ -1,9 +1,13 @@
-from typing import Optional, Dict
+from typing import Optional
+
+from starlette.datastructures import ImmutableMultiDict
 
 from cato_server.storage.abstract.page import PageRequest
 
 
-def page_request_from_request(flask_request_args: Dict) -> Optional[PageRequest]:
+def page_request_from_request(
+    flask_request_args: ImmutableMultiDict,
+) -> Optional[PageRequest]:
     page_number = flask_request_args.get("page_number")
     page_size = flask_request_args.get("page_size")
 
