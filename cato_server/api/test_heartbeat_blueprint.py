@@ -1,10 +1,10 @@
 import datetime
 import logging
 
-from flask import jsonify
+from fastapi import APIRouter
+from starlette.responses import JSONResponse
 
 from cato_api_models.catoapimodels import TestHeartbeatDto
-from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.mappers.object_mapper import ObjectMapper
@@ -16,58 +16,55 @@ from cato_server.storage.abstract.test_result_repository import TestResultReposi
 logger = logging.getLogger(__name__)
 
 
-class TestHeartbeatBlueprint(BaseBlueprint):
+class TestHeartbeatBlueprint(APIRouter):
     def __init__(
         self,
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
         object_mapper: ObjectMapper,
     ):
-        super(TestHeartbeatBlueprint, self).__init__("test_heartbeats", __name__)
+        super(TestHeartbeatBlueprint, self).__init__()
 
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
 
         self._object_mapper = object_mapper
 
-        self.route("/test_heartbeats/<int:test_result_id>", methods=["POST"])(
-            self.register_heartbeat
-        )
-        self.route(
-            "/test_heartbeats/run/<int:run_id>/<string:suite_name>/<string:test_name>",
-            methods=["POST"],
+        self.post("/test_heartbeats/{test_result_id}")(self.register_heartbeat)
+        self.post(
+            "/test_heartbeats/run/{run_id}/{suite_name}/{test_name}",
         )(self.register_heartbeat_by_run_id)
 
-    def register_heartbeat(self, test_result_id):
+    def register_heartbeat(self, test_result_id: int):
         if not self._test_result_repository.find_by_id(test_result_id):
-            return (
-                jsonify(
-                    {"test_result_id": f"No test result found with id {test_result_id}"}
-                ),
-                400,
+            return JSONResponse(
+                content={
+                    "test_result_id": f"No test result found with id {test_result_id}"
+                },
+                status_code=400,
             )
 
         return self._handle_heartbeat_registration(test_result_id)
 
-    def register_heartbeat_by_run_id(self, run_id, suite_name, test_name):
+    def register_heartbeat_by_run_id(
+        self, run_id: int, suite_name: str, test_name: str
+    ):
         test_identifier = TestIdentifier(suite_name, test_name)
         test_result = self._test_result_repository.find_by_run_id_and_test_identifier(
             run_id, test_identifier
         )
         if not test_result:
-            return (
-                jsonify(
-                    {
-                        "run_id": f"No test result found with run id {run_id} and test identifier {test_identifier}",
-                        "test_identifier": f"No test result found with run id {run_id} and test identifier {test_identifier}",
-                    }
-                ),
-                400,
+            return JSONResponse(
+                content={
+                    "run_id": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                    "test_identifier": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                },
+                status_code=400,
             )
 
         return self._handle_heartbeat_registration(test_result.id)
 
-    def _handle_heartbeat_registration(self, test_result_id):
+    def _handle_heartbeat_registration(self, test_result_id: int):
         test_heartbeat = self._test_heartbeat_repository.find_by_test_result_id(
             test_result_id
         )
@@ -95,4 +92,4 @@ class TestHeartbeatBlueprint(BaseBlueprint):
             test_result_id=test_heartbeat.test_result_id,
             last_beat=test_heartbeat.last_beat.isoformat(),
         )
-        return self.json_response(self._object_mapper.to_json(test_heartbeat_dto))
+        return JSONResponse(self._object_mapper.to_dict(test_heartbeat_dto))
