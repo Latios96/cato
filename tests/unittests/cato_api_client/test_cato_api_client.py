@@ -27,22 +27,22 @@ from cato_api_models.catoapimodels import (
 from cato_server.domain.submission_info import SubmissionInfo
 
 
-class FlaskClientHttpTemplateResponse(HttpTemplateResponse):
+class FastApiClientHttpTemplateResponse(HttpTemplateResponse):
     def __init__(self, response, response_cls, mapper) -> None:
-        super(FlaskClientHttpTemplateResponse, self).__init__(response_cls, mapper)
+        super(FastApiClientHttpTemplateResponse, self).__init__(response_cls, mapper)
         self._response = response
 
     def status_code(self) -> int:
         return self._response.status_code
 
     def get_json(self):
-        return self._response.get_json()
+        return self._response.json()
 
     def text(self):
-        return self._response.data
+        return self._response.content
 
 
-class FlaskClientHttpTemplate(AbstractHttpTemplate):
+class FastApiClientHttpTemplate(AbstractHttpTemplate):
     def __init__(self, client, object_mapper):
         self._client = client
         self._object_mapper = object_mapper
@@ -57,7 +57,7 @@ class FlaskClientHttpTemplate(AbstractHttpTemplate):
         return self._client.patch(url, json=params)
 
     def _construct_http_template_response(self, response, response_cls):
-        return FlaskClientHttpTemplateResponse(
+        return FastApiClientHttpTemplateResponse(
             response, response_cls, self._object_mapper
         )
 
@@ -65,7 +65,7 @@ class FlaskClientHttpTemplate(AbstractHttpTemplate):
 class CatoApiTestClient(CatoApiClient):
     def __init__(self, url, client, object_mapper):
         super(CatoApiTestClient, self).__init__(
-            url, FlaskClientHttpTemplate(client, object_mapper), object_mapper
+            url, FastApiClientHttpTemplate(client, object_mapper), object_mapper
         )
         self._client = client
 
@@ -74,15 +74,13 @@ class CatoApiTestClient(CatoApiClient):
         return get
 
     def _post_form(self, url, params, files=None):
-        if files:
-            params.update(files)
-        return self._client.post(url.replace(self._url, ""), data=params)
+        return self._client.post(url.replace(self._url, ""), files=files)
 
     def _post_json(self, url, params):
         return self._client.post(url.replace(self._url, ""), json=params)
 
     def _get_json(self, reponse):
-        return reponse.get_json()
+        return reponse.json()
 
     def _get_url(self, url):
         return self._client.get(url.replace(self._url, ""))

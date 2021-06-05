@@ -69,7 +69,7 @@ class CatoApiClient:
             raise ValueError(f"Path {path} does not exists!")
 
         url = self._build_url("/api/v1/images")
-        files = {"file": open(path, "rb")}
+        files = {"file": (os.path.basename(path), open(path, "rb"))}
 
         logger.info("Uploading image %s", path)
         response = self._post_form(url, {}, files=files)

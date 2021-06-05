@@ -1,6 +1,5 @@
 from fastapi import APIRouter
-from fastapi.openapi.models import Response
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.submission_info_repository import (

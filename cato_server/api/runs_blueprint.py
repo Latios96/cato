@@ -174,7 +174,7 @@ class RunsBlueprint(APIRouter):
         )
 
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
-        return JSONResponse(content=self._object_mapper.to_json(run), status_code=201)
+        return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
     def run_events_for_project(self, project_id):
         if not self._project_repository.find_by_id(project_id):

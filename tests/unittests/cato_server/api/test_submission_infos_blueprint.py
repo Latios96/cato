@@ -4,7 +4,7 @@ def test_should_existing_get_submission_info(client, submission_info):
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.get_json() == {
+    assert rv.json() == {
         "config": {
             "project_name": "EXAMPLE_PROJECT",
             "suites": [
