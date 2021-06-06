@@ -81,10 +81,13 @@ class MyChromeDriver(webdriver.Chrome):
 def selenium_driver():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
-    driver_path = ChromeDriverManager(
-        chrome_type=ChromeType.GOOGLE,
-        version="91.0.4472.77" if os.environ.get("CI") else "latest",
-    ).install()
+    driver_path = (
+        ChromeDriverManager(
+            chrome_type=ChromeType.GOOGLE,
+        ).install()
+        if os.environ.get("CI")
+        else os.path.join(os.environ["CHROMEWEBDRIVER"], "chromedriver")
+    )
     driver = MyChromeDriver(
         executable_path=driver_path,
         options=chrome_options if os.environ.get("CI") else None,
