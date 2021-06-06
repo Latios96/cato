@@ -12,6 +12,7 @@ packages = [
     { include = "cato_server" },
     { include = "cato_api_client" },
     { include = "cato_api_models" },
+    { include = "cato_common" },
 ]
 
 [tool.poetry.scripts]
