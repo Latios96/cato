@@ -232,6 +232,20 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
 
 
 @pytest.fixture
+def test_result_no_machine_info(
+    sessionmaker_fixture, test_result_factory, suite_result, stored_image
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result = test_result_factory(
+        suite_result_id=suite_result.id,
+        image_output=stored_image.id,
+        reference_image=stored_image.id,
+    )
+    test_result.machine_info = None
+    return repository.save(test_result)
+
+
+@pytest.fixture
 def finished_test_result(
     sessionmaker_fixture, test_result_factory, suite_result, stored_image
 ):

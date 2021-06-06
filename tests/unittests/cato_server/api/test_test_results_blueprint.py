@@ -305,6 +305,51 @@ def test_get_test_result_by_id(client, test_result):
     }
 
 
+def test_get_test_result_by_id_no_machine_info(client, test_result_no_machine_info):
+    url = f"/api/v1/test_results/{test_result_no_machine_info.id}"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json() == {
+        "execution_status": "NOT_STARTED",
+        "finished_at": test_result_no_machine_info.finished_at.isoformat(),
+        "id": 1,
+        "image_output": {
+            "channels": [
+                {"file_id": 1, "id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "name": "alpha"},
+            ],
+            "id": 1,
+            "name": "test.exr",
+            "original_file_id": 1,
+            "width": 1920,
+            "height": 1080,
+        },
+        "machine_info": None,
+        "message": "success",
+        "reference_image": {
+            "channels": [
+                {"file_id": 1, "id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "name": "alpha"},
+            ],
+            "id": 1,
+            "name": "test.exr",
+            "original_file_id": 1,
+            "width": 1920,
+            "height": 1080,
+        },
+        "seconds": 5.0,
+        "started_at": test_result_no_machine_info.started_at.isoformat(),
+        "status": "SUCCESS",
+        "suite_result_id": 1,
+        "test_command": "my_command",
+        "test_identifier": "my_suite/my_test_name",
+        "test_name": "my_test_name",
+        "test_variables": {"testkey": "test_value"},
+    }
+
+
 def test_get_test_results_by_run_id_should_404(client):
     url = f"/api/v1/test_results/{42}"
 

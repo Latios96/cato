@@ -265,7 +265,9 @@ class TestResultsBlueprint(APIRouter):
                 cpu_name=result.machine_info.cpu_name,
                 cores=result.machine_info.cores,
                 memory=result.machine_info.memory,
-            ),
+            )
+            if result.machine_info
+            else None,
             execution_status=ExecutionStatusDto(result.execution_status.value),
             status=TestStatusDto(result.status.value) if result.status else None,
             seconds=result.seconds if result.seconds is not None else 0,
