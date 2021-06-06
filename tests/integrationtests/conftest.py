@@ -4,11 +4,11 @@ import threading
 import time
 
 import pytest
-import requests
-from chromedriver_py import binary_path
-from flask import request
+import uvicorn
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from webdriver_manager.utils import ChromeType
 
 
 class LiveServer:
@@ -16,24 +16,16 @@ class LiveServer:
         self._app = app
         self._port = port
         self._startup_timeout = startup_timeout
+        self.server = None
 
     def spawn_live_server(self):
-        def shutdown_server():
-            func = request.environ.get("werkzeug.server.shutdown")
-            if func is None:
-                raise RuntimeError("Not running with the Werkzeug Server")
-            func()
-
-        @self._app.route("/shutdown", methods=["GET"])
-        def shutdown():
-            shutdown_server()
-            return "Server shutting down..."
-
         class ScheduleThread(threading.Thread):
             @classmethod
             def run(cls):
                 print(f"Running server on port {self._port}")
-                self._app.run(port=self._port, use_reloader=False)
+                config = uvicorn.Config(self._app, host="127.0.0.1", port=self._port)
+                self.server = uvicorn.Server(config)
+                self.server.run()
 
         continuous_thread = ScheduleThread()
         continuous_thread.start()
@@ -65,7 +57,7 @@ class LiveServer:
         return success
 
     def terminate(self):
-        requests.get(self.server_url() + "/shutdown")
+        self.server.should_exit = True
 
     def server_url(self):
         return f"http://127.0.0.1:{self._port}"
@@ -89,8 +81,9 @@ class MyChromeDriver(webdriver.Chrome):
 def selenium_driver():
     chrome_options = Options()
     chrome_options.add_argument("--headless")
+    driver_path = ChromeDriverManager(chrome_type=ChromeType.GOOGLE).install()
     driver = MyChromeDriver(
-        executable_path=binary_path,
+        executable_path=driver_path,
         options=chrome_options if os.environ.get("CI") else None,
     )
     driver.implicitly_wait(5)
