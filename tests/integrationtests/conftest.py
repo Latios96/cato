@@ -85,7 +85,7 @@ def selenium_driver():
         ChromeDriverManager(
             chrome_type=ChromeType.GOOGLE,
         ).install()
-        if os.environ.get("CI")
+        if not os.environ.get("CI")
         else os.path.join(os.environ["CHROMEWEBDRIVER"], "chromedriver")
     )
     driver = MyChromeDriver(
