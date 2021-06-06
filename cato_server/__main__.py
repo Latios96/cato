@@ -67,8 +67,6 @@ def create_app(
     static_directory = os.path.join(os.path.dirname(__file__), "static")
     app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")
 
-    print([{"path": route.path, "name": route.name} for route in app.routes])
-
     if create_background_tasks:
         logger.info("Created background tasks..")
         task_creator = obj_graph.provide(BackgroundTaskCreator)
