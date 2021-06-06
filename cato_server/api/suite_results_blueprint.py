@@ -14,7 +14,6 @@ from cato_api_models.catoapimodels import (
     ExecutionStatusDto,
     TestStatusDto,
 )
-from cato_server.api.base_blueprint import BaseBlueprint
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,

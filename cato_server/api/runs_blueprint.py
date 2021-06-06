@@ -1,7 +1,6 @@
 import logging
 from http.client import BAD_REQUEST
 
-import flask
 from dateutil.parser import parse
 from fastapi import APIRouter
 from starlette.requests import Request

@@ -18,7 +18,7 @@ from cato_api_models.catoapimodels import (
     ApiSuccess,
     StartTestResultDto,
 )
-from cato_server.api.base_blueprint import BaseBlueprint
+
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
