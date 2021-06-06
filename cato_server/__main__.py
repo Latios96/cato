@@ -65,6 +65,8 @@ def create_app(
     app.include_router(obj_graph.provide(TestResultsBlueprint), prefix="/api/v1")
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
+    if not os.path.exists(static_directory):
+        os.makedirs(static_directory)
     app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")
 
     if create_background_tasks:
