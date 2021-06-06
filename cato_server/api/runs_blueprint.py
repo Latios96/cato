@@ -13,7 +13,6 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
 )
 from cato_server.api.page_utils import page_request_from_request
-from cato_server.api.utils import format_sse
 from cato_server.api.validators.run_validators import (
     CreateRunValidator,
     CreateFullRunValidator,
@@ -176,20 +175,9 @@ class RunsBlueprint(APIRouter):
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
     def run_events_for_project(self, project_id):
-        if not self._project_repository.find_by_id(project_id):
-            return Response(status_code=404)
-        message_queue = self._message_queue.component
-
-        response = flask.Response(
-            format_sse(
-                message_queue.get_event_stream(
-                    "run_events", str(project_id), self._object_mapper
-                )
-            ),
-            mimetype="text/event-stream",
+        return JSONResponse(
+            content={"message": "Not supported with FastAPI yet!"}, status_code=404
         )
-        response.headers["Access-Control-Allow-Origin"] = "*"
-        return response
 
     def summary(self, run_id):
         run = self._run_repository.find_by_id(run_id)
