@@ -8,13 +8,9 @@ import requests
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from cato.config.config_file_parser import JsonConfigParser
-from cato.config.config_file_writer import ConfigFileWriter
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
-from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.mappers.page_mapper import PageMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.schedulers.abstract_scheduler_submitter import (
@@ -67,10 +63,6 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_heartbeat_repository import 
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.usecases.create_full_run import CreateFullRunUsecase
-from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
-from cato_server.usecases.finish_test import FinishTest
-from cato_server.usecases.start_test import StartTest
 
 logger = logging.getLogger(__name__)
 
