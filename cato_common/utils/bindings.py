@@ -1,6 +1,9 @@
 import sys
+from typing import List, Type, TypeVar
+from pinject.object_graph import ObjectGraph
+from cato_common.utils.typing import safe_cast
 
-from typing import List
+T = TypeVar("T")
 
 
 def _is_in_module_with_name(module_names, module):
@@ -20,3 +23,7 @@ def imported_modules(module_names: List[str]):
             all_imported_modules,
         )
     )
+
+
+def provide_safe(obj_graph: ObjectGraph, cls: Type[T]) -> T:
+    return safe_cast(cls, obj_graph.provide(cls))
