@@ -5,7 +5,6 @@ from typing import Type, TypeVar, Optional
 import pinject
 from pinject.object_graph import ObjectGraph
 
-import cato
 from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
@@ -23,8 +22,8 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato.utils.url_format import format_url
-from cato_api_client import cato_api_client, http_template
 from cato_api_client.http_template import HttpTemplate
+from cato_common.utils.bindings import imported_modules
 from cato_common.utils.typing import safe_cast
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 
@@ -44,22 +43,7 @@ def create_object_graph(url: Optional[str] = None) -> ObjectGraph:
     if url:
         url = format_url(url)
     return pinject.new_object_graph(
-        modules=[
-            cato,
-            cato.runners.test_runner,
-            cato.runners.command_runner,
-            cato.utils.machine_info_collector,
-            cato.reporter.stats_calculator,
-            cato_api_client,
-            http_template,
-            cato.commands.config_template_command,
-            cato.commands.list_tests_command,
-            cato.commands.run_command,
-            cato.commands.update_missing_reference_images_command,
-            cato.commands.update_reference_image_command,
-            cato.config.config_encoder,
-            cato.config.config_file_parser,
-        ],
+        modules=[*imported_modules(["cato"])],
         binding_specs=[TestExecutionReporterBindings(url)],
     )
 
