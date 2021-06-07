@@ -8,9 +8,9 @@ import uvicorn
 from fastapi import FastAPI
 from starlette.staticfiles import StaticFiles
 
-import cato
 import cato_server
 import cato_server.server_logging
+from cato_common.utils.bindings import imported_modules
 from cato_server.api.about_blueprint import AboutBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
@@ -48,7 +48,7 @@ def create_app(
     logger.info("Cato Server Version %s", cato_server.__version__)
     logger.info("Creating Flask app..")
     obj_graph = pinject.new_object_graph(
-        modules=[cato, cato_server], binding_specs=[bindings]
+        modules=[*imported_modules(["cato", "cato_server"])], binding_specs=[bindings]
     )
 
     app = FastAPI()

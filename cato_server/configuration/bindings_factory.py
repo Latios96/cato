@@ -153,16 +153,10 @@ class PinjectBindings(pinject.BindingSpec):
             to_instance=self._bindings.storage_bindings.session_maker_binding,
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
-        bind("create_full_run_usecase", to_class=CreateFullRunUsecase)
         bind(
             "message_queue",
             to_instance=self._bindings.message_queue_bindings.message_queue_binding,
         )
-        bind("fail_timed_out_tests", to_class=FailTimedOutTests)
-        bind("finish_test", to_class=FinishTest)
-        bind("start_test", to_class=StartTest)
-        bind("object_mapper", to_class=ObjectMapper)
-        bind("page_mapper", to_class=PageMapper)
         bind(
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
@@ -170,14 +164,6 @@ class PinjectBindings(pinject.BindingSpec):
         bind(
             "scheduler_submitter",
             to_instance=self._bindings.scheduler_bindings.scheduler_submitter_binding,
-        )
-        bind(
-            "config_file_writer",
-            to_class=ConfigFileWriter,
-        )
-        bind(
-            "json_config_parser",
-            to_class=JsonConfigParser,
         )
         bind(
             "submission_info_repository",
