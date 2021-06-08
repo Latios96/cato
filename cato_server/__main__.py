@@ -1,6 +1,5 @@
 import argparse
 import os.path
-import signal
 
 import pinject
 import schedule
@@ -100,10 +99,10 @@ def main():
 
     app = create_app(config, bindings, create_background_tasks=True)
 
-    signal.signal(
-        signal.SIGINT,
-        lambda x, y: (app.scheduler_runner.stop(), exit(0)),
-    )
+    @app.on_event("shutdown")
+    def shutdown_event():
+        app.scheduler_runner.stop(),
+        exit(0),
 
     logger.info(f"Starting on http://127.0.0.1:{config.port}")
     uvicorn.run(app, host="127.0.0.1", port=config.port)
