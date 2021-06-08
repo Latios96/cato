@@ -1,3 +1,5 @@
+import os
+
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.message_queue_configuration import (
@@ -31,5 +33,25 @@ class AppConfigurationDefaults:
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
             message_queue_configuration=MessageQueueConfiguration(host="localhost"),
+            scheduler_configuration=SchedulerConfiguration(),
+        )
+
+    def create_ready_to_use(self, config_folder) -> AppConfiguration:
+        return AppConfiguration(
+            port=self.PORT_DEFAULT,
+            debug=self.DEBUG_DEFAULT,
+            storage_configuration=StorageConfiguration(
+                database_url="sqlite:///{}".format(
+                    os.path.join(config_folder, "cato.db")
+                ),
+                file_storage_url=os.path.join(config_folder, "file_storage"),
+            ),
+            logging_configuration=LoggingConfiguration(
+                log_file_path=self.LOG_FILE_PATH_DEFAULT,
+                use_file_handler=self.USE_FILE_HANDLER_DEFAULT,
+                max_bytes=self.MAX_BYTES_DEFAULT,
+                backup_count=self.BACKUP_COUNT_DEFAULT,
+            ),
+            message_queue_configuration=MessageQueueConfiguration(host=""),
             scheduler_configuration=SchedulerConfiguration(),
         )
