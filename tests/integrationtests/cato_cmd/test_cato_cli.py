@@ -97,6 +97,8 @@ def test_worker_run_command(live_server, snapshot, run_config, test_resource_pro
             "passed in.*": "passed in 0.12 seconds",
             "Command: .*": "Command: <some command>",
             "Copy .* to .*": "Copy <a> to <b>",
+            "Found image output at path .*": "Found image output at path <foo>",
+            "Found reference image at path .*": "Found image output at path <bar>",
         },
     )
 
