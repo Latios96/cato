@@ -26,5 +26,7 @@ class RunStatusCalculator:
                 return RunStatus.FAILED
             else:
                 return RunStatus.SUCCESS
-        else:
+        elif execution_status_counts[ExecutionStatus.RUNNING] > 0:
             return RunStatus.RUNNING
+        else:
+            return RunStatus.NOT_STARTED

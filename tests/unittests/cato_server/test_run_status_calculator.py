@@ -27,8 +27,21 @@ def make_test_result(
     )
 
 
-def test_calculate_not_started():
-    status_set = {(ExecutionStatus.NOT_STARTED, None)}
+@pytest.mark.parametrize(
+    "status_set",
+    [
+        {(ExecutionStatus.NOT_STARTED, None)},
+        {
+            (ExecutionStatus.NOT_STARTED, None),
+            (ExecutionStatus.FINISHED, TestStatus.FAILED),
+        },
+        {
+            (ExecutionStatus.NOT_STARTED, None),
+            (ExecutionStatus.FINISHED, TestStatus.SUCCESS),
+        },
+    ],
+)
+def test_calculate_not_started(status_set):
     calculator = RunStatusCalculator()
 
     status = calculator.calculate(status_set)
@@ -46,10 +59,6 @@ def test_calculate_not_started():
         },
         {
             (ExecutionStatus.RUNNING, None),
-            (ExecutionStatus.NOT_STARTED, None),
-            (ExecutionStatus.FINISHED, None),
-        },
-        {
             (ExecutionStatus.NOT_STARTED, None),
             (ExecutionStatus.FINISHED, None),
         },
