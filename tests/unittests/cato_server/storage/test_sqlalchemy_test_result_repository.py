@@ -269,7 +269,11 @@ def test_find_by_run_id_paginated_should_return_correct_order(
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     for name in order_test_data.wrong_order:
         repository.save(
-            test_result_factory(test_name=name, suite_result_id=suite_result.id)
+            test_result_factory(
+                test_identifier="{0}/{0}".format(name),
+                test_name=name,
+                suite_result_id=suite_result.id,
+            )
         )
 
     results = repository.find_by_run_id_with_paging(run.id, PageRequest(1, 10))
