@@ -3,7 +3,7 @@ from marshmallow import fields, ValidationError, Schema, EXCLUDE
 from marshmallow.validate import Regexp, Length, Range
 from pathvalidate import validate_filename, validate_filepath
 
-REGEX_VALID_NAME = Regexp(r"^[A-Za-z0-9_\-]+$")
+REGEX_VALID_NAME = Regexp(r"^[A-Za-z0-9_ \-]+$")
 
 
 def _is_str_str_dict(the_dict):

@@ -115,7 +115,7 @@ def test_create_project_should_create_project(cato_api_client):
 
 def test_create_project_should_not_create_invalid_name(cato_api_client):
     with pytest.raises(ValueError):
-        cato_api_client.create_project("my project")
+        cato_api_client.create_project("my%&&&project")
 
 
 def test_upload_file(cato_api_client, test_resource_provider):

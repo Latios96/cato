@@ -14,6 +14,7 @@ class TestCreateProjectValidator:
             "my-project_name222",
             "22",
             "My-Project-Name",
+            "My-Project Name",
         ],
     )
     def test_valid_name(self, project_name):
@@ -28,14 +29,12 @@ class TestCreateProjectValidator:
     @pytest.mark.parametrize(
         "invalid_project_name,error_messages",
         [
-            ("my invalid name", ["String does not match expected pattern."]),
             ("myinvalid%name", ["String does not match expected pattern."]),
             ("myinvalid$name", ["String does not match expected pattern."]),
             ("myinvalid§*+*name", ["String does not match expected pattern."]),
             ("myinvalid/name", ["String does not match expected pattern."]),
             ("myinvalid\\name", ["String does not match expected pattern."]),
             ("my invalid&name", ["String does not match expected pattern."]),
-            ("my invalid name", ["String does not match expected pattern."]),
             (
                 "",
                 [
