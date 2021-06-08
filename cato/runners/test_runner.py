@@ -131,6 +131,14 @@ class TestRunner:
         image_compare_result = self._image_comparator.compare(
             reference_image, image_output
         )
+
+        self._reporter.report_message(
+            "Found image output at path {}".format(image_output)
+        )
+        self._reporter.report_message(
+            "Found reference image at path {}".format(reference_image)
+        )
+
         if image_compare_result.error:
             return TestExecutionResult(
                 test,
