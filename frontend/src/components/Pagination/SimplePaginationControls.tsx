@@ -3,6 +3,7 @@ import { Pagination } from "react-bootstrap";
 import { firstEntityOnPage, lastEntityOnPage, Page, PageRequest } from "./Page";
 import { usePagination } from "./usePagination";
 import styles from "./SimplePaginationControl.module.scss";
+import { ArrowLeft, Hourglass, TextRight } from "react-bootstrap-icons";
 
 interface Props<T extends Object> {
   currentPage: Page<T>;

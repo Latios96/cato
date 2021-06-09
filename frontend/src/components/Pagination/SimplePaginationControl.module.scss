@@ -1,8 +1,9 @@
 .paginationControlContainer {
   display: flex;
+  justify-content: flex-end;
+  margin-right: 20px;
 }
 .controls {
-  margin: auto;
   display: flex;
 }
 .elementsOnPage {

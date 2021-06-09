@@ -95,25 +95,27 @@ export default function RunSummaryTabComponent(props: Props) {
             renderSpinner()
           ) : (
             <>
-              <SimplePaginationControls
-                currentPage={suites}
-                pageChangedCallback={(pageRequest) => {
-                  fetch(
-                    `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
-                  )
-                    .then((res) => res.json())
-                    .then(
-                      (result) => {
-                        setSuites(result);
-                        setIsLoading(false);
-                      },
-                      (error) => {
-                        console.log(error);
-                        setIsLoading(false);
-                      }
-                    );
-                }}
-              />
+              <div className={styles.paginationControlsPositioner}>
+                <SimplePaginationControls
+                  currentPage={suites}
+                  pageChangedCallback={(pageRequest) => {
+                    fetch(
+                      `/api/v1/suite_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+                    )
+                      .then((res) => res.json())
+                      .then(
+                        (result) => {
+                          setSuites(result);
+                          setIsLoading(false);
+                        },
+                        (error) => {
+                          console.log(error);
+                          setIsLoading(false);
+                        }
+                      );
+                  }}
+                />
+              </div>
               <SuiteResultList
                 suiteResults={suites.entities}
                 projectId={props.projectId}
@@ -130,25 +132,27 @@ export default function RunSummaryTabComponent(props: Props) {
             renderSpinner()
           ) : (
             <>
-              <SimplePaginationControls
-                currentPage={tests}
-                pageChangedCallback={(pageRequest) => {
-                  fetch(
-                    `/api/v1/test_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
-                  )
-                    .then((res) => res.json())
-                    .then(
-                      (result) => {
-                        setTests(result);
-                        setIsLoading(false);
-                      },
-                      (error) => {
-                        console.log(error);
-                        setIsLoading(false);
-                      }
-                    );
-                }}
-              />
+              <div className={styles.paginationControlsPositioner}>
+                <SimplePaginationControls
+                  currentPage={tests}
+                  pageChangedCallback={(pageRequest) => {
+                    fetch(
+                      `/api/v1/test_results/run/${props.runId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`
+                    )
+                      .then((res) => res.json())
+                      .then(
+                        (result) => {
+                          setTests(result);
+                          setIsLoading(false);
+                        },
+                        (error) => {
+                          console.log(error);
+                          setIsLoading(false);
+                        }
+                      );
+                  }}
+                />
+              </div>
               <TestResultList
                 testResults={tests.entities}
                 projectId={props.projectId}
