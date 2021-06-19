@@ -40,7 +40,7 @@ jobs:
         run: |
           curl --location https://github.com/Latios96/oiio-building/releases/download/v2.2.7.0-test/openimageio-2.2.7.0-windows.tar --output openimageio-2.2.7.0-windows.tar
           tar -xvf openimageio-2.2.7.0-windows.tar
-          echo “##[add-path]build/bin
+          echo "build/bin" | Out-File -FilePath $env:GITHUB_PATH -Encoding utf8 -Append
       - name: Build with Gradle
         run: .\gradlew build --info
       - name: Lint with Gradle
