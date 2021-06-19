@@ -5,15 +5,9 @@ import subprocess
 from collections import defaultdict
 from typing import List
 
+from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
+
 logger = logging.getLogger(__name__)
-
-
-class OiioBinariesDiscorvery:
-    def get_iiinfo_executable(self) -> str:
-        return "iinfo"
-
-    def get_oiiotool_executable(self) -> str:
-        return "oiiotool"
 
 
 class ImageSplitter:

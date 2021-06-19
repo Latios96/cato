@@ -3,7 +3,8 @@ from pathlib import Path
 
 import pytest
 
-from cato_server.images.image_splitter import ImageSplitter, OiioBinariesDiscorvery
+from cato_server.images.image_splitter import ImageSplitter
+from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
 
 
 @pytest.mark.parametrize(
