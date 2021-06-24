@@ -4,7 +4,7 @@ from pathlib import Path
 import pytest
 
 from cato_server.images.image_splitter import ImageSplitter, NotAnImageException
-from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
+from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
 
 @pytest.mark.parametrize(
@@ -20,7 +20,7 @@ def test_split_exr_image(
     test_resource_provider, tmp_path: Path, image_name, expected_channel_names
 ):
     image_name_without_extension = os.path.splitext(image_name)[0]
-    image_splitter = ImageSplitter(OiioBinariesDiscorvery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery())
 
     channels = image_splitter.split_image_into_channels(
         test_resource_provider.resource_by_name(
@@ -40,7 +40,7 @@ def test_split_exr_image(
 
 
 def test_split_non_image(tmp_path: Path):
-    image_splitter = ImageSplitter(OiioBinariesDiscorvery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery())
 
     with pytest.raises(NotAnImageException):
         image_splitter.split_image_into_channels(__file__, str(tmp_path))

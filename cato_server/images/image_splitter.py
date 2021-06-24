@@ -5,7 +5,7 @@ import subprocess
 from collections import defaultdict
 from typing import List, Tuple
 
-from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
+from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
 logger = logging.getLogger(__name__)
 
@@ -16,7 +16,7 @@ class NotAnImageException(Exception):
 
 
 class ImageSplitter:
-    def __init__(self, oiio_binaries_discovery: OiioBinariesDiscorvery):
+    def __init__(self, oiio_binaries_discovery: OiioBinariesDiscovery):
         self._oiio_binaries_discovery = oiio_binaries_discovery
 
     def split_image_into_channels(

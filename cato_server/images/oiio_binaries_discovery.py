@@ -1,7 +1,7 @@
 import subprocess
 
 
-class OiioBinariesDiscorvery:
+class OiioBinariesDiscovery:
     def get_iiinfo_executable(self) -> str:
         return "iinfo"
 
