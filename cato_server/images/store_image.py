@@ -1,16 +1,12 @@
+import logging
 import os
 import tempfile
-from collections import defaultdict
-from typing import List
 
-from oiio.OpenImageIO import ImageBuf, ImageBufAlgo
+from PIL import Image as PillowImage
 
 from cato_server.domain.image import Image, ImageChannel
-from cato.image_utils.image_conversion import ImageConversionError
+from cato_server.images.image_splitter import ImageSplitter
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-
-import logging
-
 from cato_server.storage.abstract.image_repository import ImageRepository
 
 logger = logging.getLogger(__name__)
@@ -18,10 +14,14 @@ logger = logging.getLogger(__name__)
 
 class StoreImage:
     def __init__(
-        self, file_storage: AbstractFileStorage, image_repository: ImageRepository
+        self,
+        file_storage: AbstractFileStorage,
+        image_repository: ImageRepository,
+        image_splitter: ImageSplitter,
     ):
         self._file_storage = file_storage
         self._image_repository = image_repository
+        self._image_splitter = image_splitter
 
     def store_image(self, path: str) -> Image:
         if not os.path.exists(path):
@@ -30,44 +30,23 @@ class StoreImage:
         original_file = self._file_storage.save_file(path)
         logger.info("Stored original file %s to %s", path, original_file)
 
-        logger.info("Reading image %s", path)
-        buf = ImageBuf(path)
-        if not buf.initialized:
-            raise ValueError(f"Could not read image from path {path}: {buf.geterror()}")
-
-        indices_and_name = self._channel_indices_and_name(buf.spec().channelnames)
-
-        total_channel_number = len(indices_and_name.items())
-        logger.info("Found %s channels in image", total_channel_number)
+        logger.info("Splitting image into channels..")
 
         channel_files = []
 
         with tempfile.TemporaryDirectory() as tmpdirname:
-            for i, (name, indices) in enumerate(indices_and_name.items()):
-                channel_buf = ImageBufAlgo.channels(buf, tuple(indices))
-                target_path = os.path.join(
-                    tmpdirname, self._channel_file_name(path, name)
-                )
-                logger.info(
-                    "Writing channel %s (%s of %s) to %s",
-                    name,
-                    i + 1,
-                    total_channel_number,
-                    target_path,
-                )
-                ok = channel_buf.write(target_path)
-
-                if not ok:
-                    raise ImageConversionError(
-                        "Error when writing channel {} to {}".format(name, target_path)
-                    )
-
-                logger.info("Saving channel %s to db..", name)
-                channel_file = self._file_storage.save_file(target_path)
-                logger.info("Saved channel %s to %s", name, channel_file)
+            channels = self._image_splitter.split_image_into_channels(path, tmpdirname)
+            for channel_name, channel_path in channels:
+                logger.info("Saving channel %s to db..", channel_name)
+                channel_file = self._file_storage.save_file(channel_path)
+                logger.info("Saved channel %s to %s", channel_name, channel_file)
                 channel_files.append(
-                    ImageChannel(id=0, image_id=0, name=name, file_id=channel_file.id)
+                    ImageChannel(
+                        id=0, image_id=0, name=channel_name, file_id=channel_file.id
+                    )
                 )
+
+            width, height = self._get_image_resolution(channels)
 
             logger.info("Removing temporary directory..")
 
@@ -76,33 +55,16 @@ class StoreImage:
             name=os.path.basename(path),
             original_file_id=original_file.id,
             channels=channel_files,
-            width=buf.spec().width,
-            height=buf.spec().height,
+            width=width,
+            height=height,
         )
         logger.info("Saving image %s to db..", image)
         image = self._image_repository.save(image)
         logger.info("Saved image with id %s", image.id)
         return image
 
-    def _channel_indices_and_name(self, channelnames: List[str]):
-        names_indices = defaultdict(list)
-        for i, name in enumerate(channelnames):
-            key = self.__get_key(name)
-            names_indices[key].append(i)
-        return names_indices
-
-    def __get_key(self, name):
-        if name in ["R", "G", "B"]:
-            key = "rgb"
-        elif name == "A":
-            key = "alpha"
-        elif name == "Z":
-            key = "depth"
-        else:
-            key = name.split(".")[0]
-        return key
-
-    def _channel_file_name(self, path, channel_name):
-        basename, ext = os.path.splitext(os.path.basename(path))
-        extension = f".{channel_name}.png" if channel_name else ".png"
-        return basename + extension
+    def _get_image_resolution(self, channels):
+        for channel_name, channel_path in channels:
+            if channel_name == "rgb":
+                im = PillowImage.open(channel_path)
+                return im.size
