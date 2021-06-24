@@ -21,11 +21,13 @@ class ImagesBlueprint(APIRouter):
         file_storage: AbstractFileStorage,
         image_repository: ImageRepository,
         object_mapper: ObjectMapper,
+        store_image: StoreImage,
     ):
         super(ImagesBlueprint, self).__init__()
         self._file_storage = file_storage
         self._image_repository = image_repository
         self._object_mapper = object_mapper
+        self._store_image = store_image
 
         self.post("/images")(self.upload_file)
         self.get("/images/original_file/{file_id}")(self.get_original_image_file)
@@ -38,14 +40,12 @@ class ImagesBlueprint(APIRouter):
                 content={"file": "Filename can not be empty!"}, status_code=400
             )
 
-        store_image = StoreImage(self._file_storage, self._image_repository)
-
         try:
             with tempfile.TemporaryDirectory() as tmpdirname:
                 tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
                 with open(tmp_path, "wb") as tmp:
                     shutil.copyfileobj(uploaded_file.file, tmp)
-                image = store_image.store_image(tmp_path)
+                image = self._store_image.store_image(tmp_path)
 
                 logger.info("Deleting tmpdir %s", tmpdirname)
         except Exception as e:
