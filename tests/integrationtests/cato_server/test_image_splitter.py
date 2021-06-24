@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from cato_server.images.image_splitter import ImageSplitter
+from cato_server.images.image_splitter import ImageSplitter, NotAnImageException
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
 
 
@@ -37,3 +37,10 @@ def test_split_exr_image(
         )
         assert rgb_channel_path.exists()
         assert (channel_name, str(rgb_channel_path)) in channels
+
+
+def test_split_non_image(tmp_path: Path):
+    image_splitter = ImageSplitter(OiioBinariesDiscorvery())
+
+    with pytest.raises(NotAnImageException):
+        image_splitter.split_image_into_channels(__file__, str(tmp_path))

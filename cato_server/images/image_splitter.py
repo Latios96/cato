@@ -10,6 +10,11 @@ from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscorvery
 logger = logging.getLogger(__name__)
 
 
+class NotAnImageException(Exception):
+    def __init__(self, output):
+        super(NotAnImageException, self).__init__(f"The file is not an Image! {output}")
+
+
 class ImageSplitter:
     def __init__(self, oiio_binaries_discovery: OiioBinariesDiscorvery):
         self._oiio_binaries_discovery = oiio_binaries_discovery
@@ -31,9 +36,7 @@ class ImageSplitter:
         status, output = subprocess.getstatusoutput(command)
 
         if status != 0:
-            raise Exception(
-                f"Exit code f{status} when running command {command}: output was: {output}"
-            )
+            self._handle_command_error(command, status, output)
 
         lines = output.split("\n")
         lines = map(lambda x: x.strip(), lines)
@@ -63,9 +66,7 @@ class ImageSplitter:
             logger.debug("Running command %s", command)
             status, output = subprocess.getstatusoutput(command)
             if status != 0:
-                raise Exception(
-                    f"Exit code f{status} when running command {command}: output was: {output}"
-                )
+                self._handle_command_error(command, status, output)
 
             channel_paths.append((channel_name, target_image))
 
@@ -81,3 +82,11 @@ class ImageSplitter:
         else:
             key = name.split(".")[0]
         return key
+
+    def _handle_command_error(self, command, status, output):
+        is_not_an_image = "OpenImageIO could not find a format reader" in output
+        if is_not_an_image:
+            raise NotAnImageException(output)
+        raise Exception(
+            f"Exit code f{status} when running command {command}: output was: {output}"
+        )
