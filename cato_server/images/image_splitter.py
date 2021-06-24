@@ -34,9 +34,7 @@ class ImageSplitter:
         )
         logger.debug("Running command %s", command)
         status, output = subprocess.getstatusoutput(command)
-
-        if status != 0:
-            self._handle_command_error(command, status, output)
+        self._handle_command_error(command, status, output)
 
         lines = output.split("\n")
         lines = map(lambda x: x.strip(), lines)
@@ -65,8 +63,7 @@ class ImageSplitter:
             command = f"{self._oiio_binaries_discovery.get_oiiotool_executable()} {image_path} --ch {','.join(channels)} -o {target_image}"
             logger.debug("Running command %s", command)
             status, output = subprocess.getstatusoutput(command)
-            if status != 0:
-                self._handle_command_error(command, status, output)
+            self._handle_command_error(command, status, output)
 
             channel_paths.append((channel_name, target_image))
 
@@ -84,9 +81,18 @@ class ImageSplitter:
         return key
 
     def _handle_command_error(self, command, status, output):
+        if not output.startswith("iinfo ERROR") and not output.startswith(
+            "oiiotool ERROR"
+        ):
+            return
         is_not_an_image = "OpenImageIO could not find a format reader" in output
+
         if is_not_an_image:
             raise NotAnImageException(output)
+
+        if status == 0:
+            return
+
         raise Exception(
             f"Exit code f{status} when running command {command}: output was: {output}"
         )
