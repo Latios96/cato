@@ -81,6 +81,7 @@ class ImageSplitter:
         return key
 
     def _handle_command_error(self, command, status, output):
+        logger.info(output)
         if not output.startswith("iinfo ERROR") and not output.startswith(
             "oiiotool ERROR"
         ):
