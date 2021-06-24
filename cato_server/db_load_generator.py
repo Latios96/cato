@@ -14,6 +14,7 @@ import cato
 import cato_server
 import cato_server.server_logging
 from cato.domain.test_status import TestStatus
+from cato_common.utils.bindings import imported_modules
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
 from cato_server.domain.execution_status import ExecutionStatus
@@ -68,11 +69,12 @@ class DbLoadGenerator:
         image_repository: ImageRepository,
         file_storage: AbstractFileStorage,
         test_result_repository: TestResultRepository,
+        store_image: StoreImage,
     ):
         self._project_repository = project_repository
         self._run_repository = run_repository
         self._suite_result_repository = suite_result_repository
-        self._store_image = StoreImage(file_storage, image_repository)
+        self._store_image = store_image
         self._test_result_repository = test_result_repository
         self._file_storage = file_storage
         self._image_repository = image_repository
@@ -316,7 +318,7 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     obj_graph = pinject.new_object_graph(
-        modules=[cato, cato_server], binding_specs=[bindings]
+        modules=[*imported_modules([cato, cato_server])], binding_specs=[bindings]
     )
 
     obj_graph.provide(DbLoadGenerator).generate_load(
