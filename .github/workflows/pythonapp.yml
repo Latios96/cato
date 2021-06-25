@@ -24,6 +24,11 @@ jobs:
       run: ./gradlew build --info
     - name: Lint with Gradle
       run: ./gradlew lint --info
+    - uses: actions/upload-artifact@v2
+      with:
+        name: wheel-linux
+        path: |
+          ./dist/*.whl
 
   build_windows:
     runs-on: windows-latest
