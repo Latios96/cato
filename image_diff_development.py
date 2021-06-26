@@ -48,7 +48,7 @@ def pillow(test_case: TestCase, work_dir):
     output.save(case_work_dir / (test_case.name + ".difference.png"))
 
 
-def opencv(test_case: TestCase, work_dir):
+def opencv(test_case: TestCase, work_dir, threshold=0.0):
     case_work_dir = work_dir / test_case.name / "OpenCV"
     os.makedirs(case_work_dir)
 
@@ -65,9 +65,13 @@ def opencv(test_case: TestCase, work_dir):
     diff_gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
     diff_gray = ~diff_gray
 
-    black_channel = np.ones(diff_gray.shape, dtype=diff_gray.dtype)
-    weighted_green = cv2.merge((black_channel, diff_gray, black_channel))
+    int_threshold = 255-int(threshold * 255)
+    print(int_threshold)
+    thresh = cv2.threshold(diff_gray.copy(), int_threshold, 255, cv2.THRESH_TOZERO)[1]
+    thresh = cv2.threshold(thresh, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
+    black_channel = np.ones(thresh.shape, dtype=thresh.dtype)
+    weighted_green = cv2.merge((black_channel, thresh, black_channel))
 
     filled_after = cv2.addWeighted(output_image, 1,weighted_green, 1,0)
 
@@ -75,12 +79,12 @@ def opencv(test_case: TestCase, work_dir):
 
     cv2.imwrite(str(case_work_dir / (test_case.name + ".difference.png")), filled_after)
     cv2.imwrite(str(case_work_dir / (test_case.name + ".diff_gray.png")), diff_gray)
-# todo implement threshold
 
-    #cv2.imshow("diff_gray", diff_gray)
-    #cv2.imshow("weighted_green", weighted_green)
-    #cv2.imshow("filled_after", filled_after)
-    #cv2.waitKey(0)
+
+    cv2.imshow("diff_gray", diff_gray)
+    cv2.imshow("thresh", thresh)
+    cv2.imshow("filled_after", filled_after)
+    cv2.waitKey(0)
 
 
 
@@ -99,5 +103,5 @@ if __name__ == '__main__':
     first = True
     for test_case in test_cases:
         #if first:
-        opencv(test_case, work_dir)
+        opencv(test_case, work_dir, 0.99)
         first = False
