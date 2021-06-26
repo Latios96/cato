@@ -87,42 +87,67 @@ class TestRunner:
             )
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
-        if not image_output or not self._output_folder.image_output_exists(
-            image_output
-        ):
-            image_output_str = emoji.emojize(
-                ":x:\n".join(self._image_outputs(variables)), use_aliases=True
-            )
-            message = emoji.emojize(
-                f"No given image output path exists: \n{image_output_str} :x:",
-                use_aliases=True,
-            )
-            self._reporter.report_message(message)
+        no_image_output = (
+            not image_output
+            or not self._output_folder.image_output_exists(image_output)
+        )
+        image_output_str = emoji.emojize(
+            ":x:\n".join(self._image_outputs(variables)), use_aliases=True
+        )
+        message_image_output_missing = emoji.emojize(
+            f"No given image output path exists: \n{image_output_str} :x:",
+            use_aliases=True,
+        )
+
+        reference_image = self._output_folder.any_existing(
+            self._reference_images(variables)
+        )
+        no_reference_image = (
+            not reference_image
+            or not self._output_folder.reference_image_exists(reference_image)
+        )
+        message_reference_image_missing = f"Reference image {reference_image if reference_image else '<not found>'} does not exist!"
+
+        if no_reference_image and not no_image_output:
+            self._reporter.report_message(message_reference_image_missing)
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
                 command_result.output,
                 elapsed,
-                message,
-                None,
+                message_reference_image_missing,
+                image_output,
                 None,
                 start,
                 end,
             )
 
-        reference_image = self._output_folder.any_existing(
-            self._reference_images(variables)
-        )
-        if not reference_image or not self._output_folder.reference_image_exists(
-            reference_image
-        ):
+        if no_image_output and not no_reference_image:
+            self._reporter.report_message(message_image_output_missing)
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
                 command_result.output,
                 elapsed,
-                f"Reference image {reference_image if reference_image else '<not found>'} does not exist!",
-                image_output,
+                message_image_output_missing,
+                None,
+                reference_image,
+                start,
+                end,
+            )
+
+        if no_image_output and no_reference_image:
+            self._reporter.report_message(message_image_output_missing)
+            self._reporter.report_message(message_reference_image_missing)
+            return TestExecutionResult(
+                test,
+                TestStatus.FAILED,
+                command_result.output,
+                elapsed,
+                "{}, {}".format(
+                    message_image_output_missing, message_reference_image_missing
+                ),
+                None,
                 None,
                 start,
                 end,

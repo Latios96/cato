@@ -1,5 +1,6 @@
 import time
 from unittest import mock
+from unittest.mock import Mock
 
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
@@ -256,6 +257,9 @@ def test_should_have_failed_with_missing_reference_image():
 
     assert result.status == TestStatus.FAILED
     assert result.message.startswith("Reference image")
+    assert result.image_output is not None
+    assert result.reference_image is None
+    reporter.report_message.assert_called_with(result.message)
 
 
 def test_should_have_failed_with_missing_image_output():
@@ -291,3 +295,46 @@ def test_should_have_failed_with_missing_image_output():
 
     assert result.status == TestStatus.FAILED
     assert result.message.startswith("No given image output path exists")
+    assert result.image_output is None
+    assert result.reference_image is not None
+    reporter.report_message.assert_called_with(result.message)
+
+
+def test_should_have_failed_with_missing_reference_and_image_output():
+    reporter = mock_safe(Reporter)
+    command_runner = mock_safe(CommandRunner)
+    output_folder = mock_safe(OutputFolder)
+    output_folder.image_output_exists.return_value = False
+    output_folder.reference_image_exists.return_value = False
+    image_comparator = mock_safe(ImageComparator)
+    magic_mock = mock.MagicMock()
+    magic_mock.error = True
+    image_comparator.compare.return_value = magic_mock
+    test_execution_reporter = mock_safe(TestExecutionReporter)
+    test_runner = TestRunner(
+        command_runner,
+        reporter,
+        output_folder,
+        image_comparator,
+        test_execution_reporter,
+    )
+    test = Test(name="my_first_test", command="dummy_command", variables={})
+    command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+
+    result = test_runner.run_test(
+        RunConfig(
+            project_name=EXAMPLE_PROJECT,
+            resource_path="test",
+            test_suites=[],
+            output_folder="output",
+        ),
+        TestSuite(name="suite", tests=[]),
+        test,
+    )
+
+    assert result.status == TestStatus.FAILED
+    assert result.message.startswith("No given image output path exists")
+    assert result.image_output is None
+    assert result.reference_image is None
+    reporter.report_message.assert_any_call(result.message.split(", ")[0])
+    reporter.report_message.assert_any_call(result.message.split(", ")[1])
