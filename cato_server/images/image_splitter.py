@@ -30,7 +30,7 @@ class ImageSplitter:
     def _parse_channels(self, image_path: str):
         logger.info("Parsing channels for image %s", image_path)
         command = (
-            f"{self._oiio_binaries_discovery.get_iiinfo_executable()} -v {image_path}"
+            f'{self._oiio_binaries_discovery.get_iiinfo_executable()} -v "{image_path}"'
         )
         logger.debug("Running command %s", command)
         status, output = subprocess.getstatusoutput(command)
@@ -60,7 +60,7 @@ class ImageSplitter:
             target_image = os.path.join(
                 work_folder, f"{os.path.basename(name)}.{channel_name}.png"
             )
-            command = f"{self._oiio_binaries_discovery.get_oiiotool_executable()} {image_path} --ch {','.join(channels)} -o {target_image}"
+            command = f'{self._oiio_binaries_discovery.get_oiiotool_executable()} "{image_path}" --ch {",".join(channels)} -o {target_image}'
             logger.debug("Running command %s", command)
             status, output = subprocess.getstatusoutput(command)
             self._handle_command_error(command, status, output)
