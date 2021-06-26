@@ -20,8 +20,8 @@ VRAY_FOR_MAYA_PREDEFINITION = VariablePredefinition(
     name="V-Ray for Maya",
     variables={
         "vray_scene_file": "{@test_resources}/scene.vrscene",
-        "vray_render_command": r'"{@maya_location}\vray\bin\vray.exe" -sceneFile={@vray_scene_file} -imgFile={@image_output_exr} -progressIncrement=1',
-        "vray_gpu_render_command": r'"{@maya_location}\vray\bin\vray.exe" -sceneFile={@vray_scene_file} -imgFile={@image_output_exr} -progressIncrement=1 -rtengine=5',
+        "vray_render_command": r'"{@maya_location}\vray\bin\vray.exe" -sceneFile={@vray_scene_file} -imgFile={@image_output_exr} -progressIncrement=1 -display=0',
+        "vray_gpu_render_command": r'"{@maya_location}\vray\bin\vray.exe" -sceneFile={@vray_scene_file} -imgFile={@image_output_exr} -progressIncrement=1 -display=0 -rtengine=5',
     },
 )
 
