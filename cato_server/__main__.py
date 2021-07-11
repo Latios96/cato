@@ -12,6 +12,7 @@ import cato_server
 import cato_server.server_logging
 from cato_common.utils.bindings import imported_modules
 from cato_server.api.about_blueprint import AboutBlueprint
+from cato_server.api.compare_image_blueprint import CompareImageBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
 from cato_server.api.projects_blueprint import ProjectsBlueprint
@@ -63,6 +64,7 @@ def create_app(
     app.include_router(obj_graph.provide(SuiteResultsBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(TestHeartbeatBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(TestResultsBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(CompareImageBlueprint), prefix="/api/v1")
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
     if not os.path.exists(static_directory):
