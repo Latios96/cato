@@ -1,3 +1,4 @@
+from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.file import File
 from cato_server.domain.image import ImageChannel, Image
 from cato_server.domain.machine_info import MachineInfo
@@ -7,6 +8,12 @@ from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
+from cato_server.mappers.internal.compare_image_result_class_mapper import (
+    CompareImageResultClassMapper,
+)
+from cato_server.mappers.internal.comparison_settings_class_mapper import (
+    ComparisonSettingsClassMapper,
+)
 from cato_server.mappers.internal.file_class_mapper import FileClassMapper
 from cato_server.mappers.internal.image_channel_class_mapper import (
     ImageChannelClassMapper,
@@ -30,6 +37,7 @@ from cato_server.mappers.internal.suite_result_class_mapper import (
 )
 from cato_server.mappers.internal.test_result_class_mapper import TestResultClassMapper
 from cato_server.domain.submission_info import SubmissionInfo
+from cato_server.usecases.compare_image import CompareImageResult
 
 
 class MapperRegistryFactory:
@@ -47,5 +55,11 @@ class MapperRegistryFactory:
         mapper_registry.register_mapper(TestResult, TestResultClassMapper())
         mapper_registry.register_mapper(TestIdentifier, TestIdentifierClassMapper())
         mapper_registry.register_mapper(SubmissionInfo, SubmissionInfoClassMapper())
+        mapper_registry.register_mapper(
+            ComparisonSettings, ComparisonSettingsClassMapper()
+        )
+        mapper_registry.register_mapper(
+            CompareImageResult, CompareImageResultClassMapper()
+        )
 
         return mapper_registry
