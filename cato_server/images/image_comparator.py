@@ -1,20 +1,10 @@
-from dataclasses import dataclass
-
 import cv2
 from skimage import metrics
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.comparison_result import ComparisonResult
-
-
-@dataclass
-class Resolution:
-    width: int
-    height: int
-
-    def __str__(self):
-        return f"{self.width}x{self.height}px"
+from cato_server.domain.resolution import Resolution
 
 
 class ImageComparator:
