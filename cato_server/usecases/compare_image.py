@@ -1,16 +1,15 @@
+import logging
 import os
 import shutil
 import tempfile
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import IO
+from typing import IO, Optional
 
-import logging
-
-from cato_server.domain.comparison_result import ComparisonResult
+from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_settings import ComparisonSettings
-from cato_server.images.image_comparator import ImageComparator
+from cato_server.images.advanced_image_comparator import AdvancedImageComparator
 from cato_server.images.store_image import StoreImage
 
 logger = logging.getLogger(__name__)
@@ -18,15 +17,20 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class CompareImageResult:
-    result: ComparisonResult
+    status: TestStatus
+    message: Optional[str]
     reference_image_id: int
     output_image_id: int
 
 
 class CompareImage:
-    def __init__(self, store_image: StoreImage, image_comparator: ImageComparator):
+    def __init__(
+        self,
+        store_image: StoreImage,
+        advanced_image_comparator: AdvancedImageComparator,
+    ):
         self._store_image = store_image
-        self._image_comparator = image_comparator
+        self._advanced_image_comparator = advanced_image_comparator
 
     def compare_image(
         self,
@@ -44,13 +48,14 @@ class CompareImage:
                 tmpdirname, reference_image_file, reference_image_name
             )
 
-            result = self._image_comparator.compare(
+            result = self._advanced_image_comparator.compare(
                 reference_image_path, output_image_path, comparison_settings
             )
             logger.debug("Deleting tmpdir %s", tmpdirname)
 
         return CompareImageResult(
-            result=result,
+            status=result.status,
+            message=result.message,
             reference_image_id=reference_image.id,
             output_image_id=output_image.id,
         )
