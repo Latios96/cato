@@ -1,3 +1,5 @@
+import os.path
+
 import cv2
 from skimage import metrics
 
@@ -11,6 +13,11 @@ class AdvancedImageComparator:
     def compare(
         self, reference: str, output: str, comparison_settings: ComparisonSettings
     ) -> ComparisonResult:
+        reference_output = os.path.abspath(reference) == os.path.abspath(output)
+        if reference_output:
+            raise ValueError(
+                f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
+            )
         output_image = cv2.imread(output)
         reference_image = cv2.imread(reference)
 

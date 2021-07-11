@@ -1,3 +1,9 @@
+import os
+import shutil
+import tempfile
+
+import pytest
+
 from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_method import ComparisonMethod
 from cato_server.domain.comparison_result import ComparisonResult
@@ -63,15 +69,30 @@ def test_compare_image_should_fail_waith_and_without_watermark(test_resource_pro
 
 def test_compare_image_should_succeed_same_image(test_resource_provider):
     image = test_resource_provider.resource_by_name("100x100_reference.png")
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        other_image = os.path.join(tmpdirname, "100x100_reference.png")
+        shutil.copy(image, other_image)
+        image_comparator = AdvancedImageComparator()
+
+        comparison_result = image_comparator.compare(
+            image,
+            other_image,
+            ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM),
+        )
+
+        assert comparison_result == ComparisonResult(
+            status=TestStatus.SUCCESS, message=None, diff_image=None
+        )
+
+
+def test_compare_image_should_fail_for_same_image_paths(test_resource_provider):
+    image = test_resource_provider.resource_by_name("100x100_reference.png")
     image_comparator = AdvancedImageComparator()
 
-    comparison_result = image_comparator.compare(
-        image, image, ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM)
-    )
-
-    assert comparison_result == ComparisonResult(
-        status=TestStatus.SUCCESS, message=None, diff_image=None
-    )
+    with pytest.raises(ValueError):
+        comparison_result = image_comparator.compare(
+            image, image, ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM)
+        )
 
 
 def test_compare_image_should_succeed_threshold_not_exceeded(test_resource_provider):
