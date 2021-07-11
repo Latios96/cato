@@ -7,7 +7,7 @@ from cato_server.domain.comparison_result import ComparisonResult
 from cato_server.domain.resolution import Resolution
 
 
-class ImageComparator:
+class AdvancedImageComparator:
     def compare(
         self, reference: str, output: str, comparison_settings: ComparisonSettings
     ) -> ComparisonResult:
