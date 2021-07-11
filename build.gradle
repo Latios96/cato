@@ -1,7 +1,6 @@
 buildscript {
     repositories {
         mavenCentral()
-        maven { url 'https://dl.bintray.com/palantir/releases/' }
     }
 
     dependencies {
@@ -17,7 +16,7 @@ plugins {
 
 allprojects {
     repositories {
-        maven { url 'https://dl.bintray.com/palantir/releases/' }
+        mavenCentral()
     }
 }
 
