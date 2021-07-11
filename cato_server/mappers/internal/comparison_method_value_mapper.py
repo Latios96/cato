@@ -1,6 +1,5 @@
 from typing import Optional
 
-from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_method import ComparisonMethod
 from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
 

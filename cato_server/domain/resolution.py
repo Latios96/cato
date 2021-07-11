@@ -12,7 +12,7 @@ class Resolution:
             raise ValueError("Width can not be smaller than 0!")
 
     @height.validator
-    def _validate_width(self, attribute, value):
+    def _validate_height(self, attribute, value):
         if value < 0:
             raise ValueError("Height can not be smaller than 0!")
 
