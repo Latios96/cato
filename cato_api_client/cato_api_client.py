@@ -16,6 +16,7 @@ from cato_api_models.catoapimodels import (
     ApiSuccess,
     StartTestResultDto,
 )
+from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.file import File
 from cato_server.domain.image import Image
 from cato_server.domain.output import Output
@@ -26,6 +27,7 @@ from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.domain.submission_info import SubmissionInfo
+from cato_server.usecases.compare_image import CompareImageResult
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +78,47 @@ class CatoApiClient:
 
         if response.status_code == 201:
             return self._object_mapper.from_dict(self._get_json(response), Image)
+        raise self._create_value_error_for_bad_request(response)
+
+    def compare_images(
+        self,
+        reference_image: str,
+        output_image: str,
+        comparison_settings: ComparisonSettings,
+    ) -> CompareImageResult:
+        if not os.path.exists(reference_image):
+            raise ValueError(f"Path {reference_image} does not exists!")
+
+        if not os.path.exists(output_image):
+            raise ValueError(f"Path {output_image} does not exists!")
+
+        url = self._build_url("/api/v1/compare_image")
+        files = {
+            "reference_image": (
+                os.path.basename(reference_image),
+                open(reference_image, "rb"),
+            ),
+            "output_image": (
+                os.path.basename(output_image),
+                open(output_image, "rb"),
+            ),
+        }
+
+        data = {"comparison_settings": self._object_mapper.to_json(comparison_settings)}
+
+        logger.info("Uploading images for comparison..")
+        logger.info(
+            "Uploading reference image %s, output image %s with comparison settings %s",
+            reference_image,
+            output_image,
+            comparison_settings,
+        )
+        response = self._post_form(url, data, files=files)
+
+        if response.status_code == 201:
+            return self._object_mapper.from_dict(
+                self._get_json(response), CompareImageResult
+            )
         raise self._create_value_error_for_bad_request(response)
 
     def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
@@ -251,7 +294,7 @@ class CatoApiClient:
 
     def _post_form(self, url, params, files=None):
         logger.debug("Launching POST request to %s with params %s", url, params)
-        response = requests.post(url, data=params, files=files)
+        response = requests.post(url, data=params)
         logger.debug("Received response %s", response)
         return response
 

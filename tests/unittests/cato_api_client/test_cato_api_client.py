@@ -4,6 +4,8 @@ import os
 import pytest
 from requests.models import Response
 
+from cato_server.domain.comparison_method import ComparisonMethod
+from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.image import Image, ImageChannel
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
@@ -25,6 +27,7 @@ from cato_api_models.catoapimodels import (
     StartTestResultDto,
 )
 from cato_server.domain.submission_info import SubmissionInfo
+from cato_server.usecases.compare_image import CompareImageResult
 
 
 class FastApiClientHttpTemplateResponse(HttpTemplateResponse):
@@ -74,7 +77,7 @@ class CatoApiTestClient(CatoApiClient):
         return get
 
     def _post_form(self, url, params, files=None):
-        return self._client.post(url.replace(self._url, ""), files=files)
+        return self._client.post(url.replace(self._url, ""), data=params, files=files)
 
     def _post_json(self, url, params):
         return self._client.post(url.replace(self._url, ""), json=params)
@@ -473,4 +476,52 @@ def test_start_test_failure(cato_api_client):
             StartTestResultDto(
                 id=43, machine_info=MachineInfoDto(cpu_name="Intel", cores=1, memory=1)
             )
+        )
+
+
+def test_compare_images_success(cato_api_client, test_resource_provider):
+    result = cato_api_client.compare_images(
+        test_resource_provider.resource_by_name("test_image_white.jpg"),
+        test_resource_provider.resource_by_name("test_image_white.jpg"),
+        ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
+    )
+
+    assert result == CompareImageResult(
+        status=TestStatus.SUCCESS,
+        message=None,
+        reference_image_id=2,
+        output_image_id=1,
+    )
+
+
+def test_compare_images_success_should_fail_for_not_existing_reference_image(
+    cato_api_client, test_resource_provider
+):
+    with pytest.raises(ValueError):
+        cato_api_client.compare_images(
+            "not_existing.jpg",
+            test_resource_provider.resource_by_name("test_image_black.png"),
+            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
+        )
+
+
+def test_compare_images_success_should_fail_for_not_existing_output_image(
+    cato_api_client, test_resource_provider
+):
+    with pytest.raises(ValueError):
+        cato_api_client.compare_images(
+            test_resource_provider.resource_by_name("test_image_black.png"),
+            "not_existing.jpg",
+            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
+        )
+
+
+def test_compare_images_success_should_fail_for_non_image(
+    cato_api_client, test_resource_provider
+):
+    with pytest.raises(ValueError):
+        cato_api_client.compare_images(
+            test_resource_provider.resource_by_name("unsupported-file.txt"),
+            test_resource_provider.resource_by_name("unsupported-file.txt"),
+            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
         )
