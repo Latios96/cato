@@ -11,7 +11,7 @@ class CompareImageResultClassMapper(AbstractClassMapper[CompareImageResult]):
 
     def map_from_dict(self, json_data: Dict) -> CompareImageResult:
         return CompareImageResult(
-            status=json_data["status"],
+            status=self._test_status_value_mapper.map_from(json_data["status"]),
             message=json_data.get("message"),
             reference_image_id=json_data["reference_image_id"],
             output_image_id=json_data["output_image_id"],
