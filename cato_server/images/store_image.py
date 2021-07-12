@@ -36,10 +36,11 @@ class StoreImage:
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             channels = self._image_splitter.split_image_into_channels(path, tmpdirname)
+            logger.debug("Image has channels %s", channels)
             for channel_name, channel_path in channels:
-                logger.info("Saving channel %s to db..", channel_name)
+                logger.debug("Saving channel %s to db..", channel_name)
                 channel_file = self._file_storage.save_file(channel_path)
-                logger.info("Saved channel %s to %s", channel_name, channel_file)
+                logger.debug("Saved channel %s to %s", channel_name, channel_file)
                 channel_files.append(
                     ImageChannel(
                         id=0, image_id=0, name=channel_name, file_id=channel_file.id
@@ -48,7 +49,7 @@ class StoreImage:
 
             width, height = self._get_image_resolution(channels)
 
-            logger.info("Removing temporary directory..")
+            logger.debug("Removing temporary directory..")
 
         image = Image(
             id=0,
