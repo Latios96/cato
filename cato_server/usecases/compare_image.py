@@ -39,7 +39,7 @@ class CompareImage:
         reference_image_file: IO,
         reference_image_name: str,
         comparison_settings: ComparisonSettings,
-    ):
+    ) -> CompareImageResult:
         with tempfile.TemporaryDirectory() as tmpdirname:
             output_image, output_image_path = self._store_image_in_db(
                 tmpdirname, output_image_file, output_image_name
