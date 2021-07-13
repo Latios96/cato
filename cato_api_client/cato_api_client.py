@@ -294,7 +294,7 @@ class CatoApiClient:
 
     def _post_form(self, url, params, files=None):
         logger.debug("Launching POST request to %s with params %s", url, params)
-        response = requests.post(url, data=params)
+        response = requests.post(url, data=params, files=files)
         logger.debug("Received response %s", response)
         return response
 
