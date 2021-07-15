@@ -36,7 +36,7 @@ class CreateFullRunUsecase:
         self._message_queue = message_queue
         self._object_mapper = object_mapper
 
-    def create_full_run(self, create_full_run_dto: CreateFullRunDto):
+    def create_full_run(self, create_full_run_dto: CreateFullRunDto) -> None:
         run = Run(
             id=0,
             project_id=create_full_run_dto.project_id,

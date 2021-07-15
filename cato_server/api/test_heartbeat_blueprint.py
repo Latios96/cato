@@ -2,7 +2,7 @@ import datetime
 import logging
 
 from fastapi import APIRouter
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from cato_api_models.catoapimodels import TestHeartbeatDto
 from cato_server.domain.test_heartbeat import TestHeartbeat
@@ -35,7 +35,7 @@ class TestHeartbeatBlueprint(APIRouter):
             "/test_heartbeats/run/{run_id}/{suite_name}/{test_name}",
         )(self.register_heartbeat_by_run_id)
 
-    def register_heartbeat(self, test_result_id: int):
+    def register_heartbeat(self, test_result_id: int) -> Response:
         if not self._test_result_repository.find_by_id(test_result_id):
             return JSONResponse(
                 content={
@@ -48,7 +48,7 @@ class TestHeartbeatBlueprint(APIRouter):
 
     def register_heartbeat_by_run_id(
         self, run_id: int, suite_name: str, test_name: str
-    ):
+    ) -> Response:
         test_identifier = TestIdentifier(suite_name, test_name)
         test_result = self._test_result_repository.find_by_run_id_and_test_identifier(
             run_id, test_identifier
@@ -64,7 +64,7 @@ class TestHeartbeatBlueprint(APIRouter):
 
         return self._handle_heartbeat_registration(test_result.id)
 
-    def _handle_heartbeat_registration(self, test_result_id: int):
+    def _handle_heartbeat_registration(self, test_result_id: int) -> Response:
         test_heartbeat = self._test_heartbeat_repository.find_by_test_result_id(
             test_result_id
         )

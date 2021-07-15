@@ -277,6 +277,6 @@ class BindingsFactory:
         logger.info(f'Scheduler is not available, unknown name "{scheduler_name}"')
         return OptionalComponent.empty()
 
-    def _deadline_is_available(self, url: str):
+    def _deadline_is_available(self, url: str) -> bool:
         response = requests.get(url + "/api/users?NamesOnly=true")
         return response.status_code == 200

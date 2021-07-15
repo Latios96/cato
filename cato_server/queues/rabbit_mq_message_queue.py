@@ -21,7 +21,7 @@ class RabbitMqMessageQueue(AbstractMessageQueue):
         routing_key: str,
         event: Event[T],
         object_mapper: ObjectMapper,
-    ):
+    ) -> None:
         connection = pika.BlockingConnection(pika.ConnectionParameters(host=self._host))
 
         channel = connection.channel()

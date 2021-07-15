@@ -95,7 +95,7 @@ class TestResultsBlueprint(APIRouter):
 
     def get_test_result_by_suite_and_identifier(
         self, suite_result_id: int, suite_name: str, test_name: str
-    ):
+    ) -> Response:
         identifier = TestIdentifier(suite_name, test_name)
         test_result = (
             self._test_result_repository.find_by_suite_result_and_test_identifier(
@@ -111,7 +111,7 @@ class TestResultsBlueprint(APIRouter):
 
     def get_test_result_by_run_id_and_identifier(
         self, run_id: int, suite_name: str, test_name: str
-    ):
+    ) -> Response:
         identifier = TestIdentifier(suite_name, test_name)
         suite_result = self._suite_result_repository.find_by_run_id_and_name(
             run_id, suite_name
@@ -129,17 +129,17 @@ class TestResultsBlueprint(APIRouter):
 
         return JSONResponse(content=self._object_mapper.to_dict(test_result))
 
-    def get_test_result_by_suite_id(self, suite_id: int):
+    def get_test_result_by_suite_id(self, suite_id: int) -> Response:
         test_results = self._test_result_repository.find_by_suite_result_id(suite_id)
         return JSONResponse(content=self._object_mapper.many_to_dict(test_results))
 
-    def get_test_result_output(self, test_result_id: int):
+    def get_test_result_output(self, test_result_id: int) -> Response:
         output = self._output_repository.find_by_test_result_id(test_result_id)
         if not output:
             return Response(status_code=404)
         return JSONResponse(content=self._object_mapper.to_dict(output))
 
-    async def create_test_result(self, request: Request):
+    async def create_test_result(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateTestResultValidator(
             self._suite_result_repository, self._file_storage
@@ -155,7 +155,7 @@ class TestResultsBlueprint(APIRouter):
             content=self._object_mapper.to_dict(test_result), status_code=201
         )
 
-    async def create_test_result_output(self, request: Request):
+    async def create_test_result_output(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateOutputValidator(
             self._test_result_repository, self._output_repository
@@ -172,7 +172,7 @@ class TestResultsBlueprint(APIRouter):
             content=self._object_mapper.to_dict(output), status_code=201
         )
 
-    def get_test_result_by_run_id(self, run_id: int, request: Request):
+    def get_test_result_by_run_id(self, run_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
         if page_request:
             return self._get_test_result_by_run_id_paged(run_id, page_request)
@@ -199,7 +199,9 @@ class TestResultsBlueprint(APIRouter):
             content=self._object_mapper.many_to_dict(test_result_short_summary_dtos)
         )
 
-    def _get_test_result_by_run_id_paged(self, run_id: int, page_request: PageRequest):
+    def _get_test_result_by_run_id_paged(
+        self, run_id: int, page_request: PageRequest
+    ) -> Response:
         page = self._test_result_repository.find_by_run_id_with_paging(
             run_id, page_request
         )
@@ -224,7 +226,7 @@ class TestResultsBlueprint(APIRouter):
         page.entities = test_result_short_summary_dtos
         return JSONResponse(content=self._page_mapper.to_dict(page))
 
-    def get_test_result_by_id(self, test_result_id):
+    def get_test_result_by_id(self, test_result_id) -> Response:
         result = self._test_result_repository.find_by_id(test_result_id)
         if not result:
             return Response(status_code=404)
@@ -279,12 +281,12 @@ class TestResultsBlueprint(APIRouter):
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
 
-    def _to_channel_dto(self, channel: ImageChannel):
+    def _to_channel_dto(self, channel: ImageChannel) -> ImageChannelDto:
         return ImageChannelDto(
             id=channel.id, name=channel.name, file_id=channel.file_id
         )
 
-    async def finish_test_result(self, request: Request):
+    async def finish_test_result(self, request: Request) -> Response:
         request_json = await request.json()
         errors = FinishTestResultValidator(
             self._test_result_repository, self._image_repository
@@ -308,7 +310,7 @@ class TestResultsBlueprint(APIRouter):
             content=self._object_mapper.to_dict(ApiSuccess(success=True))
         )
 
-    async def start_test_result(self, request: Request):
+    async def start_test_result(self, request: Request) -> Response:
         request_json = await request.json()
         errors = StartTestResultValidator(self._test_result_repository).validate(
             request_json
@@ -328,11 +330,13 @@ class TestResultsBlueprint(APIRouter):
         )
         self._start_test.start_test(start_test_result_dto.id, machine_info)
 
-        return (
-            JSONResponse(content=self._object_mapper.to_dict(ApiSuccess(success=True))),
+        return JSONResponse(
+            content=self._object_mapper.to_dict(ApiSuccess(success=True))
         )
 
-    def get_test_result_by_run_id_and_test_status(self, run_id, test_status):
+    def get_test_result_by_run_id_and_test_status(
+        self, run_id, test_status
+    ) -> Response:
         try:
             test_status = TestStatus(test_status)
         except ValueError:

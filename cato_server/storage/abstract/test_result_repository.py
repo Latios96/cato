@@ -1,4 +1,4 @@
-from typing import Optional, Iterable, Set, Tuple, Dict
+from typing import Optional, Iterable, Set, Tuple, Dict, List
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
@@ -56,5 +56,5 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
 
     def find_by_run_id_filter_by_test_status(
         self, run_id: int, test_status: TestStatus
-    ):
+    ) -> List[TestResult]:
         raise NotImplementedError()

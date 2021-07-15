@@ -8,7 +8,7 @@ logger = logging.getLogger(__name__)
 
 
 class AppConfigurationWriter:
-    def write_stream(self, config: AppConfiguration, stream: IO):
+    def write_stream(self, config: AppConfiguration, stream: IO) -> None:
         config_reader = configparser.ConfigParser()
         config_reader.add_section("app")
         config_reader.add_section("storage")
@@ -33,6 +33,6 @@ class AppConfigurationWriter:
 
         config_reader.write(stream)
 
-    def write_file(self, config: AppConfiguration, path: str):
+    def write_file(self, config: AppConfiguration, path: str) -> None:
         with open(path, "w") as f:
             self.write_stream(config, f)

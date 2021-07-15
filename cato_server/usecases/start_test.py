@@ -26,7 +26,7 @@ class StartTest:
         self._message_queue = message_queue
         self._object_mapper = object_mapper
 
-    def start_test(self, test_result_id: int, machine_info: MachineInfo):
+    def start_test(self, test_result_id: int, machine_info: MachineInfo) -> None:
         logger.info("Starting test test with id %s", test_result_id)
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if not test_result:
@@ -57,7 +57,7 @@ class StartTest:
                 self._object_mapper,
             )
 
-    def _reset_possible_data_from_previous_run(self, test_result: TestResult):
+    def _reset_possible_data_from_previous_run(self, test_result: TestResult) -> None:
         logger.info(
             "Reseting data from previos run for test with id %s", test_result.id
         )

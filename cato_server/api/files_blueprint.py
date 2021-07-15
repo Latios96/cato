@@ -5,7 +5,7 @@ import tempfile
 
 from fastapi import APIRouter, UploadFile
 from fastapi.params import File
-from starlette.responses import FileResponse, JSONResponse
+from starlette.responses import FileResponse, JSONResponse, Response
 
 from cato.image_utils.image_conversion import ImageConverter
 from cato_server.mappers.object_mapper import ObjectMapper
@@ -23,7 +23,7 @@ class FilesBlueprint(APIRouter):
         self.get("/files/{file_id}")(self.get_file)
         self.post("/files")(self.upload_file)
 
-    def upload_file(self, file: UploadFile = File(...)):
+    def upload_file(self, file: UploadFile = File(...)) -> Response:
         uploaded_file = file
         if not uploaded_file.filename:
             return JSONResponse(
@@ -57,7 +57,7 @@ class FilesBlueprint(APIRouter):
 
         return f
 
-    def get_file(self, file_id: int):
+    def get_file(self, file_id: int) -> Response:
         file = self._file_storage.find_by_id(file_id)
         file_path = self._file_storage.get_path(file)
         if file and os.path.exists(file_path):

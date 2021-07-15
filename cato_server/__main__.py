@@ -43,8 +43,8 @@ BANNER = r"""
 def create_app(
     app_configuration: AppConfiguration,
     bindings: PinjectBindings,
-    create_background_tasks=False,
-):
+    create_background_tasks: bool = False,
+) -> FastAPI:
     logger.info(BANNER)
     logger.info("Cato Server Version %s", cato_server.__version__)
     logger.info("Creating Flask app..")

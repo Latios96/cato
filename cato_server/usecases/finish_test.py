@@ -38,7 +38,7 @@ class FinishTest:
         message: str,
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
-    ):
+    ) -> None:
         logger.info(
             "Finishing test test with id %s and message %s", test_result_id, message
         )
@@ -75,7 +75,7 @@ class FinishTest:
                 self._object_mapper,
             )
 
-    def fail_test(self, test_result_id: int, message: str):
+    def fail_test(self, test_result_id: int, message: str) -> None:
         logger.info("Failing test with id %s with message %s", test_result_id, message)
         self.finish_test(
             test_result_id=test_result_id,

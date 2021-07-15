@@ -17,7 +17,7 @@ class DeadlineApi:
         self._deadline_url = deadline_url
         self._http_module = http_module
 
-    def submit_jobs(self, jobs: List[DeadlineJob]):
+    def submit_jobs(self, jobs: List[DeadlineJob]) -> None:
         if not jobs:
             raise DeadlineApiError(f"Jobs can not be empty list or None, was {jobs}")
         url = self._build_jobs_url()

@@ -21,7 +21,7 @@ class SubmissionInfosBlueprint(APIRouter):
             self.get_submission_info_by_id
         )
 
-    def get_submission_info_by_id(self, submission_info_id: int):
+    def get_submission_info_by_id(self, submission_info_id: int) -> Response:
         submission_info = self._submission_info_repository.find_by_id(
             submission_info_id
         )

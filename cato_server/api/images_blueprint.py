@@ -33,7 +33,7 @@ class ImagesBlueprint(APIRouter):
         self.get("/images/original_file/{file_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
-    def upload_file(self, file: UploadFile = File(...)):
+    def upload_file(self, file: UploadFile = File(...)) -> Response:
         uploaded_file = file
         if not uploaded_file.filename:
             return JSONResponse(
@@ -56,7 +56,7 @@ class ImagesBlueprint(APIRouter):
 
         return JSONResponse(content=self._object_mapper.to_dict(image), status_code=201)
 
-    def get_original_image_file(self, file_id: int):
+    def get_original_image_file(self, file_id: int) -> Response:
         image = self._image_repository.find_by_id(file_id)
         file = self._file_storage.find_by_id(image.original_file_id)
         file_path = self._file_storage.get_path(file)
@@ -64,7 +64,7 @@ class ImagesBlueprint(APIRouter):
             return FileResponse(path=file_path, filename=file.name)
         return JSONResponse(content={"file_id": "No file found!"}, status_code=201)
 
-    def get_image(self, image_id):
+    def get_image(self, image_id) -> Response:
         image = self._image_repository.find_by_id(image_id)
         if not image:
             return Response(status_code=404)

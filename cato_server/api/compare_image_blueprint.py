@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile
 from fastapi.params import File, Form
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.mappers.object_mapper import ObjectMapper
@@ -20,7 +20,7 @@ class CompareImageBlueprint(APIRouter):
         reference_image: UploadFile = File(...),
         output_image: UploadFile = File(...),
         comparison_settings: str = Form(...),
-    ):
+    ) -> Response:
         if not reference_image.filename:
             return JSONResponse(
                 content={"reference_image": "Filename can not be empty!"},
@@ -31,7 +31,7 @@ class CompareImageBlueprint(APIRouter):
                 content={"output_image": "Filename can not be empty!"}, status_code=400
             )
         try:
-            comparison_settings = self._object_mapper.from_json(
+            parsed_comparison_settings = self._object_mapper.from_json(
                 comparison_settings, ComparisonSettings
             )
         except Exception as e:
@@ -50,7 +50,7 @@ class CompareImageBlueprint(APIRouter):
                 output_image.filename,
                 reference_image.file,
                 reference_image.filename,
-                comparison_settings,
+                parsed_comparison_settings,
             )
         except Exception as e:
             return JSONResponse(

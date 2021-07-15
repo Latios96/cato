@@ -17,9 +17,9 @@ class TestSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    name: NAME_FIELD
-    command: fields.String(required=True, validate=[fields.Length(min=1)])
-    variables: OPTIONAL_VARIABLES_FIELD
+    name = NAME_FIELD
+    command = fields.String(required=True, validate=[fields.Length(min=1)])
+    variables = OPTIONAL_VARIABLES_FIELD
 
 
 class TestSuiteSchema(Schema):

@@ -58,7 +58,7 @@ class SuiteResultsBlueprint(APIRouter):
         self.get("/suite_results/{suite_id}")(self.suite_result_by_id)
         self.post("/suite_results")(self.create_suite_result)
 
-    def suite_result_by_run(self, run_id: int, request: Request):
+    def suite_result_by_run(self, run_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
         if page_request:
             return self._suite_result_by_run_paged(run_id, page_request)
@@ -87,7 +87,9 @@ class SuiteResultsBlueprint(APIRouter):
             )
         return JSONResponse(content=self._object_mapper.many_to_dict(suite_result_dtos))
 
-    def _suite_result_by_run_paged(self, run_id: int, page_request: PageRequest):
+    def _suite_result_by_run_paged(
+        self, run_id: int, page_request: PageRequest
+    ) -> Response:
         suite_results_page = self._suite_result_repository.find_by_run_id_with_paging(
             run_id, page_request
         )
@@ -121,7 +123,7 @@ class SuiteResultsBlueprint(APIRouter):
         )
         return JSONResponse(content=self._page_mapper.to_dict(page))
 
-    async def create_suite_result(self, request: Request):
+    async def create_suite_result(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateSuiteResultValidator(
             self._run_repository, self._suite_result_repository

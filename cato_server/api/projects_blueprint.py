@@ -26,17 +26,17 @@ class ProjectsBlueprint(APIRouter):
         self.get("/projects/name/{project_name}")(self.get_project_by_name)
         self.post("/projects")(self.create_project)
 
-    def get_projects(self):
+    def get_projects(self) -> Response:
         projects = self._project_repository.find_all()
         return JSONResponse(content=self._object_mapper.many_to_dict(projects))
 
-    def get_project(self, project_id: int):
+    def get_project(self, project_id: int) -> Response:
         project = self._project_repository.find_by_id(project_id)
         if not project:
             return Response(status_code=404)
         return JSONResponse(content=self._object_mapper.to_dict(project))
 
-    async def create_project(self, request: Request):
+    async def create_project(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateProjectValidator(self._project_repository).validate(request_json)
         if errors:
@@ -51,7 +51,7 @@ class ProjectsBlueprint(APIRouter):
             content=self._object_mapper.to_dict(project), status_code=201
         )
 
-    def get_project_by_name(self, project_name: str):
+    def get_project_by_name(self, project_name: str) -> Response:
         project = self._project_repository.find_by_name(project_name)
         if not project:
             return Response(status_code=404)

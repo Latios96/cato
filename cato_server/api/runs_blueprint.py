@@ -72,7 +72,7 @@ class RunsBlueprint(APIRouter):
                 self.run_events_for_project
             )
 
-    def runs_by_project(self, project_id: int, request: Request):
+    def runs_by_project(self, project_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
         if page_request:
             return self.runs_by_project_paged(project_id, page_request)
@@ -95,7 +95,9 @@ class RunsBlueprint(APIRouter):
             )
         return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
 
-    def runs_by_project_paged(self, project_id: int, page_request: PageRequest):
+    def runs_by_project_paged(
+        self, project_id: int, page_request: PageRequest
+    ) -> Response:
         run_page = self._run_repository.find_by_project_id_with_paging(
             project_id, page_request
         )
@@ -123,14 +125,14 @@ class RunsBlueprint(APIRouter):
         )
         return JSONResponse(content=self._page_mapper.to_dict(page))
 
-    def run_id_exists(self, run_id):
+    def run_id_exists(self, run_id) -> Response:
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)
 
         return JSONResponse(content={"succes": True}, status_code=200)
 
-    async def create_run(self, request: Request):
+    async def create_run(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateRunValidator(self._project_repository).validate(request_json)
         if errors:
@@ -145,7 +147,7 @@ class RunsBlueprint(APIRouter):
         logger.info("Created run %s", run)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
-    def status(self, run_id: int):
+    def status(self, run_id: int) -> Response:
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_run_ids({run_id})
         )
@@ -161,7 +163,7 @@ class RunsBlueprint(APIRouter):
             }
         )
 
-    async def create_full_run(self, request: Request):
+    async def create_full_run(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateFullRunValidator(self._project_repository).validate(request_json)
         if errors:
@@ -174,12 +176,12 @@ class RunsBlueprint(APIRouter):
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
-    def run_events_for_project(self, project_id):
+    def run_events_for_project(self, project_id) -> Response:
         return JSONResponse(
             content={"message": "Not supported with FastAPI yet!"}, status_code=404
         )
 
-    def summary(self, run_id):
+    def summary(self, run_id) -> Response:
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)

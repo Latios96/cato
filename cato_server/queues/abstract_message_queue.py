@@ -13,7 +13,7 @@ class AbstractMessageQueue:
         routing_key: str,
         event: Event[T],
         object_mapper: ObjectMapper,
-    ):
+    ) -> None:
         raise NotImplementedError()
 
     def get_event_stream(

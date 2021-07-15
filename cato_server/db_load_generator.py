@@ -82,7 +82,7 @@ class DbLoadGenerator:
         self.reference_image = None
         self.output_image = None
 
-    def generate_load(self, preset: str, threaded=True):
+    def generate_load(self, preset: str, threaded=True) -> None:
         self.current_preset = PRESETS[preset]
         project_count = len(self.current_preset["project_names"])
         run_count = project_count * self.current_preset["runs_per_project"]
@@ -119,7 +119,7 @@ class DbLoadGenerator:
         )
         self._generate_suites(runs, project.name)
 
-    def _generate_suites(self, runs: Iterable[Run], project_name):
+    def _generate_suites(self, runs: Iterable[Run], project_name) -> None:
         choices = [
             "alpha",
             "analytic",
@@ -156,7 +156,9 @@ class DbLoadGenerator:
         logger.info("Inserted %s suite results", len(suites))
         self._generate_test_results(suites, project_name)
 
-    def _generate_test_results(self, suites: Iterable[SuiteResult], project_name):
+    def _generate_test_results(
+        self, suites: Iterable[SuiteResult], project_name
+    ) -> None:
         total_count = len(suites) * self.current_preset["tests_per_suite"]
         logger.info("Generating %s test results..", total_count)
         test_names = [

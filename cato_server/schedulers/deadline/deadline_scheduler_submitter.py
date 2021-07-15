@@ -1,4 +1,5 @@
 import logging
+from typing import List
 
 from cato.domain.test_suite import iterate_suites_and_tests
 from cato_server.domain.submission_info import SubmissionInfo
@@ -13,7 +14,7 @@ class DeadlineSchedulerSubmitter:
         self._deadline_url = deadline_url
         self._deadline_api = deadline_api
 
-    def submit_tests(self, submission_info: SubmissionInfo):
+    def submit_tests(self, submission_info: SubmissionInfo) -> None:
         jobs = []
         for suite, test in iterate_suites_and_tests(submission_info.config.test_suites):
             job = self._create_job(submission_info, suite, test)
@@ -51,7 +52,7 @@ class DeadlineSchedulerSubmitter:
 
         return plugin_info
 
-    def _create_command(self, submission_info, test_identifier_str: str):
+    def _create_command(self, submission_info, test_identifier_str: str) -> List[str]:
         command = [
             "-m",
             "cato",

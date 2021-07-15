@@ -1,7 +1,7 @@
 import dataclasses
 from collections import defaultdict
 import datetime
-from typing import Optional, Iterable, Set, Tuple, Dict
+from typing import Optional, Iterable, Set, Tuple, Dict, List
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
 
@@ -335,7 +335,7 @@ class SqlAlchemyTestResultRepository(
 
     def find_by_run_id_filter_by_test_status(
         self, run_id: int, test_status: TestStatus
-    ):
+    ) -> List[TestResult]:
         session = self._session_maker()
 
         entities = self._order_by_case_insensitive(

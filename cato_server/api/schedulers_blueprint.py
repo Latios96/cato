@@ -3,7 +3,7 @@ from http.client import BAD_REQUEST
 
 from fastapi import APIRouter
 from starlette.requests import Request
-from starlette.responses import JSONResponse
+from starlette.responses import JSONResponse, Response
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato_server.api.validators.test_submission_validators import (
@@ -41,7 +41,7 @@ class SchedulersBlueprint(APIRouter):
         else:
             self.post("/schedulers/submit")(self.submit_tests_placeholder)
 
-    async def submit_tests(self, request: Request):
+    async def submit_tests(self, request: Request) -> Response:
         request_json = await request.json()
         errors = SubmissionInfoValidator(self._run_repository).validate(request_json)
         if errors:
@@ -54,7 +54,7 @@ class SchedulersBlueprint(APIRouter):
 
         return JSONResponse(content={"success": True})
 
-    def _read_submission_info(self, request_json):
+    def _read_submission_info(self, request_json) -> SubmissionInfo:
         return SubmissionInfo(
             id=0,
             config=self._json_config_parser.parse_dict(request_json["config"]),
@@ -63,7 +63,7 @@ class SchedulersBlueprint(APIRouter):
             executable=request_json["executable"],
         )
 
-    def submit_tests_placeholder(self):
+    def submit_tests_placeholder(self) -> Response:
         return JSONResponse(
             content={"message": "No scheduler is available!"}, status_code=404
         )
