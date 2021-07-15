@@ -7,9 +7,9 @@ from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.usecases.compare_image import CompareImage
 
 
-class CompareImageBlueprint(APIRouter):
+class CompareImagesBlueprint(APIRouter):
     def __init__(self, compare_image: CompareImage, object_mapper: ObjectMapper):
-        super(CompareImageBlueprint, self).__init__()
+        super(CompareImagesBlueprint, self).__init__()
         self._compare_image = compare_image
         self._object_mapper = object_mapper
 
