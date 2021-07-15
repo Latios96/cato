@@ -8,6 +8,10 @@ from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.comparison_result import ComparisonResult
 from cato_server.domain.resolution import Resolution
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class AdvancedImageComparator:
     def compare(
@@ -18,6 +22,7 @@ class AdvancedImageComparator:
             raise ValueError(
                 f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
             )
+        logger.debug("Reading images")
         output_image = cv2.imread(output)
         reference_image = cv2.imread(reference)
 
@@ -31,6 +36,10 @@ class AdvancedImageComparator:
         images_have_same_resolution = (
             output_image_resolution == reference_image_resolution
         )
+        logger.debug(
+            "Images have same resolution: %s",
+            "yes" if images_have_same_resolution else "no",
+        )
         if not images_have_same_resolution:
             return ComparisonResult(
                 status=TestStatus.FAILED,
@@ -41,6 +50,7 @@ class AdvancedImageComparator:
         (score, diff) = metrics.structural_similarity(
             reference_image, output_image, full=True, multichannel=True
         )
+        logger.debug("SSIM score: %s ", score)
         diff = (diff * 255).astype("uint8")
 
         if score < comparison_settings.threshold:
