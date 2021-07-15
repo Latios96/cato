@@ -15,10 +15,10 @@ class ConjureClassMapper(AbstractClassMapper[T]):
         self._conjure_type = conjure_type
 
     def map_from_dict(self, json_data: Dict) -> T:
-        return ConjureDecoder().decode(json_data, self._conjure_type)
+        return ConjureDecoder().decode(json_data, self._conjure_type)  # type: ignore
 
     def map_to_dict(self, test_result: T) -> Dict:
-        return json.loads(ConjureEncoder().encode(test_result))
+        return json.loads(ConjureEncoder().encode(test_result))  # type: ignore
 
 
 class NoMapperFoundException(Exception):

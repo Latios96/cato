@@ -22,5 +22,5 @@ class AbstractRepository(Generic[T, K]):
     def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
         raise NotImplementedError()
 
-    def delete_by_id(self, id: K):
+    def delete_by_id(self, id: K) -> None:
         raise NotImplementedError()

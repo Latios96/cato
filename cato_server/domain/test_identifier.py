@@ -7,7 +7,8 @@ class TestIdentifier:
     test_name: str = attr.ib()
 
     @staticmethod
-    def from_string(string: str):
+    def from_string(string):
+        # type: (str) -> TestIdentifier
         splitted_string = string.split("/")
         if len(splitted_string) != 2:
             raise ValueError(f"Invalid test identifier: {string}")

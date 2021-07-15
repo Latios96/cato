@@ -13,6 +13,6 @@ class OiioBinariesDiscovery:
             self.get_oiiotool_executable()
         )
 
-    def _is_available(self, binary: str):
+    def _is_available(self, binary: str) -> bool:
         status, output = subprocess.getstatusoutput(f"{binary} -help")
         return status == 0

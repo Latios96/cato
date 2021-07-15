@@ -26,8 +26,8 @@ class SubmissionInfoClassMapper(AbstractClassMapper[SubmissionInfo]):
             "executable": submission_info.executable,
         }
 
-    def _map_config_from_dict(self, json_data: Dict):
+    def _map_config_from_dict(self, json_data: Dict) -> Config:
         return JsonConfigParser().parse_dict(json_data)
 
-    def _map_config_to_dict(self, config: Config):
+    def _map_config_to_dict(self, config: Config) -> Dict:
         return ConfigFileWriter().write_to_dict(config)

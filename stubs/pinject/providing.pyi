@@ -1,0 +1,3 @@
+from typing import Any
+
+def default_get_arg_names_from_provider_fn_name(provider_fn_name: Any): ...

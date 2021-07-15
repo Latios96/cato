@@ -21,11 +21,12 @@ class PageRequest:
             raise ValueError("page_size can not be less than 0.")
 
     @staticmethod
-    def first(page_size: int):
+    def first(page_size):
+        # type: (int) -> PageRequest
         return PageRequest(1, page_size)
 
     @property
-    def offset(self):
+    def offset(self) -> int:
         return self.page_size * (self.page_number - 1)
 
 
@@ -52,9 +53,8 @@ class Page(Generic[T]):
             raise ValueError("total_pages can not be less than 0.")
 
     @staticmethod
-    def from_page_request(
-        page_request: PageRequest, total_entity_count: int, entities: List[T]
-    ):
+    def from_page_request(page_request, total_entity_count, entities):
+        # type: (PageRequest,int,List[T]) -> Page
         return Page(
             page_number=page_request.page_number,
             page_size=page_request.page_size,

@@ -5,10 +5,11 @@ import tempfile
 import uuid
 from dataclasses import dataclass
 from pathlib import Path
-from typing import IO, Optional
+from typing import IO, Optional, Tuple
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_settings import ComparisonSettings
+from cato_server.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator
 from cato_server.images.store_image import StoreImage
 
@@ -60,7 +61,9 @@ class CompareImage:
             output_image_id=output_image.id,
         )
 
-    def _store_image_in_db(self, tmpdirname, image_file: IO, image_name: str):
+    def _store_image_in_db(
+        self, tmpdirname: str, image_file: IO, image_name: str
+    ) -> Tuple[Image, str]:
         tmp_path = Path(tmpdirname) / str(uuid.uuid4()) / image_name
         if not os.path.exists(tmp_path.parent):
             os.makedirs(tmp_path.parent)
