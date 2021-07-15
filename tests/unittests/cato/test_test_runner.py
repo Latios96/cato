@@ -1,16 +1,14 @@
 import time
 from unittest import mock
-from unittest.mock import Mock
 
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
-from cato.image_utils.image_comparator import ImageComparator
+from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.command_runner import CommandRunner, CommandResult
-from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.image import Image
