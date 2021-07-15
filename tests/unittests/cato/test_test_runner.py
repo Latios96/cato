@@ -15,6 +15,7 @@ from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.image import Image
 from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.usecases.compare_image import CompareImageResult
 from tests.utils import mock_safe
 
 EXAMPLE_PROJECT = "Example Project"
@@ -37,11 +38,15 @@ class TestTestRunner:
         self.reporter = mock_safe(Reporter)
         self.command_runner = mock_safe(CommandRunner)
         self.output_folder = mock_safe(OutputFolder)
-        self.image_comparator = mock_safe(ImageComparator)
-        self.image_comparator.compare.return_value = True
         self.test_execution_reporter = mock_safe(TestExecutionReporter)
         self.mock_cato_api_client = mock_safe(CatoApiClient)
         self.mock_cato_api_client.upload_image.side_effect = self._mocked_store_image
+        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            status=TestStatus.SUCCESS,
+            message="",
+            reference_image_id=1,
+            output_image_id=2,
+        )
 
     @mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
     def test_should_report_test_start(self, mock_heartbeat_reporter_class):
@@ -50,7 +55,6 @@ class TestTestRunner:
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             self.test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -84,7 +88,6 @@ class TestTestRunner:
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             self.test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -117,7 +120,6 @@ class TestTestRunner:
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             self.test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -140,16 +142,11 @@ class TestTestRunner:
         self,
     ):
         self.output_folder.image_output_exists.return_value = True
-
-        magic_mock = mock.MagicMock()
-        magic_mock.error = False
-        self.image_comparator.compare.return_value = magic_mock
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -171,6 +168,7 @@ class TestTestRunner:
         assert result.image_output == 1
         assert result.reference_image == 2
         assert self.mock_cato_api_client.upload_image.call_count == 2
+        self.mock_cato_api_client.compare_images.assert_called_once()
 
     def test_should_have_failed_with_exit_code_0(
         self,
@@ -182,7 +180,6 @@ class TestTestRunner:
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -205,15 +202,17 @@ class TestTestRunner:
     def test_should_have_failed_with_images_not_equal(
         self,
     ):
-        magic_mock = mock.MagicMock()
-        magic_mock.error = True
-        self.image_comparator.compare.return_value = magic_mock
+        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            status=TestStatus.FAILED,
+            message="Images are not equal!",
+            reference_image_id=1,
+            output_image_id=2,
+        )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -234,21 +233,23 @@ class TestTestRunner:
         assert result.status == TestStatus.FAILED
         assert result.message == "Images are not equal!"
         assert self.mock_cato_api_client.upload_image.call_count == 2
+        self.mock_cato_api_client.compare_images.assert_called_once()
 
     def test_should_have_failed_with_missing_reference_image(
         self,
     ):
         self.output_folder.reference_image_exists.return_value = False
-
-        magic_mock = mock.MagicMock()
-        magic_mock.error = True
-        self.image_comparator.compare.return_value = magic_mock
+        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            status=TestStatus.FAILED,
+            message="Images are not equal!",
+            reference_image_id=1,
+            output_image_id=2,
+        )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -277,16 +278,17 @@ class TestTestRunner:
         self,
     ):
         self.output_folder.image_output_exists.return_value = False
-
-        magic_mock = mock.MagicMock()
-        magic_mock.error = True
-        self.image_comparator.compare.return_value = magic_mock
+        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            status=TestStatus.FAILED,
+            message="Images are not equal!",
+            reference_image_id=1,
+            output_image_id=2,
+        )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )
@@ -316,16 +318,17 @@ class TestTestRunner:
     ):
         self.output_folder.image_output_exists.return_value = False
         self.output_folder.reference_image_exists.return_value = False
-
-        magic_mock = mock.MagicMock()
-        magic_mock.error = True
-        self.image_comparator.compare.return_value = magic_mock
+        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            status=TestStatus.FAILED,
+            message="Images are not equal!",
+            reference_image_id=1,
+            output_image_id=2,
+        )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
             self.command_runner,
             self.reporter,
             self.output_folder,
-            self.image_comparator,
             test_execution_reporter,
             self.mock_cato_api_client,
         )

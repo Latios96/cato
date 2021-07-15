@@ -8,7 +8,6 @@ from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
-from cato.image_utils.image_comparator import ImageComparator
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.test_heartbeat_reporter import TestHeartbeatReporter
@@ -16,6 +15,8 @@ from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_server.domain.comparison_method import ComparisonMethod
+from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.test_identifier import TestIdentifier
 
 
@@ -27,7 +28,6 @@ class TestRunner:
         command_runner: CommandRunner,
         reporter: Reporter,
         output_folder: OutputFolder,
-        image_comparator: ImageComparator,
         test_execution_reporter: TestExecutionReporter,
         cato_api_client: CatoApiClient,
     ):
@@ -35,7 +35,6 @@ class TestRunner:
         self._reporter = reporter
         self._output_folder = output_folder
         self._variable_processor = VariableProcessor()
-        self._image_comparator = image_comparator
         self._test_execution_reporter = test_execution_reporter
         self._cato_api_client = cato_api_client
 
@@ -164,20 +163,22 @@ class TestRunner:
             "Found reference image at path {}".format(reference_image)
         )
 
-        image_compare_result = self._image_comparator.compare(
-            reference_image, image_output
+        image_compare_result = self._cato_api_client.compare_images(
+            reference_image,
+            image_output,
+            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
         )
 
         reference_image_image = self._cato_api_client.upload_image(reference_image)
         image_output_image = self._cato_api_client.upload_image(image_output)
 
-        if image_compare_result.error:
+        if image_compare_result.status == TestStatus.FAILED:
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
                 command_result.output,
                 elapsed,
-                "Images are not equal!",
+                image_compare_result.message,
                 reference_image_image.id,
                 image_output_image.id,
                 start,
