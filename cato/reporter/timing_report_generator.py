@@ -1,4 +1,4 @@
-from typing import List, Iterable, Tuple
+from typing import List, Tuple
 
 import emoji
 import humanfriendly
@@ -11,7 +11,7 @@ from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 def iterate_suite_results(
     results: List[TestSuiteExecutionResult],
-) -> Iterable[Tuple[TestSuiteExecutionResult, TestExecutionResult]]:
+) -> List[Tuple[TestSuiteExecutionResult, TestExecutionResult]]:
     for suite_result in results:
         for test_result in suite_result.test_results:
             yield suite_result, test_result

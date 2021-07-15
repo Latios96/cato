@@ -1,4 +1,4 @@
-from typing import Optional, Iterable
+from typing import Optional, List
 
 from sqlalchemy import Column, Integer, ForeignKey, String, JSON
 from sqlalchemy.orm import relationship
@@ -45,7 +45,7 @@ class SqlAlchemySuiteResultRepository(
     def mapping_cls(self):
         return _SuiteResultMapping
 
-    def find_by_run_id(self, run_id: int) -> Iterable[SuiteResult]:
+    def find_by_run_id(self, run_id: int) -> List[SuiteResult]:
         session = self._session_maker()
 
         entities = self._order_by_case_insensitive(

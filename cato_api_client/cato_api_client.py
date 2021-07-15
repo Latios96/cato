@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Type, TypeVar, Iterable, List
+from typing import Optional, Type, TypeVar, List
 from urllib.parse import quote
 
 import requests
@@ -317,7 +317,7 @@ class CatoApiClient:
 
     def _find_many_with_http_template(
         self, url: str, response_cls: Type[T]
-    ) -> Optional[Iterable[T]]:
+    ) -> Optional[List[T]]:
         response = self._http_template.get_for_entity(url, response_cls)
         if response.status_code() == 404:
             return None

@@ -1,4 +1,4 @@
-from typing import Iterable
+from typing import List
 
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
@@ -40,7 +40,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
     def mapping_cls(self):
         return _RunMapping
 
-    def find_by_project_id(self, id: int) -> Iterable[Run]:
+    def find_by_project_id(self, id: int) -> List[Run]:
         session = self._session_maker()
 
         entities = (

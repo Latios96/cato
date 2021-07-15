@@ -1,5 +1,5 @@
 import json
-from typing import TypeVar, Dict, Type, Iterable, Optional
+from typing import TypeVar, Dict, Type, Iterable, Optional, List
 
 from conjure_python_client import ConjureBeanType, ConjureDecoder, ConjureEncoder
 
@@ -54,16 +54,16 @@ class ObjectMapper:
     def from_json(self, json_str: str, cls: Type[T]) -> T:
         return self.from_dict(json.loads(json_str), cls)
 
-    def many_to_dict(self, objs: Iterable[T]) -> Iterable[T]:
+    def many_to_dict(self, objs: Iterable[T]) -> List[T]:
         return list(map(self.to_dict, objs))
 
     def many_to_json(self, objs: Iterable[T]) -> str:
         return json.dumps(self.many_to_dict(objs))
 
-    def many_from_dict(self, the_dicts: Iterable[Dict], cls: Type[T]) -> Iterable[T]:
+    def many_from_dict(self, the_dicts: Iterable[Dict], cls: Type[T]) -> List[T]:
         return list(map(lambda x: self.from_dict(x, cls), the_dicts))
 
-    def many_from_json(self, json_str: str, cls: Type[T]) -> Iterable[T]:
+    def many_from_json(self, json_str: str, cls: Type[T]) -> List[T]:
         the_dicts = json.loads(json_str)
         return self.many_from_dict(the_dicts, cls)
 

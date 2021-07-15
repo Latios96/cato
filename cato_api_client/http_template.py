@@ -1,8 +1,7 @@
-from typing import TypeVar, Generic, Type, Iterable
+import logging
+from typing import TypeVar, Generic, Type, List
 
 import requests
-
-import logging
 
 from cato_server.mappers.object_mapper import ObjectMapper
 
@@ -23,7 +22,7 @@ class HttpTemplateResponse(Generic[R]):
     def get_entity(self) -> R:
         return self._mapper.from_dict(self.get_json(), self._response_cls)
 
-    def get_entities(self) -> Iterable[R]:
+    def get_entities(self) -> List[R]:
         return self._mapper.many_from_dict(self.get_json(), self._response_cls)
 
     def get_json(self):

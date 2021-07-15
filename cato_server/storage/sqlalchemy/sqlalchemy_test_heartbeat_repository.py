@@ -1,5 +1,5 @@
 import datetime
-from typing import Iterable, Optional
+from typing import Optional, List
 
 from sqlalchemy import Column, Integer, ForeignKey, DateTime
 
@@ -52,9 +52,7 @@ class SqlAlchemyTestHeartbeatRepository(
         session.close()
         return self._map_one_to_domain_object(query.first())
 
-    def find_last_beat_older_than(
-        self, date: datetime.datetime
-    ) -> Iterable[TestHeartbeat]:
+    def find_last_beat_older_than(self, date: datetime.datetime) -> List[TestHeartbeat]:
         session = self._session_maker()
 
         results = (

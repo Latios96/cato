@@ -1,4 +1,4 @@
-from typing import Optional, Iterable, Set, Tuple, Dict, List
+from typing import Optional, Set, Tuple, Dict, List
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
@@ -14,10 +14,10 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     ) -> Optional[TestResult]:
         raise NotImplementedError()
 
-    def find_by_suite_result_id(self, suite_result_id: int) -> Iterable[TestResult]:
+    def find_by_suite_result_id(self, suite_result_id: int) -> List[TestResult]:
         raise NotImplementedError()
 
-    def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
+    def find_by_run_id(self, run_id: int) -> List[TestResult]:
         raise NotImplementedError()
 
     def find_by_run_id_with_paging(

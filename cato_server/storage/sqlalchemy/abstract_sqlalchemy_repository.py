@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional, Iterable, Callable, List
+from typing import TypeVar, Generic, Optional, Callable, List
 
 from sqlalchemy import asc, collate
 from sqlalchemy.ext.declarative import declarative_base
@@ -41,7 +41,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
         return domain_object
 
-    def insert_many(self, domain_objects: Iterable[T]) -> Iterable[T]:
+    def insert_many(self, domain_objects: List[T]) -> List[T]:
         session = self._session_maker()
 
         project_mappings = list(map(self.to_entity, domain_objects))
@@ -63,7 +63,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         session.close()
         return self._map_one_to_domain_object(query.first())
 
-    def find_all(self) -> Iterable[T]:
+    def find_all(self) -> List[T]:
         session = self._session_maker()
         results = session.query(self.mapping_cls()).all()
 
@@ -108,7 +108,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
             return self.to_domain_object(entity)
         return None
 
-    def _map_many_to_domain_object(self, entities: Iterable[E]) -> List[T]:
+    def _map_many_to_domain_object(self, entities: List[E]) -> List[T]:
         return [self.to_domain_object(x) for x in entities]
 
     def _pageginate(self, session, query, page_request) -> Page[T]:

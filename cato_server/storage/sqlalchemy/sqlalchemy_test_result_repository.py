@@ -1,7 +1,7 @@
 import dataclasses
 from collections import defaultdict
 import datetime
-from typing import Optional, Iterable, Set, Tuple, Dict, List
+from typing import Optional, Set, Tuple, Dict, List
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
 
@@ -130,7 +130,7 @@ class SqlAlchemyTestResultRepository(
         if entity:
             return self.to_domain_object(entity)
 
-    def find_by_suite_result_id(self, suite_result_id: int) -> Iterable[TestResult]:
+    def find_by_suite_result_id(self, suite_result_id: int) -> List[TestResult]:
         session = self._session_maker()
 
         entities = (
@@ -141,7 +141,7 @@ class SqlAlchemyTestResultRepository(
         session.close()
         return list(map(self.to_domain_object, entities))
 
-    def find_by_run_id(self, run_id: int) -> Iterable[TestResult]:
+    def find_by_run_id(self, run_id: int) -> List[TestResult]:
         session = self._session_maker()
 
         entities = self._order_by_case_insensitive(

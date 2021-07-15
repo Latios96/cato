@@ -1,4 +1,4 @@
-from typing import Generic, TypeVar, Optional, Iterable
+from typing import Generic, TypeVar, Optional, Iterable, List
 
 from cato_server.storage.abstract.page import PageRequest, Page
 
@@ -10,13 +10,13 @@ class AbstractRepository(Generic[T, K]):
     def save(self, entity: T) -> T:
         raise NotImplementedError()
 
-    def insert_many(self, entities: Iterable[T]) -> Iterable[T]:
+    def insert_many(self, entities: Iterable[T]) -> List[T]:
         raise NotImplementedError()
 
     def find_by_id(self, id: K) -> Optional[T]:
         raise NotImplementedError()
 
-    def find_all(self) -> Iterable[T]:
+    def find_all(self) -> List[T]:
         raise NotImplementedError()
 
     def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
