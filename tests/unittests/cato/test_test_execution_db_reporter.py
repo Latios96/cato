@@ -169,8 +169,8 @@ class TestTestExecutionDbReporter:
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",
-            image_output="test.exr",
-            reference_image="reference.exr",
+            image_output=10,
+            reference_image=20,
             started_at=started_at,
             finished_at=finished_at,
         )
@@ -184,8 +184,8 @@ class TestTestExecutionDbReporter:
             status=TestStatus.SUCCESS,
             seconds=4,
             message="",
-            image_output=3,
-            reference_image=4,
+            image_output=10,
+            reference_image=20,
         )
         self.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"

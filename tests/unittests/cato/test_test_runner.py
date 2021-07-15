@@ -12,6 +12,8 @@ from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.test_runner import TestRunner
+from cato_api_client.cato_api_client import CatoApiClient
+from cato_server.domain.image import Image
 from cato_server.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
@@ -19,13 +21,27 @@ EXAMPLE_PROJECT = "Example Project"
 
 
 class TestTestRunner:
+    def _mocked_store_image(self, path):
+        self.counter += 1
+        return Image(
+            id=self.counter,
+            name="test",
+            original_file_id=1,
+            channels=[],
+            width=10,
+            height=20,
+        )
+
     def setup_method(self):
+        self.counter = 0
         self.reporter = mock_safe(Reporter)
         self.command_runner = mock_safe(CommandRunner)
         self.output_folder = mock_safe(OutputFolder)
         self.image_comparator = mock_safe(ImageComparator)
         self.image_comparator.compare.return_value = True
         self.test_execution_reporter = mock_safe(TestExecutionReporter)
+        self.mock_cato_api_client = mock_safe(CatoApiClient)
+        self.mock_cato_api_client.upload_image.side_effect = self._mocked_store_image
 
     @mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
     def test_should_report_test_start(self, mock_heartbeat_reporter_class):
@@ -36,6 +52,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             self.test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         test_suite = TestSuite(name="suite", tests=[])
@@ -69,6 +86,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             self.test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -101,6 +119,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             self.test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
 
@@ -132,6 +151,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -148,6 +168,9 @@ class TestTestRunner:
         )
 
         assert result.status == TestStatus.SUCCESS
+        assert result.image_output == 1
+        assert result.reference_image == 2
+        assert self.mock_cato_api_client.upload_image.call_count == 2
 
     def test_should_have_failed_with_exit_code_0(
         self,
@@ -161,6 +184,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 1, [])
@@ -191,6 +215,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -208,6 +233,7 @@ class TestTestRunner:
 
         assert result.status == TestStatus.FAILED
         assert result.message == "Images are not equal!"
+        assert self.mock_cato_api_client.upload_image.call_count == 2
 
     def test_should_have_failed_with_missing_reference_image(
         self,
@@ -224,6 +250,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -241,9 +268,10 @@ class TestTestRunner:
 
         assert result.status == TestStatus.FAILED
         assert result.message.startswith("Reference image")
-        assert result.image_output is not None
+        assert result.image_output == 1
         assert result.reference_image is None
         self.reporter.report_message.assert_called_with(result.message)
+        assert self.mock_cato_api_client.upload_image.call_count == 1
 
     def test_should_have_failed_with_missing_image_output(
         self,
@@ -260,6 +288,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -278,8 +307,9 @@ class TestTestRunner:
         assert result.status == TestStatus.FAILED
         assert result.message.startswith("No given image output path exists")
         assert result.image_output is None
-        assert result.reference_image is not None
+        assert result.reference_image == 1
         self.reporter.report_message.assert_called_with(result.message)
+        assert self.mock_cato_api_client.upload_image.call_count == 1
 
     def test_should_have_failed_with_missing_reference_and_image_output(
         self,
@@ -297,6 +327,7 @@ class TestTestRunner:
             self.output_folder,
             self.image_comparator,
             test_execution_reporter,
+            self.mock_cato_api_client,
         )
         test = Test(name="my_first_test", command="dummy_command", variables={})
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
@@ -318,3 +349,4 @@ class TestTestRunner:
         assert result.reference_image is None
         self.reporter.report_message.assert_any_call(result.message.split(", ")[0])
         self.reporter.report_message.assert_any_call(result.message.split(", ")[1])
+        self.mock_cato_api_client.upload_image.assert_not_called()

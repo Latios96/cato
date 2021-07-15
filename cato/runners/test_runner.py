@@ -15,6 +15,7 @@ from cato.reporter.test_heartbeat_reporter import TestHeartbeatReporter
 from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
+from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.test_identifier import TestIdentifier
 
 
@@ -28,6 +29,7 @@ class TestRunner:
         output_folder: OutputFolder,
         image_comparator: ImageComparator,
         test_execution_reporter: TestExecutionReporter,
+        cato_api_client: CatoApiClient,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -35,6 +37,7 @@ class TestRunner:
         self._variable_processor = VariableProcessor()
         self._image_comparator = image_comparator
         self._test_execution_reporter = test_execution_reporter
+        self._cato_api_client = cato_api_client
 
     def run_test(
         self, config: RunConfig, current_suite: TestSuite, test: Test
@@ -110,13 +113,14 @@ class TestRunner:
 
         if no_reference_image and not no_image_output:
             self._reporter.report_message(message_reference_image_missing)
+            image_output_image = self._cato_api_client.upload_image(image_output)
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
                 command_result.output,
                 elapsed,
                 message_reference_image_missing,
-                image_output,
+                image_output_image.id,
                 None,
                 start,
                 end,
@@ -124,6 +128,7 @@ class TestRunner:
 
         if no_image_output and not no_reference_image:
             self._reporter.report_message(message_image_output_missing)
+            reference_image_image = self._cato_api_client.upload_image(reference_image)
             return TestExecutionResult(
                 test,
                 TestStatus.FAILED,
@@ -131,7 +136,7 @@ class TestRunner:
                 elapsed,
                 message_image_output_missing,
                 None,
-                reference_image,
+                reference_image_image.id,
                 start,
                 end,
             )
@@ -164,6 +169,9 @@ class TestRunner:
             "Found reference image at path {}".format(reference_image)
         )
 
+        reference_image_image = self._cato_api_client.upload_image(reference_image)
+        image_output_image = self._cato_api_client.upload_image(image_output)
+
         if image_compare_result.error:
             return TestExecutionResult(
                 test,
@@ -171,8 +179,8 @@ class TestRunner:
                 command_result.output,
                 elapsed,
                 "Images are not equal!",
-                image_output,
-                reference_image,
+                reference_image_image.id,
+                image_output_image.id,
                 start,
                 end,
             )
@@ -183,8 +191,8 @@ class TestRunner:
             command_result.output,
             elapsed,
             message="",
-            image_output=image_output,
-            reference_image=reference_image,
+            image_output=reference_image_image.id,
+            reference_image=image_output_image.id,
             started_at=start,
             finished_at=end,
         )

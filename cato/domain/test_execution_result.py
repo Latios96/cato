@@ -13,8 +13,8 @@ class TestExecutionResult:
     output: List[str]
     seconds: float
     message: str
-    image_output: Optional[str]
-    reference_image: Optional[str]
+    image_output: Optional[int]
+    reference_image: Optional[int]
     started_at: datetime.datetime
     finished_at: datetime.datetime
 

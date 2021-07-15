@@ -137,25 +137,14 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
             return
 
-        image_output_id = None
-        if test_execution_result.image_output:
-            image_output_id = self._cato_api_client.upload_image(
-                test_execution_result.image_output
-            ).id
-        reference_image_id = None
-        if test_execution_result.reference_image:
-            reference_image_id = self._cato_api_client.upload_image(
-                test_execution_result.reference_image
-            ).id
-
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._cato_api_client.finish_test(
             test_result.id,
             status=test_execution_result.status,
             seconds=test_execution_result.seconds,
             message=test_execution_result.message,
-            image_output=image_output_id,
-            reference_image=reference_image_id,
+            image_output=test_execution_result.image_output,
+            reference_image=test_execution_result.reference_image,
         )
 
         logger.info(f"Uploading output of test {test_identifier}..")
