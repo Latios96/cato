@@ -128,8 +128,8 @@ def test_upload_file(cato_api_client, test_resource_provider):
 
     assert f == File(
         id=1,
-        name="test.png",
-        hash="505cc9e0719a4f15a36eaa6df776bea0cc065b32d198be6002a79a03823b4d9e",
+        name="test.exr",
+        hash="a233c347f49d2745b4f759bec0da9414e1bc980b1ece56f98dd7f9696d608709",
         value_counter=0,
     )
 
