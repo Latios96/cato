@@ -1159,6 +1159,14 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "types-pillow"
+version = "8.3.1"
+description = "Typing stubs for Pillow"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "typing-extensions"
 version = "3.10.0.0"
 description = "Backported and Experimental Type Hints for Python 3.5+"
@@ -1264,7 +1272,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "2ddd5a09c5b963b86d07741f14ac8acf270ea9243f4e751a281b14194b14ea44"
+content-hash = "bf2be7125c6268d6176ff4afaef640a5eec7c9ce67cdbd4cc010a48d004c8927"
 
 [metadata.files]
 aiofiles = [
@@ -2272,6 +2280,10 @@ typed-ast = [
     {file = "typed_ast-1.4.3-cp39-cp39-win32.whl", hash = "sha256:209596a4ec71d990d71d5e0d312ac935d86930e6eecff6ccc7007fe54d703808"},
     {file = "typed_ast-1.4.3-cp39-cp39-win_amd64.whl", hash = "sha256:9c6d1a54552b5330bc657b7ef0eae25d00ba7ffe85d9ea8ae6540d2197a3788c"},
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
+]
+types-pillow = [
+    {file = "types-Pillow-8.3.1.tar.gz", hash = "sha256:12329f4700941f60a0054194815b4bf674e5dfac73debd97ef7548c51f2c5103"},
+    {file = "types_Pillow-8.3.1-py3-none-any.whl", hash = "sha256:9556ba9cb25f570371bd082dc30fe77a549a22bac035ce9d3a606bfc541d12ec"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
