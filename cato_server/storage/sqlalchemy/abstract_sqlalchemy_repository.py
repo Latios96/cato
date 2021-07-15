@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Optional, Iterable, Callable
+from typing import TypeVar, Generic, Optional, Iterable, Callable, List
 
 from sqlalchemy import asc, collate
 from sqlalchemy.ext.declarative import declarative_base
@@ -18,10 +18,8 @@ class BaseEntity:
 
 
 class AbstractSqlAlchemyRepository(Generic[T, E, K]):
-    _session_maker: Callable[[], Session]
-
-    def __init__(self, session_maker):
-        self._session_maker = session_maker
+    def __init__(self, session_maker: Callable[[], Session]):
+        self._session_maker: Callable[[], Session] = session_maker
 
     def save(self, domain_object: T) -> T:
         session = self._session_maker()
@@ -82,7 +80,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         session.close()
         return page
 
-    def delete_by_id(self, id: K):
+    def delete_by_id(self, id: K) -> None:
         session = self._session_maker()
         entity = (
             session.query(self.mapping_cls())
@@ -105,11 +103,12 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
     def mapping_cls(self):
         raise NotImplementedError()
 
-    def _map_one_to_domain_object(self, entity):
+    def _map_one_to_domain_object(self, entity: Optional[E]) -> Optional[T]:
         if entity:
             return self.to_domain_object(entity)
+        return None
 
-    def _map_many_to_domain_object(self, entities):
+    def _map_many_to_domain_object(self, entities: Iterable[E]) -> List[T]:
         return [self.to_domain_object(x) for x in entities]
 
     def _pageginate(self, session, query, page_request) -> Page[T]:

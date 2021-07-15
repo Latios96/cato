@@ -1,5 +1,5 @@
 from collections import defaultdict
-from typing import Set, Tuple
+from typing import Set, Tuple, Dict
 
 from cato.domain.test_status import TestStatus
 from cato_server.domain.execution_status import ExecutionStatus
@@ -10,8 +10,8 @@ class RunStatusCalculator:
     def calculate(
         self, status_set: Set[Tuple[ExecutionStatus, TestStatus]]
     ) -> RunStatus:
-        execution_status_counts = defaultdict(lambda: 0)
-        test_status_counts = defaultdict(lambda: 0)
+        execution_status_counts: Dict[ExecutionStatus, int] = defaultdict(lambda: 0)
+        test_status_counts: Dict[TestStatus, int] = defaultdict(lambda: 0)
 
         for execution_status, test_status in status_set:
             execution_status_counts[execution_status] += 1

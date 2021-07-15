@@ -16,7 +16,7 @@ class _SuiteResultMapping(Base):
     __tablename__ = "suite_result_entity"
 
     id = Column(Integer, primary_key=True, autoincrement=True)
-    run_entity_id = Column(Integer, ForeignKey("run_entity.id"))
+    run_entity_id = Column(Integer, ForeignKey("run_entity.id"), nullable=False)
     suite_name = Column(String, nullable=False)
     suite_variables = Column(JSON, nullable=False)
 
@@ -87,6 +87,7 @@ class SqlAlchemySuiteResultRepository(
         session.close()
         if entity:
             return self.to_domain_object(entity)
+        return None
 
     def suite_count_by_run_id(self, run_id: int) -> int:
         session = self._session_maker()

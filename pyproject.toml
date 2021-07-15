@@ -69,6 +69,7 @@ pytest-bdd = "^4.0.2"
 checksumdir = "^1.2.0"
 webdriver-manager = "^3.4.2"
 types-Pillow = "^8.3.1"
+sqlalchemy-stubs = "^0.4"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
