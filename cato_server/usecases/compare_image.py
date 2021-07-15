@@ -50,7 +50,7 @@ class CompareImage:
             )
 
             result = self._advanced_image_comparator.compare(
-                reference_image_path, output_image_path, comparison_settings
+                reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
             logger.debug("Deleting tmpdir %s", tmpdirname)
 
