@@ -131,24 +131,6 @@ CONFIG_FOR_MESSAGE_QUEUE_TESTING = AppConfiguration(
 )
 
 
-def test_create_message_queue_bindings_rabbit_mq_available():
-    bindings_factory = BindingsFactory(CONFIG_FOR_MESSAGE_QUEUE_TESTING)
-    bindings_factory._rabbit_mq_message_queue_is_available = lambda: True
-
-    message_queue_bindings = bindings_factory.create_message_queue_bindings()
-
-    assert message_queue_bindings.message_queue_binding.is_available()
-
-
-def test_create_message_queue_bindings_rabbit_mq_not_available():
-    bindings_factory = BindingsFactory(CONFIG_FOR_MESSAGE_QUEUE_TESTING)
-    bindings_factory._rabbit_mq_message_queue_is_available = lambda: False
-
-    message_queue_bindings = bindings_factory.create_message_queue_bindings()
-
-    assert message_queue_bindings.message_queue_binding.empty()
-
-
 def test_create_scheduler_bindings_no_scheduler():
     config = AppConfiguration(
         port=5000,

@@ -2,7 +2,6 @@ import logging
 from dataclasses import dataclass
 from typing import Type, Any
 
-import pika
 import pinject
 import requests
 from sqlalchemy import create_engine
@@ -12,7 +11,6 @@ from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
-from cato_server.queues.rabbit_mq_message_queue import RabbitMqMessageQueue
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
@@ -198,7 +196,7 @@ class BindingsFactory:
 
     def create_message_queue_bindings(self):
         logger.info("Creating message queue bindings..")
-        return MessageQueueBindings(message_queue_binding=self._get_message_queue())
+        return MessageQueueBindings(message_queue_binding=OptionalComponent.empty())
 
     def _get_session_maker(self):
         return sessionmaker(bind=self._get_engine())
@@ -222,32 +220,6 @@ class BindingsFactory:
         return create_engine(
             database_url, pool_size=pool_size, max_overflow=max_overflow
         )
-
-    def _get_message_queue(self) -> OptionalComponent[AbstractMessageQueue]:
-        if not self._rabbit_mq_message_queue_is_available():
-            logger.info("RabbitMq is not available")
-            return OptionalComponent.empty()
-        logger.info(
-            "RabbitMq is available at %s",
-            self._configuration.message_queue_configuration.host,
-        )
-        return OptionalComponent(
-            RabbitMqMessageQueue(self._configuration.message_queue_configuration.host)
-        )
-
-    def _rabbit_mq_message_queue_is_available(self):
-        connection_parameters = pika.ConnectionParameters(
-            host=self._configuration.message_queue_configuration.host
-        )
-        try:
-            connection = pika.BlockingConnection(connection_parameters)
-            if connection.is_open:
-                connection.close()
-                return True
-        except Exception as error:
-            logger.error("Error when connecting to RabbitMQ:")
-            logger.error(error)
-            return False
 
     def create_scheduler_bindings(self):
         return SchedulerBindings(

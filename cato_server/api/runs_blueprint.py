@@ -66,12 +66,6 @@ class RunsBlueprint(APIRouter):
         self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
 
-        if self._message_queue.is_available():
-            logger.info("Message queue is available, adding run events route")
-            self.route("/runs/events/<int:project_id>", methods=["GET"])(
-                self.run_events_for_project
-            )
-
     def runs_by_project(self, project_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
         if page_request:
@@ -175,11 +169,6 @@ class RunsBlueprint(APIRouter):
 
         run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
-
-    def run_events_for_project(self, project_id) -> Response:
-        return JSONResponse(
-            content={"message": "Not supported with FastAPI yet!"}, status_code=404
-        )
 
     def summary(self, run_id) -> Response:
         run = self._run_repository.find_by_id(run_id)
