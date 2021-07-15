@@ -131,28 +131,31 @@ build.dependsOn('poetryBuild')
 install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPythonCheck(type: PythonTask){
-    command = '-m black cato cato_server tests cato_api_client --check'
+    command = '-m black cato cato_server tests cato_api_client cato_common --check'
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
+    inputs.dir('cato_common')
     outputs.file('formatPythonCheck')
 }
 
 task formatPython(type:PythonTask){
-    command = '-m black cato cato_server tests cato_api_client'
+    command = '-m black cato cato_server tests cato_api_client cato_common'
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
+    inputs.dir('cato_common')
     outputs.file('formatPython')
 }
 
 task lintPython(type:PythonTask){
-    command = '-m flake8 cato cato_server cato_api_client'
+    command = '-m flake8 cato cato_server cato_api_client cato_common'
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
+    inputs.dir('cato_common')
     outputs.file('lintPython')
 }
 

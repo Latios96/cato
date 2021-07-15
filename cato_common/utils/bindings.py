@@ -1,8 +1,9 @@
 import inspect
 import os
-import sys
-from typing import List, Type, TypeVar
+from typing import Type, TypeVar
+
 from pinject.object_graph import ObjectGraph
+
 from cato_common.utils.typing import safe_cast
 
 T = TypeVar("T")
