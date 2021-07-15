@@ -53,8 +53,9 @@ class TestCompareImage:
             message=self.comparison_result.message,
             reference_image_id=2,
             output_image_id=1,
+            diff_image_id=3,
         )
-        assert self.mock_store_image.store_image.call_count == 2
+        assert self.mock_store_image.store_image.call_count == 3
         assert self.mock_image_comparator.compare.call_args[0][0].endswith(
             "reference.png"
         )
@@ -82,8 +83,9 @@ class TestCompareImage:
             message=self.comparison_result.message,
             reference_image_id=2,
             output_image_id=1,
+            diff_image_id=3,
         )
-        assert self.mock_store_image.store_image.call_count == 2
+        assert self.mock_store_image.store_image.call_count == 3
         assert self.mock_image_comparator.compare.call_args[0][0].endswith(
             "an_image.png"
         )

@@ -14,6 +14,7 @@ def test_map_from():
             "message": "message",
             "reference_image_id": 1,
             "output_image_id": 2,
+            "diff_image_id": 3,
         }
     )
 
@@ -22,6 +23,7 @@ def test_map_from():
         message="message",
         reference_image_id=1,
         output_image_id=2,
+        diff_image_id=3,
     )
 
 
@@ -29,11 +31,20 @@ def test_map_from_optional_data():
     mapper = CompareImageResultClassMapper()
 
     result = mapper.map_from_dict(
-        {"status": "SUCCESS", "reference_image_id": 1, "output_image_id": 2}
+        {
+            "status": "SUCCESS",
+            "reference_image_id": 1,
+            "output_image_id": 2,
+            "diff_image_id": 3,
+        }
     )
 
     assert result == CompareImageResult(
-        status=TestStatus.SUCCESS, message=None, reference_image_id=1, output_image_id=2
+        status=TestStatus.SUCCESS,
+        message=None,
+        reference_image_id=1,
+        output_image_id=2,
+        diff_image_id=3,
     )
 
 
@@ -46,6 +57,7 @@ def test_map_to():
             message="message",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
     )
 
@@ -54,4 +66,5 @@ def test_map_to():
         "message": "message",
         "reference_image_id": 1,
         "output_image_id": 2,
+        "diff_image_id": 3,
     }

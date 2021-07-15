@@ -15,6 +15,7 @@ class CompareImageResultClassMapper(AbstractClassMapper[CompareImageResult]):
             message=json_data.get("message"),
             reference_image_id=json_data["reference_image_id"],
             output_image_id=json_data["output_image_id"],
+            diff_image_id=json_data["diff_image_id"],
         )
 
     def map_to_dict(self, comparison_settings: CompareImageResult) -> Dict:
@@ -23,4 +24,5 @@ class CompareImageResultClassMapper(AbstractClassMapper[CompareImageResult]):
             "message": comparison_settings.message,
             "reference_image_id": comparison_settings.reference_image_id,
             "output_image_id": comparison_settings.output_image_id,
+            "diff_image_id": comparison_settings.diff_image_id,
         }

@@ -44,6 +44,7 @@ class TestTestRunner:
             message="",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
 
     @mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
@@ -205,6 +206,7 @@ class TestTestRunner:
             message="Images are not equal!",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -242,6 +244,7 @@ class TestTestRunner:
             message="Images are not equal!",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -281,6 +284,7 @@ class TestTestRunner:
             message="Images are not equal!",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -321,6 +325,7 @@ class TestTestRunner:
             message="Images are not equal!",
             reference_image_id=1,
             output_image_id=2,
+            diff_image_id=3,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(

@@ -22,6 +22,7 @@ class CompareImageResult:
     message: Optional[str]
     reference_image_id: int
     output_image_id: int
+    diff_image_id: int
 
 
 class CompareImage:
@@ -52,6 +53,9 @@ class CompareImage:
             result = self._advanced_image_comparator.compare(
                 reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
+
+            stored_diff_image = self._store_image.store_image(result.diff_image)
+
             logger.debug("Deleting tmpdir %s", tmpdirname)
 
         return CompareImageResult(
@@ -59,6 +63,7 @@ class CompareImage:
             message=result.message,
             reference_image_id=reference_image.id,
             output_image_id=output_image.id,
+            diff_image_id=stored_diff_image.id,
         )
 
     def _store_image_in_db(

@@ -24,6 +24,7 @@ def test_upload_images_for_comparison_success(
         "message": None,
         "output_image_id": 1,
         "reference_image_id": 2,
+        "diff_image_id": 3,
         "status": "SUCCESS",
     }
     assert response.status_code == 201
