@@ -90,7 +90,7 @@ class TestRunner:
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
         no_image_output = (
-            not image_output
+            image_output is None
             or not self._output_folder.image_output_exists(image_output)
         )
         image_output_str = emoji.emojize(
@@ -105,12 +105,12 @@ class TestRunner:
             self._reference_images(variables)
         )
         no_reference_image = (
-            not reference_image
+            reference_image is None
             or not self._output_folder.reference_image_exists(reference_image)
         )
         message_reference_image_missing = f"Reference image {reference_image if reference_image else '<not found>'} does not exist!"
 
-        if no_reference_image and not no_image_output:
+        if no_reference_image and not no_image_output and image_output is not None:
             self._reporter.report_message(message_reference_image_missing)
             image_output_image = self._cato_api_client.upload_image(image_output)
             return TestExecutionResult(
@@ -125,7 +125,7 @@ class TestRunner:
                 end,
             )
 
-        if no_image_output and not no_reference_image:
+        if no_image_output and not no_reference_image and reference_image is not None:
             self._reporter.report_message(message_image_output_missing)
             reference_image_image = self._cato_api_client.upload_image(reference_image)
             return TestExecutionResult(
@@ -162,40 +162,43 @@ class TestRunner:
         self._reporter.report_message(
             "Found reference image at path {}".format(reference_image)
         )
-
-        image_compare_result = self._cato_api_client.compare_images(
-            reference_image,
-            image_output,
-            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
-        )
-
-        reference_image_image = self._cato_api_client.upload_image(reference_image)
-        image_output_image = self._cato_api_client.upload_image(image_output)
-
-        if image_compare_result.status == TestStatus.FAILED:
-            return TestExecutionResult(
-                test,
-                TestStatus.FAILED,
-                command_result.output,
-                elapsed,
-                image_compare_result.message,
-                reference_image_image.id,
-                image_output_image.id,
-                start,
-                end,
+        if reference_image is not None and image_output is not None:
+            image_compare_result = self._cato_api_client.compare_images(
+                reference_image,
+                image_output,
+                ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
             )
 
-        return TestExecutionResult(
-            test,
-            TestStatus.SUCCESS,
-            command_result.output,
-            elapsed,
-            message="",
-            image_output=reference_image_image.id,
-            reference_image=image_output_image.id,
-            started_at=start,
-            finished_at=end,
-        )
+            reference_image_image = self._cato_api_client.upload_image(reference_image)
+            image_output_image = self._cato_api_client.upload_image(image_output)
+
+            if image_compare_result.status == TestStatus.FAILED:
+                return TestExecutionResult(
+                    test,
+                    TestStatus.FAILED,
+                    command_result.output,
+                    elapsed,
+                    image_compare_result.message
+                    if image_compare_result.message
+                    else "",
+                    reference_image_image.id,
+                    image_output_image.id,
+                    start,
+                    end,
+                )
+
+            return TestExecutionResult(
+                test,
+                TestStatus.SUCCESS,
+                command_result.output,
+                elapsed,
+                message="",
+                image_output=reference_image_image.id,
+                reference_image=image_output_image.id,
+                started_at=start,
+                finished_at=end,
+            )
+        raise RuntimeError("This should never happen!")
 
     def _image_outputs(self, variables):
         image_outputs = [
