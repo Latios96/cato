@@ -164,10 +164,10 @@ class TestTestRunner:
         )
 
         assert result.status == TestStatus.SUCCESS
-        assert result.image_output == 1
-        assert result.reference_image == 2
+        assert result.image_output == 2
+        assert result.reference_image == 1
         assert result.diff_image == 3
-        assert self.mock_cato_api_client.upload_image.call_count == 2
+        self.mock_cato_api_client.upload_image.assert_not_called()
         self.mock_cato_api_client.compare_images.assert_called_once()
 
     def test_should_have_failed_with_exit_code_0(
@@ -236,7 +236,7 @@ class TestTestRunner:
         assert result.image_output == 1
         assert result.reference_image == 2
         assert result.diff_image == 3
-        assert self.mock_cato_api_client.upload_image.call_count == 2
+        self.mock_cato_api_client.upload_image.assert_not_called()
         self.mock_cato_api_client.compare_images.assert_called_once()
 
     def test_should_have_failed_with_missing_reference_image(

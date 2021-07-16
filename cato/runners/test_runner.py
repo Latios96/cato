@@ -173,11 +173,6 @@ class TestRunner:
                 ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
             )
 
-            reference_image_image = self._cato_api_client.upload_image(
-                reference_image
-            )  # todo doubled upload, fix this
-            image_output_image = self._cato_api_client.upload_image(image_output)
-
             if image_compare_result.status == TestStatus.FAILED:
                 return TestExecutionResult(
                     test,
@@ -187,8 +182,8 @@ class TestRunner:
                     image_compare_result.message
                     if image_compare_result.message
                     else "",
-                    reference_image_image.id,
-                    image_output_image.id,
+                    image_compare_result.reference_image_id,
+                    image_compare_result.output_image_id,
                     image_compare_result.diff_image_id,
                     start,
                     end,
@@ -200,8 +195,8 @@ class TestRunner:
                 command_result.output,
                 elapsed,
                 message="",
-                image_output=reference_image_image.id,
-                reference_image=image_output_image.id,
+                image_output=image_compare_result.output_image_id,
+                reference_image=image_compare_result.reference_image_id,
                 diff_image=image_compare_result.diff_image_id,
                 started_at=start,
                 finished_at=end,

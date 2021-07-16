@@ -253,6 +253,7 @@ class TestTestExecutionDbReporter:
             message="",
             image_output=None,
             reference_image=None,
+            diff_image=None,
         )
         self.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"
