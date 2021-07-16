@@ -29,7 +29,7 @@ class TestCompareImage:
         self.mock_store_image.store_image.side_effect = self._mocked_store_image
         self.mock_image_comparator = mock_safe(AdvancedImageComparator)
         self.comparison_result = ComparisonResult(
-            status=TestStatus.SUCCESS, message="", diff_image=""
+            status=TestStatus.SUCCESS, message="", diff_image="some-path"
         )
         self.comparison_settings = ComparisonSettings(
             method=ComparisonMethod.SSIM, threshold=1
@@ -51,6 +51,40 @@ class TestCompareImage:
         assert result == CompareImageResult(
             status=self.comparison_result.status,
             message=self.comparison_result.message,
+            reference_image_id=2,
+            output_image_id=1,
+            diff_image_id=3,
+        )
+        assert self.mock_store_image.store_image.call_count == 3
+        assert self.mock_image_comparator.compare.call_args[0][0].endswith(
+            "reference.png"
+        )
+        assert self.mock_image_comparator.compare.call_args[0][1].endswith("output.png")
+        assert (
+            self.mock_image_comparator.compare.call_args[0][0]
+            != self.mock_image_comparator.compare.call_args[0][1]
+        )
+        assert (
+            self.mock_image_comparator.compare.call_args[0][2]
+            == self.comparison_settings
+        )
+
+    def test_compare_images_failure(self):
+        self.mock_image_comparator.compare.return_value = ComparisonResult(
+            status=TestStatus.FAILED, message="Failed", diff_image="some-path"
+        )
+
+        result = self.compare_image.compare_image(
+            BytesIO(b"output image"),
+            "output.png",
+            BytesIO(b"reference image"),
+            "reference.png",
+            self.comparison_settings,
+        )
+
+        assert result == CompareImageResult(
+            status=TestStatus.FAILED,
+            message="Failed",
             reference_image_id=2,
             output_image_id=1,
             diff_image_id=3,
