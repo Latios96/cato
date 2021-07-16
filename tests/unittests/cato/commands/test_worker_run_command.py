@@ -78,6 +78,7 @@ class TestWorkerRunCommand:
             "this is a message",
             None,
             None,
+            None,
             datetime.datetime.now(),
             datetime.datetime.now(),
         )
@@ -103,6 +104,7 @@ class TestWorkerRunCommand:
             [],
             1,
             "this is a message",
+            None,
             None,
             None,
             datetime.datetime.now(),

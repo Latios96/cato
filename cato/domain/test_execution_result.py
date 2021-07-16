@@ -15,6 +15,7 @@ class TestExecutionResult:
     message: str
     image_output: Optional[int]
     reference_image: Optional[int]
+    diff_image: Optional[int]
     started_at: datetime.datetime
     finished_at: datetime.datetime
 

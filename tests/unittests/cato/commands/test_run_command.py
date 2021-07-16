@@ -90,6 +90,7 @@ class TestRunCommand:
                         message="",
                         image_output=None,
                         reference_image=None,
+                        diff_image=None,
                         started_at=started_at,
                         finished_at=finished_at,
                     )

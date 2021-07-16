@@ -145,6 +145,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             message=test_execution_result.message,
             image_output=test_execution_result.image_output,
             reference_image=test_execution_result.reference_image,
+            diff_image=test_execution_result.diff_image,
         )
 
         logger.info(f"Uploading output of test {test_identifier}..")

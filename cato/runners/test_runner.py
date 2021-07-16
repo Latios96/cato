@@ -84,6 +84,7 @@ class TestRunner:
                 f"Command exited with exit code {command_result.exit_code}",
                 None,
                 None,
+                None,
                 start,
                 end,
             )
@@ -121,6 +122,7 @@ class TestRunner:
                 message_reference_image_missing,
                 image_output_image.id,
                 None,
+                None,
                 start,
                 end,
             )
@@ -136,6 +138,7 @@ class TestRunner:
                 message_image_output_missing,
                 None,
                 reference_image_image.id,
+                None,
                 start,
                 end,
             )
@@ -151,6 +154,7 @@ class TestRunner:
                 "{}, {}".format(
                     message_image_output_missing, message_reference_image_missing
                 ),
+                None,
                 None,
                 None,
                 start,
@@ -169,7 +173,9 @@ class TestRunner:
                 ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
             )
 
-            reference_image_image = self._cato_api_client.upload_image(reference_image)
+            reference_image_image = self._cato_api_client.upload_image(
+                reference_image
+            )  # todo doubled upload, fix this
             image_output_image = self._cato_api_client.upload_image(image_output)
 
             if image_compare_result.status == TestStatus.FAILED:
@@ -183,6 +189,7 @@ class TestRunner:
                     else "",
                     reference_image_image.id,
                     image_output_image.id,
+                    image_compare_result.diff_image_id,
                     start,
                     end,
                 )
@@ -195,6 +202,7 @@ class TestRunner:
                 message="",
                 image_output=reference_image_image.id,
                 reference_image=image_output_image.id,
+                diff_image=image_compare_result.diff_image_id,
                 started_at=start,
                 finished_at=end,
             )

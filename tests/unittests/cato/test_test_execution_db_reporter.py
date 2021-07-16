@@ -171,6 +171,7 @@ class TestTestExecutionDbReporter:
             message="",
             image_output=10,
             reference_image=20,
+            diff_image=30,
             started_at=started_at,
             finished_at=finished_at,
         )
@@ -186,6 +187,7 @@ class TestTestExecutionDbReporter:
             message="",
             image_output=10,
             reference_image=20,
+            diff_image=30,
         )
         self.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"
@@ -201,8 +203,9 @@ class TestTestExecutionDbReporter:
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",
-            image_output="test.exr",
-            reference_image="reference.exr",
+            image_output=10,
+            reference_image=20,
+            diff_image=30,
             started_at=started_at,
             finished_at=finished_at,
         )
@@ -234,6 +237,7 @@ class TestTestExecutionDbReporter:
             message="",
             image_output=None,
             reference_image=None,
+            diff_image=None,
             started_at=started_at,
             finished_at=finished_at,
         )
@@ -264,6 +268,7 @@ class TestTestExecutionDbReporter:
             message="",
             image_output=None,
             reference_image=None,
+            diff_image=None,
             started_at=datetime.datetime.now(),
             finished_at=datetime.datetime.now(),
         )

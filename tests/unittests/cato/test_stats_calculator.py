@@ -21,6 +21,7 @@ def test_calculates_succeded_correctly():
         MESSAGE,
         None,
         None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )
@@ -45,6 +46,7 @@ def test_calculates_failed_correctly():
         MESSAGE,
         None,
         None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )
@@ -54,6 +56,7 @@ def test_calculates_failed_correctly():
         [],
         1,
         MESSAGE,
+        None,
         None,
         None,
         datetime.datetime.now(),

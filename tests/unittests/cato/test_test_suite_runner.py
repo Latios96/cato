@@ -100,6 +100,7 @@ def test_run_suite_should_return_correctly_collected_results():
         "this is a message",
         None,
         None,
+        None,
         datetime.datetime.now(),
         datetime.datetime.now(),
     )

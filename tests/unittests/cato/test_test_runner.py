@@ -166,6 +166,7 @@ class TestTestRunner:
         assert result.status == TestStatus.SUCCESS
         assert result.image_output == 1
         assert result.reference_image == 2
+        assert result.diff_image == 3
         assert self.mock_cato_api_client.upload_image.call_count == 2
         self.mock_cato_api_client.compare_images.assert_called_once()
 
@@ -232,6 +233,9 @@ class TestTestRunner:
 
         assert result.status == TestStatus.FAILED
         assert result.message == "Images are not equal!"
+        assert result.image_output == 1
+        assert result.reference_image == 2
+        assert result.diff_image == 3
         assert self.mock_cato_api_client.upload_image.call_count == 2
         self.mock_cato_api_client.compare_images.assert_called_once()
 
@@ -272,6 +276,7 @@ class TestTestRunner:
         assert result.message.startswith("Reference image")
         assert result.image_output == 1
         assert result.reference_image is None
+        assert result.diff_image is None
         self.reporter.report_message.assert_called_with(result.message)
         assert self.mock_cato_api_client.upload_image.call_count == 1
 
@@ -312,6 +317,7 @@ class TestTestRunner:
         assert result.message.startswith("No given image output path exists")
         assert result.image_output is None
         assert result.reference_image == 1
+        assert result.diff_image is None
         self.reporter.report_message.assert_called_with(result.message)
         assert self.mock_cato_api_client.upload_image.call_count == 1
 
@@ -353,6 +359,7 @@ class TestTestRunner:
         assert result.message.startswith("No given image output path exists")
         assert result.image_output is None
         assert result.reference_image is None
+        assert result.diff_image is None
         self.reporter.report_message.assert_any_call(result.message.split(", ")[0])
         self.reporter.report_message.assert_any_call(result.message.split(", ")[1])
         self.mock_cato_api_client.upload_image.assert_not_called()
