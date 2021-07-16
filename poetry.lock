@@ -1161,9 +1161,25 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "types-jsonschema"
+version = "3.2.0"
+description = "Typing stubs for jsonschema"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "types-pillow"
 version = "8.3.1"
 description = "Typing stubs for Pillow"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "types-psutil"
+version = "5.8.0"
+description = "Typing stubs for psutil"
 category = "dev"
 optional = false
 python-versions = "*"
@@ -1274,7 +1290,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "37e6a0546a3b5ee0fdbcbeb03e4ccc97b80bcc5cee56d33a13f4b299059fb9c6"
+content-hash = "fba5b124a1885171e2c2255eab45b33553a4d44b5e34951996450beaeab6e944"
 
 [metadata.files]
 aiofiles = [
@@ -2283,9 +2299,17 @@ typed-ast = [
     {file = "typed_ast-1.4.3-cp39-cp39-win_amd64.whl", hash = "sha256:9c6d1a54552b5330bc657b7ef0eae25d00ba7ffe85d9ea8ae6540d2197a3788c"},
     {file = "typed_ast-1.4.3.tar.gz", hash = "sha256:fb1bbeac803adea29cedd70781399c99138358c26d05fcbd23c13016b7f5ec65"},
 ]
+types-jsonschema = [
+    {file = "types-jsonschema-3.2.0.tar.gz", hash = "sha256:1bbee1d5992f768f798aea96f05045821035e919a34136ea94f0444f31d08189"},
+    {file = "types_jsonschema-3.2.0-py3-none-any.whl", hash = "sha256:4a8f2e87aa7001361b4c3666565f8684f0e016517228396ac1bffd397d8c3fd0"},
+]
 types-pillow = [
     {file = "types-Pillow-8.3.1.tar.gz", hash = "sha256:12329f4700941f60a0054194815b4bf674e5dfac73debd97ef7548c51f2c5103"},
     {file = "types_Pillow-8.3.1-py3-none-any.whl", hash = "sha256:9556ba9cb25f570371bd082dc30fe77a549a22bac035ce9d3a606bfc541d12ec"},
+]
+types-psutil = [
+    {file = "types-psutil-5.8.0.tar.gz", hash = "sha256:670593241eeff0c2aaaca8062c8982e02a5012238c2a4bf0e401bbd7dc4e6740"},
+    {file = "types_psutil-5.8.0-py3-none-any.whl", hash = "sha256:1729e6eb1af309d224dc305d8edd10139091fbaa44d23236c57aecd6b886d763"},
 ]
 typing-extensions = [
     {file = "typing_extensions-3.10.0.0-py2-none-any.whl", hash = "sha256:0ac0f89795dd19de6b97debb0c6af1c70987fd80a2d62d1958f7e56fcc31b497"},
