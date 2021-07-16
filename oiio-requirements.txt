@@ -4,3 +4,13 @@ https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp
 https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp38-none-linux_x86_64.whl ; sys.platform=='linux' and python_version=='3.8'
 https://github.com/Latios96/oiio-building/releases/download/v28/oiio-2.2.11.1-cp38-none-macosx_11_1_x86_64.whl ; sys.platform=='darwin' and python_version=='3.8'
 conjure_python_client
+scikit-image
+cycler
+kiwisolver
+pytz
+pandas
+scipy
+imageio
+networkx
+tifffile
+pywavelets

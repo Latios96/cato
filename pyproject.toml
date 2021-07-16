@@ -21,7 +21,7 @@ cato_server_admin = 'cato_server.cato_server_admin:main'
 db_load_generator = 'cato_server.db_load_generator:main'
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.7.1"
 emoji = "^1.2.0"
 pinject = "^0.14.1"
 jsonschema = "^3.2.0"
@@ -48,7 +48,6 @@ uvicorn = "^0.13.4"
 aiofiles = "^0.7.0"
 python-multipart = "^0.0.5"
 Pillow = "^8.1.0"
-scikit-image = "^0.18.2"
 opencv-python = "^4.5.2"
 
 [tool.poetry.dev-dependencies]
