@@ -1,4 +1,4 @@
-#from .bindings import BindingSpec as BindingSpec
+from .bindings import BindingSpec as BindingSpec
 #from .decorators import annotate_arg as annotate_arg, inject as inject, injectable as injectable, provides as provides
 from .object_graph import new_object_graph as new_object_graph
 #from .scoping import PROTOTYPE as PROTOTYPE, SINGLETON as SINGLETON, Scope as Scope
