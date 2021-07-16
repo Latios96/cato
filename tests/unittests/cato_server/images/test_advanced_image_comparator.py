@@ -159,3 +159,27 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
         message=None,
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
     )
+
+
+@pytest.mark.parametrize(
+    "image1_name,image2_name",
+    [
+        ("unsupported-file.txt", "alembic-config-for-tests.ini"),
+        ("with_watermark.png", "unsupported-file.txt"),
+        ("unsupported-file.txt", "with_watermark.png"),
+    ],
+)
+def test_compare_image_should_fail_for_non_images(
+    image1_name, image2_name, test_resource_provider, tmpdir
+):
+    image1 = test_resource_provider.resource_by_name(image1_name)
+    image2 = test_resource_provider.resource_by_name(image2_name)
+    image_comparator = AdvancedImageComparator()
+
+    with pytest.raises(ValueError):
+        comparison_result = image_comparator.compare(
+            image1,
+            image2,
+            ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM),
+            str(tmpdir),
+        )

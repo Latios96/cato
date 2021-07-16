@@ -29,7 +29,15 @@ class AdvancedImageComparator:
             )
         logger.debug("Reading images")
         output_image = cv2.imread(output)
+        if output_image is None:
+            raise ValueError(
+                f"Could not read image from {output}, unsupported file format!"
+            )
         reference_image = cv2.imread(reference)
+        if reference_image is None:
+            raise ValueError(
+                f"Could not read image from {reference}, unsupported file format!"
+            )
 
         output_image_resolution = Resolution(
             output_image.shape[0], output_image.shape[1]
