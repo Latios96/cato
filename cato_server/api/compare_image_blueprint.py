@@ -6,6 +6,10 @@ from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.usecases.compare_image import CompareImage
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CompareImagesBlueprint(APIRouter):
     def __init__(self, compare_image: CompareImage, object_mapper: ObjectMapper):
@@ -53,6 +57,8 @@ class CompareImagesBlueprint(APIRouter):
                 parsed_comparison_settings,
             )
         except Exception as e:
+            logger.error("Error when comparing images")
+            logger.error(e, exc_info=True)
             return JSONResponse(
                 content={"error": "Error when comparing images: {}".format(e)},
                 status_code=400,
