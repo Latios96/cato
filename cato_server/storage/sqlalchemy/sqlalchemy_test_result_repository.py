@@ -40,6 +40,7 @@ class _TestResultMapping(Base):
     message = Column(String, nullable=True)
     image_output_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     reference_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
+    diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     started_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
 
@@ -69,6 +70,7 @@ class SqlAlchemyTestResultRepository(
             message=domain_object.message,
             image_output_id=domain_object.image_output,
             reference_image_id=domain_object.reference_image,
+            diff_image_id=domain_object.diff_image,
             started_at=domain_object.started_at,
             finished_at=domain_object.finished_at,
         )
@@ -94,6 +96,7 @@ class SqlAlchemyTestResultRepository(
             message=entity.message,
             image_output=entity.image_output_id,
             reference_image=entity.reference_image_id,
+            diff_image=entity.diff_image_id,
             started_at=entity.started_at,
             finished_at=entity.finished_at,
         )

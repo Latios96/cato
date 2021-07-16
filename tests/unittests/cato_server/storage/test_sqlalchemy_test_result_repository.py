@@ -14,7 +14,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 
 
-def test_save_success(sessionmaker_fixture, suite_result, stored_image):
+def test_save_success(sessionmaker_fixture, suite_result, stored_image_factory):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -30,8 +30,9 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image):
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=stored_image.id,
-        reference_image=stored_image.id,
+        image_output=stored_image_factory().id,
+        reference_image=stored_image_factory().id,
+        diff_image=stored_image_factory().id,
         started_at=start_time,
         finished_at=end_time,
     )
@@ -43,7 +44,9 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image):
     assert test_result_save == test_result
 
 
-def test_save_success_no_machine_info(sessionmaker_fixture, suite_result, stored_image):
+def test_save_success_no_machine_info(
+    sessionmaker_fixture, suite_result, stored_image_factory
+):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -59,8 +62,9 @@ def test_save_success_no_machine_info(sessionmaker_fixture, suite_result, stored
         status=TestStatus.SUCCESS,
         seconds=5,
         message="sucess",
-        image_output=stored_image.id,
-        reference_image=stored_image.id,
+        image_output=stored_image_factory().id,
+        reference_image=stored_image_factory().id,
+        diff_image=stored_image_factory().id,
         started_at=start_time,
         finished_at=end_time,
     )

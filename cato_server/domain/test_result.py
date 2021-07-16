@@ -23,6 +23,7 @@ class TestResult:
     message: Optional[str] = None
     image_output: Optional[int] = None
     reference_image: Optional[int] = None
+    diff_image: Optional[int] = None
     started_at: Optional[datetime.datetime] = None
     finished_at: Optional[datetime.datetime] = None
     __test__ = False

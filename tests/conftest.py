@@ -191,6 +191,7 @@ def test_result_factory():
         message: Optional[str] = None,
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
+        diff_image: Optional[int] = None,
         started_at: Optional[datetime.datetime] = None,
         finished_at: Optional[datetime.datetime] = None,
     ):
@@ -213,6 +214,7 @@ def test_result_factory():
             message=or_default(message, "success"),
             image_output=or_default(image_output, None),
             reference_image=or_default(reference_image, None),
+            diff_image=or_default(diff_image, None),
             started_at=or_default(started_at, datetime.datetime.now()),
             finished_at=or_default(finished_at, datetime.datetime.now()),
         )
@@ -272,23 +274,34 @@ def stored_file_alpha(sessionmaker_fixture, tmp_path, test_resource_provider):
 
 
 @pytest.fixture()
-def stored_image(sessionmaker_fixture, tmp_path, stored_file, stored_file_alpha):
+def stored_image_factory(
+    sessionmaker_fixture, tmp_path, stored_file, stored_file_alpha
+):
     repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-    return repository.save(
-        Image(
-            id=0,
-            name="test.exr",
-            original_file_id=stored_file.id,
-            channels=[
-                ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id),
-                ImageChannel(
-                    id=0, name="alpha", image_id=0, file_id=stored_file_alpha.id
-                ),
-            ],
-            width=1920,
-            height=1080,
+
+    def func():
+        return repository.save(
+            Image(
+                id=0,
+                name="test.exr",
+                original_file_id=stored_file.id,
+                channels=[
+                    ImageChannel(id=0, name="rgb", image_id=0, file_id=stored_file.id),
+                    ImageChannel(
+                        id=0, name="alpha", image_id=0, file_id=stored_file_alpha.id
+                    ),
+                ],
+                width=1920,
+                height=1080,
+            )
         )
-    )
+
+    return func
+
+
+@pytest.fixture()
+def stored_image(stored_image_factory):
+    return stored_image_factory()
 
 
 @pytest.fixture()
