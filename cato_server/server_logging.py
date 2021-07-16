@@ -14,7 +14,7 @@ ch.setFormatter(formatter)
 logger.addHandler(ch)
 
 
-def setup_file_handler(path: str, max_bytes, backup_count) -> None:
+def setup_file_handler(path: str, max_bytes: int, backup_count: int) -> None:
     logger.info("Adding RotatingFileHandler..")
     fh = RotatingFileHandler(path, maxBytes=max_bytes, backupCount=backup_count)
     fh.setLevel(LOGGING_LEVEL)

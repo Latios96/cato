@@ -3,7 +3,7 @@ import logging
 import os
 import subprocess
 from collections import defaultdict
-from typing import List, Tuple
+from typing import List, Tuple, Iterable
 
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
@@ -36,7 +36,7 @@ class ImageSplitter:
         status, output = subprocess.getstatusoutput(command)
         self._handle_command_error(command, status, output)
 
-        lines = output.split("\n")
+        lines: Iterable[str] = output.split("\n")
         lines = map(lambda x: x.strip(), lines)
         lines = filter(lambda x: x.startswith("channel list"), lines)
         lines = map(lambda x: x.replace("channel list: ", ""), lines)

@@ -1,4 +1,4 @@
-from typing import Type, TypeVar, Optional
+from typing import Type, TypeVar, Optional, Dict
 
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 
@@ -7,7 +7,7 @@ T = TypeVar("T")
 
 class MapperRegistry:
     def __init__(self):
-        self._mappers = {}
+        self._mappers: Dict[Type[T], AbstractClassMapper[T]] = {}
 
     def register_mapper(self, cls: Type[T], mapper: AbstractClassMapper[T]) -> None:
         self._mappers[cls] = mapper
