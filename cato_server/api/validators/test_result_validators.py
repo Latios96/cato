@@ -143,6 +143,12 @@ class FinishTestResultValidator(SchemaValidator):
                 errors, "reference_image", f"No image exists for id {reference_image}."
             )
 
+        diff_image = data.get("diff_image")
+        if diff_image and not self._image_repository.find_by_id(diff_image):
+            self.add_error(
+                errors, "diff_image", f"No image exists for id {diff_image}."
+            )
+
         return errors
 
 

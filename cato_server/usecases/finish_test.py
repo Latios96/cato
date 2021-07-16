@@ -38,6 +38,7 @@ class FinishTest:
         message: str,
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
+        diff_image: Optional[int] = None,
     ) -> None:
         logger.info(
             "Finishing test test with id %s and message %s", test_result_id, message
@@ -52,6 +53,7 @@ class FinishTest:
         test_result.message = message
         test_result.image_output = image_output
         test_result.reference_image = reference_image
+        test_result.diff_image = diff_image
         test_result.finished_at = self._get_finished_time()
 
         test_result = self._test_result_repository.save(test_result)

@@ -39,6 +39,7 @@ def test_should_finish(test_result_factory, object_mapper):
         message="Test succeded",
         image_output=2,
         reference_image=3,
+        diff_image=4,
     )
 
     test_result_repository.save.assert_called_with(
@@ -50,6 +51,7 @@ def test_should_finish(test_result_factory, object_mapper):
             message="Test succeded",
             image_output=2,
             reference_image=3,
+            diff_image=4,
             started_at=started_at,
             finished_at=finished_at,
         )
@@ -78,6 +80,7 @@ def test_should_raise_no_test_result_with_id(object_mapper):
             message="Test succeded",
             image_output=2,
             reference_image=3,
+            diff_image=4,
         )
 
 
@@ -109,6 +112,7 @@ def test_should_fail_test(test_result_factory, object_mapper):
             message="This is a test",
             image_output=None,
             reference_image=None,
+            diff_image=None,
             started_at=started_at,
             finished_at=finished_at,
         )

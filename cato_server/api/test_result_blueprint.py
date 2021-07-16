@@ -305,6 +305,7 @@ class TestResultsBlueprint(APIRouter):
             finish_test_result_dto.message,
             finish_test_result_dto.image_output,
             finish_test_result_dto.reference_image,
+            finish_test_result_dto.diff_image,
         )
         return JSONResponse(
             content=self._object_mapper.to_dict(ApiSuccess(success=True))

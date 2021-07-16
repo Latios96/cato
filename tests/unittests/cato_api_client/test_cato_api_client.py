@@ -386,14 +386,15 @@ def test_send_test_heartbeat_not_existing_test_id(cato_api_client):
         cato_api_client.heartbeat_test(42, TestIdentifier("suite_name", "test_name"))
 
 
-def test_finish_test_result_success(cato_api_client, test_result, stored_image):
+def test_finish_test_result_success(cato_api_client, test_result, stored_image_factory):
     cato_api_client.finish_test(
         test_result_id=test_result.id,
         status=TestStatus.SUCCESS,
         seconds=3,
         message="my_mesage",
-        image_output=stored_image.id,
-        reference_image=stored_image.id,
+        image_output=stored_image_factory().id,
+        reference_image=stored_image_factory().id,
+        diff_image=stored_image_factory().id,
     )
 
 

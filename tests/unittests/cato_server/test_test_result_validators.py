@@ -308,6 +308,18 @@ class TestFinishTestResultValidator:
                 },
                 {"reference_image": ["No image exists for id 42."]},
             ),
+            (
+                {
+                    "id": 1,
+                    "status": TestStatus.SUCCESS,
+                    "message": "test",
+                    "seconds": 1,
+                    "image_output": 1,
+                    "reference_image": 1,
+                    "diff_image": 42,
+                },
+                {"diff_image": ["No image exists for id 42."]},
+            ),
         ],
     )
     def test_failure(self, data, expected_errors):
