@@ -44,3 +44,15 @@ def test_split_non_image(tmp_path: Path):
 
     with pytest.raises(NotAnImageException):
         image_splitter.split_image_into_channels(__file__, str(tmp_path))
+
+
+@pytest.mark.parametrize("extension", ["png", "jpeg", "exr", "tiff"])
+def test_split_non_image_invalid_data(tmp_path: Path, extension):
+    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    file_with_invalid_data = tmp_path.joinpath(f"not_a_{extension}_file.{extension}")
+    file_with_invalid_data.touch()
+
+    with pytest.raises(NotAnImageException):
+        image_splitter.split_image_into_channels(
+            str(file_with_invalid_data), str(tmp_path)
+        )

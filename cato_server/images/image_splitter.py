@@ -88,7 +88,16 @@ class ImageSplitter:
             "oiiotool ERROR"
         ):
             return
-        is_not_an_image = "OpenImageIO could not find a format reader" in output
+        is_not_an_image = any(
+            message in output
+            for message in [
+                "OpenImageIO could not find a format reader",
+                "Not a PNG file",
+                "Empty file",
+                "is not an OpenEXR file",
+                "Cannot read TIFF header",
+            ]
+        )
 
         if is_not_an_image:
             raise NotAnImageException(output)

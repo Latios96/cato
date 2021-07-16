@@ -99,6 +99,6 @@ def test_upload_should_fail_with_non_image_data(
     )
 
     assert response.json()["error"].startswith(
-        "Error when comparing images: Exit code f1 when running command"
+        "Error when comparing images: The file is not an Image"
     )
     assert response.status_code == 400
