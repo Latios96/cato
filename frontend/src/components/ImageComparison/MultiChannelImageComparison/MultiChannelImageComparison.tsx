@@ -9,6 +9,7 @@ import AlphaButton from "../AlphaButton/AlphaButton";
 interface Props {
   imageOutput: ImageDto;
   referenceImage: ImageDto;
+  diffImage: ImageDto;
   id: string;
 }
 
@@ -42,7 +43,8 @@ class MultiChannelImageComparison extends Component<Props, State> {
         {this.props.imageOutput && this.props.referenceImage ? (
           this.renderImageComparison(
             this.props.imageOutput,
-            this.props.referenceImage
+            this.props.referenceImage,
+            this.props.diffImage
           )
         ) : (
           <React.Fragment />
@@ -51,7 +53,11 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   }
 
-  renderImageComparison = (imageOutput: ImageDto, referenceImage: ImageDto) => {
+  renderImageComparison = (
+    imageOutput: ImageDto,
+    referenceImage: ImageDto,
+    diffImage: ImageDto
+  ) => {
     return (
       <React.Fragment>
         <form>
@@ -105,6 +111,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
           referenceImageUrl={
             "/api/v1/files/" +
             this.channelFileIdByName(referenceImage, this.state.selectedChannel)
+          }
+          diffImageUrl={
+            "/api/v1/files/" +
+            this.channelFileIdByName(diffImage, this.state.selectedChannel)
           }
           width={imageOutput.width}
           height={imageOutput.height}

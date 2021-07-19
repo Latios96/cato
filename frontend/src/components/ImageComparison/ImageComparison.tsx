@@ -8,6 +8,7 @@ import styles from "./ImageComparison.module.scss";
 interface Props {
   imageOutput: ImageDto;
   referenceImage: ImageDto;
+  diffImage: ImageDto;
 }
 const ImageComparison = (props: Props) => {
   const [modalIsOpen, setModalOpen] = useState(false);
@@ -17,6 +18,7 @@ const ImageComparison = (props: Props) => {
         id={"default-compare"}
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
+        diffImage={props.diffImage}
       />
 
       <div className={styles.fullscreenButtonContainer}>
@@ -38,6 +40,7 @@ const ImageComparison = (props: Props) => {
         onCloseRequest={() => setModalOpen(false)}
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
+        diffImage={props.diffImage}
       />
     </div>
   );

@@ -37,10 +37,11 @@ function renderFailureInformation(result: TestResultDto): React.ReactNode {
 function renderImages(result: TestResultDto): React.ReactNode {
   return (
     <React.Fragment>
-      {result.image_output && result.reference_image ? (
+      {result.image_output && result.reference_image && result.diff_image ? (
         <ImageComparison
           imageOutput={result.image_output}
           referenceImage={result.reference_image}
+          diffImage={result.diff_image}
         />
       ) : (
         ""

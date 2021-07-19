@@ -4,10 +4,12 @@ import ReactCompareImage from "react-compare-image";
 import { Spinner } from "react-bootstrap";
 import { CompareModes } from "../CompareModes";
 import ImageDiff from "../ImageDiff/ImageDiff";
+import DiffImageDisplay from "../DiffImageDisplay/DiffImageDisplay";
 
 interface Props {
   outputImageUrl: string;
   referenceImageUrl: string;
+  diffImageUrl: string;
   width: number;
   height: number;
   identifier: string;
@@ -107,10 +109,7 @@ class SingleChannelComparison extends Component<Props, State> {
                 rightImage={this.state.referenceImageUrlToRender}
               />
             ) : (
-              <ImageDiff
-                leftImage={this.state.outputImageUrlToRender}
-                rightImage={this.state.referenceImageUrlToRender}
-              />
+              <DiffImageDisplay imageUrl={this.props.diffImageUrl} />
             )
           ) : (
             <div className={styles.spinner}>

@@ -11,6 +11,7 @@ interface Props {
   onCloseRequest: () => void;
   imageOutput: ImageDto;
   referenceImage: ImageDto;
+  diffImage: ImageDto;
 }
 
 const ImageComparisonFullScreenModal = (props: Props) => {
@@ -36,6 +37,7 @@ const ImageComparisonFullScreenModal = (props: Props) => {
         id={"modal"}
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
+        diffImage={props.diffImage}
       />
     </Modal>
   );
