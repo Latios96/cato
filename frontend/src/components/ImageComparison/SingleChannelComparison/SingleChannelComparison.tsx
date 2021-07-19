@@ -118,8 +118,14 @@ class SingleChannelComparison extends Component<Props, State> {
               </Spinner>
             </div>
           )}
-          <span className={styles.referenceText}>Reference</span>
-          <span className={styles.outputText}>Output</span>
+          {this.props.mode === CompareModes.SWIPE ? (
+            <>
+              <span className={styles.referenceText}>Reference</span>
+              <span className={styles.outputText}>Output</span>
+            </>
+          ) : (
+            ""
+          )}
         </div>
       </div>
     );
