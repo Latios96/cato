@@ -270,6 +270,17 @@ def test_get_test_result_by_id(client, test_result):
         "execution_status": "NOT_STARTED",
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
+        "diff_image": {
+            "channels": [
+                {"file_id": 1, "id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "name": "alpha"},
+            ],
+            "height": 1080,
+            "id": 1,
+            "name": "test.exr",
+            "original_file_id": 1,
+            "width": 1920,
+        },
         "image_output": {
             "channels": [
                 {"file_id": 1, "id": 1, "name": "rgb"},
@@ -305,7 +316,9 @@ def test_get_test_result_by_id(client, test_result):
     }
 
 
-def test_get_test_result_by_id_no_machine_info(client, test_result_no_machine_info):
+def test_get_test_result_by_id_no_machine_info_no_diff_image(
+    client, test_result_no_machine_info
+):
     url = f"/api/v1/test_results/{test_result_no_machine_info.id}"
 
     rv = client.get(url)
@@ -315,6 +328,7 @@ def test_get_test_result_by_id_no_machine_info(client, test_result_no_machine_in
         "execution_status": "NOT_STARTED",
         "finished_at": test_result_no_machine_info.finished_at.isoformat(),
         "id": 1,
+        "diff_image": None,
         "image_output": {
             "channels": [
                 {"file_id": 1, "id": 1, "name": "rgb"},

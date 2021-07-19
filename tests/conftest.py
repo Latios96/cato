@@ -229,6 +229,7 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
         suite_result_id=suite_result.id,
         image_output=stored_image.id,
         reference_image=stored_image.id,
+        diff_image=stored_image.id,
     )
     return repository.save(test_result)
 

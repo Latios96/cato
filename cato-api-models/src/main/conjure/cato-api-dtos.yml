@@ -91,6 +91,7 @@ types:
           message: optional<string>
           image_output: optional<ImageDto>
           reference_image: optional<ImageDto>
+          diff_image: optional<ImageDto>
           started_at: optional<datetime>
           finished_at: optional<datetime>
 

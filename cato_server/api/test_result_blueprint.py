@@ -1,5 +1,6 @@
 import logging
 from http.client import BAD_REQUEST
+from typing import Optional
 
 from fastapi import APIRouter
 from starlette.requests import Request
@@ -231,30 +232,9 @@ class TestResultsBlueprint(APIRouter):
         if not result:
             return Response(status_code=404)
 
-        image_output_dto = None
-        reference_image_dto = None
-
-        image_output = self._image_repository.find_by_id(result.image_output)
-        if result.image_output and image_output:
-            image_output_dto = ImageDto(
-                id=image_output.id,
-                name=image_output.name,
-                original_file_id=image_output.original_file_id,
-                channels=list(map(self._to_channel_dto, image_output.channels)),
-                width=image_output.width,
-                height=image_output.height,
-            )
-
-        reference_image = self._image_repository.find_by_id(result.reference_image)
-        if result.reference_image and reference_image:
-            reference_image_dto = ImageDto(
-                id=reference_image.id,
-                name=reference_image.name,
-                original_file_id=reference_image.original_file_id,
-                channels=list(map(self._to_channel_dto, reference_image.channels)),
-                width=reference_image.width,
-                height=reference_image.height,
-            )
+        image_output_dto = self._map_to_image_dto(result.image_output)
+        reference_image_dto = self._map_to_image_dto(result.reference_image)
+        diff_image_dto = self._map_to_image_dto(result.diff_image)
 
         test_result_dto = TestResultDto(
             id=result.id,
@@ -276,10 +256,23 @@ class TestResultsBlueprint(APIRouter):
             message=result.message if result.message else None,
             image_output=image_output_dto,
             reference_image=reference_image_dto,
+            diff_image=diff_image_dto,
             started_at=result.started_at.isoformat() if result.started_at else None,
             finished_at=result.finished_at.isoformat() if result.finished_at else None,
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
+
+    def _map_to_image_dto(self, image_output) -> Optional[ImageDto]:
+        image = self._image_repository.find_by_id(image_output)
+        if image:
+            return ImageDto(
+                id=image.id,
+                name=image.name,
+                original_file_id=image.original_file_id,
+                channels=list(map(self._to_channel_dto, image.channels)),
+                width=image.width,
+                height=image.height,
+            )
 
     def _to_channel_dto(self, channel: ImageChannel) -> ImageChannelDto:
         return ImageChannelDto(
