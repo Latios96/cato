@@ -107,7 +107,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
             type={"radio"}
             checked={this.state.selectedMode === CompareModes.DIFF}
             onChange={() => this.setState({ selectedMode: CompareModes.DIFF })}
-            disabled={!!this.props.diffImage}
+            disabled={!this.props.diffImage}
           />
         </form>
         <SingleChannelComparison
