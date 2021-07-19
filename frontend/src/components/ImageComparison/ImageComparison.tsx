@@ -6,9 +6,9 @@ import { Fullscreen } from "react-bootstrap-icons";
 import ImageComparisonFullScreenModal from "./ImageComparisonFullScreenModal/ImageComparisonFullScreenModal";
 import styles from "./ImageComparison.module.scss";
 interface Props {
-  imageOutput: ImageDto;
-  referenceImage: ImageDto;
-  diffImage: ImageDto;
+  imageOutput: ImageDto | null | undefined;
+  referenceImage: ImageDto | null | undefined;
+  diffImage: ImageDto | null | undefined;
 }
 const ImageComparison = (props: Props) => {
   const [modalIsOpen, setModalOpen] = useState(false);

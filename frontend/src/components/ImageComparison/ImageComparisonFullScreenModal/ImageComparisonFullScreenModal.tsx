@@ -9,9 +9,9 @@ import styles from "./ImageComparisonFullScreenModal.module.scss";
 interface Props {
   modalIsOpen: boolean;
   onCloseRequest: () => void;
-  imageOutput: ImageDto;
-  referenceImage: ImageDto;
-  diffImage: ImageDto;
+  imageOutput: ImageDto | null | undefined;
+  referenceImage: ImageDto | null | undefined;
+  diffImage: ImageDto | null | undefined;
 }
 
 const ImageComparisonFullScreenModal = (props: Props) => {

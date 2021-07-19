@@ -7,9 +7,9 @@ import { CompareModes } from "../CompareModes";
 import AlphaButton from "../AlphaButton/AlphaButton";
 
 interface Props {
-  imageOutput: ImageDto;
-  referenceImage: ImageDto;
-  diffImage: ImageDto;
+  imageOutput: ImageDto | null | undefined;
+  referenceImage: ImageDto | null | undefined;
+  diffImage: ImageDto | null | undefined;
   id: string;
 }
 
@@ -54,10 +54,14 @@ class MultiChannelImageComparison extends Component<Props, State> {
   }
 
   renderImageComparison = (
-    imageOutput: ImageDto,
-    referenceImage: ImageDto,
-    diffImage: ImageDto
+    imageOutput: ImageDto | null | undefined,
+    referenceImage: ImageDto | null | undefined,
+    diffImage: ImageDto | null | undefined
   ) => {
+    const imageOutputOrReferenceImage = this.getDefined(
+      imageOutput,
+      referenceImage
+    );
     return (
       <React.Fragment>
         <form>
@@ -68,7 +72,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
             onChange={this.handleChange}
             value={this.state.selectedChannel}
           >
-            {imageOutput.channels.map((channel) => {
+            {(imageOutputOrReferenceImage
+              ? imageOutputOrReferenceImage.channels
+              : []
+            ).map((channel) => {
               return (
                 <option key={channel.id} value={channel.name}>
                   {channel.name}
@@ -91,7 +98,6 @@ class MultiChannelImageComparison extends Component<Props, State> {
             type={"radio"}
             checked={this.state.selectedMode === CompareModes.SWIPE}
             onChange={() => this.setState({ selectedMode: CompareModes.SWIPE })}
-            onClick={(e) => console.log("clicjed")}
           />
           <Form.Check
             id={"selected-swipe-mode-diff" + this.props.id}
@@ -116,8 +122,12 @@ class MultiChannelImageComparison extends Component<Props, State> {
             "/api/v1/files/" +
             this.channelFileIdByName(diffImage, this.state.selectedChannel)
           }
-          width={imageOutput.width}
-          height={imageOutput.height}
+          width={
+            imageOutputOrReferenceImage ? imageOutputOrReferenceImage.width : 0
+          }
+          height={
+            imageOutputOrReferenceImage ? imageOutputOrReferenceImage.height : 0
+          }
           identifier={"test"}
           mode={this.state.selectedMode}
         />
@@ -125,7 +135,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   };
 
-  channelFileIdByName = (image: ImageDto, name: string) => {
+  channelFileIdByName = (image: ImageDto | null | undefined, name: string) => {
+    if (!image) {
+      return "0";
+    }
     let channel = this.channelByName(image, name);
     if (channel === null) {
       return null;
@@ -167,7 +180,17 @@ class MultiChannelImageComparison extends Component<Props, State> {
   };
 
   hasAlpha = () => {
+    if (!this.props.referenceImage) {
+      return false;
+    }
     return this.channelByName(this.props.referenceImage, "alpha") !== null;
+  };
+
+  getDefined = (
+    first: ImageDto | null | undefined,
+    second: ImageDto | null | undefined
+  ) => {
+    return first ? first : second;
   };
 }
 

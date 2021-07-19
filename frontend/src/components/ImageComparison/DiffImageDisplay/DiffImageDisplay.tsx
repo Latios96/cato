@@ -13,6 +13,7 @@ function DiffImageDisplay(props: Props) {
       <img
         src={props.imageUrl}
         onLoad={() => setLoading(false)}
+        onError={() => setLoading(false)}
         style={{ display: isLoading ? "None" : "" }}
         alt={"A diff image"}
       />
