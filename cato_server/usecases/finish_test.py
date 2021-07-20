@@ -41,7 +41,7 @@ class FinishTest:
         diff_image: Optional[int] = None,
     ) -> None:
         logger.info(
-            "Finishing test test with id %s and message %s", test_result_id, message
+            'Finishing test test with id %s and message "%s"', test_result_id, message
         )
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if not test_result:
