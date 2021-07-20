@@ -3,7 +3,6 @@ import styles from "./SingleChannelComparison.module.css";
 import ReactCompareImage from "react-compare-image";
 import { Spinner } from "react-bootstrap";
 import { CompareModes } from "../CompareModes";
-import ImageDiff from "../ImageDiff/ImageDiff";
 import DiffImageDisplay from "../DiffImageDisplay/DiffImageDisplay";
 
 interface Props {

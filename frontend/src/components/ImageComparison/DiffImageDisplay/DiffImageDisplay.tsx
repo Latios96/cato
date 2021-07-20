@@ -15,7 +15,7 @@ function DiffImageDisplay(props: Props) {
         onLoad={() => setLoading(false)}
         onError={() => setLoading(false)}
         style={{ display: isLoading ? "None" : "" }}
-        alt={"A diff image"}
+        alt={"A diff"}
       />
       {isLoading ? (
         <div className={styles.spinner}>
