@@ -28,12 +28,12 @@ class AdvancedImageComparator:
                 f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
             )
         logger.debug("Reading images")
-        output_image = cv2.imread(output)
+        output_image = cv2.imread(output, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
         if output_image is None:
             raise ValueError(
                 f"Could not read image from {output}, unsupported file format!"
             )
-        reference_image = cv2.imread(reference)
+        reference_image = cv2.imread(reference, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
         if reference_image is None:
             raise ValueError(
                 f"Could not read image from {reference}, unsupported file format!"
@@ -88,19 +88,33 @@ class AdvancedImageComparator:
         threshold: float,
         workdir: str,
     ) -> str:
+        is_linear = output_image.dtype == "float32"
         diff_gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
         diff_gray = ~diff_gray
 
         int_threshold = 255 - int(threshold * 255)
-        thresh = cv2.threshold(diff_gray.copy(), int_threshold, 255, cv2.THRESH_TOZERO)[
-            1
-        ]
-        thresh = cv2.threshold(thresh, 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+        thresh = cv2.threshold(diff_gray.copy(), threshold, 1, cv2.THRESH_TOZERO)[1]
+        thresh = cv2.threshold(thresh, 0, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
 
         black_channel = numpy.ones(thresh.shape, dtype=thresh.dtype)
         weighted_green = cv2.merge((black_channel, thresh, black_channel))
-        output_with_highlights = cv2.addWeighted(output_image, 1, weighted_green, 1, 0)
+        if is_linear:
+            output_image = output_image.clip(0, 1)
+            output_image = lin2srgb(output_image)
+            output_image *= 255
+        output_image = output_image.astype("uint8")
+        output_with_highlights = cv2.addWeighted(
+            output_image, 1, cv2.merge((thresh, thresh, thresh)), -1, 0
+        )
+        output_with_highlights = cv2.addWeighted(
+            output_with_highlights, 1, weighted_green, 1, 0
+        )
         target_path = os.path.join(workdir, f"diff_image_{uuid.uuid4()}.png")
         cv2.imwrite(target_path, output_with_highlights)
 
         return target_path
+
+
+def lin2srgb(x):
+    a = 0.055
+    return numpy.where(x <= 0.0031308, x * 12.92, (1 + a) * numpy.power(x, 1 / 2.4) - a)
