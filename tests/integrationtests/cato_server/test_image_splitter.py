@@ -1,4 +1,5 @@
 import os.path
+import shutil
 from pathlib import Path
 
 import pytest
@@ -16,7 +17,7 @@ from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
         ("exr_multichannel_16_bit.exr", ["rgb", "alpha"]),
     ],
 )
-def test_split_exr_image(
+def test_split_image(
     test_resource_provider, tmp_path: Path, image_name, expected_channel_names
 ):
     image_name_without_extension = os.path.splitext(image_name)[0]
@@ -56,3 +57,16 @@ def test_split_non_image_invalid_data(tmp_path: Path, extension):
         image_splitter.split_image_into_channels(
             str(file_with_invalid_data), str(tmp_path)
         )
+
+
+def test_split_image_with_spaces_in_path(tmp_path: Path, test_resource_provider):
+    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    test_image = test_resource_provider.resource_by_name(
+        os.path.join("sphere_test_images", "png_8_bit.png")
+    )
+    test_image_path_with_spaces = tmp_path / "test image.png"
+    shutil.copy(test_image, test_image_path_with_spaces)
+
+    image_splitter.split_image_into_channels(
+        str(test_image_path_with_spaces), str(tmp_path)
+    )

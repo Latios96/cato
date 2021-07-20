@@ -62,7 +62,7 @@ class ImageSplitter:
             target_image = os.path.join(
                 work_folder, f"{os.path.basename(name)}.{channel_name}.png"
             )
-            command = f'{self._oiio_binaries_discovery.get_oiiotool_executable()} "{image_path}" --ch {",".join(channels)} -o {target_image}'
+            command = f'{self._oiio_binaries_discovery.get_oiiotool_executable()} "{image_path}" --ch {",".join(channels)} -o "{target_image}"'
             logger.debug("Running command %s", command)
             status, output = subprocess.getstatusoutput(command)
             self._handle_command_error(command, status, output)
