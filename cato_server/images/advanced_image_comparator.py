@@ -60,14 +60,18 @@ class AdvancedImageComparator:
                 diff_image=None,
             )
 
+        output_image = self._normalize_image(output_image)
+        reference_image = self._normalize_image(reference_image)
+
         (score, diff) = metrics.structural_similarity(
             reference_image, output_image, full=True, multichannel=True
         )
         logger.debug("SSIM score: %s ", score)
-        diff = (diff * 255).astype("uint8")
+        diff = diff.astype("float32")
 
+        is_linear = os.path.splitext(output)[1] == ".exr"
         diff_image = self._create_diff_image(
-            output_image, diff, comparison_settings.threshold, workdir
+            output_image, diff, comparison_settings.threshold, workdir, is_linear
         )
 
         if score < comparison_settings.threshold:
@@ -87,14 +91,14 @@ class AdvancedImageComparator:
         diff: numpy.array,
         threshold: float,
         workdir: str,
+        is_linear: bool,
     ) -> str:
-        is_linear = output_image.dtype == "float32"
         diff_gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
-        diff_gray = ~diff_gray
 
-        int_threshold = 255 - int(threshold * 255)
         thresh = cv2.threshold(diff_gray.copy(), threshold, 1, cv2.THRESH_TOZERO)[1]
-        thresh = cv2.threshold(thresh, 0, 1, cv2.THRESH_BINARY | cv2.THRESH_OTSU)[1]
+        thresh = cv2.threshold(thresh, 0.0, 1, cv2.THRESH_BINARY_INV)[1]
+        thresh = thresh.astype("float32")
+        thresh *= 255
 
         black_channel = numpy.ones(thresh.shape, dtype=thresh.dtype)
         weighted_green = cv2.merge((black_channel, thresh, black_channel))
@@ -102,7 +106,6 @@ class AdvancedImageComparator:
             output_image = output_image.clip(0, 1)
             output_image = lin2srgb(output_image)
             output_image *= 255
-        output_image = output_image.astype("uint8")
         output_with_highlights = cv2.addWeighted(
             output_image, 1, cv2.merge((thresh, thresh, thresh)), -1, 0
         )
@@ -113,6 +116,17 @@ class AdvancedImageComparator:
         cv2.imwrite(target_path, output_with_highlights)
 
         return target_path
+
+    def _normalize_image(self, image):
+        if image.dtype == "uint8":
+            image = image.astype("float32")
+            return image
+        elif image.dtype == "uint16":
+            image = image.astype("float32")
+            image /= 255.0
+            return image
+        elif image.dtype == "float32":
+            return image
 
 
 def lin2srgb(x):
