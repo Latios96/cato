@@ -5,13 +5,17 @@ import uuid
 import cv2
 import numpy
 from skimage import metrics
-
+from PIL import Image, ImageOps
 from cato.domain.test_status import TestStatus
 from cato_server.domain.comparison_result import ComparisonResult
 from cato_server.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.resolution import Resolution
 
 logger = logging.getLogger(__name__)
+
+
+# todo image debugger
+# todo value type for converting 0-1 floating point to 8 bit etc
 
 
 class AdvancedImageComparator:
@@ -69,10 +73,9 @@ class AdvancedImageComparator:
         logger.debug("SSIM score: %s ", score)
         diff = diff.astype("float32")
 
-        is_linear = os.path.splitext(output)[1] == ".exr"
-        diff_image = self._create_diff_image(
-            output_image, diff, comparison_settings.threshold, workdir, is_linear
-        )
+        file_extension = os.path.splitext(output)[1]
+        is_linear = file_extension == ".exr"
+        diff_image = self._create_diff_image(output_image, diff, workdir, is_linear)
 
         if score < comparison_settings.threshold:
             return ComparisonResult(
@@ -89,32 +92,36 @@ class AdvancedImageComparator:
         self,
         output_image: numpy.array,
         diff: numpy.array,
-        threshold: float,
         workdir: str,
         is_linear: bool,
     ) -> str:
-        diff_gray = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        heatmap = cv2.cvtColor(diff, cv2.COLOR_BGR2GRAY)
+        heatmap = cv2.applyColorMap(
+            ~(heatmap.clip(0, 1) * 255).astype("uint8"), cv2.COLORMAP_WINTER
+        )
+        heatmap = Image.fromarray(cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB), mode="RGB")
 
-        thresh = cv2.threshold(diff_gray.copy(), threshold, 1, cv2.THRESH_TOZERO)[1]
-        thresh = cv2.threshold(thresh, 0.0, 1, cv2.THRESH_BINARY_INV)[1]
-        thresh = thresh.astype("float32")
-        thresh *= 255
+        diff = Image.fromarray(
+            (cv2.cvtColor(diff, cv2.COLOR_BGR2RGB).clip(0, 1) * 255).astype("uint8"),
+            mode="RGB",
+        )
 
-        black_channel = numpy.ones(thresh.shape, dtype=thresh.dtype)
-        weighted_green = cv2.merge((black_channel, thresh, black_channel))
+        output_image = output_image.clip(0, 1)
         if is_linear:
-            output_image = output_image.clip(0, 1)
             output_image = lin2srgb(output_image)
-            output_image *= 255
-        output_with_highlights = cv2.addWeighted(
-            output_image, 1, cv2.merge((thresh, thresh, thresh)), -1, 0
+        output_image *= 255
+        output_image = Image.fromarray(
+            cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB).astype("uint8"), mode="RGB"
         )
-        output_with_highlights = cv2.addWeighted(
-            output_with_highlights, 1, weighted_green, 1, 0
-        )
-        target_path = os.path.join(workdir, f"diff_image_{uuid.uuid4()}.png")
-        cv2.imwrite(target_path, output_with_highlights)
 
+        diff_image_as_luminance = diff.convert("L")
+        diff_image_as_luminance = ImageOps.invert(diff_image_as_luminance)
+        (diff_luminance,) = diff_image_as_luminance.split()
+        l_thresholded = diff_luminance.point(lambda p: 0 if p > 1 else 255)
+
+        composited_diff_image = Image.composite(output_image, heatmap, l_thresholded)
+        target_path = os.path.join(workdir, f"diff_{uuid.uuid4()}.png")
+        composited_diff_image.save(target_path)
         return target_path
 
     def _normalize_image(self, image):
