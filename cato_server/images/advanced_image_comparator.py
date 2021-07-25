@@ -14,10 +14,6 @@ from cato_server.domain.resolution import Resolution
 logger = logging.getLogger(__name__)
 
 
-# todo image debugger
-# todo value type for converting 0-1 floating point to 8 bit etc
-
-
 class AdvancedImageComparator:
     def compare(
         self,
@@ -127,10 +123,11 @@ class AdvancedImageComparator:
     def _normalize_image(self, image):
         if image.dtype == "uint8":
             image = image.astype("float32")
+            image /= 255.0
             return image
         elif image.dtype == "uint16":
             image = image.astype("float32")
-            image /= 255.0
+            image /= 65535
             return image
         elif image.dtype == "float32":
             return image
