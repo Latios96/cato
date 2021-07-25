@@ -28,12 +28,12 @@ class AdvancedImageComparator:
                 f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
             )
         logger.debug("Reading images")
-        output_image = cv2.imread(output, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+        output_image = self._read_image(output)
         if output_image is None:
             raise ValueError(
                 f"Could not read image from {output}, unsupported file format!"
             )
-        reference_image = cv2.imread(reference, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+        reference_image = self._read_image(reference)
         if reference_image is None:
             raise ValueError(
                 f"Could not read image from {reference}, unsupported file format!"
@@ -83,6 +83,15 @@ class AdvancedImageComparator:
         return ComparisonResult(
             status=TestStatus.SUCCESS, message=None, diff_image=diff_image
         )
+
+    def _read_image(self, image_path):
+        is_tiff = (
+            os.path.splitext(image_path)[1] == ".tif"
+            or os.path.splitext(image_path)[1] == ".tiff"
+        )
+        if is_tiff:
+            return cv2.imread(image_path, cv2.IMREAD_COLOR)
+        return cv2.imread(image_path, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
 
     def _create_diff_image(
         self,
