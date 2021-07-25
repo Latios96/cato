@@ -125,7 +125,7 @@ class AdvancedImageComparator:
         l_thresholded = diff_luminance.point(lambda p: 0 if p > 1 else 255)
 
         composited_diff_image = Image.composite(output_image, heatmap, l_thresholded)
-        target_path = os.path.join(workdir, f"diff_{uuid.uuid4()}.png")
+        target_path = os.path.join(workdir, f"diff_image_{uuid.uuid4()}.png")
         composited_diff_image.save(target_path)
         return target_path
 

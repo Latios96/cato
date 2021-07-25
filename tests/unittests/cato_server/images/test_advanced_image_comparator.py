@@ -3,6 +3,9 @@ import shutil
 import tempfile
 from unittest import mock
 
+import cv2
+from skimage import metrics
+
 import pytest
 from PIL import ImageChops
 from PIL import Image
@@ -53,8 +56,10 @@ def test_compare_image_should_fail_one_pixel_different(
 
     assert comparison_result == ComparisonResult(
         status=TestStatus.FAILED,
-        message="Images are not equal! ComparisonMethod.SSIM score was 0.994, max threshold is 1.000",
-        diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
+        message="Images are not equal! ComparisonMethod.SSIM score was 0.995, max threshold is 1.000",
+        diff_image=str(
+            tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png")
+        ),
     )
 
 
@@ -85,7 +90,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
 
     assert comparison_result == ComparisonResult(
         status=TestStatus.FAILED,
-        message="Images are not equal! ComparisonMethod.SSIM score was 0.885, max threshold is 1.000",
+        message="Images are not equal! ComparisonMethod.SSIM score was 0.891, max threshold is 1.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
     )
     assert images_are_equal(
@@ -183,3 +188,72 @@ def test_compare_image_should_fail_for_non_images(
             ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM),
             str(tmpdir),
         )
+
+
+@pytest.mark.parametrize(
+    "image_name,extension",
+    [
+        ("png_8_bit", ".png"),
+        ("png_16_bit", ".png"),
+        ("exr_singlechannel_16_bit", ".exr"),
+        ("exr_singlechannel_32_bit", ".exr"),
+        ("jpeg", ".jpg"),
+        ("tiff_8_bit", ".tif"),
+        ("tiff_16_bit", ".tif"),
+    ],
+)
+def test_compare_image_should_generate_diff_image_correctly(
+    image_name, extension, test_resource_provider, tmpdir
+):
+    reference_image = test_resource_provider.resource_by_name(
+        os.path.join("sphere_test_images", "reference", image_name + extension)
+    )
+    output_image = test_resource_provider.resource_by_name(
+        os.path.join("sphere_test_images", "output", image_name + extension)
+    )
+    image_comparator = AdvancedImageComparator()
+
+    comparison_result = image_comparator.compare(
+        reference_image,
+        output_image,
+        ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM),
+        str(tmpdir),
+    )
+
+    assert comparison_result.status == TestStatus.FAILED
+    assert comparison_result.message.startswith(
+        "Images are not equal! ComparisonMethod.SSIM score was "
+    )
+    expected_diff_image = test_resource_provider.resource_by_name(
+        os.path.join("sphere_test_images", "expected_diff", image_name + ".png")
+    )
+    assert images_are_visually_equal(
+        comparison_result.diff_image, expected_diff_image, 0.99
+    )
+
+
+def _normalize_image(image):
+    if image.dtype == "uint8":
+        image = image.astype("float32")
+        image /= 255.0
+        return image
+    elif image.dtype == "uint16":
+        image = image.astype("float32")
+        image /= 65535
+        return image
+    elif image.dtype == "float32":
+        return image
+
+
+def images_are_visually_equal(image1, image2, threshold):
+    image_one = _normalize_image(
+        cv2.imread(image1, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+    )
+    image_two = _normalize_image(
+        cv2.imread(image2, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+    )
+
+    (score, diff) = metrics.structural_similarity(
+        image_one, image_two, full=True, multichannel=True
+    )
+    return score > threshold
