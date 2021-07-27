@@ -90,8 +90,9 @@ class AdvancedImageComparator:
             or os.path.splitext(image_path)[1] == ".tiff"
         )
         if is_tiff:
-            return cv2.imread(image_path, cv2.IMREAD_COLOR)
-        return cv2.imread(image_path, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
+            image = cv2.imread(image_path, cv2.IMREAD_COLOR)
+            return cv2.cvtColor(image, cv2.COLOR_BGR2BGRA)
+        return cv2.imread(image_path, cv2.IMREAD_UNCHANGED | cv2.IMREAD_ANYDEPTH)
 
     def _create_diff_image(
         self,
@@ -104,11 +105,13 @@ class AdvancedImageComparator:
         heatmap = cv2.applyColorMap(
             ~(heatmap.clip(0, 1) * 255).astype("uint8"), cv2.COLORMAP_WINTER
         )
-        heatmap = Image.fromarray(cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGB), mode="RGB")
+        heatmap = Image.fromarray(
+            cv2.cvtColor(heatmap, cv2.COLOR_BGR2RGBA), mode="RGBA"
+        )
 
         diff = Image.fromarray(
-            (cv2.cvtColor(diff, cv2.COLOR_BGR2RGB).clip(0, 1) * 255).astype("uint8"),
-            mode="RGB",
+            (cv2.cvtColor(diff, cv2.COLOR_BGR2RGBA).clip(0, 1) * 255).astype("uint8"),
+            mode="RGBA",
         )
 
         output_image = output_image.clip(0, 1)
@@ -116,7 +119,7 @@ class AdvancedImageComparator:
             output_image = lin2srgb(output_image)
         output_image *= 255
         output_image = Image.fromarray(
-            cv2.cvtColor(output_image, cv2.COLOR_BGR2RGB).astype("uint8"), mode="RGB"
+            cv2.cvtColor(output_image, cv2.COLOR_BGR2RGBA).astype("uint8"), mode="RGBA"
         )
 
         diff_image_as_luminance = diff.convert("L")

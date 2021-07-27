@@ -90,7 +90,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
 
     assert comparison_result == ComparisonResult(
         status=TestStatus.FAILED,
-        message="Images are not equal! ComparisonMethod.SSIM score was 0.891, max threshold is 1.000",
+        message="Images are not equal! ComparisonMethod.SSIM score was 0.918, max threshold is 1.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
     )
     assert images_are_equal(
@@ -200,6 +200,7 @@ def test_compare_image_should_fail_for_non_images(
         ("jpeg", ".jpg"),
         ("tiff_8_bit", ".tif"),
         ("tiff_16_bit", ".tif"),
+        ("transparent_red_over_opaque_blue", ".png"),
     ],
 )
 def test_compare_image_should_generate_diff_image_correctly(
