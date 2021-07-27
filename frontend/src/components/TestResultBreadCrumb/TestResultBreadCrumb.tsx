@@ -1,5 +1,7 @@
 import React from "react";
-import { Breadcrumb } from "react-bootstrap";
+import { Breadcrumb, Button } from "react-bootstrap";
+import { Clipboard } from "react-bootstrap-icons";
+import styles from "../ImageComparison/ImageComparison.module.scss";
 
 interface Props {
   projectId: number;
@@ -24,7 +26,22 @@ const TestResultBreadCrumb = (props: Props) => {
           {props.suiteName}
         </Breadcrumb.Item>
         {props.testName ? (
-          <Breadcrumb.Item>{props.testName}</Breadcrumb.Item>
+          <>
+            <Breadcrumb.Item>{props.testName}</Breadcrumb.Item>
+            <Button
+              className={styles.buttonNoShadowOnFocus}
+              onClick={() => {
+                navigator.clipboard.writeText(
+                  `${props.suiteName}/${props.testName}`
+                );
+              }}
+              variant={"link"}
+              style={{ marginLeft: "auto", padding: "0px" }}
+              title={"Copy test identifier to clipboard"}
+            >
+              <Clipboard size={16} />
+            </Button>
+          </>
         ) : (
           <React.Fragment />
         )}
