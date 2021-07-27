@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Spinner } from "react-bootstrap";
-import styles from "./DiffImageDisplay.module.css";
+import styles from "./DiffImageDisplay.module.scss";
 
 interface Props {
   imageUrl: string;
@@ -26,6 +26,10 @@ function DiffImageDisplay(props: Props) {
       ) : (
         ""
       )}
+      <div className={styles.diffHighlightInformation}>
+        <div style={{}} /> <span>Minimal Error</span>
+        <div style={{}} /> <span>Maximal Error</span>
+      </div>
     </div>
   );
 }
