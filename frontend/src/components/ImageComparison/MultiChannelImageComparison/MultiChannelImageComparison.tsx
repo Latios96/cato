@@ -120,8 +120,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
             this.channelFileIdByName(referenceImage, this.state.selectedChannel)
           }
           diffImageUrl={
-            "/api/v1/files/" +
-            this.channelFileIdByName(diffImage, this.state.selectedChannel)
+            "/api/v1/files/" + this.channelFileIdByName(diffImage, "rgb")
           }
           width={
             imageOutputOrReferenceImage ? imageOutputOrReferenceImage.width : 0
