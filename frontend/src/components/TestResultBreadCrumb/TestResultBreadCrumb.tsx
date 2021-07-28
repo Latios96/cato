@@ -1,7 +1,6 @@
 import React from "react";
-import { Breadcrumb, Button } from "react-bootstrap";
-import { Clipboard } from "react-bootstrap-icons";
-import styles from "../ImageComparison/ImageComparison.module.scss";
+import { Breadcrumb } from "react-bootstrap";
+import CopyToClipboardButton from "../CopyToClipboardButton/CopyToClipboardButton";
 
 interface Props {
   projectId: number;
@@ -28,19 +27,12 @@ const TestResultBreadCrumb = (props: Props) => {
         {props.testName ? (
           <>
             <Breadcrumb.Item>{props.testName}</Breadcrumb.Item>
-            <Button
-              className={styles.buttonNoShadowOnFocus}
-              onClick={() => {
-                navigator.clipboard.writeText(
-                  `${props.suiteName}/${props.testName}`
-                );
-              }}
-              variant={"link"}
-              style={{ marginLeft: "auto", padding: "0px" }}
-              title={"Copy test identifier to clipboard"}
-            >
-              <Clipboard size={16} />
-            </Button>
+            <div style={{ marginLeft: "auto" }}>
+              <CopyToClipboardButton
+                tooltipText={"Copied test identifier"}
+                clipboardText={`${props.suiteName}/${props.testName}`}
+              />
+            </div>
           </>
         ) : (
           <React.Fragment />
