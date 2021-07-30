@@ -2,6 +2,7 @@ from typing import Dict
 
 import attr
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.validation import validate_name
 
 
@@ -10,6 +11,7 @@ class Test:
     name: str = attr.ib()
     command: str = attr.ib()
     variables: Dict[str, str] = attr.ib()
+    comparison_settings: ComparisonSettings = attr.ib()
 
     def to_dict(self):
         return {"name": self.name, "command": self.command}

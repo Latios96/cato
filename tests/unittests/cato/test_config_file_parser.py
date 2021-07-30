@@ -6,6 +6,8 @@ import pytest
 from jsonschema import ValidationError
 
 from cato.config.config_file_parser import JsonConfigParser
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -40,6 +42,7 @@ EXPECTED_VALID_CONFIG = Config(
                     name="My_first_test",
                     command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                     variables={},
+                    comparison_settings=ComparisonSettings.default(),
                 )
             ],
         )
@@ -80,6 +83,37 @@ VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
     "variables": {"my_var": "from_config"},
 }
 
+VALID_CONFIG_NO_COMPARISON_SETTINGS = {
+    "project_name": EXAMPLE_PROJECT,
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                }
+            ],
+        }
+    ],
+}
+
+VALID_CONFIG_WITH_COMPARISON_SETTINGS = {
+    "project_name": EXAMPLE_PROJECT,
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    "comparison_settings": {"method": "SSIM", "threshold": 0.2},
+                }
+            ],
+        }
+    ],
+}
+
 INVALID_CONFIG = {
     "suite": {
         "name": "My_first_test_Suite",
@@ -90,6 +124,38 @@ INVALID_CONFIG = {
             }
         ],
     }
+}
+
+INVALID_COMPARISON_METHOD = {
+    "project_name": EXAMPLE_PROJECT,
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    "comparison_settings": {"method": "INVALID", "threshold": 0.1},
+                }
+            ],
+        }
+    ],
+}
+
+INVALID_COMPARISON_THRESHOLD = {
+    "project_name": EXAMPLE_PROJECT,
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    "comparison_settings": {"method": "SSIM", "threshold": "0.1"},
+                }
+            ],
+        }
+    ],
 }
 
 
@@ -118,6 +184,7 @@ def test_success_with_variables():
                         name="My_first_test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                         variables={"frame": "7"},
+                        comparison_settings=ComparisonSettings.default(),
                     )
                 ],
             )
@@ -143,6 +210,7 @@ def test_success_with_variables_in_config_and_suite():
                         name="My_first_test",
                         command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                         variables={"frame": "7"},
+                        comparison_settings=ComparisonSettings.default(),
                     )
                 ],
                 variables={"my_var": "from_suite"},
@@ -172,3 +240,37 @@ def test_failure_parse_dict():
 
     with pytest.raises(ValidationError):
         json_config_parser.parse_dict(INVALID_CONFIG)
+
+
+def test_parse_invalid_comparison_method():
+    json_config_parser = JsonConfigParser()
+
+    with pytest.raises(ValidationError):
+        json_config_parser.parse_dict(INVALID_COMPARISON_METHOD)
+
+
+def test_parse_invalid_comparison_threshold():
+    json_config_parser = JsonConfigParser()
+
+    with pytest.raises(ValidationError):
+        json_config_parser.parse_dict(INVALID_COMPARISON_THRESHOLD)
+
+
+def test_parse_no_comparison_settings():
+    json_config_parser = JsonConfigParser()
+
+    config = json_config_parser.parse_dict(VALID_CONFIG_NO_COMPARISON_SETTINGS)
+
+    test = config.test_suites[0].tests[0]
+    assert test.comparison_settings == ComparisonSettings.default()
+
+
+def test_parse_use_defined_comparison_settings():
+    json_config_parser = JsonConfigParser()
+
+    config = json_config_parser.parse_dict(VALID_CONFIG_WITH_COMPARISON_SETTINGS)
+
+    test = config.test_suites[0].tests[0]
+    assert test.comparison_settings == ComparisonSettings(
+        method=ComparisonMethod.SSIM, threshold=0.2
+    )

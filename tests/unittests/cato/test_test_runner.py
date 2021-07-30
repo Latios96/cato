@@ -1,6 +1,7 @@
 import time
 from unittest import mock
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
@@ -57,7 +58,12 @@ class TestTestRunner:
             self.test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         test_suite = TestSuite(name="suite", tests=[])
 
         test_runner.run_test(
@@ -94,6 +100,7 @@ class TestTestRunner:
             name="my_first_test",
             command="crayg -s {test_resources}/test.json -o {image_output_png}",
             variables={},
+            comparison_settings=ComparisonSettings.default(),
         )
 
         test_runner.run_test(
@@ -122,7 +129,12 @@ class TestTestRunner:
             self.test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -149,7 +161,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
         result = test_runner.run_test(
@@ -183,7 +200,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 1, [])
 
         result = test_runner.run_test(
@@ -217,7 +239,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
         result = test_runner.run_test(
@@ -258,7 +285,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
         result = test_runner.run_test(
@@ -299,7 +331,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
         result = test_runner.run_test(
@@ -341,7 +378,12 @@ class TestTestRunner:
             test_execution_reporter,
             self.mock_cato_api_client,
         )
-        test = Test(name="my_first_test", command="dummy_command", variables={})
+        test = Test(
+            name="my_first_test",
+            command="dummy_command",
+            variables={},
+            comparison_settings=ComparisonSettings.default(),
+        )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
         result = test_runner.run_test(

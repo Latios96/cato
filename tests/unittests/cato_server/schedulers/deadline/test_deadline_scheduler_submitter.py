@@ -1,3 +1,4 @@
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
@@ -53,6 +54,7 @@ class TestDeadlineSchedulerSubmitter:
                 name="AnotherTest",
                 command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                 variables={"frame": "7"},
+                comparison_settings=ComparisonSettings.default(),
             )
         )
         submission_info = SubmissionInfo(

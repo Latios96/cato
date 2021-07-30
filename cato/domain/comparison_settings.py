@@ -7,3 +7,7 @@ from cato.domain.comparison_method import ComparisonMethod
 class ComparisonSettings:
     method: ComparisonMethod
     threshold: float
+
+    @staticmethod
+    def default():
+        return ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8)

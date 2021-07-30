@@ -4,6 +4,7 @@ import sys
 import pytest
 
 from cato.config.config_file_writer import ConfigFileWriter
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -20,6 +21,7 @@ def run_config(tmp_path, test_resource_provider):
                 "test_image_black.png"
             )
         },
+        comparison_settings=ComparisonSettings.default(),
     )
     python_test_suite = TestSuite(
         name="PythonTestSuite",

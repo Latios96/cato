@@ -2,6 +2,7 @@ import datetime
 
 import pytest
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -31,7 +32,14 @@ from cato_api_models.catoapimodels import (
 SUITES = [
     TestSuite(
         name="my_suite",
-        tests=[Test(name="my_test", command="my_command", variables={})],
+        tests=[
+            Test(
+                name="my_test",
+                command="my_command",
+                variables={},
+                comparison_settings=ComparisonSettings.default(),
+            )
+        ],
         variables={},
     )
 ]

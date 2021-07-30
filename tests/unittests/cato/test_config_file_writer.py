@@ -3,13 +3,14 @@ from io import StringIO
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 
-test1 = Test("test1", "command", {"key": "value"})
-test2 = Test("test2", "command", {})
-test3 = Test("test3", "command", {})
+test1 = Test("test1", "command", {"key": "value"}, ComparisonSettings.default())
+test2 = Test("test2", "command", {}, ComparisonSettings.default())
+test3 = Test("test3", "command", {}, ComparisonSettings.default())
 suite1 = TestSuite(name="my_suite_1", tests=[test1])
 suite2 = TestSuite(name="my_suite_2", tests=[test2, test3])
 

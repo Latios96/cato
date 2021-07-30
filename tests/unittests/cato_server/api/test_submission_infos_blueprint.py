@@ -18,6 +18,7 @@ def test_should_existing_get_submission_info(client, submission_info):
                             "{image_output}/{test_name.png}",
                             "name": "My_first_test",
                             "variables": {"frame": "7"},
+                            "comparison_settings": {"method": "SSIM", "threshold": 0.8},
                         }
                     ],
                     "variables": {"my_var": "from_suite"},

@@ -4,6 +4,8 @@ from typing import IO, List, Dict
 
 from jsonschema import validate
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -55,11 +57,22 @@ class JsonConfigParser:
     def _transform_test(self, suite: Dict) -> List[Test]:
         tests = []
         for test in suite["tests"]:
+            comparison_settings = self._read_comparison_settings(test)
             tests.append(
                 Test(
                     name=test["name"],
                     command=test["command"],
                     variables=test["variables"] if test.get("variables") else {},
+                    comparison_settings=comparison_settings,
                 )
             )
         return tests
+
+    def _read_comparison_settings(self, test):
+        comparison_settings_dict = test.get("comparison_settings")
+        if comparison_settings_dict:
+            return ComparisonSettings(
+                method=ComparisonMethod(comparison_settings_dict["method"]),
+                threshold=comparison_settings_dict["threshold"],
+            )
+        return ComparisonSettings.default()

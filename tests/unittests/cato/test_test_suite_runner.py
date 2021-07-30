@@ -2,6 +2,7 @@ import datetime
 
 import pytest
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
@@ -55,7 +56,12 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
         mock_execution_reporter,
         lambda x: mock_last_run_information_repository,
     )
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
@@ -84,7 +90,12 @@ def test_run_suite_should_return_correctly_collected_results():
         mock_execution_reporter,
         lambda x: mock_last_run_information_repository,
     )
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,

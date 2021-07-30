@@ -4,6 +4,7 @@ from unittest.mock import call
 
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.config.config_file_parser import JsonConfigParser
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -13,6 +14,7 @@ TEST = Test(
     name="My_first_test",
     command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
     variables={"frame": "7"},
+    comparison_settings=ComparisonSettings.default(),
 )
 TEST_SUITE = TestSuite(
     name="My_first_test_Suite",

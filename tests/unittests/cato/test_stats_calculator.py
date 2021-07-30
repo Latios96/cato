@@ -1,5 +1,6 @@
 import datetime
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -11,7 +12,12 @@ MESSAGE = "this is a message"
 
 
 def test_calculates_succeded_correctly():
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     execution_result = TestExecutionResult(
         test,
@@ -36,7 +42,12 @@ def test_calculates_succeded_correctly():
 
 
 def test_calculates_failed_correctly():
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     execution_result1 = TestExecutionResult(
         test,

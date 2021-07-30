@@ -1,3 +1,4 @@
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -24,7 +25,12 @@ def test_evaluate_variables_no_custom_vars():
         output_folder="test",
     )
     suite = TestSuite(name="my_test_suite", tests=[])
-    test = Test("test_name", "test_command", variables={})
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(config, suite, test)
@@ -62,6 +68,7 @@ def test_evaluate_variables_custom_image_output():
             "frame": "7",
             "image_output_png": "{@image_output_folder}/test_name{@frame}.png",
         },
+        comparison_settings=ComparisonSettings.default(),
     )
     variable_processor = VariableProcessor()
 
@@ -108,7 +115,12 @@ def test_evaluate_variables_variables_from_config():
         variables={"test_variable": "my_value"},
     )
     suite = TestSuite(name="my_test_suite", tests=[])
-    test = Test("test_name", "test_command", variables={})
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(config, suite, test)
@@ -142,7 +154,12 @@ def test_evaluate_variables_variables_from_suite():
     suite = TestSuite(
         name="my_test_suite", tests=[], variables={"test_variable": "my_value"}
     )
-    test = Test("test_name", "test_command", variables={})
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(config, suite, test)
@@ -179,7 +196,12 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         tests=[],
         variables={"test_variable": "my_value_from_suite"},
     )
-    test = Test("test_name", "test_command", variables={})
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     variable_processor = VariableProcessor()
 
     variables = variable_processor.evaluate_variables(config, suite, test)
@@ -217,7 +239,10 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         variables={"test_variable": "my_value_from_suite"},
     )
     test = Test(
-        "test_name", "test_command", variables={"test_variable": "my_value_from_test"}
+        "test_name",
+        "test_command",
+        variables={"test_variable": "my_value_from_test"},
+        comparison_settings=ComparisonSettings.default(),
     )
     variable_processor = VariableProcessor()
 
@@ -256,7 +281,10 @@ def test_evaluate_variables_maya_predefinition():
         variables={"test_variable": "my_value_from_suite"},
     )
     test = Test(
-        "test_name", "test_command", variables={"test_variable": "my_value_from_test"}
+        "test_name",
+        "test_command",
+        variables={"test_variable": "my_value_from_test"},
+        comparison_settings=ComparisonSettings.default(),
     )
     variable_processor = VariableProcessor()
 

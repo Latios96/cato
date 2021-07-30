@@ -1,5 +1,6 @@
 import datetime
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -11,8 +12,8 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 def test_generate():
     generator = TimingReportGenerator()
 
-    test = Test("my_test", "cmd", {})
-    test2 = Test("my_test", "cmd", {})
+    test = Test("my_test", "cmd", {}, comparison_settings=ComparisonSettings.default())
+    test2 = Test("my_test", "cmd", {}, comparison_settings=ComparisonSettings.default())
     report = generator.generate(
         [
             TestSuiteExecutionResult(

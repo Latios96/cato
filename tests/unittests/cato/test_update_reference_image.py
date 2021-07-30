@@ -1,5 +1,6 @@
 from unittest import mock
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
@@ -17,7 +18,12 @@ def test_should_update():
     output_folder = mock_safe(OutputFolder)
     output_folder.any_existing.return_value = EXISTS_PNG
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
@@ -38,7 +44,12 @@ def test_should_not_update_because_image_output_missing():
     output_folder = mock_safe(OutputFolder)
     output_folder.any_existing.return_value = None
     missing_reference_images = UpdateReferenceImage(output_folder, copy_file=mock_copy)
-    test = Test(name="my_first_test", command="dummy_command", variables={})
+    test = Test(
+        name="my_first_test",
+        command="dummy_command",
+        variables={},
+        comparison_settings=ComparisonSettings.default(),
+    )
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
@@ -64,6 +75,7 @@ def test_user_supplied_paths_are_checked():
             "image_output": "user_supplied_image_output.png",
             "reference_image": "user_supplied_reference_image.png",
         },
+        comparison_settings=ComparisonSettings.default(),
     )
     test_suite = TestSuite(name="example", tests=[test])
     config = RunConfig(

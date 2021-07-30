@@ -15,6 +15,7 @@ from starlette.testclient import TestClient
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
@@ -419,6 +420,7 @@ class ConfigFixture:
             name="My_first_test",
             command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
             variables={"frame": "7"},
+            comparison_settings=ComparisonSettings.default(),
         )
         self.TEST_SUITE = TestSuite(
             name="My_first_test_Suite",

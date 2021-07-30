@@ -56,7 +56,7 @@ def test_compare_image_should_fail_one_pixel_different(
 
     assert comparison_result == ComparisonResult(
         status=TestStatus.FAILED,
-        message="Images are not equal! ComparisonMethod.SSIM score was 0.995, max threshold is 1.000",
+        message="Images are not equal! SSIM score was 0.995, max threshold is 1.000",
         diff_image=str(
             tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png")
         ),
@@ -90,7 +90,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
 
     assert comparison_result == ComparisonResult(
         status=TestStatus.FAILED,
-        message="Images are not equal! ComparisonMethod.SSIM score was 0.918, max threshold is 1.000",
+        message="Images are not equal! SSIM score was 0.918, max threshold is 1.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
     )
     assert images_are_equal(
@@ -222,9 +222,7 @@ def test_compare_image_should_generate_diff_image_correctly(
     )
 
     assert comparison_result.status == TestStatus.FAILED
-    assert comparison_result.message.startswith(
-        "Images are not equal! ComparisonMethod.SSIM score was "
-    )
+    assert comparison_result.message.startswith("Images are not equal! SSIM score was ")
     expected_diff_image = test_resource_provider.resource_by_name(
         os.path.join("sphere_test_images", "expected_diff", image_name + ".png")
     )

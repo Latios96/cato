@@ -1,5 +1,6 @@
 import pytest
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import (
@@ -12,9 +13,9 @@ from cato.domain.test_suite import (
     filter_by_test_identifiers,
 )
 
-test1 = Test("test1", "command", {})
-test2 = Test("test2", "command", {})
-test3 = Test("test3", "command", {})
+test1 = Test("test1", "command", {}, ComparisonSettings.default())
+test2 = Test("test2", "command", {}, ComparisonSettings.default())
+test3 = Test("test3", "command", {}, ComparisonSettings.default())
 suite1 = TestSuite(name="my_suite_1", tests=[test1])
 suite2 = TestSuite(name="my_suite_2", tests=[test2, test3])
 
