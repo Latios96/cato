@@ -7,8 +7,8 @@ import numpy
 from skimage import metrics
 from PIL import Image, ImageOps
 from cato.domain.test_status import TestStatus
-from cato_server.domain.comparison_result import ComparisonResult
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_result import ComparisonResult
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.resolution import Resolution
 
 logger = logging.getLogger(__name__)

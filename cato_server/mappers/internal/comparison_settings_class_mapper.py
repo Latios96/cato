@@ -1,6 +1,6 @@
 from typing import Dict
 
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.internal.comparison_method_value_mapper import (
     ComparisonMethodValueMapper,

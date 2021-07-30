@@ -16,7 +16,7 @@ from cato_api_models.catoapimodels import (
     ApiSuccess,
     StartTestResultDto,
 )
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.file import File
 from cato_server.domain.image import Image
 from cato_server.domain.output import Output

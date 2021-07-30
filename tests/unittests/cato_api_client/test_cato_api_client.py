@@ -4,8 +4,8 @@ import os
 import pytest
 from requests.models import Response
 
-from cato_server.domain.comparison_method import ComparisonMethod
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.image import Image, ImageChannel
 from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output

@@ -15,8 +15,8 @@ from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.comparison_method import ComparisonMethod
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.test_identifier import TestIdentifier
 
 

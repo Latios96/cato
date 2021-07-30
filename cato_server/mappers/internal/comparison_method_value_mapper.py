@@ -1,6 +1,6 @@
 from typing import Optional
 
-from cato_server.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_method import ComparisonMethod
 from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
 
 

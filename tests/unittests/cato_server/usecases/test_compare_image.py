@@ -1,9 +1,9 @@
 from io import BytesIO
 
 from cato.domain.test_status import TestStatus
-from cato_server.domain.comparison_method import ComparisonMethod
-from cato_server.domain.comparison_result import ComparisonResult
-from cato_server.domain.comparison_settings import ComparisonSettings
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_result import ComparisonResult
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator
 from cato_server.images.store_image import StoreImage
