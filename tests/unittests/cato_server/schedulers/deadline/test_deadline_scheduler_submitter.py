@@ -1,4 +1,3 @@
-from cato.config.config_encoder import ConfigEncoder
 from cato.domain.test import Test
 from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi

@@ -1,14 +1,9 @@
 import datetime
 import logging
-import os
-from unittest import mock
 
 import pytest
 
 from cato.commands.worker_run_command import WorkerRunCommand
-from cato.config.config_encoder import ConfigEncoder
-from cato.config.config_file_parser import JsonConfigParser
-from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.reporter.reporter import Reporter
