@@ -15,8 +15,6 @@ from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.test_identifier import TestIdentifier
 
 
@@ -170,7 +168,7 @@ class TestRunner:
             image_compare_result = self._cato_api_client.compare_images(
                 reference_image,
                 image_output,
-                ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8),
+                test.comparison_settings,
             )
 
             if image_compare_result.status == TestStatus.FAILED:

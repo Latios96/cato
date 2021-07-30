@@ -1,6 +1,8 @@
 import time
 from unittest import mock
+from unittest.mock import ANY
 
+from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
@@ -152,6 +154,7 @@ class TestTestRunner:
     def test_should_have_succeded_with_exit_code_0(
         self,
     ):
+        comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
         self.output_folder.image_output_exists.return_value = True
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -165,7 +168,7 @@ class TestTestRunner:
             name="my_first_test",
             command="dummy_command",
             variables={},
-            comparison_settings=ComparisonSettings.default(),
+            comparison_settings=comparison_settings,
         )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
@@ -185,7 +188,9 @@ class TestTestRunner:
         assert result.reference_image == 1
         assert result.diff_image == 3
         self.mock_cato_api_client.upload_image.assert_not_called()
-        self.mock_cato_api_client.compare_images.assert_called_once()
+        self.mock_cato_api_client.compare_images.assert_called_with(
+            ANY, ANY, comparison_settings
+        )
 
     def test_should_have_failed_with_exit_code_0(
         self,
@@ -224,6 +229,7 @@ class TestTestRunner:
     def test_should_have_failed_with_images_not_equal(
         self,
     ):
+        comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
         self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
             status=TestStatus.FAILED,
             message="Images are not equal!",
@@ -243,7 +249,7 @@ class TestTestRunner:
             name="my_first_test",
             command="dummy_command",
             variables={},
-            comparison_settings=ComparisonSettings.default(),
+            comparison_settings=comparison_settings,
         )
         self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
 
@@ -264,7 +270,9 @@ class TestTestRunner:
         assert result.reference_image == 2
         assert result.diff_image == 3
         self.mock_cato_api_client.upload_image.assert_not_called()
-        self.mock_cato_api_client.compare_images.assert_called_once()
+        self.mock_cato_api_client.compare_images.assert_called_with(
+            ANY, ANY, comparison_settings
+        )
 
     def test_should_have_failed_with_missing_reference_image(
         self,
