@@ -44,21 +44,25 @@ class MapperRegistryFactory:
     def create_mapper_registry(self) -> MapperRegistry:
         mapper_registry = MapperRegistry()
 
-        mapper_registry.register_mapper(Project, ProjectClassMapper())
-        mapper_registry.register_mapper(ImageChannel, ImageChannelClassMapper())
-        mapper_registry.register_mapper(Image, ImageClassMapper())
-        mapper_registry.register_mapper(File, FileClassMapper())
-        mapper_registry.register_mapper(MachineInfo, MachineInfoClassMapper())
-        mapper_registry.register_mapper(Output, OutputClassMapper())
-        mapper_registry.register_mapper(Run, RunClassMapper())
-        mapper_registry.register_mapper(SuiteResult, SuiteResultClassMapper())
-        mapper_registry.register_mapper(TestResult, TestResultClassMapper())
-        mapper_registry.register_mapper(TestIdentifier, TestIdentifierClassMapper())
-        mapper_registry.register_mapper(SubmissionInfo, SubmissionInfoClassMapper())
-        mapper_registry.register_mapper(
+        mapper_registry.register_class_mapper(Project, ProjectClassMapper())
+        mapper_registry.register_class_mapper(ImageChannel, ImageChannelClassMapper())
+        mapper_registry.register_class_mapper(Image, ImageClassMapper())
+        mapper_registry.register_class_mapper(File, FileClassMapper())
+        mapper_registry.register_class_mapper(MachineInfo, MachineInfoClassMapper())
+        mapper_registry.register_class_mapper(Output, OutputClassMapper())
+        mapper_registry.register_class_mapper(Run, RunClassMapper())
+        mapper_registry.register_class_mapper(SuiteResult, SuiteResultClassMapper())
+        mapper_registry.register_class_mapper(TestResult, TestResultClassMapper())
+        mapper_registry.register_class_mapper(
+            TestIdentifier, TestIdentifierClassMapper()
+        )
+        mapper_registry.register_class_mapper(
+            SubmissionInfo, SubmissionInfoClassMapper()
+        )
+        mapper_registry.register_class_mapper(
             ComparisonSettings, ComparisonSettingsClassMapper()
         )
-        mapper_registry.register_mapper(
+        mapper_registry.register_class_mapper(
             CompareImageResult, CompareImageResultClassMapper()
         )
 
