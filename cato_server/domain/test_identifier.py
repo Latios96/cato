@@ -1,10 +1,14 @@
-import attr
+from dataclasses import dataclass
 
 
-@attr.s
+@dataclass
 class TestIdentifier:
-    suite_name: str = attr.ib()
-    test_name: str = attr.ib()
+    suite_name: str
+    test_name: str
+
+    def __post_init__(self):
+        self._validate_test_identifier_part("suite name", self.suite_name)
+        self._validate_test_identifier_part("test_name", self.test_name)
 
     @staticmethod
     def from_string(string):
@@ -19,14 +23,6 @@ class TestIdentifier:
         return f"{self.suite_name}/{self.test_name}"
 
     __test__ = False
-
-    @suite_name.validator
-    def _check_suite_name(self, attribute, value):
-        self._validate_test_identifier_part("suite name", value)
-
-    @test_name.validator
-    def _check_test_name(self, attribute, value):
-        self._validate_test_identifier_part("suite name", value)
 
     def _validate_test_identifier_part(self, part, value):
         if "/" in value:

@@ -1,23 +1,19 @@
+from dataclasses import dataclass
 from typing import TypeVar, Generic, List
-
-import attr
 
 T = TypeVar("T")
 
 
-@attr.s
+@dataclass
 class PageRequest:
-    page_number: int = attr.ib()
-    page_size: int = attr.ib()
+    page_number: int
+    page_size: int
 
-    @page_number.validator
-    def validate_page_number(self, attribute, value):
-        if value < 1:
+    def __post_init__(self):
+        if self.page_number < 1:
             raise ValueError("page_number can not be less than 1.")
 
-    @page_size.validator
-    def validate_page_size(self, attribute, value):
-        if value < 0:
+        if self.page_size < 0:
             raise ValueError("page_size can not be less than 0.")
 
     @staticmethod
@@ -30,27 +26,20 @@ class PageRequest:
         return self.page_size * (self.page_number - 1)
 
 
-@attr.s
+@dataclass
 class Page(Generic[T]):
-    page_number: int = attr.ib()
-    page_size: int = attr.ib()
-    total_entity_count: int = attr.ib()
-    entities: List[T] = attr.ib()
+    page_number: int
+    page_size: int
+    total_entity_count: int
+    entities: List[T]
 
-    @page_number.validator
-    def validate_page_number(self, attribute, value):
-        if value < 1:
+    def __post_init__(self):
+        if self.page_number < 1:
             raise ValueError("page_number can not be less than 1.")
-
-    @page_size.validator
-    def validate_page_size(self, attribute, value):
-        if value < 0:
+        if self.page_size < 0:
             raise ValueError("page_size can not be less than 0.")
-
-    @total_entity_count.validator
-    def validate_total_entity_count(self, attribute, value):
-        if value < 0:
-            raise ValueError("total_pages can not be less than 0.")
+        if self.total_entity_count < 0:
+            raise ValueError("total_entity_count can not be less than 0.")
 
     @staticmethod
     def from_page_request(page_request, total_entity_count, entities):

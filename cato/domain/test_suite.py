@@ -1,24 +1,22 @@
+from dataclasses import dataclass, field
 from typing import List, Iterable, Tuple, Dict
 
-import attr
-
 from cato.domain.test import Test
-from cato_server.domain.test_identifier import TestIdentifier
 from cato.domain.validation import validate_name
+from cato_server.domain.test_identifier import TestIdentifier
 
 
-@attr.s
+@dataclass
 class TestSuite:
-    name: str = attr.ib()
-    tests: List[Test] = attr.ib()
-    variables: Dict[str, str] = attr.ib(factory=dict)
+    name: str
+    tests: List[Test]
+    variables: Dict[str, str] = field(default_factory=dict)
+
+    def __post_init__(self):
+        validate_name(self.name)
 
     def to_dict(self):
         return {"name": self.name, "tests": [x.to_dict() for x in self.tests]}
-
-    @name.validator
-    def check(self, attribute, value):
-        validate_name(value)
 
     __test__ = False
 

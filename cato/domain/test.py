@@ -1,23 +1,21 @@
+from dataclasses import dataclass
 from typing import Dict
-
-import attr
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.validation import validate_name
 
 
-@attr.s
+@dataclass
 class Test:
-    name: str = attr.ib()
-    command: str = attr.ib()
-    variables: Dict[str, str] = attr.ib()
-    comparison_settings: ComparisonSettings = attr.ib()
+    name: str
+    command: str
+    variables: Dict[str, str]
+    comparison_settings: ComparisonSettings
+
+    def __post_init__(self):
+        validate_name(self.name)
 
     def to_dict(self):
         return {"name": self.name, "command": self.command}
-
-    @name.validator
-    def check(self, attribute, value):
-        validate_name(value)
 
     __test__ = False

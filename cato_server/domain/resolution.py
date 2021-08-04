@@ -1,19 +1,15 @@
-import attr
+from dataclasses import dataclass
 
 
-@attr.s
+@dataclass
 class Resolution:
-    width: int = attr.ib(validator=attr.validators.instance_of(int))
-    height: int = attr.ib(validator=attr.validators.instance_of(int))
+    width: int
+    height: int
 
-    @width.validator
-    def _validate_width(self, attribute, value):
-        if value < 0:
+    def __post_init__(self):
+        if self.width < 0:
             raise ValueError("Width can not be smaller than 0!")
-
-    @height.validator
-    def _validate_height(self, attribute, value):
-        if value < 0:
+        if self.height < 0:
             raise ValueError("Height can not be smaller than 0!")
 
     def __str__(self):
