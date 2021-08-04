@@ -1,0 +1,11 @@
+conjure_python_client
+scikit-image
+cycler
+kiwisolver
+pytz
+pandas
+scipy
+imageio
+networkx
+tifffile
+pywavelets

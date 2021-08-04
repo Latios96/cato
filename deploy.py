@@ -44,7 +44,7 @@ def main():
             pip_path,
             "install",
             "-r",
-            os.path.join(os.path.dirname(__file__), "oiio-requirements.txt"),
+            os.path.join(os.path.dirname(__file__), "requirements.txt"),
         ]
     )
 
