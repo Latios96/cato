@@ -48,11 +48,11 @@ class SubmitCommand(RunCommandInterface):
             path, suite_name, test_identifier_str, only_failed
         )
 
-        if not config.test_suites:
+        if not config.suites:
             raise ValueError("At least one TestSuite is required!")
 
         self._test_execution_reporter.start_execution(
-            config.project_name, config.test_suites
+            config.project_name, config.suites
         )
 
         submission_info = SubmissionInfo(

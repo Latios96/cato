@@ -1,5 +1,6 @@
 import datetime
 from dataclasses import dataclass
+from enum import Enum
 from typing import List, Dict, Optional
 
 import pytest
@@ -63,6 +64,15 @@ class DataClassWithNestedOptionalClass:
 class DataClassWithOptionalNestedClass:
     my_string: str
     my_nested_class: Optional[NestedClass]
+
+
+class MyEnum(Enum):
+    VALUE = "VALUE"
+
+
+@dataclass
+class DataClassWithEnum:
+    enum_value: MyEnum
 
 
 class TestMapToDict:
@@ -156,6 +166,13 @@ class TestMapToDict:
         )
 
         assert result == {"success": True}
+
+    def test_map_enum(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            DataClassWithEnum(enum_value=MyEnum.VALUE)
+        )
+
+        assert result == {"enum_value": "VALUE"}
 
 
 class TestMapFromDict:
@@ -420,3 +437,21 @@ class TestMapFromDict:
         )
 
         assert result == ApiSuccess(success=True)
+
+    def test_map_enum(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {"enum_value": "VALUE"}, DataClassWithEnum
+        )
+
+        assert result == DataClassWithEnum(enum_value=MyEnum.VALUE)
+
+    def test_default_non_optional_int_to_0(self):
+        @dataclass
+        class DataClassWithOptionalInt:
+            my_optional_int: int
+
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {}, DataClassWithOptionalInt
+        )
+
+        assert result == DataClassWithOptionalInt(my_optional_int=0)

@@ -1,11 +1,8 @@
 from cato_server.domain.image import ImageChannel, Image
-from cato_server.mappers.internal.image_class_mapper import ImageClassMapper
 
 
-def test_from_dict_with_id():
-    mapper = ImageClassMapper()
-
-    result = mapper.map_from_dict(
+def test_from_dict_with_id(object_mapper):
+    result = object_mapper.from_dict(
         {
             "id": 1,
             "name": "test.exr",
@@ -13,7 +10,8 @@ def test_from_dict_with_id():
             "channels": [{"id": 1, "image_id": 2, "name": "rgb", "file_id": 3}],
             "width": 100,
             "height": 100,
-        }
+        },
+        Image,
     )
 
     assert result == Image(
@@ -26,10 +24,8 @@ def test_from_dict_with_id():
     )
 
 
-def test_to_dict():
-    mapper = ImageClassMapper()
-
-    result = mapper.map_to_dict(
+def test_to_dict(object_mapper):
+    result = object_mapper.to_dict(
         Image(
             id=1,
             name="test.exr",

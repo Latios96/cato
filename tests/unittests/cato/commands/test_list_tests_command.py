@@ -23,7 +23,7 @@ TEST_SUITE = TestSuite(
 )
 CONFIG = Config(
     project_name="EXAMPLE_PROJECT",
-    test_suites=[TEST_SUITE],
+    suites=[TEST_SUITE],
     variables={"my_var": "from_config"},
 )
 

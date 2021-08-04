@@ -28,7 +28,7 @@ def test_should_update():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="",
-        test_suites=[test_suite],
+        suites=[test_suite],
         output_folder="output",
     )
 
@@ -54,7 +54,7 @@ def test_should_not_update_because_image_output_missing():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="",
-        test_suites=[test_suite],
+        suites=[test_suite],
         output_folder="output",
     )
 
@@ -81,7 +81,7 @@ def test_user_supplied_paths_are_checked():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="",
-        test_suites=[test_suite],
+        suites=[test_suite],
         output_folder="output",
     )
 

@@ -6,7 +6,7 @@ class TestConfig:
         assert config_fixture.CONFIG.suite_count == 1
 
     def test_correct_suite_count_multiple_suites(self, config_fixture):
-        config_fixture.CONFIG.test_suites.extend(config_fixture.CONFIG.test_suites)
+        config_fixture.CONFIG.suites.extend(config_fixture.CONFIG.suites)
 
         assert config_fixture.CONFIG.suite_count == 2
 
@@ -14,8 +14,8 @@ class TestConfig:
         assert config_fixture.CONFIG.test_count == 1
 
     def test_correct_test_count_multiple_tests(self, config_fixture):
-        config_fixture.CONFIG.test_suites[0].tests.extend(
-            config_fixture.CONFIG.test_suites[0].tests
+        config_fixture.CONFIG.suites[0].tests.extend(
+            config_fixture.CONFIG.suites[0].tests
         )
 
         assert config_fixture.CONFIG.test_count == 2

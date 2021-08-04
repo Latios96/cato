@@ -27,3 +27,7 @@ class TestResult:
     started_at: Optional[datetime.datetime] = None
     finished_at: Optional[datetime.datetime] = None
     __test__ = False
+
+    def __post_init__(self):
+        if self.id is None:
+            self.id = 0

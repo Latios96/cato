@@ -1,22 +1,19 @@
 from typing import Dict
 
+from dateutil.parser import parse
+
+from cato_server.domain.machine_info import MachineInfo
 from cato_server.domain.test_identifier import TestIdentifier
+from cato_server.domain.test_result import TestResult
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
 from cato_server.mappers.internal.execution_status_value_mapper import (
     ExecutionStatusValueMapper,
 )
-from cato_server.mappers.internal.machine_info_class_mapper import (
-    MachineInfoClassMapper,
-)
 from cato_server.mappers.internal.test_status_value_mapper import TestStatusValueMapper
-from cato_server.domain.test_result import TestResult
 
 
 class TestResultClassMapper(AbstractClassMapper):
     def __init__(self):
-        self._date_time_value_mapper = DateTimeValueMapper()
-        self._machine_info_class_mapper = MachineInfoClassMapper()
         self._execution_status_value_wrapper = ExecutionStatusValueMapper()
         self._test_status_value_wrapper = TestStatusValueMapper()
 
@@ -28,8 +25,10 @@ class TestResultClassMapper(AbstractClassMapper):
             test_identifier=TestIdentifier.from_string(the_dict["test_identifier"]),
             test_command=the_dict["test_command"],
             test_variables=the_dict["test_variables"],
-            machine_info=self._machine_info_class_mapper.map_from_dict(
-                the_dict["machine_info"]
+            machine_info=MachineInfo(
+                cpu_name=the_dict["machine_info"]["cpu_name"],
+                cores=the_dict["machine_info"]["cores"],
+                memory=the_dict["machine_info"]["memory"],
             )
             if the_dict.get("machine_info")
             else None,
@@ -41,12 +40,12 @@ class TestResultClassMapper(AbstractClassMapper):
             message=the_dict.get("message"),
             image_output=the_dict.get("image_output"),
             reference_image=the_dict.get("reference_image"),
-            started_at=self._date_time_value_mapper.map_from(
-                the_dict.get("started_at")
-            ),
-            finished_at=self._date_time_value_mapper.map_from(
-                the_dict.get("finished_at")
-            ),
+            started_at=parse(the_dict.get("started_at"))
+            if the_dict.get("started_at")
+            else None,
+            finished_at=parse(the_dict.get("finished_at"))
+            if the_dict.get("finished_at")
+            else None,
         )
 
     def map_to_dict(self, test_result: TestResult) -> Dict:
@@ -84,6 +83,8 @@ class TestResultClassMapper(AbstractClassMapper):
         if test_result.finished_at:
             data["finished_at"] = test_result.finished_at.isoformat()
         if test_result.machine_info:
-            data["machine_info"] = MachineInfoClassMapper().map_to_dict(
-                test_result.machine_info
-            )
+            data["machine_info"] = {
+                "cpu_name": test_result.machine_info.cpu_name,
+                "cores": test_result.machine_info.cores,
+                "memory": test_result.machine_info.memory,
+            }

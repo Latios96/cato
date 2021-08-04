@@ -47,10 +47,10 @@ class RunCommandInterface(BaseCliCommand):
             last_run_information = repo.read_last_run_information()
 
         if suite_name:
-            config.test_suites = filter_by_suite_name(config.test_suites, suite_name)
+            config.suites = filter_by_suite_name(config.suites, suite_name)
         if test_identifier_str:
-            config.test_suites = filter_by_test_identifier(
-                config.test_suites, TestIdentifier.from_string(test_identifier_str)
+            config.suites = filter_by_test_identifier(
+                config.suites, TestIdentifier.from_string(test_identifier_str)
             )
 
         if last_run_information:
@@ -61,8 +61,8 @@ class RunCommandInterface(BaseCliCommand):
             )
             if not failed_test_identifiers:
                 failed_test_identifiers = []
-            config.test_suites = filter_by_test_identifiers(
-                config.test_suites, failed_test_identifiers
+            config.suites = filter_by_test_identifiers(
+                config.suites, failed_test_identifiers
             )
 
         return config

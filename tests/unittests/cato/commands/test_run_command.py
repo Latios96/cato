@@ -44,7 +44,7 @@ TEST_SUITE = TestSuite(
 CONFIG = RunConfig(
     project_name="EXAMPLE_PROJECT",
     resource_path="test",
-    test_suites=[TEST_SUITE],
+    suites=[TEST_SUITE],
     output_folder="output",
     variables={"my_var": "from_config"},
 )
@@ -122,7 +122,7 @@ class TestRunCommand:
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
 
-        assert self.config.test_suites == []
+        assert self.config.suites == []
 
     def test_should_filter_by_test_identifier(self):
         self.run_command.run(
@@ -131,7 +131,7 @@ class TestRunCommand:
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
 
-        assert self.config.test_suites == []
+        assert self.config.suites == []
 
     def test_should_filter_by_invalid_test_identifier_str(self):
         with pytest.raises(ValueError):
@@ -150,7 +150,7 @@ class TestRunCommand:
         self.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
-        assert self.config.test_suites == []
+        assert self.config.suites == []
 
     def test_existing_last_run_information_should_filter_one_test_executed(self):
         self.mock_last_run_information_repository.read_last_run_information.return_value = LastRunInformation(
@@ -163,7 +163,7 @@ class TestRunCommand:
         self.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
-        assert self.config.test_suites == [
+        assert self.config.suites == [
             TestSuite(
                 name="My_first_test_Suite",
                 tests=[TEST],
@@ -182,4 +182,4 @@ class TestRunCommand:
         self.run_command.run("my_path", None, None, False, VerboseMode.DEFAULT)
 
         self.mock_test_suite_runner.run_test_suites.assert_called_with(self.config)
-        assert self.config.test_suites == CONFIG.test_suites
+        assert self.config.suites == CONFIG.suites

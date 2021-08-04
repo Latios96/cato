@@ -18,9 +18,9 @@ class ListTestsCommand(BaseCliCommand):
         path = self._config_path(path)
         config = self._json_config_parser.parse(path)
         self._logger.info(
-            f"Found {count_tests(config.test_suites)} tests in {count_suites(config.test_suites)} suites:"
+            f"Found {count_tests(config.suites)} tests in {count_suites(config.suites)} suites:"
         )
         self._logger.info("")
 
-        for suite, test in iterate_suites_and_tests(config.test_suites):
+        for suite, test in iterate_suites_and_tests(config.suites):
             self._logger.info(f"{suite.name}/{test.name}")

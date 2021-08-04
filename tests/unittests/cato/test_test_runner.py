@@ -72,7 +72,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             test_suite,
@@ -109,7 +109,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -142,7 +142,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -176,7 +176,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -217,7 +217,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -257,7 +257,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -305,7 +305,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -351,7 +351,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),
@@ -398,7 +398,7 @@ class TestTestRunner:
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             ),
             TestSuite(name="suite", tests=[]),

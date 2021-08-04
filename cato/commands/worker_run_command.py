@@ -42,17 +42,17 @@ class WorkerRunCommand(BaseCliCommand):
             raise ValueError("Invalid submission info id: {}".format(submission_info))
         config = submission_info.config
 
-        config.test_suites = filter_by_test_identifier(
-            config.test_suites, TestIdentifier.from_string(test_identifier_str)
+        config.suites = filter_by_test_identifier(
+            config.suites, TestIdentifier.from_string(test_identifier_str)
         )
 
-        if len(config.test_suites) == 0 or len(config.test_suites[0].tests) == 0:
+        if len(config.suites) == 0 or len(config.suites[0].tests) == 0:
             raise ValueError(
                 f"Filter {test_identifier_str} did match not match a test!"
             )
 
-        suite = config.test_suites[0]
-        test = config.test_suites[0].tests[0]
+        suite = config.suites[0]
+        test = config.suites[0].tests[0]
 
         self._test_execution_reporter.use_run_id(submission_info.run_id)
 

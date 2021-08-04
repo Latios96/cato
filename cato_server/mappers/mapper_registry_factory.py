@@ -1,69 +1,23 @@
-from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.file import File
-from cato_server.domain.image import ImageChannel, Image
-from cato_server.domain.machine_info import MachineInfo
-from cato_server.domain.output import Output
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
-from cato_server.domain.suite_result import SuiteResult
+import datetime
+
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
-from cato_server.mappers.internal.compare_image_result_class_mapper import (
-    CompareImageResultClassMapper,
-)
-from cato_server.mappers.internal.comparison_settings_class_mapper import (
-    ComparisonSettingsClassMapper,
-)
-from cato_server.mappers.internal.file_class_mapper import FileClassMapper
-from cato_server.mappers.internal.image_channel_class_mapper import (
-    ImageChannelClassMapper,
-)
-from cato_server.mappers.internal.image_class_mapper import ImageClassMapper
-from cato_server.mappers.internal.machine_info_class_mapper import (
-    MachineInfoClassMapper,
-)
-from cato_server.mappers.internal.submission_info_class_mapper import (
-    SubmissionInfoClassMapper,
-)
-from cato_server.mappers.internal.test_identifier_class_mapper import (
-    TestIdentifierClassMapper,
-)
-from cato_server.mappers.mapper_registry import MapperRegistry
-from cato_server.mappers.internal.output_class_mapper import OutputClassMapper
-from cato_server.mappers.internal.project_class_mapper import ProjectClassMapper
-from cato_server.mappers.internal.run_class_mapper import RunClassMapper
-from cato_server.mappers.internal.suite_result_class_mapper import (
-    SuiteResultClassMapper,
+from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
+from cato_server.mappers.internal.test_identifier_value_mapper import (
+    TestIdentifierValueMapper,
 )
 from cato_server.mappers.internal.test_result_class_mapper import TestResultClassMapper
-from cato_server.domain.submission_info import SubmissionInfo
-from cato_server.usecases.compare_image import CompareImageResult
+from cato_server.mappers.mapper_registry import MapperRegistry
 
 
 class MapperRegistryFactory:
     def create_mapper_registry(self) -> MapperRegistry:
         mapper_registry = MapperRegistry()
+        mapper_registry.register_value_mapper(
+            TestIdentifier, TestIdentifierValueMapper()
+        )
+        mapper_registry.register_value_mapper(datetime.datetime, DateTimeValueMapper())
 
-        mapper_registry.register_class_mapper(Project, ProjectClassMapper())
-        mapper_registry.register_class_mapper(ImageChannel, ImageChannelClassMapper())
-        mapper_registry.register_class_mapper(Image, ImageClassMapper())
-        mapper_registry.register_class_mapper(File, FileClassMapper())
-        mapper_registry.register_class_mapper(MachineInfo, MachineInfoClassMapper())
-        mapper_registry.register_class_mapper(Output, OutputClassMapper())
-        mapper_registry.register_class_mapper(Run, RunClassMapper())
-        mapper_registry.register_class_mapper(SuiteResult, SuiteResultClassMapper())
         mapper_registry.register_class_mapper(TestResult, TestResultClassMapper())
-        mapper_registry.register_class_mapper(
-            TestIdentifier, TestIdentifierClassMapper()
-        )
-        mapper_registry.register_class_mapper(
-            SubmissionInfo, SubmissionInfoClassMapper()
-        )
-        mapper_registry.register_class_mapper(
-            ComparisonSettings, ComparisonSettingsClassMapper()
-        )
-        mapper_registry.register_class_mapper(
-            CompareImageResult, CompareImageResultClassMapper()
-        )
 
         return mapper_registry

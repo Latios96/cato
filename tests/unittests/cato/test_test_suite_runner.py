@@ -3,7 +3,7 @@ import datetime
 import pytest
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -11,7 +11,6 @@ from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
-    LastRunInformation,
 )
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
@@ -39,7 +38,7 @@ def test_run_empty_suites_should_fail():
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="",
-                test_suites=[],
+                suites=[],
                 output_folder="output",
             )
         )
@@ -66,7 +65,7 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="",
-        test_suites=[test_suite],
+        suites=[test_suite],
         output_folder="output",
     )
 
@@ -100,7 +99,7 @@ def test_run_suite_should_return_correctly_collected_results():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="",
-        test_suites=[test_suite],
+        suites=[test_suite],
         output_folder="output",
     )
     execution_result = TestExecutionResult(

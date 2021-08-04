@@ -18,7 +18,7 @@ suites = [suite1, suite2]
 
 CONFIG = Config(
     project_name="Example project",
-    test_suites=suites,
+    suites=suites,
     variables={"my_var": "value"},
 )
 

@@ -10,7 +10,6 @@ from starlette.staticfiles import StaticFiles
 import cato
 import cato_server
 import cato_server.server_logging
-from cato_api_client.http_template import AbstractHttpTemplate
 from cato_common.utils.bindings import imported_modules
 from cato_server.api.about_blueprint import AboutBlueprint
 from cato_server.api.compare_image_blueprint import CompareImagesBlueprint
@@ -54,7 +53,6 @@ def create_app(
     )
 
     app = FastAPI()
-    obj_graph.provide(AbstractHttpTemplate)
     app.include_router(obj_graph.provide(AboutBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(ProjectsBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(FilesBlueprint), prefix="/api/v1")

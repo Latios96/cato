@@ -23,7 +23,7 @@ class BaseCliCommand(object):
         return RunConfig(
             project_name=config.project_name,
             resource_path=os.path.dirname(config_path),
-            test_suites=config.test_suites,
+            suites=config.suites,
             output_folder=os.getcwd(),
             variables=config.variables,
         )

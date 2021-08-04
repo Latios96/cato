@@ -34,7 +34,7 @@ VALID_CONFIG = {
 
 EXPECTED_VALID_CONFIG = Config(
     project_name=EXAMPLE_PROJECT,
-    test_suites=[
+    suites=[
         TestSuite(
             name="My_first_test_Suite",
             tests=[
@@ -176,7 +176,7 @@ def test_success_with_variables():
 
     assert suites == Config(
         project_name=EXAMPLE_PROJECT,
-        test_suites=[
+        suites=[
             TestSuite(
                 name="My_first_test_Suite",
                 tests=[
@@ -202,7 +202,7 @@ def test_success_with_variables_in_config_and_suite():
 
     assert suites == Config(
         project_name=EXAMPLE_PROJECT,
-        test_suites=[
+        suites=[
             TestSuite(
                 name="My_first_test_Suite",
                 tests=[
@@ -261,7 +261,7 @@ def test_parse_no_comparison_settings():
 
     config = json_config_parser.parse_dict(VALID_CONFIG_NO_COMPARISON_SETTINGS)
 
-    test = config.test_suites[0].tests[0]
+    test = config.suites[0].tests[0]
     assert test.comparison_settings == ComparisonSettings.default()
 
 
@@ -270,7 +270,7 @@ def test_parse_use_defined_comparison_settings():
 
     config = json_config_parser.parse_dict(VALID_CONFIG_WITH_COMPARISON_SETTINGS)
 
-    test = config.test_suites[0].tests[0]
+    test = config.suites[0].tests[0]
     assert test.comparison_settings == ComparisonSettings(
         method=ComparisonMethod.SSIM, threshold=0.2
     )

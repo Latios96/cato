@@ -49,7 +49,7 @@ class TestDeadlineSchedulerSubmitter:
 
     def test_should_submit_all_jobs(self, config_fixture):
         config = config_fixture.CONFIG
-        config.test_suites[0].tests.append(
+        config.suites[0].tests.append(
             Test(
                 name="AnotherTest",
                 command="mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",

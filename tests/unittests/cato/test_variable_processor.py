@@ -21,7 +21,7 @@ def test_evaluate_variables_no_custom_vars():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
     )
     suite = TestSuite(name="my_test_suite", tests=[])
@@ -57,7 +57,7 @@ def test_evaluate_variables_custom_image_output():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
     )
     suite = TestSuite(name="my_test_suite", tests=[])
@@ -110,7 +110,7 @@ def test_evaluate_variables_variables_from_config():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
         variables={"test_variable": "my_value"},
     )
@@ -148,7 +148,7 @@ def test_evaluate_variables_variables_from_suite():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
     )
     suite = TestSuite(
@@ -187,7 +187,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
     )
@@ -229,7 +229,7 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
     )
@@ -271,7 +271,7 @@ def test_evaluate_variables_maya_predefinition():
     config = RunConfig(
         project_name=EXAMPLE_PROJECT,
         resource_path="config_path",
-        test_suites=[],
+        suites=[],
         output_folder="test",
         variables={"test_variable": "my_value_from_config"},
     )

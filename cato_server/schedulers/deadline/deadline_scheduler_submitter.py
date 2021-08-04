@@ -16,7 +16,7 @@ class DeadlineSchedulerSubmitter:
 
     def submit_tests(self, submission_info: SubmissionInfo) -> None:
         jobs = []
-        for suite, test in iterate_suites_and_tests(submission_info.config.test_suites):
+        for suite, test in iterate_suites_and_tests(submission_info.config.suites):
             job = self._create_job(submission_info, suite, test)
             jobs.append(job)
 

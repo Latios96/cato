@@ -1,14 +1,18 @@
 import datetime
 
 from cato_server.domain.project import Project
+from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
 from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
 from cato_server.mappers.mapper_registry import MapperRegistry
-from cato_server.mappers.internal.project_class_mapper import ProjectClassMapper
+
+
+class MyTestMapper(AbstractClassMapper):
+    pass
 
 
 def test_register_class_mapper_and_get():
     mapper_registry = MapperRegistry()
-    mapper = ProjectClassMapper()
+    mapper = MyTestMapper()
 
     mapper_registry.register_class_mapper(Project, mapper)
     returned_mapper = mapper_registry.class_mapper_for_cls(Project)

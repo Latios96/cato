@@ -32,16 +32,16 @@ class TestSuiteRunner:
 
     def run_test_suites(self, config: RunConfig) -> List[TestSuiteExecutionResult]:
 
-        if not config.test_suites:
+        if not config.suites:
             raise ValueError("At least one TestSuite is required!")
 
         results = []
 
         self._test_execution_reporter.start_execution(
-            config.project_name, config.test_suites
+            config.project_name, config.suites
         )
 
-        for suite in config.test_suites:
+        for suite in config.suites:
             test_results = []
             suite_status = TestStatus.SUCCESS
             self._reporter.report_start_test_suite(suite)

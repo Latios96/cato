@@ -431,13 +431,13 @@ class ConfigFixture:
         )
         self.CONFIG = Config(
             project_name="EXAMPLE_PROJECT",
-            test_suites=[self.TEST_SUITE],
+            suites=[self.TEST_SUITE],
             variables={"my_var": "from_config"},
         )
         self.RUN_CONFIG = RunConfig(
             project_name="EXAMPLE_PROJECT",
             resource_path="test",
-            test_suites=[self.TEST_SUITE],
+            suites=[self.TEST_SUITE],
             output_folder="output",
             variables={"my_var": "from_config"},
         )

@@ -1,12 +1,9 @@
 import os
 
-from cato_server.mappers.internal.submission_info_class_mapper import (
-    SubmissionInfoClassMapper,
-)
 from cato_server.domain.submission_info import SubmissionInfo
 
 
-def test_map_to_dict(config_fixture):
+def test_map_to_dict(config_fixture, object_mapper):
     submission_info = SubmissionInfo(
         id=0,
         config=config_fixture.CONFIG,
@@ -15,7 +12,7 @@ def test_map_to_dict(config_fixture):
         executable="C:/Python27/python.exe",
     )
 
-    the_dict = SubmissionInfoClassMapper().map_to_dict(submission_info)
+    the_dict = object_mapper.to_dict(submission_info)
 
     assert the_dict == {
         "id": 0,
@@ -46,7 +43,7 @@ def test_map_to_dict(config_fixture):
     }
 
 
-def test_map_from_dict(config_fixture):
+def test_map_from_dict(config_fixture, object_mapper):
     the_dict = {
         "id": 0,
         "config": {
@@ -62,6 +59,7 @@ def test_map_from_dict(config_fixture):
                             "{image_output}/{test_name.png}",
                             "name": "My_first_test",
                             "variables": {"frame": "7"},
+                            "comparison_settings": {"method": "SSIM", "threshold": 0.8},
                         }
                     ],
                     "variables": {"my_var": "from_suite"},
@@ -74,7 +72,7 @@ def test_map_from_dict(config_fixture):
         "run_id": 42,
     }
 
-    submission_info = SubmissionInfoClassMapper().map_from_dict(the_dict)
+    submission_info = object_mapper.from_dict(the_dict, SubmissionInfo)
     config_fixture.CONFIG.resource_path = "this/is/a/random"
     config_fixture.CONFIG.output_folder = os.getcwd()
 

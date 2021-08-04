@@ -23,7 +23,7 @@ class UpdateReferenceImage:
         self._copy_file = copy_file
 
     def update(self, config: RunConfig, test_identifier: TestIdentifier) -> None:
-        filtered = filter_by_test_identifier(config.test_suites, test_identifier)
+        filtered = filter_by_test_identifier(config.suites, test_identifier)
         for suite, test in iterate_suites_and_tests(filtered):
             variable_processor = VariableProcessor()
             variables = variable_processor.evaluate_variables(config, suite, test)
