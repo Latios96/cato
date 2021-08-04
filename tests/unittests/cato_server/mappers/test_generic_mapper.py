@@ -8,6 +8,9 @@ from cato_server.mappers.abstract_class_mapper import AbstractClassMapper, T
 from cato_server.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
 from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_api_models.catoapimodels import (
+    ApiSuccess,
+)
 
 
 @dataclass
@@ -146,6 +149,13 @@ class TestMapToDict:
         result = mapper.map_to_dict(SimpleDataClass(my_int=1, my_string="my_test"))
 
         assert result == {"my_int": 42, "my_string": "my_test"}
+
+    def test_map_conjure_type(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            ApiSuccess(success=True)
+        )
+
+        assert result == {"success": True}
 
 
 class TestMapFromDict:
@@ -403,3 +413,10 @@ class TestMapFromDict:
                 {},
                 DataClassWithNestedClass,
             )
+
+    def test_map_conjure_type(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {"success": True}, ApiSuccess
+        )
+
+        assert result == ApiSuccess(success=True)

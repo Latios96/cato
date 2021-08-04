@@ -1,6 +1,9 @@
 import copy
+import json
 from dataclasses import _is_dataclass_instance, fields, is_dataclass
 from typing import Type, Dict, TypeVar, Collection
+
+from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder
 
 from cato_server.mappers.mapper_registry import MapperRegistry
 
@@ -35,6 +38,8 @@ class GenericClassMapper:
             and not isinstance(obj, bytes)
         ):
             return [self._to_dict(o) for o in obj]
+        elif issubclass(obj.__class__, ConjureBeanType):
+            return json.loads(ConjureEncoder().encode(obj))
         else:
             return copy.deepcopy(obj)
 
@@ -64,5 +69,7 @@ class GenericClassMapper:
         elif isinstance(json_data, list):
             collection_type = cls.__args__[0]
             return [self._from_dict(o, collection_type) for o in json_data]
+        elif issubclass(cls, ConjureBeanType):
+            return ConjureDecoder().decode(json_data, cls)
         else:
             return copy.deepcopy(json_data)
