@@ -20,7 +20,10 @@ class HttpTemplateResponse(Generic[R]):
         raise NotImplementedError()
 
     def get_entity(self) -> R:
-        return self._mapper.from_dict(self.get_json(), self._response_cls)
+        json = self.get_json()
+        if json:
+            return self._mapper.from_dict(json, self._response_cls)
+        raise ValueError("Json is None!")
 
     def get_entities(self) -> List[R]:
         return self._mapper.many_from_dict(self.get_json(), self._response_cls)

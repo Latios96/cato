@@ -50,7 +50,7 @@ def test_get_for_entity_404(mock_requests_get, object_mapper):
     response = http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
     assert response.status_code() == 404
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         response.get_entity()
 
 
@@ -88,7 +88,7 @@ def test_post_for_entity_404(mock_requests_post, object_mapper):
     )
 
     assert response.status_code() == 404
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         response.get_entity()
 
 
@@ -115,5 +115,5 @@ def test_patch_for_entity_404(mock_requests_post, object_mapper):
     )
 
     assert response.status_code() == 404
-    with pytest.raises(TypeError):
+    with pytest.raises(ValueError):
         response.get_entity()

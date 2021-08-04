@@ -46,6 +46,7 @@ from cato_server.domain.submission_info import SubmissionInfo
 from cato_server.domain.suite_result import SuiteResult
 from cato_server.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
+from cato_server.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.schedulers.abstract_scheduler_submitter import (
@@ -411,7 +412,8 @@ def mapper_registry():
 
 @pytest.fixture
 def object_mapper(mapper_registry):
-    return ObjectMapper(mapper_registry)
+    generic_class_mapper = GenericClassMapper(mapper_registry)
+    return ObjectMapper(generic_class_mapper)
 
 
 class ConfigFixture:

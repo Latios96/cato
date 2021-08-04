@@ -7,6 +7,7 @@ from pinject.object_graph import ObjectGraph
 
 import cato
 import cato_api_client
+import cato_server
 from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
@@ -37,7 +38,7 @@ def create_object_graph(url: Optional[str] = None) -> ObjectGraph:
     if url:
         url = format_url(url)
     return pinject.new_object_graph(
-        modules=[*imported_modules([cato, cato_api_client])],
+        modules=[*imported_modules([cato, cato_api_client, cato_server])],
         binding_specs=[TestExecutionReporterBindings(url)],
     )
 
