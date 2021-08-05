@@ -1,8 +1,8 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.domain.suite_result import SuiteResult
+from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
     _SuiteResultMapping,

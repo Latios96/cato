@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )

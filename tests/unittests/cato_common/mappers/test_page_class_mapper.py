@@ -1,6 +1,6 @@
-from cato_server.domain.project import Project
-from cato_server.mappers.page_mapper import PageMapper
-from cato_server.storage.abstract.page import Page
+from cato_common.mappers.page_mapper import PageMapper
+from cato_common.domain.project import Project
+from cato_common.storage.page import Page
 
 
 def test_map_empty_to_dict(object_mapper):

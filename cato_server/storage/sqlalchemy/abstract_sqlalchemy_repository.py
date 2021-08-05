@@ -4,7 +4,7 @@ from sqlalchemy import asc, collate
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import Session
 
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.storage.page import PageRequest, Page
 
 T = TypeVar("T")
 K = TypeVar("K")

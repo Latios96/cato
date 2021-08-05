@@ -3,8 +3,8 @@ from typing import List
 from sqlalchemy import Column, Integer, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 
-from cato_server.domain.run import Run
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.domain.run import Run
+from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,

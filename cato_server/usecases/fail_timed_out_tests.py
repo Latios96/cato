@@ -1,7 +1,7 @@
 import datetime
 
 
-from cato_server.domain.execution_status import ExecutionStatus
+from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )

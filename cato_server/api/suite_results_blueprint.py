@@ -14,15 +14,15 @@ from cato_api_models.catoapimodels import (
     ExecutionStatusDto,
     TestStatusDto,
 )
+from cato_common.mappers.page_mapper import PageMapper
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.suite_result_validators import (
     CreateSuiteResultValidator,
 )
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.mappers.page_mapper import PageMapper
+from cato_common.domain.suite_result import SuiteResult
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.run_status_calculator import RunStatusCalculator
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (

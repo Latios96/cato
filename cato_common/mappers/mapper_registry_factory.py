@@ -1,8 +1,8 @@
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.mappers.internal.test_identifier_value_mapper import (
+from cato_common.mappers.internal.test_identifier_value_mapper import (
     TestIdentifierValueMapper,
 )
-from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_common.mappers.mapper_registry import MapperRegistry
 
 
 class MapperRegistryFactory:

@@ -1,7 +1,7 @@
 import pytest
 
 from cato_server.api.page_utils import page_request_from_request
-from cato_server.storage.abstract.page import PageRequest
+from cato_common.storage.page import PageRequest
 
 
 @pytest.mark.parametrize(

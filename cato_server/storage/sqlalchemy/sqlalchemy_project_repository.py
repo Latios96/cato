@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from cato_server.domain.project import Project
+from cato_common.domain.project import Project
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,

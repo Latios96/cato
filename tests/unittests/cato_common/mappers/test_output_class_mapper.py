@@ -1,4 +1,4 @@
-from cato_server.domain.output import Output
+from cato_common.domain.output import Output
 
 
 def test_from_dict_with_id(object_mapper):

@@ -1,8 +1,8 @@
 from typing import List
 
-from cato_server.domain.run import Run
+from cato_common.domain.run import Run
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.storage.page import PageRequest, Page
 
 
 class RunRepository(AbstractRepository[Run, int]):

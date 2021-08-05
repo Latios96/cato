@@ -1,11 +1,8 @@
 import pytest
 
-from cato_server.domain.project import Project
-from cato_server.mappers.generic_class_mapper import GenericClassMapper
-from cato_server.mappers.mapper_registry import MapperRegistry
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.domain.project import Project
 from cato_api_models.catoapimodels import MachineInfoDto
-from cato_server.storage.abstract.page import Page
+from cato_common.storage.page import Page
 
 
 class TestMapToDict:

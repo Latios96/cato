@@ -4,7 +4,7 @@ import tempfile
 
 from PIL import Image as PillowImage
 
-from cato_server.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel
 from cato_server.images.image_splitter import ImageSplitter
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository

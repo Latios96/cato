@@ -4,10 +4,11 @@ from cato.domain.test_status import TestStatus
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_result import ComparisonResult
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.image import Image
+from cato_common.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator
 from cato_server.images.store_image import StoreImage
-from cato_server.usecases.compare_image import CompareImage, CompareImageResult
+from cato_server.usecases.compare_image import CompareImage
+from cato_common.domain.compare_image_result import CompareImageResult
 from tests.utils import mock_safe
 
 

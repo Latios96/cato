@@ -1,7 +1,7 @@
 from typing import Optional
 
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
+from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
 
 
 class TestIdentifierValueMapper(AbstractValueMapper[TestIdentifier, str]):

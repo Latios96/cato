@@ -9,7 +9,7 @@ from sqlalchemy.orm import sessionmaker
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,

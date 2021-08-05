@@ -4,7 +4,7 @@ import pytest
 
 from cato.domain.test_status import TestStatus
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.execution_status import ExecutionStatus
+from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_heartbeat_repository import (

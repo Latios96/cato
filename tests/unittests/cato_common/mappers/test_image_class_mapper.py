@@ -1,4 +1,4 @@
-from cato_server.domain.image import ImageChannel, Image
+from cato_common.domain.image import ImageChannel, Image
 
 
 def test_from_dict_with_id(object_mapper):

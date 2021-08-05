@@ -1,4 +1,4 @@
-from cato_server.domain.project import Project
+from cato_common.domain.project import Project
 
 
 def test_map_from_dict(object_mapper):

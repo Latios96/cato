@@ -3,7 +3,7 @@ from dataclasses import dataclass
 import pytest
 from sqlalchemy import Column, Integer, String
 
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     Base,
     AbstractSqlAlchemyRepository,

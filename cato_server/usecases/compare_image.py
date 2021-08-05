@@ -3,26 +3,16 @@ import os
 import shutil
 import tempfile
 import uuid
-from dataclasses import dataclass
 from pathlib import Path
-from typing import IO, Optional, Tuple
+from typing import IO, Tuple
 
-from cato.domain.test_status import TestStatus
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.image import Image
+from cato_common.domain.compare_image_result import CompareImageResult
+from cato_common.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator
 from cato_server.images.store_image import StoreImage
 
 logger = logging.getLogger(__name__)
-
-
-@dataclass
-class CompareImageResult:
-    status: TestStatus
-    message: Optional[str]
-    reference_image_id: int
-    output_image_id: int
-    diff_image_id: int
 
 
 class CompareImage:

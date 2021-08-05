@@ -1,7 +1,9 @@
 import json
 from typing import Iterable
 
-from cato import logger
+import logging
+
+logger = logging.getLogger(__name__)
 from cato_server.domain.event import Event
 
 

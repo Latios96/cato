@@ -2,7 +2,7 @@ from typing import Optional
 
 from sqlalchemy import Column, Integer, Text, ForeignKey
 
-from cato_server.domain.output import Output
+from cato_common.domain.output import Output
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,

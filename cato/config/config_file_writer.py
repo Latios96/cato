@@ -2,7 +2,7 @@ import json
 from typing import IO, Dict
 
 from cato.domain.config import Config
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 
 
 class ConfigFileWriter:

@@ -5,7 +5,7 @@ from fastapi import APIRouter, UploadFile
 from fastapi.params import File
 from starlette.responses import FileResponse, JSONResponse, Response
 
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 
 logger = logging.getLogger(__name__)

@@ -3,7 +3,7 @@ from typing import TypeVar, Generic, Type, List
 
 import requests
 
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 
 logger = logging.getLogger(__name__)
 

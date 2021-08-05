@@ -6,17 +6,17 @@ from requests.models import Response
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
-from cato_server.domain.output import Output
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
+from cato_common.domain.output import Output
+from cato_common.domain.project import Project
+from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
-from cato_server.domain.file import File
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_result import TestResult
+from cato_common.domain.file import File
+from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.suite_result import SuiteResult
+from cato_common.domain.test_result import TestResult
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
 from cato_api_models.catoapimodels import (
@@ -27,7 +27,7 @@ from cato_api_models.catoapimodels import (
     StartTestResultDto,
 )
 from cato_common.domain.submission_info import SubmissionInfo
-from cato_server.usecases.compare_image import CompareImageResult
+from cato_common.domain.compare_image_result import CompareImageResult
 
 
 class FastApiClientHttpTemplateResponse(HttpTemplateResponse):

@@ -1,4 +1,4 @@
-from cato_server.domain.suite_result import SuiteResult
+from cato_common.domain.suite_result import SuiteResult
 
 
 def test_map_from_dict(object_mapper):

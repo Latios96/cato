@@ -3,7 +3,7 @@ from fastapi.params import File, Form
 from starlette.responses import JSONResponse, Response
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.usecases.compare_image import CompareImage
 
 import logging

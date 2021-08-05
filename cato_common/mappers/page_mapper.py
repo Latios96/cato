@@ -1,8 +1,8 @@
 import json
 from typing import Dict, TypeVar, Type
 
-from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.storage.abstract.page import Page
+from cato_common.mappers.object_mapper import ObjectMapper
+from cato_common.storage.page import Page
 
 T = TypeVar("T")
 

@@ -6,8 +6,8 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
 from cato_server.api.validators.project_validators import CreateProjectValidator
-from cato_server.domain.project import Project
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.domain.project import Project
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.project_repository import ProjectRepository
 
 logger = logging.getLogger(__name__)

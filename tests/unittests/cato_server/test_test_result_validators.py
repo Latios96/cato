@@ -10,7 +10,7 @@ from cato_server.storage.abstract.test_result_repository import (
 )
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_server.domain.suite_result import SuiteResult
+from cato_common.domain.suite_result import SuiteResult
 from cato_server.api.validators.test_result_validators import (
     CreateTestResultValidator,
     UpdateTestResultValidator,

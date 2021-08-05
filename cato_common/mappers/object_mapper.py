@@ -1,8 +1,8 @@
 import json
 from typing import TypeVar, Dict, Type, Iterable, List
 
-from cato_server.mappers.generic_class_mapper import GenericClassMapper
-from cato_server.storage.abstract.page import Page
+from cato_common.mappers.generic_class_mapper import GenericClassMapper
+from cato_common.storage.page import Page
 
 T = TypeVar("T")
 

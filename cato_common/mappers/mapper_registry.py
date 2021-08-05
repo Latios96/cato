@@ -1,7 +1,7 @@
 from typing import Type, TypeVar, Optional, Dict
 
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
+from cato_common.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
 
 T = TypeVar("T")
 M = TypeVar("M")

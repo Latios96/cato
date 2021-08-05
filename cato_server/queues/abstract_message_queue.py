@@ -1,7 +1,7 @@
 from typing import TypeVar, Iterable
 
 from cato_server.domain.event import Event
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 
 T = TypeVar("T")
 

@@ -20,6 +20,7 @@ from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
+from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -36,19 +37,18 @@ from cato_server.configuration.message_queue_configuration import (
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.image import Image, ImageChannel
+from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
-from cato_server.domain.output import Output
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
+from cato_common.domain.output import Output
+from cato_common.domain.project import Project
+from cato_common.domain.run import Run
 from cato_common.domain.submission_info import SubmissionInfo
-from cato_server.domain.suite_result import SuiteResult
+from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
-from cato_server.mappers.generic_class_mapper import GenericClassMapper
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.domain.test_result import TestResult
+from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )

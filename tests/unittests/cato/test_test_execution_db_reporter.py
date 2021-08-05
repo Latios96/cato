@@ -14,11 +14,11 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.image import Image
+from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.image import Image
 from cato_common.domain.machine_info import MachineInfo
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
+from cato_common.domain.project import Project
+from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 from cato_api_models.catoapimodels import (

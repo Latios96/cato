@@ -1,6 +1,6 @@
 import datetime
 
-from cato_server.domain.run import Run
+from cato_common.domain.run import Run
 
 
 def test_map_from_dict(object_mapper):

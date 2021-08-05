@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Dict, Optional
 
-from cato_server.domain.execution_status import ExecutionStatus
+from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus

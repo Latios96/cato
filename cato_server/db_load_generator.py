@@ -17,14 +17,14 @@ from cato.domain.test_status import TestStatus
 from cato_common.utils.bindings import imported_modules
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.image import Image, ImageChannel
+from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
-from cato_server.domain.project import Project
-from cato_server.domain.run import Run
-from cato_server.domain.suite_result import SuiteResult
+from cato_common.domain.project import Project
+from cato_common.domain.run import Run
+from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
+from cato_common.domain.test_result import TestResult
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository

@@ -1,8 +1,8 @@
 from typing import Optional, List
 
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
-from cato_server.domain.suite_result import SuiteResult
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.domain.suite_result import SuiteResult
+from cato_common.storage.page import PageRequest, Page
 
 
 class SuiteResultRepository(AbstractRepository):

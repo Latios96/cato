@@ -2,7 +2,7 @@ from collections import defaultdict
 from typing import Set, Tuple, Dict
 
 from cato.domain.test_status import TestStatus
-from cato_server.domain.execution_status import ExecutionStatus
+from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.domain.run_status import RunStatus
 
 

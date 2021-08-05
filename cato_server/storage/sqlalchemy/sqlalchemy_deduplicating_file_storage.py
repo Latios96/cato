@@ -3,7 +3,7 @@ import logging
 import os
 from typing import IO, Tuple, AnyStr
 
-from cato_server.domain.file import File
+from cato_common.domain.file import File
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,

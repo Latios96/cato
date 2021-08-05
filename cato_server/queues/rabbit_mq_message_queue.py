@@ -5,7 +5,7 @@ from typing import Iterable
 import pika
 
 from cato_server.domain.event import Event
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue, T
 
 logger = logging.getLogger(__name__)

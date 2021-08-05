@@ -8,7 +8,7 @@ from typing import Type, Dict, TypeVar, Collection
 from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder
 from dateutil.parser import parse
 
-from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_common.mappers.mapper_registry import MapperRegistry
 
 T = TypeVar("T")
 

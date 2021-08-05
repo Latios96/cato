@@ -8,7 +8,7 @@ from fastapi.params import File
 from starlette.responses import JSONResponse, FileResponse, Response
 
 from cato_server.images.store_image import StoreImage
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 

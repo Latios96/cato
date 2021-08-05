@@ -3,7 +3,7 @@ from unittest import mock
 import pytest
 
 from cato_api_client.http_template import HttpTemplate, HttpTemplateException
-from cato_server.domain.project import Project
+from cato_common.domain.project import Project
 
 
 class Response:

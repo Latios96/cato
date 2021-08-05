@@ -1,5 +1,5 @@
 from cato.domain.test_status import TestStatus
-from cato_server.usecases.compare_image import CompareImageResult
+from cato_common.domain.compare_image_result import CompareImageResult
 
 
 def test_map_from(object_mapper):

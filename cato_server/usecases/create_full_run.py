@@ -5,12 +5,12 @@ from cato_api_models.catoapimodels import CreateFullRunDto
 from cato_api_models.catoapimodels import RunDto, RunStatusDto
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
-from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.run import Run
-from cato_server.domain.suite_result import SuiteResult
+from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.run import Run
+from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.domain.test_result import TestResult
-from cato_server.mappers.object_mapper import ObjectMapper
+from cato_common.domain.test_result import TestResult
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository

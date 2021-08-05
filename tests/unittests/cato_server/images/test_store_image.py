@@ -1,5 +1,5 @@
 import pytest
-from cato_server.domain.image import ImageChannel, Image
+from cato_common.domain.image import ImageChannel, Image
 from cato_server.images.image_splitter import ImageSplitter, NotAnImageException
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 

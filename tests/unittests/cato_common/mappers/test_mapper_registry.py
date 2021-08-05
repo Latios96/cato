@@ -1,9 +1,9 @@
 import datetime
 
-from cato_server.domain.project import Project
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper
-from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
-from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_common.mappers.mapper_registry import MapperRegistry
+from cato_common.domain.project import Project
+from cato_common.mappers.abstract_class_mapper import AbstractClassMapper
+from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
 
 
 class MyTestMapper(AbstractClassMapper):

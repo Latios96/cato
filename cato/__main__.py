@@ -7,7 +7,7 @@ from pinject.object_graph import ObjectGraph
 
 import cato
 import cato_api_client
-import cato_server
+import cato_common
 from cato import logger
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
@@ -26,7 +26,7 @@ from cato.reporter.verbose_mode import VerboseMode
 from cato.utils.url_format import format_url
 from cato_api_client.http_template import HttpTemplate
 from cato_common.utils.bindings import imported_modules, provide_safe
-from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
+from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 
 PATH_TO_CONFIG_FILE = "Path to config file"
 is_executed_as_module = __name__ != "__main__"
@@ -38,7 +38,7 @@ def create_object_graph(url: Optional[str] = None) -> ObjectGraph:
     if url:
         url = format_url(url)
     return pinject.new_object_graph(
-        modules=[*imported_modules([cato, cato_api_client, cato_server])],
+        modules=[*imported_modules([cato, cato_api_client, cato_common])],
         binding_specs=[TestExecutionReporterBindings(url)],
     )
 

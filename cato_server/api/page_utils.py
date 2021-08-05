@@ -2,7 +2,7 @@ from typing import Optional
 
 from starlette.datastructures import ImmutableMultiDict
 
-from cato_server.storage.abstract.page import PageRequest
+from cato_common.storage.page import PageRequest
 
 
 def page_request_from_request(

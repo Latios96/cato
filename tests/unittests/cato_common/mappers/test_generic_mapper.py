@@ -5,13 +5,13 @@ from typing import List, Dict, Optional
 
 import pytest
 
-from cato_server.mappers.abstract_class_mapper import AbstractClassMapper, T
-from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
-from cato_server.mappers.generic_class_mapper import GenericClassMapper
-from cato_server.mappers.mapper_registry import MapperRegistry
+from cato_common.mappers.abstract_class_mapper import AbstractClassMapper, T
+from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
 from cato_api_models.catoapimodels import (
     ApiSuccess,
 )
+from cato_common.mappers.generic_class_mapper import GenericClassMapper
+from cato_common.mappers.mapper_registry import MapperRegistry
 
 
 class DateTimeValueMapper(AbstractValueMapper[datetime.datetime, str]):

@@ -7,7 +7,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
-from cato_server.domain.project import Project
+from cato_common.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )

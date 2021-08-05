@@ -3,8 +3,8 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.run import Run
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.domain.run import Run
+from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
     _RunMapping,

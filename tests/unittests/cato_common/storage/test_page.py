@@ -1,6 +1,6 @@
 import pytest
 
-from cato_server.storage.abstract.page import PageRequest, Page
+from cato_common.storage.page import PageRequest, Page
 
 
 class TestPageRequest:
