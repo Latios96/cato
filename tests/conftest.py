@@ -324,9 +324,9 @@ def output_for_finished_test(sessionmaker_fixture, finished_test_result):
 
 
 @pytest.fixture()
-def submission_info(sessionmaker_fixture, run, config_fixture):
+def submission_info(sessionmaker_fixture, run, config_fixture, object_mapper):
     repository = SqlAlchemySubmissionInfoRepository(
-        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter()
+        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
     )
     sub_info = SubmissionInfo(
         id=0,

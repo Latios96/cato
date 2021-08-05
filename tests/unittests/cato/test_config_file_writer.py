@@ -23,8 +23,8 @@ CONFIG = Config(
 )
 
 
-def test_write_and_read_back_is_equal():
-    config_file_writer = ConfigFileWriter()
+def test_write_and_read_back_is_equal(object_mapper):
+    config_file_writer = ConfigFileWriter(object_mapper)
     stream = StringIO()
 
     config_file_writer.write_to_stream(stream, CONFIG)
@@ -36,8 +36,8 @@ def test_write_and_read_back_is_equal():
     assert parsed_result == CONFIG
 
 
-def test_write_to_dict_and_read_back_is_equal():
-    config_file_writer = ConfigFileWriter()
+def test_write_to_dict_and_read_back_is_equal(object_mapper):
+    config_file_writer = ConfigFileWriter(object_mapper)
 
     config_dict = config_file_writer.write_to_dict(CONFIG)
 

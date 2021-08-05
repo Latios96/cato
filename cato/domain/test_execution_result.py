@@ -19,14 +19,4 @@ class TestExecutionResult:
     started_at: datetime.datetime
     finished_at: datetime.datetime
 
-    def to_dict(self):
-        return {
-            "test": self.test.to_dict(),
-            "status": str(self.status),
-            "output": self.output,
-            "seconds": self.seconds,
-            "message": self.message,
-            "image_output": self.image_output,
-        }
-
     __test__ = False

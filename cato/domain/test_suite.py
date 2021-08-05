@@ -15,9 +15,6 @@ class TestSuite:
     def __post_init__(self):
         validate_name(self.name)
 
-    def to_dict(self):
-        return {"name": self.name, "tests": [x.to_dict() for x in self.tests]}
-
     __test__ = False
 
 

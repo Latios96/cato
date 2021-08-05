@@ -15,7 +15,4 @@ class Test:
     def __post_init__(self):
         validate_name(self.name)
 
-    def to_dict(self):
-        return {"name": self.name, "command": self.command}
-
     __test__ = False
