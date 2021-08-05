@@ -1,9 +1,6 @@
 import React from "react";
 import styles from "./ProjectInformation.module.scss";
 import { useFetch } from "use-http";
-import { Page } from "../../../components/Pagination/Page";
-import { RunDto } from "../../../catoapimodels";
-import _ from "lodash";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import Project from "../../../models/Project";
 import { Helmet } from "react-helmet";
@@ -12,7 +9,7 @@ interface Props {
 }
 
 function ProjectInformation(props: Props) {
-  const { loading, error, data } = useFetch<Project>(
+  const { loading, data } = useFetch<Project>(
     "/api/v1/projects/" + props.projectId,
     []
   );

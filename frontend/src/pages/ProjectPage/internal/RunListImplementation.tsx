@@ -4,16 +4,18 @@ import RunStatus from "../../../components/Status/RunStatus";
 import { Link } from "react-router-dom";
 import { formatDuration, formatTime } from "../../../utils";
 import { RunDto } from "../../../catoapimodels";
-import { Page } from "../../../components/Pagination/Page";
+import { Page, PageRequest } from "../../../components/Pagination/Page";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import Error from "../../../components/Error/Error";
+import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
 
 interface Props {
   projectId: number;
   runs: Page<RunDto> | undefined;
   isLoading: boolean;
   error?: Error;
+  pageChangedCallback: (pageRequest: PageRequest) => void;
 }
 
 function RunListImplementation(props: Props) {
@@ -45,7 +47,7 @@ function RunListImplementation(props: Props) {
           </tr>
         </thead>
         <tbody>
-          {props.runs
+          {props.runs && !props.isLoading
             ? props.runs.entities.map((run) => {
                 return (
                   <tr key={run.id}>
@@ -75,6 +77,14 @@ function RunListImplementation(props: Props) {
             );
           })}
         </SkeletonTheme>
+      ) : null}
+      {props.runs ? (
+        <div className={styles.paginationControls}>
+          <SimplePaginationControls
+            currentPage={props.runs}
+            pageChangedCallback={props.pageChangedCallback}
+          />
+        </div>
       ) : null}
     </div>
   );

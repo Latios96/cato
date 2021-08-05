@@ -42,3 +42,10 @@
     }
   }
 }
+.paginationControls {
+  margin-top: 15px;
+  display: flex;
+  div:nth-child(1) {
+    margin: auto;
+  }
+}

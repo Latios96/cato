@@ -5,7 +5,33 @@
 }
 .controls {
   display: flex;
+  svg {
+    font-size: 13px;
+    margin-top: -2px;
+  }
+  span {
+    user-select: none;
+  }
+  span:nth-child(1) {
+    margin-right: 16px;
+  }
+  [data-disabled="true"] {
+    color: grey;
+  }
+  [data-disabled="false"]:hover {
+    color: red;
+    cursor: pointer;
+  }
+  [data-disabled="false"] {
+    color: #0f5b99;
+  }
 }
 .elementsOnPage {
   margin-right: 10px;
+}
+.disabled {
+  color: grey;
+  &:hover {
+    cursor: default;
+  }
 }

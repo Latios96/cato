@@ -1,5 +1,5 @@
-import React from "react";
-import { useFetch } from "use-http";
+import React, { useState } from "react";
+import { CachePolicies, useFetch } from "use-http";
 import {
   Page,
   requestFirstPageOfSize,
@@ -11,10 +11,11 @@ interface Props {
 }
 
 function RunList(props: Props) {
-  const pageRequest = requestFirstPageOfSize(25);
+  const [currentPage, setCurrentPage] = useState(requestFirstPageOfSize(25));
   const { loading, error, data } = useFetch<Page<RunDto>>(
-    `/api/v1/runs/project/${props.projectId}?page_number=${pageRequest.page_number}&page_size=${pageRequest.page_size}`,
-    []
+    `/api/v1/runs/project/${props.projectId}?page_number=${currentPage.page_number}&page_size=${currentPage.page_size}`,
+    { cachePolicy: CachePolicies.NO_CACHE },
+    [currentPage]
   );
   return (
     <RunListImplementation
@@ -22,6 +23,9 @@ function RunList(props: Props) {
       runs={data}
       isLoading={loading}
       error={error}
+      pageChangedCallback={(page) => {
+        setCurrentPage(page);
+      }}
     />
   );
 }
