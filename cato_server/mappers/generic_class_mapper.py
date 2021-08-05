@@ -43,7 +43,7 @@ class GenericClassMapper:
         elif issubclass(obj.__class__, ConjureBeanType):
             return json.loads(ConjureEncoder().encode(obj))
         elif isinstance(obj, Enum):
-            return obj.value
+            return obj.name
         else:
             return copy.deepcopy(obj)
 
