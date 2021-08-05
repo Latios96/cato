@@ -1,13 +1,21 @@
 import React from "react";
 import styles from "./Footer.module.scss";
-interface Props {}
+import { CachePolicies, useFetch } from "use-http";
 
-function Footer(props: Props) {
+interface AboutInformation {
+  version: string;
+}
+function Footer() {
+  const { data } = useFetch<AboutInformation>(
+    `/api/v1/about`,
+    { cachePolicy: CachePolicies.CACHE_FIRST },
+    []
+  );
   return (
     <div className={`${styles.footer}`}>
       <div>
         <span>Cato</span>
-        <span>Build info</span>
+        <span>Build info: {data?.version}</span>
       </div>
     </div>
   );
