@@ -89,6 +89,7 @@ def test_create_test_result_success(client, suite_result, stored_image):
             "reference_image": stored_image.id,
             "started_at": started_at,
             "finished_at": finished_at,
+            "seconds": 1,
         },
     )
 
@@ -99,13 +100,16 @@ def test_create_test_result_success(client, suite_result, stored_image):
         "image_output": 1,
         "machine_info": {"cores": 8, "cpu_name": "Intel", "memory": 24},
         "reference_image": 1,
-        "seconds": 0,
+        "seconds": 1,
         "started_at": started_at,
         "suite_result_id": 1,
         "test_command": "my_command",
         "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"key": "value"},
+        "diff_image": None,
+        "message": None,
+        "status": None,
     }
     assert rv.status_code == 201
 
@@ -158,6 +162,7 @@ def test_get_test_result_by_run_and_identifier_success(
         "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"testkey": "test_value"},
+        "diff_image": 1,
     }
 
 

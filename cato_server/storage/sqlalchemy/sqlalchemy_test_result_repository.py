@@ -36,7 +36,7 @@ class _TestResultMapping(Base):
     machine_info = Column(JSON, nullable=True)
     execution_status = Column(String, nullable=True)
     status = Column(String, nullable=True)
-    seconds = Column(Float, nullable=False)
+    seconds = Column(Float, nullable=True)
     message = Column(String, nullable=True)
     image_output_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     reference_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)

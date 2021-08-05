@@ -6,12 +6,21 @@ from typing import List, Dict, Optional
 import pytest
 
 from cato_server.mappers.abstract_class_mapper import AbstractClassMapper, T
+from cato_server.mappers.abstract_value_mapper import AbstractValueMapper
 from cato_server.mappers.generic_class_mapper import GenericClassMapper
-from cato_server.mappers.internal.datetime_value_mapper import DateTimeValueMapper
 from cato_server.mappers.mapper_registry import MapperRegistry
 from cato_api_models.catoapimodels import (
     ApiSuccess,
 )
+
+
+class DateTimeValueMapper(AbstractValueMapper[datetime.datetime, str]):
+    def map_from(self, data: Optional[str]) -> Optional[datetime.datetime]:
+        if data:
+            return datetime.datetime(2021, 8, 5)
+
+    def map_to(self, date: datetime.datetime) -> str:
+        return "my datetime string"
 
 
 @dataclass
@@ -128,7 +137,7 @@ class TestMapToDict:
             )
         )
 
-        assert result == {"my_datetime": "2021-07-31T09:31:00", "my_int": 1}
+        assert result == {"my_datetime": "my datetime string", "my_int": 1}
 
     def test_map_dataclass_with_custom_class_mapper_for_field(self):
         class CustomMapper(AbstractClassMapper[NestedClass]):
@@ -283,7 +292,7 @@ class TestMapFromDict:
         )
 
         assert result == DataClassWithDatetime(
-            my_int=1, my_datetime=datetime.datetime(2021, 7, 31, 9, 31)
+            my_int=1, my_datetime=datetime.datetime(2021, 8, 5, 0, 0)
         )
 
     @pytest.mark.parametrize("json_value,parsed_value", [(None, None), (0, 0), (1, 1)])

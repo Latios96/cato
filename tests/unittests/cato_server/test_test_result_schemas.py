@@ -26,6 +26,28 @@ class TestCreateTestResultSchema:
 
         assert errors == {}
 
+    def test_success_with_required_fields_only_other_fields_none(self):
+        schema = CreateTestResultSchema()
+        data = {
+            "suite_result_id": 1,
+            "test_name": "my_test_name",
+            "test_identifier": "my_suite/test_identifier",
+            "test_command": "my_command",
+            "test_variables": {"key": "value"},
+            "execution_status": "NOT_STARTED",
+            "status": None,
+            "seconds": None,
+            "message": None,
+            "image_output": None,
+            "reference_image": None,
+            "started_at": None,
+            "finished_at": None,
+        }
+
+        errors = schema.validate(data)
+
+        assert errors == {}
+
     def test_success_with_all_fields(self):
         schema = CreateTestResultSchema()
         data = {

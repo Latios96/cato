@@ -34,14 +34,14 @@ class CreateTestResultSchema(Schema):
     test_variables = VARIABLES_FIELD
     machine_info = fields.Nested(MachineInfoSchema, required=False)
     execution_status = EnumField(ExecutionStatus, required=True)
-    status = EnumField(TestStatus)
+    status = EnumField(TestStatus, allow_none=True)
     output = fields.List(fields.String())
-    seconds = fields.Float(min=1)
-    message = fields.String(validate=[Length(1)])
-    image_output = fields.Integer()
-    reference_image = fields.Integer()
-    started_at = fields.DateTime()
-    finished_at = fields.DateTime()
+    seconds = fields.Float(min=1, allow_none=True)
+    message = fields.String(validate=[Length(1)], allow_none=True)
+    image_output = fields.Integer(allow_none=True)
+    reference_image = fields.Integer(allow_none=True)
+    started_at = fields.DateTime(allow_none=True)
+    finished_at = fields.DateTime(allow_none=True)
 
 
 class UpdateTestResultSchema(Schema):

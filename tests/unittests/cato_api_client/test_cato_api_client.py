@@ -201,7 +201,7 @@ def test_create_test_result_success_minimal(cato_api_client, suite_result):
         test_command="my_command",
         machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
         execution_status=ExecutionStatus.NOT_STARTED,
-        seconds=0,
+        seconds=None,
     )
 
 
@@ -232,7 +232,7 @@ def test_create_test_result_success_complex(
         test_command="my_command",
         machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
         execution_status=ExecutionStatus.NOT_STARTED,
-        seconds=0,
+        seconds=None,
         started_at=started_at,
         image_output=stored_image.id,
     )
@@ -275,6 +275,7 @@ def test_get_test_result_by_run_and_identifier_success(
         message="success",
         image_output=1,
         reference_image=1,
+        diff_image=1,
         started_at=test_result.started_at,
         finished_at=test_result.finished_at,
     )
