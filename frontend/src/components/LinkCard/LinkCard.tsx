@@ -9,7 +9,7 @@ interface Props {
 
 const LinkCard = (props: Props) => {
   return (
-    <Link to={props.linkTo}>
+    <Link to={props.linkTo} style={{ textDecoration: "none" }}>
       <div className={styles.linkCard}>
         <div className={styles.cardContentDiv}>{props.name}</div>
       </div>
