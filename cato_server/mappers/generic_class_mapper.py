@@ -1,10 +1,12 @@
 import copy
+import datetime
 import json
 from dataclasses import _is_dataclass_instance, fields, is_dataclass
 from enum import Enum
 from typing import Type, Dict, TypeVar, Collection
 
 from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder
+from dateutil.parser import parse
 
 from cato_server.mappers.mapper_registry import MapperRegistry
 
@@ -44,6 +46,8 @@ class GenericClassMapper:
             return json.loads(ConjureEncoder().encode(obj))
         elif isinstance(obj, Enum):
             return obj.name
+        elif isinstance(obj, datetime.datetime):
+            return obj.isoformat()
         else:
             return copy.deepcopy(obj)
 
@@ -81,6 +85,8 @@ class GenericClassMapper:
             return ConjureDecoder().decode(json_data, cls)
         elif self._is_subclass(cls, Enum):
             return cls(json_data)
+        elif self._is_subclass(cls, datetime.datetime):
+            return parse(json_data)
         else:
             return copy.deepcopy(json_data)
 

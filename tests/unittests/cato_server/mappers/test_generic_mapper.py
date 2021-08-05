@@ -174,6 +174,15 @@ class TestMapToDict:
 
         assert result == {"enum_value": "VALUE"}
 
+    def test_map_datetime(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            DataClassWithDatetime(
+                my_int=1, my_datetime=datetime.datetime(2021, 8, 5, 9, 53)
+            )
+        )
+
+        assert result == {"my_int": 1, "my_datetime": "2021-08-05T09:53:00"}
+
 
 class TestMapFromDict:
     def test_simple_class(self):
@@ -455,3 +464,12 @@ class TestMapFromDict:
         )
 
         assert result == DataClassWithOptionalInt(my_optional_int=0)
+
+    def test_map_datetime(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {"my_int": 1, "my_datetime": "2021-08-05T09:53:00"}, DataClassWithDatetime
+        )
+
+        assert result == DataClassWithDatetime(
+            my_int=1, my_datetime=datetime.datetime(2021, 8, 5, 9, 53)
+        )
