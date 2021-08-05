@@ -1,0 +1,14 @@
+.footer {
+  border-top: 1px solid #adadad;
+  margin-top: 140px;
+  margin-left: 70px;
+  margin-right: 70px;
+  div {
+    display: flex;
+    flex-direction: column;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-left: 10px;
+    font-size: 12px;
+  }
+}

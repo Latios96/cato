@@ -1,0 +1,12 @@
+.error {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  span:nth-child(1) {
+    font-size: 21px;
+    margin-bottom: 16px;
+  }
+  span:nth-child(2) {
+    font-size: 15px;
+  }
+}

@@ -1,5 +1,6 @@
 import time
 
+import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.select import Select
 
@@ -37,30 +38,18 @@ class ProjectPage:
         )
         assert project_name.text == self.stateless_test.project.name
 
-    def select_a_run_placeholder_should_be_visible(self):
-        placeholder = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "ProjectRunsView_suiteResultsPlaceholder"
-            )
-        )
-        assert placeholder.text == "Please select a run"
-
     def should_display_run_list(self):
-        run_number = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "ProjectRunsView_runNumber"
-            )
+        placeholder = self.stateless_test.selenium_driver.find_element_by_xpath(
+            "//a[text()='Run #1']"
         )
-        assert run_number.text == "Run #1"
+        assert placeholder
 
     def select_run(self):
-        run_number = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "ProjectRunsView_runNumber"
-            )
+        run_number = self.stateless_test.selenium_driver.find_element_by_xpath(
+            "//a[text()='Run #1']"
         )
         run_number.click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites")
+        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
 
 
 class RunView:
@@ -354,40 +343,17 @@ class NavigateBackAndForwardShouldWorkTest(ReadOnlySeleniumTest):
 class DisplayProjectPage(ReadOnlySeleniumTest):
     def execute(self):
         self.navigate_to_project_page()
-        self.project_page.select_a_run_placeholder_should_be_visible()
+        self.project_page.should_display_run_list()
 
 
 class ProjectPageNavigation(ReadOnlySeleniumTest):
     def execute(self):
         self.navigate_to_project_page_and_select_run()
 
-        self.navigate_to_test_and_back_by_suites()
-
-        self.navigate_to_test_and_back_by_tests()
-
     def navigate_to_project_page_and_select_run(self):
         self.navigate_to_project_page()
-        self.project_page.select_a_run_placeholder_should_be_visible()
         self.project_page.should_display_run_list()
         self.project_page.select_run()
-
-    def navigate_to_test_and_back_by_suites(self):
-        self.run_view.should_show_run_headline()
-        self.run_view.the_suites_tab_should_be_selected()
-        self.run_view.the_suites_tab_should_display_one_entry()
-        self.run_view.clicking_on_suite_entry_should_show_suite_tests()
-        self.run_view.the_breadcrumb_should_be_shown()
-        self.run_view.the_suites_tests_should_be_shown()
-        self.run_view.clicking_on_test_name_in_test_list_should_show_test()
-        self.run_view.the_breadcrumb_should_be_shown_and_show_test_name()
-        self.run_view.should_navigate_to_suite_by_breadcrumb()
-        self.run_view.should_navigate_to_run_by_breadcrumb()
-        self.run_view.the_suites_tab_should_be_selected()
-
-    def navigate_to_test_and_back_by_tests(self):
-        self.run_view.select_tests_tab()
-        self.run_view.the_tests_tab_should_display_one_entry()
-        self.run_view.clicking_on_test_name_in_test_tab_should_show_test()
 
 
 class TestResultFunctionality(ReadOnlySeleniumTest):
@@ -438,6 +404,7 @@ def test_read_only_tests(live_server, selenium_driver, project, finished_test_re
     test.execute()
 
 
+@pytest.mark.skip("Page does not exist at the moment")
 def test_test_result_page(
     live_server,
     selenium_driver,

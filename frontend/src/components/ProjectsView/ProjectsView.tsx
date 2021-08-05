@@ -53,7 +53,7 @@ export const ProjectsViewStateless = (props: Props) => {
         ]).map((p: Project) => {
           return (
             <div key={p.id} className={styles.projectsViewProjectComponent}>
-              <LinkCard name={p.name} linkTo={`/projects/${p.id}/runs`} />
+              <LinkCard name={p.name} linkTo={`/projects/${p.id}`} />
             </div>
           );
         })}

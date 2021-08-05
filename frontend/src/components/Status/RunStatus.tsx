@@ -11,13 +11,33 @@ interface Props {
 
 const RunStatus = (props: Props) => {
   if (props.status === "NOT_STARTED") {
-    return <Hourglass size={27} />;
+    return (
+      <span
+        className="d-inline-block"
+        data-toggle="tooltip"
+        title="not started"
+      >
+        <Hourglass size={27} />
+      </span>
+    );
   } else if (props.status === "RUNNING") {
-    return <RenderingBucketIcon isActive={props.isActive} />;
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="running">
+        <RenderingBucketIcon isActive={props.isActive} />
+      </span>
+    );
   } else if (props.status === "SUCCESS") {
-    return <Check2All color="green" size={27} />;
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="success">
+        <Check2All color="green" size={27} />
+      </span>
+    );
   } else if (props.status === "FAILED") {
-    return <XCircleIcon size={27} className={styles.errorIcon} />;
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="failed">
+        <XCircleIcon size={27} className={styles.errorIcon} />
+      </span>
+    );
   }
   return <span />;
 };

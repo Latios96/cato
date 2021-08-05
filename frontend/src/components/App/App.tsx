@@ -7,7 +7,7 @@ import {
   HashRouter,
 } from "react-router-dom";
 import ProjectsPage from "../../pages/ProjectsPage";
-import ProjectPage from "../../pages/ProjectPage";
+import ProjectPage from "../../pages/ProjectPage/ProjectPage";
 import AboutPage from "../../pages/AboutPage";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -32,22 +32,11 @@ function App() {
           <Route exact path="/about" component={() => <AboutPage />} />
           <Route
             exact
-            path="/projects/:projectId/runs/:runId?/:currentTab?/:suiteOrTestId?"
+            path="/projects/:projectId"
             component={(props: ProjectPageMatchProps) => {
               return (
                 <ProjectPage
                   projectId={parseInt(props.match.params.projectId)}
-                  currentRunId={
-                    props.match.params.runId != null
-                      ? parseInt(props.match.params.runId)
-                      : null
-                  }
-                  currentTab={props.match.params.currentTab}
-                  suiteOrTestId={
-                    props.match.params.suiteOrTestId != null
-                      ? parseInt(props.match.params.suiteOrTestId)
-                      : null
-                  }
                 />
               );
             }}
