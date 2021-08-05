@@ -28,9 +28,9 @@ from cato_server.api.validators.test_result_validators import (
     StartTestResultValidator,
 )
 from cato_server.domain.image import ImageChannel
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.mappers.page_mapper import PageMapper

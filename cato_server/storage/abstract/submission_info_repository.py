@@ -1,4 +1,4 @@
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 

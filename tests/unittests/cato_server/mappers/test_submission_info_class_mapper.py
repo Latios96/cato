@@ -1,6 +1,6 @@
 import os
 
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 
 
 def test_map_to_dict(config_fixture, object_mapper):

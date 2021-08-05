@@ -1,7 +1,7 @@
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.runners.update_reference_images import UpdateReferenceImage
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 
 class UpdateReferenceImageCommand(BaseCliCommand):

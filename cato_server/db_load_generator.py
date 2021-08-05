@@ -19,11 +19,11 @@ from cato_server.configuration.app_configuration_reader import AppConfigurationR
 from cato_server.configuration.bindings_factory import BindingsFactory
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image, ImageChannel
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage

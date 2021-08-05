@@ -38,13 +38,13 @@ from cato_server.configuration.scheduler_configuration import SchedulerConfigura
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image, ImageChannel
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory

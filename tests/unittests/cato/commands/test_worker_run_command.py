@@ -11,7 +11,7 @@ from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from tests.utils import mock_safe
 
 

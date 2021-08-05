@@ -15,7 +15,7 @@ from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.image import Image
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.usecases.compare_image import CompareImageResult
 from tests.utils import mock_safe
 

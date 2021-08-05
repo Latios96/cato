@@ -13,7 +13,7 @@ from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.submission_info_repository import (
     SubmissionInfoRepository,

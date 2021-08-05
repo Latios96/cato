@@ -13,7 +13,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 
 class RunCommandInterface(BaseCliCommand):

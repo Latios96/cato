@@ -3,9 +3,9 @@ from typing import Optional
 import pytest
 
 from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.run_status import RunStatus
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato.domain.test_status import TestStatus
 from cato_server.run_status_calculator import RunStatusCalculator

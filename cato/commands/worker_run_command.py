@@ -11,7 +11,7 @@ from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 
 class WorkerRunCommand(BaseCliCommand):

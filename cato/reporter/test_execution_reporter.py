@@ -6,7 +6,7 @@ from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 
 class TestExecutionReporter:

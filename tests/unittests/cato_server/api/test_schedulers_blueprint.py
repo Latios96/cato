@@ -1,5 +1,5 @@
 from cato.config.config_file_parser import JsonConfigParser
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from tests.unittests.cato.test_config_file_parser import VALID_CONFIG
 
 

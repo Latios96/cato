@@ -3,7 +3,7 @@ from typing import Optional
 import cpuinfo
 import psutil
 
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 
 
 class MachineInfoCollector:

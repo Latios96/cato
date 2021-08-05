@@ -1,6 +1,6 @@
 from typing import List, Dict
 
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_result_repository import (

@@ -2,7 +2,7 @@ from sqlalchemy import Column, Integer, JSON, ForeignKey, String
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.storage.abstract.submission_info_repository import (
     SubmissionInfoRepository,
 )

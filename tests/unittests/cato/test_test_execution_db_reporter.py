@@ -16,10 +16,10 @@ from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.image import Image
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,

@@ -7,11 +7,11 @@ from requests.models import Response
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.image import Image, ImageChannel
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.domain.output import Output
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
 from cato_server.domain.file import File
 from cato_server.domain.execution_status import ExecutionStatus
@@ -26,7 +26,7 @@ from cato_api_models.catoapimodels import (
     MachineInfoDto,
     StartTestResultDto,
 )
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.usecases.compare_image import CompareImageResult
 
 

@@ -1,4 +1,4 @@
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 
 
 def test_map_from_dict(object_mapper):

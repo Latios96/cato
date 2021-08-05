@@ -11,7 +11,7 @@ import pytest
 from cato.commands.run_command import RunCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
@@ -27,7 +27,7 @@ from cato.reporter.timing_report_generator import TimingReportGenerator
 from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
 TEST = Test(

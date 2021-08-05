@@ -1,12 +1,12 @@
 from unittest import mock
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.update_reference_images import UpdateReferenceImage
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
 EXAMPLE_PROJECT = "Example project"

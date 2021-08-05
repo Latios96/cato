@@ -2,7 +2,7 @@ import time
 
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.test_heartbeat_reporter import TestHeartbeatReporter
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from tests.utils import mock_safe
 
 

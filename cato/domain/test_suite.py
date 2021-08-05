@@ -3,7 +3,7 @@ from typing import List, Iterable, Tuple, Dict
 
 from cato.domain.test import Test
 from cato.domain.validation import validate_name
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 
 @dataclass

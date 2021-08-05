@@ -23,10 +23,10 @@ from cato_server.domain.output import Output
 from cato_server.domain.project import Project
 from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.usecases.compare_image import CompareImageResult
 
 logger = logging.getLogger(__name__)

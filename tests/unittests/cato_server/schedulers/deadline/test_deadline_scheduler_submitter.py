@@ -1,6 +1,6 @@
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
-from cato_server.domain.submission_info import SubmissionInfo
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_job import DeadlineJob
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (

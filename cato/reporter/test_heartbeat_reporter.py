@@ -3,7 +3,7 @@ import time
 from typing import Optional
 
 from cato.reporter.test_execution_reporter import TestExecutionReporter
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 
 HEARTBEAT_INTERVAL_IN_SECONDS = 5
 

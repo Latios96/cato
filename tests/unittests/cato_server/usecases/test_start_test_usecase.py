@@ -5,7 +5,7 @@ import pytest
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
-from cato_server.domain.machine_info import MachineInfo
+from cato_common.domain.machine_info import MachineInfo
 from cato_server.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue

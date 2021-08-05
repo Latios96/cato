@@ -8,7 +8,7 @@ from cato_server.domain.event import Event
 from cato_server.domain.execution_status import ExecutionStatus
 from cato_server.domain.run import Run
 from cato_server.domain.suite_result import SuiteResult
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_result import TestResult
 from cato_server.mappers.object_mapper import ObjectMapper
 from cato_server.queues.abstract_message_queue import AbstractMessageQueue

@@ -2,7 +2,7 @@ import pytest
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
-from cato_server.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import (
     TestSuite,
     iterate_suites_and_tests,
