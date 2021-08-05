@@ -1,3 +1,4 @@
+@import "../../custom.scss";
 .paginationControlContainer {
   display: flex;
   justify-content: flex-end;
@@ -19,7 +20,7 @@
     color: grey;
   }
   [data-disabled="false"]:hover {
-    color: red;
+    color: $cato-highlight;
     cursor: pointer;
   }
   [data-disabled="false"] {
