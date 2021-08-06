@@ -10,12 +10,13 @@ import ProjectsPage from "../../pages/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage/ProjectPage";
 import AboutPage from "../../pages/AboutPage";
 import { QueryClient, QueryClientProvider } from "react-query";
+import RunOverviewPage from "../../pages/RunPages/RunOverviewPage";
+import RunSuitePage from "../../pages/RunPages/RunSuitesPage";
+import RunTestsPage from "../../pages/RunPages/RunTestsPage";
 
 interface ProjectPageMatchParams {
   projectId: string;
   runId: string;
-  currentTab: string;
-  suiteOrTestId: string;
 }
 
 interface ProjectPageMatchProps
@@ -37,6 +38,42 @@ function App() {
               return (
                 <ProjectPage
                   projectId={parseInt(props.match.params.projectId)}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/runs/:runId"
+            component={(props: ProjectPageMatchProps) => {
+              return (
+                <RunOverviewPage
+                  projectId={parseInt(props.match.params.projectId)}
+                  runId={parseInt(props.match.params.runId)}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/runs/:runId/suites"
+            component={(props: ProjectPageMatchProps) => {
+              return (
+                <RunSuitePage
+                  projectId={parseInt(props.match.params.projectId)}
+                  runId={parseInt(props.match.params.runId)}
+                />
+              );
+            }}
+          />
+          <Route
+            exact
+            path="/projects/:projectId/runs/:runId/tests"
+            component={(props: ProjectPageMatchProps) => {
+              return (
+                <RunTestsPage
+                  projectId={parseInt(props.match.params.projectId)}
+                  runId={parseInt(props.match.params.runId)}
                 />
               );
             }}

@@ -1,0 +1,23 @@
+@import "../../../custom";
+.sideMenu {
+  width: 180px;
+  min-height: 100vh;
+  background-color: #171717;
+  li {
+    margin: 10px;
+    margin-left: 12px;
+  }
+  a {
+    text-decoration: none;
+    color: white;
+  }
+  a:hover {
+    color: $cato-highlight !important;
+    text-decoration: none;
+  }
+}
+.active {
+  a {
+    color: red;
+  }
+}
