@@ -5,7 +5,6 @@ import { formatDuration } from "../../../utils";
 import React from "react";
 
 import styles from "./RunSummary.module.scss";
-import { CachePolicies, useFetch } from "use-http";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import {
   DataLoadedState,
@@ -14,6 +13,7 @@ import {
   LoadingStateHandler,
 } from "../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
+import { useReFetch } from "../../../useReFetch";
 interface Props {
   runId: number;
 }
@@ -22,13 +22,7 @@ export function RunSummary(props: Props) {
     data: runSummaryDto,
     loading,
     error,
-  } = useFetch<RunSummaryDto>(
-    `/api/v1/runs/${props.runId}/summary`,
-    {
-      cachePolicy: CachePolicies.NO_CACHE,
-    },
-    []
-  );
+  } = useReFetch(`/api/v1/runs/${props.runId}/summary`, 5000, [props.runId]);
 
   return (
     <div className={styles.runSummary}>
