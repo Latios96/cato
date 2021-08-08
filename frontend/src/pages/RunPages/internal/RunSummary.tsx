@@ -7,11 +7,22 @@ import React from "react";
 import styles from "./RunSummary.module.scss";
 import { CachePolicies, useFetch } from "use-http";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import {
+  DataLoadedState,
+  ErrorState,
+  LoadingState,
+  LoadingStateHandler,
+} from "../../../components/LoadingStateHandler/LoadingStateHandler";
+import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 interface Props {
   runId: number;
 }
 export function RunSummary(props: Props) {
-  const { data: runSummaryDto, loading } = useFetch<RunSummaryDto>(
+  const {
+    data: runSummaryDto,
+    loading,
+    error,
+  } = useFetch<RunSummaryDto>(
     `/api/v1/runs/${props.runId}/summary`,
     {
       cachePolicy: CachePolicies.NO_CACHE,
@@ -19,43 +30,52 @@ export function RunSummary(props: Props) {
     []
   );
 
-  if (loading) {
-    return (
-      <div className={styles.runSummary}>
-        <SkeletonTheme color="#f7f7f7" highlightColor="white">
-          <p>
-            <Skeleton count={1} width={720} height={100} />
-          </p>
-        </SkeletonTheme>
-      </div>
-    );
-  }
-  if (!runSummaryDto) {
-    return null;
-  }
-
   return (
     <div className={styles.runSummary}>
-      <InfoBox>
-        <InfoBoxElement
-          value={"" + runSummaryDto.suite_count}
-          title={"suites"}
-        />
-        <InfoBoxElement value={"" + runSummaryDto.test_count} title={"tests"} />
-        <InfoBoxElement
-          value={"" + runSummaryDto.failed_test_count}
-          title={"failed tests"}
-        />
-        <InfoBoxElement
-          value={
-            "" +
-            formatDuration(
-              runSummaryDto.duration !== "NaN" ? runSummaryDto.duration : 0
-            )
-          }
-          title={"duration"}
-        />
-      </InfoBox>
+      <LoadingStateHandler isLoading={loading} error={error}>
+        <LoadingState>
+          <SkeletonTheme color="#f7f7f7" highlightColor="white">
+            <p>
+              <Skeleton count={1} width={720} height={100} />
+            </p>
+          </SkeletonTheme>
+        </LoadingState>
+        <ErrorState>
+          <ErrorMessageBox
+            heading={"Error when loading run summary"}
+            message={error?.message}
+          />
+        </ErrorState>
+        <DataLoadedState>
+          {runSummaryDto ? (
+            <InfoBox>
+              <InfoBoxElement
+                value={"" + runSummaryDto.suite_count}
+                title={"suites"}
+              />
+              <InfoBoxElement
+                value={"" + runSummaryDto.test_count}
+                title={"tests"}
+              />
+              <InfoBoxElement
+                value={"" + runSummaryDto.failed_test_count}
+                title={"failed tests"}
+              />
+              <InfoBoxElement
+                value={
+                  "" +
+                  formatDuration(
+                    runSummaryDto.duration !== "NaN"
+                      ? runSummaryDto.duration
+                      : 0
+                  )
+                }
+                title={"duration"}
+              />
+            </InfoBox>
+          ) : null}
+        </DataLoadedState>
+      </LoadingStateHandler>
     </div>
   );
 }
