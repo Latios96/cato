@@ -1,0 +1,29 @@
+@import "../../../custom";
+.testList {
+  width: 100%;
+  colgroup {
+    > col:nth-child(1) {
+      width: 0px;
+    }
+  }
+
+  tr {
+    height: 40px;
+  }
+  tr:hover {
+    background-color: #dadada;
+    cursor: pointer;
+    user-select: none;
+  }
+  td {
+    padding-left: 20px;
+    border-top: 1px solid #dadada;
+    white-space: nowrap;
+  }
+}
+.active {
+  background-color: $cato-highlight;
+}
+.active:hover {
+  background-color: $cato-highlight !important;
+}

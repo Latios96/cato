@@ -1,6 +1,6 @@
 import { CachePolicies, useFetch } from "use-http";
-import useInterval from "./useInterval";
 import { useState } from "react";
+import { useInterval } from "rooks";
 
 export function useReFetch<TData = any>(
   url: string,
