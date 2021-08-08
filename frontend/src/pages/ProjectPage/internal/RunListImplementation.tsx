@@ -7,7 +7,7 @@ import { RunDto } from "../../../catoapimodels";
 import { Page, PageRequest } from "../../../components/Pagination/Page";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
-import Error from "../../../components/Error/Error";
+import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
 
 interface Props {
@@ -22,7 +22,7 @@ function RunListImplementation(props: Props) {
   if (props.error) {
     return (
       <div className={styles.error}>
-        <Error
+        <ErrorMessageBox
           heading={"Error when loading runs"}
           message={props.error.message}
         />

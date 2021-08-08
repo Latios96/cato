@@ -5,7 +5,7 @@ interface Props {
   message: string;
 }
 
-function Error(props: Props) {
+function ErrorMessageBox(props: Props) {
   return (
     <div className={styles.error}>
       <span>{props.heading}</span>
@@ -14,4 +14,4 @@ function Error(props: Props) {
   );
 }
 
-export default Error;
+export default ErrorMessageBox;
