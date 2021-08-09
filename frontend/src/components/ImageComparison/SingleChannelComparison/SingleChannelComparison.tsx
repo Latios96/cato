@@ -37,6 +37,10 @@ class SingleChannelComparison extends Component<Props, State> {
     };
   }
   componentDidMount() {
+    this.updateHeight();
+  }
+
+  private updateHeight() {
     let containerElement = document.getElementById(this.generateId());
     if (containerElement) {
       let width = containerElement.clientWidth;
@@ -57,11 +61,7 @@ class SingleChannelComparison extends Component<Props, State> {
         prevProps.identifier === this.props.identifier);
 
     if (isSwapping) {
-      let containerElement = document.getElementById(this.generateId());
-      if (containerElement) {
-        let height = containerElement.clientHeight;
-        this.setState({ heightForRendering: height });
-      }
+      this.updateHeight();
       this.setState({ isSwapping: true });
     }
     if (
@@ -106,6 +106,7 @@ class SingleChannelComparison extends Component<Props, State> {
               <ReactCompareImage
                 leftImage={this.state.outputImageUrlToRender}
                 rightImage={this.state.referenceImageUrlToRender}
+                key={this.state.outputImageUrlToRender}
               />
             ) : (
               <DiffImageDisplay imageUrl={this.props.diffImageUrl} />
@@ -132,7 +133,6 @@ class SingleChannelComparison extends Component<Props, State> {
   checkLoadedReferenceImage = () => {
     this.setState({ referenceImageLoaded: true });
     if (this.state.outputImageLoaded) {
-      console.log(this.props.outputImageUrl);
       this.setState({
         outputImageUrlToRender: this.props.outputImageUrl,
         referenceImageUrlToRender: this.props.referenceImageUrl,
@@ -143,7 +143,6 @@ class SingleChannelComparison extends Component<Props, State> {
   checkOutputImageLoaded = () => {
     this.setState({ outputImageLoaded: true });
     if (this.state.referenceImageLoaded) {
-      console.log(this.props.outputImageUrl);
       this.setState({
         outputImageUrlToRender: this.props.outputImageUrl,
         referenceImageUrlToRender: this.props.referenceImageUrl,
