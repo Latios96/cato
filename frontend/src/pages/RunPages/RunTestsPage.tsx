@@ -1,27 +1,18 @@
 import React from "react";
-import { CachePolicies, useFetch } from "use-http";
-import { TestResultShortSummaryDto } from "../../catoapimodels";
 import BasicRunPage from "./internal/BasicRunPage";
 import { CurrentPage } from "./internal/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
 import TestList from "./internal/TestList";
-import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
-import { useReFetch } from "../../useReFetch";
 interface Props {
   projectId: number;
   runId: number;
 }
 
 function RunTestsPage(props: Props) {
-  const { data, loading, error } = useReFetch(
-    `/api/v1/test_results/run/${props.runId}`,
-    5000,
-    [props.runId]
-  );
   const location = useLocation();
   const queryParams = queryString.parse(location.search, {
     parseNumbers: true,
@@ -33,15 +24,7 @@ function RunTestsPage(props: Props) {
     <BasicRunPage {...props} currentPage={CurrentPage.TESTS}>
       <div className={styles.suiteAndTestContainer}>
         <div>
-          {data ? (
-            <TestList
-              projectId={props.projectId}
-              runId={props.runId}
-              tests={_.sortBy(data, "test_identifier")}
-            />
-          ) : (
-            ""
-          )}
+          <TestList projectId={props.projectId} runId={props.runId} />
         </div>
         <div>
           <div>

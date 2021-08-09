@@ -5,6 +5,12 @@
     > col:nth-child(1) {
       width: 0px;
     }
+    > col:nth-child(2) {
+      width: 0px;
+    }
+    > col:nth-child(3) {
+      width: 0px;
+    }
   }
 
   tr {
@@ -27,4 +33,9 @@
 }
 .active:hover {
   background-color: $cato-highlight !important;
+}
+.loading {
+  p {
+    margin-bottom: 1px;
+  }
 }
