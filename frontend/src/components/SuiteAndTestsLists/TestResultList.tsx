@@ -42,7 +42,7 @@ const TestResultList = (props: Props) => {
             >
               <ListGroup.Item className={styles.listEntry}>
                 <span className={styles.statusInList}>
-                  <TestStatus restResult={test} />
+                  <TestStatus testResult={test} />
                 </span>
                 <span className={styles.nameInList}>
                   {!!props.displayOnlyTestName

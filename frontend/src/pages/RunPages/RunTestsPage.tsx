@@ -10,18 +10,17 @@ import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
+import { useReFetch } from "../../useReFetch";
 interface Props {
   projectId: number;
   runId: number;
 }
 
 function RunTestsPage(props: Props) {
-  const { data } = useFetch<TestResultShortSummaryDto[]>(
+  const { data, loading, error } = useReFetch(
     `/api/v1/test_results/run/${props.runId}`,
-    {
-      cachePolicy: CachePolicies.NO_CACHE,
-    },
-    []
+    5000,
+    [props.runId]
   );
   const location = useLocation();
   const queryParams = queryString.parse(location.search, {

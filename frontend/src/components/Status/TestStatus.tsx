@@ -10,17 +10,17 @@ interface TestStatusData {
 }
 
 interface Props {
-  restResult: TestStatusData;
+  testResult: TestStatusData;
 }
 const TestStatus = (props: Props) => {
   let status = (props: Props) => {
-    if (props.restResult.execution_status === "NOT_STARTED") {
+    if (props.testResult.execution_status === "NOT_STARTED") {
       return <Hourglass size={27} />;
-    } else if (props.restResult.execution_status === "RUNNING") {
+    } else if (props.testResult.execution_status === "RUNNING") {
       return <RenderingBucketIcon isActive={false} />;
-    } else if (props.restResult.status === "SUCCESS") {
+    } else if (props.testResult.status === "SUCCESS") {
       return <Check color="green" size={27} />;
-    } else if (props.restResult.status === "FAILED") {
+    } else if (props.testResult.status === "FAILED") {
       return <XCircleIcon size={27} className={styles.errorIcon} />;
     }
   };
