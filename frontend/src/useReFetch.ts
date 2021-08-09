@@ -30,11 +30,15 @@ export function useReFetch<TData = any>(
     dependencies
   );
 
-  useInterval(() => {
-    if (!loading) {
-      get();
-    }
-  }, interval);
-
+  const [start] = useInterval(
+    () => {
+      if (!loading) {
+        get();
+      }
+    },
+    interval,
+    true
+  );
+  start();
   return { data, loading: isFirstFetch ? loading : false, error };
 }
