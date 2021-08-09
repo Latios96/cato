@@ -4,8 +4,9 @@
   > :nth-child(1) {
     width: 50%;
     border-right: 5px solid #eceff1;
-    min-height: 100vh;
+    height: 100vh;
     padding: 20px;
+    overflow: scroll;
   }
   > :nth-child(2) {
     width: 50%;
