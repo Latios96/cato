@@ -17,9 +17,7 @@ const SuiteResultComponent = (props: Props) => {
         (result) => {
           setSuiteResult(result);
         },
-        (error) => {
-          console.log(error);
-        }
+        (error) => {}
       );
   }, [props.suiteId]);
 

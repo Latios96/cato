@@ -40,7 +40,6 @@ export default function RunSummaryTabComponent(props: Props) {
             setIsLoading(false);
           },
           (error) => {
-            console.log(error);
             setIsLoading(false);
           }
         );
@@ -57,7 +56,6 @@ export default function RunSummaryTabComponent(props: Props) {
             setIsLoading(false);
           },
           (error) => {
-            console.log(error);
             setIsLoading(false);
           }
         );
@@ -109,7 +107,6 @@ export default function RunSummaryTabComponent(props: Props) {
                           setIsLoading(false);
                         },
                         (error) => {
-                          console.log(error);
                           setIsLoading(false);
                         }
                       );
@@ -146,7 +143,6 @@ export default function RunSummaryTabComponent(props: Props) {
                           setIsLoading(false);
                         },
                         (error) => {
-                          console.log(error);
                           setIsLoading(false);
                         }
                       );

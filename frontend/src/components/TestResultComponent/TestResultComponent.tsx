@@ -20,9 +20,7 @@ function TestResultComponent(props: Props) {
         (result) => {
           setResult(result);
         },
-        (error) => {
-          console.log(error);
-        }
+        (error) => {}
       );
   }, [props.resultId]);
 

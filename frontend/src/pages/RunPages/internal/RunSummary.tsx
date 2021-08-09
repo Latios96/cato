@@ -1,4 +1,3 @@
-import { RunSummaryDto } from "../../../catoapimodels";
 import InfoBox from "../../../components/InfoBox/InfoBox";
 import InfoBoxElement from "../../../components/InfoBox/InfoBoxElement/InfoBoxElement";
 import { formatDuration } from "../../../utils";

@@ -105,9 +105,7 @@ class ProjectRunsView extends Component<Props, State> {
         (result) => {
           this.setState({ project: result });
         },
-        (error) => {
-          console.log(error);
-        }
+        (error) => {}
       );
   };
 
@@ -122,9 +120,7 @@ class ProjectRunsView extends Component<Props, State> {
         (result) => {
           this.setState({ runs: result });
         },
-        (error) => {
-          console.log(error);
-        }
+        (error) => {}
       );
   };
 

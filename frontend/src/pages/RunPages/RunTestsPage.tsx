@@ -1,10 +1,9 @@
 import React from "react";
 import { CachePolicies, useFetch } from "use-http";
-import { TestResultDto, TestResultShortSummaryDto } from "../../catoapimodels";
+import { TestResultShortSummaryDto } from "../../catoapimodels";
 import BasicRunPage from "./internal/BasicRunPage";
 import { CurrentPage } from "./internal/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
-import TestListEntry from "./internal/TestListEntry";
 import TestList from "./internal/TestList";
 import _ from "lodash";
 import { useLocation } from "react-router-dom";

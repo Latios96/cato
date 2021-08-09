@@ -49,6 +49,9 @@
     "build-storybook": "build-storybook -s public"
   },
   "eslintConfig": {
+    "rules": {
+        "no-console": "error"
+    },
     "extends": [
       "react-app",
       "react-app/jest"

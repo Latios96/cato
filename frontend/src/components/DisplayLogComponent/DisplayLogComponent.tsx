@@ -64,7 +64,6 @@ class DisplayLogComponent extends Component<Props, State> {
         },
         (error) => {
           this.setState({ isLoading: false });
-          console.log(error);
         }
       );
   };

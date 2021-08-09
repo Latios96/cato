@@ -52,9 +52,7 @@ class RunSummary extends Component<Props, State> {
           (result) => {
             this.setState({ runSummaryDto: result, isLoadingSummary: false });
           },
-          (error) => {
-            console.log(error);
-          }
+          (error) => {}
         );
     });
   };

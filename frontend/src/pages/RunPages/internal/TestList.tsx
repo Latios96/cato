@@ -1,7 +1,7 @@
 import React from "react";
 import { TestResultShortSummaryDto } from "../../../catoapimodels";
 import styles from "./TestList.module.scss";
-import { useHistory, useLocation, useParams } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 interface Props {
   projectId: number;
