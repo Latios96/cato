@@ -9,6 +9,7 @@ import _ from "lodash";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
+import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
 interface Props {
   projectId: number;
   runId: number;
@@ -52,7 +53,12 @@ function RunTestsPage(props: Props) {
                 resultId={selectedTestId}
               />
             ) : (
-              "no test seleected"
+              <div className={styles.noTestSelected}>
+                <PlaceHolderText
+                  text={"No test selected"}
+                  className={styles.centered}
+                />
+              </div>
             )}
           </div>
         </div>
