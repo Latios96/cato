@@ -10,21 +10,20 @@
     font-size: 13px;
     margin-top: -2px;
   }
-  span {
+  button {
     user-select: none;
+    background: none;
+    border: none;
+    color: #0f5b99;
   }
-  span:nth-child(1) {
-    margin-right: 16px;
-  }
-  [data-disabled="true"] {
+  button:disabled {
     color: grey;
   }
-  [data-disabled="false"]:hover {
+  button:hover {
     color: $cato-highlight;
-    cursor: pointer;
   }
-  [data-disabled="false"] {
-    color: #0f5b99;
+  button:disabled:hover {
+    color: grey;
   }
 }
 .elementsOnPage {

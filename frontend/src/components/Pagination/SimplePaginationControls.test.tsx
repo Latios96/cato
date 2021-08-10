@@ -17,7 +17,7 @@ describe("SimplePaginationControls", () => {
         />
       );
 
-      expect(getByText("Previous")).toHaveAttribute("data-disabled", "true");
+      expect(getByText("Previous")).not.toBeEnabled();
       expect(getByText("Next Page")).toBeEnabled();
     });
 
@@ -30,7 +30,7 @@ describe("SimplePaginationControls", () => {
       );
 
       expect(getByText("Previous")).toBeEnabled();
-      expect(getByText("Next Page")).toHaveAttribute("data-disabled", "true");
+      expect(getByText("Next Page")).not.toBeEnabled();
     });
 
     it("should disable 'next page' and 'previous page' on small first page", () => {
@@ -41,8 +41,8 @@ describe("SimplePaginationControls", () => {
         />
       );
 
-      expect(getByText("Previous")).toHaveAttribute("data-disabled", "true");
-      expect(getByText("Next Page")).toHaveAttribute("data-disabled", "true");
+      expect(getByText("Previous")).not.toBeEnabled();
+      expect(getByText("Next Page")).not.toBeEnabled();
     });
 
     it("should enable 'next page' and 'previous page' on middle page", () => {

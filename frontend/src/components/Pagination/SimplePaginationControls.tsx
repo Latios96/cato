@@ -18,19 +18,21 @@ const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
   return (
     <div className={styles.paginationControlContainer}>
       <div className={styles.controls}>
-        <span
-          data-disabled={controls.isFirstPage()}
+        <button
+          aria-label={"Previous"}
+          disabled={controls.isFirstPage()}
           onClick={() => controls.previousPage()}
         >
           <ChevronLeft />
           Previous
-        </span>
-        <span
-          data-disabled={controls.isLastPage()}
+        </button>
+        <button
+          aria-label={"Next Page"}
+          disabled={controls.isLastPage()}
           onClick={() => controls.nextPage()}
         >
           Next Page <ChevronRight />
-        </span>
+        </button>
       </div>
     </div>
   );
