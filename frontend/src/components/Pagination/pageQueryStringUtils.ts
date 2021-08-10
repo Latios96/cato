@@ -7,12 +7,18 @@ export function toQueryString(pageRequest: PageRequest): string {
   });
 }
 
-export function fromQueryString(theQueryString: string): PageRequest {
+export function fromQueryString(
+  theQueryString: string,
+  defaultPage?: PageRequest
+): PageRequest {
   const parsed = queryString.parse(theQueryString, { parseNumbers: true });
   const pageNumber = Number(parsed.page_number);
   const pageSize = Number(parsed.page_size);
-  if (Number.isNaN(pageNumber) || Number.isNaN(pageSize)) {
+  const invalidData = Number.isNaN(pageNumber) || Number.isNaN(pageSize);
+  if (invalidData && !defaultPage) {
     throw new Error("Invalid query string: " + theQueryString);
+  } else if (invalidData && defaultPage) {
+    return defaultPage;
   }
   return {
     page_number: pageNumber,
