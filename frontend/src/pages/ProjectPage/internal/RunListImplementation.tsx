@@ -31,7 +31,7 @@ function RunListImplementation(props: Props) {
   }
   return (
     <div className={styles.runList}>
-      <table>
+      <table id={"runList"}>
         <colgroup>
           <col />
           <col />
