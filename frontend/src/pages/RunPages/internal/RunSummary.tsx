@@ -45,14 +45,17 @@ export function RunSummary(props: Props) {
               <InfoBoxElement
                 value={"" + runSummaryDto.suite_count}
                 title={"suites"}
+                id={"runSummary suites"}
               />
               <InfoBoxElement
                 value={"" + runSummaryDto.test_count}
                 title={"tests"}
+                id={"runSummary tests"}
               />
               <InfoBoxElement
                 value={"" + runSummaryDto.failed_test_count}
                 title={"failed tests"}
+                id={"runSummary failed tests"}
               />
               <InfoBoxElement
                 value={
@@ -64,6 +67,7 @@ export function RunSummary(props: Props) {
                   )
                 }
                 title={"duration"}
+                id={"runSummary duration"}
               />
             </InfoBox>
           ) : null}
