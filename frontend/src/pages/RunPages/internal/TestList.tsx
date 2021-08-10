@@ -4,7 +4,7 @@ import styles from "./TestList.module.scss";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
 import TestStatus from "../../../components/Status/TestStatus";
-import { useReFetch } from "../../../useReFetch";
+import { useReFetch } from "../../../hooks/useReFetch";
 import _ from "lodash";
 import {
   DataLoadedState,

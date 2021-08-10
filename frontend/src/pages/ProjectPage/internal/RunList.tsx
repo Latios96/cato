@@ -5,7 +5,7 @@ import {
 } from "../../../components/Pagination/Page";
 import { RunDto } from "../../../catoapimodels";
 import RunListImplementation from "./RunListImplementation";
-import { useReFetch } from "../../../useReFetch";
+import { useReFetch } from "../../../hooks/useReFetch";
 interface Props {
   projectId: number;
 }

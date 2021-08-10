@@ -12,7 +12,7 @@ import {
   LoadingStateHandler,
 } from "../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
-import { useReFetch } from "../../../useReFetch";
+import { useReFetch } from "../../../hooks/useReFetch";
 interface Props {
   runId: number;
 }
