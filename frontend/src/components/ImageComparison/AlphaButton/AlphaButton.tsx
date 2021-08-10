@@ -9,12 +9,23 @@ interface Props {
 }
 
 const AlphaButton = (props: Props) => {
+  function getStyle() {
+    if (!props.clickable) {
+      return `${styles.buttonBg} ${styles.buttonBgDisabled}`;
+    }
+    return `${styles.buttonBg} ${
+      props.isToggled ? styles.buttonBgEnabled : ""
+    } ${props.clickable ? styles.buttonBgClickable : ""}`;
+  }
+
   return (
     <div
-      className={`${styles.buttonBg} ${
-        props.isToggled ? styles.buttonBgEnabled : ""
-      } ${props.clickable ? styles.buttonBgClickable : ""}`}
-      onClick={props.onClick}
+      className={getStyle()}
+      onClick={() => {
+        if (props.clickable) {
+          props.onClick();
+        }
+      }}
     >
       <CircleFill
         className={`${styles.icon} ${

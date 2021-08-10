@@ -68,9 +68,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
           <Form.Control
             className={styles.selectChannel}
             as="select"
-            custom
             onChange={this.handleChange}
             value={this.state.selectedChannel}
+            disabled={this.state.selectedMode === CompareModes.DIFF}
+            custom
           >
             {(imageOutputOrReferenceImage
               ? imageOutputOrReferenceImage.channels
@@ -87,7 +88,9 @@ class MultiChannelImageComparison extends Component<Props, State> {
           <AlphaButton
             isToggled={this.state.selectedChannel === "alpha"}
             onClick={() => this.toggleAlpha()}
-            clickable={this.hasAlpha()}
+            clickable={
+              this.hasAlpha() && this.state.selectedMode === CompareModes.SWIPE
+            }
           />
 
           <Form.Check
