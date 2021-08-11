@@ -5,6 +5,7 @@ import { Form } from "react-bootstrap";
 import styles from "./MultiChannelImageComparion.module.scss";
 import { CompareModes } from "../CompareModes";
 import AlphaButton from "../AlphaButton/AlphaButton";
+import SingleImageDisplay from "../SingleImageDisplay/SingleImageDisplay";
 
 interface Props {
   imageOutput: ImageDto | null | undefined;
@@ -40,14 +41,10 @@ class MultiChannelImageComparison extends Component<Props, State> {
   render() {
     return (
       <div style={this.state.height ? { height: this.state.height } : {}}>
-        {this.props.imageOutput && this.props.referenceImage ? (
-          this.renderImageComparison(
-            this.props.imageOutput,
-            this.props.referenceImage,
-            this.props.diffImage
-          )
-        ) : (
-          <React.Fragment />
+        {this.renderImageComparison(
+          this.props.imageOutput,
+          this.props.referenceImage,
+          this.props.diffImage
         )}
       </div>
     );
@@ -62,6 +59,11 @@ class MultiChannelImageComparison extends Component<Props, State> {
       imageOutput,
       referenceImage
     );
+    const standartRender =
+      (imageOutput &&
+        referenceImage &&
+        this.state.selectedMode === CompareModes.SWIPE) ||
+      this.state.selectedMode === CompareModes.DIFF;
     return (
       <React.Fragment>
         <form>
@@ -101,6 +103,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
             type={"radio"}
             checked={this.state.selectedMode === CompareModes.SWIPE}
             onChange={() => this.setState({ selectedMode: CompareModes.SWIPE })}
+            disabled={!this.props.imageOutput || !this.props.referenceImage}
           />
           <Form.Check
             id={"selected-swipe-mode-diff" + this.props.id}
@@ -113,27 +116,51 @@ class MultiChannelImageComparison extends Component<Props, State> {
             disabled={!this.props.diffImage}
           />
         </form>
-        <SingleChannelComparison
-          outputImageUrl={
-            "/api/v1/files/" +
-            this.channelFileIdByName(imageOutput, this.state.selectedChannel)
-          }
-          referenceImageUrl={
-            "/api/v1/files/" +
-            this.channelFileIdByName(referenceImage, this.state.selectedChannel)
-          }
-          diffImageUrl={
-            "/api/v1/files/" + this.channelFileIdByName(diffImage, "rgb")
-          }
-          width={
-            imageOutputOrReferenceImage ? imageOutputOrReferenceImage.width : 0
-          }
-          height={
-            imageOutputOrReferenceImage ? imageOutputOrReferenceImage.height : 0
-          }
-          identifier={"test"}
-          mode={this.state.selectedMode}
-        />
+        {standartRender ? (
+          <SingleChannelComparison
+            outputImageUrl={
+              "/api/v1/files/" +
+              this.channelFileIdByName(imageOutput, this.state.selectedChannel)
+            }
+            referenceImageUrl={
+              "/api/v1/files/" +
+              this.channelFileIdByName(
+                referenceImage,
+                this.state.selectedChannel
+              )
+            }
+            diffImageUrl={
+              "/api/v1/files/" + this.channelFileIdByName(diffImage, "rgb")
+            }
+            width={
+              imageOutputOrReferenceImage
+                ? imageOutputOrReferenceImage.width
+                : 0
+            }
+            height={
+              imageOutputOrReferenceImage
+                ? imageOutputOrReferenceImage.height
+                : 0
+            }
+            identifier={"test"}
+            mode={this.state.selectedMode}
+          />
+        ) : (
+          <SingleImageDisplay
+            imageUrl={
+              "/api/v1/files/" +
+              this.channelFileIdByName(
+                this.getDefined(imageOutput, referenceImage),
+                this.state.selectedChannel
+              )
+            }
+            informationText={
+              this.getDefined(imageOutput, referenceImage) === imageOutput
+                ? "Output"
+                : "Reference"
+            }
+          />
+        )}
       </React.Fragment>
     );
   };
