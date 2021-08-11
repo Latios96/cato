@@ -74,6 +74,9 @@ class RunsBlueprint(APIRouter):
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(project_id)
         )
+        duration_by_run_id = self._test_result_repository.duration_by_run_ids(
+            {x.id for x in runs}
+        )
         run_dtos = []
         for run in runs:
             status = self._run_status_calculator.calculate(
@@ -85,6 +88,7 @@ class RunsBlueprint(APIRouter):
                     project_id=run.id,
                     started_at=run.started_at.isoformat(),
                     status=RunStatusDto(status),
+                    duration=duration_by_run_id[run.id],
                 )
             )
         return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
@@ -98,6 +102,9 @@ class RunsBlueprint(APIRouter):
         status_by_run_id = (
             self._test_result_repository.find_execution_status_by_project_id(project_id)
         )
+        duration_by_run_id = self._test_result_repository.duration_by_run_ids(
+            {x.id for x in run_page.entities}
+        )
         run_dtos = []
         for run in run_page.entities:
             status = self._run_status_calculator.calculate(
@@ -109,6 +116,7 @@ class RunsBlueprint(APIRouter):
                     project_id=run.id,
                     started_at=run.started_at.isoformat(),
                     status=RunStatusDto(status),
+                    duration=duration_by_run_id[run.id],
                 )
             )
         page = Page(
@@ -182,23 +190,23 @@ class RunsBlueprint(APIRouter):
         status = self._run_status_calculator.calculate(
             status_by_run_id.get(run.id, set())
         )
+        duration = self._test_result_repository.duration_by_run_id(run_id)
         run_dto = RunDto(
             id=run.id,
             project_id=run.id,
             started_at=run.started_at.isoformat(),
             status=RunStatusDto(status),
+            duration=duration,
         )
         suite_count = self._suite_result_repository.suite_count_by_run_id(run_id)
         test_count = self._test_result_repository.test_count_by_run_id(run_id)
         failed_test_count = self._test_result_repository.failed_test_count_by_run_id(
             run_id
         )
-        duration = self._test_result_repository.duration_by_run_id(run_id)
         run_summary_dto = RunSummaryDto(
             run=run_dto,
             suite_count=suite_count,
             test_count=test_count,
             failed_test_count=failed_test_count,
-            duration=duration,
         )
         return JSONResponse(content=self._object_mapper.to_dict(run_summary_dto))

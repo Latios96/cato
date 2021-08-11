@@ -22,6 +22,7 @@ const Template: Story<Args> = (args) => (
         project_id: 2,
         started_at: new Date().toISOString(),
         status: args.status,
+        duration: 1,
       }}
       isCurrentEntry={args.isCurrentEntry}
       link={"/some/link"}

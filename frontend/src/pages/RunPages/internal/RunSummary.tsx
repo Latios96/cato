@@ -61,8 +61,8 @@ export function RunSummary(props: Props) {
                 value={
                   "" +
                   formatDuration(
-                    runSummaryDto.duration !== "NaN"
-                      ? runSummaryDto.duration
+                    runSummaryDto.run.duration !== "NaN"
+                      ? runSummaryDto.run.duration
                       : 0
                   )
                 }

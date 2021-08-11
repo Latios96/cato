@@ -35,6 +35,7 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
                 "project_id": 1,
                 "started_at": run.started_at.isoformat(),
                 "status": "NOT_STARTED",
+                "duration": 0,
             }
         ],
         "page_number": 1,
@@ -102,13 +103,13 @@ def test_get_run_summary(client, run, test_result):
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "duration": 5.0,
         "failed_test_count": 0,
         "run": {
             "id": 1,
             "project_id": 1,
             "started_at": run.started_at.isoformat(),
             "status": "NOT_STARTED",
+            "duration": 5.0,
         },
         "suite_count": 1,
         "test_count": 1,

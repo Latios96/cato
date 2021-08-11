@@ -109,7 +109,9 @@ class RunSummary extends Component<Props, State> {
           value={
             "" +
             formatDuration(
-              runSummaryDto.duration !== "NaN" ? runSummaryDto.duration : 0
+              runSummaryDto.run.duration !== "NaN"
+                ? runSummaryDto.run.duration
+                : 0
             )
           }
           title={"duration"}

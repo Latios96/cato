@@ -500,3 +500,52 @@ def test_find_by_run_id_filter_by_test_status_should_return_correct_order(
     names = list(map(lambda x: x.test_name.lower(), results))
 
     assert names == order_test_data.correct_order_lowercase
+
+
+def test_duration_by_run_ids(
+    sessionmaker_fixture, run, suite_result, test_result, test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            execution_status=ExecutionStatus.RUNNING,
+            seconds=0,
+            started_at=(datetime.datetime.now() - datetime.timedelta(seconds=5)),
+        )
+    )
+    durations = repository.duration_by_run_ids({run.id})
+
+    assert durations == {1: 10.0}
+
+
+def test_duration_by_run_ids_single_test(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.duration_by_run_ids({run.id}) == {1: test_result.seconds}
+
+
+def test_duration_by_run_ids_multiple_test(sessionmaker_fixture, run, test_result):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    repository.save(test_result)
+
+    assert repository.duration_by_run_ids({run.id}) == {1: 10.0}
+
+
+def test_duration_by_run_ids_no_tests(sessionmaker_fixture, run):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    assert repository.duration_by_run_ids({run.id}) == {1: 0}
+
+
+def test_duration_by_run_ids_respect_running_tests(
+    sessionmaker_fixture, run, test_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    test_result.id = 0
+    test_result.execution_status = ExecutionStatus.RUNNING
+    test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
+    repository.save(test_result)
+
+    assert repository.duration_by_run_ids({run.id}) == {1: 20.0}

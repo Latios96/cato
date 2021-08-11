@@ -40,6 +40,7 @@ types:
           project_id: integer
           started_at: datetime
           status: RunStatusDto
+          duration: double
 
       RunSummaryDto:
         fields:
@@ -47,7 +48,6 @@ types:
           suite_count: integer
           test_count: integer
           failed_test_count: integer
-          duration: double
 
       ExecutionStatusDto:
         values:

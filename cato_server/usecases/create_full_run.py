@@ -82,6 +82,7 @@ class CreateFullRunUsecase:
                 project_id=run.id,
                 started_at=run.started_at.isoformat(),
                 status=RunStatusDto.NOT_STARTED,
+                duration=0,
             )
             run_created_event = Event("RUN_CREATED", run_dto)
             self._message_queue.component.send_event(

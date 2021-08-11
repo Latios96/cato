@@ -66,6 +66,7 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
                 project_id=run.project_id,
                 started_at=run.started_at.isoformat(),
                 status=RunStatusDto.NOT_STARTED,
+                duration=0,
             ),
         ),
         object_mapper,

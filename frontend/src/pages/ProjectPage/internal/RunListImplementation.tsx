@@ -60,7 +60,7 @@ function RunListImplementation(props: Props) {
                       </Link>
                     </td>
                     <td>{formatTime(run.started_at)}</td>
-                    <td>{formatDuration(10)}</td>
+                    <td>{run.duration ? formatDuration(run.duration) : "—"}</td>
                   </tr>
                 );
               })
