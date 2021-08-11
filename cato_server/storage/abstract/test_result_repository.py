@@ -49,6 +49,9 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     def duration_by_run_id(self, run_id: int) -> float:
         raise NotImplementedError()
 
+    def duration_by_run_ids(self, run_ids: Set[int]) -> Dict[int, float]:
+        raise NotImplementedError()
+
     def find_execution_status_by_suite_ids(
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:

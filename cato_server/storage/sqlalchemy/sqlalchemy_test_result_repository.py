@@ -291,6 +291,49 @@ class SqlAlchemyTestResultRepository(
         session.close()
         return total_duration
 
+    def duration_by_run_ids(self, run_ids: Set[int]) -> Dict[int, float]:
+        session = self._session_maker()
+
+        summed_durations = (
+            session.query(_RunMapping.id, func.sum(_TestResultMapping.seconds))
+            .select_from(_RunMapping)
+            .join(_SuiteResultMapping)
+            .join(_TestResultMapping)
+            .filter(_RunMapping.id.in_(run_ids))
+            .group_by(_RunMapping.id)
+            .all()
+        )
+        summed_durations = {id: duration for id, duration in summed_durations}
+
+        start_points_of_started_tests = (
+            session.query(_RunMapping.id, _TestResultMapping.started_at)
+            .select_from(_RunMapping)
+            .join(_SuiteResultMapping)
+            .join(_TestResultMapping)
+            .filter(_RunMapping.id.in_(run_ids))
+            .filter(_TestResultMapping.execution_status == "RUNNING")
+            .all()
+        )
+        now = datetime.datetime.now()
+        additional_durations = {
+            id: (now - started_at).seconds
+            for id, started_at in start_points_of_started_tests
+        }
+
+        for run_id in run_ids:
+            has_duration_for_running_tests = (
+                additional_durations.get(run_id) is not None
+            )
+            has_duration_for_finished_tests = summed_durations.get(run_id) is not None
+            if has_duration_for_finished_tests and has_duration_for_running_tests:
+                summed_durations[run_id] += additional_durations[run_id]
+            elif summed_durations.get(run_id) is None:
+                summed_durations[run_id] = 0
+
+        session.close()
+
+        return summed_durations
+
     def find_execution_status_by_suite_ids(
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
