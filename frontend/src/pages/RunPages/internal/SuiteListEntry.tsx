@@ -11,6 +11,7 @@ import {
 } from "../../../components/LoadingStateHandler/LoadingStateHandler";
 import { useHistory } from "react-router-dom";
 import { popFromQueryString, updateQueryString } from "../../../utils";
+import TestStatus from "../../../components/Status/TestStatus";
 interface Props {
   suite: SuiteResultDto;
   projectId: number;
@@ -49,7 +50,7 @@ function SuiteListEntry(props: Props) {
     });
     toggle(true);
   };
-  // todo error / loading state / no tests state / test status icon
+  // todo error / loading state / no tests state
   return (
     <div>
       <div className={styles.suiteListEntry}>
@@ -80,6 +81,9 @@ function SuiteListEntry(props: Props) {
                               : ""
                           }
                         >
+                          <span>
+                            <TestStatus testResult={test} />
+                          </span>
                           <span>{test.test_name}</span>
                         </div>
                       );
