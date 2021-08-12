@@ -1,3 +1,4 @@
+@import "../../../custom";
 .suiteListEntry {
   height: 40px;
   border-top: 1px solid #dadada;
@@ -29,4 +30,14 @@
       margin-left: 10px;
     }
   }
+  > div:hover {
+    background-color: $cato-highlight-hover;
+    cursor: pointer;
+  }
+}
+.active {
+  background-color: $cato-highlight;
+}
+.active:hover {
+  background-color: $cato-highlight !important;
 }

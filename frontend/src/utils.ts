@@ -1,5 +1,6 @@
 import ago from "s-ago";
 import humanizeDuration from "humanize-duration";
+import queryString from "query-string";
 
 export function formatTime(datestr: string | null | undefined): string {
   if (!datestr) {
@@ -17,4 +18,17 @@ export function formatDuration(
     return "";
   }
   return humanizeDuration(durationInSeconds * 1000, { round: true });
+}
+
+export function updateQueryString(theQueryString: string, data: object) {
+  const parsedData = queryString.parse(theQueryString);
+  Object.assign(parsedData, data);
+  return queryString.stringify(parsedData);
+}
+export function popFromQueryString(theQueryString: string, keys: string[]) {
+  const parsedData = queryString.parse(theQueryString);
+  keys.forEach((key) => {
+    delete parsedData[key];
+  });
+  return queryString.stringify(parsedData);
 }

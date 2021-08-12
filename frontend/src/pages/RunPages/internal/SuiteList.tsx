@@ -12,6 +12,8 @@ import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox
 import styles from "./SuiteList.module.scss";
 import SuiteListEntry from "./SuiteListEntry";
 import { useReFetch } from "../../../hooks/useReFetch";
+import { useHistory } from "react-router-dom";
+import queryString from "query-string";
 interface Props {
   projectId: number;
   runId: number;
@@ -23,6 +25,14 @@ function SuiteList(props: Props) {
     5000,
     [props.runId]
   );
+  const history = useHistory();
+  const queryParams = queryString.parse(history.location.search, {
+    parseNumbers: true,
+  });
+  // @ts-ignore
+  const selectedTestId: number | undefined = queryParams.selectedTest;
+  // @ts-ignore
+  const selectedSuiteId: number | undefined = queryParams.selectedSuiteId;
 
   return (
     <LoadingStateHandler isLoading={loading} error={error}>
@@ -55,6 +65,13 @@ function SuiteList(props: Props) {
                     suite={suite}
                     projectId={props.projectId}
                     runId={props.runId}
+                    testSelected={(suiteId, testId) => {
+                      history.push(
+                        `/projects/${props.projectId}/runs/${props.runId}/suites/?selectedTest=${testId}&selectedSuiteId=${suiteId}`
+                      );
+                    }}
+                    selectedTestId={selectedTestId}
+                    expand={selectedSuiteId === suite.id}
                   />
                 );
               })

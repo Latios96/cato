@@ -17,14 +17,14 @@
     height: 40px;
   }
   tr:hover {
-    background-color: #dadada;
+    background-color: $cato-highlight-hover;
     cursor: pointer;
     user-select: none;
   }
   td {
     padding-left: 20px;
-    border-top: 1px solid #dadada;
-    border-bottom: 1px solid #dadada;
+    border-top: 1px solid $cato-highlight-hover;
+    border-bottom: 1px solid $cato-highlight-hover;
     white-space: nowrap;
   }
 }
