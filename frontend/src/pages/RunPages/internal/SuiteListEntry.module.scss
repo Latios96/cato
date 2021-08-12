@@ -1,0 +1,32 @@
+.suiteListEntry {
+  height: 40px;
+  border-top: 1px solid #dadada;
+  display: flex;
+  flex-direction: row;
+  > span {
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-left: 20px;
+  }
+  > span:nth-child(1) {
+    margin-left: 10px;
+    cursor: pointer;
+  }
+  > span:nth-child(2) {
+    margin-left: 10px;
+  }
+}
+.suiteListEntryContent {
+  padding-left: 40px;
+  > div {
+    height: 30px;
+    border-top: 1px solid #dadada;
+    display: flex;
+    flex-direction: row;
+    > span {
+      margin-top: auto;
+      margin-bottom: auto;
+      margin-left: 10px;
+    }
+  }
+}
