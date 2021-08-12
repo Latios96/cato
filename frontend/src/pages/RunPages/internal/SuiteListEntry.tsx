@@ -12,18 +12,17 @@ import {
 import { useHistory } from "react-router-dom";
 import { popFromQueryString, updateQueryString } from "../../../utils";
 import TestStatus from "../../../components/Status/TestStatus";
+import queryString from "query-string";
+
 interface Props {
   suite: SuiteResultDto;
   projectId: number;
   runId: number;
-  testSelected: (suiteId: number, testId: number) => void;
-  selectedTestId?: number;
-  expand: boolean;
 }
 
 function SuiteListEntry(props: Props) {
   const history = useHistory();
-  const [expanded, toggle] = useToggle(props.expand);
+  const [expanded, toggle] = useToggle(false);
   const { data, loading, get } = useFetch<TestResultDto[]>(
     `api/v1/test_results/suite_result/${props.suite.id}`,
     {
@@ -40,16 +39,21 @@ function SuiteListEntry(props: Props) {
     let search = "";
     if (!expanded) {
       search = updateQueryString(history.location.search, {
-        selectedSuiteId: props.suite.id,
+        selectedSuite: props.suite.id,
       });
     } else {
-      search = popFromQueryString(history.location.search, ["selectedSuiteId"]);
+      search = popFromQueryString(history.location.search, ["selectedSuite"]);
     }
     history.push({
       search,
     });
     toggle(true);
   };
+
+  const queryParams = queryString.parse(history.location.search, {
+    parseNumbers: true,
+  });
+  const selectedTest = queryParams.selectedTest;
   // todo error / loading state / no tests state
   return (
     <div>
@@ -69,16 +73,27 @@ function SuiteListEntry(props: Props) {
               <DataLoadedState>
                 {data ? (
                   <>
+                    {data.length === 0 ? (
+                      <div>
+                        <span>This suite has no tests</span>
+                      </div>
+                    ) : null}
                     {data.map((test) => {
                       return (
                         <div
                           onClick={() =>
-                            props.testSelected(props.suite.id, test.id)
+                            history.push({
+                              search: updateQueryString(
+                                history.location.search,
+                                {
+                                  selectedSuite: props.suite.id,
+                                  selectedTest: test.id,
+                                }
+                              ),
+                            })
                           }
                           className={
-                            test.id === props.selectedTestId
-                              ? styles.active
-                              : ""
+                            test.id === selectedTest ? styles.active : ""
                           }
                         >
                           <span>
