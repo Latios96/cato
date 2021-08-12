@@ -1,18 +1,18 @@
 import React from "react";
-import { TestResultShortSummaryDto } from "../../../catoapimodels";
+import { TestResultShortSummaryDto } from "../../../../catoapimodels";
 import styles from "./TestList.module.scss";
 import { useHistory, useLocation } from "react-router-dom";
 import queryString from "query-string";
-import TestStatus from "../../../components/Status/TestStatus";
-import { useReFetch } from "../../../hooks/useReFetch";
+import TestStatus from "../../../../components/Status/TestStatus";
+import { useReFetch } from "../../../../hooks/useReFetch";
 import _ from "lodash";
 import {
   DataLoadedState,
   ErrorState,
   LoadingState,
   LoadingStateHandler,
-} from "../../../components/LoadingStateHandler/LoadingStateHandler";
-import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
+} from "../../../../components/LoadingStateHandler/LoadingStateHandler";
+import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 interface Props {
   projectId: number;

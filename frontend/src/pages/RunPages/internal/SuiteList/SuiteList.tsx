@@ -1,17 +1,17 @@
 import React from "react";
-import { SuiteResultDto } from "../../../catoapimodels";
+import { SuiteResultDto } from "../../../../catoapimodels";
 import {
   DataLoadedState,
   ErrorState,
   LoadingState,
   LoadingStateHandler,
-} from "../../../components/LoadingStateHandler/LoadingStateHandler";
+} from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
-import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
+import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import styles from "./SuiteList.module.scss";
 import SuiteListEntry from "./SuiteListEntry";
-import { useReFetch } from "../../../hooks/useReFetch";
+import { useReFetch } from "../../../../hooks/useReFetch";
 interface Props {
   projectId: number;
   runId: number;

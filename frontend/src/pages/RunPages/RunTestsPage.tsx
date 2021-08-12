@@ -1,8 +1,8 @@
 import React from "react";
-import BasicRunPage from "./internal/BasicRunPage";
-import { CurrentPage } from "./internal/CurrentPage";
+import BasicRunPage from "./internal/common/BasicRunPage";
+import { CurrentPage } from "./internal/common/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
-import TestList from "./internal/TestList";
+import TestList from "./internal/TestList/TestList";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";

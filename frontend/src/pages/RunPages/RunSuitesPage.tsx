@@ -1,12 +1,12 @@
 import React from "react";
-import BasicRunPage from "./internal/BasicRunPage";
-import { CurrentPage } from "./internal/CurrentPage";
+import BasicRunPage from "./internal/common/BasicRunPage";
+import { CurrentPage } from "./internal/common/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
 import { useLocation } from "react-router-dom";
 import queryString from "query-string";
-import SuiteList from "./internal/SuiteList";
+import SuiteList from "./internal/SuiteList/SuiteList";
 interface Props {
   projectId: number;
   runId: number;

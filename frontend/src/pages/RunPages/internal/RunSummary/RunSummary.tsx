@@ -1,6 +1,6 @@
-import InfoBox from "../../../components/InfoBox/InfoBox";
-import InfoBoxElement from "../../../components/InfoBox/InfoBoxElement/InfoBoxElement";
-import { formatDuration } from "../../../utils/dateUtils";
+import InfoBox from "../../../../components/InfoBox/InfoBox";
+import InfoBoxElement from "../../../../components/InfoBox/InfoBoxElement/InfoBoxElement";
+import { formatDuration } from "../../../../utils/dateUtils";
 import React from "react";
 
 import styles from "./RunSummary.module.scss";
@@ -10,9 +10,9 @@ import {
   ErrorState,
   LoadingState,
   LoadingStateHandler,
-} from "../../../components/LoadingStateHandler/LoadingStateHandler";
-import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
-import { useReFetch } from "../../../hooks/useReFetch";
+} from "../../../../components/LoadingStateHandler/LoadingStateHandler";
+import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
+import { useReFetch } from "../../../../hooks/useReFetch";
 interface Props {
   runId: number;
 }

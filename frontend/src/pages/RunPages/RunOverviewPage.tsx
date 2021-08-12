@@ -1,7 +1,7 @@
 import React from "react";
-import BasicRunPage from "./internal/BasicRunPage";
-import { CurrentPage } from "./internal/CurrentPage";
-import { RunSummary } from "./internal/RunSummary";
+import BasicRunPage from "./internal/common/BasicRunPage";
+import { CurrentPage } from "./internal/common/CurrentPage";
+import { RunSummary } from "./internal/RunSummary/RunSummary";
 
 interface Props {
   projectId: number;

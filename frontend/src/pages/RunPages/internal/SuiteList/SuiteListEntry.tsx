@@ -1,8 +1,8 @@
 import React, { useEffect } from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
-import SuiteStatus from "../../../components/Status/SuiteStatus";
+import SuiteStatus from "../../../../components/Status/SuiteStatus";
 import styles from "./SuiteListEntry.module.scss";
-import { SuiteResultDto, TestResultDto } from "../../../catoapimodels";
+import { SuiteResultDto, TestResultDto } from "../../../../catoapimodels";
 import { useToggle } from "rooks";
 import { CachePolicies, useFetch } from "use-http";
 import {
@@ -10,16 +10,16 @@ import {
   ErrorState,
   LoadingState,
   LoadingStateHandler,
-} from "../../../components/LoadingStateHandler/LoadingStateHandler";
+} from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import { useHistory } from "react-router-dom";
-import TestStatus from "../../../components/Status/TestStatus";
+import TestStatus from "../../../../components/Status/TestStatus";
 import queryString from "query-string";
-import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
+import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton from "react-loading-skeleton";
 import {
   popFromQueryString,
   updateQueryString,
-} from "../../../utils/queryStringUtils";
+} from "../../../../utils/queryStringUtils";
 
 interface Props {
   suite: SuiteResultDto;

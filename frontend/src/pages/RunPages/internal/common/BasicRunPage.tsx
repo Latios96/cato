@@ -1,5 +1,5 @@
 import React from "react";
-import BasicPage from "../../BasicPage";
+import BasicPage from "../../../BasicPage";
 import SideBar from "./SideBar";
 import { CurrentPage } from "./CurrentPage";
 
