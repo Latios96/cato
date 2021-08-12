@@ -9,18 +9,36 @@ interface Props {
 }
 
 const SuiteStatus = (props: Props) => {
-  let status = (props: Props) => {
-    if (props.suiteResult.status === "NOT_STARTED") {
-      return <Hourglass size={27} />;
-    } else if (props.suiteResult.status === "RUNNING") {
-      return <RenderingBucketIcon isActive={false} />;
-    } else if (props.suiteResult.status === "SUCCESS") {
-      return <Check color="green" size={27} />;
-    } else if (props.suiteResult.status === "FAILED") {
-      return <XCircleIcon size={27} className={styles.errorIcon} />;
-    }
-  };
-  return <React.Fragment>{status(props)}</React.Fragment>;
+  if (props.suiteResult.status === "NOT_STARTED") {
+    return (
+      <span
+        className="d-inline-block"
+        data-toggle="tooltip"
+        title="not started"
+      >
+        <Hourglass size={27} />
+      </span>
+    );
+  } else if (props.suiteResult.status === "RUNNING") {
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="running">
+        <RenderingBucketIcon isActive={false} />
+      </span>
+    );
+  } else if (props.suiteResult.status === "SUCCESS") {
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="success">
+        <Check color="green" size={27} />
+      </span>
+    );
+  } else if (props.suiteResult.status === "FAILED") {
+    return (
+      <span className="d-inline-block" data-toggle="tooltip" title="failed">
+        <XCircleIcon size={27} className={styles.errorIcon} />
+      </span>
+    );
+  }
+  return <span />;
 };
 
 export default SuiteStatus;
