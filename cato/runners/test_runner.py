@@ -165,6 +165,7 @@ class TestRunner:
             "Found reference image at path {}".format(reference_image)
         )
         if reference_image is not None and image_output is not None:
+            self._reporter.report_message("Comparing images on the server..")
             image_compare_result = self._cato_api_client.compare_images(
                 reference_image,
                 image_output,
