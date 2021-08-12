@@ -59,7 +59,7 @@ function TestList(props: Props) {
         />
       </ErrorState>
       <DataLoadedState>
-        <table className={styles.testList}>
+        <table className={styles.testList} id={"testList"}>
           <colgroup>
             <col />
             <col />

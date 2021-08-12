@@ -26,7 +26,7 @@ function RunTestsPage(props: Props) {
         <div>
           <TestList projectId={props.projectId} runId={props.runId} />
         </div>
-        <div>
+        <div id={"selectedTestContainer"}>
           <div>
             {selectedTestId ? (
               <TestResultComponent
