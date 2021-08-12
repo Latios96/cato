@@ -7,12 +7,16 @@ import { useToggle } from "rooks";
 import { CachePolicies, useFetch } from "use-http";
 import {
   DataLoadedState,
+  ErrorState,
+  LoadingState,
   LoadingStateHandler,
 } from "../../../components/LoadingStateHandler/LoadingStateHandler";
 import { useHistory } from "react-router-dom";
 import { popFromQueryString, updateQueryString } from "../../../utils";
 import TestStatus from "../../../components/Status/TestStatus";
 import queryString from "query-string";
+import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
+import Skeleton from "react-loading-skeleton";
 
 interface Props {
   suite: SuiteResultDto;
@@ -23,7 +27,7 @@ interface Props {
 function SuiteListEntry(props: Props) {
   const history = useHistory();
   const [expanded, toggle] = useToggle(false);
-  const { data, loading, get } = useFetch<TestResultDto[]>(
+  const { data, loading, error, get } = useFetch<TestResultDto[]>(
     `api/v1/test_results/suite_result/${props.suite.id}`,
     {
       cachePolicy: CachePolicies.NO_CACHE,
@@ -54,7 +58,6 @@ function SuiteListEntry(props: Props) {
     parseNumbers: true,
   });
   const selectedTest = queryParams.selectedTest;
-  // todo error / loading state / no tests state
   return (
     <div>
       <div className={styles.suiteListEntry}>
@@ -70,6 +73,23 @@ function SuiteListEntry(props: Props) {
         {expanded ? (
           <div className={styles.suiteListEntryContent}>
             <LoadingStateHandler isLoading={loading}>
+              <ErrorState>
+                <ErrorMessageBox
+                  heading={"Error when loading tests"}
+                  message={error?.message}
+                />
+              </ErrorState>
+              <LoadingState>
+                <div>
+                  <Skeleton count={1} width={250} height={20} />
+                </div>
+                <div>
+                  <Skeleton count={1} width={250} height={20} />
+                </div>
+                <div>
+                  <Skeleton count={1} width={250} height={20} />
+                </div>
+              </LoadingState>
               <DataLoadedState>
                 {data ? (
                   <>
