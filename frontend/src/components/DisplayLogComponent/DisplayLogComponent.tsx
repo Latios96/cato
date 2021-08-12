@@ -1,78 +1,54 @@
-import React, { Component } from "react";
+import React, { useEffect } from "react";
 import LogComponent from "../LogComponent/LogComponent";
 import { Button } from "react-bootstrap";
 import styles from "./DisplayLogComponent.module.scss";
+import { useToggle } from "rooks";
+import {
+  DataLoadedState,
+  LoadingStateHandler,
+} from "../LoadingStateHandler/LoadingStateHandler";
+import { CachePolicies, useFetch } from "use-http";
 interface Props {
   testResultId: number;
 }
-
-interface State {
-  isOpened: boolean;
-  content: string;
-  contentIsLoaded: boolean;
-  isLoading: boolean;
+interface Output {
+  id: number;
+  test_result_id: number;
+  text: string;
 }
 
-class DisplayLogComponent extends Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-    this.state = {
-      isOpened: false,
-      content: "",
-      contentIsLoaded: false,
-      isLoading: false,
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <Button
-          onClick={(e) => this.toggle()}
-          disabled={this.state.isLoading}
-          className={styles.logButton}
-        >
-          {this.getButtonText()}
-        </Button>
-        {this.state.isOpened && this.state.contentIsLoaded ? (
-          <LogComponent content={this.state.content} />
-        ) : (
-          <React.Fragment />
-        )}
-      </div>
-    );
-  }
-
-  toggle = () => {
-    let isOpened = !this.state.isOpened;
-    this.setState({ isOpened: isOpened });
-    if (isOpened) {
-      this.fetchLog();
+function DisplayLogComponent(props: Props) {
+  const [expanded, toggle] = useToggle(false);
+  const { data, loading, get } = useFetch<Output>(
+    `api/v1/test_results/${props.testResultId}/output`,
+    {
+      cachePolicy: CachePolicies.NO_CACHE,
     }
-  };
-  fetchLog = () => {
-    this.setState({ isLoading: true });
-    fetch(`api/v1/test_results/${this.props.testResultId}/output`)
-      .then((res) => res.json())
-      .then(
-        (result) => {
-          this.setState({
-            content: result.text,
-            contentIsLoaded: true,
-            isLoading: false,
-          });
-        },
-        (error) => {
-          this.setState({ isLoading: false });
-        }
-      );
-  };
-  getButtonText = () => {
-    if (this.state.isLoading) {
+  );
+  useEffect(() => {
+    if (expanded) {
+      get();
+    }
+  }, [get, expanded, props.testResultId]);
+
+  const getButtonText = () => {
+    if (loading) {
       return "Loading..";
     }
-    return this.state.isOpened ? "Hide Log" : "Display Log";
+    return expanded ? "Hide Log" : "Display Log";
   };
+  return (
+    <div>
+      <Button onClick={toggle} disabled={loading} className={styles.logButton}>
+        {getButtonText()}
+      </Button>
+      <LoadingStateHandler isLoading={loading}>
+        <DataLoadedState>
+          {data && expanded ? <LogComponent content={data.text} /> : null}
+        </DataLoadedState>
+      </LoadingStateHandler>
+    </div>
+  );
 }
 
 export default DisplayLogComponent;
