@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDuration } from "../../utils";
+import { formatDuration } from "../../utils/dateUtils";
 import DisplayLogComponent from "../DisplayLogComponent/DisplayLogComponent";
 import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";

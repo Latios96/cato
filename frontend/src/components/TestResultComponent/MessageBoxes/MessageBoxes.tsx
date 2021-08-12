@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./MessageBoxes.module.scss";
 import { ExclamationCircleFill, Hourglass } from "react-bootstrap-icons";
-import { formatTime } from "../../../utils";
+import { formatTime } from "../../../utils/dateUtils";
 import RenderingBucketIcon from "../../Icons/RenderingBucketIcon";
 
 interface BasicProps {

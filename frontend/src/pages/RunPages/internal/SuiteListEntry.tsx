@@ -12,11 +12,14 @@ import {
   LoadingStateHandler,
 } from "../../../components/LoadingStateHandler/LoadingStateHandler";
 import { useHistory } from "react-router-dom";
-import { popFromQueryString, updateQueryString } from "../../../utils";
 import TestStatus from "../../../components/Status/TestStatus";
 import queryString from "query-string";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton from "react-loading-skeleton";
+import {
+  popFromQueryString,
+  updateQueryString,
+} from "../../../utils/queryStringUtils";
 
 interface Props {
   suite: SuiteResultDto;
@@ -27,7 +30,7 @@ interface Props {
 function SuiteListEntry(props: Props) {
   const history = useHistory();
   const [expanded, toggle] = useToggle(false);
-  const { data, loading, error, get } = useFetch<TestResultDto[]>(
+  const { data, loading, error, get } = useFetch<TestResultDto[]>( // TODO this needs to be refetching, extract into own component
     `api/v1/test_results/suite_result/${props.suite.id}`,
     {
       cachePolicy: CachePolicies.NO_CACHE,

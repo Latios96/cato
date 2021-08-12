@@ -4,7 +4,7 @@ import styles from "./RunSummary.module.scss";
 import { Spinner } from "react-bootstrap";
 import RunSummaryTabComponent from "./internal/RunSummaryTabComponent";
 import { RunSummaryDto } from "../../catoapimodels";
-import { formatDuration } from "../../utils";
+import { formatDuration } from "../../utils/dateUtils";
 import TestResultComponent from "../TestResultComponent/TestResultComponent";
 import SuiteResultComponent from "../SuiteResultComponent/SuiteResultComponent";
 import InfoBox from "../InfoBox/InfoBox";

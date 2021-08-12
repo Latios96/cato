@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { ListGroup } from "react-bootstrap";
 import styles from "./ProjectRunsView.module.scss";
-import { formatTime } from "../../utils";
+import { formatTime } from "../../utils/dateUtils";
 import { RunDto } from "../../catoapimodels";
 import RunStatus from "../Status/RunStatus";
 

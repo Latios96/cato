@@ -1,6 +1,6 @@
 import InfoBox from "../../../components/InfoBox/InfoBox";
 import InfoBoxElement from "../../../components/InfoBox/InfoBoxElement/InfoBoxElement";
-import { formatDuration } from "../../../utils";
+import { formatDuration } from "../../../utils/dateUtils";
 import React from "react";
 
 import styles from "./RunSummary.module.scss";

@@ -1,17 +1,4 @@
-import each from "jest-each";
-import { formatDuration, popFromQueryString, updateQueryString } from "./utils";
-
-describe("format duration", () => {
-  each([[undefined, null, "NaN"]]).it(
-    "should format %s to empty string",
-    (value) => {
-      expect(formatDuration(value)).toBe("");
-    }
-  );
-  it("should format 0 to 0 seconds", () => {
-    expect(formatDuration(0)).toBe("0 seconds");
-  });
-});
+import { popFromQueryString, updateQueryString } from "./queryStringUtils";
 
 describe("query string utils", () => {
   describe("update query string", () => {
