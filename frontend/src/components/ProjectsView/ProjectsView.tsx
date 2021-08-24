@@ -4,8 +4,8 @@ import styles from "./ProjectsView.module.css";
 import LinkCard from "../LinkCard/LinkCard";
 import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
 import _ from "lodash";
-import { FetchResult, useFetch } from "../utils";
 import { Spinner } from "react-bootstrap";
+import { FetchResult, useFetch } from "../../hooks/useFetch";
 
 interface Props {
   fetchResult: FetchResult<Project[]>;

@@ -1,4 +1,4 @@
-import { renderIf } from "./utils";
+import { renderIf } from "./renderUtils";
 import React from "react";
 import { render } from "@testing-library/react";
 
