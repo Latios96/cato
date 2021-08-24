@@ -2,19 +2,14 @@ import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 
 import { Spinner } from "react-bootstrap";
-import RunSummaryTabComponent from "./internal/RunSummaryTabComponent";
 import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils/dateUtils";
-import TestResultComponent from "../TestResultComponent/TestResultComponent";
-import SuiteResultComponent from "../SuiteResultComponent/SuiteResultComponent";
 import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
 
 interface Props {
   projectId: number;
   runId: number;
-  currentTab: string;
-  suiteOrTestId: number | null;
 }
 
 interface State {
@@ -78,17 +73,6 @@ class RunSummary extends Component<Props, State> {
             <React.Fragment />
           )}
         </div>
-        {!this.props.suiteOrTestId ? (
-          <div className={styles.runContent}>
-            <RunSummaryTabComponent
-              projectId={this.props.projectId}
-              runId={this.props.runId}
-              currentTab={this.props.currentTab}
-            />
-          </div>
-        ) : (
-          this.renderSuiteOrTest()
-        )}
       </div>
     );
   }
@@ -117,26 +101,6 @@ class RunSummary extends Component<Props, State> {
           title={"duration"}
         />
       </InfoBox>
-    );
-  };
-
-  renderSuiteOrTest = () => {
-    return (
-      <div className={styles.suiteOrTestContainer}>
-        {this.props.currentTab === "suites" ? (
-          <SuiteResultComponent
-            suiteId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
-            projectId={this.props.projectId}
-            runId={this.props.runId}
-          />
-        ) : (
-          <TestResultComponent
-            resultId={this.props.suiteOrTestId ? this.props.suiteOrTestId : 0}
-            projectId={this.props.projectId}
-            runId={this.props.runId}
-          />
-        )}
-      </div>
     );
   };
 }
