@@ -12,7 +12,7 @@ import TestStatus from "../../../../components/Status/TestStatus";
 import React from "react";
 interface Props {
   loading: boolean;
-  error: Error;
+  error?: Error;
   data: TestResultDto[] | undefined;
   onClick: (test: TestResultDto) => void;
   selectedTestId: any;

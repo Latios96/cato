@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./Error.module.scss";
 interface Props {
   heading: string;
-  message: string;
+  message?: string;
 }
 
 function ErrorMessageBox(props: Props) {

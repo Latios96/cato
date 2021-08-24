@@ -1,12 +1,17 @@
 import { CachePolicies, useFetch } from "use-http";
 import { useState } from "react";
 import { useInterval } from "rooks";
+interface UseReFetchResult<T> {
+  data?: T;
+  loading: boolean;
+  error?: Error;
+}
 
 export function useReFetch<TData = any>(
   url: string,
   interval: number,
   dependencies?: any[]
-) {
+): UseReFetchResult<TData> {
   const [isFirstFetch, setFirstFetch] = useState(true);
   const markFirstFetch = () => {
     if (isFirstFetch) {
