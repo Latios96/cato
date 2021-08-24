@@ -1,5 +1,8 @@
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
+from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
+    SqlAlchemySuiteResultRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -170,3 +173,199 @@ class TestRunTestPage:
         selenium_driver.get(
             f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
         )
+
+
+class TestRunSuitePage:
+    def test_navigation_to_suite_page_should_work(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        test_result,
+        suite_result,
+    ):
+        self._visit_run_overview_page(live_server, run, selenium_driver)
+
+        self._switch_to_suites_page(selenium_driver)
+
+        self._should_display_suite_result(selenium_driver, suite_result)
+
+    def test_expand_suite_should_work(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        test_result,
+        suite_result,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+        assert not self._current_url_contains_suite_id(selenium_driver, suite_result.id)
+
+        self._click_expand_icon(selenium_driver, suite_result)
+
+        self._should_display_test_result(selenium_driver, suite_result, test_result)
+        assert self._current_url_contains_suite_id(selenium_driver, suite_result.id)
+
+    def test_expand_suite_should_survive_page_update(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        test_result,
+        suite_result,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+        assert not self._current_url_contains_suite_id(selenium_driver, suite_result.id)
+
+        self._click_expand_icon(selenium_driver, suite_result)
+        self._should_display_test_result(selenium_driver, suite_result, test_result)
+
+        selenium_driver.refresh()
+
+        self._should_display_test_result(selenium_driver, suite_result, test_result)
+
+    def test_select_test_from_suite_should_display_the_test(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        test_result,
+        suite_result,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+        assert not self._current_url_contains_test_id(selenium_driver, test_result.id)
+
+        self._click_expand_icon(selenium_driver, suite_result)
+        self._select_test(selenium_driver, suite_result, test_result)
+
+        self._should_display_test_result_right(
+            selenium_driver, suite_result, test_result
+        )
+
+        assert self._current_url_contains_test_id(selenium_driver, test_result.id)
+
+    def test_select_test_from_suite_should_survive_refresh(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        test_result,
+        suite_result,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+        assert not self._current_url_contains_test_id(selenium_driver, test_result.id)
+
+        self._click_expand_icon(selenium_driver, suite_result)
+        self._select_test(selenium_driver, suite_result, test_result)
+        selenium_driver.refresh()
+
+        self._should_display_test_result_right(
+            selenium_driver, suite_result, test_result
+        )
+
+        assert self._current_url_contains_test_id(selenium_driver, test_result.id)
+
+    def test_suite_should_auto_update(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        suite_result,
+        test_result,
+        sessionmaker_fixture,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+
+        self._assert_first_suite_status_icon_has_title(selenium_driver, "not started")
+
+        self._update_run_status(sessionmaker_fixture, test_result)
+
+        self._assert_first_suite_status_icon_has_title(selenium_driver, "running")
+
+    def test_expanded_suite_should_auto_update(
+        self,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        run,
+        suite_result,
+        test_result,
+        sessionmaker_fixture,
+    ):
+        self._visit_run_suite_page(live_server, run, selenium_driver)
+        self._click_expand_icon(selenium_driver, suite_result)
+
+        self._assert_first_test_status_icon_has_title(selenium_driver, "not started")
+
+        self._update_run_status(sessionmaker_fixture, test_result)
+
+        self._assert_first_test_status_icon_has_title(selenium_driver, "running")
+
+    def _select_test(self, selenium_driver, suite_result, test_result):
+        selenium_driver.find_element_by_id(
+            f"suite-{suite_result.id}-test-{test_result.id}"
+        ).click()
+
+    def _should_display_test_result(self, selenium_driver, suite_result, test_result):
+        assert (
+            selenium_driver.find_element_by_xpath(
+                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[2]'
+            ).text
+            == test_result.test_name
+        )
+
+    def _current_url_contains_suite_id(self, selenium_driver, suite_id):
+        return f"selectedSuite={suite_id}" in selenium_driver.current_url
+
+    def _current_url_contains_test_id(self, selenium_driver, test_id):
+        return f"selectedTest={test_id}" in selenium_driver.current_url
+
+    def _visit_run_overview_page(self, live_server, run, selenium_driver):
+        selenium_driver.get(
+            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
+        )
+
+    def _switch_to_suites_page(self, selenium_driver):
+        selenium_driver.find_element_by_id("sidebar").find_element_by_link_text(
+            "Suites"
+        ).click()
+
+    def _should_display_suite_result(self, selenium_driver, suite_result):
+        assert (
+            selenium_driver.find_element_by_xpath(
+                '//*[@id="suiteList"]/div[1]/div[1]/span[3]'
+            ).text
+            == suite_result.suite_name
+        )
+
+    def _visit_run_suite_page(self, live_server, run, selenium_driver):
+        selenium_driver.get(
+            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/suites"
+        )
+
+    def _click_expand_icon(self, selenium_driver, suite_result):
+        selenium_driver.find_element_by_id(f"toggleSuite{suite_result.id}Icon").click()
+
+    def _should_display_test_result_right(
+        self, selenium_driver, suite_result, test_result
+    ):
+        assert (
+            selenium_driver.find_element_by_xpath(
+                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[2]'
+            ).text
+            == test_result.test_name
+        )
+
+    def _assert_first_suite_status_icon_has_title(self, selenium_driver, title):
+        assert selenium_driver.find_element_by_id("suiteList").find_element_by_xpath(
+            f'//*[@id="suiteListEntry1"]/span[2]/span[@title="{title}"]'
+        )
+
+    def _assert_first_test_status_icon_has_title(self, selenium_driver, title):
+        assert selenium_driver.find_element_by_id("suiteList").find_element_by_xpath(
+            f'//*[@id="suite-1-test-1"]/span[1]/span[@title="{title}"]'
+        )
+
+    def _update_run_status(self, sessionmaker_fixture, test_result):
+        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+        test_result.execution_status = ExecutionStatus.RUNNING
+        repository.save(test_result)

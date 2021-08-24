@@ -47,7 +47,7 @@ function SuiteList(props: Props) {
         />
       </ErrorState>
       <DataLoadedState>
-        <div className={styles.suiteList}>
+        <div className={styles.suiteList} id={"suiteList"}>
           {data
             ? data.map((suite) => {
                 return (
