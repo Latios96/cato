@@ -10,6 +10,7 @@ describe("SuiteTestList", () => {
         data={[]}
         selectedTestId={1}
         onClick={jest.fn}
+        suiteId={1}
       />
     );
 
