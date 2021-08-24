@@ -5,7 +5,7 @@ import { useInterval } from "rooks";
 export function useReFetch<TData = any>(
   url: string,
   interval: number,
-  dependencies: any[]
+  dependencies?: any[]
 ) {
   const [isFirstFetch, setFirstFetch] = useState(true);
   const markFirstFetch = () => {
@@ -27,7 +27,7 @@ export function useReFetch<TData = any>(
         },
       },
     },
-    dependencies
+    dependencies === undefined ? [] : dependencies
   );
 
   const [start] = useInterval(

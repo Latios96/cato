@@ -50,7 +50,7 @@
   },
   "eslintConfig": {
     "rules": {
-        "no-console": "error"
+      "no-console": "error"
     },
     "extends": [
       "react-app",
@@ -93,6 +93,7 @@
     "@types/react-modal": "^3.10.6",
     "jest-each": "^26.6.2",
     "loki": "^0.28.1",
+    "nock": "^13.1.2",
     "prettier": "^2.2.1"
   },
   "resolutions": {
