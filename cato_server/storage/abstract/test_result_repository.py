@@ -6,6 +6,9 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.test_result_filter_options import (
+    TestResultFilterOptions,
+)
 
 
 class TestResultRepository(AbstractRepository[TestResult, int]):
@@ -17,11 +20,16 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     def find_by_suite_result_id(self, suite_result_id: int) -> List[TestResult]:
         raise NotImplementedError()
 
-    def find_by_run_id(self, run_id: int) -> List[TestResult]:
+    def find_by_run_id(
+        self, run_id: int, filter_options: Optional[TestResultFilterOptions] = None
+    ) -> List[TestResult]:
         raise NotImplementedError()
 
     def find_by_run_id_with_paging(
-        self, run_id: int, page_request: PageRequest
+        self,
+        run_id: int,
+        page_request: PageRequest,
+        filter_options: Optional[TestResultFilterOptions] = None,
     ) -> Page[TestResult]:
         raise NotImplementedError()
 

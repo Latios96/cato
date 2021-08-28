@@ -9,6 +9,10 @@ from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.test_result_filter_options import (
+    TestResultFilterOptions,
+    StatusFilter,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -225,6 +229,98 @@ def test_find_by_run_id_should_return_correct_order(
     names = list(map(lambda x: x.test_name.lower(), results))
 
     assert names == order_test_data.correct_order_lowercase
+
+
+@pytest.fixture
+def __status_filter_test_results(
+    sessionmaker_fixture, test_result_factory, suite_result
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    repository.save(
+        test_result_factory(status="FORCE_NONE", suite_result_id=suite_result.id)
+    )
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            status=TestStatus.SUCCESS,
+            execution_status=ExecutionStatus.FINISHED,
+        )
+    )
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            status=TestStatus.FAILED,
+            execution_status=ExecutionStatus.FINISHED,
+        )
+    )
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            status="FORCE_NONE",
+            execution_status=ExecutionStatus.NOT_STARTED,
+        )
+    )
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            status=TestStatus.FAILED,
+            execution_status=ExecutionStatus.RUNNING,
+        )
+    )
+
+
+@pytest.mark.parametrize(
+    "filter_by,ids",
+    [
+        (StatusFilter.NONE, [1, 2, 3, 4, 5]),
+        (StatusFilter.NOT_STARTED, [1, 4]),
+        (StatusFilter.RUNNING, [5]),
+        (StatusFilter.FAILED, [3, 5]),
+        (StatusFilter.SUCCESS, [2]),
+    ],
+)
+def test_find_by_run_id_with_filter_options_should_find_correctly(
+    sessionmaker_fixture,
+    run,
+    suite_result,
+    __status_filter_test_results,
+    filter_by,
+    ids,
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result = repository.find_by_run_id(
+        run.id, TestResultFilterOptions(status=filter_by)
+    )
+
+    assert [x.id for x in result] == ids
+
+
+@pytest.mark.parametrize(
+    "filter_by,ids",
+    [
+        (StatusFilter.NONE, [1, 2, 3, 4, 5]),
+        (StatusFilter.NOT_STARTED, [1, 4]),
+        (StatusFilter.RUNNING, [5]),
+        (StatusFilter.FAILED, [3, 5]),
+        (StatusFilter.SUCCESS, [2]),
+    ],
+)
+def test_find_by_run_id_paginated_with_filter_options_should_find_correctly(
+    sessionmaker_fixture,
+    run,
+    suite_result,
+    __status_filter_test_results,
+    filter_by,
+    ids,
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    result_paginated = repository.find_by_run_id_with_paging(
+        run.id, PageRequest(1, 10), TestResultFilterOptions(status=filter_by)
+    )
+
+    assert [x.id for x in result_paginated.entities] == ids
 
 
 def test_find_by_run_id_paginated_should_find_single_test(

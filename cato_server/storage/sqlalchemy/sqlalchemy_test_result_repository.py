@@ -11,6 +11,10 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.test_result_filter_options import (
+    TestResultFilterOptions,
+    StatusFilter,
+)
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -144,31 +148,43 @@ class SqlAlchemyTestResultRepository(
         session.close()
         return list(map(self.to_domain_object, entities))
 
-    def find_by_run_id(self, run_id: int) -> List[TestResult]:
+    def find_by_run_id(
+        self, run_id: int, filter_options: Optional[TestResultFilterOptions] = None
+    ) -> List[TestResult]:
         session = self._session_maker()
 
-        entities = self._order_by_case_insensitive(
+        query = (
             session.query(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
-            .filter(_RunMapping.id == run_id),
+            .filter(_RunMapping.id == run_id)
+        )
+        query = self._add_filter_options(filter_options, query)
+        entities = self._order_by_case_insensitive(
+            query,
             self.mapping_cls().test_identifier,
         ).all()
         session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id_with_paging(
-        self, run_id: int, page_request: PageRequest
+        self,
+        run_id: int,
+        page_request: PageRequest,
+        filter_options: Optional[TestResultFilterOptions] = None,
     ) -> Page[TestResult]:
         session = self._session_maker()
 
         page = self._pageginate(
             session,
             self._order_by_case_insensitive(
-                session.query(_TestResultMapping)
-                .join(_SuiteResultMapping)
-                .join(_RunMapping)
-                .filter(_RunMapping.id == run_id),
+                self._add_filter_options(
+                    filter_options,
+                    session.query(_TestResultMapping)
+                    .join(_SuiteResultMapping)
+                    .join(_RunMapping)
+                    .filter(_RunMapping.id == run_id),
+                ),
                 self.mapping_cls().test_identifier,
             ),
             page_request,
@@ -395,3 +411,15 @@ class SqlAlchemyTestResultRepository(
         session.close()
 
         return self._map_many_to_domain_object(entities)
+
+    def _add_filter_options(self, filter_options: TestResultFilterOptions, query):
+        if filter_options and filter_options.status is not StatusFilter.NONE:
+            if filter_options.status in [StatusFilter.SUCCESS, StatusFilter.FAILED]:
+                query = query.filter(
+                    _TestResultMapping.status == filter_options.status.value
+                )
+            else:
+                query = query.filter(
+                    _TestResultMapping.execution_status == filter_options.status.value
+                )
+        return query
