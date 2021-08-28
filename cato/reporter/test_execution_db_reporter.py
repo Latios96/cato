@@ -73,9 +73,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 )
             )
 
-        create_full_run_dto = CreateFullRunDto(
-            project_id=project.id, test_suites=suites
-        )
+        create_run_dto = CreateFullRunDto(project_id=project.id, test_suites=suites)
         suite_count = len(suites)
         test_count = sum(map(lambda x: len(x.tests), suites))
         logger.info(
@@ -85,7 +83,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             test_count,
             "s" if test_count > 1 else "",
         )
-        run = self._cato_api_client.create_full_run(create_full_run_dto)
+        run = self._cato_api_client.create_run(create_run_dto)
         logger.debug("Created run %s", run)
         self._run_id = run.id
         logger.info(

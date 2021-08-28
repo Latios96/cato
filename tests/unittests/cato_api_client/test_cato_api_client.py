@@ -237,7 +237,7 @@ def test_upload_image_not_existing(cato_api_client):
         cato_api_client.upload_image(path)
 
 
-def test_create_full_run_success(cato_api_client, project):
+def test_create_run_success(cato_api_client, project):
     dto = CreateFullRunDto(
         project_id=project.id,
         test_suites=[
@@ -255,11 +255,11 @@ def test_create_full_run_success(cato_api_client, project):
             )
         ],
     )
-    run = cato_api_client.create_full_run(dto)
+    run = cato_api_client.create_run(dto)
     assert run.id == project.id
 
 
-def test_create_full_run_failure(cato_api_client):
+def test_create_run_failure(cato_api_client):
     dto = CreateFullRunDto(
         project_id=42,
         test_suites=[
@@ -278,7 +278,7 @@ def test_create_full_run_failure(cato_api_client):
         ],
     )
     with pytest.raises(ValueError):
-        cato_api_client.create_full_run(dto)
+        cato_api_client.create_run(dto)
 
 
 def test_send_test_heartbeat(cato_api_client, run, test_result):

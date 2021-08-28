@@ -21,7 +21,7 @@ from cato_server.storage.abstract.test_result_repository import (
 logger = logging.getLogger(__name__)
 
 
-class CreateFullRunUsecase:
+class CreateRunUsecase:
     def __init__(
         self,
         run_repository: RunRepository,
@@ -36,15 +36,15 @@ class CreateFullRunUsecase:
         self._message_queue = message_queue
         self._object_mapper = object_mapper
 
-    def create_full_run(self, create_full_run_dto: CreateFullRunDto) -> None:
+    def create_run(self, create_run_dto: CreateFullRunDto) -> None:
         run = Run(
             id=0,
-            project_id=create_full_run_dto.project_id,
+            project_id=create_run_dto.project_id,
             started_at=datetime.datetime.now(),
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)
-        for suite_dto in create_full_run_dto.test_suites:
+        for suite_dto in create_run_dto.test_suites:
             suite_result = SuiteResult(
                 id=0,
                 run_id=run.id,
@@ -87,7 +87,7 @@ class CreateFullRunUsecase:
             run_created_event = Event("RUN_CREATED", run_dto)
             self._message_queue.component.send_event(
                 "run_events",
-                str(create_full_run_dto.project_id),
+                str(create_run_dto.project_id),
                 run_created_event,
                 self._object_mapper,
             )

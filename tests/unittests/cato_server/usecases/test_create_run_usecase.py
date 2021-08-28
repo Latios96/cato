@@ -16,7 +16,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.usecases.create_full_run import CreateFullRunUsecase
+from cato_server.usecases.create_run import CreateRunUsecase
 from tests.utils import mock_safe
 from cato_api_models.catoapimodels import RunDto, RunStatusDto
 
@@ -26,7 +26,7 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
     suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     test_result_repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     mock_message_queue = mock_safe(OptionalComponent[AbstractMessageQueue])
-    usecase = CreateFullRunUsecase(
+    usecase = CreateRunUsecase(
         run_repository,
         suite_result_repository,
         test_result_repository,
@@ -34,7 +34,7 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
         object_mapper,
     )
 
-    run = usecase.create_full_run(
+    run = usecase.create_run(
         CreateFullRunDto(
             project_id=project.id,
             test_suites=[

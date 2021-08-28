@@ -27,7 +27,7 @@ from cato_server.storage.abstract.suite_result_repository import SuiteResultRepo
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
-from cato_server.usecases.create_full_run import CreateFullRunUsecase
+from cato_server.usecases.create_run import CreateRunUsecase
 
 logger = logging.getLogger(__name__)
 
@@ -38,7 +38,7 @@ class RunsBlueprint(APIRouter):
         run_repository: RunRepository,
         project_repository: ProjectRepository,
         test_result_repository: TestResultRepository,
-        create_full_run_usecase: CreateFullRunUsecase,
+        create_run_usecase: CreateRunUsecase,
         message_queue: OptionalComponent[AbstractMessageQueue],
         suite_result_repository: SuiteResultRepository,
         object_mapper: ObjectMapper,
@@ -48,7 +48,7 @@ class RunsBlueprint(APIRouter):
         self._run_repository = run_repository
         self._project_repository = project_repository
         self._test_result_repository = test_result_repository
-        self._create_full_run_usecase = create_full_run_usecase
+        self._create_run_usecase = create_run_usecase
         self._message_queue = message_queue
         self._suite_result_repository = suite_result_repository
         self._object_mapper = object_mapper
@@ -58,7 +58,7 @@ class RunsBlueprint(APIRouter):
 
         self.get("/runs/project/{project_id}")(self.runs_by_project)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
-        self.post("/runs/full")(self.create_full_run)
+        self.post("/runs/full")(self.create_run)
         self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
 
@@ -146,17 +146,15 @@ class RunsBlueprint(APIRouter):
             }
         )
 
-    async def create_full_run(self, request: Request) -> Response:
+    async def create_run(self, request: Request) -> Response:
         request_json = await request.json()
         errors = CreateFullRunValidator(self._project_repository).validate(request_json)
         if errors:
             return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
-        create_full_run_dto = self._object_mapper.from_dict(
-            request_json, CreateFullRunDto
-        )
+        create_run_dto = self._object_mapper.from_dict(request_json, CreateFullRunDto)
 
-        run = self._create_full_run_usecase.create_full_run(create_full_run_dto)
+        run = self._create_run_usecase.create_run(create_run_dto)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
     def summary(self, run_id) -> Response:

@@ -120,9 +120,9 @@ class CatoApiClient:
             )
         raise self._create_value_error_for_bad_request(response)
 
-    def create_full_run(self, create_full_run_dto: CreateFullRunDto) -> Run:
+    def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
         url = self._build_url("/api/v1/runs/full")
-        return self._create_with_http_template(url, create_full_run_dto, Run)
+        return self._create_with_http_template(url, create_run_dto, Run)
 
     def create_test_result(self, test_result: TestResult) -> TestResult:  # todo remove
         if test_result.id:

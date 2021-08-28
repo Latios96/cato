@@ -67,17 +67,17 @@ class TestTestExecutionDbReporter:
 
         self.mock_cato_api_client.create_project.assert_called_with("my_project_name")
 
-    def test_start_execution_should_create_full_run(self):
+    def test_start_execution_should_create_run(self):
         self.mock_cato_api_client.get_project_by_name.return_value = Project(
             id=1, name="my_project_name"
         )
-        self.mock_cato_api_client.create_full_run.return_value = Run(
+        self.mock_cato_api_client.create_run.return_value = Run(
             id=5, project_id=1, started_at=datetime.datetime.now()
         )
 
         self.test_execution_db_reporter.start_execution("my_project_name", SUITES)
 
-        self.mock_cato_api_client.create_full_run.assert_called_with(
+        self.mock_cato_api_client.create_run.assert_called_with(
             CreateFullRunDto(
                 1,
                 test_suites=[
@@ -97,7 +97,6 @@ class TestTestExecutionDbReporter:
             )
         )
         assert self.test_execution_db_reporter._run_id == 5
-        self.mock_cato_api_client.create_run.assert_not_called()
 
     def test_report_test_execution_start_should_report(self, test_result_factory):
         self.test_execution_db_reporter._run_id = 5
