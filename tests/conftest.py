@@ -175,6 +175,8 @@ def suite_result(sessionmaker_fixture, run):
 @pytest.fixture
 def test_result_factory():
     def or_default(value, default_value):
+        if value is "FORCE_NONE":
+            return None
         if value is None:
             return default_value
         return value
