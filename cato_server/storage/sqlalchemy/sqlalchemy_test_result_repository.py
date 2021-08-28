@@ -152,7 +152,7 @@ class SqlAlchemyTestResultRepository(
             .join(_SuiteResultMapping)
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id),
-            self.mapping_cls().test_name,
+            self.mapping_cls().test_identifier,
         ).all()
         session.close()
         return list(map(self.to_domain_object, entities))

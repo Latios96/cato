@@ -67,7 +67,7 @@ function TestList(props: Props) {
           </colgroup>
           <tbody>
             {tests
-              ? _.sortBy(tests, "test_identifier").map((test) => {
+              ? tests.map((test) => {
                   return (
                     <tr
                       onClick={() =>

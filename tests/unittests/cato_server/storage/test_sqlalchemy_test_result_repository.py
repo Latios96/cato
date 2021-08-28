@@ -214,7 +214,11 @@ def test_find_by_run_id_should_return_correct_order(
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     for name in order_test_data.wrong_order:
         repository.save(
-            test_result_factory(test_name=name, suite_result_id=suite_result.id)
+            test_result_factory(
+                test_identifier=f"{suite_result.suite_name}/{name}",
+                test_name=name,
+                suite_result_id=suite_result.id,
+            )
         )
 
     results = repository.find_by_run_id(run.id)
