@@ -32,3 +32,9 @@ def test_serve_file(client):
 
     assert response.status_code == 200
     assert response.content == b"some initial text data"
+
+
+def test_serve_file_file_not_found(client):
+    response = client.get(f"/api/v1/files/0")
+
+    assert response.status_code == 404

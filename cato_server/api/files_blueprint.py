@@ -33,6 +33,8 @@ class FilesBlueprint(APIRouter):
 
     def get_file(self, file_id: int) -> Response:
         file = self._file_storage.find_by_id(file_id)
+        if not file:
+            return Response(status_code=404)
         file_path = self._file_storage.get_path(file)
         if file and os.path.exists(file_path):
             return FileResponse(path=file_path, filename=file.name)
