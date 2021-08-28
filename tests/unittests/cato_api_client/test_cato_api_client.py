@@ -141,65 +141,6 @@ def test_upload_file_not_existing(cato_api_client):
         cato_api_client.upload_file(path)
 
 
-def test_create_test_result_success_minimal(cato_api_client, suite_result):
-    test_result = TestResult(
-        id=0,
-        suite_result_id=suite_result.id,
-        test_name="test",
-        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
-        test_variables={},
-        test_command="my_command",
-        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
-    )
-
-    result = cato_api_client.create_test_result(test_result)
-
-    assert result == TestResult(
-        id=1,
-        suite_result_id=suite_result.id,
-        test_name="test",
-        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
-        test_variables={},
-        test_command="my_command",
-        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        seconds=None,
-    )
-
-
-def test_create_test_result_success_complex(
-    cato_api_client, suite_result, stored_image
-):
-    started_at = datetime.datetime.now()
-    test_result = TestResult(
-        id=0,
-        suite_result_id=suite_result.id,
-        test_name="test",
-        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
-        test_variables={},
-        test_command="my_command",
-        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
-        started_at=started_at,
-        image_output=stored_image.id,
-    )
-
-    result = cato_api_client.create_test_result(test_result)
-
-    assert result == TestResult(
-        id=1,
-        suite_result_id=suite_result.id,
-        test_name="test",
-        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
-        test_variables={},
-        test_command="my_command",
-        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        seconds=None,
-        started_at=started_at,
-        image_output=stored_image.id,
-    )
-
-
 def test_create_failure_failure(cato_api_client, suite_result):
     test_result = TestResult(
         id=0,

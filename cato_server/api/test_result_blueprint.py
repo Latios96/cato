@@ -23,7 +23,6 @@ from cato_common.mappers.page_mapper import PageMapper
 
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
-    CreateTestResultValidator,
     CreateOutputValidator,
     FinishTestResultValidator,
     StartTestResultValidator,
@@ -83,7 +82,6 @@ class TestResultsBlueprint(APIRouter):
         )
         self.get("/test_results/{test_result_id}/output")(self.get_test_result_output)
         self.post("/test_results/output")(self.create_test_result_output)
-        self.post("/test_results")(self.create_test_result)
         self.get("/test_results/run/{run_id}")(self.get_test_result_by_run_id)
 
         self.get("/test_results/run/{run_id}/test_status/{test_status}")(
@@ -139,22 +137,6 @@ class TestResultsBlueprint(APIRouter):
         if not output:
             return Response(status_code=404)
         return JSONResponse(content=self._object_mapper.to_dict(output))
-
-    async def create_test_result(self, request: Request) -> Response:
-        request_json = await request.json()
-        errors = CreateTestResultValidator(
-            self._suite_result_repository, self._file_storage
-        ).validate(request_json)
-        if errors:
-            return JSONResponse(content=errors, status_code=BAD_REQUEST)
-
-        test_result = self._object_mapper.from_dict(request_json, TestResult)
-
-        test_result = self._test_result_repository.save(test_result)
-        logger.info("Created TestResult %s", test_result)
-        return JSONResponse(
-            content=self._object_mapper.to_dict(test_result), status_code=201
-        )
 
     async def create_test_result_output(self, request: Request) -> Response:
         request_json = await request.json()

@@ -21,29 +21,6 @@ def is_test_identifier(string):
         raise ValidationError(f'String "{string}" is not a valid TestIdentifier.')
 
 
-class CreateTestResultSchema(Schema):
-    class Meta:
-        unknown = EXCLUDE
-
-    suite_result_id = ID_FIELD
-    test_name = NAME_FIELD
-    test_identifier = fields.String(
-        required=True, validate=[Length(min=1), is_test_identifier]
-    )
-    test_command = fields.String(required=True, validate=[Length(1)])
-    test_variables = VARIABLES_FIELD
-    machine_info = fields.Nested(MachineInfoSchema, required=False)
-    execution_status = EnumField(ExecutionStatus, required=True)
-    status = EnumField(TestStatus, allow_none=True)
-    output = fields.List(fields.String())
-    seconds = fields.Float(min=1, allow_none=True)
-    message = fields.String(validate=[Length(1)], allow_none=True)
-    image_output = fields.Integer(allow_none=True)
-    reference_image = fields.Integer(allow_none=True)
-    started_at = fields.DateTime(allow_none=True)
-    finished_at = fields.DateTime(allow_none=True)
-
-
 class UpdateTestResultSchema(Schema):
     class Meta:
         unknown = EXCLUDE

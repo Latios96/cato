@@ -9,7 +9,6 @@ from cato_server.storage.abstract.test_result_repository import (
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.api.schemas.test_result_schemas import (
-    CreateTestResultSchema,
     UpdateTestResultSchema,
     CreateOutputSchema,
     FinishTestResultSchema,
@@ -18,18 +17,18 @@ from cato_server.api.schemas.test_result_schemas import (
 from cato_server.api.validators.basic import SchemaValidator
 
 
-class CreateTestResultValidator(SchemaValidator):
+class UpdateTestResultValidator(SchemaValidator):
     def __init__(
         self,
         suite_result_repository: SuiteResultRepository,
         file_storage: AbstractFileStorage,
     ):
-        super(CreateTestResultValidator, self).__init__(CreateTestResultSchema())
+        super(UpdateTestResultValidator, self).__init__(UpdateTestResultSchema())
         self._suite_result_repository = suite_result_repository
         self._file_storage = file_storage
 
     def validate(self, data: Dict) -> Dict[str, List[str]]:
-        errors = super(CreateTestResultValidator, self).validate(data)
+        errors = super(UpdateTestResultValidator, self).validate(data)
 
         suite_result_id = data.get("suite_result_id")
         suite_result = self._suite_result_repository.find_by_id(suite_result_id)
@@ -67,17 +66,6 @@ class CreateTestResultValidator(SchemaValidator):
             )
 
         return errors
-
-
-class UpdateTestResultValidator(CreateTestResultValidator):
-    def __init__(
-        self,
-        suite_result_repository: SuiteResultRepository,
-        file_storage: AbstractFileStorage,
-    ):
-        super(CreateTestResultValidator, self).__init__(UpdateTestResultSchema())
-        self._suite_result_repository = suite_result_repository
-        self._file_storage = file_storage
 
 
 class CreateOutputValidator(SchemaValidator):
