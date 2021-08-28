@@ -58,33 +58,6 @@ def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
     }
 
 
-def test_create_run_success(client, project):
-    started_at = datetime.datetime.now()
-
-    rv = client.post(
-        "/api/v1/runs",
-        json={"project_id": project.id, "started_at": started_at.isoformat()},
-    )
-
-    assert rv.json() == {
-        "id": 1,
-        "project_id": project.id,
-        "started_at": started_at.isoformat(),
-    }
-    assert rv.status_code == 201
-
-
-def test_create_run_failure(client):
-    started_at = datetime.datetime.now()
-
-    rv = client.post(
-        "/api/v1/runs", json={"project_id": 2, "started_at": started_at.isoformat()}
-    )
-
-    assert rv.status_code == 400
-    assert rv.json() == {"project_id": ["No project with id 2 exists!"]}
-
-
 def test_get_status(client, run, test_result):
     rv = client.get(f"/api/v1/runs/{run.id}/status")
 

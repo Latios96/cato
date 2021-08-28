@@ -9,14 +9,6 @@ from cato_server.api.schemas.general import (
 from cato_server.api.schemas.test_result_schemas import is_test_identifier
 
 
-class CreateRunSchema(Schema):
-    class Meta:
-        unknown = EXCLUDE
-
-    project_id = ID_FIELD
-    started_at = fields.DateTime()
-
-
 class TestForRunCreationSchema(Schema):
     class Meta:
         unknown = EXCLUDE

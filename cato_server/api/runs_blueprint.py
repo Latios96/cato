@@ -15,7 +15,6 @@ from cato_api_models.catoapimodels import (
 from cato_common.mappers.page_mapper import PageMapper
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.run_validators import (
-    CreateRunValidator,
     CreateFullRunValidator,
 )
 from cato_server.configuration.optional_component import OptionalComponent
@@ -61,7 +60,6 @@ class RunsBlueprint(APIRouter):
 
         self.get("/runs/project/{project_id}")(self.runs_by_project)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
-        self.post("/runs")(self.create_run)
         self.post("/runs/full")(self.create_full_run)
         self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
@@ -133,21 +131,6 @@ class RunsBlueprint(APIRouter):
             return Response(status_code=404)
 
         return JSONResponse(content={"succes": True}, status_code=200)
-
-    async def create_run(self, request: Request) -> Response:
-        request_json = await request.json()
-        errors = CreateRunValidator(self._project_repository).validate(request_json)
-        if errors:
-            return JSONResponse(content=errors, status_code=BAD_REQUEST)
-
-        run = Run(
-            id=0,
-            project_id=request_json["project_id"],
-            started_at=parse(request_json["started_at"]),
-        )
-        run = self._run_repository.save(run)
-        logger.info("Created run %s", run)
-        return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
     def status(self, run_id: int) -> Response:
         status_by_run_id = (

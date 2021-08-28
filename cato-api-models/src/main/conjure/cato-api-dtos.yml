@@ -21,7 +21,6 @@ types:
           suite_variables: map<string, string>
           tests: list<TestForRunCreation>
 
-
       CreateFullRunDto:
         fields:
           project_id: integer

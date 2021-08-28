@@ -141,23 +141,6 @@ def test_upload_file_not_existing(cato_api_client):
         cato_api_client.upload_file(path)
 
 
-def test_create_run_success(cato_api_client, project):
-    started_at = datetime.datetime.now()
-    run = Run(id=0, project_id=project.id, started_at=started_at)
-
-    result = cato_api_client.create_run(run)
-
-    assert result == Run(id=1, project_id=project.id, started_at=started_at)
-
-
-def test_create_run_failure(cato_api_client):
-    started_at = datetime.datetime.now()
-    run = Run(id=0, project_id=2, started_at=started_at)
-
-    with pytest.raises(ValueError):
-        cato_api_client.create_run(run)
-
-
 def test_create_test_result_success_minimal(cato_api_client, suite_result):
     test_result = TestResult(
         id=0,
