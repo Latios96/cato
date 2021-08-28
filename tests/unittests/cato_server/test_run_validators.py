@@ -107,3 +107,97 @@ class TestCreateFullRunValidator:
                 }
             }
         }
+
+    def test_duplicate_suite_name(self):
+        project_repository = mock_safe(ProjectRepository)
+        validator = CreateFullRunValidator(project_repository)
+
+        errors = validator.validate(
+            {
+                "project_id": 1,
+                "test_suites": [
+                    {
+                        "suite_name": "my_suite",
+                        "suite_variables": {},
+                        "tests": [
+                            {
+                                "test_name": "test_name",
+                                "test_identifier": "test/identifier",
+                                "test_command": "cmd",
+                                "test_variables": {},
+                                "execution_status": "NOT_STARTED",
+                                "machine_info": {
+                                    "cpu_name": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                            }
+                        ],
+                    },
+                    {
+                        "suite_name": "my_suite",
+                        "suite_variables": {},
+                        "tests": [
+                            {
+                                "test_name": "test_name",
+                                "test_identifier": "test/identifier",
+                                "test_command": "cmd",
+                                "test_variables": {},
+                                "execution_status": "NOT_STARTED",
+                                "machine_info": {
+                                    "cpu_name": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                            }
+                        ],
+                    },
+                ],
+            }
+        )
+
+        assert errors == {"test_suites": ["duplicate suite name(s): ['my_suite']"]}
+
+    def test_duplicate_test_name(self):
+        project_repository = mock_safe(ProjectRepository)
+        validator = CreateFullRunValidator(project_repository)
+
+        errors = validator.validate(
+            {
+                "project_id": 1,
+                "test_suites": [
+                    {
+                        "suite_name": "my_suite",
+                        "suite_variables": {},
+                        "tests": [
+                            {
+                                "test_name": "test_name",
+                                "test_identifier": "test/identifier",
+                                "test_command": "cmd",
+                                "test_variables": {},
+                                "execution_status": "NOT_STARTED",
+                                "machine_info": {
+                                    "cpu_name": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                            },
+                            {
+                                "test_name": "test_name",
+                                "test_identifier": "test/identifier",
+                                "test_command": "cmd",
+                                "test_variables": {},
+                                "execution_status": "NOT_STARTED",
+                                "machine_info": {
+                                    "cpu_name": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                            },
+                        ],
+                    },
+                ],
+            }
+        )
+
+        assert errors == {"test_results": ["duplicate test name(s): ['test_name']"]}

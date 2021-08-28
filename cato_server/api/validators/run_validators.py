@@ -1,3 +1,4 @@
+from collections import Counter
 from typing import Dict, List
 
 from cato_server.storage.abstract.project_repository import ProjectRepository
@@ -19,4 +20,28 @@ class CreateFullRunValidator(SchemaValidator):
                 errors, "project_id", f"No project with id {project_id} exists!"
             )
 
+        if data.get("test_suites"):
+            self._validate_suite_names_are_unique(errors, data.get("test_suites"))
+
+            for test_suite in data.get("test_suites"):
+                self._validate_test_names_are_unique(errors, test_suite)
+
         return errors
+
+    def _validate_suite_names_are_unique(self, errors, test_suites):
+        counter = Counter([x["suite_name"] for x in test_suites])
+        duplicates = [item for item, count in counter.items() if count > 1]
+
+        if duplicates:
+            self.add_error(
+                errors, "test_suites", "duplicate suite name(s): {}".format(duplicates)
+            )
+
+    def _validate_test_names_are_unique(self, errors, test_suite):
+        counter = Counter([x["test_name"] for x in test_suite["tests"]])
+        duplicates = [item for item, count in counter.items() if count > 1]
+
+        if duplicates:
+            self.add_error(
+                errors, "test_results", "duplicate test name(s): {}".format(duplicates)
+            )
