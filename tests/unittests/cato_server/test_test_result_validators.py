@@ -1,73 +1,17 @@
-import datetime
-
 import pytest
 
 from cato.domain.test_status import TestStatus
-from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
-from cato_server.storage.abstract.image_repository import ImageRepository
-from cato_server.storage.abstract.test_result_repository import (
-    TestResultRepository,
-)
-from cato_server.storage.abstract.output_repository import OutputRepository
-from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
-from cato_common.domain.suite_result import SuiteResult
 from cato_server.api.validators.test_result_validators import (
-    UpdateTestResultValidator,
     CreateOutputValidator,
     FinishTestResultValidator,
     StartTestResultValidator,
 )
+from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.storage.abstract.output_repository import OutputRepository
+from cato_server.storage.abstract.test_result_repository import (
+    TestResultRepository,
+)
 from tests.utils import mock_safe
-
-
-class TestUpdateTestResultValidator:
-    def test_success(self):
-        suite_result_repo = mock_safe(SuiteResultRepository)
-        suite_result_repo.find_by_id.return_value = SuiteResult(
-            id=1, run_id=1, suite_name="my_suite", suite_variables={}
-        )
-        file_storage = mock_safe(AbstractFileStorage)
-        file_storage.find_by_id = lambda x: x in [1, 2]
-        validator = UpdateTestResultValidator(suite_result_repo, file_storage)
-
-        errors = validator.validate(
-            {
-                "status": TestStatus.SUCCESS,
-                "output": ["1", "2", "3"],
-                "seconds": 5,
-                "message": "my_message",
-                "image_output": 1,
-                "reference_image": 1,
-                "started_at": datetime.datetime.now().isoformat(),
-                "finished_at": datetime.datetime.now().isoformat(),
-            }
-        )
-
-        assert errors == {}
-
-    def test_failure(self):
-        suite_result_repo = mock_safe(SuiteResultRepository)
-        suite_result_repo.find_by_id.return_value = SuiteResult(
-            id=1, run_id=1, suite_name="my_suite", suite_variables={}
-        )
-        file_storage = mock_safe(AbstractFileStorage)
-        file_storage.find_by_id = lambda x: x in [1, 2]
-        validator = UpdateTestResultValidator(suite_result_repo, file_storage)
-
-        errors = validator.validate(
-            {
-                "status": TestStatus.SUCCESS,
-                "output": ["1", "2", "3"],
-                "seconds": 5,
-                "message": "my_message",
-                "image_output": 1,
-                "reference_image": 3,
-                "started_at": datetime.datetime.now().isoformat(),
-                "finished_at": datetime.datetime.now().isoformat(),
-            }
-        )
-
-        assert errors == {"reference_image": ["No file exists for id 3."]}
 
 
 class TestCreateOutputValidator:

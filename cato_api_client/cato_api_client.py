@@ -6,6 +6,7 @@ from urllib.parse import quote
 import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test_status import TestStatus
 from cato_api_client.http_template import AbstractHttpTemplate
 from cato_api_models.catoapimodels import (
@@ -16,18 +17,16 @@ from cato_api_models.catoapimodels import (
     ApiSuccess,
     StartTestResultDto,
 )
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
-from cato_common.domain.suite_result import SuiteResult
+from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_common.domain.submission_info import SubmissionInfo
-from cato_common.domain.compare_image_result import CompareImageResult
 
 logger = logging.getLogger(__name__)
 

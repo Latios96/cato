@@ -19,24 +19,22 @@ from cato_api_models.catoapimodels import (
     ApiSuccess,
     StartTestResultDto,
 )
+from cato_common.domain.image import ImageChannel
+from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.output import Output
+from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
-
+from cato_common.storage.page import PageRequest
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
     CreateOutputValidator,
     FinishTestResultValidator,
     StartTestResultValidator,
 )
-from cato_common.domain.image import ImageChannel
-from cato_common.domain.machine_info import MachineInfo
-from cato_common.domain.output import Output
-from cato_common.domain.test_identifier import TestIdentifier
-from cato_common.domain.test_result import TestResult
-from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
-from cato_common.storage.page import PageRequest
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
