@@ -14,6 +14,7 @@ import {
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import { updateQueryString } from "../../../../utils/queryStringUtils";
 interface Props {
   projectId: number;
   runId: number;
@@ -71,9 +72,11 @@ function TestList(props: Props) {
                   return (
                     <tr
                       onClick={() =>
-                        history.push(
-                          `/projects/${props.projectId}/runs/${props.runId}/tests/?selectedTest=${test.id}`
-                        )
+                        history.push({
+                          search: updateQueryString(history.location.search, {
+                            selectedTest: test.id,
+                          }),
+                        })
                       }
                       className={
                         test.id === selectedTestId ? styles.active : ""
