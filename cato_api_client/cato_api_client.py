@@ -121,15 +121,7 @@ class CatoApiClient:
             )
         raise self._create_value_error_for_bad_request(response)
 
-    def create_suite_result(self, suite_result: SuiteResult) -> SuiteResult:
-        if suite_result.id:
-            raise ValueError(f"Id of SuiteResult is not 0, was {suite_result.id}")
-
-        url = self._build_url("/api/v1/suite_results")
-        logger.info("Creating suite_result with data %s..", suite_result)
-        return self._create_with_http_template(url, suite_result, SuiteResult)
-
-    def create_run(self, run: Run) -> Run:
+    def create_run(self, run: Run) -> Run:  # todo remove
         if run.id:
             raise ValueError(f"Id of Run is not 0, was {run.id}")
 
@@ -141,7 +133,7 @@ class CatoApiClient:
         url = self._build_url("/api/v1/runs/full")
         return self._create_with_http_template(url, create_full_run_dto, Run)
 
-    def create_test_result(self, test_result: TestResult) -> TestResult:
+    def create_test_result(self, test_result: TestResult) -> TestResult:  # todo remove
         if test_result.id:
             raise ValueError(f"Id of TestResult is not 0, was {test_result.id}")
 

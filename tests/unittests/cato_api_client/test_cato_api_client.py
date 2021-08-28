@@ -141,27 +141,6 @@ def test_upload_file_not_existing(cato_api_client):
         cato_api_client.upload_file(path)
 
 
-def test_create_suite_result_success(cato_api_client, run):
-    suite_result = SuiteResult(
-        id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
-    )
-
-    result = cato_api_client.create_suite_result(suite_result)
-
-    assert result == SuiteResult(
-        id=1, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
-    )
-
-
-def test_create_suite_result_failure_missing_run_id(cato_api_client, run):
-    suite_result = SuiteResult(
-        id=0, run_id=42, suite_name="my_suite", suite_variables={"key": "value"}
-    )
-
-    with pytest.raises(ValueError):
-        cato_api_client.create_suite_result(suite_result)
-
-
 def test_create_run_success(cato_api_client, project):
     started_at = datetime.datetime.now()
     run = Run(id=0, project_id=project.id, started_at=started_at)

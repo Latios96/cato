@@ -60,33 +60,6 @@ def test_get_suite_by_project_id_pages_should_return_empty_page(client, project)
     }
 
 
-def test_create_suite_result_should_create(client, run):
-    url = "/api/v1/suite_results"
-
-    data = dict(run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"})
-
-    rv = client.post(url, json=data)
-
-    assert rv.status_code == 201
-    assert rv.json() == {
-        "id": 1,
-        "run_id": 1,
-        "suite_name": "my_suite",
-        "suite_variables": {"key": "value"},
-    }
-
-
-def test_create_suite_result_should_not_create(client, run):
-    url = "/api/v1/suite_results"
-
-    data = dict(run_id=42, suite_name="my_suite", suite_variables={"key": "value"})
-
-    rv = client.post(url, json=data)
-
-    assert rv.status_code == 400
-    assert rv.json() == {"run_id": ["No run with id 42 exists."]}
-
-
 def test_get_by_id_should_find(client, suite_result):
     url = f"/api/v1/suite_results/{suite_result.id}"
 

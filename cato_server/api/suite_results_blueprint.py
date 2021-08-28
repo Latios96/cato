@@ -1,8 +1,6 @@
 import logging
-from http.client import BAD_REQUEST
 
 from fastapi import APIRouter
-from marshmallow import ValidationError
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
@@ -14,15 +12,11 @@ from cato_api_models.catoapimodels import (
     ExecutionStatusDto,
     TestStatusDto,
 )
-from cato_common.mappers.page_mapper import PageMapper
-from cato_server.api.page_utils import page_request_from_request
-from cato_server.api.validators.suite_result_validators import (
-    CreateSuiteResultValidator,
-)
-from cato_common.domain.suite_result import SuiteResult
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.run_status_calculator import RunStatusCalculator
+from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
+from cato_server.api.page_utils import page_request_from_request
+from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
@@ -56,7 +50,6 @@ class SuiteResultsBlueprint(APIRouter):
 
         self.get("/suite_results/run/{run_id}")(self.suite_result_by_run)
         self.get("/suite_results/{suite_id}")(self.suite_result_by_id)
-        self.post("/suite_results")(self.create_suite_result)
 
     def suite_result_by_run(self, run_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
@@ -122,35 +115,6 @@ class SuiteResultsBlueprint(APIRouter):
             entities=suite_result_dtos,
         )
         return JSONResponse(content=self._page_mapper.to_dict(page))
-
-    async def create_suite_result(self, request: Request) -> Response:
-        request_json = await request.json()
-        errors = CreateSuiteResultValidator(
-            self._run_repository, self._suite_result_repository
-        ).validate(request_json)
-        if errors:
-            return JSONResponse(content=errors, status_code=BAD_REQUEST)
-
-        suite_result = SuiteResult(
-            id=0,
-            run_id=request_json["run_id"],
-            suite_name=request_json["suite_name"],
-            suite_variables=request_json["suite_variables"],
-        )
-        suite_result = self._suite_result_repository.save(suite_result)
-        logger.info("Created SuiteResult %s", suite_result)
-        return JSONResponse(
-            content=self._object_mapper.to_dict(suite_result), status_code=201
-        )
-
-    def _run_id_exists(self, id):
-        if self._run_repository.find_by_id(id) is None:
-            raise ValidationError(f"No run with id {id} exists.")
-
-    def _is_str_str_dict(self, the_dict):
-        for key, value in the_dict.items():
-            if not isinstance(key, str) or not isinstance(value, str):
-                raise ValidationError(f"Not a mapping of str->str: {key}={value}")
 
     def suite_result_by_id(self, suite_id):
         suite_result = self._suite_result_repository.find_by_id(suite_id)
