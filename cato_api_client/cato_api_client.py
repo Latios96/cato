@@ -124,14 +124,6 @@ class CatoApiClient:
         url = self._build_url("/api/v1/runs/full")
         return self._create_with_http_template(url, create_run_dto, Run)
 
-    def create_test_result(self, test_result: TestResult) -> TestResult:  # todo remove
-        if test_result.id:
-            raise ValueError(f"Id of TestResult is not 0, was {test_result.id}")
-
-        url = self._build_url("/api/v1/test_results")
-        logger.info("Creating test_result with data %s..", test_result)
-        return self._create_with_http_template(url, test_result, TestResult)
-
     def find_test_result_by_run_id_and_identifier(
         self, run_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:

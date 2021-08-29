@@ -141,21 +141,6 @@ def test_upload_file_not_existing(cato_api_client):
         cato_api_client.upload_file(path)
 
 
-def test_create_failure_failure(cato_api_client, suite_result):
-    test_result = TestResult(
-        id=0,
-        suite_result_id=5,
-        test_name="test",
-        test_identifier=TestIdentifier(suite_result.suite_name, "test"),
-        test_variables={},
-        test_command="my_command",
-        machine_info=MachineInfo(cpu_name="Intel Xeon", cores=8, memory=24),
-    )
-
-    with pytest.raises(ValueError):
-        cato_api_client.create_test_result(test_result)
-
-
 def test_get_test_result_by_run_and_identifier_success(
     cato_api_client, suite_result, test_result
 ):
