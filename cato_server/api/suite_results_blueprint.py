@@ -15,9 +15,15 @@ from cato_api_models.catoapimodels import (
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
+from cato_server.api.filter_option_utils import suite_result_filter_options_from_request
 from cato_server.api.page_utils import page_request_from_request
+from cato_server.domain.run_status import RunStatus
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.status_filter import StatusFilter
+from cato_server.storage.abstract.suite_result_filter_options import (
+    SuiteResultFilterOptions,
+)
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
@@ -53,8 +59,9 @@ class SuiteResultsBlueprint(APIRouter):
 
     def suite_result_by_run(self, run_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
+        filter_options = suite_result_filter_options_from_request(request.query_params)
         if page_request:
-            return self._suite_result_by_run_paged(run_id, page_request)
+            return self._suite_result_by_run_paged(run_id, page_request, filter_options)
         suite_results = self._suite_result_repository.find_by_run_id(run_id)
 
         status_by_suite_id = (
@@ -65,23 +72,26 @@ class SuiteResultsBlueprint(APIRouter):
 
         suite_result_dtos = []
         for suite_result in suite_results:
-            suite_result_dtos.append(
-                SuiteResultDto(
-                    id=suite_result.id,
-                    run_id=suite_result.run_id,
-                    suite_name=suite_result.suite_name,
-                    suite_variables=suite_result.suite_variables,
-                    status=SuiteStatusDto(
-                        self._status_calculator.calculate(
-                            status_by_suite_id.get(suite_result.id, set())
-                        ).value
-                    ),
-                )
+            status = self._status_calculator.calculate(
+                status_by_suite_id.get(suite_result.id, set())
             )
+            if not _is_filtered(filter_options, status):
+                suite_result_dtos.append(
+                    SuiteResultDto(
+                        id=suite_result.id,
+                        run_id=suite_result.run_id,
+                        suite_name=suite_result.suite_name,
+                        suite_variables=suite_result.suite_variables,
+                        status=SuiteStatusDto(status.value),
+                    )
+                )
         return JSONResponse(content=self._object_mapper.many_to_dict(suite_result_dtos))
 
     def _suite_result_by_run_paged(
-        self, run_id: int, page_request: PageRequest
+        self,
+        run_id: int,
+        page_request: PageRequest,
+        filter_options: SuiteResultFilterOptions,
     ) -> Response:
         suite_results_page = self._suite_result_repository.find_by_run_id_with_paging(
             run_id, page_request
@@ -95,19 +105,19 @@ class SuiteResultsBlueprint(APIRouter):
 
         suite_result_dtos = []
         for suite_result in suite_results_page.entities:
-            suite_result_dtos.append(
-                SuiteResultDto(
-                    id=suite_result.id,
-                    run_id=suite_result.run_id,
-                    suite_name=suite_result.suite_name,
-                    suite_variables=suite_result.suite_variables,
-                    status=SuiteStatusDto(
-                        self._status_calculator.calculate(
-                            status_by_suite_id.get(suite_result.id, set())
-                        ).value
-                    ),
-                )
+            status = self._status_calculator.calculate(
+                status_by_suite_id.get(suite_result.id, set())
             )
+            if not _is_filtered(filter_options, status):
+                suite_result_dtos.append(
+                    SuiteResultDto(
+                        id=suite_result.id,
+                        run_id=suite_result.run_id,
+                        suite_name=suite_result.suite_name,
+                        suite_variables=suite_result.suite_variables,
+                        status=SuiteStatusDto(status.value),
+                    )
+                )
         page = Page(
             page_number=page_request.page_number,
             page_size=page_request.page_size,
@@ -144,3 +154,22 @@ class SuiteResultsBlueprint(APIRouter):
             tests=tests_result_short_summary_dtos,
         )
         return JSONResponse(content=self._object_mapper.to_dict(dto))
+
+
+def _is_filtered(filter_options: SuiteResultFilterOptions, status: RunStatus):
+    if filter_options.status == StatusFilter.NONE:
+        return False
+
+    if (
+        filter_options.status == StatusFilter.NOT_STARTED
+        and status == RunStatus.NOT_STARTED
+    ):
+        return False
+    elif filter_options.status == StatusFilter.RUNNING and status == RunStatus.RUNNING:
+        return False
+    elif filter_options.status == StatusFilter.FAILED and status == RunStatus.FAILED:
+        return False
+    elif filter_options.status == StatusFilter.SUCCESS and status == RunStatus.SUCCESS:
+        return False
+
+    return True
