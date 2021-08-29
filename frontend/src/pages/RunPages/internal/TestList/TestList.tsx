@@ -1,8 +1,6 @@
 import React from "react";
 import { TestResultShortSummaryDto } from "../../../../catoapimodels";
 import styles from "./TestList.module.scss";
-import { useHistory } from "react-router-dom";
-import queryString from "query-string";
 import TestStatus from "../../../../components/Status/TestStatus";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import _ from "lodash";
@@ -14,24 +12,21 @@ import {
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { updateQueryString } from "../../../../utils/queryStringUtils";
 import { TestResultFilterOptions } from "../../../../models/TestResultFilterOptions";
 import { testResultFilterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 interface Props {
   projectId: number;
   runId: number;
   testResultFilterOptions: TestResultFilterOptions;
+  selectedTestId: number | undefined;
+  selectedTestIdChanged: (testId: number) => void;
 }
 
 function TestList(props: Props) {
-  // todo refactor this, list state up
-  const history = useHistory();
-  const queryParams = queryString.parse(history.location.search, {
-    parseNumbers: true,
-  });
   const url = `/api/v1/test_results/run/${
     props.runId
   }?${testResultFilterOptionsToQueryString(props.testResultFilterOptions)}`;
+
   const {
     data: tests,
     loading,
@@ -41,7 +36,6 @@ function TestList(props: Props) {
     props.testResultFilterOptions,
   ]);
 
-  const selectedTestId = queryParams.selectedTest;
   return (
     <LoadingStateHandler isLoading={loading} error={error}>
       <LoadingState>
@@ -77,15 +71,9 @@ function TestList(props: Props) {
                 ? tests.map((test) => {
                     return (
                       <tr
-                        onClick={() =>
-                          history.push({
-                            search: updateQueryString(history.location.search, {
-                              selectedTest: test.id,
-                            }),
-                          })
-                        }
+                        onClick={() => props.selectedTestIdChanged(test.id)}
                         className={
-                          test.id === selectedTestId ? styles.active : ""
+                          test.id === props.selectedTestId ? styles.active : ""
                         }
                       >
                         <td>

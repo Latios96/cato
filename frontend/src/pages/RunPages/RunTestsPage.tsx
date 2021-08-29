@@ -39,6 +39,14 @@ function RunTestsPage(props: Props) {
             projectId={props.projectId}
             runId={props.runId}
             testResultFilterOptions={state.currentFilterOptions}
+            selectedTestId={state.selectedTestId}
+            selectedTestIdChanged={(testId) => {
+              history.push({
+                search: updateQueryString(history.location.search, {
+                  selectedTest: testId,
+                }),
+              });
+            }}
           />
         </div>
         <div id={"selectedTestContainer"}>
