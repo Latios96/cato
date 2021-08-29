@@ -3,7 +3,7 @@ from enum import Enum
 
 
 class StatusFilter(Enum):
-    NONE = "NONE"
+    NONE = "NONE"  # todo remove None
     NOT_STARTED = "NOT_STARTED"
     RUNNING = "RUNNING"
     FAILED = "FAILED"
@@ -12,4 +12,7 @@ class StatusFilter(Enum):
 
 @dataclass
 class TestResultFilterOptions:
-    status: StatusFilter
+    status: StatusFilter  # todo instead of None make this optional
+
+
+# todo implement utils on the typescript site for this
