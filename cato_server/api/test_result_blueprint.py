@@ -26,6 +26,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
+from cato_server.api.filter_option_utils import result_filter_options_from_request
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
     CreateOutputValidator,
@@ -36,6 +37,9 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.test_result_filter_options import (
+    TestResultFilterOptions,
+)
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -155,9 +159,15 @@ class TestResultsBlueprint(APIRouter):
 
     def get_test_result_by_run_id(self, run_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
+        filter_options = result_filter_options_from_request(request.query_params)
         if page_request:
-            return self._get_test_result_by_run_id_paged(run_id, page_request)
-        test_results = self._test_result_repository.find_by_run_id(run_id)
+            return self._get_test_result_by_run_id_paged(
+                run_id, page_request, filter_options
+            )
+
+        test_results = self._test_result_repository.find_by_run_id(
+            run_id, filter_options
+        )
 
         test_result_short_summary_dtos = []
         for test_result in test_results:
@@ -181,10 +191,13 @@ class TestResultsBlueprint(APIRouter):
         )
 
     def _get_test_result_by_run_id_paged(
-        self, run_id: int, page_request: PageRequest
+        self,
+        run_id: int,
+        page_request: PageRequest,
+        filter_options: TestResultFilterOptions,
     ) -> Response:
         page = self._test_result_repository.find_by_run_id_with_paging(
-            run_id, page_request
+            run_id, page_request, filter_options
         )
 
         test_result_short_summary_dtos = []
