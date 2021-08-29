@@ -26,7 +26,7 @@ function SuiteList(props: Props) {
       props.filterOptions
     )}`,
     5000,
-    [props.runId]
+    [props.runId, props.filterOptions]
   );
 
   return (
