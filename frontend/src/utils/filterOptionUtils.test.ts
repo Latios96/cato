@@ -1,8 +1,5 @@
 import { testResultFilterOptionsFromQueryString } from "./filterOptionUtils";
-import {
-  StatusFilter,
-  TestResultFilterOptions,
-} from "../models/TestResultFilterOptions";
+import { StatusFilter, FilterOptions } from "../models/FilterOptions";
 
 describe("filterOptionUtils", () => {
   describe("testResultFilterOptionsFromQueryString", () => {
@@ -12,15 +9,13 @@ describe("filterOptionUtils", () => {
       );
 
       expect(filterOptions).toStrictEqual(
-        new TestResultFilterOptions(StatusFilter.FAILED)
+        new FilterOptions(StatusFilter.FAILED)
       );
     });
     it("should use default", () => {
       const filterOptions = testResultFilterOptionsFromQueryString("asdf=test");
 
-      expect(filterOptions).toStrictEqual(
-        new TestResultFilterOptions(StatusFilter.NONE)
-      );
+      expect(filterOptions).toStrictEqual(new FilterOptions(StatusFilter.NONE));
     });
   });
 });

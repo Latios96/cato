@@ -6,7 +6,7 @@ export enum StatusFilter {
   SUCCESS = "SUCCESS",
 }
 
-export class TestResultFilterOptions {
+export class FilterOptions {
   constructor(status?: StatusFilter) {
     if (status) {
       this.status = status;

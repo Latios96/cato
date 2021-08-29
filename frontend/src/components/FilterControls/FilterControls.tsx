@@ -1,12 +1,9 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import styles from "./FilterControls.module.scss";
-import {
-  StatusFilter,
-  TestResultFilterOptions,
-} from "../../models/TestResultFilterOptions";
+import { StatusFilter, FilterOptions } from "../../models/FilterOptions";
 interface Props {
-  currentFilterOptions: TestResultFilterOptions;
+  currentFilterOptions: FilterOptions;
   statusFilterChanged: (filter: StatusFilter) => void;
 }
 

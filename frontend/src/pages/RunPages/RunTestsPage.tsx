@@ -10,7 +10,7 @@ import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
 import FilterControls from "../../components/FilterControls/FilterControls";
 import { updateQueryString } from "../../utils/queryStringUtils";
 import { testResultFilterOptionsFromQueryString } from "../../utils/filterOptionUtils";
-import { TestResultFilterOptions } from "../../models/TestResultFilterOptions";
+import { FilterOptions } from "../../models/FilterOptions";
 
 interface Props {
   projectId: number;
@@ -72,7 +72,7 @@ function RunTestsPage(props: Props) {
   );
 }
 interface State {
-  currentFilterOptions: TestResultFilterOptions;
+  currentFilterOptions: FilterOptions;
   selectedTest: number | undefined;
 }
 function parseStateFromQueryString(theQueryString: string): State {

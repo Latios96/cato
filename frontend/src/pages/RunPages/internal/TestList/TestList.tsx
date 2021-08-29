@@ -12,14 +12,14 @@ import {
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import { TestResultFilterOptions } from "../../../../models/TestResultFilterOptions";
+import { FilterOptions } from "../../../../models/FilterOptions";
 import { testResultFilterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 interface Props {
   projectId: number;
   runId: number;
-  testResultFilterOptions: TestResultFilterOptions;
+  testResultFilterOptions: FilterOptions;
   selectedTestId: number | undefined;
   selectedTestIdChanged: (testId: number) => void;
 }
