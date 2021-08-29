@@ -14,6 +14,8 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { TestResultFilterOptions } from "../../../../models/TestResultFilterOptions";
 import { testResultFilterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
+import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
+import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 interface Props {
   projectId: number;
   runId: number;
@@ -66,27 +68,34 @@ function TestList(props: Props) {
             <col />
           </colgroup>
           <tbody>
-            {
-              tests
-                ? tests.map((test) => {
-                    return (
-                      <tr
-                        onClick={() => props.selectedTestIdChanged(test.id)}
-                        className={
-                          test.id === props.selectedTestId ? styles.active : ""
-                        }
-                      >
-                        <td>
-                          <TestStatus testResult={test} />
-                        </td>
-                        <td>{test.test_identifier.split("/")[0]}</td>
-                        <td>/</td>
-                        <td>{test.test_identifier.split("/")[1]}</td>
-                      </tr>
-                    );
-                  })
-                : null /* todo display "no tests"*/
-            }
+            <CollectionHandler
+              data={tests}
+              placeHolder={
+                <div className={"d-flex"}>
+                  <PlaceHolderText
+                    text={"No tests"}
+                    className={styles.noTestPlaceholder}
+                  />
+                </div>
+              }
+              renderDataElement={(test) => {
+                return (
+                  <tr
+                    onClick={() => props.selectedTestIdChanged(test.id)}
+                    className={
+                      test.id === props.selectedTestId ? styles.active : ""
+                    }
+                  >
+                    <td>
+                      <TestStatus testResult={test} />
+                    </td>
+                    <td>{test.test_identifier.split("/")[0]}</td>
+                    <td>/</td>
+                    <td>{test.test_identifier.split("/")[1]}</td>
+                  </tr>
+                );
+              }}
+            />
           </tbody>
         </table>
       </DataLoadedState>

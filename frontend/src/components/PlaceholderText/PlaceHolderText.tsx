@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./PlaceHolderText.module.scss";
 interface Props {
   text: string;
-  className: string;
+  className?: string;
 }
 const PlaceHolderText = (props: Props) => {
   return (
