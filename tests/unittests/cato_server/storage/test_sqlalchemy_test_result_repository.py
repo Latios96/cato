@@ -11,8 +11,8 @@ from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
-    StatusFilter,
 )
+from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )

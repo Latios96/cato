@@ -1,9 +1,9 @@
 from starlette.datastructures import ImmutableMultiDict
 
 from cato_server.storage.abstract.test_result_filter_options import (
-    StatusFilter,
     TestResultFilterOptions,
 )
+from cato_server.storage.abstract.status_filter import StatusFilter
 
 
 def result_filter_options_from_request(
