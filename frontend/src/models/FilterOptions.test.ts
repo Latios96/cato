@@ -1,6 +1,6 @@
-import { StatusFilter, FilterOptions } from "./FilterOptions";
+import { FilterOptions, StatusFilter } from "./FilterOptions";
 
-describe("TestResultFilterOptions", () => {
+describe("FilterOptions", () => {
   it("should construct with default status filter NONE", () => {
     const filterOptions = new FilterOptions();
 

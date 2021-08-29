@@ -4,34 +4,47 @@ import { CurrentPage } from "./internal/common/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
-import { useLocation } from "react-router-dom";
-import queryString from "query-string";
+import { useHistory } from "react-router-dom";
 import SuiteList from "./internal/SuiteList/SuiteList";
+import FilterControls from "../../components/FilterControls/FilterControls";
+import { updateQueryString } from "../../utils/queryStringUtils";
+import { parseStateFromQueryString } from "./internal/common/extractRunTestAndSuitePageState";
 interface Props {
   projectId: number;
   runId: number;
 }
 
 function RunSuitePage(props: Props) {
-  const location = useLocation();
-  const queryParams = queryString.parse(location.search, {
-    parseNumbers: true,
-  });
-  // @ts-ignore
-  const selectedTestId: number = queryParams.selectedTest;
+  const history = useHistory();
+  const state = parseStateFromQueryString(history.location.search);
   return (
     <BasicRunPage {...props} currentPage={CurrentPage.SUITES}>
       <div className={styles.suiteAndTestContainer}>
         <div>
-          <SuiteList projectId={props.projectId} runId={props.runId} />
+          <div className={styles.filterControlsContainer}>
+            <FilterControls
+              currentFilterOptions={state.currentFilterOptions}
+              statusFilterChanged={(filter) => {
+                const queryString = updateQueryString(history.location.search, {
+                  statusFilter: filter,
+                });
+                history.push({ search: queryString });
+              }}
+            />
+          </div>
+          <SuiteList
+            projectId={props.projectId}
+            runId={props.runId}
+            filterOptions={state.currentFilterOptions}
+          />
         </div>
         <div>
           <div>
-            {selectedTestId ? (
+            {state.selectedTest ? (
               <TestResultComponent
                 runId={props.runId}
                 projectId={props.projectId}
-                resultId={selectedTestId}
+                resultId={state.selectedTest}
               />
             ) : (
               <div className={styles.noTestSelected}>

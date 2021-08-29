@@ -4,13 +4,11 @@ import { CurrentPage } from "./internal/common/CurrentPage";
 import styles from "./RunTestsPage.module.scss";
 import TestList from "./internal/TestList/TestList";
 import { useHistory } from "react-router-dom";
-import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
 import FilterControls from "../../components/FilterControls/FilterControls";
 import { updateQueryString } from "../../utils/queryStringUtils";
-import { testResultFilterOptionsFromQueryString } from "../../utils/filterOptionUtils";
-import { FilterOptions } from "../../models/FilterOptions";
+import { parseStateFromQueryString } from "./internal/common/extractRunTestAndSuitePageState";
 
 interface Props {
   projectId: number;
@@ -38,7 +36,7 @@ function RunTestsPage(props: Props) {
           <TestList
             projectId={props.projectId}
             runId={props.runId}
-            testResultFilterOptions={state.currentFilterOptions}
+            filterOptions={state.currentFilterOptions}
             selectedTestId={state.selectedTest}
             selectedTestIdChanged={(testId) => {
               history.push({
@@ -70,33 +68,6 @@ function RunTestsPage(props: Props) {
       </div>
     </BasicRunPage>
   );
-}
-interface State {
-  currentFilterOptions: FilterOptions;
-  selectedTest: number | undefined;
-}
-function parseStateFromQueryString(theQueryString: string): State {
-  const queryParams = queryString.parse(theQueryString, {
-    parseNumbers: true,
-  });
-
-  const currentFilterOptions =
-    testResultFilterOptionsFromQueryString(theQueryString);
-  const state = {
-    currentFilterOptions,
-    selectedTest: undefined,
-  };
-  if (
-    queryParams.selectedTest &&
-    !Array.isArray(queryParams.selectedTest) &&
-    !(typeof queryParams.selectedTest === "string")
-  ) {
-    return {
-      ...state,
-      selectedTest: queryParams.selectedTest,
-    };
-  }
-  return state;
 }
 
 export default RunTestsPage;

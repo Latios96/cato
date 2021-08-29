@@ -13,13 +13,13 @@ import {
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import { FilterOptions } from "../../../../models/FilterOptions";
-import { testResultFilterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
+import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 interface Props {
   projectId: number;
   runId: number;
-  testResultFilterOptions: FilterOptions;
+  filterOptions: FilterOptions;
   selectedTestId: number | undefined;
   selectedTestIdChanged: (testId: number) => void;
 }
@@ -27,7 +27,7 @@ interface Props {
 function TestList(props: Props) {
   const url = `/api/v1/test_results/run/${
     props.runId
-  }?${testResultFilterOptionsToQueryString(props.testResultFilterOptions)}`;
+  }?${filterOptionsToQueryString(props.filterOptions)}`;
 
   const {
     data: tests,
@@ -35,7 +35,7 @@ function TestList(props: Props) {
     error,
   } = useReFetch<TestResultShortSummaryDto[]>(url, 5000, [
     props.runId,
-    props.testResultFilterOptions,
+    props.filterOptions,
   ]);
 
   return (

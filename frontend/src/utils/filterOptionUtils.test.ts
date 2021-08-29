@@ -1,19 +1,18 @@
-import { testResultFilterOptionsFromQueryString } from "./filterOptionUtils";
-import { StatusFilter, FilterOptions } from "../models/FilterOptions";
+import { filterOptionsFromQueryString } from "./filterOptionUtils";
+import { FilterOptions, StatusFilter } from "../models/FilterOptions";
 
 describe("filterOptionUtils", () => {
-  describe("testResultFilterOptionsFromQueryString", () => {
+  describe("filterOptionsFromQueryString", () => {
     it("should parse provided value", () => {
-      const filterOptions = testResultFilterOptionsFromQueryString(
-        "statusFilter=FAILED"
-      );
+      const filterOptions = filterOptionsFromQueryString("statusFilter=FAILED");
 
       expect(filterOptions).toStrictEqual(
         new FilterOptions(StatusFilter.FAILED)
       );
     });
+
     it("should use default", () => {
-      const filterOptions = testResultFilterOptionsFromQueryString("asdf=test");
+      const filterOptions = filterOptionsFromQueryString("asdf=test");
 
       expect(filterOptions).toStrictEqual(new FilterOptions(StatusFilter.NONE));
     });

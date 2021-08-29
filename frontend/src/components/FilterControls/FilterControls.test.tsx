@@ -1,7 +1,7 @@
 import each from "jest-each";
 import FilterControls from "./FilterControls";
 import { render } from "@testing-library/react";
-import { StatusFilter, FilterOptions } from "../../models/FilterOptions";
+import { FilterOptions, StatusFilter } from "../../models/FilterOptions";
 
 describe("FilterControls", () => {
   each([

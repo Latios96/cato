@@ -12,14 +12,19 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import styles from "./SuiteList.module.scss";
 import SuiteListEntry from "./SuiteListEntry";
 import { useReFetch } from "../../../../hooks/useReFetch";
+import { FilterOptions } from "../../../../models/FilterOptions";
+import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 interface Props {
   projectId: number;
   runId: number;
+  filterOptions: FilterOptions;
 }
 
 function SuiteList(props: Props) {
   const { data, loading, error } = useReFetch<SuiteResultDto[]>(
-    `/api/v1/suite_results/run/${props.runId}`,
+    `/api/v1/suite_results/run/${props.runId}?${filterOptionsToQueryString(
+      props.filterOptions
+    )}`,
     5000,
     [props.runId]
   );
