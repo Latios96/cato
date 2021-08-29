@@ -39,7 +39,7 @@ function RunTestsPage(props: Props) {
             projectId={props.projectId}
             runId={props.runId}
             testResultFilterOptions={state.currentFilterOptions}
-            selectedTestId={state.selectedTestId}
+            selectedTestId={state.selectedTest}
             selectedTestIdChanged={(testId) => {
               history.push({
                 search: updateQueryString(history.location.search, {
@@ -51,11 +51,11 @@ function RunTestsPage(props: Props) {
         </div>
         <div id={"selectedTestContainer"}>
           <div>
-            {state.selectedTestId ? (
+            {state.selectedTest ? (
               <TestResultComponent
                 runId={props.runId}
                 projectId={props.projectId}
-                resultId={state.selectedTestId}
+                resultId={state.selectedTest}
               />
             ) : (
               <div className={styles.noTestSelected}>
@@ -73,7 +73,7 @@ function RunTestsPage(props: Props) {
 }
 interface State {
   currentFilterOptions: TestResultFilterOptions;
-  selectedTestId: number | undefined;
+  selectedTest: number | undefined;
 }
 function parseStateFromQueryString(theQueryString: string): State {
   const queryParams = queryString.parse(theQueryString, {
@@ -84,16 +84,16 @@ function parseStateFromQueryString(theQueryString: string): State {
     testResultFilterOptionsFromQueryString(theQueryString);
   const state = {
     currentFilterOptions,
-    selectedTestId: undefined,
+    selectedTest: undefined,
   };
   if (
-    queryParams.selectedTestId &&
-    !Array.isArray(queryParams.selectedTestId) &&
-    !(typeof queryParams.selectedTestId === "string")
+    queryParams.selectedTest &&
+    !Array.isArray(queryParams.selectedTest) &&
+    !(typeof queryParams.selectedTest === "string")
   ) {
     return {
       ...state,
-      selectedTestId: queryParams.selectedTestId,
+      selectedTest: queryParams.selectedTest,
     };
   }
   return state;
