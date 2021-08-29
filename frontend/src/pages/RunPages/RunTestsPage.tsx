@@ -8,8 +8,9 @@ import queryString from "query-string";
 import TestResultComponent from "../../components/TestResultComponent/TestResultComponent";
 import PlaceHolderText from "../../components/PlaceholderText/PlaceHolderText";
 import FilterControls from "../../components/FilterControls/FilterControls";
-import { StatusFilter } from "../../catoapimodels";
 import { updateQueryString } from "../../utils/queryStringUtils";
+import { testResultFilterOptionsFromQueryString } from "../../utils/filterOptionUtils";
+import { TestResultFilterOptions } from "../../models/TestResultFilterOptions";
 
 interface Props {
   projectId: number;
@@ -18,37 +19,35 @@ interface Props {
 
 function RunTestsPage(props: Props) {
   const history = useHistory();
-  const queryParams = queryString.parse(history.location.search, {
-    parseNumbers: true,
-  });
-  // @ts-ignore
-  const selectedTestId: number = queryParams.selectedTest;
-  // @ts-ignore
-  const currentFilter: StatusFilter | undefined = queryParams.filter;
+  const state = parseStateFromQueryString(history.location.search);
   return (
     <BasicRunPage {...props} currentPage={CurrentPage.TESTS}>
       <div className={styles.suiteAndTestContainer}>
         <div>
           <div className={styles.filterControlsContainer}>
             <FilterControls
-              currentFilter={currentFilter ? currentFilter : StatusFilter.NONE}
-              filterChanged={(filter) => {
+              currentFilterOptions={state.currentFilterOptions}
+              statusFilterChanged={(filter) => {
                 const queryString = updateQueryString(history.location.search, {
-                  filter: filter,
+                  statusFilter: filter,
                 });
                 history.push({ search: queryString });
               }}
             />
           </div>
-          <TestList projectId={props.projectId} runId={props.runId} />
+          <TestList
+            projectId={props.projectId}
+            runId={props.runId}
+            testResultFilterOptions={state.currentFilterOptions}
+          />
         </div>
         <div id={"selectedTestContainer"}>
           <div>
-            {selectedTestId ? (
+            {state.selectedTestId ? (
               <TestResultComponent
                 runId={props.runId}
                 projectId={props.projectId}
-                resultId={selectedTestId}
+                resultId={state.selectedTestId}
               />
             ) : (
               <div className={styles.noTestSelected}>
@@ -63,6 +62,33 @@ function RunTestsPage(props: Props) {
       </div>
     </BasicRunPage>
   );
+}
+interface State {
+  currentFilterOptions: TestResultFilterOptions;
+  selectedTestId: number | undefined;
+}
+function parseStateFromQueryString(theQueryString: string): State {
+  const queryParams = queryString.parse(theQueryString, {
+    parseNumbers: true,
+  });
+
+  const currentFilterOptions =
+    testResultFilterOptionsFromQueryString(theQueryString);
+  const state = {
+    currentFilterOptions,
+    selectedTestId: undefined,
+  };
+  if (
+    queryParams.selectedTestId &&
+    !Array.isArray(queryParams.selectedTestId) &&
+    !(typeof queryParams.selectedTestId === "string")
+  ) {
+    return {
+      ...state,
+      selectedTestId: queryParams.selectedTestId,
+    };
+  }
+  return state;
 }
 
 export default RunTestsPage;

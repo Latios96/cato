@@ -1,10 +1,13 @@
 import React from "react";
 import { Form } from "react-bootstrap";
-import { StatusFilter } from "../../catoapimodels";
 import styles from "./FilterControls.module.scss";
+import {
+  StatusFilter,
+  TestResultFilterOptions,
+} from "../../models/TestResultFilterOptions";
 interface Props {
-  currentFilter: StatusFilter;
-  filterChanged: (filter: StatusFilter) => void;
+  currentFilterOptions: TestResultFilterOptions;
+  statusFilterChanged: (filter: StatusFilter) => void;
 }
 
 function FilterControls(props: Props) {
@@ -16,8 +19,8 @@ function FilterControls(props: Props) {
         label="All"
         name={"Filter"}
         type={"radio"}
-        checked={props.currentFilter === StatusFilter.NONE}
-        onClick={() => props.filterChanged(StatusFilter.NONE)}
+        checked={props.currentFilterOptions.status === StatusFilter.NONE}
+        onClick={() => props.statusFilterChanged(StatusFilter.NONE)}
         onChange={(e) => {}}
       />
       <Form.Check
@@ -26,8 +29,8 @@ function FilterControls(props: Props) {
         label="Failed"
         name={"Filter"}
         type={"radio"}
-        checked={props.currentFilter === StatusFilter.FAILED}
-        onClick={() => props.filterChanged(StatusFilter.FAILED)}
+        checked={props.currentFilterOptions.status === StatusFilter.FAILED}
+        onClick={() => props.statusFilterChanged(StatusFilter.FAILED)}
         onChange={(e) => {}}
       />
       <Form.Check
@@ -36,8 +39,8 @@ function FilterControls(props: Props) {
         label="Success"
         name={"Filter"}
         type={"radio"}
-        checked={props.currentFilter === StatusFilter.SUCCESS}
-        onClick={() => props.filterChanged(StatusFilter.SUCCESS)}
+        checked={props.currentFilterOptions.status === StatusFilter.SUCCESS}
+        onClick={() => props.statusFilterChanged(StatusFilter.SUCCESS)}
         onChange={(e) => {}}
       />
       <Form.Check
@@ -46,8 +49,8 @@ function FilterControls(props: Props) {
         label="Running"
         name={"Filter"}
         type={"radio"}
-        checked={props.currentFilter === StatusFilter.RUNNING}
-        onClick={() => props.filterChanged(StatusFilter.RUNNING)}
+        checked={props.currentFilterOptions.status === StatusFilter.RUNNING}
+        onClick={() => props.statusFilterChanged(StatusFilter.RUNNING)}
         onChange={(e) => {}}
       />
       <Form.Check
@@ -56,8 +59,8 @@ function FilterControls(props: Props) {
         label={"Not Started"}
         name={"Filter"}
         type={"radio"}
-        checked={props.currentFilter === StatusFilter.NOT_STARTED}
-        onClick={() => props.filterChanged(StatusFilter.NOT_STARTED)}
+        checked={props.currentFilterOptions.status === StatusFilter.NOT_STARTED}
+        onClick={() => props.statusFilterChanged(StatusFilter.NOT_STARTED)}
         onChange={(e) => {}}
       />
     </div>

@@ -1,7 +1,10 @@
-import { StatusFilter } from "../../catoapimodels";
 import each from "jest-each";
 import FilterControls from "./FilterControls";
 import { render } from "@testing-library/react";
+import {
+  StatusFilter,
+  TestResultFilterOptions,
+} from "../../models/TestResultFilterOptions";
 
 describe("FilterControls", () => {
   each([
@@ -16,8 +19,8 @@ describe("FilterControls", () => {
       const filterChangedCallback = jest.fn();
       const rendered = render(
         <FilterControls
-          currentFilter={StatusFilter.NONE}
-          filterChanged={filterChangedCallback}
+          currentFilterOptions={new TestResultFilterOptions(StatusFilter.NONE)}
+          statusFilterChanged={filterChangedCallback}
         />
       );
 
@@ -39,8 +42,8 @@ describe("FilterControls", () => {
       const filterChangedCallback = jest.fn();
       const rendered = render(
         <FilterControls
-          currentFilter={status}
-          filterChanged={filterChangedCallback}
+          currentFilterOptions={new TestResultFilterOptions(status)}
+          statusFilterChanged={filterChangedCallback}
         />
       );
 

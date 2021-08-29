@@ -157,11 +157,3 @@ types:
       ApiSuccess:
         fields:
           success: boolean
-
-      StatusFilter:
-        values:
-          - NONE
-          - NOT_STARTED
-          - RUNNING
-          - FAILED
-          - SUCCESS
