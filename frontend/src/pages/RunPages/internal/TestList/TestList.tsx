@@ -78,23 +78,26 @@ function TestList(props: Props) {
                   />
                 </div>
               }
-              renderDataElement={(test) => {
-                return (
-                  <tr
-                    onClick={() => props.selectedTestIdChanged(test.id)}
-                    className={
-                      test.id === props.selectedTestId ? styles.active : ""
-                    }
-                  >
-                    <td>
-                      <TestStatus testResult={test} />
-                    </td>
-                    <td>{test.test_identifier.split("/")[0]}</td>
-                    <td>/</td>
-                    <td>{test.test_identifier.split("/")[1]}</td>
-                  </tr>
-                );
-              }}
+              renderElements={(tests) =>
+                tests.map((test) => {
+                  return (
+                    <tr
+                      onClick={() => props.selectedTestIdChanged(test.id)}
+                      className={
+                        test.id === props.selectedTestId ? styles.active : ""
+                      }
+                      key={test.id}
+                    >
+                      <td>
+                        <TestStatus testResult={test} />
+                      </td>
+                      <td>{test.test_identifier.split("/")[0]}</td>
+                      <td>/</td>
+                      <td>{test.test_identifier.split("/")[1]}</td>
+                    </tr>
+                  );
+                })
+              }
             />
           </tbody>
         </table>

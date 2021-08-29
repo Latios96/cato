@@ -7,7 +7,7 @@ describe("CollectionHandler", () => {
       <CollectionHandler
         data={[]}
         placeHolder={<div>Placeholder</div>}
-        renderDataElement={(d) => <div>{d}</div>}
+        renderElements={(data) => data.map((d) => <div>{d}</div>)}
       />
     );
 
@@ -19,7 +19,7 @@ describe("CollectionHandler", () => {
       <CollectionHandler
         data={undefined}
         placeHolder={<div>Placeholder</div>}
-        renderDataElement={(d) => <div>{d}</div>}
+        renderElements={(data) => data.map((d) => <div>{d}</div>)}
       />
     );
 
@@ -31,7 +31,7 @@ describe("CollectionHandler", () => {
       <CollectionHandler
         data={[1, 2, 3]}
         placeHolder={<div>Placeholder</div>}
-        renderDataElement={(d) => <div>{d}</div>}
+        renderElements={(data) => data.map((d) => <div>{d}</div>)}
       />
     );
 
