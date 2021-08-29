@@ -1,6 +1,8 @@
 import { testResultFilterOptionsFromQueryString } from "./filterOptionUtils";
-import { TestResultFilterOptions } from "../models/TestResultFilterOptions";
-import { StatusFilter } from "../catoapimodels/statusFilter";
+import {
+  StatusFilter,
+  TestResultFilterOptions,
+} from "../models/TestResultFilterOptions";
 
 describe("filterOptionUtils", () => {
   describe("testResultFilterOptionsFromQueryString", () => {
