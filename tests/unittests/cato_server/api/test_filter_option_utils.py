@@ -12,7 +12,7 @@ from cato_server.storage.abstract.test_result_filter_options import (
 
 
 def test_from_request_success_with_status_filter_set():
-    request_args = ImmutableMultiDict({"status_filter": "NONE"})
+    request_args = ImmutableMultiDict({"statusFilter": "NONE"})
 
     test_result_filter_options = result_filter_options_from_request(request_args)
 
@@ -32,7 +32,7 @@ def test_from_request_success_with_status_filter_not_set():
 
 
 def test_from_request_success_with_status_filter_invalid_value():
-    request_args = ImmutableMultiDict({"status_filter": "INVALID_VALUE"})
+    request_args = ImmutableMultiDict({"statusFilter": "INVALID_VALUE"})
 
     with pytest.raises(ValueError):
         result_filter_options_from_request(request_args)

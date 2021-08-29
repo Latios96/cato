@@ -10,6 +10,6 @@ def result_filter_options_from_request(
     request_args: ImmutableMultiDict,
 ) -> TestResultFilterOptions:
     status_filter_string = request_args.get(
-        "status_filter", StatusFilter.NONE
+        "statusFilter", StatusFilter.NONE
     )  # todo instead of None make this optional
     return TestResultFilterOptions(status=StatusFilter(status_filter_string))
