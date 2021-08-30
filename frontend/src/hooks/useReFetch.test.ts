@@ -19,7 +19,7 @@ describe("useReFetch", () => {
     let value = 0;
     nock("http://localhost")
       .get("/")
-      .times(5)
+      .times(2)
       .reply(200, () => {
         return {
           test: value++,
