@@ -14,6 +14,8 @@ import SuiteListEntry from "./SuiteListEntry";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
+import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
+import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 interface Props {
   projectId: number;
   runId: number;
@@ -53,8 +55,18 @@ function SuiteList(props: Props) {
       </ErrorState>
       <DataLoadedState>
         <div className={styles.suiteList} id={"suiteList"}>
-          {data
-            ? data.map((suite) => {
+          <CollectionHandler
+            data={data}
+            placeHolder={
+              <div className={"d-flex"}>
+                <PlaceHolderText
+                  text={"No suites"}
+                  className={styles.noSuitesPlaceholder}
+                />
+              </div>
+            }
+            renderElements={(data) => {
+              return data.map((suite) => {
                 return (
                   <SuiteListEntry
                     suite={suite}
@@ -62,8 +74,9 @@ function SuiteList(props: Props) {
                     runId={props.runId}
                   />
                 );
-              })
-            : ""}
+              });
+            }}
+          />
         </div>
       </DataLoadedState>
     </LoadingStateHandler>
