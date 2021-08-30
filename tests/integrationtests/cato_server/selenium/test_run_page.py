@@ -1,8 +1,10 @@
+import pytest
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.wait import WebDriverWait
+
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
-from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
-    SqlAlchemySuiteResultRepository,
-)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -369,3 +371,50 @@ class TestRunSuitePage:
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result.execution_status = ExecutionStatus.RUNNING
         repository.save(test_result)
+
+
+@pytest.mark.parametrize("page", ["suite", "test"])
+def test_filtering_suites_and_tests_should_work(
+    selenium_driver: MyChromeDriver, live_server, run, test_result, page
+):
+    selenium_driver.get(
+        f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/{page}s"
+    )
+    selenium_driver.find_element_by_xpath(
+        f'//*[@id="{page}List"]//*[@title="not started"]'
+    )
+
+    selenium_driver.find_element_by_id("Not Started").click()
+
+    selenium_driver.find_element_by_xpath(
+        f'//*[@id="{page}List"]//*[@title="not started"]'
+    )
+
+    selenium_driver.find_element_by_id("Failed").click()
+
+    WebDriverWait(selenium_driver, 3).until_not(
+        expected_conditions.presence_of_element_located(
+            (By.XPATH, f'//*[@id="{page}List"]//*[@title="not started"]')
+        )
+    )
+    selenium_driver.find_element_by_xpath(
+        f'//*[@id="{page}List"]//*[text()="No {page}s"]'
+    )
+
+
+@pytest.mark.parametrize("page", ["suite", "test"])
+def test_filtering_suites_and_tests_should_read_from_url(
+    selenium_driver: MyChromeDriver, live_server, run, test_result, page
+):
+    selenium_driver.get(
+        f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/{page}s?statusFilter=FAILED"
+    )
+
+    WebDriverWait(selenium_driver, 3).until_not(
+        expected_conditions.presence_of_element_located(
+            (By.XPATH, f'//*[@id="{page}List"]//*[@title="not started"]')
+        )
+    )
+    selenium_driver.find_element_by_xpath(
+        f'//*[@id="{page}List"]//*[text()="No {page}s"]'
+    )
