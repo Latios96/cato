@@ -19,14 +19,14 @@ describe("useReFetch", () => {
     let value = 0;
     nock("http://localhost")
       .get("/")
-      .times(2)
+      .times(5)
       .reply(200, () => {
         return {
           test: value++,
         };
       });
 
-    const { result } = renderHook(() => useReFetch("http://localhost/", 100));
+    const { result } = renderHook(() => useReFetch("http://localhost/", 500));
 
     expect(result.current.loading).toBeTruthy();
     await waitFor(() => {
