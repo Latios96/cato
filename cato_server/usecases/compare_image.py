@@ -54,6 +54,7 @@ class CompareImage:
             reference_image_id=reference_image.id,
             output_image_id=output_image.id,
             diff_image_id=stored_diff_image.id,
+            error=result.error,
         )
 
     def _store_image_in_db(

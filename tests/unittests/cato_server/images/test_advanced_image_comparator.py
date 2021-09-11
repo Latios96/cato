@@ -33,6 +33,7 @@ def test_compare_image_should_fail_different_resolution(test_resource_provider, 
         status=TestStatus.FAILED,
         message="Images have different resolutions! Reference image is 100x200px, output image is 100x100px",
         diff_image=None,
+        error=0,
     )
 
 
@@ -60,6 +61,7 @@ def test_compare_image_should_fail_one_pixel_different(
         diff_image=str(
             tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png")
         ),
+        error=0.9948618765070573,
     )
 
 
@@ -92,6 +94,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
         status=TestStatus.FAILED,
         message="Images are not equal! SSIM score was 0.918, max threshold is 1.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
+        error=0.9175751987519188,
     )
     assert images_are_equal(
         comparison_result.diff_image,
@@ -123,6 +126,7 @@ def test_compare_image_should_succeed_same_image(
             diff_image=tmpdir.join(
                 "diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"
             ),
+            error=1.0,
         )
 
 
@@ -163,6 +167,7 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
         status=TestStatus.SUCCESS,
         message=None,
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
+        error=0.9175751987519188,
     )
 
 

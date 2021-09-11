@@ -9,3 +9,4 @@ class ComparisonResult:
     status: TestStatus
     message: Optional[str]
     diff_image: Optional[str]
+    error: float

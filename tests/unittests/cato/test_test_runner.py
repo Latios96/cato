@@ -48,6 +48,7 @@ class TestTestRunner:
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=1,
         )
 
     @mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
@@ -236,6 +237,7 @@ class TestTestRunner:
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=1,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -284,6 +286,7 @@ class TestTestRunner:
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=1,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -330,6 +333,7 @@ class TestTestRunner:
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=1,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
@@ -377,6 +381,7 @@ class TestTestRunner:
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=1,
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(

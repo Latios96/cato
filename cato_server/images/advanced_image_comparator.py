@@ -58,6 +58,7 @@ class AdvancedImageComparator:
                 status=TestStatus.FAILED,
                 message=f"Images have different resolutions! Reference image is {reference_image_resolution}, output image is {output_image_resolution}",
                 diff_image=None,
+                error=0,
             )
 
         output_image = self._normalize_image(output_image)
@@ -78,10 +79,11 @@ class AdvancedImageComparator:
                 status=TestStatus.FAILED,
                 message=f"Images are not equal! {comparison_settings.method} score was {score:.3f}, max threshold is {comparison_settings.threshold:.3f}",
                 diff_image=diff_image,
+                error=score,
             )
 
         return ComparisonResult(
-            status=TestStatus.SUCCESS, message=None, diff_image=diff_image
+            status=TestStatus.SUCCESS, message=None, diff_image=diff_image, error=score
         )
 
     def _read_image(self, image_path):

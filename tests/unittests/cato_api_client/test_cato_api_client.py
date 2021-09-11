@@ -390,6 +390,7 @@ def test_compare_images_success(cato_api_client, test_resource_provider):
         reference_image_id=2,
         output_image_id=1,
         diff_image_id=3,
+        error=1,
     )
 
 

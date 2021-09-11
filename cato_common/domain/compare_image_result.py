@@ -11,3 +11,4 @@ class CompareImageResult:
     reference_image_id: int
     output_image_id: int
     diff_image_id: int
+    error: float

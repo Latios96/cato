@@ -30,7 +30,7 @@ class TestCompareImage:
         self.mock_store_image.store_image.side_effect = self._mocked_store_image
         self.mock_image_comparator = mock_safe(AdvancedImageComparator)
         self.comparison_result = ComparisonResult(
-            status=TestStatus.SUCCESS, message="", diff_image="some-path"
+            status=TestStatus.SUCCESS, message="", diff_image="some-path", error=1
         )
         self.comparison_settings = ComparisonSettings(
             method=ComparisonMethod.SSIM, threshold=1
@@ -55,6 +55,7 @@ class TestCompareImage:
             reference_image_id=2,
             output_image_id=1,
             diff_image_id=3,
+            error=1,
         )
         assert self.mock_store_image.store_image.call_count == 3
         assert self.mock_image_comparator.compare.call_args[0][0].endswith(
@@ -72,7 +73,7 @@ class TestCompareImage:
 
     def test_compare_images_failure(self):
         self.mock_image_comparator.compare.return_value = ComparisonResult(
-            status=TestStatus.FAILED, message="Failed", diff_image="some-path"
+            status=TestStatus.FAILED, message="Failed", diff_image="some-path", error=1
         )
 
         result = self.compare_image.compare_image(
@@ -89,6 +90,7 @@ class TestCompareImage:
             reference_image_id=2,
             output_image_id=1,
             diff_image_id=3,
+            error=1,
         )
         assert self.mock_store_image.store_image.call_count == 3
         assert self.mock_image_comparator.compare.call_args[0][0].endswith(
@@ -119,6 +121,7 @@ class TestCompareImage:
             reference_image_id=2,
             output_image_id=1,
             diff_image_id=3,
+            error=1,
         )
         assert self.mock_store_image.store_image.call_count == 3
         assert self.mock_image_comparator.compare.call_args[0][0].endswith(

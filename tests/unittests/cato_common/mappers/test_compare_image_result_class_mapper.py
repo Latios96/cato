@@ -10,6 +10,7 @@ def test_map_from(object_mapper):
             "reference_image_id": 1,
             "output_image_id": 2,
             "diff_image_id": 3,
+            "error": 4,
         },
         CompareImageResult,
     )
@@ -20,6 +21,7 @@ def test_map_from(object_mapper):
         reference_image_id=1,
         output_image_id=2,
         diff_image_id=3,
+        error=4,
     )
 
 
@@ -30,6 +32,7 @@ def test_map_from_optional_data(object_mapper):
             "reference_image_id": 1,
             "output_image_id": 2,
             "diff_image_id": 3,
+            "error": 4,
         },
         CompareImageResult,
     )
@@ -40,6 +43,7 @@ def test_map_from_optional_data(object_mapper):
         reference_image_id=1,
         output_image_id=2,
         diff_image_id=3,
+        error=4,
     )
 
 
@@ -51,6 +55,7 @@ def test_map_to(object_mapper):
             reference_image_id=1,
             output_image_id=2,
             diff_image_id=3,
+            error=4,
         )
     )
 
@@ -60,4 +65,5 @@ def test_map_to(object_mapper):
         "reference_image_id": 1,
         "output_image_id": 2,
         "diff_image_id": 3,
+        "error": 4,
     }
