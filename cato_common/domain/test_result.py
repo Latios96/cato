@@ -2,6 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Dict, Optional
 
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
@@ -26,6 +27,8 @@ class TestResult:
     diff_image: Optional[int] = None
     started_at: Optional[datetime.datetime] = None
     finished_at: Optional[datetime.datetime] = None
+    comparison_settings: Optional[ComparisonSettings] = None
+    error_value: Optional[float] = None
     __test__ = False
 
     def __post_init__(self):

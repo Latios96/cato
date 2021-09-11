@@ -94,6 +94,8 @@ def test_get_test_result_by_run_and_identifier_success(
         "test_name": "my_test_name",
         "test_variables": {"testkey": "test_value"},
         "diff_image": 1,
+        "comparison_settings": None,
+        "error_value": None,
     }
 
 
