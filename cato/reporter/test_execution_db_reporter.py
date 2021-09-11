@@ -17,6 +17,8 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     StartTestResultDto,
     MachineInfoDto,
+    ComparisonSettingsDto,
+    ComparisonMethodDto,
 )
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
@@ -63,6 +65,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
                         test_identifier=str(TestIdentifier(test_suite.name, test.name)),
                         test_command=test.command,
                         test_variables=test.variables,
+                        comparison_settings=ComparisonSettingsDto(
+                            method=ComparisonMethodDto(test.comparison_settings.method),
+                            threshold=test.comparison_settings.threshold,
+                        ),
                     )
                 )
             suites.append(

@@ -1,6 +1,8 @@
 import datetime
 import logging
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_models.catoapimodels import CreateFullRunDto
 from cato_api_models.catoapimodels import RunDto, RunStatusDto
 from cato_server.configuration.optional_component import OptionalComponent
@@ -67,6 +69,12 @@ class CreateRunUsecase:
                         test_variables=test_dto.test_variables,
                         execution_status=ExecutionStatus.NOT_STARTED,
                         seconds=0,
+                        comparison_settings=ComparisonSettings(
+                            method=ComparisonMethod(
+                                test_dto.comparison_settings.method.value
+                            ),
+                            threshold=test_dto.comparison_settings.threshold,
+                        ),
                     )
                 )
             saved_tests = self._test_result_repository.insert_many(tests)

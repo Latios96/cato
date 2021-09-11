@@ -2,7 +2,8 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
-    MachineInfoDto,
+    ComparisonSettingsDto,
+    ComparisonMethodDto,
 )
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.domain.event import Event
@@ -43,10 +44,13 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
                     suite_variables={},
                     tests=[
                         TestForRunCreation(
-                            "cmd",
-                            "test/identifier",
-                            "test_name",
-                            {},
+                            test_command="cmd",
+                            test_identifier="test/identifier",
+                            test_name="test_name",
+                            test_variables={},
+                            comparison_settings=ComparisonSettingsDto(
+                                method=ComparisonMethodDto.SSIM, threshold=0.8
+                            ),
                         )
                     ],
                 )

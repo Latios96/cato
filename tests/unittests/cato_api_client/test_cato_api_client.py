@@ -25,6 +25,8 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     MachineInfoDto,
     StartTestResultDto,
+    ComparisonMethodDto,
+    ComparisonSettingsDto,
 )
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.compare_image_result import CompareImageResult
@@ -235,6 +237,9 @@ def test_create_run_success(cato_api_client, project):
                         test_identifier="test/identifier",
                         test_name="test_name",
                         test_variables={},
+                        comparison_settings=ComparisonSettingsDto(
+                            method=ComparisonMethodDto.SSIM, threshold=0.8
+                        ),
                     )
                 ],
             )
@@ -253,10 +258,13 @@ def test_create_run_failure(cato_api_client):
                 suite_variables={},
                 tests=[
                     TestForRunCreation(
-                        "cmd",
-                        "test/identifier",
-                        "test_name",
-                        {},
+                        test_command="cmd",
+                        test_identifier="test/identifier",
+                        test_name="test_name",
+                        test_variables={},
+                        comparison_settings=ComparisonSettingsDto(
+                            method=ComparisonMethodDto.SSIM, threshold=0.8
+                        ),
                     )
                 ],
             )

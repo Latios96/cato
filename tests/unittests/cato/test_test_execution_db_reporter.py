@@ -27,6 +27,8 @@ from cato_api_models.catoapimodels import (
     TestForRunCreation,
     MachineInfoDto,
     StartTestResultDto,
+    ComparisonMethodDto,
+    ComparisonSettingsDto,
 )
 
 SUITES = [
@@ -89,6 +91,9 @@ class TestTestExecutionDbReporter:
                                 test_identifier="my_suite/my_test",
                                 test_name="my_test",
                                 test_variables={},
+                                comparison_settings=ComparisonSettingsDto(
+                                    method=ComparisonMethodDto.SSIM, threshold=0.8
+                                ),
                             )
                         ],
                         suite_variables={},

@@ -8,12 +8,22 @@ types:
           cores: integer
           memory: double
 
+      ComparisonMethodDto:
+        values:
+          - SSIM
+
+      ComparisonSettingsDto:
+        fields:
+          method: ComparisonMethodDto
+          threshold: double
+
       TestForRunCreation:
         fields:
           test_name: string
           test_identifier: string
           test_command: string
           test_variables: map<string, string>
+          comparison_settings: ComparisonSettingsDto
 
       TestSuiteForRunCreation:
         fields:
