@@ -5,6 +5,8 @@ from typing import Optional, Set, Tuple, Dict, List
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
@@ -47,6 +49,9 @@ class _TestResultMapping(Base):
     diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     started_at = Column(DateTime, nullable=True)
     finished_at = Column(DateTime, nullable=True)
+    comparison_settings_method = Column(String, nullable=True)
+    comparison_settings_threshold = Column(Float, nullable=True)
+    error_value = Column(Float, nullable=True)
 
     def __repr__(self):
         return f"<_TestResultMapping id={self.id}>"
@@ -77,6 +82,13 @@ class SqlAlchemyTestResultRepository(
             diff_image_id=domain_object.diff_image,
             started_at=domain_object.started_at,
             finished_at=domain_object.finished_at,
+            comparison_settings_method=domain_object.comparison_settings.method.value
+            if domain_object.comparison_settings
+            else None,
+            comparison_settings_threshold=domain_object.comparison_settings.threshold
+            if domain_object.comparison_settings
+            else None,
+            error_value=domain_object.error_value,
         )
 
     def to_domain_object(self, entity: _TestResultMapping) -> TestResult:
@@ -103,6 +115,13 @@ class SqlAlchemyTestResultRepository(
             diff_image=entity.diff_image_id,
             started_at=entity.started_at,
             finished_at=entity.finished_at,
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod(entity.comparison_settings_method),
+                threshold=entity.comparison_settings_threshold,
+            )
+            if entity.comparison_settings_method
+            else None,
+            error_value=entity.error_value,
         )
 
     def _map_test_status(self, status):

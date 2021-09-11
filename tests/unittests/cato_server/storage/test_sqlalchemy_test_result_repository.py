@@ -3,6 +3,8 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
@@ -39,6 +41,10 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image_factory):
         diff_image=stored_image_factory().id,
         started_at=start_time,
         finished_at=end_time,
+        comparison_settings=ComparisonSettings(
+            method=ComparisonMethod.SSIM, threshold=1
+        ),
+        error_value=0.5,
     )
 
     test_result_save = repository.save(test_result)
@@ -48,7 +54,7 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image_factory):
     assert test_result_save == test_result
 
 
-def test_save_success_no_machine_info(
+def test_save_success_no_machine_info_no_comparison_settings(
     sessionmaker_fixture, suite_result, stored_image_factory
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
