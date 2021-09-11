@@ -30,6 +30,7 @@ def test_generate():
                         None,
                         datetime.datetime.now(),
                         datetime.datetime.now(),
+                        1,
                     ),
                     TestExecutionResult(
                         test2,
@@ -42,6 +43,7 @@ def test_generate():
                         None,
                         datetime.datetime.now(),
                         datetime.datetime.now(),
+                        1,
                     ),
                 ],
                 result=TestStatus.SUCCESS,

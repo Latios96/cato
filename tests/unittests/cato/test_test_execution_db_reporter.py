@@ -186,6 +186,7 @@ class TestTestExecutionDbReporter:
             diff_image=30,
             started_at=started_at,
             finished_at=finished_at,
+            error_value=1,
         )
 
         self.test_execution_db_reporter.report_test_result(
@@ -200,6 +201,7 @@ class TestTestExecutionDbReporter:
             image_output=10,
             reference_image=20,
             diff_image=30,
+            error_value=1,
         )
         self.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"
@@ -220,6 +222,7 @@ class TestTestExecutionDbReporter:
             diff_image=30,
             started_at=started_at,
             finished_at=finished_at,
+            error_value=1,
         )
         self.mock_cato_api_client.find_test_result_by_run_id_and_identifier.return_value = (
             None
@@ -252,6 +255,7 @@ class TestTestExecutionDbReporter:
             diff_image=None,
             started_at=started_at,
             finished_at=finished_at,
+            error_value=1,
         )
 
         self.test_execution_db_reporter.report_test_result(
@@ -266,6 +270,7 @@ class TestTestExecutionDbReporter:
             image_output=None,
             reference_image=None,
             diff_image=None,
+            error_value=1,
         )
         self.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"
@@ -284,6 +289,7 @@ class TestTestExecutionDbReporter:
             diff_image=None,
             started_at=datetime.datetime.now(),
             finished_at=datetime.datetime.now(),
+            error_value=1,
         )
 
         with pytest.raises(RuntimeError):

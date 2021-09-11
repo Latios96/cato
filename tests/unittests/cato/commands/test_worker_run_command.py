@@ -76,6 +76,7 @@ class TestWorkerRunCommand:
             None,
             datetime.datetime.now(),
             datetime.datetime.now(),
+            1,
         )
         self.mock_test_runner.run_test.return_value = execution_result
 
@@ -104,6 +105,7 @@ class TestWorkerRunCommand:
             None,
             datetime.datetime.now(),
             datetime.datetime.now(),
+            1,
         )
         self.mock_test_runner.run_test.return_value = execution_result
 

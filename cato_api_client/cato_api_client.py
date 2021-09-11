@@ -178,6 +178,7 @@ class CatoApiClient:
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
         diff_image: Optional[int] = None,
+        error_value: Optional[float] = None,
     ) -> None:
         url = self._build_url("/api/v1/test_results/finish")
         dto = FinishTestResultDto(
@@ -188,6 +189,7 @@ class CatoApiClient:
             image_output=image_output,
             reference_image=reference_image,
             diff_image=diff_image,
+            error_value=error_value,
         )
         response = self._http_template.post_for_entity(url, dto, FinishTestResultDto)
         if response.status_code() != 200:

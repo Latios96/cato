@@ -144,6 +144,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         logger.info(f"Reporting test result of test {test_identifier}..")
         self._cato_api_client.finish_test(
             test_result.id,
+            error_value=test_execution_result.error_value,
             status=test_execution_result.status,
             seconds=test_execution_result.seconds,
             message=test_execution_result.message,

@@ -40,6 +40,7 @@ def test_should_finish(test_result_factory, object_mapper):
         image_output=2,
         reference_image=3,
         diff_image=4,
+        error_value=1,
     )
 
     test_result_repository.save.assert_called_with(
@@ -54,6 +55,7 @@ def test_should_finish(test_result_factory, object_mapper):
             diff_image=4,
             started_at=started_at,
             finished_at=finished_at,
+            error_value=1,
         )
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
@@ -115,6 +117,7 @@ def test_should_fail_test(test_result_factory, object_mapper):
             diff_image=None,
             started_at=started_at,
             finished_at=finished_at,
+            error_value=None,
         )
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)

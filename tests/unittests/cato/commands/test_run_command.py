@@ -95,6 +95,7 @@ class TestRunCommand:
                         diff_image=None,
                         started_at=started_at,
                         finished_at=finished_at,
+                        error_value=1,
                     )
                 ],
             )

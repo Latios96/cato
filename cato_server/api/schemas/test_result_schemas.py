@@ -38,6 +38,7 @@ class FinishTestResultSchema(Schema):
     image_output = fields.Integer(required=False, allow_none=True)
     reference_image = fields.Integer(required=False, allow_none=True)
     diff_image = fields.Integer(required=False, allow_none=True)
+    error_value = fields.Float(required=True, allow_none=True)
 
 
 class StartTestResultSchema(Schema):

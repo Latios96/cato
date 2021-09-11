@@ -30,6 +30,7 @@ def test_calculates_succeded_correctly():
         None,
         datetime.datetime.now(),
         datetime.datetime.now(),
+        1,
     )
     result = [
         TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
@@ -60,6 +61,7 @@ def test_calculates_failed_correctly():
         None,
         datetime.datetime.now(),
         datetime.datetime.now(),
+        1,
     )
     execution_result2 = TestExecutionResult(
         test,
@@ -72,6 +74,7 @@ def test_calculates_failed_correctly():
         None,
         datetime.datetime.now(),
         datetime.datetime.now(),
+        1,
     )
     result = [
         TestSuiteExecutionResult(

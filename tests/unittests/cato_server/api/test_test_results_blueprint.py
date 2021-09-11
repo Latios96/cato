@@ -362,6 +362,7 @@ def test_finish_test_success(client, test_result, stored_image):
         "message": "this is my finishing message",
         "image_output": stored_image.id,
         "reference_image": stored_image.id,
+        "error_value": 1,
     }
     rv = client.post(url, json=data)
 
@@ -377,6 +378,7 @@ def test_finish_test_failure(client, test_result, stored_image):
         "message": "this is my finishing message",
         "image_output": 42,
         "reference_image": stored_image.id,
+        "error_value": 1,
     }
     rv = client.post(url, json=data)
 

@@ -85,6 +85,7 @@ class TestRunner:
                 None,
                 start,
                 end,
+                error_value=None,
             )
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
@@ -123,6 +124,7 @@ class TestRunner:
                 None,
                 start,
                 end,
+                error_value=None,
             )
 
         if no_image_output and not no_reference_image and reference_image is not None:
@@ -139,6 +141,7 @@ class TestRunner:
                 None,
                 start,
                 end,
+                error_value=None,
             )
 
         if no_image_output and no_reference_image:
@@ -157,6 +160,7 @@ class TestRunner:
                 None,
                 start,
                 end,
+                error_value=None,
             )
         self._reporter.report_message(
             "Found image output at path {}".format(image_output)
@@ -186,6 +190,7 @@ class TestRunner:
                     image_compare_result.diff_image_id,
                     start,
                     end,
+                    error_value=image_compare_result.error,
                 )
 
             return TestExecutionResult(
@@ -199,6 +204,7 @@ class TestRunner:
                 diff_image=image_compare_result.diff_image_id,
                 started_at=start,
                 finished_at=end,
+                error_value=image_compare_result.error,
             )
         raise RuntimeError("This should never happen!")
 

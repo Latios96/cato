@@ -39,6 +39,7 @@ class FinishTest:
         image_output: Optional[int] = None,
         reference_image: Optional[int] = None,
         diff_image: Optional[int] = None,
+        error_value: Optional[float] = None,
     ) -> None:
         logger.info(
             'Finishing test test with id %s and message "%s"', test_result_id, message
@@ -55,6 +56,7 @@ class FinishTest:
         test_result.reference_image = reference_image
         test_result.diff_image = diff_image
         test_result.finished_at = self._get_finished_time()
+        test_result.error_value = error_value
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Finished test with id %s", test_result_id)
@@ -84,6 +86,7 @@ class FinishTest:
             status=TestStatus.FAILED,
             seconds=-1,
             message=message,
+            error_value=None,
         )
         logger.info("Failed test with id %s", test_result_id)
 

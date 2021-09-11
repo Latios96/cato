@@ -18,5 +18,6 @@ class TestExecutionResult:
     diff_image: Optional[int]
     started_at: datetime.datetime
     finished_at: datetime.datetime
+    error_value: Optional[float]
 
     __test__ = False

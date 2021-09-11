@@ -113,6 +113,7 @@ def test_run_suite_should_return_correctly_collected_results():
         None,
         datetime.datetime.now(),
         datetime.datetime.now(),
+        1,
     )
     mock_test_runner.run_test.return_value = execution_result
 
