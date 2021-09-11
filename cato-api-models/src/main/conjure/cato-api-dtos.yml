@@ -103,6 +103,8 @@ types:
           diff_image: optional<ImageDto>
           started_at: optional<datetime>
           finished_at: optional<datetime>
+          comparison_settings: optional<ComparisonSettingsDto>
+          error_value: optional<double>
 
       SuiteStatusDto:
         values:

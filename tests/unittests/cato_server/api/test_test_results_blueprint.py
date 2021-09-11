@@ -294,6 +294,8 @@ def test_get_test_result_by_id(client, test_result):
         "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"testkey": "test_value"},
+        "error_value": None,
+        "comparison_settings": None,
     }
 
 
@@ -342,6 +344,8 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
         "test_identifier": "my_suite/my_test_name",
         "test_name": "my_test_name",
         "test_variables": {"testkey": "test_value"},
+        "comparison_settings": None,
+        "error_value": None,
     }
 
 

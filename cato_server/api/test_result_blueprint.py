@@ -18,6 +18,8 @@ from cato_api_models.catoapimodels import (
     FinishTestResultDto,
     ApiSuccess,
     StartTestResultDto,
+    ComparisonSettingsDto,
+    ComparisonMethodDto,
 )
 from cato_common.domain.image import ImageChannel
 from cato_common.domain.machine_info import MachineInfo
@@ -252,6 +254,13 @@ class TestResultsBlueprint(APIRouter):
             diff_image=diff_image_dto,
             started_at=result.started_at.isoformat() if result.started_at else None,
             finished_at=result.finished_at.isoformat() if result.finished_at else None,
+            comparison_settings=ComparisonSettingsDto(
+                method=ComparisonMethodDto(result.comparison_settings.method.value),
+                threshold=result.comparison_settings.threshold,
+            )
+            if result.comparison_settings
+            else None,
+            error_value=result.error_value,
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
 
