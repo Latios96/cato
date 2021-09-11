@@ -4,6 +4,7 @@ import {
   NotStartedMessageBox,
   IsRenderingMessageBox,
 } from "./MessageBoxes/MessageBoxes";
+import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
 
 interface Props {
   result: TestResultDto;
@@ -12,6 +13,7 @@ interface Props {
 function WaitingOrRunningTestResultComponent(props: Props) {
   return (
     <div>
+      <TestResultComparisonResult testResult={props.result} />
       {props.result.execution_status === "NOT_STARTED" ? (
         <NotStartedMessageBox />
       ) : (

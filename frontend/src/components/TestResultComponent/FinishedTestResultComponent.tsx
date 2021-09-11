@@ -7,6 +7,7 @@ import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
 import ImageComparison from "../ImageComparison/ImageComparison";
 import { FailureMessageBox } from "./MessageBoxes/MessageBoxes";
+import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
 interface Props {
   result: TestResultDto;
 }
@@ -21,6 +22,7 @@ function FinishedTestResultComponent(props: Props) {
           title={"duration"}
         />
       </InfoBox>
+      <TestResultComparisonResult testResult={props.result} />
       {props.result.status === "FAILED"
         ? renderFailureInformation(props.result)
         : ""}

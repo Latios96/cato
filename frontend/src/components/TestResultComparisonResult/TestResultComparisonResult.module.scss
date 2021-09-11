@@ -1,0 +1,17 @@
+.testResultComparisonResult {
+  display: flex;
+  align-self: center;
+  margin-left: 44px;
+  table {
+    margin-right: 20px;
+    tr {
+      td:first-child {
+        padding-right: 10px;
+        font-weight: bolder;
+      }
+    }
+  }
+}
+.infoBox {
+  margin-bottom: 20px;
+}
