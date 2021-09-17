@@ -49,6 +49,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_server.domain.test_edit import TestEdit, EditTypes
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
@@ -73,6 +74,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
+    SqlAlchemyTestEditRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
@@ -238,6 +242,26 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
         diff_image=stored_image.id,
     )
     return repository.save(test_result)
+
+
+@pytest.fixture
+def test_edit(sessionmaker_fixture, test_result):
+    repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+    test_edit = TestEdit(
+        id=0,
+        test_id=test_result.id,
+        edit_type=EditTypes.COMPARISON_SETTINGS,
+        created_at=datetime.datetime.now(),
+        old_value={
+            "method": "SSIM",
+            "threshold": 1,
+        },
+        new_value={
+            "method": "SSIM",
+            "threshold": 10,
+        },
+    )
+    return repository.save(test_edit)
 
 
 @pytest.fixture

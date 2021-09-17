@@ -44,8 +44,15 @@ def test_save_not_existing_test_result(sessionmaker_fixture):
         repository.save(test_edit)
 
 
-def test_find_by_test_id(sessionmaker_fixture, test_result):
+def test_find_by_test_id_should_find_empty_list(sessionmaker_fixture):
+    repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
 
+    result = repository.find_by_test_id(1)
+
+    assert result == []
+
+
+def test_find_by_test_id(sessionmaker_fixture, test_result):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
     test_edits = [
         TestEdit(

@@ -27,6 +27,7 @@ from cato_server.storage.abstract.submission_info_repository import (
     SubmissionInfoRepository,
 )
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
+from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
@@ -55,6 +56,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
+    SqlAlchemyTestEditRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_heartbeat_repository import (
     SqlAlchemyTestHeartbeatRepository,
 )
@@ -78,6 +82,7 @@ class StorageBindings:
     image_repository: Type[ImageRepository]
     test_heartbeat_repository: Type[TestHeartbeatRepository]
     submission_info_repository: Type[SubmissionInfoRepository]
+    test_edit_repository: Type[TestEditRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -159,6 +164,10 @@ class PinjectBindings(pinject.BindingSpec):
             "submission_info_repository",
             to_class=self._bindings.storage_bindings.submission_info_repository,
         )
+        bind(
+            "test_edit_repository",
+            to_class=self._bindings.storage_bindings.test_edit_repository,
+        )
 
 
 class BindingsFactory:
@@ -190,6 +199,7 @@ class BindingsFactory:
             image_repository=SqlAlchemyImageRepository,
             test_heartbeat_repository=SqlAlchemyTestHeartbeatRepository,
             submission_info_repository=SqlAlchemySubmissionInfoRepository,
+            test_edit_repository=SqlAlchemyTestEditRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
