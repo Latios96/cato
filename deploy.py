@@ -22,10 +22,10 @@ def main():
 
     print(f"Deploy version {version}..")
 
-    static_path = os.path.join('cato_server', 'static')
+    static_path = os.path.join("cato_server", "static")
     if os.path.exists(static_path):
         print("Clean frontend")
-        shutil.rmtree('cato_server/static')
+        shutil.rmtree("cato_server/static")
 
     print("Building..")
     subprocess.check_call("gradlew.bat build")
@@ -34,7 +34,9 @@ def main():
     wheel_path = os.path.join(
         os.path.dirname(__file__), "dist", f"cato-{version}-py3-none-any.whl"
     )
-    shutil.copy(wheel_path, os.path.join(r'M:\cato\wheels', os.path.basename(wheel_path)))
+    shutil.copy(
+        wheel_path, os.path.join(r"M:\cato\wheels", os.path.basename(wheel_path))
+    )
 
     pip_path = r"M:\cato\venv\Scripts\pip"
 
@@ -51,12 +53,8 @@ def main():
     print("Install..")
     subprocess.check_call([pip_path, "install", "--upgrade", wheel_path])
 
-    print("Copy config..")
-    prod_config = r"M:\cato\config.ini"
-    prod_config_target = r"M:\cato\venv\Lib\site-packages\cato\storage\sqlalchemy\config.ini"
-    shutil.copy(prod_config, prod_config_target)
-
     print("Done.")
+
 
 if __name__ == "__main__":
     main()
