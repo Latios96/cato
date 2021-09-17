@@ -55,3 +55,19 @@ def test_no_test_with_id_found():
         create_comparison_settings_edit.create_edit(
             1, ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1)
         )
+
+
+def test_test_with_no_comparison_settings(test_result_factory):
+    test_edit_repository = mock_safe(TestEditRepository)
+    test_result_repository = mock_safe(TestResultRepository)
+    test_result_repository.find_by_id.return_value = test_result_factory(
+        id=5,
+    )
+    create_comparison_settings_edit = CreateComparisonSettingsEdit(
+        test_edit_repository, test_result_repository
+    )
+
+    with pytest.raises(ValueError):
+        create_comparison_settings_edit.create_edit(
+            1, ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1)
+        )

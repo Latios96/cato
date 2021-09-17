@@ -22,6 +22,11 @@ class CreateComparisonSettingsEdit:
         if not test_result:
             raise ValueError(f"Could not find a test result with id {test_result_id}")
 
+        if not test_result.comparison_settings:
+            raise ValueError(
+                "Can't edit a test result which has no comparison settings!"
+            )
+
         created_at = self._get_created_at()
         comparison_settings_edit = ComparisonSettingsEdit(
             id=0,
