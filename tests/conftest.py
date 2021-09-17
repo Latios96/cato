@@ -228,10 +228,7 @@ def test_result_factory():
             diff_image=or_default(diff_image, None),
             started_at=or_default(started_at, datetime.datetime.now()),
             finished_at=or_default(finished_at, datetime.datetime.now()),
-            comparison_settings=or_default(
-                ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-                comparison_settings,
-            ),
+            comparison_settings=comparison_settings,
             error_value=or_default(error_value, None),
         )
 

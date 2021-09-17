@@ -18,7 +18,12 @@ def test_create_edit_with_success(test_result_factory):
     test_edit_repository = mock_safe(TestEditRepository)
     test_edit_repository.save.side_effect = lambda x: x
     test_result_repository = mock_safe(TestResultRepository)
-    test_result_repository.find_by_id.return_value = test_result_factory(id=5)
+    test_result_repository.find_by_id.return_value = test_result_factory(
+        id=5,
+        comparison_settings=ComparisonSettings(
+            method=ComparisonMethod.SSIM, threshold=1
+        ),
+    )
     create_comparison_settings_edit = CreateComparisonSettingsEdit(
         test_edit_repository, test_result_repository
     )
