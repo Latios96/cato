@@ -79,7 +79,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id)
             .order_by(self.mapping_cls().created_at.desc())
-            .all
+            .all()
         )
 
         session.close()
