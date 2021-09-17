@@ -1,5 +1,11 @@
 import datetime
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
+from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
+    SqlAlchemyTestResultRepository,
+)
+
 
 def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
     url = f"/api/v1/test_edits/{test_result.id}"
@@ -63,3 +69,53 @@ def test_get_test_edits_by_run_id_should_return_empty(client, run):
     assert rv.status_code == 200
 
     assert rv.json() == []
+
+
+def test_create_comparison_settings_edit_success(
+    client, sessionmaker_fixture, suite_result, test_result_factory
+):
+    test_result = test_result_factory(
+        comparison_settings=ComparisonSettings(
+            method=ComparisonMethod.SSIM, threshold=1
+        ),
+        suite_result_id=suite_result.id,
+    )
+    test_result = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(test_result)
+    url = f"/api/v1/test_edits/comparison_settings"
+
+    rv = client.post(
+        url,
+        json={
+            "test_result_id": test_result.id,
+            "new_value": {"method": "SSIM", "threshold": 1},
+        },
+    )
+
+    assert rv.status_code == 201
+    json = rv.json()
+    now = datetime.datetime.now()
+    json["created_at"] = now
+    assert json == {
+        "created_at": now,
+        "id": 1,
+        "new_value": {"method": "SSIM", "threshold": 1},
+        "old_value": {"method": "SSIM", "threshold": 1.0},
+        "test_id": 1,
+    }
+
+
+def test_create_comparison_settings_edit_failure(
+    client,
+):
+    url = f"/api/v1/test_edits/comparison_settings"
+
+    rv = client.post(
+        url,
+        json={
+            "test_result_id": 1,
+            "new_value": {"method": "SSIM", "threshold": 1},
+        },
+    )
+
+    assert rv.status_code == 400
+    assert rv.json() == {"id": ["No TestResult with id 1 exists!"]}
