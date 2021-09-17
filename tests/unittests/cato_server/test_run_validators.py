@@ -33,6 +33,10 @@ class TestCreateFullRunValidator:
                                     "cores": 8,
                                     "memory": 8,
                                 },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
                             }
                         ],
                     }
@@ -65,6 +69,10 @@ class TestCreateFullRunValidator:
                                     "cores": 8,
                                     "memory": 8,
                                 },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
                             }
                         ],
                     }
@@ -91,6 +99,10 @@ class TestCreateFullRunValidator:
                                 "testd_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
                             }
                         ],
                     }
@@ -131,6 +143,10 @@ class TestCreateFullRunValidator:
                                     "cores": 8,
                                     "memory": 8,
                                 },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
                             }
                         ],
                     },
@@ -148,6 +164,10 @@ class TestCreateFullRunValidator:
                                     "cpu_name": "test",
                                     "cores": 8,
                                     "memory": 8,
+                                },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
                                 },
                             }
                         ],
@@ -181,6 +201,10 @@ class TestCreateFullRunValidator:
                                     "cores": 8,
                                     "memory": 8,
                                 },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
                             },
                             {
                                 "test_name": "test_name",
@@ -192,6 +216,10 @@ class TestCreateFullRunValidator:
                                     "cpu_name": "test",
                                     "cores": 8,
                                     "memory": 8,
+                                },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
                                 },
                             },
                         ],
