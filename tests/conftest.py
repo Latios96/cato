@@ -15,6 +15,7 @@ from starlette.testclient import TestClient
 
 from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
+from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
@@ -203,6 +204,7 @@ def test_result_factory():
         started_at: Optional[datetime.datetime] = None,
         finished_at: Optional[datetime.datetime] = None,
         error_value=None,
+        comparison_settings=None,
     ):
         return TestResult(
             id=or_default(id, 0),
@@ -226,6 +228,10 @@ def test_result_factory():
             diff_image=or_default(diff_image, None),
             started_at=or_default(started_at, datetime.datetime.now()),
             finished_at=or_default(finished_at, datetime.datetime.now()),
+            comparison_settings=or_default(
+                ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
+                comparison_settings,
+            ),
             error_value=or_default(error_value, None),
         )
 
