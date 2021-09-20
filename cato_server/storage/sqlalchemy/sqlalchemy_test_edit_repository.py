@@ -100,9 +100,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 ),
                 old_value=ComparisonSettingsEditValue(
                     comparison_settings=ComparisonSettings(
-                        method=ComparisonMethod(
-                            entity.old_comparison_method
-                        ),  # todo remove duplication
+                        method=ComparisonMethod(entity.old_comparison_method),
                         threshold=entity.old_threshold,
                     )
                 ),
