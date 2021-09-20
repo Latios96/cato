@@ -5,6 +5,7 @@ from sqlalchemy.orm import with_polymorphic
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
+from cato.domain.test_status import TestStatus
 from cato_server.domain.test_edit import (
     AbstractTestEdit,
     EditTypes,
@@ -45,6 +46,14 @@ class _ComparisonSettingsEditMapping(_TestEditMapping):
     new_comparison_method = Column(String, nullable=False)
     old_threshold = Column(Float, nullable=False)
     new_threshold = Column(Float, nullable=False)
+    old_status = Column(String, nullable=True)
+    new_status = Column(String, nullable=True)
+    old_message = Column(String, nullable=True)
+    new_message = Column(String, nullable=True)
+    old_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
+    new_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
+    old_error_value = Column(Float, nullable=True)
+    new_error_value = Column(Float, nullable=True)
 
     __mapper_args__ = {
         "polymorphic_identity": EditTypes.COMPARISON_SETTINGS.value,
@@ -74,6 +83,14 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 new_threshold=domain_object.new_value.comparison_settings.threshold,
                 old_comparison_method=domain_object.old_value.comparison_settings.method.value,
                 old_threshold=domain_object.old_value.comparison_settings.threshold,
+                old_status=domain_object.old_value.status.value,
+                old_message=domain_object.old_value.message,
+                old_diff_image_id=domain_object.old_value.diff_image_id,
+                new_status=domain_object.new_value.status.value,
+                new_message=domain_object.new_value.message,
+                new_diff_image_id=domain_object.new_value.diff_image_id,
+                new_error_value=domain_object.new_value.error_value,
+                old_error_value=domain_object.old_value.error_value,
             )
         elif domain_object.edit_type == EditTypes.REFERENCE_IMAGE:
             domain_object = cast(ReferenceImageEdit, domain_object)
@@ -96,13 +113,21 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                     comparison_settings=ComparisonSettings(
                         method=ComparisonMethod(entity.new_comparison_method),
                         threshold=entity.new_threshold,
-                    )
+                    ),
+                    status=TestStatus(entity.new_status),
+                    message=entity.new_message,
+                    diff_image_id=entity.new_diff_image_id,
+                    error_value=entity.new_error_value,
                 ),
                 old_value=ComparisonSettingsEditValue(
                     comparison_settings=ComparisonSettings(
                         method=ComparisonMethod(entity.old_comparison_method),
                         threshold=entity.old_threshold,
-                    )
+                    ),
+                    status=TestStatus(entity.old_status),
+                    message=entity.old_message,
+                    diff_image_id=entity.old_diff_image_id,
+                    error_value=entity.old_error_value,
                 ),
             )
         elif entity.edit_type == EditTypes.REFERENCE_IMAGE.value:

@@ -1,9 +1,10 @@
 import datetime
 from dataclasses import dataclass, field
 from enum import Enum
-from typing import TypeVar
+from typing import TypeVar, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
+from cato.domain.test_status import TestStatus
 
 T = TypeVar("T")
 
@@ -26,6 +27,10 @@ class AbstractTestEdit:
 @dataclass
 class ComparisonSettingsEditValue:
     comparison_settings: ComparisonSettings
+    status: TestStatus
+    message: Optional[str]
+    diff_image_id: int
+    error_value: float
 
 
 @dataclass

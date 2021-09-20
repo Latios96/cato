@@ -22,8 +22,20 @@ def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
             "created_at": now,
             "edit_type": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 10.0}},
-            "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
+            "new_value": {
+                "comparison_settings": {"method": "SSIM", "threshold": 10.0},
+                "diff_image_id": 2,
+                "message": "still success",
+                "status": "SUCCESS",
+                "error_value": 0.1,
+            },
+            "old_value": {
+                "comparison_settings": {"method": "SSIM", "threshold": 1.0},
+                "diff_image_id": 1,
+                "message": "success",
+                "status": "SUCCESS",
+                "error_value": 1,
+            },
             "test_id": 1,
         }
     ]
@@ -54,8 +66,20 @@ def test_get_test_edits_by_run_id(client, test_edit, test_result, run):
             "created_at": now,
             "edit_type": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 10.0}},
-            "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
+            "new_value": {
+                "comparison_settings": {"method": "SSIM", "threshold": 10.0},
+                "diff_image_id": 2,
+                "message": "still success",
+                "status": "SUCCESS",
+                "error_value": 0.1,
+            },
+            "old_value": {
+                "comparison_settings": {"method": "SSIM", "threshold": 1.0},
+                "diff_image_id": 1,
+                "message": "success",
+                "status": "SUCCESS",
+                "error_value": 1,
+            },
             "test_id": 1,
         }
     ]
@@ -72,13 +96,19 @@ def test_get_test_edits_by_run_id_should_return_empty(client, run):
 
 
 def test_create_comparison_settings_edit_success(
-    client, sessionmaker_fixture, suite_result, test_result_factory
+    client,
+    sessionmaker_fixture,
+    suite_result,
+    test_result_factory,
+    stored_image_factory,
 ):
     test_result = test_result_factory(
         comparison_settings=ComparisonSettings(
             method=ComparisonMethod.SSIM, threshold=1
         ),
         suite_result_id=suite_result.id,
+        image_output=stored_image_factory().id,
+        reference_image=stored_image_factory().id,
     )
     test_result = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(test_result)
     url = f"/api/v1/test_edits/comparison_settings"
@@ -99,8 +129,20 @@ def test_create_comparison_settings_edit_success(
         "created_at": now,
         "edit_type": "COMPARISON_SETTINGS",
         "id": 1,
-        "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 1}},
-        "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
+        "new_value": {
+            "comparison_settings": {"method": "SSIM", "threshold": 1},
+            "diff_image_id": 3,
+            "message": None,
+            "status": "SUCCESS",
+            "error_value": 1,
+        },
+        "old_value": {
+            "comparison_settings": {"method": "SSIM", "threshold": 1.0},
+            "diff_image_id": None,
+            "message": "success",
+            "status": "SUCCESS",
+            "error_value": None,
+        },
         "test_id": 1,
     }
 

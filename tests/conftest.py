@@ -253,7 +253,7 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
 
 
 @pytest.fixture
-def test_edit(sessionmaker_fixture, test_result):
+def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
     test_edit = ComparisonSettingsEdit(
         id=0,
@@ -262,12 +262,20 @@ def test_edit(sessionmaker_fixture, test_result):
         old_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
-            )
+            ),
+            status=test_result.status,
+            message=test_result.message,
+            diff_image_id=test_result.diff_image,
+            error_value=1,
         ),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=10
-            )
+            ),
+            status=test_result.status,
+            message="still " + test_result.message,
+            diff_image_id=stored_image_factory().id,
+            error_value=0.1,
         ),
     )
     return repository.save(test_edit)
