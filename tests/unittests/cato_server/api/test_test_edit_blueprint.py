@@ -22,8 +22,8 @@ def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
             "created_at": now,
             "edit_type": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {"method": "SSIM", "threshold": 10},
-            "old_value": {"method": "SSIM", "threshold": 1},
+            "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 10.0}},
+            "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
             "test_id": 1,
         }
     ]
@@ -54,8 +54,8 @@ def test_get_test_edits_by_run_id(client, test_edit, test_result, run):
             "created_at": now,
             "edit_type": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {"method": "SSIM", "threshold": 10},
-            "old_value": {"method": "SSIM", "threshold": 1},
+            "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 10.0}},
+            "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
             "test_id": 1,
         }
     ]
@@ -97,9 +97,10 @@ def test_create_comparison_settings_edit_success(
     json["created_at"] = now
     assert json == {
         "created_at": now,
+        "edit_type": "COMPARISON_SETTINGS",
         "id": 1,
-        "new_value": {"method": "SSIM", "threshold": 1},
-        "old_value": {"method": "SSIM", "threshold": 1.0},
+        "new_value": {"comparison_settings": {"method": "SSIM", "threshold": 1}},
+        "old_value": {"comparison_settings": {"method": "SSIM", "threshold": 1.0}},
         "test_id": 1,
     }
 

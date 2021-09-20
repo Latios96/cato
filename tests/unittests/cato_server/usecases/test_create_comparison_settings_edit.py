@@ -5,7 +5,10 @@ import pytest
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.test_edit import ComparisonSettingsEdit
+from cato_server.domain.test_edit import (
+    ComparisonSettingsEdit,
+    ComparisonSettingsEditValue,
+)
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.create_comparison_settings_edit import (
@@ -38,8 +41,16 @@ def test_create_edit_with_success(test_result_factory):
         id=0,
         test_id=5,
         created_at=created_at,
-        old_value=ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-        new_value=ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            )
+        ),
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            )
+        ),
     )
 
 

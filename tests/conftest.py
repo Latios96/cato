@@ -50,7 +50,12 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.domain.test_edit import TestEdit, EditTypes
+from cato_server.domain.test_edit import (
+    AbstractTestEdit,
+    EditTypes,
+    ComparisonSettingsEdit,
+    ComparisonSettingsEditValue,
+)
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
@@ -250,19 +255,20 @@ def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_
 @pytest.fixture
 def test_edit(sessionmaker_fixture, test_result):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-    test_edit = TestEdit(
+    test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
-        edit_type=EditTypes.COMPARISON_SETTINGS,
         created_at=datetime.datetime.now(),
-        old_value={
-            "method": "SSIM",
-            "threshold": 1,
-        },
-        new_value={
-            "method": "SSIM",
-            "threshold": 10,
-        },
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            )
+        ),
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=10
+            )
+        ),
     )
     return repository.save(test_edit)
 

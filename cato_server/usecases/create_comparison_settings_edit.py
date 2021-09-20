@@ -1,7 +1,10 @@
 import datetime
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.test_edit import ComparisonSettingsEdit
+from cato_server.domain.test_edit import (
+    ComparisonSettingsEdit,
+    ComparisonSettingsEditValue,
+)
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 
@@ -32,15 +35,20 @@ class CreateComparisonSettingsEdit:
             id=0,
             test_id=test_result.id,
             created_at=created_at,
-            old_value=test_result.comparison_settings,
-            new_value=comparison_settings,
+            old_value=ComparisonSettingsEditValue(
+                comparison_settings=test_result.comparison_settings
+            ),
+            new_value=ComparisonSettingsEditValue(
+                comparison_settings=comparison_settings
+            ),
         )
 
-        saved_edit = self._test_edit_repository.save(
-            comparison_settings_edit.to_test_edit()
-        )
+        saved_edit = self._test_edit_repository.save(comparison_settings_edit)
 
-        return ComparisonSettingsEdit.from_test_edit(saved_edit)
+        # todo update test result with new values, compare images and update test result status
+        # todo also handle diff image
+
+        return saved_edit
 
     def _get_created_at(self):
         return datetime.datetime.now()

@@ -3,7 +3,15 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.test_edit import TestEdit, EditTypes
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
+from cato_server.domain.test_edit import (
+    AbstractTestEdit,
+    EditTypes,
+    ComparisonSettingsEdit,
+    ComparisonSettingsEditValue,
+    ReferenceImageEdit,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
     SqlAlchemyTestEditRepository,
 )
@@ -14,13 +22,20 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 
 def test_save(test_result, sessionmaker_fixture):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-    test_edit = TestEdit(
+    test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
-        edit_type=EditTypes.COMPARISON_SETTINGS,
         created_at=datetime.datetime.now(),
-        old_value={"key": "value"},
-        new_value={"key": "new value"},
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1.0
+            )
+        ),
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.5
+            )
+        ),
     )
 
     saved_test_edit = repository.save(test_edit)
@@ -31,13 +46,20 @@ def test_save(test_result, sessionmaker_fixture):
 
 def test_save_not_existing_test_result(sessionmaker_fixture):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-    test_edit = TestEdit(
+    test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=10,
-        edit_type=EditTypes.COMPARISON_SETTINGS,
         created_at=datetime.datetime.now(),
-        old_value={"key": "value"},
-        new_value={"key": "new value"},
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1.0
+            )
+        ),
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.5
+            )
+        ),
     )
 
     with pytest.raises(IntegrityError):
@@ -55,13 +77,20 @@ def test_find_by_test_id_should_find_empty_list(sessionmaker_fixture):
 def test_find_by_test_id(sessionmaker_fixture, test_result):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
     test_edits = [
-        TestEdit(
+        ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
-            edit_type=EditTypes.COMPARISON_SETTINGS,
             created_at=datetime.datetime.now(),
-            old_value={"key": "value"},
-            new_value={"key": "new value"},
+            new_value=ComparisonSettingsEditValue(
+                comparison_settings=ComparisonSettings(
+                    method=ComparisonMethod.SSIM, threshold=1.0
+                )
+            ),
+            old_value=ComparisonSettingsEditValue(
+                comparison_settings=ComparisonSettings(
+                    method=ComparisonMethod.SSIM, threshold=0.5
+                )
+            ),
         )
         for _ in range(10)
     ]
@@ -70,13 +99,20 @@ def test_find_by_test_id(sessionmaker_fixture, test_result):
     test_result.id = 0
     test_result = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(test_result)
     repository.save(
-        TestEdit(
+        ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
-            edit_type=EditTypes.COMPARISON_SETTINGS,
             created_at=datetime.datetime.now(),
-            old_value={"key": "value"},
-            new_value={"key": "new value"},
+            new_value=ComparisonSettingsEditValue(
+                comparison_settings=ComparisonSettings(
+                    method=ComparisonMethod.SSIM, threshold=1.0
+                )
+            ),
+            old_value=ComparisonSettingsEditValue(
+                comparison_settings=ComparisonSettings(
+                    method=ComparisonMethod.SSIM, threshold=0.5
+                )
+            ),
         )
     )
 
@@ -90,22 +126,26 @@ def test_find_by_test_id(sessionmaker_fixture, test_result):
 
 def test_find_by_test_id_with_edit_type(test_result, sessionmaker_fixture):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-    test_edit = TestEdit(
+    test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
-        edit_type=EditTypes.COMPARISON_SETTINGS,
         created_at=datetime.datetime.now(),
-        old_value={"key": "value"},
-        new_value={"key": "new value"},
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            )
+        ),
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.5
+            )
+        ),
     )
     saved_test_edit = repository.save(test_edit)
-    other_test_edit = TestEdit(
+    other_test_edit = ReferenceImageEdit(
         id=0,
         test_id=test_result.id,
-        edit_type=EditTypes.REFERENCE_IMAGE,
         created_at=datetime.datetime.now(),
-        old_value={"key": "value"},
-        new_value={"key": "new value"},
     )
     repository.save(other_test_edit)
 
@@ -126,13 +166,20 @@ def test_find_by_run_id_should_find_empty_list(sessionmaker_fixture, run):
 
 def test_find_by_run_id_should_find(sessionmaker_fixture, run, test_result):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-    test_edit = TestEdit(
+    test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
-        edit_type=EditTypes.COMPARISON_SETTINGS,
         created_at=datetime.datetime.now(),
-        old_value={"key": "value"},
-        new_value={"key": "new value"},
+        new_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            )
+        ),
+        old_value=ComparisonSettingsEditValue(
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.5
+            )
+        ),
     )
     saved_test_edit = repository.save(test_edit)
 
