@@ -31,21 +31,9 @@ class CreateComparisonSettingsEdit:
     def create_edit(
         self, test_result_id, comparison_settings: ComparisonSettings
     ) -> ComparisonSettingsEdit:
-        test_result = self._test_result_repository.find_by_id(test_result_id)
-        if not test_result:
-            raise ValueError(f"Could not find a test result with id {test_result_id}")
-
-        if not test_result.comparison_settings:
-            raise ValueError(
-                "Can't edit a test result which has no comparison settings!"
-            )
-
-        output_image = self._image_repository.find_by_id(test_result.image_output)
-        if not output_image:
-            raise ValueError("Can not edit test result with no output image!")
-        reference_image = self._image_repository.find_by_id(test_result.reference_image)
-        if not reference_image:
-            raise ValueError("Can not edit test result with no reference image!")
+        output_image, reference_image, test_result = self._validate_test_result_input(
+            test_result_id
+        )
 
         logger.info("Comparing images..")
         result = self._compare_image.compare_image_from_db(
@@ -54,7 +42,39 @@ class CreateComparisonSettingsEdit:
         logger.info("Compared images, test status is, error ")
 
         created_at = self._get_created_at()
-        comparison_settings_edit = ComparisonSettingsEdit(
+        comparison_settings_edit = self._create_comparison_edit(
+            comparison_settings, created_at, result, test_result
+        )
+
+        saved_edit = self._test_edit_repository.save(comparison_settings_edit)
+
+        test_result.diff_image = result.diff_image_id
+        test_result.status = result.status
+        test_result.message = result.message
+        self._test_result_repository.save(test_result)
+
+        return saved_edit
+
+    def _validate_test_result_input(self, test_result_id):
+        test_result = self._test_result_repository.find_by_id(test_result_id)
+        if not test_result:
+            raise ValueError(f"Could not find a test result with id {test_result_id}")
+        if not test_result.comparison_settings:
+            raise ValueError(
+                "Can't edit a test result which has no comparison settings!"
+            )
+        output_image = self._image_repository.find_by_id(test_result.image_output)
+        if not output_image:
+            raise ValueError("Can not edit test result with no output image!")
+        reference_image = self._image_repository.find_by_id(test_result.reference_image)
+        if not reference_image:
+            raise ValueError("Can not edit test result with no reference image!")
+        return output_image, reference_image, test_result
+
+    def _create_comparison_edit(
+        self, comparison_settings, created_at, result, test_result
+    ):
+        return ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
             created_at=created_at,
@@ -73,15 +93,6 @@ class CreateComparisonSettingsEdit:
                 error_value=result.error,
             ),
         )
-
-        saved_edit = self._test_edit_repository.save(comparison_settings_edit)
-
-        test_result.diff_image = result.diff_image_id
-        test_result.status = result.status
-        test_result.message = result.message
-        self._test_result_repository.save(test_result)
-
-        return saved_edit
 
     def _get_created_at(self):
         return datetime.datetime.now()
