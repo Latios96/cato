@@ -162,3 +162,29 @@ def test_create_comparison_settings_edit_failure(
 
     assert rv.status_code == 400
     assert rv.json() == {"id": ["No TestResult with id 1 exists!"]}
+
+
+def test_can_create_comparison_settings_edit_should_return_true(client, test_result):
+    url = f"/api/v1/test_edits/can-edit/{test_result.id}/comparison_settings"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json() == {"can_edit": True, "message": None}
+
+
+def test_can_create_comparison_settings_edit_should_return_false(
+    client, sessionmaker_fixture, suite_result, test_result_factory
+):
+    test_result = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(
+        test_result_factory(suite_result_id=suite_result.id, diff_image=None)
+    )
+    url = f"/api/v1/test_edits/can-edit/{test_result.id}/comparison_settings"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json() == {
+        "can_edit": False,
+        "message": "Can not edit test result with no output image!",
+    }

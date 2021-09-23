@@ -31,6 +31,9 @@ class TestEditBlueprint(APIRouter):
         self._create_comparison_settings_edit = create_comparison_settings_edit
 
         self.get("/test_edits/{test_result_id}")(self.test_edits_by_test_result_id)
+        self.get("/test_edits/can-edit/{test_result_id}/comparison_settings")(
+            self.can_edit_test_result
+        )
         self.get("/test_edits/runs/{run_id}")(self.test_edits_by_run_id)
         self.post("/test_edits/comparison_settings")(
             self.create_comparison_settings_edit
@@ -42,6 +45,16 @@ class TestEditBlueprint(APIRouter):
         edits = self._test_edit_repository.find_by_test_id(test_result_id)
 
         return JSONResponse(content=self._object_mapper.many_to_dict(edits))
+
+    def can_edit_test_result(
+        self,
+        test_result_id: int,
+    ) -> Response:
+        can_edit, message = self._create_comparison_settings_edit.can_create_edit(
+            test_result_id
+        )
+
+        return JSONResponse(content={"can_edit": can_edit, "message": message})
 
     def test_edits_by_run_id(self, run_id: int, request: Request) -> Response:
         edits = self._test_edit_repository.find_by_run_id(run_id)
