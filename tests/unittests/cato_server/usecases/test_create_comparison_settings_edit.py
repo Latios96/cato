@@ -179,7 +179,6 @@ def test_no_output_image(test_result_factory):
 
 def test_test_with_no_comparison_settings(test_result_factory):
     mock_test_edit_repository = mock_safe(TestEditRepository)
-    mock_test_edit_repository.save.side_effect = lambda x: x
     mock_test_result_repository = mock_safe(TestResultRepository)
     test_result = test_result_factory(id=5, comparison_settings=None)
     mock_test_result_repository.find_by_id.return_value = test_result
@@ -192,20 +191,18 @@ def test_test_with_no_comparison_settings(test_result_factory):
         mock_image_repository,
     )
 
-    edit = create_comparison_settings_edit.create_edit(
-        1, ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1)
-    )
-
-    assert edit.old_value.comparison_settings is None
-    assert test_result.comparison_settings is not None
-    mock_test_result_repository.save.assert_called_with(test_result)
-    mock_test_edit_repository.save.assert_called_with(edit)
+    with pytest.raises(ValueError):
+        create_comparison_settings_edit.create_edit(
+            1, ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1)
+        )
 
 
 def test_can_create_should_return_true(test_result_factory):
     mock_test_edit_repository = mock_safe(TestEditRepository)
     mock_test_result_repository = mock_safe(TestResultRepository)
-    test_result = test_result_factory(id=5, comparison_settings=None)
+    test_result = test_result_factory(
+        id=5, comparison_settings=ComparisonSettings(ComparisonMethod.SSIM, 0.5)
+    )
     mock_test_result_repository.find_by_id.return_value = test_result
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
@@ -224,7 +221,11 @@ def test_can_create_should_return_true(test_result_factory):
 def test_can_create_should_return_false(test_result_factory):
     mock_test_edit_repository = mock_safe(TestEditRepository)
     mock_test_result_repository = mock_safe(TestResultRepository)
-    test_result = test_result_factory(id=5, comparison_settings=None, diff_image=None)
+    test_result = test_result_factory(
+        id=5,
+        comparison_settings=ComparisonSettings(ComparisonMethod.SSIM, 0.5),
+        diff_image=None,
+    )
     mock_test_result_repository.find_by_id.return_value = test_result
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
