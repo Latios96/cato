@@ -1,9 +1,5 @@
 import React, { useEffect, useState } from "react";
-import {
-  ComparisonMethodDto,
-  ComparisonSettingsDto,
-  TestResultDto,
-} from "../../catoapimodels";
+import { ComparisonMethodDto, TestResultDto } from "../../catoapimodels";
 import styles from "./TestResultComparisonResult.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
 import { Form } from "react-bootstrap";
@@ -13,29 +9,22 @@ import Spinner from "../Spinner/Spinner";
 interface Props {
   testResult: TestResultDto;
 }
-const getInitialComparisonSettings = (
-  comparisonSettings?: ComparisonSettingsDto | null
-) =>
-  comparisonSettings
-    ? comparisonSettings
-    : {
-        method: ComparisonMethodDto.SSIM,
-        threshold: 0.8,
-      };
+
 function TestResultComparisonResult(props: Props) {
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
 
-  const [currentComparisonSettings, setCurrentComparisonSettings] =
-    useState<ComparisonSettingsDto>(
-      getInitialComparisonSettings(props.testResult.comparison_settings)
-    );
+  const [currentThreshold, setCurrentThreshold] = useState<string>(
+    getInitialThreshold(props)
+  );
+  const [currentMethod, setCurrentMethod] = useState<ComparisonMethodDto>(
+    getInitialMethod(props)
+  );
 
   useEffect(() => {
-    setCurrentComparisonSettings(
-      getInitialComparisonSettings(props.testResult.comparison_settings)
-    );
-  }, [props.testResult]);
+    setCurrentMethod(getInitialMethod(props));
+    setCurrentThreshold(getInitialThreshold(props));
+  }, [props, props.testResult]);
 
   return (
     <InfoBox className={styles.infoBox}>
@@ -52,7 +41,7 @@ function TestResultComparisonResult(props: Props) {
                         as="select"
                         size={"sm"}
                         className={styles.methodInput}
-                        value={currentComparisonSettings.method}
+                        value={currentMethod}
                         data-testid={"edit-comparison-settings-method"}
                       >
                         {Object.values(ComparisonMethodDto).map((v) => {
@@ -60,7 +49,7 @@ function TestResultComparisonResult(props: Props) {
                         })}
                       </Form.Control>
                     ) : (
-                      currentComparisonSettings.method
+                      currentMethod
                     )
                   ) : (
                     <>&mdash;</>
@@ -78,28 +67,22 @@ function TestResultComparisonResult(props: Props) {
                           type="number"
                           step="0.01"
                           className={styles.thresholdInput}
-                          value={currentComparisonSettings.threshold}
-                          onChange={(v) =>
-                            setCurrentComparisonSettings({
-                              ...currentComparisonSettings,
-                              threshold: parseFloat(v.target.value),
-                            })
-                          }
+                          value={currentThreshold}
+                          onChange={(v) => setCurrentThreshold(v.target.value)}
                         />
                         <button
                           className={styles.button}
                           onClick={() => {
-                            setCurrentComparisonSettings({
-                              ...currentComparisonSettings,
-                              threshold: props.testResult.error_value || 0.8,
-                            });
+                            setCurrentThreshold(
+                              toFixed(props.testResult.error_value)
+                            );
                           }}
                         >
                           match error
                         </button>
                       </>
                     ) : (
-                      currentComparisonSettings.threshold
+                      currentThreshold
                     )
                   ) : (
                     <>&mdash;</>
@@ -117,7 +100,10 @@ function TestResultComparisonResult(props: Props) {
                         axios
                           .post("/api/v1/test_edits/comparison_settings", {
                             test_result_id: props.testResult.id,
-                            new_value: currentComparisonSettings,
+                            new_value: {
+                              method: currentMethod,
+                              threshold: parseFloat(currentThreshold),
+                            },
                           })
                           .then(() => {
                             setUpdating(false);
@@ -178,5 +164,25 @@ function TestResultComparisonResult(props: Props) {
     </InfoBox>
   );
 }
+function getInitialThreshold(props: Props) {
+  if (
+    props.testResult.comparison_settings &&
+    props.testResult.comparison_settings.threshold !== "NaN"
+  ) {
+    return props.testResult.comparison_settings.threshold.toFixed(3);
+  }
+  return "0.8";
+}
 
+function getInitialMethod(props: Props) {
+  return (
+    props.testResult.comparison_settings?.method || ComparisonMethodDto.SSIM
+  );
+}
+function toFixed(error_value?: number | "NaN" | null) {
+  if (error_value === "NaN" || !error_value) {
+    return "0.8";
+  }
+  return error_value.toFixed(3);
+}
 export default TestResultComparisonResult;
