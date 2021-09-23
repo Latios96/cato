@@ -200,3 +200,42 @@ def test_test_with_no_comparison_settings(test_result_factory):
     assert test_result.comparison_settings is not None
     mock_test_result_repository.save.assert_called_with(test_result)
     mock_test_edit_repository.save.assert_called_with(edit)
+
+
+def test_can_create_should_return_true(test_result_factory):
+    mock_test_edit_repository = mock_safe(TestEditRepository)
+    mock_test_result_repository = mock_safe(TestResultRepository)
+    test_result = test_result_factory(id=5, comparison_settings=None)
+    mock_test_result_repository.find_by_id.return_value = test_result
+    mock_compare_image = mock_safe(CompareImage)
+    mock_image_repository = mock_safe(ImageRepository)
+    create_comparison_settings_edit = CreateComparisonSettingsEdit(
+        mock_test_edit_repository,
+        mock_test_result_repository,
+        mock_compare_image,
+        mock_image_repository,
+    )
+
+    result = create_comparison_settings_edit.can_create_edit(5)
+
+    assert result == (True, None)
+
+
+def test_can_create_should_return_false(test_result_factory):
+    mock_test_edit_repository = mock_safe(TestEditRepository)
+    mock_test_result_repository = mock_safe(TestResultRepository)
+    test_result = test_result_factory(id=5, comparison_settings=None, diff_image=None)
+    mock_test_result_repository.find_by_id.return_value = test_result
+    mock_compare_image = mock_safe(CompareImage)
+    mock_image_repository = mock_safe(ImageRepository)
+    mock_image_repository.find_by_id.return_value = None
+    create_comparison_settings_edit = CreateComparisonSettingsEdit(
+        mock_test_edit_repository,
+        mock_test_result_repository,
+        mock_compare_image,
+        mock_image_repository,
+    )
+
+    result = create_comparison_settings_edit.can_create_edit(5)
+
+    assert result == (False, "Can not edit test result with no output image!")

@@ -1,4 +1,5 @@
 import datetime
+from typing import Tuple, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.test_edit import (
@@ -27,6 +28,13 @@ class CreateComparisonSettingsEdit:
         self._test_result_repository = test_result_repository
         self._compare_image = compare_image
         self._image_repository = image_repository
+
+    def can_create_edit(self, test_result_id: int) -> Tuple[bool, Optional[str]]:
+        try:
+            self._validate_test_result_input(test_result_id)
+            return True, None
+        except ValueError as e:
+            return False, str(e)
 
     def create_edit(
         self, test_result_id, comparison_settings: ComparisonSettings
