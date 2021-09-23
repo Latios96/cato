@@ -1,5 +1,5 @@
 import TestResultComparisonResult from "./TestResultComparisonResult";
-import { fireEvent, render, waitFor } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import { ComparisonMethodDto } from "../../catoapimodels";
 import axios from "axios";
 jest.mock("axios");

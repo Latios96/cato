@@ -1,5 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { ComparisonMethodDto, TestResultDto } from "../../catoapimodels";
+import React, { useCallback, useEffect, useState } from "react";
+import {
+  ComparisonMethodDto,
+  ComparisonSettingsDto,
+  TestResultDto,
+} from "../../catoapimodels";
 import styles from "./TestResultComparisonResult.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
 import { Form } from "react-bootstrap";
@@ -21,13 +25,13 @@ function TestResultComparisonResult(props: Props) {
   });
 
   const [currentThreshold, setCurrentThreshold] = useState<string>(
-    getInitialThreshold(props)
+    getInitialThreshold(props.testResult.comparison_settings)
   );
   const [currentMethod, setCurrentMethod] = useState<ComparisonMethodDto>(
-    getInitialMethod(props)
+    getInitialMethod(props.testResult.comparison_settings)
   );
 
-  const checkIsEditable = () => {
+  const checkIsEditable = useCallback(() => {
     setEditableChecking(true);
     axios
       .get(
@@ -41,13 +45,15 @@ function TestResultComparisonResult(props: Props) {
         setIsEditable({ can_edit: false });
         setEditableChecking(false);
       });
-  };
+  }, [props.testResult.id]);
 
   useEffect(() => {
-    setCurrentMethod(getInitialMethod(props));
-    setCurrentThreshold(getInitialThreshold(props));
+    setCurrentMethod(getInitialMethod(props.testResult.comparison_settings));
+    setCurrentThreshold(
+      getInitialThreshold(props.testResult.comparison_settings)
+    );
     checkIsEditable();
-  }, [props.testResult]);
+  }, [props.testResult, checkIsEditable, props.testResult.comparison_settings]);
 
   return (
     <InfoBox className={styles.infoBox}>
@@ -192,20 +198,17 @@ function TestResultComparisonResult(props: Props) {
     </InfoBox>
   );
 }
-function getInitialThreshold(props: Props) {
-  if (
-    props.testResult.comparison_settings &&
-    props.testResult.comparison_settings.threshold !== "NaN"
-  ) {
-    return props.testResult.comparison_settings.threshold.toFixed(3);
+function getInitialThreshold(
+  comparison_settings?: ComparisonSettingsDto | null
+) {
+  if (comparison_settings && comparison_settings.threshold !== "NaN") {
+    return comparison_settings.threshold.toFixed(3);
   }
   return "0.8";
 }
 
-function getInitialMethod(props: Props) {
-  return (
-    props.testResult.comparison_settings?.method || ComparisonMethodDto.SSIM
-  );
+function getInitialMethod(comparison_settings?: ComparisonSettingsDto | null) {
+  return comparison_settings?.method || ComparisonMethodDto.SSIM;
 }
 function toFixed(error_value?: number | "NaN" | null) {
   if (error_value === "NaN" || !error_value) {
