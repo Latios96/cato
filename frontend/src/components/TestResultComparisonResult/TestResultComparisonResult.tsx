@@ -5,6 +5,8 @@ import InfoBox from "../InfoBox/InfoBox";
 import { Form } from "react-bootstrap";
 import axios from "axios";
 import Spinner from "../Spinner/Spinner";
+import InformationIcon from "../InformationIcon/InformationIcon";
+import { CanBeEdited } from "../../models/EditableInformation";
 
 interface Props {
   testResult: TestResultDto;
@@ -13,6 +15,10 @@ interface Props {
 function TestResultComparisonResult(props: Props) {
   const [isEditing, setEditing] = useState(false);
   const [isUpdating, setUpdating] = useState(false);
+  const [isEditableChecking, setEditableChecking] = useState(true);
+  const [isEditable, setIsEditable] = useState<CanBeEdited>({
+    can_edit: false,
+  });
 
   const [currentThreshold, setCurrentThreshold] = useState<string>(
     getInitialThreshold(props)
@@ -21,10 +27,27 @@ function TestResultComparisonResult(props: Props) {
     getInitialMethod(props)
   );
 
+  const checkIsEditable = () => {
+    setEditableChecking(true);
+    axios
+      .get(
+        `/api/v1/test_edits/can-edit/${props.testResult.id}/comparison_settings`
+      )
+      .then((result) => {
+        setIsEditable(result.data);
+        setEditableChecking(false);
+      })
+      .catch(() => {
+        setIsEditable({ can_edit: false });
+        setEditableChecking(false);
+      });
+  };
+
   useEffect(() => {
     setCurrentMethod(getInitialMethod(props));
     setCurrentThreshold(getInitialThreshold(props));
-  }, [props, props.testResult]);
+    checkIsEditable();
+  }, [props.testResult]);
 
   return (
     <InfoBox className={styles.infoBox}>
@@ -125,14 +148,19 @@ function TestResultComparisonResult(props: Props) {
                     <button
                       className={styles.button}
                       onClick={() => setEditing(true)}
-                      disabled={!props.testResult.comparison_settings}
+                      disabled={isEditableChecking || !isEditable.can_edit}
                     >
                       Edit
                     </button>
-
-                    {isUpdating ? (
-                      <div className={styles.updatingSpinner}>
+                    {isUpdating || isEditableChecking ? (
+                      <div className={styles.spinner}>
                         <Spinner />
+                      </div>
+                    ) : !isEditable.can_edit ? (
+                      <div className={styles.information}>
+                        <InformationIcon
+                          informationText={isEditable.message || ""}
+                        />
                       </div>
                     ) : (
                       <></>
