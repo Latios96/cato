@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
 import { TestResultDto } from "../../catoapimodels";
 import TestResultBreadCrumb from "../TestResultBreadCrumb/TestResultBreadCrumb";
+import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
 
 interface Props {
   resultId: number;
@@ -13,8 +14,8 @@ interface Props {
 function TestResultComponent(props: Props) {
   let [result, setResult] = useState<TestResultDto>();
 
-  useEffect(() => {
-    fetch(`/api/v1/test_results/${props.resultId}`)
+  const fetchTest = useCallback((id) => {
+    fetch(`/api/v1/test_results/${id}`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -22,7 +23,11 @@ function TestResultComponent(props: Props) {
         },
         (error) => {}
       );
-  }, [props.resultId]);
+  }, []);
+
+  useEffect(() => {
+    fetchTest(props.resultId);
+  }, [fetchTest, props.resultId]);
 
   let renderTestResult = (testResult: TestResultDto) => {
     if (testResult.execution_status === "FINISHED") {
@@ -33,14 +38,16 @@ function TestResultComponent(props: Props) {
 
   return (
     <div>
-      <TestResultBreadCrumb
-        projectId={props.projectId}
-        runId={props.runId}
-        suiteId={result ? result.suite_result_id : 0}
-        suiteName={result ? result.test_identifier.split("/")[0] : ""}
-        testName={result ? result.test_name : ""}
-      />
-      {result ? renderTestResult(result) : <React.Fragment />}
+      <TestResultUpdateContext.Provider value={{ update: fetchTest }}>
+        <TestResultBreadCrumb
+          projectId={props.projectId}
+          runId={props.runId}
+          suiteId={result ? result.suite_result_id : 0}
+          suiteName={result ? result.test_identifier.split("/")[0] : ""}
+          testName={result ? result.test_name : ""}
+        />
+        {result ? renderTestResult(result) : <React.Fragment />}
+      </TestResultUpdateContext.Provider>
     </div>
   );
 }

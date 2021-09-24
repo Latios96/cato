@@ -1,8 +1,9 @@
-import React, { useCallback, useEffect, useReducer } from "react";
+import React, { useCallback, useContext, useEffect, useReducer } from "react";
 import { ComparisonSettingsDto, TestResultDto } from "../../catoapimodels";
 import axios from "axios";
 import { ActionType, getInitialState, reducer } from "./reducer";
 import TestResultComparisonResultImpl from "./TestResultComparisonResultImpl";
+import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
 
 interface Props {
   testResult: TestResultDto;
@@ -13,6 +14,7 @@ function TestResultComparisonResult(props: Props) {
     reducer,
     getInitialState(props.testResult)
   );
+  const { update } = useContext(TestResultUpdateContext);
 
   const checkIsEditable = useCallback(() => {
     dispatch({ type: ActionType.CHECK_IS_EDITABLE });
@@ -54,6 +56,10 @@ function TestResultComparisonResult(props: Props) {
         new_value: comparisonSettings,
       })
       .then(() => {
+        dispatch({ type: ActionType.UPDATING_END });
+        update(props.testResult.id);
+      })
+      .catch(() => {
         dispatch({ type: ActionType.UPDATING_END });
       });
   };
