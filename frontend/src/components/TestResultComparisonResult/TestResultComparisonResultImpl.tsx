@@ -10,6 +10,7 @@ import { Form } from "react-bootstrap";
 import Spinner from "../Spinner/Spinner";
 import InformationIcon from "../InformationIcon/InformationIcon";
 import { Action, ActionType, State } from "./reducer";
+import Button from "../Button/Button";
 
 interface Props {
   testResult: TestResultDto;
@@ -84,8 +85,7 @@ function TestResultComparisonResultImpl(props: Props) {
                             }
                           }}
                         />
-                        <button
-                          className={styles.button}
+                        <Button
                           onClick={() => {
                             props.dispatch({
                               type: ActionType.SET_CURRENT_THRESHOLD,
@@ -94,7 +94,7 @@ function TestResultComparisonResultImpl(props: Props) {
                           }}
                         >
                           match error
-                        </button>
+                        </Button>
                       </>
                     ) : (
                       state.currentThreshold
@@ -107,15 +107,10 @@ function TestResultComparisonResultImpl(props: Props) {
               <tr className={styles.buttonRow}>
                 {state.isEditing ? (
                   <>
-                    <button
-                      className={styles.button}
-                      onClick={update}
-                      data-primary={true}
-                    >
+                    <Button onClick={update} primary={true}>
                       OK
-                    </button>
-                    <button
-                      className={styles.button}
+                    </Button>
+                    <Button
                       onClick={() =>
                         props.dispatch({
                           type: ActionType.CANCEL,
@@ -123,12 +118,11 @@ function TestResultComparisonResultImpl(props: Props) {
                       }
                     >
                       Cancel
-                    </button>
+                    </Button>
                   </>
                 ) : (
                   <>
-                    <button
-                      className={styles.button}
+                    <Button
                       onClick={() =>
                         props.dispatch({
                           type: ActionType.START_EDITING,
@@ -139,7 +133,7 @@ function TestResultComparisonResultImpl(props: Props) {
                       }
                     >
                       Edit
-                    </button>
+                    </Button>
                     {state.isUpdating || state.isEditableChecking ? (
                       <div className={styles.spinner}>
                         <Spinner />

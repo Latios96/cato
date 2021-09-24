@@ -24,34 +24,7 @@
 .infoBox {
   margin-bottom: 20px;
 }
-.button {
-  user-select: none;
-  background: none;
-  border: 1px solid lightgrey;
-  border-radius: 3px;
-  padding: 0px 15px;
-  color: #0f5b99;
-  margin-left: 5px;
-  margin-right: 5px;
-}
-.button[data-primary="true"] {
-  color: white;
-  background-color: #ff008c;
-}
-button:disabled {
-  color: grey;
-  background-color: #e8e8e8;
-}
-.button:hover {
-  color: $cato-highlight;
-}
-.button[data-primary="true"]:hover {
-  color: $cato-highlight-hover;
-  background-color: #d90076;
-}
-.button:disabled:hover {
-  color: grey;
-}
+
 .methodInput {
   width: 100px !important;
 }
