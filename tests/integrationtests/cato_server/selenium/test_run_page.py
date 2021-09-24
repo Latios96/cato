@@ -3,6 +3,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
 
+from cato.domain.comparison_method import ComparisonMethod
+from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
@@ -116,6 +118,33 @@ class TestRunTestPage:
         self._select_other_test(selenium_driver)
         self._assert_other_test_is_selected(selenium_driver)
 
+    def test_editing_the_tests_comparison_settings_should_work(
+        self,
+        live_server,
+        selenium_driver,
+        run,
+        test_result_factory,
+        sessionmaker_fixture,
+        suite_result,
+        stored_image,
+    ):
+        SqlAlchemyTestResultRepository(sessionmaker_fixture).save(
+            test_result_factory(
+                suite_result_id=suite_result.id,
+                execution_status=ExecutionStatus.FINISHED,
+                status=TestStatus.SUCCESS,
+                image_output=stored_image.id,
+                reference_image=stored_image.id,
+                comparison_settings=ComparisonSettings(
+                    method=ComparisonMethod.SSIM, threshold=0.8
+                ),
+            )
+        )
+        self._visit_run_test_page(live_server, run, selenium_driver)
+        self._select_a_test(selenium_driver)
+        self._edit_tests_threshold(selenium_driver)
+        self._test_should_be_updated(selenium_driver)
+
     def _assert_other_test_is_selected(self, selenium_driver):
         assert selenium_driver.find_element_by_id(
             "selectedTestContainer"
@@ -174,6 +203,21 @@ class TestRunTestPage:
     def _visit_run_overview_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
             f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
+        )
+
+    def _edit_tests_threshold(self, selenium_driver):
+        selenium_driver.find_element_by_xpath('//button[text()="Edit"]').click()
+        selenium_driver.find_element_by_xpath(
+            '//input[@data-testid="edit-comparison-settings-threshold"]'
+        ).clear()
+        selenium_driver.find_element_by_xpath(
+            '//input[@data-testid="edit-comparison-settings-threshold"]'
+        ).send_keys("5.000")
+        selenium_driver.find_element_by_xpath('//button[text()="OK"]').click()
+
+    def _test_should_be_updated(self, selenium_driver):
+        selenium_driver.find_element_by_xpath(
+            "//span[text()='Images are not equal! SSIM score was 1.000, max threshold is 5.000']"
         )
 
 
