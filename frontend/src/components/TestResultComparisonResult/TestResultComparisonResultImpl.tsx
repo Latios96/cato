@@ -20,6 +20,16 @@ interface Props {
 
 function TestResultComparisonResultImpl(props: Props) {
   const state = props.state;
+
+  const update = () =>
+    props.updateComparisonSettings({
+      method:
+        state.currentMethod === ComparisonMethodDto.SSIM
+          ? ComparisonMethodDto.SSIM
+          : ComparisonMethodDto.SSIM,
+      threshold: parseFloat(state.currentThreshold),
+    });
+
   return (
     <InfoBox className={styles.infoBox}>
       <div className={styles.testResultComparisonResult}>
@@ -68,6 +78,11 @@ function TestResultComparisonResultImpl(props: Props) {
                               payload: v.target.value,
                             })
                           }
+                          onKeyDown={(event) => {
+                            if (event.key === "Enter") {
+                              update();
+                            }
+                          }}
                         />
                         <button
                           className={styles.button}
@@ -94,15 +109,7 @@ function TestResultComparisonResultImpl(props: Props) {
                   <>
                     <button
                       className={styles.button}
-                      onClick={() =>
-                        props.updateComparisonSettings({
-                          method:
-                            state.currentMethod === ComparisonMethodDto.SSIM
-                              ? ComparisonMethodDto.SSIM
-                              : ComparisonMethodDto.SSIM,
-                          threshold: parseFloat(state.currentThreshold),
-                        })
-                      }
+                      onClick={update}
                       data-primary={true}
                     >
                       OK
