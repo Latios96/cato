@@ -1,219 +1,70 @@
-import React, { useCallback, useEffect, useState } from "react";
-import {
-  ComparisonMethodDto,
-  ComparisonSettingsDto,
-  TestResultDto,
-} from "../../catoapimodels";
-import styles from "./TestResultComparisonResult.module.scss";
-import InfoBox from "../InfoBox/InfoBox";
-import { Form } from "react-bootstrap";
+import React, { useCallback, useEffect, useReducer } from "react";
+import { ComparisonSettingsDto, TestResultDto } from "../../catoapimodels";
 import axios from "axios";
-import Spinner from "../Spinner/Spinner";
-import InformationIcon from "../InformationIcon/InformationIcon";
-import { CanBeEdited } from "../../models/EditableInformation";
+import { ActionType, getInitialState, reducer } from "./reducer";
+import TestResultComparisonResultImpl from "./TestResultComparisonResultImpl";
 
 interface Props {
   testResult: TestResultDto;
 }
 
 function TestResultComparisonResult(props: Props) {
-  const [isEditing, setEditing] = useState(false);
-  const [isUpdating, setUpdating] = useState(false);
-  const [isEditableChecking, setEditableChecking] = useState(true);
-  const [isEditable, setIsEditable] = useState<CanBeEdited>({
-    can_edit: false,
-  });
-
-  const [currentThreshold, setCurrentThreshold] = useState<string>(
-    getInitialThreshold(props.testResult.comparison_settings)
-  );
-  const [currentMethod, setCurrentMethod] = useState<ComparisonMethodDto>(
-    getInitialMethod(props.testResult.comparison_settings)
+  const [state, dispatch] = useReducer(
+    reducer,
+    getInitialState(props.testResult)
   );
 
   const checkIsEditable = useCallback(() => {
-    setEditableChecking(true);
+    dispatch({ type: ActionType.CHECK_IS_EDITABLE });
     axios
       .get(
         `/api/v1/test_edits/can-edit/${props.testResult.id}/comparison_settings`
       )
       .then((result) => {
-        setIsEditable(result.data);
-        setEditableChecking(false);
+        dispatch({ type: ActionType.SET_IS_EDITABLE, payload: result.data });
       })
       .catch(() => {
-        setIsEditable({ can_edit: false });
-        setEditableChecking(false);
+        dispatch({
+          type: ActionType.SET_IS_EDITABLE,
+          payload: { can_edit: false },
+        });
       });
   }, [props.testResult.id]);
 
   useEffect(() => {
-    setCurrentMethod(getInitialMethod(props.testResult.comparison_settings));
-    setCurrentThreshold(
-      getInitialThreshold(props.testResult.comparison_settings)
-    );
+    dispatch({
+      type: ActionType.RESET,
+      payload: getInitialState(props.testResult),
+    });
     checkIsEditable();
-  }, [props.testResult, checkIsEditable, props.testResult.comparison_settings]);
+  }, [
+    dispatch,
+    props.testResult,
+    checkIsEditable,
+    props.testResult.comparison_settings,
+  ]);
 
+  const updateComparisonSettings = (
+    comparisonSettings: ComparisonSettingsDto
+  ) => {
+    dispatch({ type: ActionType.UPDATING_START });
+    axios
+      .post("/api/v1/test_edits/comparison_settings", {
+        test_result_id: props.testResult.id,
+        new_value: comparisonSettings,
+      })
+      .then(() => {
+        dispatch({ type: ActionType.UPDATING_END });
+      });
+  };
   return (
-    <InfoBox className={styles.infoBox}>
-      <div className={styles.testResultComparisonResult}>
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>Comparison Method</td>
-                <td data-testid={"comparison-method-method"}>
-                  {props.testResult.comparison_settings ? (
-                    isEditing ? (
-                      <Form.Control
-                        as="select"
-                        size={"sm"}
-                        className={styles.methodInput}
-                        value={currentMethod}
-                        data-testid={"edit-comparison-settings-method"}
-                      >
-                        {Object.values(ComparisonMethodDto).map((v) => {
-                          return <option key={v}>{v}</option>;
-                        })}
-                      </Form.Control>
-                    ) : (
-                      currentMethod
-                    )
-                  ) : (
-                    <>&mdash;</>
-                  )}
-                </td>
-              </tr>
-              <tr>
-                <td>Threshold</td>
-                <td data-testid={"comparison-method-threshold"}>
-                  {props.testResult.comparison_settings ? (
-                    isEditing ? (
-                      <>
-                        <input
-                          data-testid={"edit-comparison-settings-threshold"}
-                          type="number"
-                          step="0.01"
-                          className={styles.thresholdInput}
-                          value={currentThreshold}
-                          onChange={(v) => setCurrentThreshold(v.target.value)}
-                        />
-                        <button
-                          className={styles.button}
-                          onClick={() => {
-                            setCurrentThreshold(
-                              toFixed(props.testResult.error_value)
-                            );
-                          }}
-                        >
-                          match error
-                        </button>
-                      </>
-                    ) : (
-                      currentThreshold
-                    )
-                  ) : (
-                    <>&mdash;</>
-                  )}
-                </td>
-              </tr>
-              <tr>
-                {isEditing ? (
-                  <>
-                    <button
-                      className={styles.button}
-                      onClick={() => {
-                        setEditing(false);
-                        setUpdating(true);
-                        axios
-                          .post("/api/v1/test_edits/comparison_settings", {
-                            test_result_id: props.testResult.id,
-                            new_value: {
-                              method: currentMethod,
-                              threshold: parseFloat(currentThreshold),
-                            },
-                          })
-                          .then(() => {
-                            setUpdating(false);
-                          });
-                      }}
-                      data-primary={true}
-                    >
-                      OK
-                    </button>
-                    <button
-                      className={styles.button}
-                      onClick={() => setEditing(false)}
-                    >
-                      Cancel
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className={styles.button}
-                      onClick={() => setEditing(true)}
-                      disabled={isEditableChecking || !isEditable.can_edit}
-                    >
-                      Edit
-                    </button>
-                    {isUpdating || isEditableChecking ? (
-                      <div className={styles.spinner}>
-                        <Spinner />
-                      </div>
-                    ) : !isEditable.can_edit ? (
-                      <div className={styles.information}>
-                        <InformationIcon
-                          informationText={isEditable.message || ""}
-                        />
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </>
-                )}
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <div>
-          <table>
-            <tbody>
-              <tr>
-                <td>Error value</td>
-                <td data-testid={"error-value"}>
-                  {props.testResult.error_value &&
-                  props.testResult.error_value !== "NaN" ? (
-                    props.testResult.error_value.toFixed(3)
-                  ) : (
-                    <>&mdash;</>
-                  )}
-                </td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </InfoBox>
+    <TestResultComparisonResultImpl
+      state={state}
+      dispatch={dispatch}
+      testResult={props.testResult}
+      updateComparisonSettings={updateComparisonSettings}
+    />
   );
 }
-function getInitialThreshold(
-  comparison_settings?: ComparisonSettingsDto | null
-) {
-  if (comparison_settings && comparison_settings.threshold !== "NaN") {
-    return comparison_settings.threshold.toFixed(3);
-  }
-  return "0.8";
-}
 
-function getInitialMethod(comparison_settings?: ComparisonSettingsDto | null) {
-  return comparison_settings?.method || ComparisonMethodDto.SSIM;
-}
-function toFixed(error_value?: number | "NaN" | null) {
-  if (error_value === "NaN" || !error_value) {
-    return "0.8";
-  }
-  return error_value.toFixed(3);
-}
 export default TestResultComparisonResult;

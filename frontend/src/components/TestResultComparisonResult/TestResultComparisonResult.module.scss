@@ -14,12 +14,13 @@
         font-weight: bolder;
       }
     }
-    tr:last-child {
+    tr.buttonRow {
       display: flex;
       height: 26px;
     }
   }
 }
+
 .infoBox {
   margin-bottom: 20px;
 }
