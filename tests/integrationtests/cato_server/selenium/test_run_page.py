@@ -216,8 +216,13 @@ class TestRunTestPage:
         selenium_driver.find_element_by_xpath('//button[text()="OK"]').click()
 
     def _test_should_be_updated(self, selenium_driver):
-        selenium_driver.find_element_by_xpath(
-            "//span[text()='Images are not equal! SSIM score was 1.000, max threshold is 5.000']"
+        WebDriverWait(selenium_driver, 20).until(
+            expected_conditions.presence_of_element_located(
+                (
+                    By.XPATH,
+                    "//span[text()='Images are not equal! SSIM score was 1.000, max threshold is 5.000']",
+                )
+            )
         )
 
 
