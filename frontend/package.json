@@ -15,6 +15,7 @@
     "@types/react-dom": "^16.9.8",
     "@types/react-query": "^1.1.2",
     "@types/react-router-dom": "^5.1.7",
+    "axios": "^0.21.4",
     "bootstrap": "^4.5.3",
     "humanize-duration": "^3.24.0",
     "lodash": "^4.17.20",
