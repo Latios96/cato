@@ -85,6 +85,12 @@ class CreateReferenceImageEdit:
 
         if not test_result.image_output:
             raise ValueError("Can't edit a test result which has no image_output!")
+
+        if not test_result.comparison_settings:
+            raise ValueError(
+                "Can't edit a test result which has no comparison settings!"
+            )
+
         image_output = self._image_repository.find_by_id(test_result.image_output)
         return image_output, test_result
 

@@ -59,8 +59,15 @@ class CreateReferenceImageEditValidator(SchemaValidator):
         if test_result and not test_result.image_output:
             self.add_error(
                 errors,
-                "comparison_settings",
+                "test_result_id",
                 "Can't edit a test result which has no image output!",
+            )
+
+        if test_result and not test_result.comparison_settings:
+            self.add_error(
+                errors,
+                "comparison_settings",
+                "Can't edit a test result which has no comparison settings!",
             )
 
         return errors
