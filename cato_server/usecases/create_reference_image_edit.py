@@ -74,6 +74,12 @@ class CreateReferenceImageEdit:
         test_result.message = result.message
         self._test_result_repository.save(test_result)
 
+        logger.info(
+            "Created reference image edit with id %s for test result with id %s ",
+            saved_edit.id,
+            test_result_id,
+        )
+
         return saved_edit
 
     def _validate_test_result_input(
