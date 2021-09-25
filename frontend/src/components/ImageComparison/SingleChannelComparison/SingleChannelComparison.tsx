@@ -104,8 +104,8 @@ class SingleChannelComparison extends Component<Props, State> {
           this.state.isSwapping ? (
             this.props.mode === CompareModes.SWIPE ? (
               <ReactCompareImage
-                leftImage={this.state.outputImageUrlToRender}
-                rightImage={this.state.referenceImageUrlToRender}
+                leftImage={this.state.referenceImageUrlToRender}
+                rightImage={this.state.outputImageUrlToRender}
                 key={this.state.outputImageUrlToRender}
               />
             ) : (
