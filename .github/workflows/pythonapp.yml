@@ -61,7 +61,10 @@ jobs:
         with:
           name: wheel-linux
       - name: current dir
-        run: ls
+        run: |
+          sudo apt-get update
+          sudo apt install tree
+          tree
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
