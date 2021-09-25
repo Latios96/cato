@@ -8,6 +8,7 @@ import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
 import ImageComparison from "../ImageComparison/ImageComparison";
 import { FailureMessageBox } from "./MessageBoxes/MessageBoxes";
 import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
+import UpdateReferenceImageButton from "./UpdateReferenceImageButton";
 interface Props {
   result: TestResultDto;
 }
@@ -27,6 +28,7 @@ function FinishedTestResultComponent(props: Props) {
         ? renderFailureInformation(props.result)
         : ""}
       {renderImages(props.result)}
+      <UpdateReferenceImageButton testResultId={props.result.id} />
       <DisplayLogComponent testResultId={props.result.id} />
     </div>
   );
