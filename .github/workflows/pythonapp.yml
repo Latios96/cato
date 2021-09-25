@@ -60,6 +60,8 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: wheel-linux
+      - name: current dir
+        run: ls
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
