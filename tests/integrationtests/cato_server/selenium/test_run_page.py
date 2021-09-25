@@ -103,14 +103,11 @@ class TestRunTestPage:
         selenium_driver,
         run,
         test_result,
-        test_result_factory,
-        sessionmaker_fixture,
+        saving_test_result_factory,
     ):
-        SqlAlchemyTestResultRepository(sessionmaker_fixture).save(
-            test_result_factory(
-                suite_result_id=test_result.suite_result_id,
-                execution_status=ExecutionStatus.RUNNING,
-            )
+        saving_test_result_factory(
+            suite_result_id=test_result.suite_result_id,
+            execution_status=ExecutionStatus.RUNNING,
         )
         self._visit_run_test_page(live_server, run, selenium_driver)
         self._select_a_test(selenium_driver)
@@ -123,22 +120,19 @@ class TestRunTestPage:
         live_server,
         selenium_driver,
         run,
-        test_result_factory,
-        sessionmaker_fixture,
+        saving_test_result_factory,
         suite_result,
         stored_image,
     ):
-        SqlAlchemyTestResultRepository(sessionmaker_fixture).save(
-            test_result_factory(
-                suite_result_id=suite_result.id,
-                execution_status=ExecutionStatus.FINISHED,
-                status=TestStatus.SUCCESS,
-                image_output=stored_image.id,
-                reference_image=stored_image.id,
-                comparison_settings=ComparisonSettings(
-                    method=ComparisonMethod.SSIM, threshold=0.8
-                ),
-            )
+        saving_test_result_factory(
+            suite_result_id=suite_result.id,
+            execution_status=ExecutionStatus.FINISHED,
+            status=TestStatus.SUCCESS,
+            image_output=stored_image.id,
+            reference_image=stored_image.id,
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.8
+            ),
         )
         self._visit_run_test_page(live_server, run, selenium_driver)
         self._select_a_test(selenium_driver)

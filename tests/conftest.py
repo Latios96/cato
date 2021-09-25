@@ -241,6 +241,54 @@ def test_result_factory():
 
 
 @pytest.fixture
+def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_fixture):
+    def func(
+        id: Optional[int] = None,
+        suite_result_id: Optional[int] = None,
+        test_name: Optional[str] = None,
+        test_identifier: Optional[TestIdentifier] = None,
+        test_command: Optional[str] = None,
+        test_variables: Optional[Dict[str, str]] = None,
+        machine_info: Optional[MachineInfo] = None,
+        execution_status: Optional[ExecutionStatus] = None,
+        status: Optional[TestStatus] = None,
+        seconds: Optional[float] = None,
+        message: Optional[str] = None,
+        image_output: Optional[int] = None,
+        reference_image: Optional[int] = None,
+        diff_image: Optional[int] = None,
+        started_at: Optional[datetime.datetime] = None,
+        finished_at: Optional[datetime.datetime] = None,
+        error_value=None,
+        comparison_settings=None,
+    ):
+        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+        test_result = test_result_factory(
+            id,
+            suite_result_id,
+            test_name,
+            test_identifier,
+            test_command,
+            test_variables,
+            machine_info,
+            execution_status,
+            status,
+            seconds,
+            message,
+            image_output,
+            reference_image,
+            diff_image,
+            started_at,
+            finished_at,
+            error_value,
+            comparison_settings,
+        )
+        return repository.save(test_result)
+
+    return func
+
+
+@pytest.fixture
 def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_image):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result = test_result_factory(
