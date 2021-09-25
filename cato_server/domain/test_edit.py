@@ -45,11 +45,17 @@ class ComparisonSettingsEdit(AbstractTestEdit):
 
 @dataclass
 class ReferenceImageEditValue:
-    pass
+    reference_image_id: int
+    diff_image_id: int
+    error_value: float
+    status: TestStatus
+    message: Optional[str]
 
 
 @dataclass
 class ReferenceImageEdit(AbstractTestEdit):
+    new_value: ReferenceImageEditValue
+    old_value: ReferenceImageEditValue
     edit_type: EditTypes = field(default_factory=lambda: EditTypes.REFERENCE_IMAGE)
 
     def __post_init__(self):

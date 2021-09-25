@@ -12,6 +12,7 @@ from cato_server.domain.test_edit import (
     ComparisonSettingsEditValue,
     ComparisonSettingsEdit,
     ReferenceImageEdit,
+    ReferenceImageEditValue,
 )
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
@@ -65,6 +66,21 @@ class _ReferenceImageEditMapping(_TestEditMapping):
 
     id = Column(Integer, ForeignKey("test_edit_entity.id"), primary_key=True)
 
+    old_reference_image_id = Column(
+        Integer, ForeignKey("image_entity.id"), nullable=False
+    )
+    new_reference_image_id = Column(
+        Integer, ForeignKey("image_entity.id"), nullable=False
+    )
+    old_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=False)
+    new_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=False)
+    old_status = Column(String, nullable=True)
+    new_status = Column(String, nullable=True)
+    old_message = Column(String, nullable=True)
+    new_message = Column(String, nullable=True)
+    old_error_value = Column(Float, nullable=True)
+    new_error_value = Column(Float, nullable=True)
+
     __mapper_args__ = {
         "polymorphic_identity": EditTypes.REFERENCE_IMAGE.value,
     }
@@ -99,6 +115,16 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 test_id=domain_object.test_id,
                 edit_type=domain_object.edit_type.value,
                 created_at=domain_object.created_at,
+                old_reference_image_id=domain_object.old_value.reference_image_id,
+                new_reference_image_id=domain_object.new_value.reference_image_id,
+                old_diff_image_id=domain_object.old_value.diff_image_id,
+                new_diff_image_id=domain_object.new_value.diff_image_id,
+                old_status=domain_object.old_value.status.value,
+                new_status=domain_object.new_value.status.value,
+                old_message=domain_object.old_value.message,
+                new_message=domain_object.new_value.message,
+                new_error_value=domain_object.new_value.error_value,
+                old_error_value=domain_object.old_value.error_value,
             )
         raise ValueError(f"Unsupported edit type: {domain_object.edit_type}")
 
@@ -136,6 +162,20 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 id=entity.id,
                 test_id=entity.test_id,
                 created_at=entity.created_at,
+                old_value=ReferenceImageEditValue(
+                    status=TestStatus(entity.old_status),
+                    message=entity.old_message,
+                    reference_image_id=entity.old_reference_image_id,
+                    diff_image_id=entity.old_diff_image_id,
+                    error_value=entity.old_error_value,
+                ),
+                new_value=ReferenceImageEditValue(
+                    status=TestStatus(entity.new_status),
+                    message=entity.new_message,
+                    reference_image_id=entity.new_reference_image_id,
+                    diff_image_id=entity.new_diff_image_id,
+                    error_value=entity.new_error_value,
+                ),
             )
         raise ValueError(f"Unsupported edit type: {entity.edit_type}")
 
@@ -148,7 +188,10 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
         session = self._session_maker()
 
         query = session.query(
-            with_polymorphic(_TestEditMapping, [_ComparisonSettingsEditMapping])
+            with_polymorphic(
+                _TestEditMapping,
+                [_ComparisonSettingsEditMapping, _ReferenceImageEditMapping],
+            )
         ).filter(self.mapping_cls().test_id == test_id)
 
         if edit_type is not None:
@@ -164,7 +207,10 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
 
         entities = (
             session.query(
-                with_polymorphic(_TestEditMapping, [_ComparisonSettingsEditMapping])
+                with_polymorphic(
+                    _TestEditMapping,
+                    [_ComparisonSettingsEditMapping, _ReferenceImageEditMapping],
+                )
             )
             .join(_TestResultMapping)
             .join(_SuiteResultMapping)
