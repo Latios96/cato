@@ -47,7 +47,9 @@ class CreateComparisonSettingsEdit:
         result = self._compare_image.compare_image_from_db(
             output_image, reference_image, comparison_settings
         )
-        logger.info("Compared images, test status is, error ")
+        logger.info(
+            "Compared images, test status is %s, error %s", result.status, result.error
+        )
 
         created_at = self._get_created_at()
         comparison_settings_edit = self._create_comparison_edit(
