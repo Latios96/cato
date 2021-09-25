@@ -4,6 +4,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.api.validators.create_test_edits_validators import (
     CreateComparisonSettingsEditValidator,
+    CreateReferenceImageEditValidator,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from tests.utils import mock_safe
@@ -47,6 +48,48 @@ class TestCreateComparisonSettingsEditValidator:
             lambda x: None if x == 1 else test_result_factory()
         )
         validator = CreateComparisonSettingsEditValidator(mock_test_result_repository)
+
+        errors = validator.validate(data)
+
+        assert errors == expected_errors
+
+
+class TestCreateReferenceImageSettingsEditValidator:
+    def test_success(self, test_result_factory):
+        mock_test_result_repository = mock_safe(TestResultRepository)
+        mock_test_result_repository.find_by_id.return_value = test_result_factory(
+            image_output=5
+        )
+        validator = CreateReferenceImageEditValidator(mock_test_result_repository)
+        data = {"test_result_id": 1}
+
+        errors = validator.validate(data)
+
+        assert errors == {}
+
+    @pytest.mark.parametrize(
+        "data,expected_errors",
+        [
+            (
+                {"test_result_id": 1},
+                {"id": ["No TestResult with id 1 exists!"]},
+            ),
+            (
+                {"test_result_id": 2},
+                {
+                    "comparison_settings": [
+                        "Can't edit a test result which has no image output!"
+                    ]
+                },
+            ),
+        ],
+    )
+    def test_failure(self, data, expected_errors, test_result_factory):
+        mock_test_result_repository = mock_safe(TestResultRepository)
+        mock_test_result_repository.find_by_id.side_effect = (
+            lambda x: None if x == 1 else test_result_factory(image_output=None)
+        )
+        validator = CreateReferenceImageEditValidator(mock_test_result_repository)
 
         errors = validator.validate(data)
 
