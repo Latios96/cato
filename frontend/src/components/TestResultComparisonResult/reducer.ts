@@ -12,6 +12,8 @@ export interface State {
   isEditable: CanBeEdited;
   currentThreshold: string;
   currentMethod: string;
+  originalThreshold: string;
+  originalMethod: string;
 }
 
 export enum ActionType {
@@ -50,6 +52,8 @@ export function reducer(state: State, action: Action) {
       return {
         ...state,
         isEditing: false,
+        currentMethod: state.originalMethod,
+        currentThreshold: state.originalThreshold,
       };
     case ActionType.SET_CURRENT_METHOD:
       return {
@@ -99,5 +103,7 @@ export function getInitialState(testResult: TestResultDto) {
     isEditable: false,
     currentThreshold: getInitialThreshold(testResult.comparison_settings),
     currentMethod: getInitialMethod(testResult.comparison_settings),
+    originalThreshold: getInitialThreshold(testResult.comparison_settings),
+    originalMethod: getInitialMethod(testResult.comparison_settings),
   };
 }
