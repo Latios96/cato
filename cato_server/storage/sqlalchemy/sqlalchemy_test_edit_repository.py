@@ -72,8 +72,8 @@ class _ReferenceImageEditMapping(_TestEditMapping):
     new_reference_image_id = Column(
         Integer, ForeignKey("image_entity.id"), nullable=False
     )
-    old_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=False)
-    new_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=False)
+    old_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
+    new_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     old_status = Column(String, nullable=True)
     new_status = Column(String, nullable=True)
     old_message = Column(String, nullable=True)
