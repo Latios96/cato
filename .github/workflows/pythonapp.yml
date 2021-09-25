@@ -60,7 +60,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: wheel-linux
-      - name: current dir
+      - name: list current dir content
         run: |
           sudo apt-get update
           sudo apt install tree
@@ -80,4 +80,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          asset_paths: '["./wheel-linux/*.whl"]'
+          asset_paths: '["./*.whl"]'
