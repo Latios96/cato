@@ -75,4 +75,4 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          asset_paths: '["./dist/*.whl"]'
+          asset_paths: '["./wheel-linux/*.whl"]'
