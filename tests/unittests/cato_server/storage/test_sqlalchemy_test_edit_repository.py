@@ -188,7 +188,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
     assert len(results) == 10
     for i, test_edit in enumerate(test_edits):
         test_edit.id = i + 1
-        assert test_edit == results[i]
+        assert test_edit.test_id == test_result_id
 
 
 def test_find_by_test_id_should_return_all_test_edit_instances(
