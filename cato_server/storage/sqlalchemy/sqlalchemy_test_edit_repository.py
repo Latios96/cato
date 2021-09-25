@@ -67,10 +67,10 @@ class _ReferenceImageEditMapping(_TestEditMapping):
     id = Column(Integer, ForeignKey("test_edit_entity.id"), primary_key=True)
 
     old_reference_image_id = Column(
-        Integer, ForeignKey("image_entity.id"), nullable=False
+        Integer, ForeignKey("image_entity.id"), nullable=True
     )
     new_reference_image_id = Column(
-        Integer, ForeignKey("image_entity.id"), nullable=False
+        Integer, ForeignKey("image_entity.id"), nullable=True
     )
     old_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     new_diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
