@@ -131,7 +131,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
         ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
-            created_at=now,
+            created_at=now + datetime.timedelta(seconds=-1),
             new_value=ComparisonSettingsEditValue(
                 comparison_settings=ComparisonSettings(
                     method=ComparisonMethod.SSIM, threshold=1.0
