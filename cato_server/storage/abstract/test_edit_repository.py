@@ -12,3 +12,6 @@ class TestEditRepository(AbstractRepository[AbstractTestEdit, int]):
 
     def find_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
         pass
+
+    def find_edits_to_sync_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
+        pass

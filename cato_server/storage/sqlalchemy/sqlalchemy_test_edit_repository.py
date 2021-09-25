@@ -1,6 +1,6 @@
 from typing import Optional, List, cast
 
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, Float
+from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, Float, func
 from sqlalchemy.orm import with_polymorphic
 
 from cato.domain.comparison_method import ComparisonMethod
@@ -222,3 +222,27 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
 
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def find_edits_to_sync_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
+        session = self._session_maker()
+
+        entities = (
+            session.query(
+                with_polymorphic(
+                    _TestEditMapping,
+                    [_ComparisonSettingsEditMapping, _ReferenceImageEditMapping],
+                ),
+                func.max(_TestEditMapping.id),
+                _TestResultMapping.test_identifier,
+            )
+            .join(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .group_by(_TestEditMapping.edit_type)
+            .group_by(_TestEditMapping.test_id)
+            .all()
+        )
+
+        session.close()
+        return list(map(lambda x: self.to_domain_object(x[0]), entities))

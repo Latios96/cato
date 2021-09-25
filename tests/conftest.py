@@ -174,6 +174,35 @@ def run(sessionmaker_fixture, project):
 
 
 @pytest.fixture
+def saving_run_factory(sessionmaker_fixture, project):
+    def func(project_id=None, started_at=None):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+        run = Run(
+            id=0,
+            project_id=or_default(project_id, project.id),
+            started_at=or_default(started_at, datetime.datetime.now()),
+        )
+        return repository.save(run)
+
+    return func
+
+
+@pytest.fixture
+def saving_suite_result_factory(sessionmaker_fixture, run):
+    def func(run_id=None, suite_name=None, suite_variables=None):
+        repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+        suite_result = SuiteResult(
+            id=0,
+            run_id=or_default(run_id, run.id),
+            suite_name=or_default(suite_name, "my_suite"),
+            suite_variables=or_default(suite_variables, {"key": "value"}),
+        )
+        return repository.save(suite_result)
+
+    return func
+
+
+@pytest.fixture
 def suite_result(sessionmaker_fixture, run):
     repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     suite_result = SuiteResult(
@@ -182,15 +211,16 @@ def suite_result(sessionmaker_fixture, run):
     return repository.save(suite_result)
 
 
+def or_default(value, default_value):
+    if value is "FORCE_NONE":
+        return None
+    if value is None:
+        return default_value
+    return value
+
+
 @pytest.fixture
 def test_result_factory():
-    def or_default(value, default_value):
-        if value is "FORCE_NONE":
-            return None
-        if value is None:
-            return default_value
-        return value
-
     def factory(
         id: Optional[int] = None,
         suite_result_id: Optional[int] = None,

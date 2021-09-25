@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test_status import TestStatus
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.domain.test_edit import (
-    AbstractTestEdit,
     EditTypes,
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
@@ -342,3 +342,154 @@ def test_find_by_run_id_should_find(
     result = repository.find_by_run_id(run.id)
 
     assert result == [saved_test_edit]
+
+
+@pytest.fixture
+def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_fixture):
+    def func(test_id, created_at):
+        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+        return repository.save(
+            ComparisonSettingsEdit(
+                id=0,
+                test_id=test_id,
+                created_at=created_at,
+                new_value=ComparisonSettingsEditValue(
+                    comparison_settings=ComparisonSettings(
+                        method=ComparisonMethod.SSIM, threshold=1
+                    ),
+                    status=TestStatus.SUCCESS,
+                    message=None,
+                    diff_image_id=stored_image_factory().id,
+                    error_value=1,
+                ),
+                old_value=ComparisonSettingsEditValue(
+                    comparison_settings=ComparisonSettings(
+                        method=ComparisonMethod.SSIM, threshold=0.5
+                    ),
+                    status=TestStatus.FAILED,
+                    message="Failed",
+                    diff_image_id=stored_image_factory().id,
+                    error_value=0.5,
+                ),
+            )
+        )
+
+    return func
+
+
+@pytest.fixture
+def saving_reference_image_edit_factory(stored_image_factory, sessionmaker_fixture):
+    def func(test_id, created_at):
+        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+        return repository.save(
+            ReferenceImageEdit(
+                id=0,
+                test_id=test_id,
+                created_at=created_at,
+                new_value=ReferenceImageEditValue(
+                    status=TestStatus.SUCCESS,
+                    message=None,
+                    reference_image_id=stored_image_factory().id,
+                    diff_image_id=stored_image_factory().id,
+                    error_value=1,
+                ),
+                old_value=ReferenceImageEditValue(
+                    status=TestStatus.FAILED,
+                    message="Failed",
+                    reference_image_id=stored_image_factory().id,
+                    diff_image_id=stored_image_factory().id,
+                    error_value=0.5,
+                ),
+            )
+        )
+
+    return func
+
+
+# todo extract this
+def to_id_list(entites):
+    return list(map(lambda x: x.id, entites))
+
+
+def to_id_set(entites):
+    return set(map(lambda x: x.id, entites))
+
+
+def test_find_edits_to_sync_by_run_id_should_find_all_latest_edits_per_test_for_run(
+    sessionmaker_fixture,
+    saving_test_result_factory,
+    run,
+    saving_comparison_settings_edit_factory,
+    saving_run_factory,
+    saving_suite_result_factory,
+    saving_reference_image_edit_factory,
+):
+    repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+    run_one = saving_run_factory()
+    run_two = saving_run_factory()
+
+    suite_result_one = saving_suite_result_factory(run_id=run_one.id)
+    suite_result_two = saving_suite_result_factory(run_id=run_two.id)
+
+    test_result_one_run_one = saving_test_result_factory(
+        suite_result_id=suite_result_one.id,
+        test_identifier=TestIdentifier.from_string(f"{suite_result_one.id}/1"),
+    )
+    test_result_two_run_one = saving_test_result_factory(
+        suite_result_id=suite_result_one.id,
+        test_identifier=TestIdentifier.from_string(f"{suite_result_one.id}/2"),
+    )
+    test_result_run_two = saving_test_result_factory(
+        suite_result_id=suite_result_two.id,
+        test_identifier=TestIdentifier.from_string(f"{suite_result_two.id}/1"),
+    )
+
+    comparison_settings_edit_one_for_test_result_one = (
+        saving_comparison_settings_edit_factory(
+            test_id=test_result_one_run_one.id,
+            created_at=datetime.datetime.now() - datetime.timedelta(seconds=30),
+        )
+    )
+    comparison_settings_edit_two_for_test_result_one = (
+        saving_comparison_settings_edit_factory(
+            test_id=test_result_one_run_one.id,
+            created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+        )
+    )
+    comparison_settings_edit_two_for_test_result_two_run_one = (
+        saving_comparison_settings_edit_factory(
+            test_id=test_result_two_run_one.id,
+            created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+        )
+    )
+
+    reference_image_edit_one_for_run_one = saving_reference_image_edit_factory(
+        test_id=test_result_one_run_one.id,
+        created_at=datetime.datetime.now() - datetime.timedelta(seconds=30),
+    )
+    reference_image_edit_two_for_run_one = saving_reference_image_edit_factory(
+        test_id=test_result_one_run_one.id,
+        created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+    )
+    comparison_settings_edit_for_run_two = saving_reference_image_edit_factory(
+        test_id=test_result_run_two.id,
+        created_at=datetime.datetime.now() - datetime.timedelta(seconds=10),
+    )
+
+    edits = repository.find_edits_to_sync_by_run_id(run_one.id)
+
+    assert to_id_set(edits) == {
+        comparison_settings_edit_two_for_test_result_one.id,
+        reference_image_edit_two_for_run_one.id,
+        comparison_settings_edit_two_for_test_result_two_run_one.id,
+    }
+
+
+def test_find_edits_to_sync_no_edits_exist_should_find_empty_list(
+    run, sessionmaker_fixture
+):
+    repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+
+    edits = repository.find_edits_to_sync_by_run_id(run.id)
+
+    assert edits == []
