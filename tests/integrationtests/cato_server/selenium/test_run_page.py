@@ -139,6 +139,31 @@ class TestRunTestPage:
         self._edit_tests_threshold(selenium_driver)
         self._test_should_be_updated(selenium_driver)
 
+    def test_editing_the_tests_reference_image_should_work(
+        self,
+        live_server,
+        selenium_driver,
+        run,
+        saving_test_result_factory,
+        suite_result,
+        stored_image,
+    ):
+        saving_test_result_factory(
+            suite_result_id=suite_result.id,
+            execution_status=ExecutionStatus.FINISHED,
+            status=TestStatus.FAILED,
+            message="Reference image <not found> does not exist!",
+            image_output=stored_image.id,
+            reference_image=None,
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=0.8
+            ),
+        )
+        self._visit_run_test_page(live_server, run, selenium_driver)
+        self._select_a_test(selenium_driver)
+        self._update_tests_reference_image(selenium_driver)
+        self._test_reference_image_should_be_updated(selenium_driver)
+
     def _assert_other_test_is_selected(self, selenium_driver):
         assert selenium_driver.find_element_by_id(
             "selectedTestContainer"
@@ -215,6 +240,21 @@ class TestRunTestPage:
                 (
                     By.XPATH,
                     "//span[text()='Images are not equal! SSIM score was 1.000, max threshold is 5.000']",
+                )
+            )
+        )
+
+    def _update_tests_reference_image(self, selenium_driver):
+        selenium_driver.find_element_by_xpath(
+            '//button[text()="Update Reference Image"]'
+        ).click()
+
+    def _test_reference_image_should_be_updated(self, selenium_driver):
+        WebDriverWait(selenium_driver, 20).until_not(
+            expected_conditions.presence_of_element_located(
+                (
+                    By.XPATH,
+                    "//span[text()='Reference image <not found> does not exist!']",
                 )
             )
         )
