@@ -425,3 +425,28 @@ def test_compare_images_success_should_fail_for_non_image(
             test_resource_provider.resource_by_name("unsupported-file.txt"),
             ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
         )
+
+
+def test_get_test_edits_to_sync_for_run_should_return_edits(
+    cato_api_client,
+    run,
+    test_result,
+    saving_comparison_settings_edit_factory,
+    saving_reference_image_edit_factory,
+):
+    comparison_settings_edit = saving_comparison_settings_edit_factory(
+        test_id=test_result.id,
+        created_at=datetime.datetime.now() - datetime.timedelta(seconds=10),
+    )
+    reference_image_edit = saving_reference_image_edit_factory(
+        test_id=test_result.id, created_at=datetime.datetime.now()
+    )
+    edits = cato_api_client.get_test_edits_to_sync_for_run(run.id)
+
+    assert edits == [comparison_settings_edit, reference_image_edit]
+
+
+def test_get_test_edits_to_sync_for_run_should_return_empty_list(cato_api_client, run):
+    edits = cato_api_client.get_test_edits_to_sync_for_run(run.id)
+
+    assert edits == []

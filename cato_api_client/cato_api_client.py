@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Type, TypeVar, List
+from typing import Optional, Type, TypeVar, List, Dict
 from urllib.parse import quote
 
 import requests
@@ -27,6 +27,11 @@ from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_common.domain.test_edit import (
+    AbstractTestEdit,
+    ComparisonSettingsEdit,
+    ReferenceImageEdit,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -222,6 +227,37 @@ class CatoApiClient:
     ) -> Optional[SubmissionInfo]:
         url = self._build_url("/api/v1/submission_infos/{}".format(submission_info_id))
         return self._find_with_http_template(url, SubmissionInfo)
+
+    def get_test_edits_to_sync_for_run(self, run_id: int) -> List[AbstractTestEdit]:
+        url = self._build_url("/api/v1/test_edits/runs/{}/edits-to-sync".format(run_id))
+        response = self._http_template.get_for_entity(url, List[Dict])
+        if response.status_code() == 404:
+            return []
+        if response.status_code() == 200:
+            dict_list = response.get_entities()
+            entity_list = []
+            for d in dict_list:
+                if d["edit_type"] == "COMPARISON_SETTINGS":
+                    entity_list.append(
+                        self._object_mapper.from_dict(d, ComparisonSettingsEdit)
+                    )
+                elif d["edit_type"] == "REFERENCE_IMAGE":
+                    entity_list.append(
+                        self._object_mapper.from_dict(d, ReferenceImageEdit)
+                    )
+                else:
+                    raise ValueError("Unsupported edit type: {}".format(d["edit_type"]))
+            return entity_list
+        raise ValueError(
+            "Bad parameters: {}".format(
+                " ".join(
+                    [
+                        "{}: {}".format(key, value)
+                        for key, value in response.get_json().items()
+                    ]
+                )
+            )
+        )
 
     def _build_url(self, url):
         return self._url + quote(url)
