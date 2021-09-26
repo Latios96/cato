@@ -3,7 +3,7 @@ import datetime
 from cato.domain.test_status import TestStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
-from cato_server.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
+from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository

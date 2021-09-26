@@ -2,7 +2,7 @@ import datetime
 from typing import Tuple, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.test_edit import (
+from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
 )

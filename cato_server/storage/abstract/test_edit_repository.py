@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from cato_server.domain.test_edit import AbstractTestEdit, EditTypes
+from cato_common.domain.test_edit import AbstractTestEdit, EditTypes
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 

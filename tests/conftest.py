@@ -50,9 +50,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.domain.test_edit import (
-    AbstractTestEdit,
-    EditTypes,
+from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
     ReferenceImageEdit,

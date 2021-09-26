@@ -3,7 +3,7 @@ from typing import Tuple, Optional
 
 from cato_common.domain.image import Image
 from cato_common.domain.test_result import TestResult
-from cato_server.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
+from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
