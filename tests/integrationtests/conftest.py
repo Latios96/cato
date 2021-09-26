@@ -90,7 +90,7 @@ def selenium_driver():
     )
     driver = MyChromeDriver(
         executable_path=driver_path,
-        options=chrome_options if os.environ.get("CI") else None,
+        options=chrome_options,
     )
     driver.implicitly_wait(5)
     yield driver

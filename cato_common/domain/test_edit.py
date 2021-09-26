@@ -5,6 +5,7 @@ from typing import TypeVar, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test_status import TestStatus
+from cato_common.domain.test_identifier import TestIdentifier
 
 T = TypeVar("T")
 
@@ -18,6 +19,7 @@ class EditTypes(Enum):
 class AbstractTestEdit:
     id: int
     test_id: int
+    test_identifier: TestIdentifier
     created_at: datetime.datetime
 
     def __post_init__(self):

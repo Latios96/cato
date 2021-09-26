@@ -64,6 +64,7 @@ def test_create_edit_with_success(test_result_factory):
     assert edit == ComparisonSettingsEdit(
         id=0,
         test_id=5,
+        test_identifier=test_result.test_identifier,
         created_at=created_at,
         old_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(

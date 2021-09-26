@@ -96,6 +96,7 @@ class CreateComparisonSettingsEdit:
         return ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
+            test_identifier=test_result.test_identifier,
             created_at=created_at,
             old_value=ComparisonSettingsEditValue(
                 comparison_settings=test_result.comparison_settings,

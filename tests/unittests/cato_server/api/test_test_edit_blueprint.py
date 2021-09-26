@@ -34,6 +34,7 @@ def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
                 "error_value": 1,
             },
             "test_id": 1,
+            "test_identifier": "my_suite/my_test_name",
         }
     ]
 
@@ -78,6 +79,7 @@ def test_get_test_edits_by_run_id(client, test_edit, test_result, run):
                 "error_value": 1,
             },
             "test_id": 1,
+            "test_identifier": "my_suite/my_test_name",
         }
     ]
 
@@ -139,6 +141,7 @@ def test_create_comparison_settings_edit_success(
             "error_value": None,
         },
         "test_id": 1,
+        "test_identifier": "my_suite/my_test_name",
     }
 
 
@@ -275,6 +278,7 @@ def test_create_reference_image_edit_success(
             "status": "SUCCESS",
         },
         "test_id": 1,
+        "test_identifier": "my_suite/my_test_name",
     }
 
 
@@ -326,6 +330,7 @@ def test_test_edits_by_run_id_should_return_test_edit(
                 "status": "FAILED",
             },
             "test_id": 1,
+            "test_identifier": "some/test",
         }
     ]
 

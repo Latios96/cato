@@ -14,6 +14,7 @@ from cato_common.domain.test_edit import (
     ReferenceImageEdit,
     ReferenceImageEditValue,
 )
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     Base,
@@ -35,6 +36,7 @@ class _TestEditMapping(Base):
     test_id = Column(Integer, ForeignKey("test_result_entity.id"), nullable=False)
     edit_type = Column(String, nullable=False)
     created_at = Column(DateTime, nullable=False)
+    test_identifier = Column(String, nullable=False)
 
     __mapper_args__ = {"polymorphic_identity": "test_edit", "polymorphic_on": edit_type}
 
@@ -93,6 +95,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             return _ComparisonSettingsEditMapping(
                 id=domain_object.id if domain_object.id else None,
                 test_id=domain_object.test_id,
+                test_identifier=str(domain_object.test_identifier),
                 edit_type=domain_object.edit_type.value,
                 created_at=domain_object.created_at,
                 new_comparison_method=domain_object.new_value.comparison_settings.method.value,
@@ -114,6 +117,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 id=domain_object.id if domain_object.id else None,
                 test_id=domain_object.test_id,
                 edit_type=domain_object.edit_type.value,
+                test_identifier=str(domain_object.test_identifier),
                 created_at=domain_object.created_at,
                 old_reference_image_id=domain_object.old_value.reference_image_id,
                 new_reference_image_id=domain_object.new_value.reference_image_id,
@@ -134,6 +138,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             return ComparisonSettingsEdit(
                 id=entity.id,
                 test_id=entity.test_id,
+                test_identifier=TestIdentifier.from_string(entity.test_identifier),
                 created_at=entity.created_at,
                 new_value=ComparisonSettingsEditValue(
                     comparison_settings=ComparisonSettings(
@@ -161,6 +166,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             return ReferenceImageEdit(
                 id=entity.id,
                 test_id=entity.test_id,
+                test_identifier=TestIdentifier.from_string(entity.test_identifier),
                 created_at=entity.created_at,
                 old_value=ReferenceImageEditValue(
                     status=TestStatus(entity.old_status),

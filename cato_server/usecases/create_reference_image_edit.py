@@ -49,6 +49,7 @@ class CreateReferenceImageEdit:
         reference_image_edit = ReferenceImageEdit(
             id=0,
             test_id=test_result.id,
+            test_identifier=test_result.test_identifier,
             created_at=created_at,
             old_value=ReferenceImageEditValue(
                 reference_image_id=test_result.reference_image,

@@ -29,6 +29,7 @@ def test_save_comparison_settings_edit(
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
@@ -63,6 +64,7 @@ def test_save_reference_image_edit(
     test_edit = ReferenceImageEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
             status=TestStatus.SUCCESS,
@@ -91,6 +93,7 @@ def test_save_not_existing_test_result(sessionmaker_fixture, stored_image_factor
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=10,
+        test_identifier=TestIdentifier.from_string("some/test"),
         created_at=datetime.datetime.now(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
@@ -131,6 +134,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
         ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
+            test_identifier=test_result.test_identifier,
             created_at=now + datetime.timedelta(seconds=-1),
             new_value=ComparisonSettingsEditValue(
                 comparison_settings=ComparisonSettings(
@@ -161,6 +165,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
         ComparisonSettingsEdit(
             id=0,
             test_id=test_result.id,
+            test_identifier=test_result.test_identifier,
             created_at=now,
             new_value=ComparisonSettingsEditValue(
                 comparison_settings=ComparisonSettings(
@@ -199,6 +204,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
     comparison_settings_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=now,
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
@@ -222,6 +228,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
     reference_image_edit = ReferenceImageEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
             status=TestStatus.SUCCESS,
@@ -253,6 +260,7 @@ def test_find_by_test_id_with_edit_type(
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
@@ -277,6 +285,7 @@ def test_find_by_test_id_with_edit_type(
     other_test_edit = ReferenceImageEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
             status=TestStatus.SUCCESS,
@@ -317,6 +326,7 @@ def test_find_by_run_id_should_find(
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(

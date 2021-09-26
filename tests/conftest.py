@@ -336,6 +336,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
+        test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         old_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
@@ -586,6 +587,7 @@ def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_f
             ComparisonSettingsEdit(
                 id=0,
                 test_id=test_id,
+                test_identifier=TestIdentifier.from_string("some/test"),
                 created_at=created_at,
                 new_value=ComparisonSettingsEditValue(
                     comparison_settings=ComparisonSettings(
@@ -619,6 +621,7 @@ def saving_reference_image_edit_factory(stored_image_factory, sessionmaker_fixtu
             ReferenceImageEdit(
                 id=0,
                 test_id=test_id,
+                test_identifier=TestIdentifier.from_string("some/test"),
                 created_at=created_at,
                 new_value=ReferenceImageEditValue(
                     status=TestStatus.SUCCESS,
