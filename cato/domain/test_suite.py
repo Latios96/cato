@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing import List, Iterable, Tuple, Dict
+from typing import List, Iterable, Tuple, Dict, Optional
 
 from cato.domain.test import Test
 from cato.domain.validation import validate_name
@@ -48,6 +48,18 @@ def filter_by_test_identifier(
             continue
         return [TestSuite(name=suite.name, tests=[test], variables=suite.variables)]
     return []
+
+
+def find_test_by_test_identifier(
+    suites: List[TestSuite], test_identifier: TestIdentifier
+) -> Optional[Test]:
+    for suite, test in iterate_suites_and_tests(suites):
+        if suite.name != test_identifier.suite_name:
+            continue
+        if test.name != test_identifier.test_name:
+            continue
+        return test
+    return None
 
 
 def filter_by_test_identifiers(

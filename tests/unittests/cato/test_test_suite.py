@@ -11,6 +11,7 @@ from cato.domain.test_suite import (
     filter_by_suite_name,
     filter_by_test_identifier,
     filter_by_test_identifiers,
+    find_test_by_test_identifier,
 )
 
 test1 = Test("test1", "command", {}, ComparisonSettings.default())
@@ -52,6 +53,22 @@ def test_filter_by_test_identifier():
     )
 
     assert filter_result == [TestSuite(name="my_suite_2", tests=[test2])]
+
+
+def test_find_test_by_test_identifier_should_find():
+    filter_result = find_test_by_test_identifier(
+        suites, TestIdentifier.from_string("my_suite_2/test2")
+    )
+
+    assert filter_result == test2
+
+
+def test_find_test_by_test_identifier_should_not_find():
+    filter_result = find_test_by_test_identifier(
+        suites, TestIdentifier.from_string("my_suite_2/wurst")
+    )
+
+    assert filter_result == None
 
 
 @pytest.mark.parametrize(
