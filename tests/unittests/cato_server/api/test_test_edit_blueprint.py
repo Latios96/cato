@@ -292,3 +292,50 @@ def test_create_reference_image_edit_failure(
 
     assert rv.status_code == 400
     assert rv.json() == {"id": ["No TestResult with id 1 exists!"]}
+
+
+def test_test_edits_by_run_id_should_return_test_edit(
+    client, run, test_result, saving_reference_image_edit_factory
+):
+    now = datetime.datetime.now()
+    saving_reference_image_edit_factory(test_id=test_result.id, created_at=now)
+    url = f"/api/v1/test_edits/runs/{run.id}/to-sync"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+
+    json = rv.json()
+    assert json == [
+        {
+            "created_at": now.isoformat(),
+            "edit_type": "REFERENCE_IMAGE",
+            "id": 1,
+            "new_value": {
+                "diff_image_id": 3,
+                "error_value": 1.0,
+                "message": None,
+                "reference_image_id": 2,
+                "status": "SUCCESS",
+            },
+            "old_value": {
+                "diff_image_id": 5,
+                "error_value": 0.5,
+                "message": "Failed",
+                "reference_image_id": 4,
+                "status": "FAILED",
+            },
+            "test_id": 1,
+        }
+    ]
+
+
+def test_test_edits_by_run_id_should_return_empty_list(client, run):
+    url = f"/api/v1/test_edits/runs/{run.id}/to-sync"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+
+    json = rv.json()
+    assert json == []

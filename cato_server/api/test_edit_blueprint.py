@@ -42,6 +42,7 @@ class TestEditBlueprint(APIRouter):
             self.can_edit_reference_image
         )
         self.get("/test_edits/runs/{run_id}")(self.test_edits_by_run_id)
+        self.get("/test_edits/runs/{run_id}/to-sync")(self.test_edits_to_sync_by_run_id)
         self.post("/test_edits/comparison_settings")(
             self.create_comparison_settings_edit
         )
@@ -76,6 +77,11 @@ class TestEditBlueprint(APIRouter):
 
     def test_edits_by_run_id(self, run_id: int, request: Request) -> Response:
         edits = self._test_edit_repository.find_by_run_id(run_id)
+
+        return JSONResponse(content=self._object_mapper.many_to_dict(edits))
+
+    def test_edits_to_sync_by_run_id(self, run_id: int, request: Request) -> Response:
+        edits = self._test_edit_repository.find_edits_to_sync_by_run_id(run_id)
 
         return JSONResponse(content=self._object_mapper.many_to_dict(edits))
 
