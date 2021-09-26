@@ -299,7 +299,7 @@ def test_test_edits_by_run_id_should_return_test_edit(
 ):
     now = datetime.datetime.now()
     saving_reference_image_edit_factory(test_id=test_result.id, created_at=now)
-    url = f"/api/v1/test_edits/runs/{run.id}/to-sync"
+    url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync"
 
     rv = client.get(url)
 
@@ -331,7 +331,7 @@ def test_test_edits_by_run_id_should_return_test_edit(
 
 
 def test_test_edits_by_run_id_should_return_empty_list(client, run):
-    url = f"/api/v1/test_edits/runs/{run.id}/to-sync"
+    url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync"
 
     rv = client.get(url)
 
@@ -339,3 +339,27 @@ def test_test_edits_by_run_id_should_return_empty_list(client, run):
 
     json = rv.json()
     assert json == []
+
+
+def test_has_edits_by_run_id_should_return_test_edit(
+    client, run, test_result, saving_reference_image_edit_factory
+):
+    now = datetime.datetime.now()
+    saving_reference_image_edit_factory(test_id=test_result.id, created_at=now)
+    url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync-count"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+
+    assert rv.json() == {"count": 1}
+
+
+def test_has_edits_by_run_id_should_return_empty_list(client, run):
+    url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync-count"
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+
+    assert rv.json() == {"count": 0}
