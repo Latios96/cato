@@ -15,7 +15,7 @@ const CopyToClipboardButton = (props: Props) => {
         {props.copiedMessage}
       </Tooltip>
     ),
-    [props.tooltipText]
+    [props.copiedMessage]
   );
   return (
     <OverlayTrigger
