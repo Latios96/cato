@@ -226,15 +226,8 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
     def find_edits_to_sync_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
         session = self._session_maker()
 
-        entities = (
-            session.query(
-                with_polymorphic(
-                    _TestEditMapping,
-                    [_ComparisonSettingsEditMapping, _ReferenceImageEditMapping],
-                ),
-                func.max(_TestEditMapping.id),
-                _TestResultMapping.test_identifier,
-            )
+        entity_ids = (
+            session.query(func.max(_TestEditMapping.id))
             .join(_TestResultMapping)
             .join(_SuiteResultMapping)
             .join(_RunMapping)
@@ -243,6 +236,18 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             .group_by(_TestEditMapping.test_id)
             .all()
         )
+        entity_ids = list(map(lambda x: x[0], entity_ids))
+
+        entities = (
+            session.query(
+                with_polymorphic(
+                    _TestEditMapping,
+                    [_ComparisonSettingsEditMapping, _ReferenceImageEditMapping],
+                )
+            )
+            .filter(_TestEditMapping.id.in_(entity_ids))
+            .all()
+        )
 
         session.close()
-        return list(map(lambda x: self.to_domain_object(x[0]), entities))
+        return list(map(self.to_domain_object, entities))
