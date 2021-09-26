@@ -344,68 +344,6 @@ def test_find_by_run_id_should_find(
     assert result == [saved_test_edit]
 
 
-@pytest.fixture
-def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_fixture):
-    def func(test_id, created_at):
-        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-        return repository.save(
-            ComparisonSettingsEdit(
-                id=0,
-                test_id=test_id,
-                created_at=created_at,
-                new_value=ComparisonSettingsEditValue(
-                    comparison_settings=ComparisonSettings(
-                        method=ComparisonMethod.SSIM, threshold=1
-                    ),
-                    status=TestStatus.SUCCESS,
-                    message=None,
-                    diff_image_id=stored_image_factory().id,
-                    error_value=1,
-                ),
-                old_value=ComparisonSettingsEditValue(
-                    comparison_settings=ComparisonSettings(
-                        method=ComparisonMethod.SSIM, threshold=0.5
-                    ),
-                    status=TestStatus.FAILED,
-                    message="Failed",
-                    diff_image_id=stored_image_factory().id,
-                    error_value=0.5,
-                ),
-            )
-        )
-
-    return func
-
-
-@pytest.fixture
-def saving_reference_image_edit_factory(stored_image_factory, sessionmaker_fixture):
-    def func(test_id, created_at):
-        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-        return repository.save(
-            ReferenceImageEdit(
-                id=0,
-                test_id=test_id,
-                created_at=created_at,
-                new_value=ReferenceImageEditValue(
-                    status=TestStatus.SUCCESS,
-                    message=None,
-                    reference_image_id=stored_image_factory().id,
-                    diff_image_id=stored_image_factory().id,
-                    error_value=1,
-                ),
-                old_value=ReferenceImageEditValue(
-                    status=TestStatus.FAILED,
-                    message="Failed",
-                    reference_image_id=stored_image_factory().id,
-                    diff_image_id=stored_image_factory().id,
-                    error_value=0.5,
-                ),
-            )
-        )
-
-    return func
-
-
 # todo extract this
 def to_id_list(entites):
     return list(map(lambda x: x.id, entites))
