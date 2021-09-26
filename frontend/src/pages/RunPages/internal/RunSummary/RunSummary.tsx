@@ -13,6 +13,8 @@ import {
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import { useReFetch } from "../../../../hooks/useReFetch";
+import UnsyncedEdits from "../../../../components/UnsyncedEdits/UnsyncedEdits";
+import { TestEditCount } from "../../../../models/TestEditCount";
 interface Props {
   runId: number;
 }
@@ -22,6 +24,16 @@ export function RunSummary(props: Props) {
     loading,
     error,
   } = useReFetch(`/api/v1/runs/${props.runId}/summary`, 5000, [props.runId]);
+
+  const {
+    data: editsToSync,
+    loading: editsToSyncLoading,
+    error: editsToSyncError,
+  } = useReFetch<TestEditCount>(
+    `/api/v1/test_edits/runs/${props.runId}/edits-to-sync-count`,
+    5000,
+    [props.runId]
+  );
 
   return (
     <div className={styles.runSummary}>
@@ -71,6 +83,21 @@ export function RunSummary(props: Props) {
               />
             </InfoBox>
           ) : null}
+        </DataLoadedState>
+      </LoadingStateHandler>
+      <LoadingStateHandler
+        isLoading={editsToSyncLoading}
+        error={editsToSyncError}
+      >
+        <DataLoadedState>
+          {editsToSync && editsToSync.count ? (
+            <UnsyncedEdits
+              runId={props.runId}
+              unsyncedEditCount={editsToSync ? editsToSync.count : 0}
+            />
+          ) : (
+            <></>
+          )}
         </DataLoadedState>
       </LoadingStateHandler>
     </div>

@@ -29,8 +29,9 @@ const TestResultBreadCrumb = (props: Props) => {
             <Breadcrumb.Item>{props.testName}</Breadcrumb.Item>
             <div style={{ marginLeft: "auto" }}>
               <CopyToClipboardButton
-                tooltipText={"Copied test identifier"}
+                tooltipText={"Copy test identifier"}
                 clipboardText={`${props.suiteName}/${props.testName}`}
+                copiedMessage={"Copied test identifier to clipboard"}
               />
             </div>
           </>

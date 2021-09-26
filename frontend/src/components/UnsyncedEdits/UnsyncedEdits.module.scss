@@ -1,0 +1,18 @@
+@import "../../custom.scss";
+
+.unsyncedEditCount {
+  height: 50px;
+  padding-top: 10px;
+  padding-left: 18px;
+  span {
+    vertical-align: middle;
+  }
+  span:first-child {
+    font-weight: bold;
+    font-size: 20px;
+    padding-right: 5px;
+  }
+}
+.unsyncedEditCopy {
+  margin: auto;
+}
