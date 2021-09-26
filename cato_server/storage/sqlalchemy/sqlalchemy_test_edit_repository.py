@@ -251,3 +251,18 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
 
         session.close()
         return list(map(self.to_domain_object, entities))
+
+    def edits_to_sync_by_run_id_count(self, run_id: int) -> int:
+        session = self._session_maker()
+        count = (
+            session.query(func.max(_TestEditMapping.id))
+            .join(_TestResultMapping)
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .group_by(_TestEditMapping.edit_type)
+            .group_by(_TestEditMapping.test_id)
+            .count()
+        )
+        session.close()
+        return count
