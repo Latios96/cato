@@ -5,13 +5,14 @@ import { Clipboard, ClipboardCheck } from "react-bootstrap-icons";
 interface Props {
   tooltipText: string;
   clipboardText: string;
+  copiedMessage: string;
 }
 const CopyToClipboardButton = (props: Props) => {
   const [displayCheck, setDisplayCheck] = useState(false);
   const renderTooltip = useCallback(
     (tooltipProps: any) => (
       <Tooltip id="button-tooltip" {...tooltipProps}>
-        {props.tooltipText}
+        {props.copiedMessage}
       </Tooltip>
     ),
     [props.tooltipText]
@@ -40,7 +41,7 @@ const CopyToClipboardButton = (props: Props) => {
         }}
         variant={"link"}
         style={{ padding: "0px" }}
-        title={"Copy test identifier to clipboard"}
+        title={props.tooltipText}
       >
         {displayCheck ? <ClipboardCheck size={16} /> : <Clipboard size={16} />}
       </Button>

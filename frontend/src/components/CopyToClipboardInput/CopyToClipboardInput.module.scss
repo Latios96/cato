@@ -1,0 +1,35 @@
+.copyTextButton {
+  background-color: #f1f1f1;
+  border: 1px solid #c7c7c7;
+  border-radius: 3px;
+  border-left: 0px;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  height: 28px;
+  width: 45px;
+  display: flex;
+  button {
+    margin: auto;
+    margin-top: -2px !important;
+  }
+}
+
+.copyText {
+  display: flex;
+  flex-direction: row;
+  height: fit-content;
+  input {
+    height: 28px;
+    border: 1px solid #c7c7c7;
+    border-radius: 3px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    background-color: #f1f1f1;
+    vertical-align: middle;
+    font-family: monospace;
+    padding: 7px;
+  }
+  input:focus {
+    outline: none;
+  }
+}
