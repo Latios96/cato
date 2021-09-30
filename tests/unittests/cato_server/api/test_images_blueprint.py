@@ -63,3 +63,16 @@ def test_upload_unsupported_file(client, test_resource_provider):
     response = client.post(API_V_IMAGES, files=data)
 
     assert response.status_code == 400
+
+
+def test_get_original_image_file_should_return_file(client, stored_image):
+    response = client.get(f"/api/v1/images/original_file/{stored_image.id}")
+
+    assert response.status_code == 200
+    assert len(response.content) == 87444
+
+
+def test_get_original_image_file_should_return_404(client):
+    response = client.get("/api/v1/images/original_file/42")
+
+    assert response.status_code == 404

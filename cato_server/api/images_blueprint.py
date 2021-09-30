@@ -58,7 +58,11 @@ class ImagesBlueprint(APIRouter):
 
     def get_original_image_file(self, image_id: int) -> Response:
         image = self._image_repository.find_by_id(image_id)
+        if not image:
+            return Response(status_code=404)
         file = self._file_storage.find_by_id(image.original_file_id)
+        if not file:
+            return Response(status_code=404)
         file_path = self._file_storage.get_path(file)
         if file and os.path.exists(file_path):
             return FileResponse(path=file_path, filename=file.name)
