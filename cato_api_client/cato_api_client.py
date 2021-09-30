@@ -95,6 +95,10 @@ class CatoApiClient:
             )
         return response.content()
 
+    def get_image_by_id(self, image_id: int) -> Optional[Image]:
+        url = self._build_url(f"/api/v1/images/{image_id}")
+        return self._find_with_http_template(url, Image)
+
     def compare_images(
         self,
         reference_image: str,

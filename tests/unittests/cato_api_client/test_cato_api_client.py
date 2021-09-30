@@ -465,3 +465,15 @@ def test_download_original_image_not_found(cato_api_client):
     content = cato_api_client.download_original_image(1)
 
     assert content is None
+
+
+def test_get_image_by_id_success(cato_api_client, stored_image):
+    image = cato_api_client.get_image_by_id(stored_image.id)
+
+    assert image == stored_image
+
+
+def test_get_image_by_id_not_found(cato_api_client):
+    image = cato_api_client.get_image_by_id(42)
+
+    assert image is None
