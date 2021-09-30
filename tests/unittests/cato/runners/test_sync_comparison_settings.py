@@ -22,7 +22,7 @@ def test_should_update_successfully(config_fixture):
         mock_config_file_writer, mock_reporter
     )
     test_identifier = TestIdentifier.from_string("My_first_test_Suite/My_first_test")
-    comparison_settings_edits = [create_comparison_settings(test_identifier)]
+    comparison_settings_edits = [create_comparison_settings_edit(test_identifier)]
 
     sync_comparison_settings.update(
         config_fixture.RUN_CONFIG, "config_file_path", comparison_settings_edits
@@ -73,7 +73,7 @@ def test_test_for_edit_not_found_in_config_should_print_message_and_not_write(
     sync_comparison_settings.update(
         config_fixture.RUN_CONFIG,
         "config_file_path",
-        [create_comparison_settings(test_identifier)],
+        [create_comparison_settings_edit(test_identifier)],
     )
 
     mock_config_file_writer.write_to_file.assert_not_called()
@@ -89,7 +89,7 @@ def test_test_for_edit_not_found_in_config_should_print_message_and_not_write(
     )
 
 
-def create_comparison_settings(test_identifier):
+def create_comparison_settings_edit(test_identifier):
     return ComparisonSettingsEdit(
         id=0,
         test_id=1,
