@@ -31,7 +31,10 @@ class HttpTemplateResponse(Generic[R]):
     def get_json(self):
         raise NotImplementedError()
 
-    def text(self):
+    def text(self) -> str:
+        raise NotImplementedError()
+
+    def content(self) -> bytes:
         raise NotImplementedError()
 
 
@@ -53,6 +56,9 @@ class RequestsHttpTemplateResponse(HttpTemplateResponse):
 
     def text(self):
         return self._response.text
+
+    def content(self):
+        return self._response.content
 
 
 class HttpTemplateException(Exception):

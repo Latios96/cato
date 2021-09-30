@@ -84,6 +84,17 @@ class CatoApiClient:
             return self._object_mapper.from_dict(self._get_json(response), Image)
         raise self._create_value_error_for_bad_request(response)
 
+    def download_original_image(self, image_id: int) -> Optional[bytes]:
+        url = self._build_url(f"/api/v1/images/original_file/{image_id}")
+        response = self._http_template.get_for_entity(url, object)
+        if response.status_code() == 404:
+            return None
+        if response.status_code() != 200:
+            raise ValueError(
+                f"Something went wrong when downloading original image: {response}"
+            )
+        return response.content()
+
     def compare_images(
         self,
         reference_image: str,

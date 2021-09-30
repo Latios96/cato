@@ -44,6 +44,9 @@ class FastApiClientHttpTemplateResponse(HttpTemplateResponse):
         return self._response.json()
 
     def text(self):
+        return self._response.text
+
+    def content(self):
         return self._response.content
 
 
@@ -450,3 +453,15 @@ def test_get_test_edits_to_sync_for_run_should_return_empty_list(cato_api_client
     edits = cato_api_client.get_test_edits_to_sync_for_run(run.id)
 
     assert edits == []
+
+
+def test_download_original_image_success(cato_api_client, stored_image):
+    content = cato_api_client.download_original_image(stored_image.id)
+
+    assert len(content) == 87444
+
+
+def test_download_original_image_not_found(cato_api_client):
+    content = cato_api_client.download_original_image(1)
+
+    assert content is None
