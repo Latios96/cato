@@ -14,16 +14,8 @@ const TestResultBreadCrumb = (props: Props) => {
   return (
     <div>
       <Breadcrumb>
-        <Breadcrumb.Item
-          href={`#/projects/${props.projectId}/runs/${props.runId}`}
-        >
-          Run {`#${props.runId}`}
-        </Breadcrumb.Item>
-        <Breadcrumb.Item
-          href={`#/projects/${props.projectId}/runs/${props.runId}/suites/${props.suiteId}`}
-        >
-          {props.suiteName}
-        </Breadcrumb.Item>
+        <Breadcrumb.Item>Run {`#${props.runId}`}</Breadcrumb.Item>
+        <Breadcrumb.Item>{props.suiteName}</Breadcrumb.Item>
         {props.testName ? (
           <>
             <Breadcrumb.Item>{props.testName}</Breadcrumb.Item>
