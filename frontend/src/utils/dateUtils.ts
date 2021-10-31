@@ -16,5 +16,8 @@ export function formatDuration(
   if (durationInSeconds == null || durationInSeconds === "NaN") {
     return "";
   }
+  if (durationInSeconds > 0 && durationInSeconds < 1) {
+    return "less than one second";
+  }
   return humanizeDuration(durationInSeconds * 1000, { round: true });
 }
