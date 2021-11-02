@@ -1,4 +1,4 @@
-__version__ = "46.release"
+__version__ = "47-snapshot"
 import logging
 
 # create logger with 'spam_application'
