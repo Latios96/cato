@@ -17,12 +17,12 @@ class SyncTestEdits:
     def __init__(
         self,
         cato_api_client: CatoApiClient,
-        update_comparison_settings: SyncComparisonSettings,
-        sync_reference_images: SyncReferenceImageEdits,
+        sync_comparison_settings: SyncComparisonSettings,
+        sync_reference_image_edits: SyncReferenceImageEdits,
     ):
         self._cato_api_client = cato_api_client
-        self._update_comparison_settings = update_comparison_settings
-        self._sync_reference_images = sync_reference_images
+        self._update_comparison_settings = sync_comparison_settings
+        self._sync_reference_images = sync_reference_image_edits
 
     def update(self, config: RunConfig, path: str, run_id):
         all_test_edits = self._cato_api_client.get_test_edits_to_sync_for_run(run_id)

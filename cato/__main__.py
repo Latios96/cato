@@ -13,6 +13,7 @@ from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
 from cato.commands.submit_command import SubmitCommand
+from cato.commands.sync_test_edits_command import SyncTestEditsCommand
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
@@ -106,7 +107,7 @@ def list_tests(path):
     obj_graph = create_object_graph()
     list_tests_command = obj_graph.provide(ListTestsCommand)
 
-    list_tests_command.list_tests(path)
+    list_tests_command.sync(path)
 
 
 def update_reference(path, test_identifier):
@@ -132,6 +133,13 @@ def worker_run(
     worker_command = provide_safe(obj_graph, WorkerRunCommand)
 
     worker_command.execute(submission_info_id, test_identifier_str)
+
+
+def sync_test_edits(path: str, url: str, run_id: int):
+    obj_graph = create_object_graph(url)
+    sync_test_edits_command = provide_safe(obj_graph, SyncTestEditsCommand)
+
+    sync_test_edits_command.sync(path, run_id)
 
 
 def main():
@@ -209,6 +217,19 @@ def main():
         "-test-identifier", required=True, help="Identifier of the test to run"
     )
 
+    sync_test_edits_command_parser = commands_subparser.add_parser(
+        "sync-edits",
+        help="Sync test edits from UI back locally",
+        parents=[parent_parser],
+    )
+    sync_test_edits_command_parser.add_argument(
+        "-u", "--url", help="url to server", required=True
+    )
+    sync_test_edits_command_parser.add_argument(
+        "-run-id", required=True, type=int, help="run id to take edits to sync from"
+    )
+    sync_test_edits_command_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -238,6 +259,8 @@ def main():
         update_reference(args.path, args.test_identifier)
     elif args.command == "worker-run":
         worker_run(args.url, args.submission_info_id, args.test_identifier)
+    elif args.command == "sync-edits":
+        sync_test_edits(args.path, args.url, args.run_id)
     else:
         logger.error(f"No method found to run command {args.command}")
 
