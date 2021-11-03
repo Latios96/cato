@@ -204,7 +204,7 @@ def main():
 
     worker_execute_command_parser = commands_subparser.add_parser(
         "worker-run",
-        help="Tun test in a distributed environment. Not for direct human use",
+        help="Run test in a distributed environment. Not for direct human use",
         parents=[parent_parser],
     )
     worker_execute_command_parser.add_argument(
