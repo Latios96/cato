@@ -1,10 +1,14 @@
 import argparse
 import os.path
+import time
 
 import pinject
 import schedule
 import uvicorn
 from fastapi import FastAPI
+from starlette.middleware.base import RequestResponseEndpoint
+from starlette.requests import Request
+from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
 
 import cato
@@ -80,6 +84,14 @@ def create_app(
         task_creator.create()
         app.scheduler_runner = BackgroundSchedulerRunner(schedule)
         app.scheduler_runner.start()
+
+    @app.middleware("http")
+    async def timing(request: Request, call_next: RequestResponseEndpoint) -> Response:
+        start = time.time()
+        response = await call_next(request)
+        stop = time.time()
+        logger.info("%s %.3fs", request.url, stop - start)
+        return response
 
     return app
 
