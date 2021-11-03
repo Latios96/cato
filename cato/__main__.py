@@ -107,7 +107,7 @@ def list_tests(path):
     obj_graph = create_object_graph()
     list_tests_command = obj_graph.provide(ListTestsCommand)
 
-    list_tests_command.sync(path)
+    list_tests_command.list_tests(path)
 
 
 def update_reference(path, test_identifier):
