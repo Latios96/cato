@@ -23,12 +23,12 @@ class ImageSplitter:
         self, image_path: str, work_folder: str
     ) -> List[Tuple[str, str]]:
         channels = self._parse_channels(image_path)
-        logger.info("Image has channels %s", channels)
+        logger.debug("Image has channels %s", channels)
 
         return self._extract_channels(image_path, channels, work_folder)
 
     def _parse_channels(self, image_path: str) -> List[str]:
-        logger.info("Parsing channels for image %s", image_path)
+        logger.debug("Parsing channels for image %s", image_path)
         command = (
             f'{self._oiio_binaries_discovery.get_iiinfo_executable()} -v "{image_path}"'
         )
@@ -57,7 +57,7 @@ class ImageSplitter:
         channel_paths = []
 
         for channel_name, channels in images_to_channels.items():
-            logger.info("Extracting channel %s", channel_name)
+            logger.debug("Extracting channel %s", channel_name)
             name, ext = os.path.splitext(image_path)
             target_image = os.path.join(
                 work_folder, f"{os.path.basename(name)}.{channel_name}.png"
