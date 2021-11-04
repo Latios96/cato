@@ -243,6 +243,7 @@ class BindingsFactory:
             return OptionalComponent.empty()
         if scheduler_name == "Deadline":
             url = self._configuration.scheduler_configuration.url
+            logger.info('Probing scheduler "Deadline"...')
             if self._deadline_is_available(url):
                 logger.info(
                     'Scheduler "Deadline" is available at %s',
