@@ -26,10 +26,14 @@ class VariableProcessor:
             "reference_image_no_extension": "{@test_resources}/reference",
             "reference_image_png": "{@reference_image_no_extension}.png",
             "reference_image_exr": "{@reference_image_no_extension}.exr",
+            "reference_image_jpg": "{@reference_image_no_extension}.jpg",
+            "reference_image_tif": "{@reference_image_no_extension}.tif",
             "image_output_folder": "{@output_folder}/result/{@suite_name}/{@test_name}",
             "image_output_no_extension": "{@image_output_folder}/{@test_name}",
             "image_output_png": "{@image_output_no_extension}.png",
             "image_output_exr": "{@image_output_no_extension}.exr",
+            "image_output_jpg": "{@image_output_no_extension}.jpg",
+            "image_output_tif": "{@image_output_no_extension}.tif",
         }
         if predefinitions:
             for predefinition in predefinitions:

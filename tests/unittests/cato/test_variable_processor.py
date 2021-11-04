@@ -8,8 +8,12 @@ from cato.variable_processing.variable_processor import VariableProcessor
 REFERENCE_IMAGE_PNG = "config_path/my_test_suite/test_name/reference.png"
 REFERENCE_IMAGE_NO_EXTENSION = "config_path/my_test_suite/test_name/reference"
 REFERENCE_IMAGE_EXR = "config_path/my_test_suite/test_name/reference.exr"
+REFERENCE_IMAGE_JPG = "config_path/my_test_suite/test_name/reference.jpg"
+REFERENCE_IMAGE_TIF = "config_path/my_test_suite/test_name/reference.tif"
 IMAGE_OUTPUT_EXR = "test/result/my_test_suite/test_name/test_name.exr"
 IMAGE_OUTPUT_PNG = "test/result/my_test_suite/test_name/test_name.png"
+IMAGE_OUTPUT_JPG = "test/result/my_test_suite/test_name/test_name.jpg"
+IMAGE_OUTPUT_TIF = "test/result/my_test_suite/test_name/test_name.tif"
 IMAGE_OUTPUT_NO_EXTENSION = "test/result/my_test_suite/test_name/test_name"
 IMAGE_OUTPUT_FOLDER = "test/result/my_test_suite/test_name"
 SUITE_RESOURCES = "config_path/my_test_suite"
@@ -50,6 +54,10 @@ def test_evaluate_variables_no_custom_vars():
         "reference_image_exr": REFERENCE_IMAGE_EXR,
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -93,6 +101,10 @@ def test_evaluate_variables_custom_image_output():
         "reference_image_exr": REFERENCE_IMAGE_EXR,
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -141,6 +153,10 @@ def test_evaluate_variables_variables_from_config():
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value",
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -180,6 +196,10 @@ def test_evaluate_variables_variables_from_suite():
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value",
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -222,6 +242,10 @@ def test_evaluate_variables_variables_from_config_override_by_suite():
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value_from_suite",
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -264,6 +288,10 @@ def test_evaluate_variables_variables_from_config_override_by_suite_overriden_by
         "reference_image_no_extension": REFERENCE_IMAGE_NO_EXTENSION,
         "reference_image_png": REFERENCE_IMAGE_PNG,
         "test_variable": "my_value_from_test",
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 
@@ -320,6 +348,10 @@ def test_evaluate_variables_maya_predefinition():
         "vray_render_command": r'"C:\Program Files\Autodesk\Maya2020\vray\bin\vray.exe" -sceneFile=config_path/my_test_suite/test_name/scene.vrscene -imgFile=test/result/my_test_suite/test_name/test_name.exr -progressIncrement=1 -display=0',
         "vray_gpu_render_command": r'"C:\Program Files\Autodesk\Maya2020\vray\bin\vray.exe" -sceneFile=config_path/my_test_suite/test_name/scene.vrscene -imgFile=test/result/my_test_suite/test_name/test_name.exr -progressIncrement=1 -display=0 -rtengine=5',
         "vray_scene_file": "config_path/my_test_suite/test_name/scene.vrscene",
+        "image_output_jpg": IMAGE_OUTPUT_JPG,
+        "image_output_tif": IMAGE_OUTPUT_TIF,
+        "reference_image_jpg": REFERENCE_IMAGE_JPG,
+        "reference_image_tif": REFERENCE_IMAGE_TIF,
     }
 
 

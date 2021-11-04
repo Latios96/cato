@@ -213,6 +213,8 @@ class TestRunner:
             variables.get("image_output"),
             variables.get("image_output_png"),
             variables.get("image_output_exr"),
+            variables.get("image_output_jpg"),
+            variables.get("image_output_tif"),
         ]
         return list(filter(lambda x: x is not None, image_outputs))
 
@@ -221,5 +223,7 @@ class TestRunner:
             variables.get("reference_image"),
             variables.get("reference_image_png"),
             variables.get("reference_image_exr"),
+            variables.get("reference_image_jpg"),
+            variables.get("reference_image_tif"),
         ]
         return list(filter(lambda x: x is not None, image_outputs))
