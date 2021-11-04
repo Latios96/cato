@@ -151,10 +151,12 @@ class TestResultsBlueprint(APIRouter):
             return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
         output = self._object_mapper.from_dict(request_json, Output)
-        logger.info(
-            "Saving output for test result with id %s", request_json["test_result_id"]
-        )
         output = self._output_repository.save(output)
+        logger.info(
+            "Saved output with id %s for test result with id %s",
+            output.id,
+            request_json["test_result_id"],
+        )
         return JSONResponse(
             content=self._object_mapper.to_dict(output), status_code=201
         )
