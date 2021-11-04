@@ -37,6 +37,7 @@ from cato_server.configuration.message_queue_configuration import (
 )
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.image import Image, ImageChannel
@@ -486,6 +487,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
         ),
         message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

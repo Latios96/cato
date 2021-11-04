@@ -8,6 +8,7 @@ from cato_server.configuration.scheduler_configuration import (
     DeadlineSchedulerConfiguration,
 )
 from cato_common.domain.project import Project
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
@@ -50,6 +51,7 @@ def test_create_storage_bindings_for_postgres():
         ),
         message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -86,6 +88,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         ),
         message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -128,6 +131,7 @@ CONFIG_FOR_MESSAGE_QUEUE_TESTING = AppConfiguration(
     ),
     message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
     scheduler_configuration=SchedulerConfiguration(),
+    sentry_configuration=SentryConfiguration(url=None),
 )
 
 
@@ -147,6 +151,7 @@ def test_create_scheduler_bindings_no_scheduler():
         ),
         message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
     bindings_factory = BindingsFactory(config)
 
@@ -170,6 +175,7 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     ),
     message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
     scheduler_configuration=DeadlineSchedulerConfiguration("test"),
+    sentry_configuration=SentryConfiguration(url=None),
 )
 
 

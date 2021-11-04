@@ -4,8 +4,10 @@ import time
 
 import pinject
 import schedule
+import sentry_sdk
 import uvicorn
 from fastapi import FastAPI
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
@@ -120,6 +122,18 @@ def main():
     def shutdown_event():
         app.scheduler_runner.stop(),
         exit(0),
+
+    if config.sentry_configuration.url:
+        logger.info(
+            "Initializing sentry sdk with url %s", config.sentry_configuration.url
+        )
+        sentry_sdk.init(
+            config.sentry_configuration.url,
+            traces_sample_rate=1.0,
+            release=cato_server.__version__,
+        )
+
+        app = SentryAsgiMiddleware(app)
 
     logger.info(f"Starting on http://127.0.0.1:{config.port}")
     uvicorn.run(app, host="127.0.0.1", port=config.port)

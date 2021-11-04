@@ -16,6 +16,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
@@ -36,6 +37,7 @@ class AppConfigurationReader:
         logging_configuration = self._read_logging_configuration(config)
         message_queue_configuration = self._read_message_queue_configuration(config)
         scheduler_configuration = self._read_scheduler_configuration(config)
+        sentry_configuration = self._read_sentry_configuration(config)
 
         return AppConfiguration(
             port=config.getint(
@@ -48,6 +50,7 @@ class AppConfigurationReader:
             logging_configuration=logging_configuration,
             message_queue_configuration=message_queue_configuration,
             scheduler_configuration=scheduler_configuration,
+            sentry_configuration=sentry_configuration,
         )
 
     def _read_storage_configuration(
@@ -96,3 +99,7 @@ class AppConfigurationReader:
                 "scheduler", "deadline_url", fallback="http://localhost:8082"
             )
             return DeadlineSchedulerConfiguration(url)
+
+    def _read_sentry_configuration(self, config):
+        sentry_url = config.get("sentry", "url", fallback=None)
+        return SentryConfiguration(url=sentry_url)

@@ -11,6 +11,7 @@ from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
@@ -30,6 +31,7 @@ def test_create_default_config():
         ),
         message_queue_configuration=MessageQueueConfiguration(host="localhost"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
 
 
@@ -52,4 +54,5 @@ def test_create_default_config_ready_to_use():
         ),
         message_queue_configuration=MessageQueueConfiguration(host=""),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )

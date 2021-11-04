@@ -12,6 +12,7 @@ from cato_server.configuration.message_queue_configuration import (
     MessageQueueConfiguration,
 )
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from tests.conftest import random_port
 from tests.integrationtests.utils import change_cwd
@@ -29,6 +30,7 @@ def test_run_db_load_test(tmp_path, snapshot):
         ),
         message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)
@@ -45,4 +47,4 @@ def test_run_db_load_test(tmp_path, snapshot):
             "cato_server - INFO - Generating total 1 projects, 10 runs, 50 suites and 750 test results.."
             in output
         )
-        assert "Writing done, saving file File" in output
+        assert "Inserted 50 suite results" in output

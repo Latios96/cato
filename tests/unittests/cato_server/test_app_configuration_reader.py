@@ -14,6 +14,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
+from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 VALID_INI_FILE = """[app]
@@ -146,6 +147,7 @@ def test_read_valid_file(ini_file_creator):
         ),
         message_queue_configuration=MessageQueueConfiguration(host="127.0.01"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
 
 
@@ -177,6 +179,7 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         ),
         message_queue_configuration=MessageQueueConfiguration(host="localhost"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
 
 
@@ -197,6 +200,7 @@ def test_read_with_logging(ini_file_creator):
         ),
         message_queue_configuration=MessageQueueConfiguration(host="localhost"),
         scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
     )
 
 
@@ -233,6 +237,7 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
         scheduler_configuration=DeadlineSchedulerConfiguration(
             url="http://localhost:8082"
         ),
+        sentry_configuration=SentryConfiguration(url=None),
     )
 
 
@@ -253,4 +258,5 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
         scheduler_configuration=DeadlineSchedulerConfiguration(
             url="http://localhost:8085"
         ),
+        sentry_configuration=SentryConfiguration(url=None),
     )
