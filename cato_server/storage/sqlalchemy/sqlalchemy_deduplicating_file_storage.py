@@ -30,11 +30,11 @@ class SqlAlchemyDeduplicatingFileStorage(
         file.value_counter = value_counter
 
         if needs_write:
-            logger.info("Write file %s to storage at %s..", path, self.get_path(file))
+            logger.debug("Write file %s to storage at %s..", path, self.get_path(file))
             target_stream = self._get_write_stream(file)
             target_stream.write(content)
             target_stream.close()
-        logger.info("Writing done, saving file %s..", file)
+        logger.debug("Writing done, saving file %s..", file)
         file = self.save(file)
         return file
 
@@ -45,12 +45,12 @@ class SqlAlchemyDeduplicatingFileStorage(
         file.value_counter = value_counter
 
         if needs_write:
-            logger.info("Writing stream to storage at %s..", self.get_path(file))
+            logger.debug("Writing stream to storage at %s..", self.get_path(file))
             target_stream = self._get_write_stream(file)
             target_stream.write(content)
             target_stream.close()
 
-        logger.info("Writing done, saving file %s..", file)
+        logger.debug("Writing done, saving file %s..", file)
         file = self.save(file)
         return file
 
@@ -96,7 +96,7 @@ class SqlAlchemyDeduplicatingFileStorage(
     def _needs_write(self, file, content):
         needs_write = not os.path.exists(self._get_bucket_folder(file.hash))
         if needs_write:
-            logger.info(
+            logger.debug(
                 "File %s needs write, no file exists for hash %s", file, file.hash
             )
             return True, 0
@@ -109,7 +109,7 @@ class SqlAlchemyDeduplicatingFileStorage(
                 stored_content = f.read()
 
             if stored_content == content:
-                logger.info(
+                logger.debug(
                     "File %s needs no write, file already exists for hash %s at %s",
                     file,
                     file.hash,
@@ -117,7 +117,7 @@ class SqlAlchemyDeduplicatingFileStorage(
                 )
                 return False, self._get_value_counter_from_path(existing_entry)
 
-        logger.info(
+        logger.debug(
             "File %s should write: %s, no content match for colliding hash %s",
             file,
             needs_write,
