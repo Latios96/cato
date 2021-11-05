@@ -55,7 +55,7 @@ def create_app(
 ) -> FastAPI:
     logger.info(BANNER)
     logger.info("Cato Server Version %s", cato_server.__version__)
-    logger.info("Creating Flask app..")
+    logger.info("Creating FastApi app..")
     obj_graph = pinject.new_object_graph(
         modules=[*imported_modules([cato_common, cato, cato_server])],
         binding_specs=[bindings],
