@@ -11,6 +11,9 @@ from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page
+from cato_server.domain.test_result_status_information import (
+    TestResultStatusInformation,
+)
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
@@ -655,3 +658,150 @@ def test_duration_by_run_ids_respect_running_tests(
     repository.save(test_result)
 
     assert repository.duration_by_run_ids({run.id}) == {1: 20.0}
+
+
+def test_status_information_by_run_id_empty_for_not_existing_run_id(
+    sessionmaker_fixture,
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    status_information = repository.status_information_by_run_id(42)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=0, running=0, failed=0, success=0
+    )
+
+
+def test_status_information_by_run_id_empty_run_should_return_all_0(
+    sessionmaker_fixture, run
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+    status_information = repository.status_information_by_run_id(run.id)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=0, running=0, failed=0, success=0
+    )
+
+
+def test_status_information_by_run_id_run_with_single_not_started_test(
+    sessionmaker_fixture, run, suite_result, saving_test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    saving_test_result_factory(
+        execution_status=ExecutionStatus.NOT_STARTED,
+        suite_result_id=suite_result.id,
+        status="FORCE_NONE",
+    )
+    status_information = repository.status_information_by_run_id(run.id)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=1, running=0, failed=0, success=0
+    )
+
+
+def test_status_information_by_run_id_run_with_single_running_test(
+    sessionmaker_fixture, run, suite_result, saving_test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    saving_test_result_factory(
+        execution_status=ExecutionStatus.RUNNING,
+        suite_result_id=suite_result.id,
+        status="FORCE_NONE",
+    )
+    status_information = repository.status_information_by_run_id(run.id)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=0, running=1, failed=0, success=0
+    )
+
+
+def test_status_information_by_run_id_run_with_single_failed_test(
+    sessionmaker_fixture, run, suite_result, saving_test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    saving_test_result_factory(
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.FAILED,
+        suite_result_id=suite_result.id,
+    )
+    status_information = repository.status_information_by_run_id(run.id)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=0, running=0, failed=1, success=0
+    )
+
+
+def test_status_information_by_run_id_run_with_single_succeded_test(
+    sessionmaker_fixture, run, suite_result, saving_test_result_factory
+):
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    saving_test_result_factory(
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.SUCCESS,
+        suite_result_id=suite_result.id,
+    )
+    status_information = repository.status_information_by_run_id(run.id)
+
+    assert status_information == TestResultStatusInformation(
+        not_started=0, running=0, failed=0, success=1
+    )
+
+
+def test_status_information_by_run_id_multiple_runs_only_correct_run(
+    sessionmaker_fixture,
+    suite_result,
+    saving_test_result_factory,
+    saving_run_factory,
+    saving_suite_result_factory,
+):
+    run_1 = saving_run_factory()
+    run_2 = saving_run_factory()
+    suite_result_1 = saving_suite_result_factory(run_id=run_1.id)
+    suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
+    test_result_run_1_1 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        execution_status=ExecutionStatus.NOT_STARTED,
+        status="FORCE_NONE",
+    )
+    test_result_run_1_2 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        execution_status=ExecutionStatus.RUNNING,
+        status="FORCE_NONE",
+    )
+    test_result_run_1_3 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.SUCCESS,
+    )
+    test_result_run_1_5 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.FAILED,
+    )
+    test_result_run_1_1 = saving_test_result_factory(
+        suite_result_id=suite_result_2.id,
+        execution_status=ExecutionStatus.NOT_STARTED,
+        status="FORCE_NONE",
+    )
+    test_result_run_1_2 = saving_test_result_factory(
+        suite_result_id=suite_result_2.id,
+        execution_status=ExecutionStatus.RUNNING,
+        status="FORCE_NONE",
+    )
+    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    saving_test_result_factory(
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.SUCCESS,
+        suite_result_id=suite_result.id,
+    )
+
+    status_information_run_1 = repository.status_information_by_run_id(run_1.id)
+    assert status_information_run_1 == TestResultStatusInformation(
+        not_started=1, running=1, failed=1, success=1
+    )
+
+    status_information_run_2 = repository.status_information_by_run_id(run_2.id)
+    assert status_information_run_2 == TestResultStatusInformation(
+        not_started=1, running=1, failed=0, success=0
+    )

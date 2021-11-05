@@ -4,6 +4,9 @@ from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_server.domain.test_result_status_information import (
+    TestResultStatusInformation,
+)
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.test_result_filter_options import (
@@ -68,4 +71,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     def find_by_run_id_filter_by_test_status(
         self, run_id: int, test_status: TestStatus
     ) -> List[TestResult]:
+        raise NotImplementedError()
+
+    def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
         raise NotImplementedError()

@@ -13,6 +13,9 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page
+from cato_server.domain.test_result_status_information import (
+    TestResultStatusInformation,
+)
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
@@ -430,6 +433,56 @@ class SqlAlchemyTestResultRepository(
         session.close()
 
         return self._map_many_to_domain_object(entities)
+
+    def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
+        session = self._session_maker()
+        execution_status_counts = (
+            session.query(
+                _TestResultMapping.execution_status,
+                func.count(_TestResultMapping.execution_status),
+            )
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .group_by(_TestResultMapping.execution_status)
+            .all()
+        )
+
+        execution_status_count_dict = self.__status_count_query_result_to_dict(
+            execution_status_counts
+        )
+
+        status_counts = (
+            session.query(
+                _TestResultMapping.status,
+                func.count(_TestResultMapping.status),
+            )
+            .join(_SuiteResultMapping)
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .group_by(_TestResultMapping.status)
+            .all()
+        )
+
+        status_count_dict = self.__status_count_query_result_to_dict(status_counts)
+
+        not_started_count = execution_status_count_dict.get("NOT_STARTED", 0)
+        running_count = execution_status_count_dict.get("RUNNING", 0)
+        failed_count = status_count_dict.get("FAILED", 0)
+        success_count = status_count_dict.get("SUCCESS", 0)
+
+        session.close()
+        return TestResultStatusInformation(
+            not_started=not_started_count,
+            running=running_count,
+            failed=failed_count,
+            success=success_count,
+        )
+
+    def __status_count_query_result_to_dict(self, execution_status_counts):
+        return {
+            status: status_count for status, status_count in execution_status_counts
+        }
 
     def _add_filter_options(self, filter_options: TestResultFilterOptions, query):
         if filter_options and filter_options.status is not StatusFilter.NONE:
