@@ -6,6 +6,7 @@ from collections import defaultdict
 from typing import List, Tuple, Iterable
 
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
+from cato_server.utils.commands_builder import CommandsBuilder
 
 logger = logging.getLogger(__name__)
 
@@ -55,6 +56,8 @@ class ImageSplitter:
             images_to_channels[self.__get_key(channel)].append(channel)
 
         channel_paths = []
+        command_base = f"{self._oiio_binaries_discovery.get_oiiotool_executable()}"
+        commands_builder = CommandsBuilder(command_base, 8000)
 
         for channel_name, channels in images_to_channels.items():
             logger.debug("Extracting channel %s", channel_name)
@@ -62,14 +65,24 @@ class ImageSplitter:
             target_image = os.path.join(
                 work_folder, f"{os.path.basename(name)}.{channel_name}.png"
             )
-            command = f'{self._oiio_binaries_discovery.get_oiiotool_executable()} "{image_path}" --ch {",".join(channels)} -o "{target_image}"'
-            logger.debug("Running command %s", command)
+            channel_paths.append((channel_name, target_image))
+            image_cmd_part = (
+                f' -i "{image_path}" --ch {",".join(channels)} -o "{target_image}"'
+            )
+            commands_builder.push(image_cmd_part)
+
+        commands = commands_builder.finalize()
+        for command in commands:
+            logger.info("Running command %s", command)
             status, output = subprocess.getstatusoutput(command)
             self._handle_command_error(command, status, output)
 
-            channel_paths.append((channel_name, target_image))
-
         return channel_paths
+
+    def _run_cmd(self, command):
+        logger.debug("Running command %s", command)
+        status, output = subprocess.getstatusoutput(command)
+        return command, status, output
 
     def __get_key(self, name):
         if name in ["R", "G", "B"]:
