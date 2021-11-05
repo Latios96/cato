@@ -56,7 +56,10 @@ types:
           run: RunDto
           suite_count: integer
           test_count: integer
+          waiting_test_count: integer
+          running_test_count: integer
           failed_test_count: integer
+          succeeded_test_count: integer
 
       ExecutionStatusDto:
         values:

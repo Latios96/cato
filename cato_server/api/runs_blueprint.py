@@ -179,13 +179,17 @@ class RunsBlueprint(APIRouter):
         )
         suite_count = self._suite_result_repository.suite_count_by_run_id(run_id)
         test_count = self._test_result_repository.test_count_by_run_id(run_id)
-        failed_test_count = self._test_result_repository.failed_test_count_by_run_id(
-            run_id
+        test_result_status_information = (
+            self._test_result_repository.status_information_by_run_id(run_id)
         )
+
         run_summary_dto = RunSummaryDto(
             run=run_dto,
             suite_count=suite_count,
             test_count=test_count,
-            failed_test_count=failed_test_count,
+            waiting_test_count=test_result_status_information.not_started,
+            running_test_count=test_result_status_information.running,
+            succeeded_test_count=test_result_status_information.success,
+            failed_test_count=test_result_status_information.failed,
         )
         return JSONResponse(content=self._object_mapper.to_dict(run_summary_dto))

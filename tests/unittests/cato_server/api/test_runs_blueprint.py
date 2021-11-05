@@ -74,9 +74,11 @@ def test_get_status_404(client, run):
 def test_get_run_summary(client, run, test_result):
     rv = client.get(f"/api/v1/runs/{run.id}/summary")
 
-    assert rv.status_code == 200
     assert rv.json() == {
+        "waiting_test_count": 1,
         "failed_test_count": 0,
+        "running_test_count": 0,
+        "succeeded_test_count": 1,
         "run": {
             "id": 1,
             "project_id": 1,
@@ -87,6 +89,7 @@ def test_get_run_summary(client, run, test_result):
         "suite_count": 1,
         "test_count": 1,
     }
+    assert rv.status_code == 200
 
 
 def test_get_run_summary_should_error(client):
