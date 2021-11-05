@@ -41,8 +41,6 @@ export function RunSummary(props: Props) {
 
   function renderSummary() {
     const statusPercentage = calculateStatusPercentage(runSummaryDto);
-    // eslint-disable-next-line no-console
-    console.log(statusPercentage, runSummaryDto);
     return (
       <>
         <InfoBox>
