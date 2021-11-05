@@ -29,6 +29,7 @@ class RunSummary extends Component<Props, State> {
   componentDidMount() {
     this.fetchRunSummary();
   }
+
   componentDidUpdate(
     prevProps: Readonly<Props>,
     prevState: Readonly<State>,

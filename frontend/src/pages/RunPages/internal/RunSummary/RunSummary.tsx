@@ -15,9 +15,13 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import { useReFetch } from "../../../../hooks/useReFetch";
 import UnsyncedEdits from "../../../../components/UnsyncedEdits/UnsyncedEdits";
 import { TestEditCount } from "../../../../models/TestEditCount";
+import { calculateStatusPercentage } from "./utils";
+import { RunSummaryProgressBar } from "./RunSummaryProgressBar";
+
 interface Props {
   runId: number;
 }
+
 export function RunSummary(props: Props) {
   const {
     data: runSummaryDto,
@@ -35,6 +39,46 @@ export function RunSummary(props: Props) {
     [props.runId]
   );
 
+  function renderSummary() {
+    const statusPercentage = calculateStatusPercentage(runSummaryDto);
+    // eslint-disable-next-line no-console
+    console.log(statusPercentage, runSummaryDto);
+    return (
+      <>
+        <InfoBox>
+          <InfoBoxElement
+            value={"" + runSummaryDto.suite_count}
+            title={"suites"}
+            id={"runSummary suites"}
+          />
+          <InfoBoxElement
+            value={"" + runSummaryDto.test_count}
+            title={"tests"}
+            id={"runSummary tests"}
+          />
+          <InfoBoxElement
+            value={"" + runSummaryDto.failed_test_count}
+            title={"failed tests"}
+            id={"runSummary failed tests"}
+          />
+          <InfoBoxElement
+            value={
+              "" +
+              formatDuration(
+                runSummaryDto.run.duration !== "NaN"
+                  ? runSummaryDto.run.duration
+                  : 0
+              )
+            }
+            title={"duration"}
+            id={"runSummary duration"}
+          />
+        </InfoBox>
+        <RunSummaryProgressBar statusPercentage={statusPercentage} />
+      </>
+    );
+  }
+
   return (
     <div className={styles.runSummary}>
       <LoadingStateHandler isLoading={loading} error={error}>
@@ -42,6 +86,9 @@ export function RunSummary(props: Props) {
           <SkeletonTheme color="#f7f7f7" highlightColor="white">
             <p>
               <Skeleton count={1} width={720} height={100} />
+            </p>
+            <p>
+              <Skeleton count={1} width={720} height={25} />
             </p>
           </SkeletonTheme>
         </LoadingState>
@@ -52,37 +99,7 @@ export function RunSummary(props: Props) {
           />
         </ErrorState>
         <DataLoadedState>
-          {runSummaryDto ? (
-            <InfoBox>
-              <InfoBoxElement
-                value={"" + runSummaryDto.suite_count}
-                title={"suites"}
-                id={"runSummary suites"}
-              />
-              <InfoBoxElement
-                value={"" + runSummaryDto.test_count}
-                title={"tests"}
-                id={"runSummary tests"}
-              />
-              <InfoBoxElement
-                value={"" + runSummaryDto.failed_test_count}
-                title={"failed tests"}
-                id={"runSummary failed tests"}
-              />
-              <InfoBoxElement
-                value={
-                  "" +
-                  formatDuration(
-                    runSummaryDto.run.duration !== "NaN"
-                      ? runSummaryDto.run.duration
-                      : 0
-                  )
-                }
-                title={"duration"}
-                id={"runSummary duration"}
-              />
-            </InfoBox>
-          ) : null}
+          {runSummaryDto ? renderSummary() : null}
         </DataLoadedState>
       </LoadingStateHandler>
       <LoadingStateHandler
