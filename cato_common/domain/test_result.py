@@ -29,6 +29,7 @@ class TestResult:
     finished_at: Optional[datetime.datetime] = None
     comparison_settings: Optional[ComparisonSettings] = None
     error_value: Optional[float] = None
+    thumbnail_file_id: Optional[int] = None
     __test__ = False
 
     def __post_init__(self):

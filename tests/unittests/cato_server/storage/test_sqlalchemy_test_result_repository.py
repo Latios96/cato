@@ -23,7 +23,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 
 
-def test_save_success(sessionmaker_fixture, suite_result, stored_image_factory):
+def test_save_success(
+    sessionmaker_fixture, suite_result, stored_image_factory, stored_file
+):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
     end_time = datetime.datetime.now()
@@ -48,6 +50,7 @@ def test_save_success(sessionmaker_fixture, suite_result, stored_image_factory):
             method=ComparisonMethod.SSIM, threshold=1
         ),
         error_value=0.5,
+        thumbnail_file_id=stored_file.id,
     )
 
     test_result_save = repository.save(test_result)

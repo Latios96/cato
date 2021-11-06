@@ -96,6 +96,7 @@ def test_get_test_result_by_run_and_identifier_success(
         "diff_image": 1,
         "comparison_settings": None,
         "error_value": None,
+        "thumbnail_file_id": None,
     }
 
 

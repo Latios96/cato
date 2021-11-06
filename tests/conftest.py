@@ -264,6 +264,7 @@ def test_result_factory():
         finished_at: Optional[datetime.datetime] = None,
         error_value=None,
         comparison_settings=None,
+        thumbnail_file_id: Optional[int] = None,
     ):
         return TestResult(
             id=or_default(id, 0),
@@ -289,6 +290,7 @@ def test_result_factory():
             finished_at=or_default(finished_at, datetime.datetime.now()),
             comparison_settings=comparison_settings,
             error_value=or_default(error_value, None),
+            thumbnail_file_id=or_default(thumbnail_file_id, None),
         )
 
     return factory
@@ -315,6 +317,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
         finished_at: Optional[datetime.datetime] = None,
         error_value=None,
         comparison_settings=None,
+        thumbnail_file_id: Optional[int] = None,
     ):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result = test_result_factory(
@@ -336,6 +339,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
             finished_at,
             error_value,
             comparison_settings,
+            thumbnail_file_id,
         )
         return repository.save(test_result)
 

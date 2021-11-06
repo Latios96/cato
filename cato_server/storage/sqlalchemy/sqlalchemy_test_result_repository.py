@@ -55,6 +55,9 @@ class _TestResultMapping(Base):
     comparison_settings_method = Column(String, nullable=True)
     comparison_settings_threshold = Column(Float, nullable=True)
     error_value = Column(Float, nullable=True)
+    thumbnail_file_entity_id = Column(
+        Integer, ForeignKey("file_entity.id"), nullable=True
+    )
 
     def __repr__(self):
         return f"<_TestResultMapping id={self.id}>"
@@ -92,6 +95,7 @@ class SqlAlchemyTestResultRepository(
             if domain_object.comparison_settings
             else None,
             error_value=domain_object.error_value,
+            thumbnail_file_entity_id=domain_object.thumbnail_file_id,
         )
 
     def to_domain_object(self, entity: _TestResultMapping) -> TestResult:
@@ -125,6 +129,7 @@ class SqlAlchemyTestResultRepository(
             if entity.comparison_settings_method
             else None,
             error_value=entity.error_value,
+            thumbnail_file_id=entity.thumbnail_file_entity_id,
         )
 
     def _map_test_status(self, status):
