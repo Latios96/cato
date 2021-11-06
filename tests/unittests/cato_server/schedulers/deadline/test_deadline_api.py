@@ -12,20 +12,26 @@ def create_response(status_code=200):
     return response
 
 
-class TestDeadlineApi:
-    def setup_method(self, method):
-        self.http_mock = mock_safe(requests)
-        self.deadline_api = DeadlineApi("some_url", http_module=self.http_mock)
+@pytest.fixture
+def test_context():
+    class TestContext:
+        def __init__(self):
+            self.http_mock = mock_safe(requests)
+            self.deadline_api = DeadlineApi("some_url", http_module=self.http_mock)
 
-    def test_should_submit_jobs_with_success(self):
+    return TestContext()
+
+
+class TestDeadlineApi:
+    def test_should_submit_jobs_with_success(self, test_context):
         jobs = [
             DeadlineJob(job_info={"Plugin": "test"}, plugin_info={"my_value": "test"})
         ]
-        self.http_mock.post.return_value = create_response(status_code=200)
+        test_context.http_mock.post.return_value = create_response(status_code=200)
 
-        self.deadline_api.submit_jobs(jobs)
+        test_context.deadline_api.submit_jobs(jobs)
 
-        self.http_mock.post.assert_called_once_with(
+        test_context.http_mock.post.assert_called_once_with(
             "some_url/api/jobs",
             json={
                 "Jobs": [
@@ -38,16 +44,16 @@ class TestDeadlineApi:
             },
         )
 
-    def test_should_submit_jobs_with_error_should_throw_error(self):
+    def test_should_submit_jobs_with_error_should_throw_error(self, test_context):
         jobs = [
             DeadlineJob(job_info={"Plugin": "test"}, plugin_info={"my_value": "test"})
         ]
-        self.http_mock.post.return_value = create_response(status_code=500)
+        test_context.http_mock.post.return_value = create_response(status_code=500)
 
         with pytest.raises(DeadlineApiError):
-            self.deadline_api.submit_jobs(jobs)
+            test_context.deadline_api.submit_jobs(jobs)
 
-        self.http_mock.post.assert_called_once_with(
+        test_context.http_mock.post.assert_called_once_with(
             "some_url/api/jobs",
             json={
                 "Jobs": [
@@ -60,10 +66,10 @@ class TestDeadlineApi:
             },
         )
 
-    def test_can_not_submit_empty_job_list(self):
+    def test_can_not_submit_empty_job_list(self, test_context):
         jobs = []
 
         with pytest.raises(DeadlineApiError):
-            self.deadline_api.submit_jobs(jobs)
+            test_context.deadline_api.submit_jobs(jobs)
 
-        self.http_mock.post.assert_not_called()
+        test_context.http_mock.post.assert_not_called()
