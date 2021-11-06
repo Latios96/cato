@@ -285,20 +285,6 @@ class SqlAlchemyTestResultRepository(
         session.close()
         return count
 
-    def failed_test_count_by_run_id(self, run_id: int) -> int:
-        session = self._session_maker()
-
-        count = (
-            session.query(_TestResultMapping)
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .filter(_TestResultMapping.status == "FAILED")
-            .count()
-        )
-        session.close()
-        return count
-
     def duration_by_run_id(self, run_id: int) -> float:
         session = self._session_maker()
 
