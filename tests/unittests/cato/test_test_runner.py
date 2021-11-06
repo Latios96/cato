@@ -2,6 +2,8 @@ import time
 from unittest import mock
 from unittest.mock import ANY
 
+import pytest
+
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
@@ -22,44 +24,54 @@ from tests.utils import mock_safe
 EXAMPLE_PROJECT = "Example Project"
 
 
+@pytest.fixture
+def test_context():
+    class TestContext:
+        def __init__(self):
+            self.counter = 0
+            self.reporter = mock_safe(Reporter)
+            self.command_runner = mock_safe(CommandRunner)
+            self.output_folder = mock_safe(OutputFolder)
+            self.test_execution_reporter = mock_safe(TestExecutionReporter)
+            self.mock_cato_api_client = mock_safe(CatoApiClient)
+            self.mock_cato_api_client.upload_image.side_effect = (
+                self._mocked_store_image
+            )
+            self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+                status=TestStatus.SUCCESS,
+                message="",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
+            )
+
+        def _mocked_store_image(self, path):
+            self.counter += 1
+            return Image(
+                id=self.counter,
+                name="test",
+                original_file_id=1,
+                channels=[],
+                width=10,
+                height=20,
+            )
+
+    return TestContext()
+
+
 class TestTestRunner:
-    def _mocked_store_image(self, path):
-        self.counter += 1
-        return Image(
-            id=self.counter,
-            name="test",
-            original_file_id=1,
-            channels=[],
-            width=10,
-            height=20,
-        )
-
-    def setup_method(self):
-        self.counter = 0
-        self.reporter = mock_safe(Reporter)
-        self.command_runner = mock_safe(CommandRunner)
-        self.output_folder = mock_safe(OutputFolder)
-        self.test_execution_reporter = mock_safe(TestExecutionReporter)
-        self.mock_cato_api_client = mock_safe(CatoApiClient)
-        self.mock_cato_api_client.upload_image.side_effect = self._mocked_store_image
-        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-            status=TestStatus.SUCCESS,
-            message="",
-            reference_image_id=1,
-            output_image_id=2,
-            diff_image_id=3,
-            error=1,
-        )
-
     @mock.patch("cato.runners.test_runner.TestHeartbeatReporter")
-    def test_should_report_test_start(self, mock_heartbeat_reporter_class):
+    def test_should_report_test_start(
+        self, mock_heartbeat_reporter_class, test_context
+    ):
         mock_heartbeat_reporter_class.return_value = mock.MagicMock()
-        test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
-            self.test_execution_reporter,
-            self.mock_cato_api_client,
+        test_runner = TestRunner(  # todo check if we can generalize this
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
+            test_context.test_execution_reporter,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -80,24 +92,22 @@ class TestTestRunner:
             test,
         )
 
-        self.reporter.report_start_test.assert_called_with(test)
-        self.command_runner.run.assert_called_with(test.command)
-        self.output_folder.create_folder("output", test_suite, test)
+        test_context.reporter.report_start_test.assert_called_with(test)
+        test_context.command_runner.run.assert_called_with(test.command)
+        test_context.output_folder.create_folder("output", test_suite, test)
         time.sleep(1)
         mock_heartbeat_reporter_class.return_value.start_sending_heartbeats_for_test.assert_called_with(
             TestIdentifier("suite", "my_first_test")
         )
         mock_heartbeat_reporter_class.return_value.stop.assert_called_once()
 
-    def test_should_replace_placeholder(
-        self,
-    ):
+    def test_should_replace_placeholder(self, test_context):
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
-            self.test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
+            test_context.test_execution_reporter,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -117,20 +127,18 @@ class TestTestRunner:
             test,
         )
 
-        self.reporter.report_start_test.assert_called_with(test)
-        self.command_runner.run.assert_called_with(
+        test_context.reporter.report_start_test.assert_called_with(test)
+        test_context.command_runner.run.assert_called_with(
             "crayg -s test/suite/my_first_test/test.json -o output/result/suite/my_first_test/my_first_test.png",
         )
 
-    def test_should_collect_timing_info(
-        self,
-    ):
+    def test_should_collect_timing_info(self, test_context):
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
-            self.test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
+            test_context.test_execution_reporter,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -152,18 +160,16 @@ class TestTestRunner:
 
         assert result.seconds >= 0
 
-    def test_should_have_succeded_with_exit_code_0(
-        self,
-    ):
+    def test_should_have_succeded_with_exit_code_0(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
-        self.output_folder.image_output_exists.return_value = True
+        test_context.output_folder.image_output_exists.return_value = True
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -171,7 +177,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=comparison_settings,
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 0, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -188,23 +196,21 @@ class TestTestRunner:
         assert result.image_output == 2
         assert result.reference_image == 1
         assert result.diff_image == 3
-        self.mock_cato_api_client.upload_image.assert_not_called()
-        self.mock_cato_api_client.compare_images.assert_called_with(
+        test_context.mock_cato_api_client.upload_image.assert_not_called()
+        test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
         )
 
-    def test_should_have_failed_with_exit_code_0(
-        self,
-    ):
-        self.output_folder.reference_image_exists.return_value = True
+    def test_should_have_failed_with_exit_code_0(self, test_context):
+        test_context.output_folder.reference_image_exists.return_value = True
 
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -212,7 +218,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=ComparisonSettings.default(),
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 1, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 1, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -228,25 +236,25 @@ class TestTestRunner:
         assert result.status == TestStatus.FAILED
         assert result.error_value == None
 
-    def test_should_have_failed_with_images_not_equal(
-        self,
-    ):
+    def test_should_have_failed_with_images_not_equal(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
-        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-            status=TestStatus.FAILED,
-            message="Images are not equal!",
-            reference_image_id=1,
-            output_image_id=2,
-            diff_image_id=3,
-            error=1,
+        test_context.mock_cato_api_client.compare_images.return_value = (
+            CompareImageResult(
+                status=TestStatus.FAILED,
+                message="Images are not equal!",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
+            )
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -254,7 +262,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=comparison_settings,
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 0, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -273,30 +283,30 @@ class TestTestRunner:
         assert result.reference_image == 2
         assert result.diff_image == 3
         assert result.error_value is not None
-        self.mock_cato_api_client.upload_image.assert_not_called()
-        self.mock_cato_api_client.compare_images.assert_called_with(
+        test_context.mock_cato_api_client.upload_image.assert_not_called()
+        test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
         )
 
-    def test_should_have_failed_with_missing_reference_image(
-        self,
-    ):
-        self.output_folder.reference_image_exists.return_value = False
-        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-            status=TestStatus.FAILED,
-            message="Images are not equal!",
-            reference_image_id=1,
-            output_image_id=2,
-            diff_image_id=3,
-            error=1,
+    def test_should_have_failed_with_missing_reference_image(self, test_context):
+        test_context.output_folder.reference_image_exists.return_value = False
+        test_context.mock_cato_api_client.compare_images.return_value = (
+            CompareImageResult(
+                status=TestStatus.FAILED,
+                message="Images are not equal!",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
+            )
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -304,7 +314,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=ComparisonSettings.default(),
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 0, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -323,28 +335,28 @@ class TestTestRunner:
         assert result.reference_image is None
         assert result.diff_image is None
         assert result.error_value == None
-        self.reporter.report_message.assert_called_with(result.message)
-        assert self.mock_cato_api_client.upload_image.call_count == 1
+        test_context.reporter.report_message.assert_called_with(result.message)
+        assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
-    def test_should_have_failed_with_missing_image_output(
-        self,
-    ):
-        self.output_folder.image_output_exists.return_value = False
-        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-            status=TestStatus.FAILED,
-            message="Images are not equal!",
-            reference_image_id=1,
-            output_image_id=2,
-            diff_image_id=3,
-            error=1,
+    def test_should_have_failed_with_missing_image_output(self, test_context):
+        test_context.output_folder.image_output_exists.return_value = False
+        test_context.mock_cato_api_client.compare_images.return_value = (
+            CompareImageResult(
+                status=TestStatus.FAILED,
+                message="Images are not equal!",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
+            )
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -352,7 +364,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=ComparisonSettings.default(),
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 0, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -371,29 +385,31 @@ class TestTestRunner:
         assert result.reference_image == 1
         assert result.diff_image is None
         assert result.error_value == None
-        self.reporter.report_message.assert_called_with(result.message)
-        assert self.mock_cato_api_client.upload_image.call_count == 1
+        test_context.reporter.report_message.assert_called_with(result.message)
+        assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
     def test_should_have_failed_with_missing_reference_and_image_output(
-        self,
+        self, test_context
     ):
-        self.output_folder.image_output_exists.return_value = False
-        self.output_folder.reference_image_exists.return_value = False
-        self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-            status=TestStatus.FAILED,
-            message="Images are not equal!",
-            reference_image_id=1,
-            output_image_id=2,
-            diff_image_id=3,
-            error=1,
+        test_context.output_folder.image_output_exists.return_value = False
+        test_context.output_folder.reference_image_exists.return_value = False
+        test_context.mock_cato_api_client.compare_images.return_value = (
+            CompareImageResult(
+                status=TestStatus.FAILED,
+                message="Images are not equal!",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
+            )
         )
         test_execution_reporter = mock_safe(TestExecutionReporter)
         test_runner = TestRunner(
-            self.command_runner,
-            self.reporter,
-            self.output_folder,
+            test_context.command_runner,
+            test_context.reporter,
+            test_context.output_folder,
             test_execution_reporter,
-            self.mock_cato_api_client,
+            test_context.mock_cato_api_client,
         )
         test = Test(
             name="my_first_test",
@@ -401,7 +417,9 @@ class TestTestRunner:
             variables={},
             comparison_settings=ComparisonSettings.default(),
         )
-        self.command_runner.run.return_value = CommandResult("dummy_command", 0, [])
+        test_context.command_runner.run.return_value = CommandResult(
+            "dummy_command", 0, []
+        )
 
         result = test_runner.run_test(
             RunConfig(
@@ -420,6 +438,10 @@ class TestTestRunner:
         assert result.reference_image is None
         assert result.diff_image is None
         assert result.error_value == None
-        self.reporter.report_message.assert_any_call(result.message.split(", ")[0])
-        self.reporter.report_message.assert_any_call(result.message.split(", ")[1])
-        self.mock_cato_api_client.upload_image.assert_not_called()
+        test_context.reporter.report_message.assert_any_call(
+            result.message.split(", ")[0]
+        )
+        test_context.reporter.report_message.assert_any_call(
+            result.message.split(", ")[1]
+        )
+        test_context.mock_cato_api_client.upload_image.assert_not_called()
