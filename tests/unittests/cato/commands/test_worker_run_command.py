@@ -27,7 +27,7 @@ def submission_info_fixture(config_fixture):
 
 
 @pytest.fixture
-def text_context():
+def test_context():
     class TestContext:
         def __init__(self):
             self.mock_test_execution_reporter = mock_safe(TestExecutionReporter)
@@ -48,29 +48,29 @@ def text_context():
 
 class TestWorkerRunCommand:
     def test_not_matching_identifier_for_suite_should_raise(
-        self, submission_info_fixture, text_context
+        self, submission_info_fixture, test_context
     ):
-        text_context.cato_api_client.get_submission_info_by_id.return_value = (
+        test_context.cato_api_client.get_submission_info_by_id.return_value = (
             submission_info_fixture
         )
 
         with pytest.raises(ValueError):
-            text_context.worker_command.execute(1, "test/My_first_test")
+            test_context.worker_command.execute(1, "test/My_first_test")
 
     def test_not_matching_identifier_for_test_should_raise(
-        self, submission_info_fixture, text_context
+        self, submission_info_fixture, test_context
     ):
-        text_context.cato_api_client.get_submission_info_by_id.return_value = (
+        test_context.cato_api_client.get_submission_info_by_id.return_value = (
             submission_info_fixture
         )
 
         with pytest.raises(ValueError):
-            text_context.worker_command.execute(1, "My_first_test_Suite/test")
+            test_context.worker_command.execute(1, "My_first_test_Suite/test")
 
     def test_test_run_success(
-        self, config_fixture, submission_info_fixture, text_context
+        self, config_fixture, submission_info_fixture, test_context
     ):
-        text_context.cato_api_client.get_submission_info_by_id.return_value = (
+        test_context.cato_api_client.get_submission_info_by_id.return_value = (
             submission_info_fixture
         )
         execution_result = TestExecutionResult(
@@ -86,24 +86,24 @@ class TestWorkerRunCommand:
             datetime.datetime.now(),
             1,
         )
-        text_context.mock_test_runner.run_test.return_value = execution_result
+        test_context.mock_test_runner.run_test.return_value = execution_result
 
-        text_context.worker_command.execute(1, "My_first_test_Suite/My_first_test")
+        test_context.worker_command.execute(1, "My_first_test_Suite/My_first_test")
 
-        text_context.mock_test_execution_reporter.use_run_id.assert_called_with(5)
-        text_context.mock_test_execution_reporter.report_test_execution_start.assert_called_with(
+        test_context.mock_test_execution_reporter.use_run_id.assert_called_with(5)
+        test_context.mock_test_execution_reporter.report_test_execution_start.assert_called_with(
             config_fixture.TEST_SUITE, config_fixture.TEST
         )
-        text_context.mock_reporter.set_verbose_mode.assert_called_with(
+        test_context.mock_reporter.set_verbose_mode.assert_called_with(
             VerboseMode.VERY_VERBOSE
         )
-        text_context.mock_test_runner.run_test.assert_called_once()
-        text_context.mock_reporter.report_test_success.assert_called_once()
+        test_context.mock_test_runner.run_test.assert_called_once()
+        test_context.mock_reporter.report_test_success.assert_called_once()
 
     def test_test_run_failure(
-        self, config_fixture, submission_info_fixture, text_context
+        self, config_fixture, submission_info_fixture, test_context
     ):
-        text_context.cato_api_client.get_submission_info_by_id.return_value = (
+        test_context.cato_api_client.get_submission_info_by_id.return_value = (
             submission_info_fixture
         )
         execution_result = TestExecutionResult(
@@ -119,13 +119,13 @@ class TestWorkerRunCommand:
             datetime.datetime.now(),
             1,
         )
-        text_context.mock_test_runner.run_test.return_value = execution_result
+        test_context.mock_test_runner.run_test.return_value = execution_result
 
-        text_context.worker_command.execute(1, "My_first_test_Suite/My_first_test")
+        test_context.worker_command.execute(1, "My_first_test_Suite/My_first_test")
 
-        text_context.mock_test_execution_reporter.use_run_id.assert_called_with(5)
-        text_context.mock_test_execution_reporter.report_test_execution_start.assert_called_with(
+        test_context.mock_test_execution_reporter.use_run_id.assert_called_with(5)
+        test_context.mock_test_execution_reporter.report_test_execution_start.assert_called_with(
             config_fixture.TEST_SUITE, config_fixture.TEST
         )
-        text_context.mock_test_runner.run_test.assert_called_once()
-        text_context.mock_reporter.report_test_failure.assert_called_once()
+        test_context.mock_test_runner.run_test.assert_called_once()
+        test_context.mock_reporter.report_test_failure.assert_called_once()
