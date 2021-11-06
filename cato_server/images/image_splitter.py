@@ -6,19 +6,20 @@ from collections import defaultdict
 from typing import List, Tuple, Iterable
 
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
+from cato_server.images.oiio_command_executor import OiioCommandExecutor
 from cato_server.utils.commands_builder import CommandsBuilder
 
 logger = logging.getLogger(__name__)
 
 
-class NotAnImageException(Exception):
-    def __init__(self, output):
-        super(NotAnImageException, self).__init__(f"The file is not an Image! {output}")
-
-
 class ImageSplitter:
-    def __init__(self, oiio_binaries_discovery: OiioBinariesDiscovery):
+    def __init__(
+        self,
+        oiio_binaries_discovery: OiioBinariesDiscovery,
+        oiio_command_executor: OiioCommandExecutor,
+    ):
         self._oiio_binaries_discovery = oiio_binaries_discovery
+        self._oiio_command_executor = oiio_command_executor
 
     def split_image_into_channels(
         self, image_path: str, work_folder: str
@@ -33,9 +34,7 @@ class ImageSplitter:
         command = (
             f'{self._oiio_binaries_discovery.get_iiinfo_executable()} -v "{image_path}"'
         )
-        logger.debug("Running command %s", command)
-        status, output = subprocess.getstatusoutput(command)
-        self._handle_command_error(command, status, output)
+        output = self._oiio_command_executor.execute_command(command)
 
         lines: Iterable[str] = output.split("\n")
         lines = map(lambda x: x.strip(), lines)
@@ -73,9 +72,7 @@ class ImageSplitter:
 
         commands = commands_builder.finalize()
         for command in commands:
-            logger.info("Running command %s", command)
-            status, output = subprocess.getstatusoutput(command)
-            self._handle_command_error(command, status, output)
+            self._oiio_command_executor.execute_command(command)
 
         return channel_paths
 
@@ -94,30 +91,3 @@ class ImageSplitter:
         else:
             key = name.split(".")[0]
         return key
-
-    def _handle_command_error(self, command, status, output):
-        logger.debug(output)
-        if not output.startswith("iinfo ERROR") and not output.startswith(
-            "oiiotool ERROR"
-        ):
-            return
-        is_not_an_image = any(
-            message in output
-            for message in [
-                "OpenImageIO could not find a format reader",
-                "Not a PNG file",
-                "Empty file",
-                "is not an OpenEXR file",
-                "Cannot read TIFF header",
-            ]
-        )
-
-        if is_not_an_image:
-            raise NotAnImageException(output)
-
-        if status == 0:
-            return
-
-        raise Exception(
-            f"Exit code f{status} when running command {command}: output was: {output}"
-        )

@@ -1,6 +1,10 @@
 import pytest
 from cato_common.domain.image import ImageChannel, Image
-from cato_server.images.image_splitter import ImageSplitter, NotAnImageException
+from cato_server.images.image_splitter import ImageSplitter
+from cato_server.images.oiio_command_executor import (
+    NotAnImageException,
+    OiioCommandExecutor,
+)
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
 from cato_server.images.store_image import StoreImage
@@ -18,7 +22,9 @@ def test_store_rgb_jpeg(sessionmaker_fixture, tmp_path, test_resource_provider):
     )
     mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     store_image = StoreImage(
-        file_storage, mock_image_repository, ImageSplitter(OiioBinariesDiscovery())
+        file_storage,
+        mock_image_repository,
+        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
 
     image = store_image.store_image(
@@ -41,7 +47,9 @@ def test_store_rgb_png(sessionmaker_fixture, tmp_path, test_resource_provider):
     )
     mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     store_image = StoreImage(
-        file_storage, mock_image_repository, ImageSplitter(OiioBinariesDiscovery())
+        file_storage,
+        mock_image_repository,
+        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
 
     image = store_image.store_image(
@@ -64,7 +72,9 @@ def test_store_multichannel_exr(sessionmaker_fixture, tmp_path, test_resource_pr
     )
     mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     store_image = StoreImage(
-        file_storage, mock_image_repository, ImageSplitter(OiioBinariesDiscovery())
+        file_storage,
+        mock_image_repository,
+        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
 
     image = store_image.store_image(
@@ -94,7 +104,9 @@ def test_store_not_existing_image(sessionmaker_fixture, tmp_path):
     )
     mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     store_image = StoreImage(
-        file_storage, mock_image_repository, ImageSplitter(OiioBinariesDiscovery())
+        file_storage,
+        mock_image_repository,
+        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
 
     with pytest.raises(ValueError):
@@ -107,7 +119,9 @@ def test_store_no_image(sessionmaker_fixture, tmp_path):
     )
     mock_image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
     store_image = StoreImage(
-        file_storage, mock_image_repository, ImageSplitter(OiioBinariesDiscovery())
+        file_storage,
+        mock_image_repository,
+        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
 
     with pytest.raises(NotAnImageException):

@@ -4,7 +4,11 @@ from pathlib import Path
 
 import pytest
 
-from cato_server.images.image_splitter import ImageSplitter, NotAnImageException
+from cato_server.images.image_splitter import ImageSplitter
+from cato_server.images.oiio_command_executor import (
+    NotAnImageException,
+    OiioCommandExecutor,
+)
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
 
@@ -21,7 +25,7 @@ def test_split_image(
     test_resource_provider, tmp_path: Path, image_name, expected_channel_names
 ):
     image_name_without_extension = os.path.splitext(image_name)[0]
-    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor())
 
     channels = image_splitter.split_image_into_channels(
         test_resource_provider.resource_by_name(
@@ -41,7 +45,7 @@ def test_split_image(
 
 
 def test_split_non_image(tmp_path: Path):
-    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor())
 
     with pytest.raises(NotAnImageException):
         image_splitter.split_image_into_channels(__file__, str(tmp_path))
@@ -49,7 +53,7 @@ def test_split_non_image(tmp_path: Path):
 
 @pytest.mark.parametrize("extension", ["png", "jpeg", "exr", "tiff"])
 def test_split_non_image_invalid_data(tmp_path: Path, extension):
-    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor())
     file_with_invalid_data = tmp_path.joinpath(f"not_a_{extension}_file.{extension}")
     file_with_invalid_data.touch()
 
@@ -60,7 +64,7 @@ def test_split_non_image_invalid_data(tmp_path: Path, extension):
 
 
 def test_split_image_with_spaces_in_path(tmp_path: Path, test_resource_provider):
-    image_splitter = ImageSplitter(OiioBinariesDiscovery())
+    image_splitter = ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor())
     test_image = test_resource_provider.resource_by_name(
         os.path.join("sphere_test_images", "png_8_bit.png")
     )
