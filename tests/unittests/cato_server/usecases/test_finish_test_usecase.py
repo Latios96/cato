@@ -11,12 +11,18 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.usecases.create_thumbnail import CreateThumbnail
 from cato_server.usecases.finish_test import FinishTest
 from tests.utils import mock_safe
+
+# no reference or output image should not create thumbnail
+# create thumbnail
+# exception during thumbnail creation should not be an issue
 
 
 def test_should_finish(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
+    test_result_repository.save.side_effect = lambda x: x
     started_at = datetime.datetime.now()
     finished_at = datetime.datetime.now()
     test_result_repository.find_by_id.return_value = test_result_factory(
@@ -27,8 +33,13 @@ def test_should_finish(test_result_factory, object_mapper):
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
+    mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
+        test_result_repository,
+        test_heartbeat_repository,
+        message_queue,
+        object_mapper,
+        mock_create_thumbnail,
     )
     finish_test._get_finished_time = lambda: finished_at
 
@@ -43,23 +54,23 @@ def test_should_finish(test_result_factory, object_mapper):
         error_value=1,
     )
 
-    test_result_repository.save.assert_called_with(
-        test_result_factory(
-            id=42,
-            execution_status=ExecutionStatus.FINISHED,
-            status=TestStatus.SUCCESS,
-            seconds=2,
-            message="Test succeded",
-            image_output=2,
-            reference_image=3,
-            diff_image=4,
-            started_at=started_at,
-            finished_at=finished_at,
-            error_value=1,
-        )
+    expected_test_result = test_result_factory(
+        id=42,
+        execution_status=ExecutionStatus.FINISHED,
+        status=TestStatus.SUCCESS,
+        seconds=2,
+        message="Test succeded",
+        image_output=2,
+        reference_image=3,
+        diff_image=4,
+        started_at=started_at,
+        finished_at=finished_at,
+        error_value=1,
     )
+    test_result_repository.save.assert_called_with(expected_test_result)
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
     message_queue.component.send_event.assert_called_once()
+    mock_create_thumbnail.create_thumbnail.assert_called_with(expected_test_result)
 
 
 def test_should_raise_no_test_result_with_id(object_mapper):
@@ -70,8 +81,13 @@ def test_should_raise_no_test_result_with_id(object_mapper):
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
+    mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
+        test_result_repository,
+        test_heartbeat_repository,
+        message_queue,
+        object_mapper,
+        mock_create_thumbnail,
     )
 
     with pytest.raises(ValueError):
@@ -88,6 +104,7 @@ def test_should_raise_no_test_result_with_id(object_mapper):
 
 def test_should_fail_test(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
+    test_result_repository.save.side_effect = lambda x: x
     started_at = datetime.datetime.now()
     finished_at = datetime.datetime.now()
     test_result_repository.find_by_id.return_value = test_result_factory(
@@ -98,8 +115,13 @@ def test_should_fail_test(test_result_factory, object_mapper):
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
     message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
+    mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
-        test_result_repository, test_heartbeat_repository, message_queue, object_mapper
+        test_result_repository,
+        test_heartbeat_repository,
+        message_queue,
+        object_mapper,
+        mock_create_thumbnail,
     )
     finish_test._get_finished_time = lambda: finished_at
 
@@ -122,3 +144,38 @@ def test_should_fail_test(test_result_factory, object_mapper):
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
     message_queue.component.send_event.assert_called_once()
+    mock_create_thumbnail.create_thumbnail.assert_not_called()
+
+
+def test_exception_during_thumbnail_creation_should_not_be_an_issue(
+    test_result_factory, object_mapper
+):
+    test_result_repository = mock_safe(TestResultRepository)
+    test_result_repository.save.side_effect = lambda x: x
+    test_result_repository.find_by_id.return_value = test_result_factory(
+        id=42, started_at=(datetime.datetime.now())
+    )
+    test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
+    message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
+    mock_create_thumbnail = mock_safe(CreateThumbnail)
+    mock_create_thumbnail.create_thumbnail.side_effect = Exception()
+    finish_test = FinishTest(
+        test_result_repository,
+        test_heartbeat_repository,
+        message_queue,
+        object_mapper,
+        mock_create_thumbnail,
+    )
+    finish_test.finish_test(
+        test_result_id=42,
+        status=TestStatus.SUCCESS,
+        seconds=2,
+        message="Test succeded",
+        image_output=2,
+        reference_image=3,
+        diff_image=4,
+        error_value=1,
+    )
+
+    test_result_repository.save.assert_called_once()
+    mock_create_thumbnail.create_thumbnail.assert_called_once()

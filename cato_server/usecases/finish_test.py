@@ -13,6 +13,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.usecases.create_thumbnail import CreateThumbnail
 
 logger = logging.getLogger(__name__)
 
@@ -24,11 +25,13 @@ class FinishTest:
         test_heartbeat_repository: TestHeartbeatRepository,
         message_queue: OptionalComponent[AbstractMessageQueue],
         object_mapper: ObjectMapper,
+        create_thumbnail: CreateThumbnail,
     ):
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
         self._message_queue = message_queue
         self._object_mapper = object_mapper
+        self._create_thumbnail = create_thumbnail
 
     def finish_test(
         self,
@@ -67,6 +70,16 @@ class FinishTest:
         if test_heartbeat:
             logger.info("Removing heartbeat %s", test_heartbeat)
             self._test_heartbeat_repository.delete_by_id(test_heartbeat.id)
+
+        if test_result.reference_image or test_result.image_output:
+            try:
+                self._create_thumbnail.create_thumbnail(test_result)
+            except Exception as e:
+                logger.error(
+                    "Error when creating thumbnail for test result with id %s, test result won't have a thumbnail:",
+                    test_result_id,
+                )
+                logger.exception(e)
 
         if self._message_queue.is_available():
             dto = TestResultFinishedDto(test_result.id)

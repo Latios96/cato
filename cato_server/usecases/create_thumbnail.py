@@ -10,6 +10,10 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 class CreateThumbnail:
     def __init__(
@@ -50,6 +54,11 @@ class CreateThumbnail:
 
         test_result.thumbnail_file_id = thumbnail_file.id
         self._test_result_repository.save(test_result)
+        logger.info(
+            "Created thumbnail with file id %s for test result with id %s",
+            thumbnail_file.id,
+            test_result.id,
+        )
 
     def _resolve_image_id(self, test_result) -> Optional[int]:
         if test_result.reference_image:
