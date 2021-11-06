@@ -45,6 +45,13 @@ def test_context():
                 diff_image_id=3,
                 error=1,
             )
+            self.test_runner = TestRunner(
+                self.command_runner,
+                self.reporter,
+                self.output_folder,
+                self.test_execution_reporter,
+                self.mock_cato_api_client,
+            )
 
         def _mocked_store_image(self, path):
             self.counter += 1
@@ -66,13 +73,7 @@ class TestTestRunner:
         self, mock_heartbeat_reporter_class, test_context
     ):
         mock_heartbeat_reporter_class.return_value = mock.MagicMock()
-        test_runner = TestRunner(  # todo check if we can generalize this
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_context.test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
+
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -81,7 +82,7 @@ class TestTestRunner:
         )
         test_suite = TestSuite(name="suite", tests=[])
 
-        test_runner.run_test(
+        test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -102,13 +103,6 @@ class TestTestRunner:
         mock_heartbeat_reporter_class.return_value.stop.assert_called_once()
 
     def test_should_replace_placeholder(self, test_context):
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_context.test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="crayg -s {test_resources}/test.json -o {image_output_png}",
@@ -116,7 +110,7 @@ class TestTestRunner:
             comparison_settings=ComparisonSettings.default(),
         )
 
-        test_runner.run_test(
+        test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -133,13 +127,6 @@ class TestTestRunner:
         )
 
     def test_should_collect_timing_info(self, test_context):
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_context.test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -147,7 +134,7 @@ class TestTestRunner:
             comparison_settings=ComparisonSettings.default(),
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -163,14 +150,6 @@ class TestTestRunner:
     def test_should_have_succeded_with_exit_code_0(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
         test_context.output_folder.image_output_exists.return_value = True
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -181,7 +160,7 @@ class TestTestRunner:
             "dummy_command", 0, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -204,14 +183,6 @@ class TestTestRunner:
     def test_should_have_failed_with_exit_code_0(self, test_context):
         test_context.output_folder.reference_image_exists.return_value = True
 
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -222,7 +193,7 @@ class TestTestRunner:
             "dummy_command", 1, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -248,14 +219,6 @@ class TestTestRunner:
                 error=1,
             )
         )
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -266,7 +229,7 @@ class TestTestRunner:
             "dummy_command", 0, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -300,14 +263,6 @@ class TestTestRunner:
                 error=1,
             )
         )
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -318,7 +273,7 @@ class TestTestRunner:
             "dummy_command", 0, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -350,14 +305,6 @@ class TestTestRunner:
                 error=1,
             )
         )
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -368,7 +315,7 @@ class TestTestRunner:
             "dummy_command", 0, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
@@ -403,14 +350,6 @@ class TestTestRunner:
                 error=1,
             )
         )
-        test_execution_reporter = mock_safe(TestExecutionReporter)
-        test_runner = TestRunner(
-            test_context.command_runner,
-            test_context.reporter,
-            test_context.output_folder,
-            test_execution_reporter,
-            test_context.mock_cato_api_client,
-        )
         test = Test(
             name="my_first_test",
             command="dummy_command",
@@ -421,7 +360,7 @@ class TestTestRunner:
             "dummy_command", 0, []
         )
 
-        result = test_runner.run_test(
+        result = test_context.test_runner.run_test(
             RunConfig(
                 project_name=EXAMPLE_PROJECT,
                 resource_path="test",
