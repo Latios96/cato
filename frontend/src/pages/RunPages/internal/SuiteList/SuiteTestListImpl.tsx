@@ -10,6 +10,7 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import Skeleton from "react-loading-skeleton";
 import TestStatus from "../../../../components/Status/TestStatus";
 import React from "react";
+import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
 interface Props {
   loading: boolean;
   error?: Error;
@@ -62,6 +63,17 @@ export function SuiteTestListImpl(props: Props) {
                   >
                     <span>
                       <TestStatus testResult={test} />
+                    </span>
+                    <span>
+                      <Thumbnail
+                        url={
+                          test.thumbnail_file_id
+                            ? `/api/v1/files/${test.thumbnail_file_id}`
+                            : undefined
+                        }
+                        width={"55px"}
+                        height={"30px"}
+                      />
                     </span>
                     <span>{test.test_name}</span>
                   </div>

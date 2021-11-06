@@ -16,6 +16,8 @@ import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
+import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
+
 interface Props {
   projectId: number;
   runId: number;
@@ -66,6 +68,7 @@ function TestList(props: Props) {
             <col />
             <col />
             <col />
+            <col />
           </colgroup>
           <tbody>
             <CollectionHandler
@@ -90,6 +93,17 @@ function TestList(props: Props) {
                     >
                       <td>
                         <TestStatus testResult={test} />
+                      </td>
+                      <td>
+                        <Thumbnail
+                          url={
+                            test.thumbnail_file_id
+                              ? `/api/v1/files/${test.thumbnail_file_id}`
+                              : undefined
+                          }
+                          width={"60px"}
+                          height={"35px"}
+                        />
                       </td>
                       <td>{test.test_identifier.split("/")[0]}</td>
                       <td>/</td>
