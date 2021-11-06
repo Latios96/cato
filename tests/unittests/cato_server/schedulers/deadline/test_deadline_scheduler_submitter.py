@@ -1,3 +1,5 @@
+import pytest
+
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato_common.domain.submission_info import SubmissionInfo
@@ -9,14 +11,20 @@ from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
 from tests.utils import mock_safe
 
 
-class TestDeadlineSchedulerSubmitter:
-    def setup_method(self, method):
-        self.deadline_api_mock = mock_safe(DeadlineApi)
-        self.deadline_submitter = DeadlineSchedulerSubmitter(
-            "http://localhost:8085", self.deadline_api_mock
-        )
+@pytest.fixture
+def test_context():
+    class TestContext:
+        def __init__(self):
+            self.deadline_api_mock = mock_safe(DeadlineApi)
+            self.deadline_submitter = DeadlineSchedulerSubmitter(
+                "http://localhost:8085", self.deadline_api_mock
+            )
 
-    def test_should_submit_single_job_successfully(self, config_fixture):
+    return TestContext()
+
+
+class TestDeadlineSchedulerSubmitter:
+    def test_should_submit_single_job_successfully(self, config_fixture, test_context):
         submission_info = SubmissionInfo(
             id=0,
             config=config_fixture.CONFIG,
@@ -25,9 +33,9 @@ class TestDeadlineSchedulerSubmitter:
             executable="python",
         )
 
-        self.deadline_submitter.submit_tests(submission_info)
+        test_context.deadline_submitter.submit_tests(submission_info)
 
-        self.deadline_api_mock.submit_jobs.assert_called_with(
+        test_context.deadline_api_mock.submit_jobs.assert_called_with(
             [
                 DeadlineJob(
                     job_info={
@@ -47,7 +55,7 @@ class TestDeadlineSchedulerSubmitter:
             ]
         )
 
-    def test_should_submit_all_jobs(self, config_fixture):
+    def test_should_submit_all_jobs(self, config_fixture, test_context):
         config = config_fixture.CONFIG
         config.suites[0].tests.append(
             Test(
@@ -65,9 +73,9 @@ class TestDeadlineSchedulerSubmitter:
             executable="python",
         )
 
-        self.deadline_submitter.submit_tests(submission_info)
+        test_context.deadline_submitter.submit_tests(submission_info)
 
-        self.deadline_api_mock.submit_jobs.assert_called_with(
+        test_context.deadline_api_mock.submit_jobs.assert_called_with(
             [
                 DeadlineJob(
                     job_info={
