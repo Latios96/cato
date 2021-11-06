@@ -175,13 +175,24 @@ def run(sessionmaker_fixture, project):
 
 
 @pytest.fixture
-def saving_run_factory(sessionmaker_fixture, project):
+def run_factory():
+    def func(project_id=None, started_at=None):
+        return Run(
+            id=0,
+            project_id=or_default(project_id, 1),
+            started_at=or_default(started_at, datetime.datetime.now()),
+        )
+
+    return func
+
+
+@pytest.fixture
+def saving_run_factory(sessionmaker_fixture, project, run_factory):
     def func(project_id=None, started_at=None):
         repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-        run = Run(
-            id=0,
+        run = run_factory(
             project_id=or_default(project_id, project.id),
-            started_at=or_default(started_at, datetime.datetime.now()),
+            started_at=started_at,
         )
         return repository.save(run)
 
@@ -189,11 +200,23 @@ def saving_run_factory(sessionmaker_fixture, project):
 
 
 @pytest.fixture
-def saving_suite_result_factory(sessionmaker_fixture, run):
+def suite_result_factory():
+    def func(run_id=None, suite_name=None, suite_variables=None):
+        return SuiteResult(
+            id=0,
+            run_id=run_id,
+            suite_name=or_default(suite_name, "my_suite"),
+            suite_variables=or_default(suite_variables, {"key": "value"}),
+        )
+
+    return func
+
+
+@pytest.fixture
+def saving_suite_result_factory(sessionmaker_fixture, run, suite_result_factory):
     def func(run_id=None, suite_name=None, suite_variables=None):
         repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
-        suite_result = SuiteResult(
-            id=0,
+        suite_result = suite_result_factory(
             run_id=or_default(run_id, run.id),
             suite_name=or_default(suite_name, "my_suite"),
             suite_variables=or_default(suite_variables, {"key": "value"}),
