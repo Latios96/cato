@@ -148,6 +148,7 @@ def test_get_by_id_should_find_should_contain_no_tests(
                 "name": "my_test_name",
                 "status": "SUCCESS",
                 "test_identifier": "my_suite/my_test_name",
+                "thumbnail_file_id": None,
             }
         ],
     }

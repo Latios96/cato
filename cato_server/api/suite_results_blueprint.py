@@ -143,6 +143,7 @@ class SuiteResultsBlueprint(APIRouter):
                     status=TestStatusDto(
                         test.status.value if test.status else "FAILED"
                     ),
+                    thumbnail_file_id=test.thumbnail_file_id,
                 )
             )
 

@@ -108,6 +108,7 @@ types:
           finished_at: optional<datetime>
           comparison_settings: optional<ComparisonSettingsDto>
           error_value: optional<double>
+          thumbnail_file_id: optional<integer>
 
       SuiteStatusDto:
         values:
@@ -131,6 +132,7 @@ types:
           test_identifier: string
           execution_status: ExecutionStatusDto
           status: TestStatusDto
+          thumbnail_file_id: optional<integer>
 
       SuiteResultSummaryDto:
         fields:

@@ -188,6 +188,7 @@ class TestResultsBlueprint(APIRouter):
                         if test_result.status
                         else TestStatus.FAILED
                     ),
+                    thumbnail_file_id=test_result.thumbnail_file_id,
                 )
             )
         return JSONResponse(
@@ -219,6 +220,7 @@ class TestResultsBlueprint(APIRouter):
                         if test_result.status
                         else TestStatus.FAILED
                     ),
+                    thumbnail_file_id=test_result.thumbnail_file_id,
                 )
             )
         page.entities = test_result_short_summary_dtos
@@ -263,6 +265,7 @@ class TestResultsBlueprint(APIRouter):
             if result.comparison_settings
             else None,
             error_value=result.error_value,
+            thumbnail_file_id=result.thumbnail_file_id,
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
 

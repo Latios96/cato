@@ -74,6 +74,7 @@ def step_impl(live_server, scenario_context):
             "name": "write_black_image",
             "status": "FAILED",
             "test_identifier": "WriteImages/write_black_image",
+            "thumbnail_file_id": 6,
         },
         {
             "execution_status": "FINISHED",
@@ -81,6 +82,7 @@ def step_impl(live_server, scenario_context):
             "name": "write_white_image",
             "status": "FAILED",
             "test_identifier": "WriteImages/write_white_image",
+            "thumbnail_file_id": 3,
         },
     ]
 
@@ -139,6 +141,7 @@ def step_impl(scenario_context, live_server):
             "name": "write_black_image",
             "status": "SUCCESS",
             "test_identifier": "WriteImages/write_black_image",
+            "thumbnail_file_id": 16,
         },
         {
             "execution_status": "FINISHED",
@@ -146,6 +149,7 @@ def step_impl(scenario_context, live_server):
             "name": "write_white_image",
             "status": "SUCCESS",
             "test_identifier": "WriteImages/write_white_image",
+            "thumbnail_file_id": 8,
         },
     ]
 
