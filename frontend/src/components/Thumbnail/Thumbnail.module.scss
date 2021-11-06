@@ -1,0 +1,13 @@
+.thumbnail {
+  background-size: contain;
+  background-position: center;
+  background-color: black;
+  border: 1px solid #dddddd;
+}
+.thumbnailPlaceholder {
+  display: flex;
+  > svg {
+    margin: auto;
+    color: #818181;
+  }
+}
