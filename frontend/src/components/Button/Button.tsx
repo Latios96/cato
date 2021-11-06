@@ -5,6 +5,7 @@ interface Props {
   primary?: boolean;
   onClick?: () => void;
   disabled?: boolean;
+  solid?: boolean;
 }
 
 const Button = (props: PropsWithChildren<Props>) => {
@@ -14,6 +15,7 @@ const Button = (props: PropsWithChildren<Props>) => {
       onClick={props.onClick}
       disabled={props.disabled}
       data-primary={props.primary}
+      data-solid={props.solid}
     >
       {props.children}
     </button>

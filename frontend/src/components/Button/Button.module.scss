@@ -16,6 +16,8 @@
 }
 button:disabled {
   color: grey;
+}
+button[data-primary="true"]:disabled {
   background-color: #e8e8e8;
 }
 .button:hover {

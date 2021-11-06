@@ -92,6 +92,7 @@ function TestResultComparisonResultImpl(props: Props) {
                               payload: toFixed(props.testResult.error_value),
                             });
                           }}
+                          solid={true}
                         >
                           match error
                         </Button>
@@ -107,7 +108,7 @@ function TestResultComparisonResultImpl(props: Props) {
               <tr className={styles.buttonRow}>
                 {state.isEditing ? (
                   <>
-                    <Button onClick={update} primary={true}>
+                    <Button onClick={update} primary={true} solid={true}>
                       OK
                     </Button>
                     <Button
@@ -116,6 +117,7 @@ function TestResultComparisonResultImpl(props: Props) {
                           type: ActionType.CANCEL,
                         })
                       }
+                      solid={true}
                     >
                       Cancel
                     </Button>
@@ -131,6 +133,7 @@ function TestResultComparisonResultImpl(props: Props) {
                       disabled={
                         state.isEditableChecking || !state.isEditable.can_edit
                       }
+                      solid={true}
                     >
                       Edit
                     </Button>
