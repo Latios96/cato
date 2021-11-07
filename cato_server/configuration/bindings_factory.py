@@ -10,7 +10,6 @@ from sqlalchemy.orm import sessionmaker
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
@@ -88,11 +87,6 @@ class StorageBindings:
 
 
 @dataclass
-class MessageQueueBindings:
-    message_queue_binding: OptionalComponent[AbstractMessageQueue]
-
-
-@dataclass
 class SchedulerBindings:
     scheduler_submitter_binding: OptionalComponent[AbstractSchedulerSubmitter]
 
@@ -101,7 +95,6 @@ class SchedulerBindings:
 class Bindings:
     storage_bindings: StorageBindings
     app_configuration: AppConfiguration
-    message_queue_bindings: MessageQueueBindings
     scheduler_bindings: SchedulerBindings
 
 
@@ -149,10 +142,6 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
         bind(
-            "message_queue",
-            to_instance=self._bindings.message_queue_bindings.message_queue_binding,
-        )
-        bind(
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
         )
@@ -177,12 +166,10 @@ class BindingsFactory:
     def create_bindings(self) -> PinjectBindings:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
-        message_queue_bindings = self.create_message_queue_bindings()
         scheduler_bindings = self.create_scheduler_bindings()
         bindings = Bindings(
             storage_bindings,
             self._configuration,
-            message_queue_bindings,
             scheduler_bindings,
         )
         return PinjectBindings(bindings)
@@ -203,10 +190,6 @@ class BindingsFactory:
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
-
-    def create_message_queue_bindings(self):
-        logger.info("Creating message queue bindings..")
-        return MessageQueueBindings(message_queue_binding=OptionalComponent.empty())
 
     def _get_session_maker(self):
         return sessionmaker(bind=self._get_engine())

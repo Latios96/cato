@@ -2,9 +2,6 @@ import os
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
-from cato_server.configuration.message_queue_configuration import (
-    MessageQueueConfiguration,
-)
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -33,7 +30,6 @@ class AppConfigurationDefaults:
                 max_bytes=self.MAX_BYTES_DEFAULT,
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
-            message_queue_configuration=MessageQueueConfiguration(host="localhost"),
             scheduler_configuration=SchedulerConfiguration(),
             sentry_configuration=SentryConfiguration(url=None),
         )
@@ -54,7 +50,6 @@ class AppConfigurationDefaults:
                 max_bytes=self.MAX_BYTES_DEFAULT,
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
-            message_queue_configuration=MessageQueueConfiguration(host=""),
             scheduler_configuration=SchedulerConfiguration(),
             sentry_configuration=SentryConfiguration(url=None),
         )

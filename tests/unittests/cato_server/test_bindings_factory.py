@@ -1,8 +1,5 @@
 from sqlalchemy.orm import sessionmaker
 
-from cato_server.configuration.message_queue_configuration import (
-    MessageQueueConfiguration,
-)
 from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
@@ -49,7 +46,6 @@ def test_create_storage_bindings_for_postgres():
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
-        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
     )
@@ -86,7 +82,6 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
-        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
     )
@@ -116,25 +111,6 @@ def test_create_storage_bindings_using_sqlite_in_memory():
     )
 
 
-CONFIG_FOR_MESSAGE_QUEUE_TESTING = AppConfiguration(
-    port=5000,
-    debug=True,
-    storage_configuration=StorageConfiguration(
-        database_url="sqlite:///:memory:",
-        file_storage_url="some_path",
-    ),
-    logging_configuration=LoggingConfiguration(
-        log_file_path=AppConfigurationDefaults.LOG_FILE_PATH_DEFAULT,
-        use_file_handler=AppConfigurationDefaults.USE_FILE_HANDLER_DEFAULT,
-        max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
-        backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
-    ),
-    message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
-    scheduler_configuration=SchedulerConfiguration(),
-    sentry_configuration=SentryConfiguration(url=None),
-)
-
-
 def test_create_scheduler_bindings_no_scheduler():
     config = AppConfiguration(
         port=5000,
@@ -149,7 +125,6 @@ def test_create_scheduler_bindings_no_scheduler():
             max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
-        message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
     )
@@ -173,7 +148,6 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
         max_bytes=AppConfigurationDefaults.MAX_BYTES_DEFAULT,
         backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
     ),
-    message_queue_configuration=MessageQueueConfiguration(host="NOT_AVAILABLE"),
     scheduler_configuration=DeadlineSchedulerConfiguration("test"),
     sentry_configuration=SentryConfiguration(url=None),
 )

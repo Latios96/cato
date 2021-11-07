@@ -9,9 +9,6 @@ from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
-from cato_server.configuration.message_queue_configuration import (
-    MessageQueueConfiguration,
-)
 from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
@@ -35,7 +32,6 @@ class AppConfigurationReader:
 
         storage_configuration = self._read_storage_configuration(config)
         logging_configuration = self._read_logging_configuration(config)
-        message_queue_configuration = self._read_message_queue_configuration(config)
         scheduler_configuration = self._read_scheduler_configuration(config)
         sentry_configuration = self._read_sentry_configuration(config)
 
@@ -48,7 +44,6 @@ class AppConfigurationReader:
             ),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
-            message_queue_configuration=message_queue_configuration,
             scheduler_configuration=scheduler_configuration,
             sentry_configuration=sentry_configuration,
         )
@@ -83,12 +78,6 @@ class AppConfigurationReader:
                 fallback=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
             ),
         )
-
-    def _read_message_queue_configuration(
-        self, config: configparser.ConfigParser
-    ) -> MessageQueueConfiguration:
-        host = config.get("message_queue", "host", fallback="localhost")
-        return MessageQueueConfiguration(host=host)
 
     def _read_scheduler_configuration(self, config):
         name = config.get("scheduler", "name", fallback=None)

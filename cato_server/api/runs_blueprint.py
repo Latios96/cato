@@ -18,8 +18,6 @@ from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.run_validators import (
     CreateFullRunValidator,
 )
-from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
@@ -39,7 +37,6 @@ class RunsBlueprint(APIRouter):
         project_repository: ProjectRepository,
         test_result_repository: TestResultRepository,
         create_run_usecase: CreateRunUsecase,
-        message_queue: OptionalComponent[AbstractMessageQueue],
         suite_result_repository: SuiteResultRepository,
         object_mapper: ObjectMapper,
         page_mapper: PageMapper,
@@ -49,7 +46,6 @@ class RunsBlueprint(APIRouter):
         self._project_repository = project_repository
         self._test_result_repository = test_result_repository
         self._create_run_usecase = create_run_usecase
-        self._message_queue = message_queue
         self._suite_result_repository = suite_result_repository
         self._object_mapper = object_mapper
         self._page_mapper = page_mapper

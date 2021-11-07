@@ -7,7 +7,6 @@ from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_api_models.catoapimodels import TestResultStartedDto
 
@@ -19,11 +18,9 @@ class StartTest:
     def __init__(
         self,
         test_result_repository: TestResultRepository,
-        message_queue: OptionalComponent[AbstractMessageQueue],
         object_mapper: ObjectMapper,
     ):
         self._test_result_repository = test_result_repository
-        self._message_queue = message_queue
         self._object_mapper = object_mapper
 
     def start_test(self, test_result_id: int, machine_info: MachineInfo) -> None:
@@ -45,17 +42,6 @@ class StartTest:
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Started test %s", test_result)
-
-        if self._message_queue.is_available():
-            dto = TestResultStartedDto(test_result.id)
-            event = Event("TEST_RESULT_STARTED", dto)
-            logger.info("Sending event %s", event)
-            self._message_queue.component.send_event(
-                "test_result_events",
-                str(test_result.suite_result_id),
-                event,
-                self._object_mapper,
-            )
 
     def _reset_possible_data_from_previous_run(self, test_result: TestResult) -> None:
         logger.info(

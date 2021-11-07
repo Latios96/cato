@@ -3,12 +3,8 @@ import logging
 from typing import Optional
 
 from cato.domain.test_status import TestStatus
-from cato_api_models.catoapimodels import TestResultFinishedDto
-from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.event import Event
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
@@ -23,13 +19,11 @@ class FinishTest:
         self,
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
-        message_queue: OptionalComponent[AbstractMessageQueue],
         object_mapper: ObjectMapper,
         create_thumbnail: CreateThumbnail,
     ):
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
-        self._message_queue = message_queue
         self._object_mapper = object_mapper
         self._create_thumbnail = create_thumbnail
 
@@ -80,17 +74,6 @@ class FinishTest:
                     test_result_id,
                 )
                 logger.exception(e)
-
-        if self._message_queue.is_available():
-            dto = TestResultFinishedDto(test_result.id)
-            event = Event("TEST_RESULT_FINISHED", dto)
-            logger.info("Sending event %s", event)
-            self._message_queue.component.send_event(
-                "test_result_events",
-                str(test_result.suite_result_id),
-                event,
-                self._object_mapper,
-            )
 
     def fail_test(self, test_result_id: int, message: str) -> None:
         logger.info("Failing test with id %s with message %s", test_result_id, message)

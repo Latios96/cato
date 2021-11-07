@@ -28,13 +28,9 @@ from cato_server.configuration.bindings_factory import (
     BindingsFactory,
     Bindings,
     PinjectBindings,
-    MessageQueueBindings,
     SchedulerBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
-from cato_server.configuration.message_queue_configuration import (
-    MessageQueueConfiguration,
-)
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
@@ -512,22 +508,16 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
         logging_configuration=LoggingConfiguration(
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
-        message_queue_configuration=MessageQueueConfiguration(host="DISABLED"),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()
     storage_bindings.session_maker_binding = sessionmaker_fixture
-    message_queue_bindings = MessageQueueBindings(
-        message_queue_binding=OptionalComponent.empty()
-    )
     scheduler_bindings = SchedulerBindings(
         scheduler_submitter_binding=OptionalComponent(mocked_scheduler_submitter)
     )
-    bindings = Bindings(
-        storage_bindings, config, message_queue_bindings, scheduler_bindings
-    )
+    bindings = Bindings(storage_bindings, config, scheduler_bindings)
     pinject_bindings = PinjectBindings(bindings)
 
     app = create_app(config, pinject_bindings)

@@ -2,17 +2,15 @@ import datetime
 
 import pytest
 
-from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.event import Event
+from cato_api_models.catoapimodels import TestResultStartedDto
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
+from cato_server.domain.event import Event
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.start_test import StartTest
 from tests.utils import mock_safe
-from cato_api_models.catoapimodels import TestResultStartedDto
 
 
 @pytest.fixture
@@ -20,14 +18,12 @@ def test_context():
     class TestContext:
         def __init__(self):
             self.test_result_repository = mock_safe(TestResultRepository)
-            self.message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
             self.object_mapper = ObjectMapper(
                 MapperRegistryFactory().create_mapper_registry()
             )
             self.machine_info = MachineInfo("cpu_name", 1, 1)
             self.start_test_usecase = StartTest(
                 self.test_result_repository,
-                self.message_queue,
                 self.object_mapper,
             )
 
@@ -62,12 +58,6 @@ class TestStartTest:
         assert test_result.execution_status == ExecutionStatus.RUNNING
         assert test_result.started_at is not None
         assert test_result.machine_info == test_context.machine_info
-        test_context.message_queue.component.send_event.assert_called_with(
-            "test_result_events",
-            str(test_result.suite_result_id),
-            event,
-            test_context.object_mapper,
-        )
 
     def test_starting_an_existing_which_was_started_at_least_once_should_reset_data(
         self, test_result_factory, test_context
@@ -81,7 +71,6 @@ class TestStartTest:
         test_context.start_test_usecase.start_test(1, test_context.machine_info)
 
         test_context.test_result_repository.save.assert_called_with(test_result)
-        test_context.message_queue.component.send_event.assert_called_once()
         assert test_result.execution_status == ExecutionStatus.RUNNING
         assert test_result.started_at is not None
         assert test_result.status == None

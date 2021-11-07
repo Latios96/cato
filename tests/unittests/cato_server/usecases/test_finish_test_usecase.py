@@ -6,7 +6,6 @@ from cato.domain.test_status import TestStatus
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
-from cato_server.queues.abstract_message_queue import AbstractMessageQueue
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
@@ -14,10 +13,6 @@ from cato_server.storage.abstract.test_result_repository import TestResultReposi
 from cato_server.usecases.create_thumbnail import CreateThumbnail
 from cato_server.usecases.finish_test import FinishTest
 from tests.utils import mock_safe
-
-# no reference or output image should not create thumbnail
-# create thumbnail
-# exception during thumbnail creation should not be an issue
 
 
 def test_should_finish(test_result_factory, object_mapper):
@@ -32,12 +27,10 @@ def test_should_finish(test_result_factory, object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
-    message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
-        message_queue,
         object_mapper,
         mock_create_thumbnail,
     )
@@ -69,7 +62,6 @@ def test_should_finish(test_result_factory, object_mapper):
     )
     test_result_repository.save.assert_called_with(expected_test_result)
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
-    message_queue.component.send_event.assert_called_once()
     mock_create_thumbnail.create_thumbnail.assert_called_with(expected_test_result)
 
 
@@ -80,12 +72,10 @@ def test_should_raise_no_test_result_with_id(object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
-    message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
-        message_queue,
         object_mapper,
         mock_create_thumbnail,
     )
@@ -114,12 +104,10 @@ def test_should_fail_test(test_result_factory, object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=datetime.datetime.now()
     )
-    message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
-        message_queue,
         object_mapper,
         mock_create_thumbnail,
     )
@@ -143,7 +131,6 @@ def test_should_fail_test(test_result_factory, object_mapper):
         )
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
-    message_queue.component.send_event.assert_called_once()
     mock_create_thumbnail.create_thumbnail.assert_not_called()
 
 
@@ -156,13 +143,11 @@ def test_exception_during_thumbnail_creation_should_not_be_an_issue(
         id=42, started_at=(datetime.datetime.now())
     )
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
-    message_queue = OptionalComponent(mock_safe(AbstractMessageQueue))
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     mock_create_thumbnail.create_thumbnail.side_effect = Exception()
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
-        message_queue,
         object_mapper,
         mock_create_thumbnail,
     )
