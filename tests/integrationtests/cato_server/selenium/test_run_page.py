@@ -203,13 +203,13 @@ class TestRunTestPage:
     def _should_display_test_result(self, selenium_driver, test_result):
         assert (
             selenium_driver.find_element_by_xpath(
-                '//*[@id="testList"]/tbody/tr/td[2]'
+                '//*[@id="testList"]/tbody/tr/td[3]'
             ).text
             == test_result.test_identifier.suite_name
         )
         assert (
             selenium_driver.find_element_by_xpath(
-                '//*[@id="testList"]/tbody/tr/td[4]'
+                '//*[@id="testList"]/tbody/tr/td[5]'
             ).text
             == test_result.test_identifier.test_name
         )
@@ -393,7 +393,7 @@ class TestRunSuitePage:
     def _should_display_test_result(self, selenium_driver, suite_result, test_result):
         assert (
             selenium_driver.find_element_by_xpath(
-                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[2]'
+                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[3]'
             ).text
             == test_result.test_name
         )
@@ -435,7 +435,7 @@ class TestRunSuitePage:
     ):
         assert (
             selenium_driver.find_element_by_xpath(
-                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[2]'
+                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[3]'
             ).text
             == test_result.test_name
         )
