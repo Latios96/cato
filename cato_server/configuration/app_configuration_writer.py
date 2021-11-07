@@ -27,6 +27,10 @@ class AppConfigurationWriter:
         if scheduler_configuration.name == "Deadline":
             config_reader.set("scheduler", "deadline_url", scheduler_configuration.url)
 
+        if config.sentry_configuration.url:
+            config_reader.add_section("sentry")
+            config_reader.set("sentry", "url", config.sentry_configuration.url)
+
         config_reader.write(stream)
 
     def write_file(self, config: AppConfiguration, path: str) -> None:

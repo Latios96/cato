@@ -19,6 +19,10 @@ name = None
 
 """
 
+EXPECTED_SENTRY = """[sentry]
+url = the_host
+"""
+
 
 def test_write_stream():
     string_stream = StringIO()
@@ -28,3 +32,14 @@ def test_write_stream():
     app_configuration_writer.write_stream(config, string_stream)
 
     assert string_stream.getvalue() == EXPECTED
+
+
+def test_write_with_sentry():
+    string_stream = StringIO()
+    app_configuration_writer = AppConfigurationWriter()
+    config = AppConfigurationDefaults().create()
+    config.sentry_configuration.url = "the_host"
+
+    app_configuration_writer.write_stream(config, string_stream)
+
+    assert EXPECTED_SENTRY in string_stream.getvalue()
