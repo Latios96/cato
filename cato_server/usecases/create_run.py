@@ -4,9 +4,6 @@ import logging
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_models.catoapimodels import CreateFullRunDto
-from cato_api_models.catoapimodels import RunDto, RunStatusDto
-from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.domain.event import Event
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult
