@@ -6,11 +6,6 @@ import pytest
 
 
 @pytest.fixture
-def scenario_context():
-    return {}
-
-
-@pytest.fixture
 def dir_changer():
     old_dir = os.getcwd()
     yield
@@ -18,15 +13,13 @@ def dir_changer():
 
 
 @pytest.fixture
-def cato_config(tmp_path, test_resource_provider, scenario_context):
+def cato_config(tmp_path, test_resource_provider):
     config_folder = os.path.join(str(tmp_path), "config_folder")
     shutil.copytree(
         test_resource_provider.resource_by_name("cato_cmd_integ_tests"), config_folder
     )
 
-    scenario_context["config_folder"] = config_folder
     config_path = os.path.join(config_folder, "cato.json")
-    scenario_context["config_path"] = config_path
 
     with open(config_path) as f:
         content = f.read()
@@ -38,13 +31,16 @@ def cato_config(tmp_path, test_resource_provider, scenario_context):
 
     with open(config_path, "wb") as f:
         f.write(content.encode())
+    return config_folder, config_path
 
 
 @pytest.fixture
-def create_result_path(scenario_context):
+def create_result_path(cato_config):
+    config_folder, config_path = cato_config
+
     def f(suite_name, test_name):
         return os.path.join(
-            scenario_context["config_folder"],
+            config_folder,
             "result",
             suite_name,
             test_name,
@@ -55,10 +51,10 @@ def create_result_path(scenario_context):
 
 
 @pytest.fixture
-def create_reference_path(scenario_context):
+def create_reference_path(cato_config):
+    config_folder, config_path = cato_config
+
     def f(suite_name, test_name):
-        return os.path.join(
-            scenario_context["config_folder"], suite_name, test_name, "reference.png"
-        )
+        return os.path.join(config_folder, suite_name, test_name, "reference.png")
 
     return f
