@@ -5,6 +5,7 @@ from typing import Dict, Optional
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
 
@@ -30,6 +31,7 @@ class TestResult:
     comparison_settings: Optional[ComparisonSettings] = None
     error_value: Optional[float] = None
     thumbnail_file_id: Optional[int] = None
+    failure_reason: Optional[TestFailureReason] = None
     __test__ = False
 
     def __post_init__(self):

@@ -97,6 +97,7 @@ def test_get_test_result_by_run_and_identifier_success(
         "comparison_settings": None,
         "error_value": None,
         "thumbnail_file_id": None,
+        "failure_reason": None,
     }
 
 

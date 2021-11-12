@@ -21,6 +21,7 @@ from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -261,6 +262,7 @@ def test_result_factory():
         error_value=None,
         comparison_settings=None,
         thumbnail_file_id: Optional[int] = None,
+        failure_reason: Optional[TestFailureReason] = None,
     ):
         return TestResult(
             id=or_default(id, 0),
@@ -287,6 +289,7 @@ def test_result_factory():
             comparison_settings=comparison_settings,
             error_value=or_default(error_value, None),
             thumbnail_file_id=or_default(thumbnail_file_id, None),
+            failure_reason=or_default(failure_reason, None),
         )
 
     return factory
@@ -314,6 +317,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
         error_value=None,
         comparison_settings=None,
         thumbnail_file_id: Optional[int] = None,
+        failure_reason: Optional[TestFailureReason] = None,
     ):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result = test_result_factory(
@@ -336,6 +340,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
             error_value,
             comparison_settings,
             thumbnail_file_id,
+            failure_reason,
         )
         return repository.save(test_result)
 
