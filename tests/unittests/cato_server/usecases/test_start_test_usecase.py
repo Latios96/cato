@@ -3,7 +3,6 @@ import datetime
 import pytest
 
 from cato_api_models.catoapimodels import TestResultStartedDto
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.unified_test_status import UnifiedTestStatus
@@ -75,7 +74,7 @@ class TestStartTest:
         test_context.start_test_usecase.start_test(1, test_context.machine_info)
 
         test_context.test_result_repository.save.assert_called_with(test_result)
-        assert test_result.unified_test_status == ExecutionStatus.RUNNING
+        assert test_result.unified_test_status == UnifiedTestStatus.RUNNING
         assert test_result.started_at is not None
         assert test_result.seconds is None
         assert test_result.message is None

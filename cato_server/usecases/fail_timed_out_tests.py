@@ -1,8 +1,8 @@
 import datetime
 
 
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
@@ -42,7 +42,7 @@ class FailTimedOutTests:
             test_result = self._test_result_repository.find_by_id(
                 timed_out_heartbeat.test_result_id
             )
-            if test_result.unified_test_status == ExecutionStatus.RUNNING:
+            if test_result.unified_test_status == UnifiedTestStatus.RUNNING:
                 self._finish_test.fail_test(
                     test_result.id, "Test timed out!", TestFailureReason.TIMED_OUT
                 )

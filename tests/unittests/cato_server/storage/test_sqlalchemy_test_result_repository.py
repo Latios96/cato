@@ -5,7 +5,6 @@ from sqlalchemy.exc import IntegrityError
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
@@ -858,7 +857,7 @@ def test_status_information_by_run_id_multiple_runs_only_correct_run(
     )
     test_result_run_1_2 = saving_test_result_factory(
         suite_result_id=suite_result_2.id,
-        unified_test_status=ExecutionStatus.RUNNING,
+        unified_test_status=UnifiedTestStatus.RUNNING,
     )
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(

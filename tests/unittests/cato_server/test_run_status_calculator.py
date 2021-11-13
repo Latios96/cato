@@ -1,6 +1,5 @@
 import pytest
 
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
@@ -34,12 +33,10 @@ def test_calculate_not_started():
 @pytest.mark.parametrize(
     "test_results",
     [
-        {ExecutionStatus.RUNNING},
-        {ExecutionStatus.RUNNING, ExecutionStatus.NOT_STARTED},
+        {UnifiedTestStatus.RUNNING},
         {
-            ExecutionStatus.RUNNING,
-            ExecutionStatus.NOT_STARTED,
-            ExecutionStatus.FINISHED,
+            UnifiedTestStatus.RUNNING,
+            UnifiedTestStatus.NOT_STARTED,
         },
     ],
 )

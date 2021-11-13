@@ -7,12 +7,10 @@ from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTim
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.test_status import TestStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.test_result_status_information import (
@@ -138,20 +136,6 @@ class SqlAlchemyTestResultRepository(
             if entity.failure_reason
             else None,
         )
-
-    def _map_test_status(self, status):
-        if not status:
-            return None
-        return TestStatus.SUCCESS if status == "SUCCESS" else TestStatus.FAILED
-
-    def _map_execution_status(self, status):
-        if not status:
-            return None
-        return {
-            "NOT_STARTED": ExecutionStatus.NOT_STARTED,
-            "RUNNING": ExecutionStatus.RUNNING,
-            "FINISHED": ExecutionStatus.FINISHED,
-        }[status]
 
     def mapping_cls(self):
         return _TestResultMapping

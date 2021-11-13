@@ -1,15 +1,14 @@
-from typing import Optional, Set, Tuple, Dict, List
+from typing import Optional, Set, Dict, List
 
-from cato_common.domain.test_status import TestStatus
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.test_result_status_information import (
     TestResultStatusInformation,
 )
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
-from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
@@ -49,7 +48,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
 
     def find_execution_status_by_project_id(
         self, project_id: int
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
 
     def test_count_by_run_id(self, run_id: int) -> int:
@@ -63,7 +62,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
 
     def find_execution_status_by_suite_ids(
         self, suite_ids: Set[int]
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
 
     def find_by_run_id_filter_by_test_status(
