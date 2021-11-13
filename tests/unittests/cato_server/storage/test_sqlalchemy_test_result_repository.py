@@ -342,7 +342,7 @@ def test_find_by_run_id_with_filter_options_should_find_correctly(
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
     result = repository.find_by_run_id(
-        run.id, TestResultFilterOptions(status=filter_by)
+        run.id, TestResultFilterOptions(status=filter_by, failure_reason=None)
     )
 
     assert [x.id for x in result] == ids
@@ -369,7 +369,9 @@ def test_find_by_run_id_paginated_with_filter_options_should_find_correctly(
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
     result_paginated = repository.find_by_run_id_with_paging(
-        run.id, PageRequest(1, 10), TestResultFilterOptions(status=filter_by)
+        run.id,
+        PageRequest(1, 10),
+        TestResultFilterOptions(status=filter_by, failure_reason=None),
     )
 
     assert [x.id for x in result_paginated.entities] == ids

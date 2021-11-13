@@ -4,6 +4,7 @@
 import pytest
 from starlette.datastructures import ImmutableMultiDict
 
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_server.api.filter_option_utils import (
     result_filter_options_from_request,
     suite_result_filter_options_from_request,
@@ -24,7 +25,7 @@ class TestTestResultFilterOptions:
         test_result_filter_options = result_filter_options_from_request(request_args)
 
         assert test_result_filter_options == TestResultFilterOptions(
-            status=StatusFilter.NONE
+            status=StatusFilter.NONE, failure_reason=None
         )
 
     def test_from_request_success_with_status_filter_not_set(self):
@@ -33,7 +34,31 @@ class TestTestResultFilterOptions:
         test_result_filter_options = result_filter_options_from_request(request_args)
 
         assert test_result_filter_options == TestResultFilterOptions(
-            status=StatusFilter.NONE
+            status=StatusFilter.NONE, failure_reason=None
+        )
+
+    def test_from_request_success_with_failure_reason(self):
+        request_args = ImmutableMultiDict(
+            {"statusFilter": "FAILED", "failureReasonFilter": "TIMED_OUT"}
+        )
+
+        test_result_filter_options = result_filter_options_from_request(request_args)
+
+        assert test_result_filter_options == TestResultFilterOptions(
+            status=StatusFilter.FAILED, failure_reason=TestFailureReason.TIMED_OUT
+        )
+
+    def test_from_request_success_with_no_failure_reason_when_status_filter_is_not_failed(
+        self,
+    ):
+        request_args = ImmutableMultiDict(
+            {"statusFilter": "NONE", "failureReasonFilter": "TIMED_OUT"}
+        )
+
+        test_result_filter_options = result_filter_options_from_request(request_args)
+
+        assert test_result_filter_options == TestResultFilterOptions(
+            status=StatusFilter.NONE, failure_reason=None
         )
 
     def test_from_request_success_with_status_filter_invalid_value(self):
