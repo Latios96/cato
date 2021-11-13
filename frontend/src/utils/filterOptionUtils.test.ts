@@ -1,5 +1,6 @@
 import { filterOptionsFromQueryString } from "./filterOptionUtils";
 import { FilterOptions, StatusFilter } from "../models/FilterOptions";
+import { TestFailureReasonDto } from "../catoapimodels";
 
 describe("filterOptionUtils", () => {
   describe("filterOptionsFromQueryString", () => {
@@ -15,6 +16,26 @@ describe("filterOptionUtils", () => {
       const filterOptions = filterOptionsFromQueryString("asdf=test");
 
       expect(filterOptions).toStrictEqual(new FilterOptions(StatusFilter.NONE));
+    });
+
+    it("should parse failureReason", () => {
+      const filterOptions = filterOptionsFromQueryString(
+        "statusFilter=FAILED&failureReasonFilter=TIMED_OUT"
+      );
+
+      expect(filterOptions).toStrictEqual(
+        new FilterOptions(StatusFilter.FAILED, TestFailureReasonDto.TIMED_OUT)
+      );
+    });
+
+    it("should not parse failureReason if statusFilter is not FAILED", () => {
+      const filterOptions = filterOptionsFromQueryString(
+        "statusFilter=SUCCESS&failureReasonFilter=TIMED_OUT"
+      );
+
+      expect(filterOptions).toStrictEqual(
+        new FilterOptions(StatusFilter.SUCCESS)
+      );
     });
   });
 });

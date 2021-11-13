@@ -1,7 +1,8 @@
 import each from "jest-each";
 import FilterControls from "./FilterControls";
-import { render } from "@testing-library/react";
+import { fireEvent, render } from "@testing-library/react";
 import { FilterOptions, StatusFilter } from "../../models/FilterOptions";
+import { TestFailureReasonDto } from "../../catoapimodels";
 
 describe("FilterControls", () => {
   each([
@@ -17,15 +18,127 @@ describe("FilterControls", () => {
       const rendered = render(
         <FilterControls
           currentFilterOptions={new FilterOptions(StatusFilter.NONE)}
-          statusFilterChanged={filterChangedCallback}
+          filterOptionsChanged={filterChangedCallback}
         />
       );
 
       rendered.getByText(label).click();
 
-      expect(filterChangedCallback).toBeCalledWith(status);
+      expect(filterChangedCallback).toBeCalledWith({
+        status,
+        failureReason: undefined,
+      });
     }
   );
+
+  describe("failure reason filters should be only displayed if statusFilter is FAILED", () => {
+    it("should not display failure reasons", () => {
+      const filterChangedCallback = jest.fn();
+
+      const rendered = render(
+        <FilterControls
+          currentFilterOptions={new FilterOptions(StatusFilter.NONE)}
+          filterOptionsChanged={filterChangedCallback}
+        />
+      );
+
+      expect(rendered.queryByText("Failure Reason")).not.toBeInTheDocument();
+    });
+    it("should display failure reasons", () => {
+      const filterChangedCallback = jest.fn();
+
+      const rendered = render(
+        <FilterControls
+          currentFilterOptions={new FilterOptions(StatusFilter.FAILED)}
+          filterOptionsChanged={filterChangedCallback}
+        />
+      );
+      expect(rendered.queryByText("Failure Reason")).toBeInTheDocument();
+    });
+  });
+
+  each([
+    ["None", undefined],
+    [
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+    ],
+    [
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+    ],
+    [
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+    ],
+    [
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+    ],
+    [
+      TestFailureReasonDto.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
+      TestFailureReasonDto.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
+    ],
+    [TestFailureReasonDto.TIMED_OUT, TestFailureReasonDto.TIMED_OUT],
+  ]).it(
+    "should report the correct failureReason selection when clicking",
+    (value: string, failureReason?: TestFailureReasonDto) => {
+      const filterChangedCallback = jest.fn();
+      const rendered = render(
+        <FilterControls
+          currentFilterOptions={
+            new FilterOptions(StatusFilter.FAILED, failureReason)
+          }
+          filterOptionsChanged={filterChangedCallback}
+        />
+      );
+
+      fireEvent.change(rendered.getByLabelText("Failure Reason"), {
+        target: { value },
+      });
+
+      expect(filterChangedCallback).toBeCalledWith({
+        status: StatusFilter.FAILED,
+        failureReason,
+      });
+    }
+  );
+
+  it("should default to failure reason filter None when switching to statusFilter FAILED", () => {
+    const filterChangedCallback = jest.fn();
+    const rendered = render(
+      <FilterControls
+        currentFilterOptions={new FilterOptions(StatusFilter.NONE)}
+        filterOptionsChanged={filterChangedCallback}
+      />
+    );
+
+    rendered.getByText("Failed").click();
+
+    expect(filterChangedCallback).toBeCalledWith({
+      status: StatusFilter.FAILED,
+      failureReason: undefined,
+    });
+  });
+
+  it("should remove failure reason filter when switching away from FAILED", () => {
+    const filterChangedCallback = jest.fn();
+    const rendered = render(
+      <FilterControls
+        currentFilterOptions={
+          new FilterOptions(StatusFilter.FAILED, TestFailureReasonDto.TIMED_OUT)
+        }
+        filterOptionsChanged={filterChangedCallback}
+      />
+    );
+
+    rendered.getByText("Success").click();
+
+    expect(filterChangedCallback).toBeCalledWith({
+      status: StatusFilter.SUCCESS,
+      failureReason: undefined,
+    });
+  });
 
   each([
     ["All", StatusFilter.NONE],
@@ -40,7 +153,7 @@ describe("FilterControls", () => {
       const rendered = render(
         <FilterControls
           currentFilterOptions={new FilterOptions(status)}
-          statusFilterChanged={filterChangedCallback}
+          filterOptionsChanged={filterChangedCallback}
         />
       );
 

@@ -28,6 +28,7 @@ function RunTestsPage(props: Props) {
               filterOptionsChanged={(filter) => {
                 const queryString = updateQueryString(history.location.search, {
                   statusFilter: filter.status,
+                  failureReasonFilter: filter.failureReason,
                 });
                 history.push({ search: queryString });
               }}

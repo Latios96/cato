@@ -2,6 +2,8 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import styles from "./FilterControls.module.scss";
 import { FilterOptions, StatusFilter } from "../../models/FilterOptions";
+import { TestFailureReasonDto } from "../../catoapimodels";
+import { getNiceName } from "../../models/testFailureReasonNiceNames";
 
 interface Props {
   currentFilterOptions: FilterOptions;
@@ -20,9 +22,9 @@ function FilterControls(props: Props) {
         checked={props.currentFilterOptions.status === StatusFilter.NONE}
         onClick={() =>
           props.filterOptionsChanged(
-            props.currentFilterOptions.withChangedStatusFilter(
-              StatusFilter.NONE
-            )
+            props.currentFilterOptions
+              .withChangedStatusFilter(StatusFilter.NONE)
+              .withChangedFailureReason(undefined)
           )
         }
         onChange={(e) => {}}
@@ -52,9 +54,9 @@ function FilterControls(props: Props) {
         checked={props.currentFilterOptions.status === StatusFilter.SUCCESS}
         onClick={() =>
           props.filterOptionsChanged(
-            props.currentFilterOptions.withChangedStatusFilter(
-              StatusFilter.SUCCESS
-            )
+            props.currentFilterOptions
+              .withChangedStatusFilter(StatusFilter.SUCCESS)
+              .withChangedFailureReason(undefined)
           )
         }
         onChange={(e) => {}}
@@ -68,9 +70,9 @@ function FilterControls(props: Props) {
         checked={props.currentFilterOptions.status === StatusFilter.RUNNING}
         onClick={() =>
           props.filterOptionsChanged(
-            props.currentFilterOptions.withChangedStatusFilter(
-              StatusFilter.RUNNING
-            )
+            props.currentFilterOptions
+              .withChangedStatusFilter(StatusFilter.RUNNING)
+              .withChangedFailureReason(undefined)
           )
         }
         onChange={(e) => {}}
@@ -84,13 +86,58 @@ function FilterControls(props: Props) {
         checked={props.currentFilterOptions.status === StatusFilter.NOT_STARTED}
         onClick={() =>
           props.filterOptionsChanged(
-            props.currentFilterOptions.withChangedStatusFilter(
-              StatusFilter.NOT_STARTED
-            )
+            props.currentFilterOptions
+              .withChangedStatusFilter(StatusFilter.NOT_STARTED)
+              .withChangedFailureReason(undefined)
           )
         }
         onChange={(e) => {}}
       />
+      {props.currentFilterOptions.status === StatusFilter.FAILED ? (
+        <div className={styles.failureReasonFilterControls}>
+          <Form.Label htmlFor={"failureReasonSelect"}>
+            Failure Reason
+          </Form.Label>
+          <Form.Control
+            id={"failureReasonSelect"}
+            as="select"
+            onChange={(event) => {
+              const newValue =
+                event.currentTarget.value !== "NONE"
+                  ? TestFailureReasonDto[
+                      event.currentTarget
+                        .value as keyof typeof TestFailureReasonDto
+                    ]
+                  : undefined;
+              props.filterOptionsChanged(
+                props.currentFilterOptions.withChangedFailureReason(newValue)
+              );
+            }}
+            custom
+            value={
+              props.currentFilterOptions.failureReason
+                ? props.currentFilterOptions.failureReason
+                : "NONE"
+            }
+          >
+            {" "}
+            <option value={"NONE"}>None</option>
+            {Object.keys(TestFailureReasonDto).map((reason) => {
+              return (
+                <option key={reason} value={reason}>
+                  {getNiceName(
+                    TestFailureReasonDto[
+                      reason as keyof typeof TestFailureReasonDto
+                    ]
+                  )}
+                </option>
+              );
+            })}
+          </Form.Control>
+        </div>
+      ) : (
+        <></>
+      )}
     </div>
   );
 }

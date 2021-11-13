@@ -3,3 +3,13 @@
     margin: 7px;
   }
 }
+.failureReasonFilterControls {
+  display: flex;
+  label {
+    margin: auto;
+  }
+  select {
+    margin-left: 10px;
+    width: auto;
+  }
+}
