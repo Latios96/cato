@@ -12,6 +12,7 @@ from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_common.domain.test_failure_reason import TestFailureReason
 from tests.utils import mock_safe
 
 
@@ -85,6 +86,7 @@ class TestWorkerRunCommand:
             datetime.datetime.now(),
             datetime.datetime.now(),
             1,
+            failure_reason=None,
         )
         test_context.mock_test_runner.run_test.return_value = execution_result
 
@@ -118,6 +120,7 @@ class TestWorkerRunCommand:
             datetime.datetime.now(),
             datetime.datetime.now(),
             1,
+            failure_reason=TestFailureReason.REFERENCE_IMAGE_MISSING,
         )
         test_context.mock_test_runner.run_test.return_value = execution_result
 

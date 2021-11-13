@@ -102,6 +102,7 @@ class TestRunCommand:
                         started_at=started_at,
                         finished_at=finished_at,
                         error_value=1,
+                        failure_reason=None,
                     )
                 ],
             )

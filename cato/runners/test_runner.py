@@ -15,6 +15,7 @@ from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 
 
@@ -86,6 +87,7 @@ class TestRunner:
                 start,
                 end,
                 error_value=None,
+                failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
             )
 
         image_output = self._output_folder.any_existing(self._image_outputs(variables))
@@ -125,6 +127,7 @@ class TestRunner:
                 start,
                 end,
                 error_value=None,
+                failure_reason=TestFailureReason.REFERENCE_IMAGE_MISSING,
             )
 
         if no_image_output and not no_reference_image and reference_image is not None:
@@ -142,6 +145,7 @@ class TestRunner:
                 start,
                 end,
                 error_value=None,
+                failure_reason=TestFailureReason.OUTPUT_IMAGE_MISSING,
             )
 
         if no_image_output and no_reference_image:
@@ -161,6 +165,7 @@ class TestRunner:
                 start,
                 end,
                 error_value=None,
+                failure_reason=TestFailureReason.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
             )
         self._reporter.report_message(
             "Found image output at path {}".format(image_output)
@@ -191,6 +196,7 @@ class TestRunner:
                     start,
                     end,
                     error_value=image_compare_result.error,
+                    failure_reason=TestFailureReason.IMAGES_ARE_NOT_EQUAL,
                 )
 
             return TestExecutionResult(
@@ -205,6 +211,7 @@ class TestRunner:
                 started_at=start,
                 finished_at=end,
                 error_value=image_compare_result.error,
+                failure_reason=None,
             )
         raise RuntimeError("This should never happen!")
 

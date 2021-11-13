@@ -7,6 +7,7 @@ from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.stats_calculator import StatsCalculator, Stats
+from cato_common.domain.test_failure_reason import TestFailureReason
 
 MESSAGE = "this is a message"
 
@@ -31,6 +32,7 @@ def test_calculates_succeded_correctly():
         datetime.datetime.now(),
         datetime.datetime.now(),
         1,
+        failure_reason=None,
     )
     result = [
         TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
@@ -62,6 +64,7 @@ def test_calculates_failed_correctly():
         datetime.datetime.now(),
         datetime.datetime.now(),
         1,
+        failure_reason=None,
     )
     execution_result2 = TestExecutionResult(
         test,
@@ -75,6 +78,7 @@ def test_calculates_failed_correctly():
         datetime.datetime.now(),
         datetime.datetime.now(),
         1,
+        failure_reason=TestFailureReason.REFERENCE_IMAGE_MISSING,
     )
     result = [
         TestSuiteExecutionResult(

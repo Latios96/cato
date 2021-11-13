@@ -8,6 +8,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
+from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
@@ -17,6 +18,7 @@ from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.image import Image
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.compare_image_result import CompareImageResult
 from tests.utils import mock_safe
@@ -175,6 +177,7 @@ class TestTestRunner:
         assert result.image_output == 2
         assert result.reference_image == 1
         assert result.diff_image == 3
+        assert result.failure_reason is None
         test_context.mock_cato_api_client.upload_image.assert_not_called()
         test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
@@ -206,6 +209,7 @@ class TestTestRunner:
 
         assert result.status == TestStatus.FAILED
         assert result.error_value == None
+        assert result.failure_reason == TestFailureReason.EXIT_CODE_NON_ZERO
 
     def test_should_have_failed_with_images_not_equal(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
@@ -246,6 +250,7 @@ class TestTestRunner:
         assert result.reference_image == 2
         assert result.diff_image == 3
         assert result.error_value is not None
+        assert result.failure_reason == TestFailureReason.IMAGES_ARE_NOT_EQUAL
         test_context.mock_cato_api_client.upload_image.assert_not_called()
         test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
@@ -290,6 +295,7 @@ class TestTestRunner:
         assert result.reference_image is None
         assert result.diff_image is None
         assert result.error_value == None
+        assert result.failure_reason == TestFailureReason.REFERENCE_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
         assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
@@ -332,6 +338,7 @@ class TestTestRunner:
         assert result.reference_image == 1
         assert result.diff_image is None
         assert result.error_value == None
+        assert result.failure_reason == TestFailureReason.OUTPUT_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
         assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
@@ -376,7 +383,11 @@ class TestTestRunner:
         assert result.image_output is None
         assert result.reference_image is None
         assert result.diff_image is None
-        assert result.error_value == None
+        assert result.error_value is None
+        assert (
+            result.failure_reason
+            == TestFailureReason.REFERENCE_AND_OUTPUT_IMAGE_MISSING
+        )
         test_context.reporter.report_message.assert_any_call(
             result.message.split(", ")[0]
         )

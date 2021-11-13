@@ -4,6 +4,7 @@ from typing import List, Optional
 
 from cato.domain.test import Test
 from cato.domain.test_status import TestStatus
+from cato_common.domain.test_failure_reason import TestFailureReason
 
 
 @dataclass
@@ -19,5 +20,6 @@ class TestExecutionResult:
     started_at: datetime.datetime
     finished_at: datetime.datetime
     error_value: Optional[float]
+    failure_reason: Optional[TestFailureReason]
 
     __test__ = False
