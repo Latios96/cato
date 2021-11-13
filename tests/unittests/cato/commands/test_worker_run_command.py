@@ -5,7 +5,7 @@ import pytest
 
 from cato.commands.worker_run_command import WorkerRunCommand
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.verbose_mode import VerboseMode

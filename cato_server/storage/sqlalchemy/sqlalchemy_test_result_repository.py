@@ -7,7 +7,7 @@ from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTim
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason

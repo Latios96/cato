@@ -1,6 +1,6 @@
 from typing import Optional, Set, Tuple, Dict, List
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult

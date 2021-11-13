@@ -4,7 +4,7 @@ import pytest
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import (

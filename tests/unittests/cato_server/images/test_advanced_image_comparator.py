@@ -10,7 +10,7 @@ import pytest
 from PIL import ImageChops
 from PIL import Image
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_result import ComparisonResult
 from cato.domain.comparison_settings import ComparisonSettings

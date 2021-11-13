@@ -8,7 +8,7 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_result import TestResult
 from cato_common.storage.page import PageRequest, Page

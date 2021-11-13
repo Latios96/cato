@@ -2,7 +2,7 @@ import datetime
 import logging
 from typing import Optional
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.mappers.object_mapper import ObjectMapper

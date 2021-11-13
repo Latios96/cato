@@ -3,7 +3,7 @@ import datetime
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.domain.test_suite import find_test_by_test_identifier
 from cato.reporter.reporter import Reporter
 from cato.runners.sync_comparison_settings import SyncComparisonSettings

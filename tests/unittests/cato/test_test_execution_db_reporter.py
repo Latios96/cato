@@ -5,7 +5,7 @@ import pytest
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,

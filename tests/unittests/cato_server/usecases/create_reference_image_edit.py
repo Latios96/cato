@@ -1,6 +1,6 @@
 import datetime
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue

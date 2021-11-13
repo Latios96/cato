@@ -6,7 +6,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_api_models.catoapimodels import (
     TestResultDto,
     ImageDto,

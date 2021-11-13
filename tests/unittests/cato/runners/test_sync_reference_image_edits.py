@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.reporter.reporter import Reporter
 from cato.runners.sync_reference_image_edits import SyncReferenceImageEdits
 from cato.variable_processing.variable_processor import VariableProcessor

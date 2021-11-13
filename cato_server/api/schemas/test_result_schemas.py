@@ -3,7 +3,7 @@ from marshmallow import Schema, fields, ValidationError, EXCLUDE
 from marshmallow.validate import Length
 from marshmallow_enum import EnumField
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.api.schemas.general import (

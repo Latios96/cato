@@ -19,7 +19,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.mappers.generic_class_mapper import GenericClassMapper

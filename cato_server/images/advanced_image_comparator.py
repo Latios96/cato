@@ -6,7 +6,7 @@ import cv2
 import numpy
 from skimage import metrics
 from PIL import Image, ImageOps
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato.domain.comparison_result import ComparisonResult
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.resolution import Resolution

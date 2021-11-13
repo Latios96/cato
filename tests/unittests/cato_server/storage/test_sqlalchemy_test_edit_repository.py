@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_edit import (
     EditTypes,

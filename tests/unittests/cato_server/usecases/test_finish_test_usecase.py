@@ -2,9 +2,8 @@ import datetime
 
 import pytest
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_server.configuration.optional_component import OptionalComponent
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (

@@ -7,7 +7,7 @@ import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_api_client.http_template import AbstractHttpTemplate
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,

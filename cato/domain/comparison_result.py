@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import Optional
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 
 
 @dataclass

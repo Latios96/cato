@@ -13,7 +13,7 @@ from sqlalchemy import create_engine
 import cato
 import cato_server
 import cato_server.server_logging
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_common.utils.bindings import imported_modules
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory

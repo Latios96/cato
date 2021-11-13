@@ -1,6 +1,6 @@
 import pytest
 
-from cato.domain.test_status import TestStatus
+from cato_common.domain.test_status import TestStatus
 from cato_server.api.validators.test_result_validators import (
     CreateOutputValidator,
     FinishTestResultValidator,
