@@ -87,7 +87,7 @@ class FinishTestResultValidator(SchemaValidator):
                 self.add_error(
                     errors,
                     "failure_reason",
-                    f"failure_reason is required is test_status is FAILED",
+                    "failure_reason is required is test_status is FAILED",
                 )
 
         return errors
