@@ -4,6 +4,7 @@ from typing import Optional
 
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
@@ -37,6 +38,7 @@ class FinishTest:
         reference_image: Optional[int] = None,
         diff_image: Optional[int] = None,
         error_value: Optional[float] = None,
+        failure_reason: Optional[TestFailureReason] = None,
     ) -> None:
         logger.info(
             'Finishing test test with id %s and message "%s"', test_result_id, message
@@ -54,6 +56,7 @@ class FinishTest:
         test_result.diff_image = diff_image
         test_result.finished_at = self._get_finished_time()
         test_result.error_value = error_value
+        test_result.failure_reason = failure_reason
 
         test_result = self._test_result_repository.save(test_result)
         logger.info("Finished test with id %s", test_result_id)
@@ -75,7 +78,9 @@ class FinishTest:
                 )
                 logger.exception(e)
 
-    def fail_test(self, test_result_id: int, message: str) -> None:
+    def fail_test(
+        self, test_result_id: int, message: str, failure_reason: TestFailureReason
+    ) -> None:
         logger.info("Failing test with id %s with message %s", test_result_id, message)
         self.finish_test(
             test_result_id=test_result_id,
@@ -83,6 +88,7 @@ class FinishTest:
             seconds=-1,
             message=message,
             error_value=None,
+            failure_reason=failure_reason,
         )
         logger.info("Failed test with id %s", test_result_id)
 

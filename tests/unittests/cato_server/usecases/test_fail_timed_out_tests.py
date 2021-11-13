@@ -3,6 +3,7 @@ import datetime
 from cato.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
@@ -99,7 +100,9 @@ def test_should_fail_test():
 
     fail_timed_out_tests.fail_timed_out_tests()
 
-    finish_test.fail_test.assert_called_once()
+    finish_test.fail_test.assert_called_with(
+        0, "Test timed out!", TestFailureReason.TIMED_OUT
+    )
 
 
 def test_not_running_and_timed_out_test_should_not_be_failed():

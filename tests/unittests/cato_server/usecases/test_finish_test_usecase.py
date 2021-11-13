@@ -3,6 +3,7 @@ import datetime
 import pytest
 
 from cato.domain.test_status import TestStatus
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
@@ -59,6 +60,7 @@ def test_should_finish(test_result_factory, object_mapper):
         started_at=started_at,
         finished_at=finished_at,
         error_value=1,
+        failure_reason=None,
     )
     test_result_repository.save.assert_called_with(expected_test_result)
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
@@ -113,7 +115,7 @@ def test_should_fail_test(test_result_factory, object_mapper):
     )
     finish_test._get_finished_time = lambda: finished_at
 
-    finish_test.fail_test(42, "This is a test")
+    finish_test.fail_test(42, "This is a test", TestFailureReason.EXIT_CODE_NON_ZERO)
 
     test_result_repository.save.assert_called_with(
         test_result_factory(
@@ -128,6 +130,7 @@ def test_should_fail_test(test_result_factory, object_mapper):
             started_at=started_at,
             finished_at=finished_at,
             error_value=None,
+            failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
         )
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
