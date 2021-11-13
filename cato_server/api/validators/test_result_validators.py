@@ -82,6 +82,14 @@ class FinishTestResultValidator(SchemaValidator):
                 errors, "diff_image", f"No image exists for id {diff_image}."
             )
 
+        if data.get("status") == "FAILED":
+            if not data.get("failure_reason"):
+                self.add_error(
+                    errors,
+                    "failure_reason",
+                    f"failure_reason is required is test_status is FAILED",
+                )
+
         return errors
 
 

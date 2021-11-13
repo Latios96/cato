@@ -100,6 +100,16 @@ class TestFinishTestResultValidator:
                 "reference_image": 2,
                 "error_value": None,
             },
+            {
+                "id": 1,
+                "status": TestStatus.FAILED,
+                "message": "test",
+                "seconds": 1,
+                "image_output": None,
+                "reference_image": 2,
+                "error_value": None,
+                "failure_reason": "TIMED_OUT",
+            },
         ],
     )
     def test_success(self, data):
@@ -163,6 +173,23 @@ class TestFinishTestResultValidator:
                     "error_value": None,
                 },
                 {"diff_image": ["No image exists for id 42."]},
+            ),
+            (
+                {
+                    "id": 1,
+                    "status": TestStatus.FAILED,
+                    "message": "test",
+                    "seconds": 1,
+                    "image_output": 1,
+                    "reference_image": 1,
+                    "diff_image": 1,
+                    "error_value": None,
+                },
+                {
+                    "failure_reason": [
+                        "failure_reason is required is test_status is FAILED"
+                    ]
+                },
             ),
         ],
     )

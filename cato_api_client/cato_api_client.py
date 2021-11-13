@@ -16,6 +16,7 @@ from cato_api_models.catoapimodels import (
     TestHeartbeatDto,
     ApiSuccess,
     StartTestResultDto,
+    TestFailureReasonDto,
 )
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
@@ -24,6 +25,7 @@ from cato_common.domain.output import Output
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.mappers.object_mapper import ObjectMapper
@@ -199,6 +201,7 @@ class CatoApiClient:
         reference_image: Optional[int] = None,
         diff_image: Optional[int] = None,
         error_value: Optional[float] = None,
+        failure_reason: Optional[TestFailureReason] = None,
     ) -> None:
         url = self._build_url("/api/v1/test_results/finish")
         dto = FinishTestResultDto(
@@ -210,6 +213,9 @@ class CatoApiClient:
             reference_image=reference_image,
             diff_image=diff_image,
             error_value=error_value,
+            failure_reason=TestFailureReasonDto(failure_reason.value)
+            if failure_reason
+            else None,
         )
         response = self._http_template.post_for_entity(url, dto, FinishTestResultDto)
         if response.status_code() != 200:

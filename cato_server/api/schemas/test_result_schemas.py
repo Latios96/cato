@@ -4,6 +4,7 @@ from marshmallow.validate import Length
 from marshmallow_enum import EnumField
 
 from cato.domain.test_status import TestStatus
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_server.api.schemas.general import (
     MachineInfoSchema,
@@ -39,6 +40,7 @@ class FinishTestResultSchema(Schema):
     reference_image = fields.Integer(required=False, allow_none=True)
     diff_image = fields.Integer(required=False, allow_none=True)
     error_value = fields.Float(required=True, allow_none=True)
+    failure_reason = EnumField(TestFailureReason, required=False, allow_none=True)
 
 
 class StartTestResultSchema(Schema):

@@ -11,6 +11,7 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_status import TestStatus
 from cato_common.domain.file import File
@@ -307,6 +308,7 @@ def test_finish_test_result_failure(cato_api_client, test_result, stored_image):
             message="my_mesage",
             image_output=42,
             reference_image=stored_image.id,
+            failure_reason=TestFailureReason.TIMED_OUT,
         )
 
 
