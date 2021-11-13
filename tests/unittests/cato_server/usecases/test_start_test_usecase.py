@@ -5,6 +5,7 @@ import pytest
 from cato_api_models.catoapimodels import TestResultStartedDto
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.domain.event import Event
@@ -62,9 +63,11 @@ class TestStartTest:
     def test_starting_an_existing_which_was_started_at_least_once_should_reset_data(
         self, test_result_factory, test_context
     ):
-        test_result = test_result_factory()
-        test_result.started_at = datetime.datetime.now()
-        test_result.execution_status = ExecutionStatus.RUNNING
+        test_result = test_result_factory(
+            started_at=datetime.datetime.now(),
+            execution_status=ExecutionStatus.FINISHED,
+            failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
+        )
         test_context.test_result_repository.find_by_id.return_value = test_result
         assert test_result.machine_info != test_context.machine_info
 
@@ -73,10 +76,11 @@ class TestStartTest:
         test_context.test_result_repository.save.assert_called_with(test_result)
         assert test_result.execution_status == ExecutionStatus.RUNNING
         assert test_result.started_at is not None
-        assert test_result.status == None
-        assert test_result.seconds == None
-        assert test_result.message == None
-        assert test_result.image_output == None
-        assert test_result.reference_image == None
-        assert test_result.finished_at == None
+        assert test_result.status is None
+        assert test_result.seconds is None
+        assert test_result.message is None
+        assert test_result.image_output is None
+        assert test_result.reference_image is None
+        assert test_result.finished_at is None
         assert test_result.machine_info == test_context.machine_info
+        assert test_result.failure_reason is None

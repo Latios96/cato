@@ -41,7 +41,7 @@ class StartTest:
 
     def _reset_possible_data_from_previous_run(self, test_result: TestResult) -> None:
         logger.info(
-            "Reseting data from previos run for test with id %s", test_result.id
+            "Resetting data from previos run for test with id %s", test_result.id
         )
         test_result.status = None
         test_result.seconds = None
@@ -49,3 +49,4 @@ class StartTest:
         test_result.image_output = None
         test_result.reference_image = None
         test_result.finished_at = None
+        test_result.failure_reason = None

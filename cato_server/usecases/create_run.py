@@ -69,6 +69,7 @@ class CreateRunUsecase:
                             ),
                             threshold=test_dto.comparison_settings.threshold,
                         ),
+                        failure_reason=None,
                     )
                 )
             saved_tests = self._test_result_repository.insert_many(tests)

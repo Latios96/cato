@@ -56,3 +56,4 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
     assert run.id == 1
     assert run.started_at
     assert test_result_repository.find_by_id(1).machine_info == None
+    assert test_result_repository.find_by_id(1).failure_reason == None
