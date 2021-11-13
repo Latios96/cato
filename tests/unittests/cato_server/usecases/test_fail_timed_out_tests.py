@@ -1,12 +1,11 @@
 import datetime
 
-from cato_common.domain.test_status import TestStatus
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
@@ -39,8 +38,7 @@ TIMED_OUT_TEST_RESULT = TestResult(
     test_command="my_command",
     test_variables={"testkey": "test_value"},
     machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-    execution_status=ExecutionStatus.RUNNING,
-    status=TestStatus.SUCCESS,
+    unified_test_status=UnifiedTestStatus.RUNNING,
     seconds=5,
     message="sucess",
     image_output=2,
@@ -57,8 +55,7 @@ FINISHED_TEST_RESULT = TestResult(
     test_command="my_command",
     test_variables={"testkey": "test_value"},
     machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-    execution_status=ExecutionStatus.FINISHED,
-    status=TestStatus.SUCCESS,
+    unified_test_status=UnifiedTestStatus.SUCCESS,
     seconds=5,
     message="sucess",
     image_output=2,
@@ -75,8 +72,7 @@ FAILED_TIMED_OUT_TEST_RESULT = TestResult(
     test_command="my_command",
     test_variables={"testkey": "test_value"},
     machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-    execution_status=ExecutionStatus.FINISHED,
-    status=TestStatus.FAILED,
+    unified_test_status=UnifiedTestStatus.FAILED,
     seconds=5,
     message="sucess",
     image_output=2,

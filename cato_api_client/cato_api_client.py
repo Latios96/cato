@@ -28,6 +28,7 @@ from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.domain.test_edit import (
     AbstractTestEdit,
@@ -227,7 +228,7 @@ class CatoApiClient:
         return f"{self._url}/#/projects/{project_id}/runs/{run_id}"
 
     def get_test_results_by_run_id_and_test_status(
-        self, run_id: int, test_status: TestStatus
+        self, run_id: int, test_status: UnifiedTestStatus
     ) -> Optional[List[TestIdentifier]]:
         url = self._build_url(
             f"/api/v1/test_results/run/{run_id}/test_status/{test_status.value}"

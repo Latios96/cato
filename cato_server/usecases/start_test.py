@@ -1,9 +1,9 @@
 import datetime
 import logging
 
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 
@@ -26,10 +26,10 @@ class StartTest:
             raise ValueError(f"No TestResult with id {test_result_id} found!")
 
         test_was_already_started = (
-            test_result.execution_status != ExecutionStatus.NOT_STARTED
+            test_result.unified_test_status != UnifiedTestStatus.NOT_STARTED
         )
 
-        test_result.execution_status = ExecutionStatus.RUNNING
+        test_result.unified_test_status = UnifiedTestStatus.RUNNING
         test_result.started_at = datetime.datetime.now()
         test_result.machine_info = machine_info
 

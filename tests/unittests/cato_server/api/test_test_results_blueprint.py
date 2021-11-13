@@ -78,7 +78,7 @@ def test_get_test_result_by_run_and_identifier_success(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "execution_status": "NOT_STARTED",
+        "unified_test_status": "NOT_STARTED",
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
         "image_output": 1,
@@ -87,7 +87,6 @@ def test_get_test_result_by_run_and_identifier_success(
         "reference_image": 1,
         "seconds": 5.0,
         "started_at": test_result.started_at.isoformat(),
-        "status": "SUCCESS",
         "suite_result_id": 1,
         "test_command": "my_command",
         "test_identifier": "my_suite/my_test_name",
@@ -146,10 +145,9 @@ def test_get_test_results_by_run_id_should_find(client, run, test_result):
     assert rv.status_code == 200
     assert rv.json() == [
         {
-            "execution_status": "NOT_STARTED",
+            "unified_test_status": "NOT_STARTED",
             "id": 1,
             "name": "my_test_name",
-            "status": "SUCCESS",
             "test_identifier": "my_suite/my_test_name",
             "thumbnail_file_id": None,
         }
@@ -166,10 +164,9 @@ def test_get_test_results_by_run_id_should_find_with_status_filter(
     assert rv.status_code == 200
     assert rv.json() == [
         {
-            "execution_status": "NOT_STARTED",
+            "unified_test_status": "NOT_STARTED",
             "id": 1,
             "name": "my_test_name",
-            "status": "SUCCESS",
             "test_identifier": "my_suite/my_test_name",
             "thumbnail_file_id": None,
         }
@@ -197,10 +194,9 @@ def test_get_test_results_by_run_id_paginated_should_find(client, run, test_resu
         "total_entity_count": 1,
         "entities": [
             {
-                "execution_status": "NOT_STARTED",
+                "unified_test_status": "NOT_STARTED",
                 "id": 1,
                 "name": "my_test_name",
-                "status": "SUCCESS",
                 "test_identifier": "my_suite/my_test_name",
                 "thumbnail_file_id": None,
             }
@@ -222,10 +218,9 @@ def test_get_test_results_by_run_id_paginated_should_find_with_status_filter(
         "total_entity_count": 1,
         "entities": [
             {
-                "execution_status": "NOT_STARTED",
+                "unified_test_status": "NOT_STARTED",
                 "id": 1,
                 "name": "my_test_name",
-                "status": "SUCCESS",
                 "test_identifier": "my_suite/my_test_name",
                 "thumbnail_file_id": None,
             }
@@ -254,7 +249,7 @@ def test_get_test_result_by_id(client, test_result):
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "execution_status": "NOT_STARTED",
+        "unified_test_status": "NOT_STARTED",
         "finished_at": test_result.finished_at.isoformat(),
         "id": 1,
         "diff_image": {
@@ -294,7 +289,6 @@ def test_get_test_result_by_id(client, test_result):
         },
         "seconds": 5.0,
         "started_at": test_result.started_at.isoformat(),
-        "status": "SUCCESS",
         "suite_result_id": 1,
         "test_command": "my_command",
         "test_identifier": "my_suite/my_test_name",
@@ -315,7 +309,7 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "execution_status": "NOT_STARTED",
+        "unified_test_status": "NOT_STARTED",
         "finished_at": test_result_no_machine_info.finished_at.isoformat(),
         "id": 1,
         "diff_image": None,
@@ -345,7 +339,6 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
         },
         "seconds": 5.0,
         "started_at": test_result_no_machine_info.started_at.isoformat(),
-        "status": "SUCCESS",
         "suite_result_id": 1,
         "test_command": "my_command",
         "test_identifier": "my_suite/my_test_name",
@@ -399,7 +392,7 @@ def test_finish_test_failure(client, test_result, stored_image):
 
 
 def test_should_find_by_run_id_and_test_status(client, run, test_result):
-    url = f"/api/v1/test_results/run/{run.id}/test_status/SUCCESS"
+    url = f"/api/v1/test_results/run/{run.id}/test_status/NOT_STARTED"
 
     rv = client.get(url)
 

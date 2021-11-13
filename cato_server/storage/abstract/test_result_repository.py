@@ -4,6 +4,7 @@ from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.domain.test_result_status_information import (
     TestResultStatusInformation,
 )
@@ -43,7 +44,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
 
     def find_execution_status_by_run_ids(
         self, run_ids: Set[int]
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
 
     def find_execution_status_by_project_id(

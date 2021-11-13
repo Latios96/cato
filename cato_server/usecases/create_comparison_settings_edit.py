@@ -6,6 +6,7 @@ from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
 )
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
@@ -60,7 +61,7 @@ class CreateComparisonSettingsEdit:
 
         test_result.comparison_settings = comparison_settings
         test_result.diff_image = result.diff_image_id
-        test_result.status = result.status
+        test_result.unified_test_status = UnifiedTestStatus(result.status.value)
         test_result.message = result.message
         self._test_result_repository.save(test_result)
 
@@ -100,7 +101,7 @@ class CreateComparisonSettingsEdit:
             created_at=created_at,
             old_value=ComparisonSettingsEditValue(
                 comparison_settings=test_result.comparison_settings,
-                status=test_result.status,
+                status=test_result.unified_test_status.to_test_status(),
                 message=test_result.message,
                 diff_image_id=test_result.diff_image,
                 error_value=test_result.error_value,

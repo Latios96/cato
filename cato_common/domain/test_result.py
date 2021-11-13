@@ -3,11 +3,10 @@ from dataclasses import dataclass
 from typing import Dict, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 
 
 @dataclass
@@ -18,9 +17,8 @@ class TestResult:
     test_identifier: TestIdentifier
     test_command: str
     test_variables: Dict[str, str]
+    unified_test_status: UnifiedTestStatus
     machine_info: Optional[MachineInfo] = None
-    execution_status: ExecutionStatus = ExecutionStatus.NOT_STARTED
-    status: Optional[TestStatus] = None
     seconds: Optional[float] = None
     message: Optional[str] = None
     image_output: Optional[int] = None

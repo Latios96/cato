@@ -5,7 +5,6 @@ import pytest
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
@@ -14,13 +13,6 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_common.domain.execution_status import ExecutionStatus
-from cato_common.domain.image import Image
-from cato_common.domain.machine_info import MachineInfo
-from cato_common.domain.project import Project
-from cato_common.domain.run import Run
-from cato_common.domain.test_identifier import TestIdentifier
-from tests.utils import mock_safe
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
@@ -30,6 +22,14 @@ from cato_api_models.catoapimodels import (
     ComparisonMethodDto,
     ComparisonSettingsDto,
 )
+from cato_common.domain.image import Image
+from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.project import Project
+from cato_common.domain.run import Run
+from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
+from tests.utils import mock_safe
 
 SUITES = [
     TestSuite(
@@ -120,7 +120,7 @@ class TestTestExecutionDbReporter:
     ):
         test_context.test_execution_db_reporter._run_id = 5
         test_result = test_result_factory(
-            execution_status=ExecutionStatus.NOT_STARTED, started_at=None
+            unified_test_status=UnifiedTestStatus.NOT_STARTED, started_at=None
         )
         test_context.mock_cato_api_client.find_test_result_by_run_id_and_identifier.return_value = (
             test_result
@@ -177,7 +177,7 @@ class TestTestExecutionDbReporter:
 
     def test_report_test_result_should_report(self, test_result_factory, test_context):
         test_context.test_execution_db_reporter._run_id = 5
-        test_result = test_result_factory(execution_status=ExecutionStatus.RUNNING)
+        test_result = test_result_factory(unified_test_status=UnifiedTestStatus.RUNNING)
         test_context.mock_cato_api_client.find_test_result_by_run_id_and_identifier.return_value = (
             test_result
         )
@@ -259,7 +259,7 @@ class TestTestExecutionDbReporter:
         self, test_result_factory, test_context
     ):
         test_context.test_execution_db_reporter._run_id = 5
-        test_result = test_result_factory(execution_status=ExecutionStatus.RUNNING)
+        test_result = test_result_factory(unified_test_status=UnifiedTestStatus.RUNNING)
         test_context.mock_cato_api_client.find_test_result_by_run_id_and_identifier.return_value = (
             test_result
         )

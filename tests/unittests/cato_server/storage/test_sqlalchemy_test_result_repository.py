@@ -5,20 +5,20 @@ from sqlalchemy.exc import IntegrityError
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_common.domain.test_status import TestStatus
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.test_result_status_information import (
     TestResultStatusInformation,
 )
+from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
-from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -38,8 +38,7 @@ def test_save_success(
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image_factory().id,
@@ -76,8 +75,7 @@ def test_save_with_success_no_failure_reason(
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image_factory().id,
@@ -114,8 +112,7 @@ def test_save_success_no_machine_info_no_comparison_settings(
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=None,
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image_factory().id,
@@ -144,8 +141,7 @@ def test_save_no_suite_result(sessionmaker_fixture, stored_image):
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image.id,
@@ -171,8 +167,7 @@ def test_find_by_suite_result_and_test_identifier(
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image.id,
@@ -209,8 +204,7 @@ def test_find_by_suite_result(sessionmaker_fixture, suite_result, stored_image):
         test_command="my_command",
         test_variables={"testkey": "test_value"},
         machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         seconds=5,
         message="sucess",
         image_output=stored_image.id,
@@ -289,49 +283,46 @@ def __status_filter_test_results(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     repository.save(
-        test_result_factory(status="FORCE_NONE", suite_result_id=suite_result.id)
-    )
-    repository.save(
         test_result_factory(
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
             suite_result_id=suite_result.id,
-            status=TestStatus.SUCCESS,
-            execution_status=ExecutionStatus.FINISHED,
         )
     )
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            status=TestStatus.FAILED,
-            execution_status=ExecutionStatus.FINISHED,
+            unified_test_status=UnifiedTestStatus.SUCCESS,
         )
     )
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            status="FORCE_NONE",
-            execution_status=ExecutionStatus.NOT_STARTED,
+            unified_test_status=UnifiedTestStatus.FAILED,
         )
     )
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            status="FORCE_NONE",
-            execution_status=ExecutionStatus.RUNNING,
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
         )
     )
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            status=TestStatus.FAILED,
-            execution_status=ExecutionStatus.FINISHED,
+            unified_test_status=UnifiedTestStatus.RUNNING,
+        )
+    )
+    repository.save(
+        test_result_factory(
+            suite_result_id=suite_result.id,
+            unified_test_status=UnifiedTestStatus.FAILED,
             failure_reason=TestFailureReason.TIMED_OUT,
         )
     )
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            status=TestStatus.FAILED,
-            execution_status=ExecutionStatus.FINISHED,
+            unified_test_status=UnifiedTestStatus.FAILED,
             failure_reason=TestFailureReason.REFERENCE_IMAGE_MISSING,
         )
     )
@@ -523,13 +514,7 @@ def test_find_execution_status_by_run_ids_should_find(
 
     results = repository.find_execution_status_by_run_ids({run.id})
 
-    assert results == {
-        run.id: {
-            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
-            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
-            (ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS),
-        }
-    }
+    assert results == {run.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
 def test_find_execution_status_by_run_ids_should_find_empty_list(
@@ -549,7 +534,7 @@ def test_find_execution_status_by_project_id_should_find(
 
     result = repository.find_execution_status_by_project_id(run.project_id)
 
-    assert result == {run.id: {(ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS)}}
+    assert result == {run.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
 def test_find_execution_status_by_project_id_should_not_find(
@@ -599,7 +584,7 @@ def test_duration_by_run_id_respect_running_tests(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result.id = 0
-    test_result.execution_status = ExecutionStatus.RUNNING
+    test_result.unified_test_status = UnifiedTestStatus.RUNNING
     test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
     repository.save(test_result)
 
@@ -613,9 +598,7 @@ def test_find_execution_status_by_suite_ids(
 
     result = repository.find_execution_status_by_suite_ids({suite_result.id})
 
-    assert result == {
-        suite_result.id: {(ExecutionStatus.NOT_STARTED, TestStatus.SUCCESS)}
-    }
+    assert result == {suite_result.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
 def test_find_execution_status_by_suite_ids_should_return_empty(
@@ -657,7 +640,9 @@ def test_find_by_run_id_filter_by_test_status_should_not_find_not_existing_run_i
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_by_run_id_filter_by_test_status(42, TestStatus.SUCCESS)
+    result = repository.find_by_run_id_filter_by_test_status(
+        42, UnifiedTestStatus.SUCCESS
+    )
 
     assert result == []
 
@@ -667,7 +652,9 @@ def test_find_by_run_id_filter_by_test_status_should_not_find_not_matching_statu
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.FAILED)
+    result = repository.find_by_run_id_filter_by_test_status(
+        run.id, UnifiedTestStatus.FAILED
+    )
 
     assert result == []
 
@@ -677,7 +664,9 @@ def test_find_by_run_id_filter_by_test_status_should_find(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.SUCCESS)
+    result = repository.find_by_run_id_filter_by_test_status(
+        run.id, UnifiedTestStatus.NOT_STARTED
+    )
 
     assert result == [test_result]
 
@@ -691,11 +680,13 @@ def test_find_by_run_id_filter_by_test_status_should_return_correct_order(
             test_result_factory(
                 test_name=name,
                 suite_result_id=suite_result.id,
-                status=TestStatus.FAILED,
+                unified_test_status=UnifiedTestStatus.FAILED,
             )
         )
 
-    results = repository.find_by_run_id_filter_by_test_status(run.id, TestStatus.FAILED)
+    results = repository.find_by_run_id_filter_by_test_status(
+        run.id, UnifiedTestStatus.FAILED
+    )
     names = list(map(lambda x: x.test_name.lower(), results))
 
     assert names == order_test_data.correct_order_lowercase
@@ -708,7 +699,7 @@ def test_duration_by_run_ids(
     repository.save(
         test_result_factory(
             suite_result_id=suite_result.id,
-            execution_status=ExecutionStatus.RUNNING,
+            unified_test_status=UnifiedTestStatus.RUNNING,
             seconds=0,
             started_at=(datetime.datetime.now() - datetime.timedelta(seconds=5)),
         )
@@ -743,7 +734,7 @@ def test_duration_by_run_ids_respect_running_tests(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result.id = 0
-    test_result.execution_status = ExecutionStatus.RUNNING
+    test_result.unified_test_status = UnifiedTestStatus.RUNNING
     test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
     repository.save(test_result)
 
@@ -779,9 +770,8 @@ def test_status_information_by_run_id_run_with_single_not_started_test(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(
-        execution_status=ExecutionStatus.NOT_STARTED,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
         suite_result_id=suite_result.id,
-        status="FORCE_NONE",
     )
     status_information = repository.status_information_by_run_id(run.id)
 
@@ -795,9 +785,8 @@ def test_status_information_by_run_id_run_with_single_running_test(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(
-        execution_status=ExecutionStatus.RUNNING,
+        unified_test_status=UnifiedTestStatus.RUNNING,
         suite_result_id=suite_result.id,
-        status="FORCE_NONE",
     )
     status_information = repository.status_information_by_run_id(run.id)
 
@@ -811,8 +800,7 @@ def test_status_information_by_run_id_run_with_single_failed_test(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.FAILED,
+        unified_test_status=UnifiedTestStatus.FAILED,
         suite_result_id=suite_result.id,
     )
     status_information = repository.status_information_by_run_id(run.id)
@@ -827,8 +815,7 @@ def test_status_information_by_run_id_run_with_single_succeded_test(
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
         suite_result_id=suite_result.id,
     )
     status_information = repository.status_information_by_run_id(run.id)
@@ -851,38 +838,31 @@ def test_status_information_by_run_id_multiple_runs_only_correct_run(
     suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
     test_result_run_1_1 = saving_test_result_factory(
         suite_result_id=suite_result_1.id,
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status="FORCE_NONE",
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
     )
     test_result_run_1_2 = saving_test_result_factory(
         suite_result_id=suite_result_1.id,
-        execution_status=ExecutionStatus.RUNNING,
-        status="FORCE_NONE",
+        unified_test_status=UnifiedTestStatus.RUNNING,
     )
     test_result_run_1_3 = saving_test_result_factory(
         suite_result_id=suite_result_1.id,
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
     )
     test_result_run_1_5 = saving_test_result_factory(
         suite_result_id=suite_result_1.id,
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.FAILED,
+        unified_test_status=UnifiedTestStatus.FAILED,
     )
     test_result_run_1_1 = saving_test_result_factory(
         suite_result_id=suite_result_2.id,
-        execution_status=ExecutionStatus.NOT_STARTED,
-        status="FORCE_NONE",
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
     )
     test_result_run_1_2 = saving_test_result_factory(
         suite_result_id=suite_result_2.id,
-        execution_status=ExecutionStatus.RUNNING,
-        status="FORCE_NONE",
+        unified_test_status=ExecutionStatus.RUNNING,
     )
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     saving_test_result_factory(
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
         suite_result_id=suite_result.id,
     )
 

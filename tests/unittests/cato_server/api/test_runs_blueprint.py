@@ -1,6 +1,3 @@
-import datetime
-
-
 def test_get_run_by_project_id_should_return(client, project, run):
     url = "/api/v1/runs/project/{}".format(project.id)
 
@@ -78,7 +75,7 @@ def test_get_run_summary(client, run, test_result):
         "waiting_test_count": 1,
         "failed_test_count": 0,
         "running_test_count": 0,
-        "succeeded_test_count": 1,
+        "succeeded_test_count": 0,
         "run": {
             "id": 1,
             "project_id": 1,

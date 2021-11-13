@@ -3,7 +3,6 @@ import os
 
 from PIL import Image
 from checksumdir import dirhash
-from pytest_bdd import scenario, given, when, then
 
 from tests.integrationtests.command_fixture import run_cato_command
 

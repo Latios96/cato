@@ -61,17 +61,17 @@ types:
           failed_test_count: integer
           succeeded_test_count: integer
 
-      ExecutionStatusDto:
-        values:
-          - NOT_STARTED
-          - RUNNING
-          - FINISHED
-
       TestStatusDto:
         values:
           - SUCCESS
           - FAILED
 
+      UnifiedTestStatusDto:
+        values:
+          - NOT_STARTED
+          - RUNNING
+          - SUCCESS
+          - FAILED
 
       ImageChannelDto:
         fields:
@@ -97,8 +97,7 @@ types:
           test_command: string
           test_variables: map<string, string>
           machine_info: MachineInfoDto
-          execution_status: ExecutionStatusDto
-          status: TestStatusDto
+          unified_test_status: UnifiedTestStatusDto
           seconds: optional<double>
           message: optional<string>
           image_output: optional<ImageDto>
@@ -130,8 +129,7 @@ types:
           id: integer
           name: string
           test_identifier: string
-          execution_status: ExecutionStatusDto
-          status: TestStatusDto
+          unified_test_status: UnifiedTestStatusDto
           thumbnail_file_id: optional<integer>
 
       SuiteResultSummaryDto:

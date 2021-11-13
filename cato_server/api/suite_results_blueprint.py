@@ -9,8 +9,7 @@ from cato_api_models.catoapimodels import (
     SuiteStatusDto,
     SuiteResultSummaryDto,
     TestResultShortSummaryDto,
-    ExecutionStatusDto,
-    TestStatusDto,
+    UnifiedTestStatusDto,
 )
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
@@ -139,9 +138,8 @@ class SuiteResultsBlueprint(APIRouter):
                     id=test.id,
                     name=test.test_name,
                     test_identifier=str(test.test_identifier),
-                    execution_status=ExecutionStatusDto(test.execution_status.value),
-                    status=TestStatusDto(
-                        test.status.value if test.status else "FAILED"
+                    unified_test_status=UnifiedTestStatusDto(
+                        test.unified_test_status.value
                     ),
                     thumbnail_file_id=test.thumbnail_file_id,
                 )

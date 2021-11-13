@@ -30,7 +30,10 @@ function TestResultComponent(props: Props) {
   }, [fetchTest, props.resultId]);
 
   let renderTestResult = (testResult: TestResultDto) => {
-    if (testResult.execution_status === "FINISHED") {
+    if (
+      testResult.unified_test_status !== "NOT_STARTED" &&
+      testResult.unified_test_status !== "RUNNING"
+    ) {
       return <FinishedTestResultComponent result={testResult} />;
     }
     return <WaitingOrRunningTestResultComponent result={testResult} />;

@@ -1,8 +1,3 @@
-import io
-import os
-
-import pytest
-
 API_V_IMAGES = "/api/v1/images"
 
 

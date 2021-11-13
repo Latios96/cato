@@ -13,11 +13,6 @@ from sqlalchemy import create_engine
 import cato
 import cato_server
 import cato_server.server_logging
-from cato_common.domain.test_status import TestStatus
-from cato_common.utils.bindings import imported_modules
-from cato_server.configuration.app_configuration_reader import AppConfigurationReader
-from cato_server.configuration.bindings_factory import BindingsFactory
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
@@ -25,6 +20,10 @@ from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.utils.bindings import imported_modules
+from cato_server.configuration.app_configuration_reader import AppConfigurationReader
+from cato_server.configuration.bindings_factory import BindingsFactory
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
@@ -188,8 +187,7 @@ class DbLoadGenerator:
                     test_command="my_command",
                     test_variables={},
                     machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-                    execution_status=ExecutionStatus.FINISHED,
-                    status=TestStatus.SUCCESS,
+                    unified_test_status=UnifiedTestStatus.SUCCESS,
                     seconds=fake.pyint(),
                     message="success",
                     image_output=output_image.id,

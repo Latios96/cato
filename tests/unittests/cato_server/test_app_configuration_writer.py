@@ -1,4 +1,3 @@
-import os
 from io import StringIO
 
 from cato_server.configuration.app_configuration_defaults import (

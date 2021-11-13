@@ -42,7 +42,7 @@ class FailTimedOutTests:
             test_result = self._test_result_repository.find_by_id(
                 timed_out_heartbeat.test_result_id
             )
-            if test_result.execution_status == ExecutionStatus.RUNNING:
+            if test_result.unified_test_status == ExecutionStatus.RUNNING:
                 self._finish_test.fail_test(
                     test_result.id, "Test timed out!", TestFailureReason.TIMED_OUT
                 )

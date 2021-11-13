@@ -2,9 +2,9 @@ import datetime
 
 import pytest
 
-from cato_common.domain.test_status import TestStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
@@ -49,8 +49,7 @@ def test_should_finish(test_result_factory, object_mapper):
 
     expected_test_result = test_result_factory(
         id=42,
-        execution_status=ExecutionStatus.FINISHED,
-        status=TestStatus.SUCCESS,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
         seconds=2,
         message="Test succeded",
         image_output=2,
@@ -119,8 +118,7 @@ def test_should_fail_test(test_result_factory, object_mapper):
     test_result_repository.save.assert_called_with(
         test_result_factory(
             id=42,
-            execution_status=ExecutionStatus.FINISHED,
-            status=TestStatus.FAILED,
+            unified_test_status=UnifiedTestStatus.FAILED,
             seconds=-1,
             message="This is a test",
             image_output=None,

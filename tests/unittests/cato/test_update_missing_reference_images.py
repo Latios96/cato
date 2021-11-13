@@ -2,7 +2,7 @@ from unittest import mock
 from unittest.mock import call
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config, RunConfig
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder

@@ -5,8 +5,6 @@ from cato_api_models.catoapimodels import (
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
-from cato_api_models.catoapimodels import RunDto, RunStatusDto
-from cato_server.domain.event import Event
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
 )

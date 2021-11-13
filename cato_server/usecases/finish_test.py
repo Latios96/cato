@@ -2,9 +2,9 @@ import datetime
 import logging
 from typing import Optional
 
-from cato_common.domain.test_status import TestStatus
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
+from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
@@ -47,8 +47,7 @@ class FinishTest:
         if not test_result:
             raise ValueError(f"No TestResult with id {test_result_id} found!")
 
-        test_result.execution_status = ExecutionStatus.FINISHED
-        test_result.status = status
+        test_result.unified_test_status = UnifiedTestStatus(status.value)
         test_result.seconds = seconds
         test_result.message = message
         test_result.image_output = image_output

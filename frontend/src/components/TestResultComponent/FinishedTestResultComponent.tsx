@@ -24,7 +24,7 @@ function FinishedTestResultComponent(props: Props) {
         />
       </InfoBox>
       <TestResultComparisonResult testResult={props.result} />
-      {props.result.status === "FAILED"
+      {props.result.unified_test_status === "FAILED"
         ? renderFailureInformation(props.result)
         : ""}
       {renderImages(props.result)}

@@ -4,11 +4,11 @@ import logging
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_models.catoapimodels import CreateFullRunDto
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -61,7 +61,7 @@ class CreateRunUsecase:
                         ),
                         test_command=test_dto.test_command,
                         test_variables=test_dto.test_variables,
-                        execution_status=ExecutionStatus.NOT_STARTED,
+                        unified_test_status=UnifiedTestStatus.NOT_STARTED,
                         seconds=0,
                         comparison_settings=ComparisonSettings(
                             method=ComparisonMethod(

@@ -6,13 +6,11 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from cato_common.domain.test_status import TestStatus
 from cato_api_models.catoapimodels import (
     TestResultDto,
     ImageDto,
     ImageChannelDto,
-    ExecutionStatusDto,
-    TestStatusDto,
+    UnifiedTestStatusDto,
     MachineInfoDto,
     TestResultShortSummaryDto,
     FinishTestResultDto,
@@ -25,6 +23,8 @@ from cato_common.domain.image import ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
@@ -180,13 +180,8 @@ class TestResultsBlueprint(APIRouter):
                     id=test_result.id,
                     name=test_result.test_name,
                     test_identifier=str(test_result.test_identifier),
-                    execution_status=ExecutionStatusDto(
-                        test_result.execution_status.value
-                    ),
-                    status=TestStatusDto(
-                        test_result.status.value
-                        if test_result.status
-                        else TestStatus.FAILED
+                    unified_test_status=UnifiedTestStatusDto(
+                        test_result.unified_test_status.value
                     ),
                     thumbnail_file_id=test_result.thumbnail_file_id,
                 )
@@ -212,13 +207,8 @@ class TestResultsBlueprint(APIRouter):
                     id=test_result.id,
                     name=test_result.test_name,
                     test_identifier=str(test_result.test_identifier),
-                    execution_status=ExecutionStatusDto(
-                        test_result.execution_status.value
-                    ),
-                    status=TestStatusDto(
-                        test_result.status.value
-                        if test_result.status
-                        else TestStatus.FAILED
+                    unified_test_status=UnifiedTestStatusDto(
+                        test_result.unified_test_status.value
                     ),
                     thumbnail_file_id=test_result.thumbnail_file_id,
                 )
@@ -249,8 +239,7 @@ class TestResultsBlueprint(APIRouter):
             )
             if result.machine_info
             else None,
-            execution_status=ExecutionStatusDto(result.execution_status.value),
-            status=TestStatusDto(result.status.value) if result.status else None,
+            unified_test_status=UnifiedTestStatusDto(result.unified_test_status.value),
             seconds=result.seconds if result.seconds is not None else 0,
             message=result.message if result.message else None,
             image_output=image_output_dto,
@@ -341,7 +330,7 @@ class TestResultsBlueprint(APIRouter):
         self, run_id, test_status
     ) -> Response:
         try:
-            test_status = TestStatus(test_status)
+            test_status = UnifiedTestStatus(test_status)
         except ValueError:
             return JSONResponse(
                 content={"test_status": f"Not a valid test status: {test_status}."},

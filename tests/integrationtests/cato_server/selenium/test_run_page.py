@@ -7,6 +7,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
@@ -107,7 +108,7 @@ class TestRunTestPage:
     ):
         saving_test_result_factory(
             suite_result_id=test_result.suite_result_id,
-            execution_status=ExecutionStatus.RUNNING,
+            unified_test_status=UnifiedTestStatus.RUNNING,
         )
         self._visit_run_test_page(live_server, run, selenium_driver)
         self._select_a_test(selenium_driver)
@@ -126,8 +127,7 @@ class TestRunTestPage:
     ):
         saving_test_result_factory(
             suite_result_id=suite_result.id,
-            execution_status=ExecutionStatus.FINISHED,
-            status=TestStatus.SUCCESS,
+            unified_test_status=UnifiedTestStatus.SUCCESS,
             image_output=stored_image.id,
             reference_image=stored_image.id,
             comparison_settings=ComparisonSettings(
@@ -150,8 +150,7 @@ class TestRunTestPage:
     ):
         saving_test_result_factory(
             suite_result_id=suite_result.id,
-            execution_status=ExecutionStatus.FINISHED,
-            status=TestStatus.FAILED,
+            unified_test_status=UnifiedTestStatus.FAILED,
             message="Reference image <not found> does not exist!",
             image_output=stored_image.id,
             reference_image=None,
@@ -187,7 +186,7 @@ class TestRunTestPage:
 
     def _update_test_result_execution_status(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
-        test_result.execution_status = ExecutionStatus.RUNNING
+        test_result.unified_test_status = UnifiedTestStatus.RUNNING
         repository.save(test_result)
 
     def _visit_run_test_page(self, live_server, run, selenium_driver):
@@ -452,7 +451,7 @@ class TestRunSuitePage:
 
     def _update_run_status(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
-        test_result.execution_status = ExecutionStatus.RUNNING
+        test_result.unified_test_status = UnifiedTestStatus.RUNNING
         repository.save(test_result)
 
 

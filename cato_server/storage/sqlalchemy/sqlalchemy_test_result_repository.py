@@ -1,26 +1,27 @@
 import dataclasses
-from collections import defaultdict
 import datetime
-from typing import Optional, Set, Tuple, Dict, List
+from collections import defaultdict
+from typing import Optional, Set, Dict, List
 
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.test_result_status_information import (
     TestResultStatusInformation,
 )
+from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
-from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
@@ -44,8 +45,7 @@ class _TestResultMapping(Base):
     test_command = Column(String, nullable=False)
     test_variables = Column(JSON, nullable=False)
     machine_info = Column(JSON, nullable=True)
-    execution_status = Column(String, nullable=True)
-    status = Column(String, nullable=True)
+    unified_test_status = Column(String, nullable=False)
     seconds = Column(Float, nullable=True)
     message = Column(String, nullable=True)
     image_output_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
@@ -60,6 +60,9 @@ class _TestResultMapping(Base):
         Integer, ForeignKey("file_entity.id"), nullable=True
     )
     failure_reason = Column(String, nullable=True)
+    # deprecated, only there for migrations
+    execution_status = Column(String, nullable=True)
+    status = Column(String, nullable=True)
 
     def __repr__(self):
         return f"<_TestResultMapping id={self.id}>"
@@ -79,10 +82,7 @@ class SqlAlchemyTestResultRepository(
             machine_info=dataclasses.asdict(domain_object.machine_info)
             if domain_object.machine_info
             else None,
-            execution_status=domain_object.execution_status.name
-            if domain_object.execution_status
-            else None,
-            status=domain_object.status.name if domain_object.status else None,
+            unified_test_status=domain_object.unified_test_status.name,
             seconds=domain_object.seconds,
             message=domain_object.message,
             image_output_id=domain_object.image_output,
@@ -118,8 +118,7 @@ class SqlAlchemyTestResultRepository(
             )
             if entity.machine_info
             else None,
-            execution_status=self._map_execution_status(entity.execution_status),
-            status=self._map_test_status(entity.status),
+            unified_test_status=UnifiedTestStatus(entity.unified_test_status),
             seconds=entity.seconds,
             message=entity.message,
             image_output=entity.image_output_id,
@@ -229,13 +228,12 @@ class SqlAlchemyTestResultRepository(
 
     def find_execution_status_by_run_ids(
         self, run_ids: Set[int]
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
 
         results = (
             session.query(
-                _TestResultMapping.execution_status,
-                _TestResultMapping.status,
+                _TestResultMapping.unified_test_status,
                 _RunMapping.id,
             )
             .distinct()
@@ -246,25 +244,19 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         status_by_run_id = defaultdict(set)
-        for execution_status, test_status, run_id in results:
-            status_by_run_id[run_id].add(
-                (
-                    self._map_execution_status(execution_status),
-                    self._map_test_status(test_status),
-                )
-            )
+        for unified_test_status, run_id in results:
+            status_by_run_id[run_id].add(unified_test_status)
 
         return status_by_run_id
 
     def find_execution_status_by_project_id(
         self, project_id: int
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
 
         results = (
             session.query(
-                _TestResultMapping.execution_status,
-                _TestResultMapping.status,
+                _TestResultMapping.unified_test_status,
                 _RunMapping.id,
             )
             .distinct()
@@ -275,13 +267,8 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         status_by_run_id = defaultdict(set)
-        for execution_status, test_status, run_id in results:
-            status_by_run_id[run_id].add(
-                (
-                    self._map_execution_status(execution_status),
-                    self._map_test_status(test_status),
-                )
-            )
+        for unified_test_status, run_id in results:
+            status_by_run_id[run_id].add(unified_test_status)
 
         return status_by_run_id
 
@@ -315,7 +302,7 @@ class SqlAlchemyTestResultRepository(
             .join(_SuiteResultMapping)
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id)
-            .filter(_TestResultMapping.execution_status == "RUNNING")
+            .filter(_TestResultMapping.unified_test_status == "RUNNING")
             .all()
         )
         now = datetime.datetime.now()
@@ -348,7 +335,7 @@ class SqlAlchemyTestResultRepository(
             .join(_SuiteResultMapping)
             .join(_TestResultMapping)
             .filter(_RunMapping.id.in_(run_ids))
-            .filter(_TestResultMapping.execution_status == "RUNNING")
+            .filter(_TestResultMapping.unified_test_status == "RUNNING")
             .all()
         )
         now = datetime.datetime.now()
@@ -373,13 +360,12 @@ class SqlAlchemyTestResultRepository(
 
     def find_execution_status_by_suite_ids(
         self, suite_ids: Set[int]
-    ) -> Dict[int, Set[Tuple[ExecutionStatus, TestStatus]]]:
+    ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
 
         results = (
             session.query(
-                _TestResultMapping.execution_status,
-                _TestResultMapping.status,
+                _TestResultMapping.unified_test_status,
                 _SuiteResultMapping.id,
             )
             .distinct()
@@ -389,13 +375,8 @@ class SqlAlchemyTestResultRepository(
         )
         session.close()
         status_by_run_id = defaultdict(set)
-        for execution_status, test_status, run_id in results:
-            status_by_run_id[run_id].add(
-                (
-                    self._map_execution_status(execution_status),
-                    self._map_test_status(test_status),
-                )
-            )
+        for unified_test_status, run_id in results:
+            status_by_run_id[run_id].add(unified_test_status)
 
         return status_by_run_id
 
@@ -417,7 +398,7 @@ class SqlAlchemyTestResultRepository(
             return self.to_domain_object(entity)
 
     def find_by_run_id_filter_by_test_status(
-        self, run_id: int, test_status: TestStatus
+        self, run_id: int, test_status: UnifiedTestStatus
     ) -> List[TestResult]:
         session = self._session_maker()
 
@@ -426,7 +407,7 @@ class SqlAlchemyTestResultRepository(
             .join(_SuiteResultMapping)
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id)
-            .filter(_TestResultMapping.status == self._map_test_status(test_status)),
+            .filter(_TestResultMapping.unified_test_status == test_status.value),
             self.mapping_cls().test_name,
         ).all()
         session.close()
@@ -435,40 +416,26 @@ class SqlAlchemyTestResultRepository(
 
     def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
         session = self._session_maker()
-        execution_status_counts = (
+        unified_status_counts = (
             session.query(
-                _TestResultMapping.execution_status,
-                func.count(_TestResultMapping.execution_status),
+                _TestResultMapping.unified_test_status,
+                func.count(_TestResultMapping.unified_test_status),
             )
             .join(_SuiteResultMapping)
             .join(_RunMapping)
             .filter(_RunMapping.id == run_id)
-            .group_by(_TestResultMapping.execution_status)
+            .group_by(_TestResultMapping.unified_test_status)
             .all()
         )
 
-        execution_status_count_dict = self.__status_count_query_result_to_dict(
-            execution_status_counts
+        unified_status_counts_dict = self.__status_count_query_result_to_dict(
+            unified_status_counts
         )
 
-        status_counts = (
-            session.query(
-                _TestResultMapping.status,
-                func.count(_TestResultMapping.status),
-            )
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .group_by(_TestResultMapping.status)
-            .all()
-        )
-
-        status_count_dict = self.__status_count_query_result_to_dict(status_counts)
-
-        not_started_count = execution_status_count_dict.get("NOT_STARTED", 0)
-        running_count = execution_status_count_dict.get("RUNNING", 0)
-        failed_count = status_count_dict.get("FAILED", 0)
-        success_count = status_count_dict.get("SUCCESS", 0)
+        not_started_count = unified_status_counts_dict.get("NOT_STARTED", 0)
+        running_count = unified_status_counts_dict.get("RUNNING", 0)
+        failed_count = unified_status_counts_dict.get("FAILED", 0)
+        success_count = unified_status_counts_dict.get("SUCCESS", 0)
 
         session.close()
         return TestResultStatusInformation(
@@ -485,14 +452,10 @@ class SqlAlchemyTestResultRepository(
 
     def _add_filter_options(self, filter_options: TestResultFilterOptions, query):
         if filter_options and filter_options.status is not StatusFilter.NONE:
-            if filter_options.status in [StatusFilter.SUCCESS, StatusFilter.FAILED]:
-                query = query.filter(
-                    _TestResultMapping.status == filter_options.status.value
-                )
-            else:
-                query = query.filter(
-                    _TestResultMapping.execution_status == filter_options.status.value
-                )
+            query = query.filter(
+                _TestResultMapping.unified_test_status == filter_options.status.value
+            )
+
             if filter_options.failure_reason:
                 query = query.filter(
                     _TestResultMapping.failure_reason

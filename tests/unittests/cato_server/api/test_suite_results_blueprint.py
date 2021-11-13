@@ -143,10 +143,9 @@ def test_get_by_id_should_find_should_contain_no_tests(
         "suite_variables": {"key": "value"},
         "tests": [
             {
-                "execution_status": "NOT_STARTED",
                 "id": 1,
                 "name": "my_test_name",
-                "status": "SUCCESS",
+                "unified_test_status": "NOT_STARTED",
                 "test_identifier": "my_suite/my_test_name",
                 "thumbnail_file_id": None,
             }

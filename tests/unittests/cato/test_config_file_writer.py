@@ -1,4 +1,3 @@
-import os
 from io import StringIO
 
 from cato.config.config_file_parser import JsonConfigParser

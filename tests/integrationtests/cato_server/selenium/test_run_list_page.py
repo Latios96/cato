@@ -1,7 +1,7 @@
 import datetime
 
-from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.run import Run
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
 )
@@ -49,7 +49,7 @@ class TestRunListPage:
 
     def _update_run_status(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
-        test_result.execution_status = ExecutionStatus.RUNNING
+        test_result.unified_test_status = UnifiedTestStatus.RUNNING
         repository.save(test_result)
 
     def _assert_first_run_status_icon_has_title(self, selenium_driver, title):

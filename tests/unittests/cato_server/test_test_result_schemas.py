@@ -1,5 +1,3 @@
-import datetime
-
 import humanfriendly
 import pytest
 
@@ -7,7 +5,6 @@ from cato_server.api.schemas.test_result_schemas import (
     CreateOutputSchema,
     StartTestResultSchema,
 )
-
 
 STRING_WITH_MAX_SIZE = "".join(["x" for x in range(humanfriendly.parse_size("10mb"))])
 

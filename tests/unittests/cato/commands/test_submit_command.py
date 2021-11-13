@@ -11,13 +11,10 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,
 )
-from cato.reporter.end_message_generator import EndMessageGenerator
 from cato.reporter.test_execution_reporter import TestExecutionReporter
-from cato.reporter.timing_report_generator import TimingReportGenerator
-from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_common.domain.test_identifier import TestIdentifier
 from tests.unittests.cato.commands.test_run_command import CONFIG
 from tests.utils import mock_safe
 

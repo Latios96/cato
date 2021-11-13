@@ -22,6 +22,7 @@ from cato.domain.test import Test
 from cato_common.domain.test_status import TestStatus
 from cato.domain.test_suite import TestSuite
 from cato_common.domain.test_failure_reason import TestFailureReason
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_server.__main__ import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -250,8 +251,7 @@ def test_result_factory():
         test_command: Optional[str] = None,
         test_variables: Optional[Dict[str, str]] = None,
         machine_info: Optional[MachineInfo] = None,
-        execution_status: Optional[ExecutionStatus] = None,
-        status: Optional[TestStatus] = None,
+        unified_test_status: Optional[UnifiedTestStatus] = None,
         seconds: Optional[float] = None,
         message: Optional[str] = None,
         image_output: Optional[int] = None,
@@ -277,8 +277,9 @@ def test_result_factory():
             machine_info=or_default(
                 machine_info, MachineInfo(cpu_name="cpu", cores=56, memory=8)
             ),
-            execution_status=or_default(execution_status, ExecutionStatus.NOT_STARTED),
-            status=or_default(status, TestStatus.SUCCESS),
+            unified_test_status=or_default(
+                unified_test_status, UnifiedTestStatus.NOT_STARTED
+            ),
             seconds=or_default(seconds, 5.0),
             message=or_default(message, "success"),
             image_output=or_default(image_output, None),
@@ -305,8 +306,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
         test_command: Optional[str] = None,
         test_variables: Optional[Dict[str, str]] = None,
         machine_info: Optional[MachineInfo] = None,
-        execution_status: Optional[ExecutionStatus] = None,
-        status: Optional[TestStatus] = None,
+        unified_test_status: Optional[UnifiedTestStatus] = None,
         seconds: Optional[float] = None,
         message: Optional[str] = None,
         image_output: Optional[int] = None,
@@ -328,8 +328,7 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
             test_command,
             test_variables,
             machine_info,
-            execution_status,
-            status,
+            unified_test_status,
             seconds,
             message,
             image_output,
@@ -371,7 +370,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
             ),
-            status=test_result.status,
+            status=TestStatus.SUCCESS,
             message=test_result.message,
             diff_image_id=test_result.diff_image,
             error_value=1,
@@ -380,7 +379,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=10
             ),
-            status=test_result.status,
+            status=TestStatus.SUCCESS,
             message="still " + test_result.message,
             diff_image_id=stored_image_factory().id,
             error_value=0.1,
@@ -412,7 +411,7 @@ def finished_test_result(
         suite_result_id=suite_result.id,
         image_output=stored_image.id,
         reference_image=stored_image.id,
-        execution_status=ExecutionStatus.FINISHED,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
     )
     return repository.save(test_result)
 

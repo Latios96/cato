@@ -11,6 +11,7 @@ from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
 )
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
@@ -34,6 +35,7 @@ def test_create_edit_with_success(test_result_factory):
         reference_image=2,
         image_output=1,
         error_value=1,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
     )
     mock_test_result_repository.find_by_id.return_value = test_result
     mock_compare_image = mock_safe(CompareImage)
@@ -88,7 +90,7 @@ def test_create_edit_with_success(test_result_factory):
     )
     mock_test_result_repository.save.assert_called_with(test_result)
     assert test_result.diff_image == 13
-    assert test_result.status == TestStatus.SUCCESS
+    assert test_result.unified_test_status == TestStatus.SUCCESS
     assert test_result.message == "still success"
     assert test_result.comparison_settings == edit_comparison_settings
 

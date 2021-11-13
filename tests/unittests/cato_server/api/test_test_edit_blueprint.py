@@ -2,6 +2,7 @@ import datetime
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 
 
 def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
@@ -107,6 +108,7 @@ def test_create_comparison_settings_edit_success(
         suite_result_id=suite_result.id,
         image_output=stored_image_factory().id,
         reference_image=stored_image_factory().id,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
     )
     url = f"/api/v1/test_edits/comparison_settings"
 
@@ -247,6 +249,7 @@ def test_create_reference_image_edit_success(
         suite_result_id=suite_result.id,
         image_output=stored_image_factory().id,
         reference_image=stored_image_factory().id,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
     )
     url = f"/api/v1/test_edits/reference_image"
 

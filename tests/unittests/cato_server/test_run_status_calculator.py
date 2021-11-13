@@ -1,19 +1,16 @@
-from typing import Optional
-
 import pytest
 
 from cato_common.domain.execution_status import ExecutionStatus
 from cato_common.domain.machine_info import MachineInfo
-from cato_server.domain.run_status import RunStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.test_status import TestStatus
+from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_server.domain.run_status import RunStatus
 from cato_server.run_status_calculator import RunStatusCalculator
 
 
-def make_test_result(
-    execution_status: ExecutionStatus, test_status: Optional[TestStatus]
-):
+def make_test_result(unified_test_status: UnifiedTestStatus):
     return TestResult(
         id=0,
         suite_result_id=1,
@@ -22,29 +19,14 @@ def make_test_result(
         test_command="test_command",
         test_variables={},
         machine_info=MachineInfo("cpu_name", 1, 1),
-        execution_status=execution_status,
-        status=test_status,
+        unified_test_status=unified_test_status,
     )
 
 
-@pytest.mark.parametrize(
-    "status_set",
-    [
-        {(ExecutionStatus.NOT_STARTED, None)},
-        {
-            (ExecutionStatus.NOT_STARTED, None),
-            (ExecutionStatus.FINISHED, TestStatus.FAILED),
-        },
-        {
-            (ExecutionStatus.NOT_STARTED, None),
-            (ExecutionStatus.FINISHED, TestStatus.SUCCESS),
-        },
-    ],
-)
-def test_calculate_not_started(status_set):
+def test_calculate_not_started():
     calculator = RunStatusCalculator()
 
-    status = calculator.calculate(status_set)
+    status = calculator.calculate({UnifiedTestStatus.NOT_STARTED})
 
     assert status == RunStatus.NOT_STARTED
 
@@ -52,15 +34,12 @@ def test_calculate_not_started(status_set):
 @pytest.mark.parametrize(
     "test_results",
     [
-        {(ExecutionStatus.RUNNING, None)},
+        {ExecutionStatus.RUNNING},
+        {ExecutionStatus.RUNNING, ExecutionStatus.NOT_STARTED},
         {
-            (ExecutionStatus.RUNNING, None),
-            (ExecutionStatus.NOT_STARTED, None),
-        },
-        {
-            (ExecutionStatus.RUNNING, None),
-            (ExecutionStatus.NOT_STARTED, None),
-            (ExecutionStatus.FINISHED, None),
+            ExecutionStatus.RUNNING,
+            ExecutionStatus.NOT_STARTED,
+            ExecutionStatus.FINISHED,
         },
     ],
 )
@@ -72,20 +51,10 @@ def test_calculate_running(test_results):
     assert status == RunStatus.RUNNING
 
 
-@pytest.mark.parametrize(
-    "test_results",
-    [
-        {(ExecutionStatus.FINISHED, TestStatus.SUCCESS)},
-        {
-            (ExecutionStatus.FINISHED, TestStatus.SUCCESS),
-            (ExecutionStatus.FINISHED, TestStatus.SUCCESS),
-        },
-    ],
-)
-def test_calculate_success(test_results):
+def test_calculate_success():
     calculator = RunStatusCalculator()
 
-    status = calculator.calculate(test_results)
+    status = calculator.calculate({UnifiedTestStatus.SUCCESS})
 
     assert status == RunStatus.SUCCESS
 
@@ -93,10 +62,10 @@ def test_calculate_success(test_results):
 @pytest.mark.parametrize(
     "test_results",
     [
-        {(ExecutionStatus.FINISHED, TestStatus.FAILED)},
+        {TestStatus.FAILED},
         {
-            (ExecutionStatus.FINISHED, TestStatus.FAILED),
-            (ExecutionStatus.FINISHED, TestStatus.SUCCESS),
+            TestStatus.FAILED,
+            TestStatus.SUCCESS,
         },
     ],
 )

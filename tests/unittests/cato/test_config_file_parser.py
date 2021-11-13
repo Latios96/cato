@@ -1,5 +1,4 @@
 import json
-import os
 from io import StringIO
 
 import pytest
@@ -11,7 +10,6 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
-
 
 TEST_JSON = "test/test.json"
 

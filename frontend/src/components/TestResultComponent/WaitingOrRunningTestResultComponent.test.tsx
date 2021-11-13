@@ -1,9 +1,5 @@
 import React from "react";
-import {
-  ExecutionStatusDto,
-  TestResultDto,
-  TestStatusDto,
-} from "../../catoapimodels";
+import { TestResultDto, UnifiedTestStatusDto } from "../../catoapimodels";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
 import { render, screen } from "@testing-library/react";
 
@@ -19,8 +15,7 @@ const testResultWaitingToStart: TestResultDto = {
     memory: 8,
     cpu_name: "test",
   },
-  execution_status: ExecutionStatusDto.NOT_STARTED,
-  status: TestStatusDto.FAILED,
+  unified_test_status: UnifiedTestStatusDto.NOT_STARTED,
   seconds: 1,
   message: "message",
   image_output: null,
@@ -41,8 +36,7 @@ const testResultRunning: TestResultDto = {
     memory: 8,
     cpu_name: "test",
   },
-  execution_status: ExecutionStatusDto.RUNNING,
-  status: TestStatusDto.FAILED,
+  unified_test_status: UnifiedTestStatusDto.RUNNING,
   seconds: 1,
   message: "message",
   image_output: null,
