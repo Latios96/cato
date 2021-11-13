@@ -29,6 +29,7 @@ export function filterOptionsFromQueryString(
 export function filterOptionsForQueryString(filterOptions: FilterOptions) {
   return {
     statusFilter: filterOptions.status,
+    failureReasonFilter: filterOptions.failureReason,
   };
 }
 
