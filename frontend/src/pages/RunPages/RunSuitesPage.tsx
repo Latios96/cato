@@ -24,9 +24,9 @@ function RunSuitePage(props: Props) {
           <div className={styles.filterControlsContainer}>
             <FilterControls
               currentFilterOptions={state.currentFilterOptions}
-              statusFilterChanged={(filter) => {
+              filterOptionsChanged={(filter) => {
                 const queryString = updateQueryString(history.location.search, {
-                  statusFilter: filter,
+                  statusFilter: filter.status,
                 });
                 history.push({ search: queryString });
               }}

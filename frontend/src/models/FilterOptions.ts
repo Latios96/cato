@@ -14,4 +14,8 @@ export class FilterOptions {
   }
 
   public status: StatusFilter = StatusFilter.NONE;
+
+  public withChangedStatusFilter(statusFilter: StatusFilter): FilterOptions {
+    return new FilterOptions(statusFilter);
+  }
 }
