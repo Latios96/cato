@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cato"
-version = "0.48.0"
+version = "0.49.0"
 description = "coolest project"
 authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
 include = [
