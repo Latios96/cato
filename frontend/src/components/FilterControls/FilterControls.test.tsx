@@ -44,6 +44,7 @@ describe("FilterControls", () => {
 
       expect(rendered.queryByText("Failure Reason")).not.toBeInTheDocument();
     });
+
     it("should display failure reasons", () => {
       const filterChangedCallback = jest.fn();
 
@@ -54,6 +55,20 @@ describe("FilterControls", () => {
         />
       );
       expect(rendered.queryByText("Failure Reason")).toBeInTheDocument();
+    });
+
+    it("should not display failure reasons because its disabled", () => {
+      const filterChangedCallback = jest.fn();
+
+      const rendered = render(
+        <FilterControls
+          currentFilterOptions={new FilterOptions(StatusFilter.FAILED)}
+          filterOptionsChanged={filterChangedCallback}
+          failureReasonIsNotFilterable={true}
+        />
+      );
+
+      expect(rendered.queryByText("Failure Reason")).not.toBeInTheDocument();
     });
   });
 

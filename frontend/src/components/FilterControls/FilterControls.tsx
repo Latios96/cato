@@ -8,6 +8,7 @@ import { getNiceName } from "../../models/testFailureReasonNiceNames";
 interface Props {
   currentFilterOptions: FilterOptions;
   filterOptionsChanged: (filterOptions: FilterOptions) => void;
+  failureReasonIsNotFilterable?: boolean;
 }
 
 function FilterControls(props: Props) {
@@ -93,7 +94,8 @@ function FilterControls(props: Props) {
         }
         onChange={(e) => {}}
       />
-      {props.currentFilterOptions.status === StatusFilter.FAILED ? (
+      {!props.failureReasonIsNotFilterable &&
+      props.currentFilterOptions.status === StatusFilter.FAILED ? (
         <div className={styles.failureReasonFilterControls}>
           <Form.Label htmlFor={"failureReasonSelect"}>
             Failure Reason

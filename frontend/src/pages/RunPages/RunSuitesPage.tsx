@@ -30,6 +30,7 @@ function RunSuitePage(props: Props) {
                 });
                 history.push({ search: queryString });
               }}
+              failureReasonIsNotFilterable={true}
             />
           </div>
           <SuiteList
