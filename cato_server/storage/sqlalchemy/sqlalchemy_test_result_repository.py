@@ -493,4 +493,9 @@ class SqlAlchemyTestResultRepository(
                 query = query.filter(
                     _TestResultMapping.execution_status == filter_options.status.value
                 )
+            if filter_options.failure_reason:
+                query = query.filter(
+                    _TestResultMapping.failure_reason
+                    == filter_options.failure_reason.value
+                )
         return query
