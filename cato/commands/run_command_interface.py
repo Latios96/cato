@@ -3,7 +3,6 @@ from typing import Optional, Callable
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.domain.config import RunConfig
-from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import (
     filter_by_suite_name,
     filter_by_test_identifier,
