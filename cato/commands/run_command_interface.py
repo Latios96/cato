@@ -3,7 +3,7 @@ from typing import Optional, Callable
 from cato.commands.base_command import BaseCliCommand
 from cato.config.config_file_parser import JsonConfigParser
 from cato.domain.config import RunConfig
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import (
     filter_by_suite_name,
     filter_by_test_identifier,
@@ -14,6 +14,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
 )
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.domain.unified_test_status import UnifiedTestStatus
 
 
 class RunCommandInterface(BaseCliCommand):
@@ -56,7 +57,7 @@ class RunCommandInterface(BaseCliCommand):
         if last_run_information:
             failed_test_identifiers = (
                 self._cato_api_client.get_test_results_by_run_id_and_test_status(
-                    last_run_information.last_run_id, TestStatus.FAILED
+                    last_run_information.last_run_id, UnifiedTestStatus.FAILED
                 )
             )
             if not failed_test_identifiers:

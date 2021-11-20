@@ -3,7 +3,7 @@ import datetime
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.timing_report_generator import TimingReportGenerator
@@ -21,7 +21,7 @@ def test_generate():
                 test_results=[
                     TestExecutionResult(
                         test,
-                        TestStatus.SUCCESS,
+                        ResultStatus.SUCCESS,
                         [],
                         50,
                         "this is a message",
@@ -35,7 +35,7 @@ def test_generate():
                     ),
                     TestExecutionResult(
                         test2,
-                        TestStatus.SUCCESS,
+                        ResultStatus.SUCCESS,
                         [],
                         500,
                         "this is a message",
@@ -48,7 +48,7 @@ def test_generate():
                         failure_reason=None,
                     ),
                 ],
-                result=TestStatus.SUCCESS,
+                result=ResultStatus.SUCCESS,
             )
         ]
     )

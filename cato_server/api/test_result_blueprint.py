@@ -23,7 +23,7 @@ from cato_common.domain.image import ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
@@ -289,7 +289,7 @@ class TestResultsBlueprint(APIRouter):
 
         self._finish_test.finish_test(
             finish_test_result_dto.id,
-            TestStatus(finish_test_result_dto.status.value),
+            ResultStatus(finish_test_result_dto.status.value),
             finish_test_result_dto.seconds,
             finish_test_result_dto.message,
             finish_test_result_dto.image_output,

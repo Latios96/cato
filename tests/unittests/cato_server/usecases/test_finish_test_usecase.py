@@ -3,7 +3,7 @@ import datetime
 import pytest
 
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
@@ -38,7 +38,7 @@ def test_should_finish(test_result_factory, object_mapper):
 
     finish_test.finish_test(
         test_result_id=42,
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         seconds=2,
         message="Test succeded",
         image_output=2,
@@ -83,7 +83,7 @@ def test_should_raise_no_test_result_with_id(object_mapper):
     with pytest.raises(ValueError):
         finish_test.finish_test(
             test_result_id=42,
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             seconds=2,
             message="Test succeded",
             image_output=2,
@@ -153,7 +153,7 @@ def test_exception_during_thumbnail_creation_should_not_be_an_issue(
     )
     finish_test.finish_test(
         test_result_id=42,
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         seconds=2,
         message="Test succeded",
         image_output=2,

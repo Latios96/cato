@@ -5,7 +5,7 @@ from sqlalchemy.orm import with_polymorphic
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_edit import (
     AbstractTestEdit,
     EditTypes,
@@ -145,7 +145,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                         method=ComparisonMethod(entity.new_comparison_method),
                         threshold=entity.new_threshold,
                     ),
-                    status=TestStatus(entity.new_status),
+                    status=ResultStatus(entity.new_status),
                     message=entity.new_message,
                     diff_image_id=entity.new_diff_image_id,
                     error_value=entity.new_error_value,
@@ -155,7 +155,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                         method=ComparisonMethod(entity.old_comparison_method),
                         threshold=entity.old_threshold,
                     ),
-                    status=TestStatus(entity.old_status),
+                    status=ResultStatus(entity.old_status),
                     message=entity.old_message,
                     diff_image_id=entity.old_diff_image_id,
                     error_value=entity.old_error_value,
@@ -169,14 +169,14 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
                 test_identifier=TestIdentifier.from_string(entity.test_identifier),
                 created_at=entity.created_at,
                 old_value=ReferenceImageEditValue(
-                    status=TestStatus(entity.old_status),
+                    status=ResultStatus(entity.old_status),
                     message=entity.old_message,
                     reference_image_id=entity.old_reference_image_id,
                     diff_image_id=entity.old_diff_image_id,
                     error_value=entity.old_error_value,
                 ),
                 new_value=ReferenceImageEditValue(
-                    status=TestStatus(entity.new_status),
+                    status=ResultStatus(entity.new_status),
                     message=entity.new_message,
                     reference_image_id=entity.new_reference_image_id,
                     diff_image_id=entity.new_diff_image_id,

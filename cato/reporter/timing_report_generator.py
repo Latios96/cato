@@ -5,7 +5,7 @@ import humanfriendly
 from tabulate import tabulate
 
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 
@@ -26,7 +26,7 @@ class TimingReportGenerator:
             duration = humanfriendly.format_timespan(test_result.seconds)
             result = (
                 emoji.emojize(":white_check_mark:", use_aliases=True)
-                if test_result.status == TestStatus.SUCCESS
+                if test_result.status == ResultStatus.SUCCESS
                 else emoji.emojize(":x:", use_aliases=True)
             )
             entries.append((name, duration, result))

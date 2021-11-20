@@ -27,7 +27,7 @@ from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 
 
@@ -287,7 +287,7 @@ def test_send_test_heartbeat_not_existing_test_id(cato_api_client):
 def test_finish_test_result_success(cato_api_client, test_result, stored_image_factory):
     cato_api_client.finish_test(
         test_result_id=test_result.id,
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         seconds=3,
         message="my_mesage",
         image_output=stored_image_factory().id,
@@ -300,7 +300,7 @@ def test_finish_test_result_failure(cato_api_client, test_result, stored_image):
     with pytest.raises(ValueError):
         cato_api_client.finish_test(
             test_result_id=test_result.id,
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             seconds=3,
             message="my_mesage",
             image_output=42,
@@ -323,7 +323,7 @@ def test_get_test_results_by_run_id_and_test_status_should_not_find(
     cato_api_client, run, test_result
 ):
     identifiers = cato_api_client.get_test_results_by_run_id_and_test_status(
-        run.id, TestStatus.FAILED
+        run.id, ResultStatus.FAILED
     )
 
     assert identifiers == []
@@ -387,7 +387,7 @@ def test_compare_images_success(cato_api_client, test_resource_provider):
     )
 
     assert result == CompareImageResult(
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message=None,
         reference_image_id=2,
         output_image_id=1,

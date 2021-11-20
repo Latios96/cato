@@ -6,7 +6,7 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
@@ -104,7 +104,7 @@ def test_run_suite_should_return_correctly_collected_results():
     )
     execution_result = TestExecutionResult(
         test,
-        TestStatus.SUCCESS,
+        ResultStatus.SUCCESS,
         [],
         1,
         "this is a message",
@@ -121,7 +121,7 @@ def test_run_suite_should_return_correctly_collected_results():
     result = test_suite_runner.run_test_suites(config)
 
     assert result == [
-        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
+        TestSuiteExecutionResult(test_suite, ResultStatus.SUCCESS, [execution_result])
     ]
     mock_execution_reporter.report_test_execution_end.assert_called_with(
         mock_last_run_information_repository

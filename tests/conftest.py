@@ -36,7 +36,7 @@ from cato_common.domain.test_edit import (
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -369,7 +369,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=test_result.message,
             diff_image_id=test_result.diff_image,
             error_value=1,
@@ -378,7 +378,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=10
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="still " + test_result.message,
             diff_image_id=stored_image_factory().id,
             error_value=0.1,
@@ -615,7 +615,7 @@ def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_f
                     comparison_settings=ComparisonSettings(
                         method=ComparisonMethod.SSIM, threshold=1
                     ),
-                    status=TestStatus.SUCCESS,
+                    status=ResultStatus.SUCCESS,
                     message=None,
                     diff_image_id=stored_image_factory().id,
                     error_value=1,
@@ -624,7 +624,7 @@ def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_f
                     comparison_settings=ComparisonSettings(
                         method=ComparisonMethod.SSIM, threshold=0.5
                     ),
-                    status=TestStatus.FAILED,
+                    status=ResultStatus.FAILED,
                     message="Failed",
                     diff_image_id=stored_image_factory().id,
                     error_value=0.5,
@@ -646,14 +646,14 @@ def saving_reference_image_edit_factory(stored_image_factory, sessionmaker_fixtu
                 test_identifier=TestIdentifier.from_string("some/test"),
                 created_at=created_at,
                 new_value=ReferenceImageEditValue(
-                    status=TestStatus.SUCCESS,
+                    status=ResultStatus.SUCCESS,
                     message=None,
                     reference_image_id=stored_image_factory().id,
                     diff_image_id=stored_image_factory().id,
                     error_value=1,
                 ),
                 old_value=ReferenceImageEditValue(
-                    status=TestStatus.FAILED,
+                    status=ResultStatus.FAILED,
                     message="Failed",
                     reference_image_id=stored_image_factory().id,
                     diff_image_id=stored_image_factory().id,

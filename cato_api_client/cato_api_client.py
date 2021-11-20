@@ -7,7 +7,7 @@ import requests
 
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_api_client.http_template import AbstractHttpTemplate
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,
@@ -195,7 +195,7 @@ class CatoApiClient:
     def finish_test(
         self,
         test_result_id: int,
-        status: TestStatus,
+        status: ResultStatus,
         seconds: float,
         message: str,
         image_output: Optional[int] = None,

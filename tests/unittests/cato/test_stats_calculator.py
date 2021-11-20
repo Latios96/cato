@@ -3,7 +3,7 @@ import datetime
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.stats_calculator import StatsCalculator, Stats
@@ -22,7 +22,7 @@ def test_calculates_succeded_correctly():
     test_suite = TestSuite(name="example", tests=[test])
     execution_result = TestExecutionResult(
         test,
-        TestStatus.SUCCESS,
+        ResultStatus.SUCCESS,
         [],
         1,
         MESSAGE,
@@ -35,7 +35,7 @@ def test_calculates_succeded_correctly():
         failure_reason=None,
     )
     result = [
-        TestSuiteExecutionResult(test_suite, TestStatus.SUCCESS, [execution_result])
+        TestSuiteExecutionResult(test_suite, ResultStatus.SUCCESS, [execution_result])
     ]
     stats_calculator = StatsCalculator()
 
@@ -54,7 +54,7 @@ def test_calculates_failed_correctly():
     test_suite = TestSuite(name="example", tests=[test])
     execution_result1 = TestExecutionResult(
         test,
-        TestStatus.SUCCESS,
+        ResultStatus.SUCCESS,
         [],
         1,
         MESSAGE,
@@ -68,7 +68,7 @@ def test_calculates_failed_correctly():
     )
     execution_result2 = TestExecutionResult(
         test,
-        TestStatus.FAILED,
+        ResultStatus.FAILED,
         [],
         1,
         MESSAGE,
@@ -82,7 +82,7 @@ def test_calculates_failed_correctly():
     )
     result = [
         TestSuiteExecutionResult(
-            test_suite, TestStatus.SUCCESS, [execution_result1, execution_result2]
+            test_suite, ResultStatus.SUCCESS, [execution_result1, execution_result2]
         )
     ]
     stats_calculator = StatsCalculator()

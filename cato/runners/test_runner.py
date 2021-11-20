@@ -5,7 +5,7 @@ import emoji
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.reporter.reporter import Reporter
@@ -77,7 +77,7 @@ class TestRunner:
         if command_result.exit_code != 0:
             return TestExecutionResult(
                 test,
-                TestStatus.FAILED,
+                ResultStatus.FAILED,
                 command_result.output,
                 elapsed,
                 f"Command exited with exit code {command_result.exit_code}",
@@ -117,7 +117,7 @@ class TestRunner:
             image_output_image = self._cato_api_client.upload_image(image_output)
             return TestExecutionResult(
                 test,
-                TestStatus.FAILED,
+                ResultStatus.FAILED,
                 command_result.output,
                 elapsed,
                 message_reference_image_missing,
@@ -135,7 +135,7 @@ class TestRunner:
             reference_image_image = self._cato_api_client.upload_image(reference_image)
             return TestExecutionResult(
                 test,
-                TestStatus.FAILED,
+                ResultStatus.FAILED,
                 command_result.output,
                 elapsed,
                 message_image_output_missing,
@@ -153,7 +153,7 @@ class TestRunner:
             self._reporter.report_message(message_reference_image_missing)
             return TestExecutionResult(
                 test,
-                TestStatus.FAILED,
+                ResultStatus.FAILED,
                 command_result.output,
                 elapsed,
                 "{}, {}".format(
@@ -181,10 +181,10 @@ class TestRunner:
                 test.comparison_settings,
             )
 
-            if image_compare_result.status == TestStatus.FAILED:
+            if image_compare_result.status == ResultStatus.FAILED:
                 return TestExecutionResult(
                     test,
-                    TestStatus.FAILED,
+                    ResultStatus.FAILED,
                     command_result.output,
                     elapsed,
                     image_compare_result.message
@@ -201,7 +201,7 @@ class TestRunner:
 
             return TestExecutionResult(
                 test,
-                TestStatus.SUCCESS,
+                ResultStatus.SUCCESS,
                 command_result.output,
                 elapsed,
                 message="",

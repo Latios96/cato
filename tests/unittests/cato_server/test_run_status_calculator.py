@@ -3,7 +3,7 @@ import pytest
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.domain.run_status import RunStatus
 from cato_server.run_status_calculator import RunStatusCalculator
@@ -59,10 +59,10 @@ def test_calculate_success():
 @pytest.mark.parametrize(
     "test_results",
     [
-        {TestStatus.FAILED},
+        {ResultStatus.FAILED},
         {
-            TestStatus.FAILED,
-            TestStatus.SUCCESS,
+            ResultStatus.FAILED,
+            ResultStatus.SUCCESS,
         },
     ],
 )

@@ -1,6 +1,6 @@
 import pytest
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_server.api.validators.test_result_validators import (
     CreateOutputValidator,
     FinishTestResultValidator,
@@ -57,7 +57,7 @@ class TestFinishTestResultValidator:
         [
             {
                 "id": 1,
-                "status": TestStatus.SUCCESS,
+                "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
                 "image_output": 1,
@@ -66,7 +66,7 @@ class TestFinishTestResultValidator:
             },
             {
                 "id": 1,
-                "status": TestStatus.SUCCESS,
+                "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
                 "image_output": None,
@@ -75,7 +75,7 @@ class TestFinishTestResultValidator:
             },
             {
                 "id": 1,
-                "status": TestStatus.SUCCESS,
+                "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
                 "image_output": 1,
@@ -84,7 +84,7 @@ class TestFinishTestResultValidator:
             },
             {
                 "id": 1,
-                "status": TestStatus.SUCCESS,
+                "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
                 "image_output": None,
@@ -93,7 +93,7 @@ class TestFinishTestResultValidator:
             },
             {
                 "id": 1,
-                "status": TestStatus.SUCCESS,
+                "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
                 "image_output": None,
@@ -102,7 +102,7 @@ class TestFinishTestResultValidator:
             },
             {
                 "id": 1,
-                "status": TestStatus.FAILED,
+                "status": ResultStatus.FAILED,
                 "message": "test",
                 "seconds": 1,
                 "image_output": None,
@@ -128,7 +128,7 @@ class TestFinishTestResultValidator:
             (
                 {
                     "id": 42,
-                    "status": TestStatus.SUCCESS,
+                    "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
                     "image_output": 1,
@@ -140,7 +140,7 @@ class TestFinishTestResultValidator:
             (
                 {
                     "id": 1,
-                    "status": TestStatus.SUCCESS,
+                    "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
                     "image_output": 42,
@@ -152,7 +152,7 @@ class TestFinishTestResultValidator:
             (
                 {
                     "id": 1,
-                    "status": TestStatus.SUCCESS,
+                    "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
                     "image_output": 1,
@@ -164,7 +164,7 @@ class TestFinishTestResultValidator:
             (
                 {
                     "id": 1,
-                    "status": TestStatus.SUCCESS,
+                    "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
                     "image_output": 1,
@@ -177,7 +177,7 @@ class TestFinishTestResultValidator:
             (
                 {
                     "id": 1,
-                    "status": TestStatus.FAILED,
+                    "status": ResultStatus.FAILED,
                     "message": "test",
                     "seconds": 1,
                     "image_output": 1,

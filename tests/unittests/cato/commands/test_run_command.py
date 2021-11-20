@@ -14,7 +14,7 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
@@ -88,11 +88,11 @@ class TestRunCommand:
         result = [
             TestSuiteExecutionResult(
                 test_suite=TEST_SUITE,
-                result=TestStatus.SUCCESS,
+                result=ResultStatus.SUCCESS,
                 test_results=[
                     TestExecutionResult(
                         test=TEST,
-                        status=TestStatus.SUCCESS,
+                        status=ResultStatus.SUCCESS,
                         output=["this", "is", "my", "output"],
                         seconds=4,
                         message="",

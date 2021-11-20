@@ -1,6 +1,6 @@
 import datetime
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
@@ -109,7 +109,7 @@ def test_create_reference_image_edit_with_success(test_result_factory):
     mock_test_result_repository.find_by_id.return_value = test_result_factory(
         id=5,
         image_output=original_output_image_id,
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message="success",
         diff_image=3,
         reference_image=original_reference_image_id,
@@ -117,7 +117,7 @@ def test_create_reference_image_edit_with_success(test_result_factory):
     )
     mock_compare_image = mock_safe(CompareImage)
     mock_compare_image.compare_image_from_db.return_value = CompareImageResult(
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message="still success",
         reference_image_id=11,
         output_image_id=12,
@@ -142,14 +142,14 @@ def test_create_reference_image_edit_with_success(test_result_factory):
         test_id=5,
         created_at=created_at,
         old_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="success",
             diff_image_id=3,
             reference_image_id=original_reference_image_id,
             error_value=1,
         ),
         new_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="still success",
             diff_image_id=13,
             reference_image_id=original_output_image_id,

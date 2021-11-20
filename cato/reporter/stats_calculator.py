@@ -2,7 +2,7 @@ import itertools
 from dataclasses import dataclass
 from typing import List
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 
@@ -20,9 +20,9 @@ class StatsCalculator:
         total_tests = len(all_tests)
 
         total_tests_succeded = len(
-            list(filter(lambda x: x.status == TestStatus.SUCCESS, all_tests))
+            list(filter(lambda x: x.status == ResultStatus.SUCCESS, all_tests))
         )
         total_tests_failed = len(
-            list(filter(lambda x: x.status == TestStatus.FAILED, all_tests))
+            list(filter(lambda x: x.status == ResultStatus.FAILED, all_tests))
         )
         return Stats(total_tests, total_tests_succeded, total_tests_failed)

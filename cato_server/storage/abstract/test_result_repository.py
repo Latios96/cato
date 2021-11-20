@@ -2,7 +2,7 @@ from typing import Optional, Set, Dict, List
 
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.test_result_status_information import (
@@ -66,7 +66,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
         raise NotImplementedError()
 
     def find_by_run_id_filter_by_test_status(
-        self, run_id: int, test_status: TestStatus
+        self, run_id: int, test_status: ResultStatus
     ) -> List[TestResult]:
         raise NotImplementedError()
 

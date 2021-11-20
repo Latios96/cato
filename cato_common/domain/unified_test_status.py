@@ -1,6 +1,6 @@
 from enum import Enum
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 
 
 class UnifiedTestStatus(str, Enum):
@@ -9,9 +9,9 @@ class UnifiedTestStatus(str, Enum):
     SUCCESS = "SUCCESS"
     FAILED = "FAILED"
 
-    def to_test_status(self):
+    def to_result_status(self) -> ResultStatus:
         if self.value == "SUCCESS":
-            return TestStatus.SUCCESS
+            return ResultStatus.SUCCESS
         elif self.value == "FAILED":
-            return TestStatus.FAILED
+            return ResultStatus.FAILED
         raise ValueError(f"Value {self.value} is not a TestStatus!")

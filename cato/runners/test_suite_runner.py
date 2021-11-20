@@ -1,7 +1,7 @@
 from typing import List, Callable
 
 from cato.domain.config import RunConfig
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
@@ -43,16 +43,16 @@ class TestSuiteRunner:
 
         for suite in config.suites:
             test_results = []
-            suite_status = TestStatus.SUCCESS
+            suite_status = ResultStatus.SUCCESS
             self._reporter.report_start_test_suite(suite)
             for test in suite.tests:
                 self._test_execution_reporter.report_test_execution_start(suite, test)
                 result = self._test_runner.run_test(config, suite, test)
-                if result.status == TestStatus.SUCCESS:
+                if result.status == ResultStatus.SUCCESS:
                     self._reporter.report_test_success(result)
                 else:
                     self._reporter.report_test_failure(result)
-                    suite_status = TestStatus.FAILED
+                    suite_status = ResultStatus.FAILED
                 test_results.append(result)
                 self._test_execution_reporter.report_test_result(suite, result)
 

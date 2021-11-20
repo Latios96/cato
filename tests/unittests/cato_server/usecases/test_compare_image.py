@@ -2,7 +2,7 @@ from io import BytesIO
 
 import pytest
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_result import ComparisonResult
 from cato.domain.comparison_settings import ComparisonSettings
@@ -26,7 +26,7 @@ def test_context():
             self.mock_image_comparator = mock_safe(AdvancedImageComparator)
             self.mock_file_storage = mock_safe(AbstractFileStorage)
             self.comparison_result = ComparisonResult(
-                status=TestStatus.SUCCESS, message="", diff_image="some-path", error=1
+                status=ResultStatus.SUCCESS, message="", diff_image="some-path", error=1
             )
             self.comparison_settings = ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
@@ -145,7 +145,10 @@ class TestCompareImage:
 
     def test_compare_images_failure(self, test_context):
         test_context.mock_image_comparator.compare.return_value = ComparisonResult(
-            status=TestStatus.FAILED, message="Failed", diff_image="some-path", error=1
+            status=ResultStatus.FAILED,
+            message="Failed",
+            diff_image="some-path",
+            error=1,
         )
 
         result = test_context.compare_image.compare_image(
@@ -157,7 +160,7 @@ class TestCompareImage:
         )
 
         assert result == CompareImageResult(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=2,
             output_image_id=1,
@@ -182,7 +185,10 @@ class TestCompareImage:
 
     def test_compare_images_from_db_failure(self, test_context):
         test_context.mock_image_comparator.compare.return_value = ComparisonResult(
-            status=TestStatus.FAILED, message="Failed", diff_image="some-path", error=1
+            status=ResultStatus.FAILED,
+            message="Failed",
+            diff_image="some-path",
+            error=1,
         )
 
         result = test_context.compare_image.compare_image_from_db(
@@ -206,7 +212,7 @@ class TestCompareImage:
         )
 
         assert result == CompareImageResult(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=2,
             output_image_id=1,

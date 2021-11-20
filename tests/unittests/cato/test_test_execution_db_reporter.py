@@ -27,7 +27,7 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from tests.utils import mock_safe
 
@@ -193,7 +193,7 @@ class TestTestExecutionDbReporter:
         finished_at = datetime.datetime.now()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",
@@ -212,7 +212,7 @@ class TestTestExecutionDbReporter:
 
         test_context.mock_cato_api_client.finish_test.assert_called_with(
             test_result.id,
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             seconds=4,
             message="",
             image_output=10,
@@ -231,7 +231,7 @@ class TestTestExecutionDbReporter:
         finished_at = datetime.datetime.now()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",
@@ -267,7 +267,7 @@ class TestTestExecutionDbReporter:
         finished_at = datetime.datetime.now()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",
@@ -286,7 +286,7 @@ class TestTestExecutionDbReporter:
 
         test_context.mock_cato_api_client.finish_test.assert_called_with(
             test_result.id,
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             seconds=4,
             message="",
             image_output=None,
@@ -303,7 +303,7 @@ class TestTestExecutionDbReporter:
     def test_report_test_result_no_run_id_should_fail(self, test_context):
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             output=["this", "is", "my", "output"],
             seconds=4,
             message="",

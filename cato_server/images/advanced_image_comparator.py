@@ -6,7 +6,7 @@ import cv2
 import numpy
 from skimage import metrics
 from PIL import Image, ImageOps
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.comparison_result import ComparisonResult
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_server.domain.resolution import Resolution
@@ -55,7 +55,7 @@ class AdvancedImageComparator:
         )
         if not images_have_same_resolution:
             return ComparisonResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message=f"Images have different resolutions! Reference image is {reference_image_resolution}, output image is {output_image_resolution}",
                 diff_image=None,
                 error=0,
@@ -76,14 +76,17 @@ class AdvancedImageComparator:
 
         if score < comparison_settings.threshold:
             return ComparisonResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message=f"Images are not equal! {comparison_settings.method} score was {score:.3f}, max threshold is {comparison_settings.threshold:.3f}",
                 diff_image=diff_image,
                 error=score,
             )
 
         return ComparisonResult(
-            status=TestStatus.SUCCESS, message=None, diff_image=diff_image, error=score
+            status=ResultStatus.SUCCESS,
+            message=None,
+            diff_image=diff_image,
+            error=score,
         )
 
     def _read_image(self, image_path):

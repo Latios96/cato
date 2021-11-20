@@ -5,7 +5,7 @@ from selenium.webdriver.support.wait import WebDriverWait
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
@@ -44,7 +44,7 @@ class TestRunOverviewPage:
 
     def _fail_test(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
-        test_result.status = TestStatus.FAILED
+        test_result.status = ResultStatus.FAILED
         repository.save(test_result)
 
     def _visit_run_overview_page(self, live_server, run, selenium_driver):

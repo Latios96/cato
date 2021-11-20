@@ -1,4 +1,4 @@
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 
 
@@ -16,7 +16,7 @@ def test_map_from(object_mapper):
     )
 
     assert result == CompareImageResult(
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message="message",
         reference_image_id=1,
         output_image_id=2,
@@ -38,7 +38,7 @@ def test_map_from_optional_data(object_mapper):
     )
 
     assert result == CompareImageResult(
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message=None,
         reference_image_id=1,
         output_image_id=2,
@@ -50,7 +50,7 @@ def test_map_from_optional_data(object_mapper):
 def test_map_to(object_mapper):
     result = object_mapper.to_dict(
         CompareImageResult(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="message",
             reference_image_id=1,
             output_image_id=2,

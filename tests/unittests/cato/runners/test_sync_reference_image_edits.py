@@ -2,7 +2,7 @@ import datetime
 
 import pytest
 
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.reporter.reporter import Reporter
 from cato.runners.sync_reference_image_edits import SyncReferenceImageEdits
 from cato.variable_processing.variable_processor import VariableProcessor
@@ -171,14 +171,14 @@ def create_reference_image_edit(test_identifier):
         test_identifier=test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             reference_image_id=1,
             diff_image_id=2,
             error_value=1,
         ),
         old_value=ReferenceImageEditValue(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=3,
             diff_image_id=4,

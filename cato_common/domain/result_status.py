@@ -1,7 +1,7 @@
 from enum import Enum
 
 
-class TestStatus(str, Enum):
+class ResultStatus(str, Enum):
     SUCCESS = "SUCCESS"
     FAILED = "FAILED"
 

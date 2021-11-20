@@ -5,7 +5,7 @@ from sqlalchemy.exc import IntegrityError
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_edit import (
     EditTypes,
@@ -35,7 +35,7 @@ def test_save_comparison_settings_edit(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1.0
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=stored_image_factory().id,
             error_value=1,
@@ -44,7 +44,7 @@ def test_save_comparison_settings_edit(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=stored_image_factory().id,
             error_value=0.5,
@@ -67,14 +67,14 @@ def test_save_reference_image_edit(
         test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
             error_value=1,
         ),
         old_value=ReferenceImageEditValue(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
@@ -99,7 +99,7 @@ def test_save_not_existing_test_result(sessionmaker_fixture, stored_image_factor
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1.0
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=stored_image_factory().id,
             error_value=1,
@@ -108,7 +108,7 @@ def test_save_not_existing_test_result(sessionmaker_fixture, stored_image_factor
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=stored_image_factory().id,
             error_value=0.5,
@@ -140,7 +140,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
                 comparison_settings=ComparisonSettings(
                     method=ComparisonMethod.SSIM, threshold=1.0
                 ),
-                status=TestStatus.SUCCESS,
+                status=ResultStatus.SUCCESS,
                 message=None,
                 diff_image_id=stored_image_factory().id,
                 error_value=1,
@@ -149,7 +149,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
                 comparison_settings=ComparisonSettings(
                     method=ComparisonMethod.SSIM, threshold=0.5
                 ),
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Failed",
                 diff_image_id=stored_image_factory().id,
                 error_value=0.5,
@@ -171,7 +171,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
                 comparison_settings=ComparisonSettings(
                     method=ComparisonMethod.SSIM, threshold=1.0
                 ),
-                status=TestStatus.SUCCESS,
+                status=ResultStatus.SUCCESS,
                 message=None,
                 diff_image_id=stored_image_factory().id,
                 error_value=1,
@@ -180,7 +180,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
                 comparison_settings=ComparisonSettings(
                     method=ComparisonMethod.SSIM, threshold=0.5
                 ),
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Failed",
                 diff_image_id=stored_image_factory().id,
                 error_value=0.5,
@@ -210,7 +210,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1.0
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=stored_image_factory().id,
             error_value=1,
@@ -219,7 +219,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=stored_image_factory().id,
             error_value=0.5,
@@ -231,14 +231,14 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
         test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
             error_value=1,
         ),
         old_value=ReferenceImageEditValue(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
@@ -266,7 +266,7 @@ def test_find_by_test_id_with_edit_type(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=stored_image_factory().id,
             error_value=1,
@@ -275,7 +275,7 @@ def test_find_by_test_id_with_edit_type(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=stored_image_factory().id,
             error_value=0.5,
@@ -288,14 +288,14 @@ def test_find_by_test_id_with_edit_type(
         test_identifier=test_result.test_identifier,
         created_at=datetime.datetime.now(),
         new_value=ReferenceImageEditValue(
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
             error_value=1,
         ),
         old_value=ReferenceImageEditValue(
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             reference_image_id=stored_image_factory().id,
             diff_image_id=stored_image_factory().id,
@@ -332,7 +332,7 @@ def test_find_by_run_id_should_find(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=stored_image_factory().id,
             error_value=1,
@@ -341,7 +341,7 @@ def test_find_by_run_id_should_find(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=stored_image_factory().id,
             error_value=0.5,

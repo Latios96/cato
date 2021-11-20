@@ -4,7 +4,7 @@ import pytest
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import (
@@ -40,7 +40,7 @@ def test_create_edit_with_success(test_result_factory):
     mock_test_result_repository.find_by_id.return_value = test_result
     mock_compare_image = mock_safe(CompareImage)
     mock_compare_image.compare_image_from_db.return_value = CompareImageResult(
-        status=TestStatus.SUCCESS,
+        status=ResultStatus.SUCCESS,
         message="still success",
         reference_image_id=11,
         output_image_id=12,
@@ -72,14 +72,14 @@ def test_create_edit_with_success(test_result_factory):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="success",
             diff_image_id=3,
             error_value=1,
         ),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=edit_comparison_settings,
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message="still success",
             diff_image_id=13,
             error_value=0.1,
@@ -90,7 +90,7 @@ def test_create_edit_with_success(test_result_factory):
     )
     mock_test_result_repository.save.assert_called_with(test_result)
     assert test_result.diff_image == 13
-    assert test_result.unified_test_status == TestStatus.SUCCESS
+    assert test_result.unified_test_status == ResultStatus.SUCCESS
     assert test_result.message == "still success"
     assert test_result.comparison_settings == edit_comparison_settings
 

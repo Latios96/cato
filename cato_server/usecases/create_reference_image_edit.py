@@ -55,7 +55,7 @@ class CreateReferenceImageEdit:
                 reference_image_id=test_result.reference_image,
                 diff_image_id=test_result.diff_image,
                 error_value=test_result.error_value,
-                status=test_result.unified_test_status.to_test_status(),
+                status=test_result.unified_test_status.to_result_status(),
                 message=test_result.message,
             ),
             new_value=ReferenceImageEditValue(

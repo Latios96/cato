@@ -8,7 +8,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.reporter.reporter import Reporter
@@ -39,7 +39,7 @@ def test_context():
                 self._mocked_store_image
             )
             self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
-                status=TestStatus.SUCCESS,
+                status=ResultStatus.SUCCESS,
                 message="",
                 reference_image_id=1,
                 output_image_id=2,
@@ -172,7 +172,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.SUCCESS
+        assert result.status == ResultStatus.SUCCESS
         assert result.image_output == 2
         assert result.reference_image == 1
         assert result.diff_image == 3
@@ -206,7 +206,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.FAILED
+        assert result.status == ResultStatus.FAILED
         assert result.error_value == None
         assert result.failure_reason == TestFailureReason.EXIT_CODE_NON_ZERO
 
@@ -214,7 +214,7 @@ class TestTestRunner:
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
         test_context.mock_cato_api_client.compare_images.return_value = (
             CompareImageResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Images are not equal!",
                 reference_image_id=1,
                 output_image_id=2,
@@ -243,7 +243,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.FAILED
+        assert result.status == ResultStatus.FAILED
         assert result.message == "Images are not equal!"
         assert result.image_output == 1
         assert result.reference_image == 2
@@ -259,7 +259,7 @@ class TestTestRunner:
         test_context.output_folder.reference_image_exists.return_value = False
         test_context.mock_cato_api_client.compare_images.return_value = (
             CompareImageResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Images are not equal!",
                 reference_image_id=1,
                 output_image_id=2,
@@ -288,7 +288,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.FAILED
+        assert result.status == ResultStatus.FAILED
         assert result.message.startswith("Reference image")
         assert result.image_output == 1
         assert result.reference_image is None
@@ -302,7 +302,7 @@ class TestTestRunner:
         test_context.output_folder.image_output_exists.return_value = False
         test_context.mock_cato_api_client.compare_images.return_value = (
             CompareImageResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Images are not equal!",
                 reference_image_id=1,
                 output_image_id=2,
@@ -331,7 +331,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.FAILED
+        assert result.status == ResultStatus.FAILED
         assert result.message.startswith("No given image output path exists")
         assert result.image_output is None
         assert result.reference_image == 1
@@ -348,7 +348,7 @@ class TestTestRunner:
         test_context.output_folder.reference_image_exists.return_value = False
         test_context.mock_cato_api_client.compare_images.return_value = (
             CompareImageResult(
-                status=TestStatus.FAILED,
+                status=ResultStatus.FAILED,
                 message="Images are not equal!",
                 reference_image_id=1,
                 output_image_id=2,
@@ -377,7 +377,7 @@ class TestTestRunner:
             test,
         )
 
-        assert result.status == TestStatus.FAILED
+        assert result.status == ResultStatus.FAILED
         assert result.message.startswith("No given image output path exists")
         assert result.image_output is None
         assert result.reference_image is None

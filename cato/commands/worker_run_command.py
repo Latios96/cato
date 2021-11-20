@@ -4,7 +4,7 @@ import os
 from cato.commands.base_command import BaseCliCommand
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
@@ -68,7 +68,7 @@ class WorkerRunCommand(BaseCliCommand):
 
         result = self._test_runner.run_test(config, suite, test)
 
-        if result.status == TestStatus.SUCCESS:
+        if result.status == ResultStatus.SUCCESS:
             self._reporter.report_test_success(result)
         else:
             self._reporter.report_test_failure(result)

@@ -3,7 +3,7 @@ import datetime
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import find_test_by_test_identifier
 from cato.reporter.reporter import Reporter
 from cato.runners.sync_comparison_settings import SyncComparisonSettings
@@ -99,7 +99,7 @@ def create_comparison_settings_edit(test_identifier):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
             ),
-            status=TestStatus.SUCCESS,
+            status=ResultStatus.SUCCESS,
             message=None,
             diff_image_id=2,
             error_value=1,
@@ -108,7 +108,7 @@ def create_comparison_settings_edit(test_identifier):
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=0.5
             ),
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             message="Failed",
             diff_image_id=2,
             error_value=0.8,

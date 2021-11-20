@@ -4,7 +4,7 @@ from enum import Enum
 from typing import TypeVar, Optional
 
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_identifier import TestIdentifier
 
 T = TypeVar("T")
@@ -29,7 +29,7 @@ class AbstractTestEdit:
 @dataclass
 class ComparisonSettingsEditValue:
     comparison_settings: ComparisonSettings
-    status: TestStatus
+    status: ResultStatus
     message: Optional[str]
     diff_image_id: int
     error_value: float
@@ -50,7 +50,7 @@ class ReferenceImageEditValue:
     reference_image_id: int
     diff_image_id: int
     error_value: float
-    status: TestStatus
+    status: ResultStatus
     message: Optional[str]
 
 

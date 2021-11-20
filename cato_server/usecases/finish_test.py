@@ -3,7 +3,7 @@ import logging
 from typing import Optional
 
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_common.domain.test_status import TestStatus
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_heartbeat_repository import (
@@ -31,7 +31,7 @@ class FinishTest:
     def finish_test(
         self,
         test_result_id: int,
-        status: TestStatus,
+        status: ResultStatus,
         seconds: float,
         message: str,
         image_output: Optional[int] = None,
@@ -83,7 +83,7 @@ class FinishTest:
         logger.info("Failing test with id %s with message %s", test_result_id, message)
         self.finish_test(
             test_result_id=test_result_id,
-            status=TestStatus.FAILED,
+            status=ResultStatus.FAILED,
             seconds=-1,
             message=message,
             error_value=None,
