@@ -59,8 +59,8 @@ class _TestResultMapping(Base):
     )
     failure_reason = Column(String, nullable=True)
     # deprecated, only there for migrations
-    status = Column(String, nullable=True)
-    status = Column(String, nullable=True)
+    # execution_status = Column(String, nullable=True)
+    # status = Column(String, nullable=True)
 
     def __repr__(self):
         return f"<_TestResultMapping id={self.id}>"
