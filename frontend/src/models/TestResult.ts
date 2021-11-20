@@ -6,9 +6,7 @@ export default interface TestResult {
   test_command: string;
   test_variables: object;
   machine_info: object;
-  status: string;
-  status: string | null;
-  //output: string[] | null
+  unified_test_status: string;
   seconds: number | null;
   message: string | null;
   image_output: number | null;
