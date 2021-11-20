@@ -46,9 +46,12 @@ def upgrade():
                 test_result.unified_test_status = "SUCCESS"
     session.commit()
 
-    with op.batch_alter_table("test_edit_entity") as batch_op:
+    with op.batch_alter_table("test_result_entity") as batch_op:
         batch_op.alter_column(
-            "test_identifier", existing_type=sa.String(), nullable=False
+            "unified_test_status", existing_type=sa.String(), nullable=False
+        )
+        batch_op.alter_column(
+            "execution_status", existing_type=sa.String(), nullable=True
         )
 
 
