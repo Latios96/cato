@@ -33,17 +33,25 @@ def upgrade():
     bind = op.get_bind()
     session = orm.Session(bind=bind)
 
-    test_results = session.query(_TestResultMapping).all()
+    conn = op.get_bind()
+    res = conn.execute("select id, execution_status,status from test_result_entity")
+    test_results = res.fetchall()
 
-    for test_result in test_results:
-        test_result.unified_test_status = "NOT_STARTED"
-        if test_result.execution_status == "RUNNING":
-            test_result.unified_test_status = "RUNNING"
-        if test_result.execution_status == "FINISHED":
-            if test_result.status == "FAILED":
-                test_result.unified_test_status = "FAILED"
-            elif test_result.status == "SUCCESS":
-                test_result.unified_test_status = "SUCCESS"
+    for id, execution_status, status in test_results:
+        unified_test_status = "NOT_STARTED"
+        if execution_status == "RUNNING":
+            unified_test_status = "RUNNING"
+        if execution_status == "FINISHED":
+            if status == "FAILED":
+                unified_test_status = "FAILED"
+            elif status == "SUCCESS":
+                unified_test_status = "SUCCESS"
+        test_result = (
+            session.query(_TestResultMapping)
+            .filter(_TestResultMapping.id == id)
+            .first()
+        )
+        test_result.unified_test_status = unified_test_status
     session.commit()
 
     with op.batch_alter_table("test_result_entity") as batch_op:
