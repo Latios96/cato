@@ -63,10 +63,8 @@ class SuiteResultsBlueprint(APIRouter):
             return self._suite_result_by_run_paged(run_id, page_request, filter_options)
         suite_results = self._suite_result_repository.find_by_run_id(run_id)
 
-        status_by_suite_id = (
-            self._test_result_repository.find_execution_status_by_suite_ids(
-                set(map(lambda x: x.id, suite_results))
-            )
+        status_by_suite_id = self._test_result_repository.find_status_by_suite_ids(
+            set(map(lambda x: x.id, suite_results))
         )
 
         suite_result_dtos = []
@@ -96,10 +94,8 @@ class SuiteResultsBlueprint(APIRouter):
             run_id, page_request
         )
 
-        status_by_suite_id = (
-            self._test_result_repository.find_execution_status_by_suite_ids(
-                set(map(lambda x: x.id, suite_results_page.entities))
-            )
+        status_by_suite_id = self._test_result_repository.find_status_by_suite_ids(
+            set(map(lambda x: x.id, suite_results_page.entities))
         )
 
         suite_result_dtos = []

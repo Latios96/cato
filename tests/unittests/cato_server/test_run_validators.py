@@ -23,7 +23,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,
@@ -133,7 +132,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,
@@ -155,7 +153,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,
@@ -191,7 +188,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,
@@ -207,7 +203,6 @@ class TestCreateFullRunValidator:
                                 "test_identifier": "test/identifier",
                                 "test_command": "cmd",
                                 "test_variables": {},
-                                "execution_status": "NOT_STARTED",
                                 "machine_info": {
                                     "cpu_name": "test",
                                     "cores": 8,

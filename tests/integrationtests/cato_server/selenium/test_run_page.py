@@ -75,7 +75,7 @@ class TestRunTestPage:
 
         self._assert_first_test_has_icon_with_title(selenium_driver, "not started")
 
-        self._update_test_result_execution_status(sessionmaker_fixture, test_result)
+        self._update_test_result_status(sessionmaker_fixture, test_result)
 
         self._assert_first_test_has_icon_with_title(selenium_driver, "running")
 
@@ -183,7 +183,7 @@ class TestRunTestPage:
             "selectedTestContainer"
         ).find_element_by_xpath("//*[text()='No test selected']")
 
-    def _update_test_result_execution_status(self, sessionmaker_fixture, test_result):
+    def _update_test_result_status(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
         repository.save(test_result)

@@ -41,12 +41,12 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     ) -> Optional[TestResult]:
         raise NotImplementedError()
 
-    def find_execution_status_by_run_ids(
+    def find_status_by_run_ids(
         self, run_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
 
-    def find_execution_status_by_project_id(
+    def find_status_by_project_id(
         self, project_id: int
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
@@ -60,7 +60,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     def duration_by_run_ids(self, run_ids: Set[int]) -> Dict[int, float]:
         raise NotImplementedError()
 
-    def find_execution_status_by_suite_ids(
+    def find_status_by_suite_ids(
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()

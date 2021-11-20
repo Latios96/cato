@@ -499,9 +499,7 @@ def test_find_by_run_id_paginated_should_return_correct_order(
     assert names == order_test_data.correct_order_lowercase
 
 
-def test_find_execution_status_by_run_ids_should_find(
-    sessionmaker_fixture, run, test_result
-):
+def test_find_status_by_run_ids_should_find(sessionmaker_fixture, run, test_result):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result.id = 0
     test_result1 = repository.save(test_result)
@@ -511,37 +509,33 @@ def test_find_execution_status_by_run_ids_should_find(
     test_result3 = repository.save(test_result)
     test_result.id = 1
 
-    results = repository.find_execution_status_by_run_ids({run.id})
+    results = repository.find_status_by_run_ids({run.id})
 
     assert results == {run.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
-def test_find_execution_status_by_run_ids_should_find_empty_list(
-    sessionmaker_fixture, run
-):
+def test_find_status_by_run_ids_should_find_empty_list(sessionmaker_fixture, run):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    results = repository.find_execution_status_by_run_ids({run.id})
+    results = repository.find_status_by_run_ids({run.id})
 
     assert results == {}
 
 
-def test_find_execution_status_by_project_id_should_find(
-    sessionmaker_fixture, run, test_result
-):
+def test_find_status_by_project_id_should_find(sessionmaker_fixture, run, test_result):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_execution_status_by_project_id(run.project_id)
+    result = repository.find_status_by_project_id(run.project_id)
 
     assert result == {run.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
-def test_find_execution_status_by_project_id_should_not_find(
+def test_find_status_by_project_id_should_not_find(
     sessionmaker_fixture, run, test_result
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_execution_status_by_project_id(42)
+    result = repository.find_status_by_project_id(42)
 
     assert result == {}
 
@@ -590,22 +584,20 @@ def test_duration_by_run_id_respect_running_tests(
     assert repository.duration_by_run_id(run.id) == 20
 
 
-def test_find_execution_status_by_suite_ids(
-    sessionmaker_fixture, suite_result, test_result
-):
+def test_find_status_by_suite_ids(sessionmaker_fixture, suite_result, test_result):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_execution_status_by_suite_ids({suite_result.id})
+    result = repository.find_status_by_suite_ids({suite_result.id})
 
     assert result == {suite_result.id: {UnifiedTestStatus.NOT_STARTED}}
 
 
-def test_find_execution_status_by_suite_ids_should_return_empty(
+def test_find_status_by_suite_ids_should_return_empty(
     sessionmaker_fixture, suite_result, test_result
 ):
     repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
 
-    result = repository.find_execution_status_by_suite_ids({42})
+    result = repository.find_status_by_suite_ids({42})
 
     assert result == {}
 

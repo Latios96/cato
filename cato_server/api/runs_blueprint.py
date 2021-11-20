@@ -63,8 +63,8 @@ class RunsBlueprint(APIRouter):
         if page_request:
             return self.runs_by_project_paged(project_id, page_request)
         runs = self._run_repository.find_by_project_id(project_id)
-        status_by_run_id = (
-            self._test_result_repository.find_execution_status_by_project_id(project_id)
+        status_by_run_id = self._test_result_repository.find_status_by_project_id(
+            project_id
         )
         duration_by_run_id = self._test_result_repository.duration_by_run_ids(
             {x.id for x in runs}
@@ -91,8 +91,8 @@ class RunsBlueprint(APIRouter):
         run_page = self._run_repository.find_by_project_id_with_paging(
             project_id, page_request
         )
-        status_by_run_id = (
-            self._test_result_repository.find_execution_status_by_project_id(project_id)
+        status_by_run_id = self._test_result_repository.find_status_by_project_id(
+            project_id
         )
         duration_by_run_id = self._test_result_repository.duration_by_run_ids(
             {x.id for x in run_page.entities}
@@ -127,9 +127,7 @@ class RunsBlueprint(APIRouter):
         return JSONResponse(content={"succes": True}, status_code=200)
 
     def status(self, run_id: int) -> Response:
-        status_by_run_id = (
-            self._test_result_repository.find_execution_status_by_run_ids({run_id})
-        )
+        status_by_run_id = self._test_result_repository.find_status_by_run_ids({run_id})
 
         if not status_by_run_id.get(run_id):
             return Response(status_code=404)
@@ -157,10 +155,8 @@ class RunsBlueprint(APIRouter):
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)
-        status_by_run_id = (
-            self._test_result_repository.find_execution_status_by_project_id(
-                run.project_id
-            )
+        status_by_run_id = self._test_result_repository.find_status_by_project_id(
+            run.project_id
         )
         status = self._run_status_calculator.calculate(
             status_by_run_id.get(run.id, set())

@@ -6,7 +6,7 @@ export default interface TestResult {
   test_command: string;
   test_variables: object;
   machine_info: object;
-  execution_status: string;
+  status: string;
   status: string | null;
   //output: string[] | null
   seconds: number | null;

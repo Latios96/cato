@@ -59,7 +59,7 @@ class _TestResultMapping(Base):
     )
     failure_reason = Column(String, nullable=True)
     # deprecated, only there for migrations
-    execution_status = Column(String, nullable=True)
+    status = Column(String, nullable=True)
     status = Column(String, nullable=True)
 
     def __repr__(self):
@@ -210,7 +210,7 @@ class SqlAlchemyTestResultRepository(
         session.close()
         return page
 
-    def find_execution_status_by_run_ids(
+    def find_status_by_run_ids(
         self, run_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
@@ -233,7 +233,7 @@ class SqlAlchemyTestResultRepository(
 
         return status_by_run_id
 
-    def find_execution_status_by_project_id(
+    def find_status_by_project_id(
         self, project_id: int
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
@@ -342,7 +342,7 @@ class SqlAlchemyTestResultRepository(
 
         return summed_durations
 
-    def find_execution_status_by_suite_ids(
+    def find_status_by_suite_ids(
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         session = self._session_maker()
@@ -429,10 +429,8 @@ class SqlAlchemyTestResultRepository(
             success=success_count,
         )
 
-    def __status_count_query_result_to_dict(self, execution_status_counts):
-        return {
-            status: status_count for status, status_count in execution_status_counts
-        }
+    def __status_count_query_result_to_dict(self, status_counts):
+        return {status: status_count for status, status_count in status_counts}
 
     def _add_filter_options(self, filter_options: TestResultFilterOptions, query):
         if filter_options and filter_options.status is not StatusFilter.NONE:

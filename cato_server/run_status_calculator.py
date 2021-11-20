@@ -9,8 +9,8 @@ class RunStatusCalculator:
     def calculate(self, status_set: Set[UnifiedTestStatus]) -> RunStatus:
         status_counts: Dict[UnifiedTestStatus, int] = defaultdict(lambda: 0)
 
-        for execution_status in status_set:
-            status_counts[execution_status] += 1
+        for status in status_set:
+            status_counts[status] += 1
 
         total = len(status_set)
 
