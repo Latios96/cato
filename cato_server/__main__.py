@@ -3,7 +3,6 @@ import os.path
 import time
 
 import pinject
-import schedule
 import sentry_sdk
 import uvicorn
 from fastapi import FastAPI
@@ -17,8 +16,9 @@ import cato
 import cato_server
 import cato_common
 import cato_server.server_logging
-from cato_common.utils.bindings import imported_modules
+from cato_common.utils.bindings import imported_modules, provide_safe
 from cato_server.api.about_blueprint import AboutBlueprint
+from cato_server.api.background_tasks_blueprint import BackgroundTasksBlueprint
 from cato_server.api.compare_image_blueprint import CompareImagesBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
@@ -33,7 +33,6 @@ from cato_server.api.test_result_blueprint import TestResultsBlueprint
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory, PinjectBindings
-from cato_server.utils.background_scheduler_runner import BackgroundSchedulerRunner
 from cato_server.utils.background_task_creator import BackgroundTaskCreator
 
 logger = cato_server.server_logging.logger
@@ -74,6 +73,7 @@ def create_app(
     app.include_router(obj_graph.provide(TestResultsBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(CompareImagesBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(TestEditBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(BackgroundTasksBlueprint), prefix="/api/v1")
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
     if not os.path.exists(static_directory):
@@ -81,11 +81,8 @@ def create_app(
     app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")
 
     if create_background_tasks:
-        logger.info("Created background tasks..")
-        task_creator = obj_graph.provide(BackgroundTaskCreator)
-        task_creator.create()
-        app.scheduler_runner = BackgroundSchedulerRunner(schedule)
-        app.scheduler_runner.start()
+        task_creator = provide_safe(obj_graph, BackgroundTaskCreator)
+        task_creator.create(app, app_configuration)
 
     @app.middleware("http")
     async def timing(request: Request, call_next: RequestResponseEndpoint) -> Response:
@@ -117,11 +114,6 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     app = create_app(config, bindings, create_background_tasks=True)
-
-    @app.on_event("shutdown")
-    def shutdown_event():
-        app.scheduler_runner.stop(),
-        exit(0),
 
     if config.sentry_configuration.url:
         logger.info(
