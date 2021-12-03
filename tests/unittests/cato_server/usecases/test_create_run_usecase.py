@@ -5,6 +5,7 @@ from cato_api_models.catoapimodels import (
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
+from cato_common.domain.branch_name import BranchName
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
 )
@@ -48,6 +49,7 @@ def test_should_create(sessionmaker_fixture, project, object_mapper):
                     ],
                 )
             ],
+            branch_name=BranchName("default"),
         )
     )
 

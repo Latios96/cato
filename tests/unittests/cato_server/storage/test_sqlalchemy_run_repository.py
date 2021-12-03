@@ -3,6 +3,7 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
@@ -14,7 +15,13 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 def test_to_entity(sessionmaker_fixture):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     now = datetime.datetime.now()
-    run = Run(id=1, project_id=2, started_at=now)
+    run = Run(
+        id=1,
+        project_id=2,
+        started_at=now,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
 
     entity = repository.to_entity(run)
 
@@ -38,7 +45,13 @@ def test_to_domain_object(sessionmaker_fixture):
 def test_save(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
-    run = Run(id=0, project_id=project.id, started_at=start_time)
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=start_time,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
 
     run = repository.save(run)
 
@@ -49,16 +62,57 @@ def test_save(sessionmaker_fixture, project):
 
 def test_save_no_project_id(sessionmaker_fixture):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    run = Run(id=0, project_id=2, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=2,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
 
     with pytest.raises(IntegrityError):
         run = repository.save(run)
 
 
+def test_save_with_no_previous_run_id_is_possible(sessionmaker_fixture, project):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
+
+    repository.save(run)
+
+
+def test_save_with_not_existing_previous_run_id_is_not_possible(
+    sessionmaker_fixture, project
+):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=42,
+    )
+
+    with pytest.raises(IntegrityError):
+        repository.save(run)
+
+
 def test_find_by_id_should_find(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     start_time = datetime.datetime.now()
-    run = Run(id=0, project_id=project.id, started_at=start_time)
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=start_time,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     run = repository.save(run)
 
     assert repository.find_by_id(run.id).project_id == project.id
@@ -80,7 +134,13 @@ def test_find_by_project_id_should_find_empty(sessionmaker_fixture):
 def test_find_by_project_id_should_find_correct(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
 
-    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     run = repository.save(run)
 
     assert repository.find_by_project_id(project.id) == [run]
@@ -101,7 +161,13 @@ def test_find_by_project_id_paginate_should_find_empty(sessionmaker_fixture):
 def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
 
-    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     run = repository.save(run)
 
     page_request = PageRequest.first(10)
@@ -117,11 +183,23 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
     sessionmaker_fixture, project
 ):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     repository.save(run)
     runs = repository.insert_many(
         [
-            Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+            Run(
+                id=0,
+                project_id=project.id,
+                started_at=datetime.datetime.now(),
+                branch_name=BranchName("default"),
+                previous_run_id=None,
+            )
             for x in range(20)
         ]
     )
@@ -139,11 +217,23 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
     sessionmaker_fixture, project
 ):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     run = repository.save(run)
     runs = repository.insert_many(
         [
-            Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+            Run(
+                id=0,
+                project_id=project.id,
+                started_at=datetime.datetime.now(),
+                branch_name=BranchName("default"),
+                previous_run_id=None,
+            )
             for x in range(20)
         ]
     )

@@ -35,6 +35,7 @@ types:
         fields:
           project_id: integer
           test_suites: list<TestSuiteForRunCreation>
+          branch_name: string
 
       RunStatusDto:
         values:

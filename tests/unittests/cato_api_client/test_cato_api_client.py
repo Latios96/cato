@@ -17,6 +17,7 @@ from cato_api_models.catoapimodels import (
     ComparisonMethodDto,
     ComparisonSettingsDto,
 )
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel
@@ -245,6 +246,7 @@ def test_create_run_success(cato_api_client, project):
                 ],
             )
         ],
+        branch_name="default",
     )
     run = cato_api_client.create_run(dto)
     assert run.id == project.id
@@ -270,6 +272,7 @@ def test_create_run_failure(cato_api_client):
                 ],
             )
         ],
+        branch_name="default",
     )
     with pytest.raises(ValueError):
         cato_api_client.create_run(dto)

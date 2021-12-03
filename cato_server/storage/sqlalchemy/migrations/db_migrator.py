@@ -10,7 +10,7 @@ class DbMigrator:
     def __init__(self, storage_configuration: StorageConfiguration):
         self._storage_configuration = storage_configuration
 
-    def migrate(self):
+    def migrate(self, revision: str = "head"):
         database_url = self._storage_configuration.database_url
 
         alembic_cfg = Config(self._alembic_config_path)
@@ -22,7 +22,7 @@ class DbMigrator:
             "script_location",
             os.path.join(os.path.dirname(__file__), "alembic"),
         )
-        command.upgrade(alembic_cfg, "head")
+        command.upgrade(alembic_cfg, revision)
 
     @property
     def _alembic_config_path(self):

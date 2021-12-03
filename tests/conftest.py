@@ -20,6 +20,7 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
@@ -167,7 +168,13 @@ def project(sessionmaker_fixture):
 @pytest.fixture
 def run(sessionmaker_fixture, project):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    run = Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+    run = Run(
+        id=0,
+        project_id=project.id,
+        started_at=datetime.datetime.now(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
     return repository.save(run)
 
 
@@ -178,6 +185,8 @@ def run_factory():
             id=0,
             project_id=or_default(project_id, 1),
             started_at=or_default(started_at, datetime.datetime.now()),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
         )
 
     return func

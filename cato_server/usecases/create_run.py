@@ -4,6 +4,7 @@ import logging
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_models.catoapimodels import CreateFullRunDto
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
@@ -37,6 +38,8 @@ class CreateRunUsecase:
             id=0,
             project_id=create_run_dto.project_id,
             started_at=datetime.datetime.now(),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)

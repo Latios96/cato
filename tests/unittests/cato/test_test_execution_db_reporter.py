@@ -22,6 +22,7 @@ from cato_api_models.catoapimodels import (
     ComparisonMethodDto,
     ComparisonSettingsDto,
 )
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
@@ -84,7 +85,11 @@ class TestTestExecutionDbReporter:
             id=1, name="my_project_name"
         )
         test_context.mock_cato_api_client.create_run.return_value = Run(
-            id=5, project_id=1, started_at=datetime.datetime.now()
+            id=5,
+            project_id=1,
+            started_at=datetime.datetime.now(),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
         )
 
         test_context.test_execution_db_reporter.start_execution(
@@ -93,7 +98,7 @@ class TestTestExecutionDbReporter:
 
         test_context.mock_cato_api_client.create_run.assert_called_with(
             CreateFullRunDto(
-                1,
+                project_id=1,
                 test_suites=[
                     TestSuiteForRunCreation(
                         suite_name="my_suite",
@@ -111,6 +116,7 @@ class TestTestExecutionDbReporter:
                         suite_variables={},
                     )
                 ],
+                branch_name=BranchName("default"),
             )
         )
         assert test_context.test_execution_db_reporter._run_id == 5

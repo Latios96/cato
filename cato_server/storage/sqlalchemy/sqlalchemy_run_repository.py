@@ -1,8 +1,9 @@
 from typing import List
 
-from sqlalchemy import Column, Integer, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, DateTime, ForeignKey, String
 from sqlalchemy.orm import relationship
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.run_repository import RunRepository
@@ -18,6 +19,8 @@ class _RunMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
     started_at = Column(DateTime)
+    branch_name = Column(String, nullable=False)
+    previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
 
     suite_results = relationship("_SuiteResultMapping", backref="run")
 
@@ -28,6 +31,8 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             id=domain_object.id if domain_object.id else None,
             project_entity_id=domain_object.project_id,
             started_at=domain_object.started_at,
+            branch_name=str(domain_object.branch_name),
+            previous_run_id=domain_object.previous_run_id,
         )
 
     def to_domain_object(self, entity: _RunMapping) -> Run:
@@ -35,6 +40,8 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             id=entity.id,
             project_id=entity.project_entity_id,
             started_at=entity.started_at,
+            branch_name=BranchName(entity.branch_name),
+            previous_run_id=entity.previous_run_id,
         )
 
     def mapping_cls(self):
@@ -70,3 +77,17 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
 
         session.close()
         return page
+
+    def find_previous_run_by_branch_name(
+        self, project_id: int, branch_name: str
+    ) -> Run:
+        session = self._session_maker()
+
+        query = (
+            session.query(_RunMapping)
+            .filter(_RunMapping.project_entity_id == project_id)
+            .filter(_RunMapping.branch_name == branch_name)
+            .order_by(_RunMapping.id.desc())
+        )
+        session.close()
+        return self._map_one_to_domain_object(query.first())

@@ -13,3 +13,8 @@ class RunRepository(AbstractRepository[Run, int]):
         self, id: int, page_request: PageRequest
     ) -> Page[Run]:
         raise NotImplementedError()
+
+    def find_previous_run_by_branch_name(
+        self, project_id: int, branch_name: str
+    ) -> Run:
+        raise NotImplementedError()
