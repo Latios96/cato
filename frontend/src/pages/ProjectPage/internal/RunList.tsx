@@ -1,32 +1,42 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Page,
+  PageRequest,
   requestFirstPageOfSize,
 } from "../../../components/Pagination/Page";
 import { RunDto } from "../../../catoapimodels";
 import RunListImplementation from "./RunListImplementation";
 import { useReFetch } from "../../../hooks/useReFetch";
 import { useHistory } from "react-router-dom";
-import {
-  fromQueryString,
-  toQueryString,
-} from "../../../components/Pagination/pageQueryStringUtils";
+import queryString from "query-string";
+import { updateQueryString } from "../../../utils/queryStringUtils";
 interface Props {
   projectId: number;
+}
+interface State {
+  page: PageRequest;
+}
+function parseStateFromQueryString(theQueryString: string): State {
+  const queryParams = queryString.parse(theQueryString, {
+    parseNumbers: true,
+  });
+  const state = { page: requestFirstPageOfSize(25), branch: new Set<string>() };
+
+  if (queryParams.page_number && queryParams.page_size) {
+    state.page.page_size = Number(queryParams.page_size);
+    state.page.page_number = Number(queryParams.page_number);
+  }
+  return state;
 }
 
 function RunList(props: Props) {
   const history = useHistory();
-  const page = fromQueryString(
-    history.location.search.substring(1),
-    requestFirstPageOfSize(25)
-  );
+  const state = parseStateFromQueryString(history.location.search);
 
-  const [currentPage, setCurrentPage] = useState(page);
   const { loading, error, data } = useReFetch<Page<RunDto>>(
-    `/api/v1/runs/project/${props.projectId}?page_number=${currentPage.page_number}&page_size=${currentPage.page_size}`,
+    `/api/v1/runs/project/${props.projectId}?page_number=${state.page.page_number}&page_size=${state.page.page_size}`,
     5000,
-    [currentPage]
+    [state.page.page_size, state.page.page_number]
   );
 
   return (
@@ -36,8 +46,12 @@ function RunList(props: Props) {
       isLoading={loading}
       error={error}
       pageChangedCallback={(page) => {
-        setCurrentPage(page);
-        history.push({ search: "?" + toQueryString(page) });
+        history.push({
+          search: updateQueryString(history.location.search, {
+            page_number: page.page_number,
+            page_size: page.page_size,
+          }),
+        });
       }}
     />
   );
