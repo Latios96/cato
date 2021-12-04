@@ -340,7 +340,15 @@ class TestFindBranchNamesForProject:
         repository.insert_many(
             [
                 run_factory(project_id=project.id, branch_name=x)
-                for x in [BranchName("main"), BranchName("dev"), BranchName("legacy")]
+                for x in [
+                    BranchName("main"),
+                    BranchName("dev"),
+                    BranchName("legacy"),
+                    BranchName("legacy"),
+                    BranchName("legacy"),
+                    BranchName("legacy"),
+                    BranchName("legacy"),
+                ]
             ]
         )
 
