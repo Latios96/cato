@@ -17,14 +17,22 @@ def revision_eae298066911_before_add_branch_name_and_previous_run(
     db_migrator.migrate("eae298066911")
 
     def insert_project(name):
+        if "sqlite" in mapped_db_connection_string:
+            return connection.execute(
+                f"INSERT INTO project_entity (name) VALUES('{name}')"
+            ).lastrowid
         return connection.execute(
-            f"INSERT INTO project_entity (name) VALUES('{name}')"
-        ).lastrowid
+            f"INSERT INTO project_entity (name) VALUES('{name}') RETURNING id"
+        ).first()[0]
 
     def insert_run(project_id):
+        if "sqlite" in mapped_db_connection_string:
+            return connection.execute(
+                f"INSERT INTO run_entity (project_entity_id,started_at) VALUES({project_id},CURRENT_TIMESTAMP)"
+            ).lastrowid
         return connection.execute(
-            f"INSERT INTO run_entity (project_entity_id,started_at) VALUES({project_id},CURRENT_TIMESTAMP)"
-        ).lastrowid
+            f"INSERT INTO run_entity (project_entity_id,started_at) VALUES({project_id},CURRENT_TIMESTAMP) RETURNING id"
+        ).first()[0]
 
     with engine.connect() as connection:
         project_1_id = insert_project("project_1")
