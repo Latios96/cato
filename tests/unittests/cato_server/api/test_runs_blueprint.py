@@ -33,6 +33,7 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
                 "started_at": run.started_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
+                "branch_name": "default",
             }
         ],
         "page_number": 1,
@@ -82,6 +83,7 @@ def test_get_run_summary(client, run, test_result):
             "started_at": run.started_at.isoformat(),
             "status": "NOT_STARTED",
             "duration": 5.0,
+            "branch_name": "default",
         },
         "suite_count": 1,
         "test_count": 1,
