@@ -18,6 +18,7 @@ from cato_server.storage.abstract.test_result_repository import (
 )
 
 logger = logging.getLogger(__name__)
+DEFAULT_BRANCH = BranchName("default")
 
 
 class CreateRunUsecase:
@@ -33,12 +34,17 @@ class CreateRunUsecase:
         self._test_result_repository = test_result_repository
         self._object_mapper = object_mapper
 
-    def create_run(self, create_run_dto: CreateFullRunDto) -> None:
+    def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
+        branch_name = (
+            BranchName(create_run_dto.branch_name)
+            if create_run_dto.branch_name
+            else DEFAULT_BRANCH
+        )
         run = Run(
             id=0,
             project_id=create_run_dto.project_id,
             started_at=datetime.datetime.now(),
-            branch_name=BranchName("default"),
+            branch_name=branch_name,
             previous_run_id=None,
         )
         run = self._run_repository.save(run)
