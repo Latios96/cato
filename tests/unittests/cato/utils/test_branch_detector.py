@@ -18,9 +18,9 @@ def test_should_branch_name(tmp_path):
         subprocess.check_output(["git", "init"])
         (tmp_path / "test.txt").touch()
         subprocess.check_output(["git", "add", "test.txt"])
-        subprocess.check_output(
-            ["git", "commit", "-m", "test", "--author=Bar <bar@foo.com>"]
-        )
+        subprocess.check_output(["git", "config", "user.name", "Foo Bar"])
+        subprocess.check_output(["git", "config", "user.email", "foo.bar@bar.com"])
+        subprocess.check_output(["git", "commit", "-m", "test"])
 
     branch = branch_detector.detect_branch(str(tmp_path))
 
