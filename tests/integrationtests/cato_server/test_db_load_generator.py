@@ -12,7 +12,7 @@ from cato_server.configuration.scheduler_configuration import SchedulerConfigura
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from tests.conftest import random_port
-from tests.integrationtests.utils import change_cwd
+from cato_common.utils.change_cwd import change_cwd
 
 
 def test_run_db_load_test(tmp_path, snapshot):

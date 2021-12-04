@@ -1,16 +1,9 @@
-import contextlib
 import os
 import re
 import subprocess
 from typing import Dict, Tuple
 
-
-@contextlib.contextmanager
-def change_cwd(path):
-    old_cwd = os.getcwd()
-    os.chdir(path)
-    yield
-    os.chdir(old_cwd)
+from cato_common.utils.change_cwd import change_cwd
 
 
 def _trim_output(output, trimmers: Dict[str, str]):
