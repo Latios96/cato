@@ -116,7 +116,7 @@ class TestTestExecutionDbReporter:
                         suite_variables={},
                     )
                 ],
-                branch_name=BranchName("default"),
+                branch_name="default",
             )
         )
         assert test_context.test_execution_db_reporter._run_id == 5
