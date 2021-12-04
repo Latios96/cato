@@ -9,7 +9,10 @@ import RunListImplementation from "./RunListImplementation";
 import { useReFetch } from "../../../hooks/useReFetch";
 import { useHistory } from "react-router-dom";
 import queryString from "query-string";
-import { updateQueryString } from "../../../utils/queryStringUtils";
+import {
+  popFromQueryString,
+  updateQueryString,
+} from "../../../utils/queryStringUtils";
 import { fromCommaSeparatedString, toCommaSeparatedString } from "./utils";
 interface Props {
   projectId: number;
@@ -71,13 +74,17 @@ function RunList(props: Props) {
           }),
         });
       }}
-      filteredBranchesChanged={(branches) =>
-        history.push({
-          search: updateQueryString(history.location.search, {
+      filteredBranchesChanged={(branches) => {
+        let search = "";
+        if (!branches.size) {
+          search = popFromQueryString(history.location.search, ["branches"]);
+        } else {
+          search = updateQueryString(history.location.search, {
             branches: Array.from(branches).sort().join(","),
-          }),
-        })
-      }
+          });
+        }
+        history.push({ search });
+      }}
     />
   );
 }
