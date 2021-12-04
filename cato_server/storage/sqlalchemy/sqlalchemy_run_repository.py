@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from sqlalchemy import Column, Integer, DateTime, ForeignKey, String
 from sqlalchemy.orm import relationship
@@ -78,15 +78,15 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         session.close()
         return page
 
-    def find_previous_run_by_branch_name(
-        self, project_id: int, branch_name: str
-    ) -> Run:
+    def find_last_run_for_project(
+        self, project_id: int, branch_name: BranchName
+    ) -> Optional[Run]:
         session = self._session_maker()
 
         query = (
             session.query(_RunMapping)
             .filter(_RunMapping.project_entity_id == project_id)
-            .filter(_RunMapping.branch_name == branch_name)
+            .filter(_RunMapping.branch_name == branch_name.name)
             .order_by(_RunMapping.id.desc())
         )
         session.close()

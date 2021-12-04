@@ -180,12 +180,12 @@ def run(sessionmaker_fixture, project):
 
 @pytest.fixture
 def run_factory():
-    def func(project_id=None, started_at=None):
+    def func(project_id=None, started_at=None, branch_name: BranchName = None):
         return Run(
             id=0,
             project_id=or_default(project_id, 1),
             started_at=or_default(started_at, datetime.datetime.now()),
-            branch_name=BranchName("default"),
+            branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
         )
 

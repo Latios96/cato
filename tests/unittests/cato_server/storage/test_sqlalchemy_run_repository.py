@@ -4,8 +4,12 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_common.domain.branch_name import BranchName
+from cato_common.domain.project import Project
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
+    SqlAlchemyProjectRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
     _RunMapping,
@@ -257,3 +261,29 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
         total_entity_count=21,
         entities=[runs[14], runs[13], runs[12], runs[11], runs[10]],
     )
+
+
+class TestFindLastRunForProject:
+    def test_should_return_none_for_empty_project(self, sessionmaker_fixture, project):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+        result = repository.find_last_run_for_project(project.id, BranchName("default"))
+
+        assert result is None
+
+    def test_should_return_first_run(self, sessionmaker_fixture, project, run_factory):
+        project2 = SqlAlchemyProjectRepository(sessionmaker_fixture).save(
+            Project(id=0, name="test")
+        )
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+        runs = repository.insert_many(
+            [run_factory(project_id=project.id) for x in range(20)]
+        )
+        repository.insert_many([run_factory(project_id=project2.id) for x in range(20)])
+        repository.insert_many(
+            [run_factory(project_id=project.id, branch_name="dev") for x in range(20)]
+        )
+
+        result = repository.find_last_run_for_project(project.id, BranchName("default"))
+
+        assert result == runs[19]

@@ -1,5 +1,6 @@
-from typing import List
+from typing import List, Optional
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_common.storage.page import PageRequest, Page
@@ -14,7 +15,7 @@ class RunRepository(AbstractRepository[Run, int]):
     ) -> Page[Run]:
         raise NotImplementedError()
 
-    def find_previous_run_by_branch_name(
-        self, project_id: int, branch_name: str
-    ) -> Run:
+    def find_last_run_for_project(
+        self, project_id: int, branch_name: BranchName
+    ) -> Optional[Run]:
         raise NotImplementedError()
