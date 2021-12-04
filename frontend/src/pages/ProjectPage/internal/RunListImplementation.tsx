@@ -9,6 +9,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
+import { SelectInput } from "../../../components/Inputs/Select/SelectInput";
 
 interface Props {
   projectId: number;
@@ -16,6 +17,7 @@ interface Props {
   isLoading: boolean;
   error?: Error;
   pageChangedCallback: (pageRequest: PageRequest) => void;
+  filteredBranchesChanged: (branches: Set<string>) => void;
 }
 
 function RunListImplementation(props: Props) {
@@ -29,8 +31,24 @@ function RunListImplementation(props: Props) {
       </div>
     );
   }
+
   return (
     <div className={styles.runList}>
+      <div className={styles.branchSelectorContainer}>
+        <SelectInput
+          title={"Branch"}
+          subtitle={"Filter by branch"}
+          elements={[
+            "master",
+            "usd-support",
+            "triangle-bvh-rnd",
+            "lombok-experiments",
+            "simd-experiments",
+            "add-qt-to-project",
+          ]}
+          onChange={props.filteredBranchesChanged}
+        />
+      </div>
       <table id={"runList"}>
         <colgroup>
           <col />
