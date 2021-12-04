@@ -9,7 +9,7 @@ from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 
 class RunRepository(AbstractRepository[Run, int]):
     def find_by_project_id(self, id: int) -> List[Run]:
-        raise NotImplementedError()  # todo clean this up
+        raise NotImplementedError()
 
     def find_by_project_id_with_paging(
         self,
