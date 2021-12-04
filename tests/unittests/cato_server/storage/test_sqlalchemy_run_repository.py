@@ -33,13 +33,23 @@ def test_to_entity(sessionmaker_fixture):
 def test_to_domain_object(sessionmaker_fixture):
     repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     now = datetime.datetime.now()
-    run_entity = _RunMapping(id=1, project_entity_id=2, started_at=now)
+    run_entity = _RunMapping(
+        id=1,
+        project_entity_id=2,
+        started_at=now,
+        branch_name="default",
+        previous_run_id=None,
+    )
 
     run = repository.to_domain_object(run_entity)
 
-    assert run.id == 1
-    assert run.project_id == 2
-    assert run.started_at == now
+    assert run == Run(
+        id=1,
+        project_id=2,
+        started_at=now,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+    )
 
 
 def test_save(sessionmaker_fixture, project):
