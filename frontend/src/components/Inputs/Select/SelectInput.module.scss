@@ -1,0 +1,41 @@
+@import "../../../custom.scss";
+$border-color: #d0d0d0;
+
+.inputContainer {
+  background-color: white;
+  border: 1px solid $border-color;
+  width: 250px;
+  max-height: 500px;
+  box-shadow: 0px 2px 27px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+}
+.subtitle {
+  height: 35px;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: 600;
+  font-size: 12px;
+}
+.inputElement {
+  height: 30px;
+  border-bottom: 1px solid $border-color;
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  span:first-of-type {
+    margin-left: 10px;
+    margin-right: 10px;
+    min-width: 20px;
+  }
+}
+.inputElement:hover {
+  cursor: pointer;
+  background-color: $cato-highlight-hover;
+}
+.elementsContainer {
+  max-height: 463px;
+  overflow: scroll;
+  overflow-x: hidden;
+}
