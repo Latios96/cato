@@ -1,5 +1,6 @@
 import datetime
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
@@ -81,7 +82,13 @@ class TestRunListPage:
         repository = SqlAlchemyRunRepository(sessionmaker_fixture)
         repository.insert_many(
             [
-                Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+                Run(
+                    id=0,
+                    project_id=project.id,
+                    started_at=datetime.datetime.now(),
+                    branch_name=BranchName("default"),
+                    previous_run_id=None,
+                )
                 for x in range(50)
             ]
         )

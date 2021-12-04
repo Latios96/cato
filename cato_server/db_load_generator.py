@@ -13,6 +13,7 @@ from sqlalchemy import create_engine
 import cato
 import cato_server
 import cato_server.server_logging
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
@@ -112,7 +113,13 @@ class DbLoadGenerator:
         logger.info("Generating runs for project %s", project.name)
         runs = self._run_repository.insert_many(
             [
-                Run(id=0, project_id=project.id, started_at=datetime.datetime.now())
+                Run(
+                    id=0,
+                    project_id=project.id,
+                    started_at=datetime.datetime.now(),
+                    branch_name=BranchName("default"),
+                    previous_run_id=None,
+                )
                 for x in range(self.current_preset["runs_per_project"])
             ]
         )

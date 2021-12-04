@@ -18,7 +18,7 @@ def revision_eae298066911_before_add_branch_name_and_previous_run(
 
     def insert_project(name):
         return connection.execute(
-            f"INSERT INTO 'project_entity' (name) VALUES('{name}')"
+            f"INSERT INTO project_entity (name) VALUES('{name}')"
         ).lastrowid
 
     def insert_run(project_id):

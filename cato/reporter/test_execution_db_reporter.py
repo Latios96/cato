@@ -20,7 +20,6 @@ from cato_api_models.catoapimodels import (
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
-from cato_common.domain.branch_name import BranchName
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
 
@@ -81,7 +80,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
 
         create_run_dto = CreateFullRunDto(
-            project_id=project.id, test_suites=suites, branch_name=BranchName("default")
+            project_id=project.id, test_suites=suites, branch_name="default"
         )
         suite_count = len(suites)
         test_count = sum(map(lambda x: len(x.tests), suites))
