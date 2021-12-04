@@ -7,6 +7,7 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
@@ -261,6 +262,25 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
         total_entity_count=21,
         entities=[runs[14], runs[13], runs[12], runs[11], runs[10]],
     )
+
+
+def test_find_by_project_id_with_paging_should_filter_for_branches(
+    sessionmaker_fixture, project, run_factory
+):
+    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+    repository.save(
+        run_factory(project_id=project.id, branch_name=BranchName("default"))
+    )
+    repository.save(run_factory(project_id=project.id, branch_name=BranchName("main")))
+
+    runs = repository.find_by_project_id_with_paging(
+        project.id,
+        PageRequest(page_size=5, page_number=1),
+        RunFilterOptions(branches={BranchName("main")}),
+    )
+
+    assert len(runs.entities) == 1
+    assert runs.entities[0].branch_name == BranchName("main")
 
 
 class TestFindLastRunForProject:

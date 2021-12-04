@@ -19,6 +19,7 @@ interface State {
   branches: Set<string>;
 }
 function parseStateFromQueryString(theQueryString: string): State {
+  // todo extract and tests
   const queryParams = queryString.parse(theQueryString, {
     parseNumbers: true,
   });
@@ -63,6 +64,7 @@ function RunList(props: Props) {
       error={error}
       pageChangedCallback={(page) => {
         history.push({
+          // todo can we make this better?
           search: updateQueryString(history.location.search, {
             page_number: page.page_number,
             page_size: page.page_size,

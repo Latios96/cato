@@ -42,6 +42,51 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
     }
 
 
+def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should_return_empty(
+    client, project, run
+):
+    url = "/api/v1/runs/project/{}?page_number=1&page_size=10&branches={}".format(
+        project.id, "test"
+    )
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json() == {
+        "entities": [],
+        "page_number": 1,
+        "page_size": 10,
+        "total_entity_count": 0,
+    }
+
+
+def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_return(
+    client, project, run
+):
+    url = "/api/v1/runs/project/{}?page_number=1&page_size=10&branches={}".format(
+        project.id, "default"
+    )
+
+    rv = client.get(url)
+
+    assert rv.status_code == 200
+    assert rv.json() == {
+        "entities": [
+            {
+                "id": 1,
+                "project_id": 1,
+                "started_at": run.started_at.isoformat(),
+                "status": "NOT_STARTED",
+                "duration": 0,
+                "branch_name": "default",
+            }
+        ],
+        "page_number": 1,
+        "page_size": 10,
+        "total_entity_count": 1,
+    }
+
+
 def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
     url = "/api/v1/runs/project/{}?page_number=1&page_size=10".format(project.id)
 

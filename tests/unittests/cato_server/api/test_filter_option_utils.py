@@ -4,11 +4,14 @@
 import pytest
 from starlette.datastructures import ImmutableMultiDict
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_server.api.filter_option_utils import (
     result_filter_options_from_request,
     suite_result_filter_options_from_request,
+    run_filter_options_from_request,
 )
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.abstract.suite_result_filter_options import (
     SuiteResultFilterOptions,
 )
@@ -96,3 +99,37 @@ class TestSuiteTestResultFilterOptions:
 
         with pytest.raises(ValueError):
             suite_result_filter_options_from_request(request_args)
+
+
+class TestRunFilterOptionUtils:
+    @pytest.mark.parametrize(
+        "data,filter_options",
+        [
+            ({}, None),
+            ({"branches": "main"}, RunFilterOptions(branches={BranchName("main")})),
+            (
+                {"branches": "main,dev,setup-ci"},
+                RunFilterOptions(
+                    branches={
+                        BranchName("main"),
+                        BranchName("dev"),
+                        BranchName("setup-ci"),
+                    }
+                ),
+            ),
+            (
+                {"branches": "main,dev,"},
+                RunFilterOptions(branches={BranchName("main"), BranchName("dev")}),
+            ),
+            (
+                {"branches": "main,  dev,"},
+                RunFilterOptions(branches={BranchName("main"), BranchName("dev")}),
+            ),
+        ],
+    )
+    def test_from_request_args(self, data, filter_options):
+        request_args = ImmutableMultiDict(data)
+
+        run_filter_options = run_filter_options_from_request(request_args)
+
+        assert run_filter_options == filter_options

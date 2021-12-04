@@ -1,6 +1,10 @@
+from typing import Optional
+
 from starlette.datastructures import ImmutableMultiDict
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.test_failure_reason import TestFailureReason
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.abstract.suite_result_filter_options import (
     SuiteResultFilterOptions,
 )
@@ -35,3 +39,13 @@ def _parse_failure_reason(
         if failure_reason_filter_string:
             failure_reason = TestFailureReason(failure_reason_filter_string)
     return failure_reason
+
+
+def run_filter_options_from_request(
+    request_args: ImmutableMultiDict,
+) -> Optional[RunFilterOptions]:
+    branches_str = request_args.get("branches")
+    if branches_str:
+        branches = {BranchName(x.strip()) for x in branches_str.split(",") if x.strip()}
+        return RunFilterOptions(branches=branches)
+    return None

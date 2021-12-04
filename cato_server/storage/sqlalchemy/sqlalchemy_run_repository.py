@@ -6,6 +6,7 @@ from sqlalchemy.orm import relationship
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
@@ -62,16 +63,23 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         return list(map(self.to_domain_object, entities))
 
     def find_by_project_id_with_paging(
-        self, id: int, page_request: PageRequest
+        self,
+        id: int,
+        page_request: PageRequest,
+        filter_options: Optional[RunFilterOptions] = None,
     ) -> Page[Run]:
         session = self._session_maker()
 
+        query = session.query(self.mapping_cls()).filter(
+            self.mapping_cls().project_entity_id == id
+        )
+        if filter_options:
+            query = self._apply_filter_options(query, filter_options)
         page = self._pageginate(
             session,
-            session.query(self.mapping_cls())
-            .filter(self.mapping_cls().project_entity_id == id)
-            .order_by(self.mapping_cls().started_at.desc())
-            .order_by(self.mapping_cls().id.desc()),
+            query.order_by(self.mapping_cls().started_at.desc()).order_by(
+                self.mapping_cls().id.desc()
+            ),
             page_request,
         )
 
@@ -91,3 +99,10 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         )
         session.close()
         return self._map_one_to_domain_object(query.first())
+
+    def _apply_filter_options(self, query, filter_options: RunFilterOptions):
+        return query.filter(
+            self.mapping_cls().branch_name.in_(
+                {x.name for x in filter_options.branches}
+            )
+        )

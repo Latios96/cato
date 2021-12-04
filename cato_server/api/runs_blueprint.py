@@ -14,12 +14,16 @@ from cato_api_models.catoapimodels import (
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
-from cato_server.api.page_utils import page_request_from_request
+from cato_server.api.filter_option_utils import run_filter_options_from_request
+from cato_server.api.page_utils import (
+    page_request_from_request,
+)
 from cato_server.api.validators.run_validators import (
     CreateFullRunValidator,
 )
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
@@ -60,8 +64,11 @@ class RunsBlueprint(APIRouter):
 
     def runs_by_project(self, project_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
+        run_filter_options = run_filter_options_from_request(request.query_params)
         if page_request:
-            return self.runs_by_project_paged(project_id, page_request)
+            return self.runs_by_project_paged(
+                project_id, page_request, run_filter_options
+            )
         runs = self._run_repository.find_by_project_id(project_id)
         status_by_run_id = self._test_result_repository.find_status_by_project_id(
             project_id
@@ -87,10 +94,13 @@ class RunsBlueprint(APIRouter):
         return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
 
     def runs_by_project_paged(
-        self, project_id: int, page_request: PageRequest
+        self,
+        project_id: int,
+        page_request: PageRequest,
+        run_filter_options: RunFilterOptions,
     ) -> Response:
         run_page = self._run_repository.find_by_project_id_with_paging(
-            project_id, page_request
+            project_id, page_request, run_filter_options
         )
         status_by_run_id = self._test_result_repository.find_status_by_project_id(
             project_id
