@@ -45,7 +45,11 @@ function RunList(props: Props) {
   const history = useHistory();
   const state = parseStateFromQueryString(history.location.search);
 
-  const { loading, error, data } = useReFetch<Page<RunDto>>(
+  const {
+    loading: loadingRuns,
+    error: errorRuns,
+    data: runs,
+  } = useReFetch<Page<RunDto>>(
     `/api/v1/runs/project/${props.projectId}?page_number=${
       state.page.page_number
     }&page_size=${state.page.page_size}&branches=${toCommaSeparatedString(
@@ -59,12 +63,18 @@ function RunList(props: Props) {
     ]
   );
 
+  const { data: branches } = useReFetch<string[]>(
+    `/api/v1/runs/project/${props.projectId}/branches`,
+    5000,
+    []
+  );
+
   return (
     <RunListImplementation
       projectId={props.projectId}
-      runs={data}
-      isLoading={loading}
-      error={error}
+      runs={runs}
+      isLoading={loadingRuns}
+      error={errorRuns}
       pageChangedCallback={(page) => {
         history.push({
           // todo can we make this better?
@@ -85,6 +95,8 @@ function RunList(props: Props) {
         }
         history.push({ search });
       }}
+      branches={branches || []}
+      selectedBranches={state.branches}
     />
   );
 }

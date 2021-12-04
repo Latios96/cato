@@ -18,6 +18,8 @@ interface Props {
   error?: Error;
   pageChangedCallback: (pageRequest: PageRequest) => void;
   filteredBranchesChanged: (branches: Set<string>) => void;
+  branches: string[];
+  selectedBranches: Set<string>;
 }
 
 function RunListImplementation(props: Props) {
@@ -38,16 +40,9 @@ function RunListImplementation(props: Props) {
         <SelectInput
           title={"Branch"}
           subtitle={"Filter by branch"}
-          elements={[
-            // todo load branches from backend
-            "master",
-            "usd-support",
-            "triangle-bvh-rnd",
-            "lombok-experiments",
-            "simd-experiments",
-            "add-qt-to-project",
-          ]}
+          elements={props.branches}
           onChange={props.filteredBranchesChanged}
+          selectedElements={props.selectedBranches}
         />
       </div>
       <table id={"runList"}>
