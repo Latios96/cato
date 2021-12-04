@@ -37,11 +37,13 @@ function RunListImplementation(props: Props) {
           <col />
           <col />
           <col />
+          <col />
         </colgroup>
         <thead>
           <tr>
             <th>Status</th>
             <th>Run</th>
+            <th>Branch</th>
             <th>Started</th>
             <th>Duration</th>
           </tr>
@@ -59,6 +61,7 @@ function RunListImplementation(props: Props) {
                         {"Run #" + run.id}
                       </Link>
                     </td>
+                    <td>{run.branch_name}</td>
                     <td>{formatTime(run.started_at)}</td>
                     <td>{run.duration ? formatDuration(run.duration) : "—"}</td>
                   </tr>

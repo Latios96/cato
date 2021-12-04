@@ -51,6 +51,7 @@ types:
           started_at: datetime
           status: RunStatusDto
           duration: double
+          branch_name: string
 
       RunSummaryDto:
         fields:

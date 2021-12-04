@@ -81,6 +81,7 @@ class RunsBlueprint(APIRouter):
                     started_at=run.started_at.isoformat(),
                     status=RunStatusDto(status),
                     duration=duration_by_run_id[run.id],
+                    branch_name=run.branch_name.name,
                 )
             )
         return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
@@ -109,6 +110,7 @@ class RunsBlueprint(APIRouter):
                     started_at=run.started_at.isoformat(),
                     status=RunStatusDto(status),
                     duration=duration_by_run_id[run.id],
+                    branch_name=run.branch_name.name,
                 )
             )
         page = Page(
@@ -168,6 +170,7 @@ class RunsBlueprint(APIRouter):
             started_at=run.started_at.isoformat(),
             status=RunStatusDto(status),
             duration=duration,
+            branch_name=run.branch_name.name,
         )
         suite_count = self._suite_result_repository.suite_count_by_run_id(run_id)
         test_count = self._test_result_repository.test_count_by_run_id(run_id)
