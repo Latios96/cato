@@ -1,0 +1,17 @@
+@import "../../custom.scss";
+
+.arrowButton {
+  user-select: none;
+  background: none;
+  border: none;
+  color: #0f5b99;
+}
+.arrowButton:disabled {
+  color: grey;
+}
+.arrowButton:hover {
+  color: $cato-highlight;
+}
+.arrowButton:disabled:hover {
+  color: grey;
+}
