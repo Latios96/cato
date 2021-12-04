@@ -35,17 +35,15 @@ class CreateRunUsecase:
         self._object_mapper = object_mapper
 
     def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
-        branch_name = (
-            BranchName(create_run_dto.branch_name)
-            if create_run_dto.branch_name
-            else DEFAULT_BRANCH
-        )
+        branch_name = self._get_branch_name(create_run_dto)
+        previous_run_id = self._get_previous_run_id(branch_name, create_run_dto)
+
         run = Run(
             id=0,
             project_id=create_run_dto.project_id,
             started_at=datetime.datetime.now(),
             branch_name=branch_name,
-            previous_run_id=None,
+            previous_run_id=previous_run_id,
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)
@@ -89,3 +87,20 @@ class CreateRunUsecase:
             )
 
         return run
+
+    def _get_branch_name(self, create_run_dto):
+        branch_name = (
+            BranchName(create_run_dto.branch_name)
+            if create_run_dto.branch_name
+            else DEFAULT_BRANCH
+        )
+        return branch_name
+
+    def _get_previous_run_id(self, branch_name, create_run_dto):
+        previous_run_id = None
+        previous_run = self._run_repository.find_last_run_for_project(
+            create_run_dto.project_id, branch_name
+        )
+        if previous_run:
+            previous_run_id = previous_run.id
+        return previous_run_id
