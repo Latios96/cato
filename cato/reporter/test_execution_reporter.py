@@ -1,5 +1,4 @@
-from typing import List
-
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
@@ -10,7 +9,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 
 
 class TestExecutionReporter:
-    def start_execution(self, project_name: str, test_suites: List[TestSuite]) -> None:
+    def start_execution(self, config: RunConfig) -> None:
         raise NotImplementedError()
 
     def use_run_id(self, run_id: int) -> None:

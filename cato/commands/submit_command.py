@@ -51,9 +51,7 @@ class SubmitCommand(RunCommandInterface):
         if not config.suites:
             raise ValueError("At least one TestSuite is required!")
 
-        self._test_execution_reporter.start_execution(
-            config.project_name, config.suites
-        )
+        self._test_execution_reporter.start_execution(config)
 
         submission_info = SubmissionInfo(
             id=0,

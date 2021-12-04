@@ -51,7 +51,7 @@ class TestSubmitCommand:
         test_context.submit_command.run("my_path", None, None, False)
 
         test_context.mock_test_execution_reporter.start_execution.assert_called_with(
-            test_context.config.project_name, test_context.config.suites
+            test_context.config
         )
         test_context.mock_logger.info.assert_any_call("Submitting to scheduler..")
         test_context.mock_cato_api_client.submit_to_scheduler.assert_called_with(

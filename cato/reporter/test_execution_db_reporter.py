@@ -1,6 +1,7 @@
 import logging
-from typing import List, Optional
+from typing import Optional
 
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
@@ -45,18 +46,20 @@ class TestExecutionDbReporter(TestExecutionReporter):
     def run_id(self) -> int:
         return self._run_id
 
-    def start_execution(self, project_name: str, test_suites: List[TestSuite]) -> None:
+    def start_execution(self, config: RunConfig) -> None:
         logger.info("Reporting execution start to server..")
-        project = self._cato_api_client.get_project_by_name(project_name)
+        project = self._cato_api_client.get_project_by_name(config.project_name)
         if not project:
-            logger.info("No project with name %s exists, creating one..", project_name)
-            project = self._cato_api_client.create_project(project_name)
+            logger.info(
+                "No project with name %s exists, creating one..", config.project_name
+            )
+            project = self._cato_api_client.create_project(config.project_name)
             logger.info("Created project %s", project)
 
         logger.info("Creating run..")
 
         suites = []
-        for test_suite in test_suites:
+        for test_suite in config.suites:
             tests = []
             for test in test_suite.tests:
                 tests.append(

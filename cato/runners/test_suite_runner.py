@@ -37,9 +37,7 @@ class TestSuiteRunner:
 
         results = []
 
-        self._test_execution_reporter.start_execution(
-            config.project_name, config.suites
-        )
+        self._test_execution_reporter.start_execution(config)
 
         for suite in config.suites:
             test_results = []

@@ -3,6 +3,7 @@ import datetime
 import pytest
 
 from cato.domain.comparison_settings import ComparisonSettings
+from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
 from cato.domain.test_suite import TestSuite
@@ -73,7 +74,13 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.get_project_by_name.return_value = None
 
         test_context.test_execution_db_reporter.start_execution(
-            "my_project_name", SUITES
+            RunConfig(
+                project_name="my_project_name",
+                resource_path="test",
+                suites=SUITES,
+                output_folder="testoutput",
+                variables={},
+            )
         )
 
         test_context.mock_cato_api_client.create_project.assert_called_with(
@@ -93,7 +100,13 @@ class TestTestExecutionDbReporter:
         )
 
         test_context.test_execution_db_reporter.start_execution(
-            "my_project_name", SUITES
+            RunConfig(
+                project_name="my_project_name",
+                resource_path="test",
+                suites=SUITES,
+                output_folder="testoutput",
+                variables={},
+            )
         )
 
         test_context.mock_cato_api_client.create_run.assert_called_with(
