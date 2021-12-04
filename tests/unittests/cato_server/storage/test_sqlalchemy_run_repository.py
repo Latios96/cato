@@ -307,3 +307,43 @@ class TestFindLastRunForProject:
         result = repository.find_last_run_for_project(project.id, BranchName("default"))
 
         assert result == runs[19]
+
+
+class TestFindBranchNamesForProject:
+    def test_should_find_empty_list_for_not_existing_project(
+        self, sessionmaker_fixture
+    ):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+        result = repository.find_branches_for_project(42)
+
+        assert result == []
+
+    def test_should_find_empty_list(self, sessionmaker_fixture, project):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+        result = repository.find_branches_for_project(project.id)
+
+        assert result == []
+
+    def test_should_find_single_branch(self, sessionmaker_fixture, project, run):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+
+        result = repository.find_branches_for_project(project.id)
+
+        assert result == [BranchName("default")]
+
+    def test_should_find_multiple_branches_and_sort(
+        self, sessionmaker_fixture, project, run_factory
+    ):
+        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+        repository.insert_many(
+            [
+                run_factory(project_id=project.id, branch_name=x)
+                for x in [BranchName("main"), BranchName("dev"), BranchName("legacy")]
+            ]
+        )
+
+        result = repository.find_branches_for_project(project.id)
+
+        assert result == [BranchName("dev"), BranchName("legacy"), BranchName("main")]

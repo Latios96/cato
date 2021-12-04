@@ -23,3 +23,6 @@ class RunRepository(AbstractRepository[Run, int]):
         self, project_id: int, branch_name: BranchName
     ) -> Optional[Run]:
         raise NotImplementedError()
+
+    def find_branches_for_project(self, project_id: int) -> List[BranchName]:
+        raise NotImplementedError()

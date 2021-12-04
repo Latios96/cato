@@ -106,3 +106,15 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
                 {x.name for x in filter_options.branches}
             )
         )
+
+    def find_branches_for_project(self, project_id: int) -> List[BranchName]:
+        session = self._session_maker()
+
+        query = session.query(_RunMapping.branch_name).filter(
+            _RunMapping.project_entity_id == project_id
+        )
+        query = self._order_by_case_insensitive(query, _RunMapping.branch_name)
+        branch_names = query.all()
+        session.close()
+
+        return [BranchName(x[0]) for x in branch_names]
