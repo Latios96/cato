@@ -49,4 +49,6 @@ class CreateFullRunSchema(Schema):
     test_suites = fields.List(
         fields.Nested(TestSuiteForRunCreationSchema), required=True
     )
-    branch_name = fields.String(validate=[Length(min=1)])
+    branch_name = fields.String(
+        validate=[Length(min=1)], required=False, allow_none=True
+    )
