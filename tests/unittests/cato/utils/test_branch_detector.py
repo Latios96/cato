@@ -24,4 +24,4 @@ def test_should_branch_name(tmp_path):
 
     branch = branch_detector.detect_branch(str(tmp_path))
 
-    assert branch.startswith("m")
+    assert branch.name.startswith("m")
