@@ -12,6 +12,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformation,
 )
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
+from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_models.catoapimodels import (
@@ -61,9 +62,12 @@ def test_context():
             self.mock_last_run_information_repository = mock_safe(
                 LastRunInformationRepository
             )
+            self.mock_branch_detector = mock_safe(BranchDetector)
+            self.mock_branch_detector.detect_branch.return_value = None
             self.test_execution_db_reporter = TestExecutionDbReporter(
                 self.mock_machine_info_collector,
                 self.mock_cato_api_client,
+                self.mock_branch_detector,
             )
 
     return TestContext()
@@ -87,7 +91,10 @@ class TestTestExecutionDbReporter:
             "my_project_name"
         )
 
-    def test_start_execution_should_create_run(self, test_context):
+    def test_start_execution_should_create_run_with_branch_name(self, test_context):
+        test_context.mock_branch_detector.detect_branch.return_value = BranchName(
+            "my_branch"
+        )
         test_context.mock_cato_api_client.get_project_by_name.return_value = Project(
             id=1, name="my_project_name"
         )
@@ -129,10 +136,39 @@ class TestTestExecutionDbReporter:
                         suite_variables={},
                     )
                 ],
-                branch_name="default",
+                branch_name="my_branch",
             )
         )
         assert test_context.test_execution_db_reporter._run_id == 5
+
+    def test_start_execution_should_not_pass_branch_name_if_there_is_no_branch(
+        self, test_context
+    ):
+        test_context.mock_cato_api_client.get_project_by_name.return_value = Project(
+            id=1, name="my_project_name"
+        )
+        test_context.mock_cato_api_client.create_run.return_value = Run(
+            id=5,
+            project_id=1,
+            started_at=datetime.datetime.now(),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+        )
+
+        test_context.test_execution_db_reporter.start_execution(
+            RunConfig(
+                project_name="my_project_name",
+                resource_path="test",
+                suites=SUITES,
+                output_folder="testoutput",
+                variables={},
+            )
+        )
+
+        assert (
+            test_context.mock_cato_api_client.create_run.call_args[0][0].branch_name
+            is None
+        )
 
     def test_report_test_execution_start_should_report(
         self, test_result_factory, test_context

@@ -10,6 +10,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformation,
 )
 from cato.reporter.test_execution_reporter import TestExecutionReporter
+from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_models.catoapimodels import (
@@ -32,11 +33,13 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self,
         machine_info_collector: MachineInfoCollector,
         cato_api_client: CatoApiClient,
+        branch_detector: BranchDetector,
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
         self.__run_id_value: Optional[int] = None
         self._machine_info: Optional[MachineInfo] = None
+        self._branch_detector = branch_detector
 
     def use_run_id(self, run_id: int) -> None:
         if not self._cato_api_client.run_id_exists(run_id):
@@ -82,8 +85,12 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 )
             )
 
+        branch_name = self._branch_detector.detect_branch(config.resource_path)
+
         create_run_dto = CreateFullRunDto(
-            project_id=project.id, test_suites=suites, branch_name="default"
+            project_id=project.id,
+            test_suites=suites,
+            branch_name=branch_name.name if branch_name else None,
         )
         suite_count = len(suites)
         test_count = sum(map(lambda x: len(x.tests), suites))
