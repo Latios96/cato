@@ -152,3 +152,17 @@ def test_run_id_exists_failure(client):
     rv = client.get("/api/v1/runs/42/exists")
 
     assert rv.status_code == 404
+
+
+def test_get_empty_branch_list(client, project):
+    rv = client.get(f"/api/v1/runs/project/{project.id}/branches")
+
+    assert rv.status_code == 200
+    assert rv.json() == []
+
+
+def test_get_branch_list_with_default_branch(client, project, run):
+    rv = client.get(f"/api/v1/runs/project/{project.id}/branches")
+
+    assert rv.status_code == 200
+    assert rv.json() == ["default"]

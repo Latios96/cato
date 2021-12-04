@@ -61,6 +61,7 @@ class RunsBlueprint(APIRouter):
         self.post("/runs/full")(self.create_run)
         self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
+        self.get("/runs/project/{project_id}/branches")(self.get_branches)
 
     def runs_by_project(self, project_id: int, request: Request) -> Response:
         page_request = page_request_from_request(request.query_params)
@@ -198,3 +199,7 @@ class RunsBlueprint(APIRouter):
             failed_test_count=test_result_status_information.failed,
         )
         return JSONResponse(content=self._object_mapper.to_dict(run_summary_dto))
+
+    def get_branches(self, project_id: int) -> Response:
+        branch_names = self._run_repository.find_branches_for_project(project_id)
+        return JSONResponse(content=self._object_mapper.many_to_dict(branch_names))
