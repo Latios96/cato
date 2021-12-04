@@ -220,3 +220,39 @@ class TestCreateFullRunValidator:
         )
 
         assert errors == {"test_results": ["duplicate test name(s): ['test_name']"]}
+
+    def test_invalid_branch_name(self):
+        project_repository = mock_safe(ProjectRepository)
+        validator = CreateFullRunValidator(project_repository)
+
+        errors = validator.validate(
+            {
+                "project_id": 1,
+                "test_suites": [
+                    {
+                        "suite_name": "my_suite",
+                        "suite_variables": {},
+                        "tests": [
+                            {
+                                "test_name": "test_name",
+                                "test_identifier": "test/identifier",
+                                "test_command": "cmd",
+                                "test_variables": {},
+                                "machine_info": {
+                                    "cpu_name": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                                "comparison_settings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
+                            }
+                        ],
+                    }
+                ],
+                "branch_name": "",
+            }
+        )
+
+        assert errors == {"branch_name": ["Shorter than minimum length 1."]}
