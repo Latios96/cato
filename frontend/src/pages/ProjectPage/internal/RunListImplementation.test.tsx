@@ -13,6 +13,8 @@ describe("RunListImplementation", () => {
         runs={undefined}
         isLoading={true}
         error={undefined}
+        branches={[]}
+        selectedBranches={new Set()}
       />
     );
     expect(
@@ -27,6 +29,8 @@ describe("RunListImplementation", () => {
         runs={undefined}
         isLoading={false}
         error={new Error("My error message")}
+        branches={[]}
+        selectedBranches={new Set()}
       />
     );
 
@@ -66,6 +70,8 @@ describe("RunListImplementation", () => {
           runs={page}
           isLoading={false}
           error={undefined}
+          branches={[]}
+          selectedBranches={new Set()}
         />
       </HashRouter>
     );
