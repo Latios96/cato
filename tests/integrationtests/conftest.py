@@ -7,6 +7,7 @@ from typing import Callable
 import pytest
 import uvicorn
 from selenium import webdriver
+from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
@@ -79,10 +80,24 @@ class MyChromeDriver(webdriver.Chrome):
         return self.find_element_by_css_selector(f'[class^="{class_name}"]')
 
     def wait_until(self, predicate: Callable[[webdriver.Chrome], bool], timeout=20):
-        return WebDriverWait(self, timeout).until(predicate)
+        return WebDriverWait(self, timeout).until(
+            wrap_catch_webdriver_exceptions(predicate)
+        )
 
     def wait_until_not(self, predicate: Callable[[webdriver.Chrome], bool], timeout=20):
-        return WebDriverWait(self, timeout).until_not(predicate)
+        return WebDriverWait(self, timeout).until_not(
+            wrap_catch_webdriver_exceptions(predicate)
+        )
+
+
+def wrap_catch_webdriver_exceptions(predicate: Callable[[webdriver.Chrome], bool]):
+    def func(driver):
+        try:
+            return predicate(driver)
+        except WebDriverException:
+            return False
+
+    return func
 
 
 @pytest.fixture
