@@ -1,7 +1,6 @@
 import pytest
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.wait import WebDriverWait
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
@@ -233,7 +232,7 @@ class TestRunTestPage:
         selenium_driver.find_element_by_xpath('//button[text()="OK"]').click()
 
     def _test_should_be_updated(self, selenium_driver):
-        WebDriverWait(selenium_driver, 20).until(
+        selenium_driver.wait_until(
             expected_conditions.presence_of_element_located(
                 (
                     By.XPATH,
@@ -248,7 +247,7 @@ class TestRunTestPage:
         ).click()
 
     def _test_reference_image_should_be_updated(self, selenium_driver):
-        WebDriverWait(selenium_driver, 20).until_not(
+        selenium_driver.wait_until_not(
             expected_conditions.presence_of_element_located(
                 (
                     By.XPATH,
@@ -473,10 +472,11 @@ def test_filtering_suites_and_tests_should_work(
 
     selenium_driver.find_element_by_id("Failed").click()
 
-    WebDriverWait(selenium_driver, 3).until_not(
+    selenium_driver.wait_until_not(
         expected_conditions.presence_of_element_located(
             (By.XPATH, f'//*[@id="{page}List"]//*[@title="not started"]')
-        )
+        ),
+        timeout=3,
     )
     selenium_driver.find_element_by_xpath(
         f'//*[@id="{page}List"]//*[text()="No {page}s"]'
@@ -491,10 +491,11 @@ def test_filtering_suites_and_tests_should_read_from_url(
         f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/{page}s?statusFilter=FAILED"
     )
 
-    WebDriverWait(selenium_driver, 3).until_not(
+    selenium_driver.wait_until_not(
         expected_conditions.presence_of_element_located(
             (By.XPATH, f'//*[@id="{page}List"]//*[@title="not started"]')
-        )
+        ),
+        timeout=3,
     )
     selenium_driver.find_element_by_xpath(
         f'//*[@id="{page}List"]//*[text()="No {page}s"]'

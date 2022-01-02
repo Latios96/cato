@@ -1,7 +1,4 @@
 import datetime
-import time
-
-from selenium.webdriver.support.wait import WebDriverWait
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
