@@ -38,6 +38,7 @@ function RunListImplementation(props: Props) {
     <div className={styles.runList}>
       <div className={styles.branchSelectorContainer}>
         <SelectInput
+          id={"branchSelector"}
           title={"Branch"}
           subtitle={"Filter by branch"}
           elements={props.branches}

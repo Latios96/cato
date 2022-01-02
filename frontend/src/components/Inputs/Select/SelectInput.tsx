@@ -4,6 +4,7 @@ import ArrowButton from "../../Button/ArrowButton";
 import styles from "./SelectInput.module.scss";
 import { CheckLg } from "react-bootstrap-icons";
 interface Props {
+  id?: string;
   title: string;
   subtitle?: string;
   elements: string[];
@@ -37,7 +38,10 @@ export function SelectInput(props: Props) {
       trigger={"click"}
       rootClose={true}
       overlay={
-        <div className={styles.inputContainer}>
+        <div
+          className={styles.inputContainer}
+          id={props.id && `${props.id}-open`}
+        >
           {props.subtitle ? (
             <div className={styles.subtitle}>{props.subtitle}</div>
           ) : null}

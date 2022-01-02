@@ -1,4 +1,7 @@
 import datetime
+import time
+
+from selenium.webdriver.support.wait import WebDriverWait
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
@@ -48,6 +51,43 @@ class TestRunListPage:
 
         self._assert_first_run_status_icon_has_title(selenium_driver, "running")
 
+    def test_run_list_filter_by_branch(
+        self,
+        project,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        sessionmaker_fixture,
+    ):
+        self._insert_many_runs(project, sessionmaker_fixture)
+        self._visit_project_page(live_server, project, selenium_driver)
+
+        self._assert_first_run_has_branch_default(selenium_driver)
+        self._select_dev_branch(selenium_driver)
+        self._wait_until_first_run_has_branch_dev(selenium_driver)
+        self._wait_until_url_contains_branch_name(selenium_driver)
+
+    def test_run_list_filter_by_branch_should_survive_page_refresh(
+        self,
+        project,
+        live_server,
+        selenium_driver: MyChromeDriver,
+        sessionmaker_fixture,
+    ):
+        self._insert_many_runs(project, sessionmaker_fixture)
+
+        self._visit_project_page_with_branch_filter_dev(
+            live_server, project, selenium_driver
+        )
+
+        self._wait_until_first_run_has_branch_dev(selenium_driver)
+
+    def _visit_project_page_with_branch_filter_dev(
+        self, live_server, project, selenium_driver
+    ):
+        selenium_driver.get(
+            f"{live_server.server_url()}/#/projects/{project.id}?branches=dev"
+        )
+
     def _update_run_status(self, sessionmaker_fixture, test_result):
         repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
@@ -86,9 +126,31 @@ class TestRunListPage:
                     id=0,
                     project_id=project.id,
                     started_at=datetime.datetime.now(),
-                    branch_name=BranchName("default"),
+                    branch_name=BranchName("default") if x > 10 else BranchName("dev"),
                     previous_run_id=None,
                 )
                 for x in range(50)
             ]
+        )
+
+    def _assert_first_run_has_branch_default(self, selenium_driver):
+        assert self._select_first_run_branch_name(selenium_driver).text == "default"
+
+    def _select_dev_branch(self, selenium_driver):
+        selenium_driver.find_element_by_xpath("//button[text()='Branch']").click()
+        selenium_driver.find_element_by_id("branchSelector-open").find_element_by_xpath(
+            "//*[text()='dev']"
+        ).click()
+
+    def _wait_until_first_run_has_branch_dev(self, selenium_driver):
+        selenium_driver.wait_until(
+            lambda driver: self._select_first_run_branch_name(driver).text == "dev"
+        )
+
+    def _wait_until_url_contains_branch_name(self, selenium_driver):
+        selenium_driver.wait_until(lambda driver: "branches=dev" in driver.current_url)
+
+    def _select_first_run_branch_name(self, selenium_driver):
+        return selenium_driver.find_element_by_xpath(
+            '//*[@id="runList"]/tbody/tr[1]/td[3]'
         )

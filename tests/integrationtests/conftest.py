@@ -2,11 +2,13 @@ import os
 import socket
 import threading
 import time
+from typing import Callable
 
 import pytest
 import uvicorn
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.utils import ChromeType
 
@@ -75,6 +77,9 @@ def live_server(app_and_config_fixture, project):
 class MyChromeDriver(webdriver.Chrome):
     def find_element_by_css_module_class_name(self, class_name: str):
         return self.find_element_by_css_selector(f'[class^="{class_name}"]')
+
+    def wait_until(self, predicate: Callable[[webdriver.Chrome], bool]):
+        return WebDriverWait(self, 10).until(predicate)
 
 
 @pytest.fixture
