@@ -2,12 +2,12 @@ import { useEffect, useState } from "react";
 
 export interface FetchResult<T> {
   data?: T;
-  error?: string;
+  error?: Error;
   isLoading: boolean;
 }
 
 export function useFetch<T>(url: string): FetchResult<T> {
-  const [fetchResult, setFetchResult] = useState({
+  const [fetchResult, setFetchResult] = useState<FetchResult<T>>({
     isLoading: true,
     data: undefined,
     error: undefined,
@@ -24,7 +24,7 @@ export function useFetch<T>(url: string): FetchResult<T> {
             error: undefined,
           });
         },
-        (error) =>
+        (error: Error) =>
           setFetchResult({
             isLoading: false,
             data: undefined,
