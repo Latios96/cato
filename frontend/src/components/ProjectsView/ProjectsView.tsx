@@ -18,7 +18,7 @@ interface Props {
   fetchResult: FetchResult<Project[]>;
 }
 
-export const ProjectsViewStateless = (props: Props) => {
+export const ProjectsViewPresenter = (props: Props) => {
   const emptyProjectsLists =
     props.fetchResult.data && props.fetchResult.data.length === 0;
   return (
@@ -80,5 +80,5 @@ export const ProjectsViewStateless = (props: Props) => {
 
 export const ProjectsView = () => {
   const fetchResult = useFetch<Project[]>("/api/v1/projects");
-  return <ProjectsViewStateless fetchResult={fetchResult} />;
+  return <ProjectsViewPresenter fetchResult={fetchResult} />;
 };

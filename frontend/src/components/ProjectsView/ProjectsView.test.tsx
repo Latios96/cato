@@ -1,4 +1,4 @@
-import { ProjectsViewStateless } from "./ProjectsView";
+import { ProjectsViewPresenter } from "./ProjectsView";
 import { render } from "@testing-library/react";
 import { HashRouter } from "react-router-dom";
 import React from "react";
@@ -20,19 +20,19 @@ const withProjects = {
 };
 describe("ProjectsView", () => {
   it("should display a loading indicator while loading", () => {
-    const rendered = render(<ProjectsViewStateless fetchResult={isLoading} />);
+    const rendered = render(<ProjectsViewPresenter fetchResult={isLoading} />);
 
     expect(rendered.getByRole("LoadingIndicator")).toBeInTheDocument();
   });
 
   it("should display a error message", () => {
-    const rendered = render(<ProjectsViewStateless fetchResult={isError} />);
+    const rendered = render(<ProjectsViewPresenter fetchResult={isError} />);
 
     expect(rendered.getByText("This is an error message")).toBeInTheDocument();
   });
 
   it("should display a placeholder text", () => {
-    const rendered = render(<ProjectsViewStateless fetchResult={noProjects} />);
+    const rendered = render(<ProjectsViewPresenter fetchResult={noProjects} />);
 
     expect(rendered.getByText("No projects found")).toBeInTheDocument();
   });
@@ -40,7 +40,7 @@ describe("ProjectsView", () => {
   it("should display a project list", () => {
     const rendered = render(
       <HashRouter>
-        <ProjectsViewStateless fetchResult={withProjects} />
+        <ProjectsViewPresenter fetchResult={withProjects} />
       </HashRouter>
     );
 
