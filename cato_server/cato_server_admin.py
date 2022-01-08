@@ -3,6 +3,7 @@ import os
 
 import cato_server.server_logging
 from cato_server.backup.backup_creator import BackupCreator
+from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
 from cato_server.backup.pg_dump_path_resolver import PgDumpPathResolver
@@ -44,7 +45,7 @@ def migrate_db(path):
     db_migrator.migrate()
 
 
-def create_backup(path, pg_dump_executable):
+def create_backup(path, pg_dump_executable, mode_str):
     if not path:
         path = "config.ini"
     app_config = AppConfigurationReader().read_file(path)
@@ -57,8 +58,10 @@ def create_backup(path, pg_dump_executable):
     )
     create_db_backup = CreateDbBackup(app_config.storage_configuration, pg_dump_path)
 
+    mode = BackupMode(mode_str) if mode_str else BackupMode.FULL
+
     backup_creator = BackupCreator(create_file_storage_backup, create_db_backup)
-    backup_creator.create_backup(os.getcwd())
+    backup_creator.create_backup(os.getcwd(), mode)
 
 
 def main():
@@ -93,6 +96,10 @@ def main():
     create_backup_parser.add_argument(
         "--pg-dump-path", help="path to pg_dump executable"
     )
+    create_backup_parser.add_argument(
+        "--backup-mode",
+        help="mode for backup. Possible values are FULL (default), ONLY_DATABASE, ONLY_FILESTORAGE",
+    )
 
     args = main_parser.parse_args()
 
@@ -101,7 +108,7 @@ def main():
     elif args.command == "migrate-db":
         migrate_db(args.config)
     elif args.command == "create-backup":
-        create_backup(args.config, args.pg_dump_path)
+        create_backup(args.config, args.pg_dump_path, args.backup_mode)
     else:
         logger.error(f"No method found to run command {args.command}")
 

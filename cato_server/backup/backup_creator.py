@@ -6,6 +6,7 @@ import time
 
 import humanfriendly
 
+from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
 
@@ -23,7 +24,7 @@ class BackupCreator:
         self._create_file_storage_backup = create_file_storage_backup
         self._create_db_backup = create_db_backup
 
-    def create_backup(self, folder: str) -> str:
+    def create_backup(self, folder: str, backup_mode: BackupMode) -> str:
         start = time.time()
         if not os.path.isdir(folder):
             raise ValueError(f"The provided path {folder} is not a folder!")
@@ -34,7 +35,7 @@ class BackupCreator:
 
         with tempfile.TemporaryDirectory() as tmpdirname:
             cato_backup_path = self._create_individual_parts_of_the_backup(
-                folder, now, tmpdirname
+                folder, now, tmpdirname, backup_mode
             )
 
         stop = time.time()
@@ -45,28 +46,44 @@ class BackupCreator:
 
         return cato_backup_path
 
-    def _create_individual_parts_of_the_backup(self, folder, now, tmpdirname):
+    def _create_individual_parts_of_the_backup(
+        self, folder, now, tmpdirname, mode: BackupMode
+    ):
         file_storage_backup_path = os.path.join(
             tmpdirname, f"cato-backup-filestorage-{now}.tar"
         )
         db_backup_path = os.path.join(tmpdirname, f"cato-backup-filestorage-{now}.sql")
         cato_backup_path = os.path.join(folder, f"cato-backup-full-{now}.tar.gz")
 
-        self._create_file_storage_backup.create_backup(file_storage_backup_path)
-        self._create_db_backup.create_backup(db_backup_path)
+        if self._include_file_storage_in_backup(mode):
+            self._create_file_storage_backup.create_backup(file_storage_backup_path)
+        if self._include_db_in_backup(mode):
+            self._create_db_backup.create_backup(db_backup_path)
 
         self._combine_backup_parts(
-            cato_backup_path, db_backup_path, file_storage_backup_path
+            cato_backup_path, db_backup_path, file_storage_backup_path, mode
         )
         return cato_backup_path
 
     def _combine_backup_parts(
-        self, cato_backup_path, db_backup_path, file_storage_backup_path
+        self,
+        cato_backup_path,
+        db_backup_path,
+        file_storage_backup_path,
+        mode: BackupMode,
     ):
         logger.info("Creating compressed cato backup archive..")
         with tarfile.open(cato_backup_path, "w:gz") as tar:
-            tar.add(
-                file_storage_backup_path,
-                arcname=os.path.basename(file_storage_backup_path),
-            )
-            tar.add(db_backup_path, arcname=os.path.basename(db_backup_path))
+            if self._include_file_storage_in_backup(mode):
+                self._add_to_tar(file_storage_backup_path, tar)
+            if self._include_db_in_backup(mode):
+                self._add_to_tar(db_backup_path, tar)
+
+    def _add_to_tar(self, db_backup_path, tar):
+        tar.add(db_backup_path, arcname=os.path.basename(db_backup_path))
+
+    def _include_file_storage_in_backup(self, mode: BackupMode):
+        return mode in [BackupMode.FULL, BackupMode.ONLY_FILESTORAGE]
+
+    def _include_db_in_backup(self, mode: BackupMode):
+        return mode in [BackupMode.FULL, BackupMode.ONLY_DATABASE]
