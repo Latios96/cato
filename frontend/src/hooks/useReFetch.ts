@@ -52,6 +52,7 @@ export function useReFetch<TData = any>(
 
   useEffect(() => {
     doFetch();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...(dependencies || []), doFetch, setFetchResult]);
 
   const [start] = useInterval(
