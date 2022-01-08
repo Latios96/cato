@@ -1,6 +1,6 @@
-import { CachePolicies, useFetch } from "use-http";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useInterval } from "rooks";
+import { FetchResult } from "./useFetch";
 interface UseReFetchResult<T> {
   data?: T;
   isLoading: boolean;
@@ -13,37 +13,60 @@ export function useReFetch<TData = any>(
   dependencies?: any[]
 ): UseReFetchResult<TData> {
   const [isFirstFetch, setFirstFetch] = useState(true);
-  const markFirstFetch = () => {
+  const markFirstFetch = useCallback(() => {
     if (isFirstFetch) {
       setFirstFetch(false);
     }
-  };
-  const { data, loading, error, get } = useFetch<TData>(
-    url,
-    {
-      cachePolicy: CachePolicies.NO_CACHE,
-      interceptors: {
-        response: async ({ response }) => {
-          const res = response;
-          if (res.status === 200) {
-            markFirstFetch();
-          }
-          return res;
+  }, [isFirstFetch]);
+  const [fetchResult, setFetchResult] = useState<FetchResult<TData>>({
+    isLoading: true,
+    data: undefined,
+    error: undefined,
+  });
+
+  const doFetch = useCallback(() => {
+    fetch(url)
+      .then((res) => {
+        markFirstFetch();
+        if (!res.ok) {
+          throw new Error(`${res.status}: ${res.statusText}`);
+        }
+        return res.json() as Promise<TData>;
+      })
+      .then(
+        (result) => {
+          setFetchResult({
+            isLoading: false,
+            data: result,
+            error: undefined,
+          });
         },
-      },
-    },
-    dependencies === undefined ? [] : dependencies
-  );
+        (error: Error) =>
+          setFetchResult({
+            isLoading: false,
+            data: undefined,
+            error: error,
+          })
+      );
+  }, [markFirstFetch, url]);
+
+  useEffect(() => {
+    doFetch();
+  }, [...(dependencies || []), doFetch, setFetchResult]);
 
   const [start] = useInterval(
     () => {
-      if (!loading) {
-        get();
+      if (!fetchResult.isLoading) {
+        doFetch();
       }
     },
     interval,
     true
   );
   start();
-  return { data, isLoading: isFirstFetch ? loading : false, error };
+  return {
+    data: fetchResult.data,
+    isLoading: isFirstFetch ? fetchResult.isLoading : false,
+    error: fetchResult.error,
+  };
 }
