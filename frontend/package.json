@@ -75,7 +75,6 @@
     "@types/react-helmet": "^6.1.0",
     "@types/react-modal": "^3.10.6",
     "jest-each": "^27.1.0",
-    "nock": "^13.1.2",
     "prettier": "^2.2.1"
   },
   "resolutions": {
