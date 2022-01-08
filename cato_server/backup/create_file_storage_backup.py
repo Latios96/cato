@@ -12,7 +12,7 @@ class CreateFileStorageBackup:
         self._storage_configuration = storage_configuration
 
     def create_backup(self, backup_archive_path: str) -> None:
-        command = f"tar -cf {backup_archive_path} {self._storage_configuration.file_storage_url}"
+        command = f"tar -cf {backup_archive_path} -C {self._storage_configuration.file_storage_url} ."
 
         logger.info("Creating file storage backup..")
         logger.debug("Running command %s", command)

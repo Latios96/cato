@@ -27,7 +27,7 @@ def test_should_create_archive_correctly(create_filestorage_backup_setup, tmp_pa
 
     mock_subprocess_run.assert_called_once()
     assert mock_subprocess_run.call_args[0] == (
-        f"tar -cf {db_backup_path} file_storage_url",
+        f"tar -cf {db_backup_path} -C file_storage_url .",
     )
 
 
@@ -43,5 +43,5 @@ def test_should_raise_exception_if_archive_creation_failed(
 
     mock_subprocess_run.assert_called_once()
     assert mock_subprocess_run.call_args[0] == (
-        f"tar -cf {db_backup_path} file_storage_url",
+        f"tar -cf {db_backup_path} -C file_storage_url .",
     )
