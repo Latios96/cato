@@ -29,7 +29,7 @@ export function SuiteTestListImpl(props: Props) {
       <LoadingStateHandler isLoading={props.loading}>
         <ErrorState>
           <ErrorMessageBox
-            heading={"Error when loading tests"}
+            heading={"An error occurred while loading the tests"}
             message={props.error?.message}
           />
         </ErrorState>

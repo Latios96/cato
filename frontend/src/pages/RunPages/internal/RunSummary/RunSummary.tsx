@@ -92,7 +92,7 @@ export function RunSummary(props: Props) {
         </LoadingState>
         <ErrorState>
           <ErrorMessageBox
-            heading={"Error when loading run summary"}
+            heading={"An error occurred while loading the run summary"}
             message={error?.message}
           />
         </ErrorState>

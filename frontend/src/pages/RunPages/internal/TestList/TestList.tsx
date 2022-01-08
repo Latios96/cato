@@ -58,7 +58,7 @@ function TestList(props: Props) {
       <ErrorState>
         {" "}
         <ErrorMessageBox
-          heading={"Error when loading run summary"}
+          heading={"An error occurred while loading the test results"}
           message={error?.message}
         />
       </ErrorState>

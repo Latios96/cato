@@ -47,9 +47,8 @@ function SuiteList(props: Props) {
         </div>
       </LoadingState>
       <ErrorState>
-        {" "}
         <ErrorMessageBox
-          heading={"Error when loading run summary"}
+          heading={"An error occurred while loading the suite results"}
           message={error?.message}
         />
       </ErrorState>

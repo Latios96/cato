@@ -41,7 +41,7 @@ export const ProjectsViewPresenter = (props: Props) => {
         <div className={styles.projectsView}>
           <span className={styles.centered}>
             <ErrorMessageBox
-              heading={"An error encountered while loading all projects"}
+              heading={"An error occurred while loading all projects"}
               message={props.fetchResult.error?.message}
             />
           </span>

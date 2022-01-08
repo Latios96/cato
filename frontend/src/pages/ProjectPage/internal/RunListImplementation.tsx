@@ -27,7 +27,7 @@ function RunListImplementation(props: Props) {
     return (
       <div className={styles.error}>
         <ErrorMessageBox
-          heading={"Error when loading runs"}
+          heading={"An error occurred while loading the runs"}
           message={props.error.message}
         />
       </div>
