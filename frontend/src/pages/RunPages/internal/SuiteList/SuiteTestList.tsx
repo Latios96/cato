@@ -11,7 +11,7 @@ interface Props {
 }
 
 function SuiteTestList(props: Props) {
-  const { data, loading, error } = useReFetch<TestResultDto[]>(
+  const { data, isLoading, error } = useReFetch<TestResultDto[]>(
     `api/v1/test_results/suite_result/${props.suite.id}`,
     5000,
     [props.suite.id]
@@ -24,7 +24,7 @@ function SuiteTestList(props: Props) {
   const selectedTestId = queryParams.selectedTest;
   return (
     <SuiteTestListImpl
-      loading={loading}
+      loading={isLoading}
       error={error}
       data={data}
       selectedTestId={selectedTestId}

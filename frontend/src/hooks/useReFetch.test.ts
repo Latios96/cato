@@ -9,9 +9,9 @@ describe("useReFetch", () => {
 
     const { result } = renderHook(() => useReFetch("http://localhost/", 10000));
 
-    expect(result.current.loading).toBeTruthy();
+    expect(result.current.isLoading).toBeTruthy();
     await waitFor(() => {
-      expect(result.current.loading).toBeFalsy();
+      expect(result.current.isLoading).toBeFalsy();
       expect(result.current.data).toStrictEqual({ test: 0 });
     });
   });
@@ -28,14 +28,14 @@ describe("useReFetch", () => {
 
     const { result } = renderHook(() => useReFetch("http://localhost/", 500));
 
-    expect(result.current.loading).toBeTruthy();
+    expect(result.current.isLoading).toBeTruthy();
     await waitFor(() => {
-      expect(result.current.loading).toBeFalsy();
+      expect(result.current.isLoading).toBeFalsy();
       expect(result.current.data).toStrictEqual({ test: 0 });
     });
 
     await waitFor(() => {
-      expect(result.current.loading).toBeFalsy();
+      expect(result.current.isLoading).toBeFalsy();
       expect(result.current.data).toStrictEqual({ test: 1 });
     });
   });
@@ -45,9 +45,9 @@ describe("useReFetch", () => {
 
     const { result } = renderHook(() => useReFetch("http://localhost/", 10000));
 
-    expect(result.current.loading).toBeTruthy();
+    expect(result.current.isLoading).toBeTruthy();
     await waitFor(() => {
-      expect(result.current.loading).toBeFalsy();
+      expect(result.current.isLoading).toBeFalsy();
       expect(result.current.error.name).toBe("500");
     });
   });

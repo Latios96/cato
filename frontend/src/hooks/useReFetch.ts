@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useInterval } from "rooks";
 interface UseReFetchResult<T> {
   data?: T;
-  loading: boolean;
+  isLoading: boolean;
   error?: Error;
 }
 
@@ -45,5 +45,5 @@ export function useReFetch<TData = any>(
     true
   );
   start();
-  return { data, loading: isFirstFetch ? loading : false, error };
+  return { data, isLoading: isFirstFetch ? loading : false, error };
 }

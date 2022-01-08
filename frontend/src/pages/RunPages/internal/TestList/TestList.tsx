@@ -33,7 +33,7 @@ function TestList(props: Props) {
 
   const {
     data: tests,
-    loading,
+    isLoading,
     error,
   } = useReFetch<TestResultShortSummaryDto[]>(url, 5000, [
     props.runId,
@@ -41,7 +41,7 @@ function TestList(props: Props) {
   ]);
 
   return (
-    <LoadingStateHandler isLoading={loading} error={error}>
+    <LoadingStateHandler isLoading={isLoading} error={error}>
       <LoadingState>
         <div className={styles.loading}>
           <SkeletonTheme color="#f7f7f7" highlightColor="white">

@@ -23,7 +23,7 @@ interface Props {
 }
 
 function SuiteList(props: Props) {
-  const { data, loading, error } = useReFetch<SuiteResultDto[]>(
+  const { data, isLoading, error } = useReFetch<SuiteResultDto[]>(
     `/api/v1/suite_results/run/${props.runId}?${filterOptionsToQueryString(
       props.filterOptions
     )}`,
@@ -32,7 +32,7 @@ function SuiteList(props: Props) {
   );
 
   return (
-    <LoadingStateHandler isLoading={loading} error={error}>
+    <LoadingStateHandler isLoading={isLoading} error={error}>
       <LoadingState>
         <div className={styles.loading}>
           <SkeletonTheme color="#f7f7f7" highlightColor="white">

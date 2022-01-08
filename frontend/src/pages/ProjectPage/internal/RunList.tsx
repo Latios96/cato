@@ -46,7 +46,7 @@ function RunList(props: Props) {
   const state = parseStateFromQueryString(history.location.search);
 
   const {
-    loading: loadingRuns,
+    isLoading: loadingRuns,
     error: errorRuns,
     data: runs,
   } = useReFetch<Page<RunDto>>(

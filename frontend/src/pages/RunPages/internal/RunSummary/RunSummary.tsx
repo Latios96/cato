@@ -25,13 +25,13 @@ interface Props {
 export function RunSummary(props: Props) {
   const {
     data: runSummaryDto,
-    loading,
+    isLoading,
     error,
   } = useReFetch(`/api/v1/runs/${props.runId}/summary`, 5000, [props.runId]);
 
   const {
     data: editsToSync,
-    loading: editsToSyncLoading,
+    isLoading: editsToSyncLoading,
     error: editsToSyncError,
   } = useReFetch<TestEditCount>(
     `/api/v1/test_edits/runs/${props.runId}/edits-to-sync-count`,
@@ -79,7 +79,7 @@ export function RunSummary(props: Props) {
 
   return (
     <div className={styles.runSummary}>
-      <LoadingStateHandler isLoading={loading} error={error}>
+      <LoadingStateHandler isLoading={isLoading} error={error}>
         <LoadingState>
           <SkeletonTheme color="#f7f7f7" highlightColor="white">
             <p>
