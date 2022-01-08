@@ -19,6 +19,7 @@ class CreateDbBackup:
         sqlalchemy_url = make_url(self._storage_configuration.database_url)
         command = self._create_pg_dump_command(backup_archive_path, sqlalchemy_url)
 
+        logger.info("Using %s executable", self._pg_dump_path)
         logger.info("Creating db backup..")
         logger.debug("Running command %s", command)
 
