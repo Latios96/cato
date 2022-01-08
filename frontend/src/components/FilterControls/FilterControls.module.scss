@@ -1,7 +1,13 @@
 .filterControlContainer {
   div {
-    margin: 7px;
+    margin-bottom: 3px;
   }
+  margin-bottom: 5px;
+  display: flex;
+  align-items: flex-end;
+  flex-direction: column;
+}
+.checkboxContainer {
 }
 .failureReasonFilterControls {
   display: flex;
