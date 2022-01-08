@@ -15,7 +15,12 @@ export function useFetch<T>(url: string): FetchResult<T> {
 
   useEffect(() => {
     fetch(url)
-      .then((res) => res.json())
+      .then((res) => {
+        if (!res.ok) {
+          throw new Error(`${res.status}: ${res.statusText}`);
+        }
+        return res.json() as Promise<T>;
+      })
       .then(
         (result) => {
           setFetchResult({
