@@ -7,7 +7,7 @@ const isLoading = { isLoading: true, data: undefined, error: undefined };
 const isError = {
   isLoading: false,
   data: undefined,
-  error: "This is an error message",
+  error: new Error("This is an error message"),
 };
 const noProjects = { isLoading: false, data: [], error: undefined };
 const withProjects = {
