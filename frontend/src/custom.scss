@@ -2,9 +2,3 @@ $cato-black: black;
 $cato-black-hovered: #444444;
 $cato-highlight: #ff008c;
 $cato-highlight-hover: #dadada;
-
-$theme-colors: (
-  "primary": $cato-black,
-  "danger": #ff4136,
-);
-@import "../node_modules/bootstrap/scss/bootstrap";
