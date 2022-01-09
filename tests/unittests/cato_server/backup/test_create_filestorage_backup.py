@@ -45,3 +45,18 @@ def test_should_raise_exception_if_archive_creation_failed(
     assert mock_subprocess_run.call_args[0] == (
         f"tar -cf {db_backup_path} -C file_storage_url .",
     )
+
+
+@mock.patch("shutil.which")
+def test_should_raise_exception_if_tar_command_is_not_found(
+    mock_shutil_which, create_filestorage_backup_setup, tmp_path
+):
+    mock_shutil_which.return_value = None
+    create_filestorage_backup, mock_subprocess_run = create_filestorage_backup_setup
+    db_backup_path = str(tmp_path / "backup.tar")
+    mock_subprocess_run.return_value = CompletedProcess([], 1)
+
+    with pytest.raises(RuntimeError):
+        create_filestorage_backup.create_backup(db_backup_path)
+
+    mock_subprocess_run.assert_not_called()

@@ -1,3 +1,4 @@
+import shutil
 import subprocess
 
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -12,6 +13,11 @@ class CreateFileStorageBackup:
         self._storage_configuration = storage_configuration
 
     def create_backup(self, backup_archive_path: str) -> None:
+        if not shutil.which("tar"):
+            raise RuntimeError(
+                "tar command was not found, but is required to backup the file storage."
+            )
+
         command = f"tar -cf {backup_archive_path} -C {self._storage_configuration.file_storage_url} ."
 
         logger.info("Creating file storage backup..")
