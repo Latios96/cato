@@ -25,6 +25,7 @@ jobs:
     - name: Lint with Gradle
       run: ./gradlew lint --info
     - uses: actions/upload-artifact@v2
+      name: Upload reports
       if: always()
       with:
         name: test-reports-linux
@@ -58,6 +59,7 @@ jobs:
       - name: Lint with Gradle
         run: .\gradlew lint --info
       - uses: actions/upload-artifact@v2
+        name: Upload reports
         if: always()
         with:
           name: test-reports-windows
