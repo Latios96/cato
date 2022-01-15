@@ -39,9 +39,7 @@ class ExampleRepository(
 
 
 @pytest.fixture
-def sessionmaker_fixture(sqlalchemy_engine, sqlite_schema_statements):
-    for statement in sqlite_schema_statements:
-        sqlalchemy_engine.execute(statement)
+def sessionmaker_fixture(sqlalchemy_engine):
     Base.metadata.create_all(sqlalchemy_engine)
     return sessionmaker(bind=sqlalchemy_engine)
 
