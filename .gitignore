@@ -166,3 +166,4 @@ ui_mockup
 /workdir/
 /example_suite/.cato_last_run.json
 /example_suite/result/
+/tests/reports/
