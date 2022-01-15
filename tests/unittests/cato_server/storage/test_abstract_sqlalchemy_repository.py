@@ -2,6 +2,7 @@ from dataclasses import dataclass
 
 import pytest
 from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import sessionmaker
 
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
@@ -35,6 +36,14 @@ class ExampleRepository(
 
     def mapping_cls(self):
         return ExampleMapping
+
+
+@pytest.fixture
+def sessionmaker_fixture(sqlalchemy_engine, sqlite_schema_statements):
+    for statement in sqlite_schema_statements:
+        sqlalchemy_engine.execute(statement)
+    Base.metadata.create_all(sqlalchemy_engine)
+    return sessionmaker(bind=sqlalchemy_engine)
 
 
 class TestPaging:

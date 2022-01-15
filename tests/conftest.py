@@ -1,6 +1,8 @@
 import datetime
 import os
 import socketserver
+import sqlite3
+import tempfile
 from pathlib import Path
 from typing import Optional, Dict
 
@@ -59,6 +61,7 @@ from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
+from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
@@ -144,18 +147,52 @@ else:
         return "sqlite:///:memory:"
 
 
+def _split_and_keep_delimiter(str_to_split, delimiter):
+    splitted = str_to_split.split(delimiter)
+    return list(map(lambda x: x + delimiter, splitted))
+
+
+@pytest.fixture(scope="session")
+def sqlite_schema_statements():
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        db_path = os.path.join(tmpdirname, "foo.db")
+        sqlite_url = f"sqlite:///{db_path}"
+        print(db_path)
+        db_migrator = DbMigrator(
+            StorageConfiguration(file_storage_url="", database_url=sqlite_url)
+        )
+        db_migrator.migrate()
+
+        con = sqlite3.connect(db_path)
+        schema = "\n".join(con.iterdump())
+        con.close()
+
+    schema_statements = _split_and_keep_delimiter(schema, ";")[:-2]
+    yield schema_statements
+
+
 @pytest.fixture
-def sessionmaker_fixture(db_connection_string):
+def sqlalchemy_engine(db_connection_string):
     if "sqlite" in db_connection_string:
-        engine = sqlalchemy.create_engine(
+        return sqlalchemy.create_engine(
             db_connection_string,
             connect_args={"check_same_thread": False},
             poolclass=StaticPool,
         )
-    else:
-        engine = sqlalchemy.create_engine(db_connection_string)
-    Base.metadata.create_all(engine)
-    return sessionmaker(bind=engine)
+    return sqlalchemy.create_engine(db_connection_string)
+
+
+@pytest.fixture
+def sessionmaker_fixture(
+    db_connection_string, sqlalchemy_engine, sqlite_schema_statements
+):
+    if "sqlite" in db_connection_string:
+        for statement in sqlite_schema_statements:
+            sqlalchemy_engine.execute(statement)
+        return sessionmaker(bind=sqlalchemy_engine)
+
+    Base.metadata.create_all(sqlalchemy_engine)
+    return sessionmaker(bind=sqlalchemy_engine)
 
 
 @pytest.fixture
