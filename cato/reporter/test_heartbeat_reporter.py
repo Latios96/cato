@@ -13,6 +13,8 @@ logger = logging.getLogger(__name__)
 
 
 class TestHeartbeatReporter:
+    __test__ = False
+
     def __init__(self, test_execution_reporter: TestExecutionReporter):
         self._test_execution_reporter = test_execution_reporter
         self._cease_continuous_run: Optional[threading.Event] = None

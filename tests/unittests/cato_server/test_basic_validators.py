@@ -6,6 +6,7 @@ from cato_server.api.validators.basic import SchemaValidator
 
 
 class TestSchema(Schema):
+    __test__ = False
     name = fields.Str(required=True, validate=[Length(min=1), REGEX_VALID_NAME])
 
 

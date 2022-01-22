@@ -7,5 +7,7 @@ from cato_server.storage.abstract.status_filter import StatusFilter
 
 @dataclass
 class TestResultFilterOptions:
+    __test__ = False
+
     status: StatusFilter
     failure_reason: Optional[TestFailureReason]

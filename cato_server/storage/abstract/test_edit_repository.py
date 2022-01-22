@@ -5,6 +5,8 @@ from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 
 class TestEditRepository(AbstractRepository[AbstractTestEdit, int]):
+    __test__ = False
+
     def find_by_test_id(
         self, test_id: int, edit_type: Optional[EditTypes] = None
     ) -> List[AbstractTestEdit]:

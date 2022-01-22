@@ -29,6 +29,8 @@ logger = logging.getLogger(__name__)
 
 
 class TestExecutionDbReporter(TestExecutionReporter):
+    __test__ = False
+
     def __init__(
         self,
         machine_info_collector: MachineInfoCollector,

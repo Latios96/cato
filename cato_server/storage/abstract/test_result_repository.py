@@ -15,6 +15,8 @@ from cato_server.storage.abstract.test_result_filter_options import (
 
 
 class TestResultRepository(AbstractRepository[TestResult, int]):
+    __test__ = False
+
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:

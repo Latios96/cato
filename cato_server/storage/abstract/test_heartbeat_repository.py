@@ -6,6 +6,8 @@ from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 
 class TestHeartbeatRepository(AbstractRepository[TestHeartbeat, int]):
+    __test__ = False
+
     def find_by_test_result_id(self, test_result_id) -> Optional[TestHeartbeat]:
         raise NotImplementedError()
 
