@@ -44,6 +44,97 @@ def sessionmaker_fixture(sqlalchemy_engine):
     return sessionmaker(bind=sqlalchemy_engine)
 
 
+class TestSave:
+    def test_insert_single_entity(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        entity = ExampleClass(id=0, name="test")
+
+        saved_entity = repository.save(entity)
+
+        assert saved_entity.id == 1
+        entity.id = 1
+        assert entity == saved_entity
+
+    def test_update_single_entity(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        entity = repository.save(ExampleClass(id=0, name="test"))
+
+        entity.name = "test_update"
+        repository.save(entity)
+        entity = repository.find_by_id(entity.id)
+
+        assert entity.name == "test_update"
+
+    def test_insert_many_insert_empty_list(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        inserted_entities = repository.insert_many([])
+
+        assert inserted_entities == []
+
+    def test_insert_many_entities(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        inserted_entities = repository.insert_many(
+            [ExampleClass(id=0, name="test") for x in range(20)]
+        )
+
+        assert inserted_entities == [
+            ExampleClass(id=x, name="test") for x in range(1, 21)
+        ]
+
+
+class TestFinding:
+    def test_find_by_id_should_return_none_if_not_found(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+
+        not_found_entity = repository.find_by_id(1)
+
+        assert not_found_entity is None
+
+    def test_find_by_id_should_return_entity(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        entity = repository.save(ExampleClass(id=0, name="test"))
+
+        not_found_entity = repository.find_by_id(entity.id)
+
+        assert not_found_entity == ExampleClass(id=1, name="test")
+
+    def test_find_all_should_return_empty_list(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+
+        not_found_entities = repository.find_all()
+
+        assert not_found_entities == []
+
+    def test_find_all_should_return_entities(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        repository.insert_many([ExampleClass(id=0, name="test") for x in range(20)])
+
+        entities = repository.find_all()
+
+        assert entities == [ExampleClass(id=x, name="test") for x in range(1, 21)]
+
+
+class TestDelete:
+    def test_delete_by_not_existing_id_should_raise_exception(
+        self, sessionmaker_fixture
+    ):
+        repository = ExampleRepository(sessionmaker_fixture)
+
+        with pytest.raises(ValueError):
+            repository.delete_by_id(1)
+
+    def test_delete_by_id_should_delete_the_single_entity(self, sessionmaker_fixture):
+        repository = ExampleRepository(sessionmaker_fixture)
+        repository.insert_many([ExampleClass(id=0, name="test") for x in range(20)])
+
+        repository.delete_by_id(1)
+        entities_after_delete = repository.find_all()
+
+        assert entities_after_delete == [
+            ExampleClass(id=x, name="test") for x in range(2, 21)
+        ]
+
+
 class TestPaging:
     def test_find_all_with_paging_first_page_page_is_empty(self, sessionmaker_fixture):
         repository = ExampleRepository(sessionmaker_fixture)
