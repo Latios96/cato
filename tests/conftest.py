@@ -191,7 +191,10 @@ def sessionmaker_fixture(
             sqlalchemy_engine.execute(statement)
         return sessionmaker(bind=sqlalchemy_engine)
 
-    Base.metadata.create_all(sqlalchemy_engine)
+    db_migrator = DbMigrator(
+        StorageConfiguration(file_storage_url="", database_url=db_connection_string)
+    )
+    db_migrator.migrate()
     return sessionmaker(bind=sqlalchemy_engine)
 
 
