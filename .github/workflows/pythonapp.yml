@@ -28,7 +28,7 @@ jobs:
       name: Upload reports
       if: always()
       with:
-        name: test-reports-linux
+        name: test-reports-linux-${{ env.GITHUB_RUN_ID }}-${{ env.GITHUB_RUN_NUMBER }}
         path: |
           ./tests/reports/*.html
         retention-days: 10
@@ -62,7 +62,7 @@ jobs:
         name: Upload reports
         if: always()
         with:
-          name: test-reports-windows
+          name: test-reports-windows-{{ env.GITHUB_RUN_ID }}-{{ env.GITHUB_RUN_NUMBER }}
           path: |
             ./tests/reports/*.html
           retention-days: 10
