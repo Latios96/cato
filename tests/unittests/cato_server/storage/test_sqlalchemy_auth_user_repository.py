@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.auth_user import AuthUser
+from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
 )
