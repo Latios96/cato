@@ -1,14 +1,22 @@
 import argparse
 import os
 
+import pinject
+from pinject.object_graph import ObjectGraph
+
+import cato
+import cato_common
 import cato_server.server_logging
+from cato_common.utils.bindings import imported_modules
 from cato_server.admin_commands.config_template_command import ConfigTemplateCommand
+from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
 from cato_server.backup.backup_creator import BackupCreator
 from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
 from cato_server.backup.pg_dump_path_resolver import PgDumpPathResolver
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
+from cato_server.configuration.bindings_factory import BindingsFactory
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 
 logger = cato_server.server_logging.logger
@@ -20,6 +28,19 @@ def get_config_path(path):
     return path
 
 
+def create_obj_graph(path: str) -> ObjectGraph:
+    config = AppConfigurationReader().read_file(path)
+
+    bindings_factory = BindingsFactory(config)
+    bindings = bindings_factory.create_bindings()
+
+    obj_graph = pinject.new_object_graph(
+        modules=[*imported_modules([cato_common, cato, cato_server])],
+        binding_specs=[bindings],
+    )
+    return obj_graph
+
+
 def config_template(path, try_out):
     path = get_config_path(path)
 
@@ -29,10 +50,9 @@ def config_template(path, try_out):
 
 def migrate_db(path):
     path = get_config_path(path)
-    app_config = AppConfigurationReader().read_file(path)
 
-    db_migrator = DbMigrator(app_config.storage_configuration)
-    db_migrator.migrate()
+    migrate_db_command = MigrateDbCommand()
+    migrate_db_command.migrate_db(path)
 
 
 def create_backup(path, pg_dump_executable, mode_str):
