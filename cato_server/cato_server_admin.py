@@ -2,6 +2,7 @@ import argparse
 import os
 
 import cato_server.server_logging
+from cato_server.admin_commands.config_template_command import ConfigTemplateCommand
 from cato_server.backup.backup_creator import BackupCreator
 from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
@@ -12,28 +13,13 @@ from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 
 logger = cato_server.server_logging.logger
 
-from cato_server.configuration.app_configuration_defaults import (
-    AppConfigurationDefaults,
-)
-from cato_server.configuration.app_configuration_writer import AppConfigurationWriter
-
 
 def config_template(path, try_out):
     if not path:
         path = "config.ini"
 
-    if not try_out:
-        config = AppConfigurationDefaults().create()
-    else:
-        config_folder = os.path.dirname(path)
-        config_folder = os.path.abspath(config_folder)
-        config = AppConfigurationDefaults().create_ready_to_use(
-            config_folder=config_folder
-        )
-
-    logger.info("Write config to %s", path)
-    AppConfigurationWriter().write_file(config, path)
-    return
+    config_template_command = ConfigTemplateCommand()
+    config_template_command.create_config_template(path, try_out)
 
 
 def migrate_db(path):
