@@ -20,7 +20,7 @@ def upgrade():
     op.create_table(
         "user_entity",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("username", sa.String, nullable=False),
+        sa.Column("username", sa.String, nullable=False, unique=True),
         sa.Column("hashed_password", sa.String, nullable=False),
     )
 

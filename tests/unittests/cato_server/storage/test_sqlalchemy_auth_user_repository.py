@@ -31,3 +31,14 @@ def test_without_username_or_hash_should_fail(sessionmaker_fixture, auth_user):
 
     with pytest.raises(IntegrityError):
         repository.save(auth_user)
+
+
+def test_inserting_same_username_twice_should_fail(sessionmaker_fixture):
+    repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    auth_user = AuthUser(
+        id=0, username="someuser", hashed_password="the_hashed_password"
+    )
+    repository.save(auth_user)
+
+    with pytest.raises(IntegrityError):
+        repository.save(auth_user)
