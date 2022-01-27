@@ -2,15 +2,20 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_server.domain.auth.auth_user import AuthUser
+from cato_server.domain.auth.secret_str import SecretStr
+from cato_server.domain.auth.username import Username
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
+    _AuthUserMapping,
 )
 
 
 def test_save(sessionmaker_fixture):
     repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
     auth_user = AuthUser(
-        id=0, username="someuser", hashed_password="the_hashed_password"
+        id=0,
+        username=Username("someuser"),
+        hashed_password=SecretStr("the_hashed_password"),
     )
 
     saved_auth_user = repository.save(auth_user)
@@ -20,23 +25,26 @@ def test_save(sessionmaker_fixture):
 
 
 @pytest.mark.parametrize(
-    "auth_user",
+    "auth_user_mapping",
     [
-        AuthUser(id=0, username=None, hashed_password="the_hashed_password"),
-        AuthUser(id=0, username="someuser", hashed_password=None),
+        _AuthUserMapping(id=None, username=None, hashed_password="the_hashed_password"),
+        _AuthUserMapping(id=None, username="someuser", hashed_password=None),
     ],
 )
-def test_without_username_or_hash_should_fail(sessionmaker_fixture, auth_user):
-    repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+def test_without_username_or_hash_should_fail(auth_user_mapping, sessionmaker_fixture):
+    session = sessionmaker_fixture()
 
     with pytest.raises(IntegrityError):
-        repository.save(auth_user)
+        session.add(auth_user_mapping)
+        session.commit()
 
 
 def test_inserting_same_username_twice_should_fail(sessionmaker_fixture):
     repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
     auth_user = AuthUser(
-        id=0, username="someuser", hashed_password="the_hashed_password"
+        id=0,
+        username=Username("someuser"),
+        hashed_password=SecretStr("the_hashed_password"),
     )
     repository.save(auth_user)
 
@@ -47,7 +55,9 @@ def test_inserting_same_username_twice_should_fail(sessionmaker_fixture):
 def test_find_by_username_should_return_existing_user(sessionmaker_fixture):
     repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
     auth_user = AuthUser(
-        id=0, username="someuser", hashed_password="the_hashed_password"
+        id=0,
+        username=Username("someuser"),
+        hashed_password=SecretStr("the_hashed_password"),
     )
     auth_user = repository.save(auth_user)
 
