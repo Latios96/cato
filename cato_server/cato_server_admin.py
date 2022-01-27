@@ -9,6 +9,7 @@ import cato_common
 import cato_server.server_logging
 from cato_common.utils.bindings import imported_modules
 from cato_server.admin_commands.config_template_command import ConfigTemplateCommand
+from cato_server.admin_commands.create_backup_command import CreateBackupCommand
 from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
 from cato_server.backup.backup_creator import BackupCreator
 from cato_server.backup.backup_mode import BackupMode
@@ -57,20 +58,9 @@ def migrate_db(path):
 
 def create_backup(path, pg_dump_executable, mode_str):
     path = get_config_path(path)
-    app_config = AppConfigurationReader().read_file(path)
 
-    pg_dump_path_resolver = PgDumpPathResolver()
-    pg_dump_path = pg_dump_path_resolver.resolve(pg_dump_executable)
-
-    create_file_storage_backup = CreateFileStorageBackup(
-        app_config.storage_configuration
-    )
-    create_db_backup = CreateDbBackup(app_config.storage_configuration, pg_dump_path)
-
-    mode = BackupMode(mode_str) if mode_str else BackupMode.FULL
-
-    backup_creator = BackupCreator(create_file_storage_backup, create_db_backup)
-    backup_creator.create_backup(os.getcwd(), mode)
+    create_backup_command = CreateBackupCommand()
+    create_backup_command.create_backup(path, pg_dump_executable, mode_str)
 
 
 def main():
