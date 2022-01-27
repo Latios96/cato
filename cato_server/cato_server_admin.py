@@ -14,17 +14,21 @@ from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 logger = cato_server.server_logging.logger
 
 
-def config_template(path, try_out):
+def get_config_path(path):
     if not path:
         path = "config.ini"
+    return path
+
+
+def config_template(path, try_out):
+    path = get_config_path(path)
 
     config_template_command = ConfigTemplateCommand()
     config_template_command.create_config_template(path, try_out)
 
 
 def migrate_db(path):
-    if not path:
-        path = "config.ini"
+    path = get_config_path(path)
     app_config = AppConfigurationReader().read_file(path)
 
     db_migrator = DbMigrator(app_config.storage_configuration)
@@ -32,8 +36,7 @@ def migrate_db(path):
 
 
 def create_backup(path, pg_dump_executable, mode_str):
-    if not path:
-        path = "config.ini"
+    path = get_config_path(path)
     app_config = AppConfigurationReader().read_file(path)
 
     pg_dump_path_resolver = PgDumpPathResolver()
