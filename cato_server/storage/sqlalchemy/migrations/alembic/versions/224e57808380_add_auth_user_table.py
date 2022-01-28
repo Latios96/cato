@@ -20,10 +20,12 @@ def upgrade():
     op.create_table(
         "user_entity",
         sa.Column("id", sa.Integer, primary_key=True),
-        sa.Column("username", sa.String, nullable=False, unique=True),
+        sa.Column("username", sa.String, nullable=False),
         sa.Column("hashed_password", sa.String, nullable=False),
     )
+    op.execute("CREATE UNIQUE INDEX uq_username on user_entity (LOWER(username));")
 
 
 def downgrade():
+    op.drop_constraint("uq_username", "user_entity")
     op.drop_table("user_entity")
