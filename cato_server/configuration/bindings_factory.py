@@ -17,6 +17,9 @@ from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
     DeadlineSchedulerSubmitter,
 )
+from cato_server.storage.abstract.abstract_auth_user_repository import (
+    AbstractAuthUserRepository,
+)
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
@@ -34,6 +37,9 @@ from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
+from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
+    SqlAlchemyAuthUserRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
@@ -82,6 +88,7 @@ class StorageBindings:
     test_heartbeat_repository: Type[TestHeartbeatRepository]
     submission_info_repository: Type[SubmissionInfoRepository]
     test_edit_repository: Type[TestEditRepository]
+    auth_user_repository: Type[AbstractAuthUserRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -157,6 +164,10 @@ class PinjectBindings(pinject.BindingSpec):
             "test_edit_repository",
             to_class=self._bindings.storage_bindings.test_edit_repository,
         )
+        bind(
+            "auth_user_repository",
+            to_class=self._bindings.storage_bindings.auth_user_repository,
+        )
 
 
 class BindingsFactory:
@@ -187,6 +198,7 @@ class BindingsFactory:
             test_heartbeat_repository=SqlAlchemyTestHeartbeatRepository,
             submission_info_repository=SqlAlchemySubmissionInfoRepository,
             test_edit_repository=SqlAlchemyTestEditRepository,
+            auth_user_repository=SqlAlchemyAuthUserRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
