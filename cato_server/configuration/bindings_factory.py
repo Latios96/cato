@@ -17,8 +17,8 @@ from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
     DeadlineSchedulerSubmitter,
 )
-from cato_server.storage.abstract.abstract_auth_user_repository import (
-    AbstractAuthUserRepository,
+from cato_server.storage.abstract.auth_user_repository import (
+    AuthUserRepository,
 )
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
@@ -88,7 +88,7 @@ class StorageBindings:
     test_heartbeat_repository: Type[TestHeartbeatRepository]
     submission_info_repository: Type[SubmissionInfoRepository]
     test_edit_repository: Type[TestEditRepository]
-    auth_user_repository: Type[AbstractAuthUserRepository]
+    auth_user_repository: Type[AuthUserRepository]
     session_maker_binding: Any
     root_path_binding: str
 

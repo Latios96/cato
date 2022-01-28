@@ -9,8 +9,8 @@ from cato_server.authentication.crypto_context import CryptoContext
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
-from cato_server.storage.abstract.abstract_auth_user_repository import (
-    AbstractAuthUserRepository,
+from cato_server.storage.abstract.auth_user_repository import (
+    AuthUserRepository,
 )
 from tests.utils import mock_safe
 
@@ -25,7 +25,7 @@ def mocked_safe(auth_user):
 
 @pytest.fixture
 def create_user_data_fixture():
-    mock_auth_user_repository = mock_safe(AbstractAuthUserRepository)
+    mock_auth_user_repository = mock_safe(AuthUserRepository)
     mock_auth_user_repository.save.side_effect = mocked_safe
     mock_crypto_context = mock_safe(CryptoContext)
     mock_crypto_context.hash_password.return_value = "the_hash"

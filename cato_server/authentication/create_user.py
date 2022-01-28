@@ -4,8 +4,8 @@ from cato_server.authentication.crypto_context import CryptoContext
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
-from cato_server.storage.abstract.abstract_auth_user_repository import (
-    AbstractAuthUserRepository,
+from cato_server.storage.abstract.auth_user_repository import (
+    AuthUserRepository,
 )
 
 import logging
@@ -29,7 +29,7 @@ class UsernameAlreadyExistsException(Exception):
 class CreateUser:
     def __init__(
         self,
-        auth_user_repository: AbstractAuthUserRepository,
+        auth_user_repository: AuthUserRepository,
         crypto_context: CryptoContext,
     ):
         self._auth_user_repository = auth_user_repository

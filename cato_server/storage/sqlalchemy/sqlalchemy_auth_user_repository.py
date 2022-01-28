@@ -5,8 +5,8 @@ from sqlalchemy import Column, Integer, Text
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
-from cato_server.storage.abstract.abstract_auth_user_repository import (
-    AbstractAuthUserRepository,
+from cato_server.storage.abstract.auth_user_repository import (
+    AuthUserRepository,
 )
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
@@ -23,7 +23,7 @@ class _AuthUserMapping(Base):
 
 class SqlAlchemyAuthUserRepository(
     AbstractSqlAlchemyRepository[AuthUser, _AuthUserMapping, int],
-    AbstractAuthUserRepository,
+    AuthUserRepository,
 ):
     def to_entity(self, domain_object: AuthUser) -> _AuthUserMapping:
         return _AuthUserMapping(
