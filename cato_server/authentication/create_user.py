@@ -8,16 +8,15 @@ from cato_server.storage.abstract.abstract_auth_user_repository import (
     AbstractAuthUserRepository,
 )
 
+import logging
+
+logger = logging.getLogger(__name__)
+
 
 @dataclass
 class CreateUserData:
     username: Username
     password: SecretStr
-
-
-import logging
-
-logger = logging.getLogger(__name__)
 
 
 class UsernameAlreadyExistsException(Exception):
@@ -56,6 +55,6 @@ class CreateUser:
         )
         auth_user = self._auth_user_repository.save(auth_user)
 
-        logger.info("Created user with name %s", auth_user.username)
+        logger.info('Created user with name "%s"', auth_user.username)
 
         return auth_user
