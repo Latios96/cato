@@ -1,6 +1,7 @@
 import datetime
 from typing import Optional
 
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
@@ -8,12 +9,15 @@ from cato_server.domain.auth.session_id import SessionId
 
 from cato_server.storage.abstract.session_repository import SessionRepository
 
-SESSION_LIFETIME = datetime.timedelta(hours=2)
-
 
 class SessionBackend:
-    def __init__(self, session_repository: SessionRepository):
+    def __init__(
+        self,
+        session_repository: SessionRepository,
+        session_configuration: SessionConfiguration,
+    ):
         self._session_repository = session_repository
+        self._session_configuration = session_configuration
 
     def get_session(self, id: SessionId) -> Optional[Session]:
         session = self._session_repository.find_by_id(id)
@@ -33,6 +37,6 @@ class SessionBackend:
             id=SessionId.none(),
             user_id=user.id,
             created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now() + SESSION_LIFETIME,
+            expires_at=datetime.datetime.now() + self._session_configuration.lifetime,
         )
         return self._session_repository.save(session)

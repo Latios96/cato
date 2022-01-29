@@ -4,6 +4,7 @@ import pytest
 from freezegun import freeze_time
 
 from cato_server.authentication.session_backend import SessionBackend
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.session import Session
@@ -16,7 +17,10 @@ from tests.utils import mock_safe
 @pytest.fixture
 def session_backend_fixture():
     mock_session_repository = mock_safe(SessionRepository)
-    session_backend = SessionBackend(mock_session_repository)
+    session_backend = SessionBackend(
+        mock_session_repository,
+        SessionConfiguration(lifetime=datetime.timedelta(hours=2)),
+    )
     yield session_backend, mock_session_repository
 
 
