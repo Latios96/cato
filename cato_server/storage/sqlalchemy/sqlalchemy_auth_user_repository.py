@@ -18,6 +18,7 @@ class _AuthUserMapping(Base):
     __tablename__ = "user_entity"
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(Text, nullable=False)
+    fullname = Column(Text, nullable=False)
     hashed_password = Column(Text, nullable=False)
 
 
@@ -29,6 +30,7 @@ class SqlAlchemyAuthUserRepository(
         return _AuthUserMapping(
             id=domain_object.id if domain_object.id else None,
             username=str(domain_object.username),
+            fullname=str(domain_object.fullname),
             hashed_password=domain_object.hashed_password.get_secret_value(),
         )
 
@@ -36,6 +38,7 @@ class SqlAlchemyAuthUserRepository(
         return AuthUser(
             id=entity.id,
             username=Username(entity.username),
+            fullname=Username(entity.fullname),
             hashed_password=SecretStr(entity.hashed_password),
         )
 

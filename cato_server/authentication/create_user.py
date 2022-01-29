@@ -16,6 +16,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class CreateUserData:
     username: Username
+    fullname: Username
     password: SecretStr
 
 
@@ -51,10 +52,11 @@ class CreateUser:
         auth_user = AuthUser(
             id=0,
             username=create_user_data.username,
+            fullname=create_user_data.fullname,
             hashed_password=SecretStr(hashed_password),
         )
         auth_user = self._auth_user_repository.save(auth_user)
 
-        logger.info('Created user with name "%s"', auth_user.username)
+        logger.info('Created user "%s"', auth_user.username)
 
         return auth_user

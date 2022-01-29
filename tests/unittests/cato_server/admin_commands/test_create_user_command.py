@@ -10,12 +10,13 @@ def test_create_user_successfully():
     mock_create_user = mock_safe(CreateUser)
     mock_user_cli_input = mock_safe(UserCliInput)
     create_user_command = CreateUserCommand(mock_create_user, mock_user_cli_input)
-    username = "username"
-    password = "password"
-    mock_user_cli_input.prompt_username_and_password.return_value = username, password
+    create_user_data = CreateUserData(
+        username=Username("a username"),
+        fullname=Username("User Username"),
+        password=SecretStr("password"),
+    )
+    mock_user_cli_input.prompt_create_user_data.return_value = create_user_data
 
     create_user_command.create_user()
 
-    mock_create_user.create_user.assert_called_with(
-        CreateUserData(username=Username(username), password=SecretStr(password))
-    )
+    mock_create_user.create_user.assert_called_with(create_user_data)

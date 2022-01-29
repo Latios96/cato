@@ -1,3 +1,6 @@
+from typing import Generic, TypeVar
+
+
 class Username:
     def __init__(self, value):
         value = value.strip()

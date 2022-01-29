@@ -1,7 +1,5 @@
 from cato_server.admin_commands.user_cli_input import UserCliInput
-from cato_server.authentication.create_user import CreateUser, CreateUserData
-from cato_server.domain.auth.secret_str import SecretStr
-from cato_server.domain.auth.username import Username
+from cato_server.authentication.create_user import CreateUser
 
 
 class CreateUserCommand:
@@ -10,10 +8,6 @@ class CreateUserCommand:
         self._user_cli_input = user_cli_input
 
     def create_user(self):
-        username, password = self._user_cli_input.prompt_username_and_password()
-
-        create_user_data = CreateUserData(
-            username=Username(username), password=SecretStr(password)
-        )
-
+        create_user_data = self._user_cli_input.prompt_create_user_data()
+        # todo prompt if you are sure
         self._create_user.create_user(create_user_data)

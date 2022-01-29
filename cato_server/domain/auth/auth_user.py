@@ -8,4 +8,5 @@ from cato_server.domain.auth.username import Username
 class AuthUser:
     id: int
     username: Username
+    fullname: Username
     hashed_password: SecretStr
