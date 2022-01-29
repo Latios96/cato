@@ -1,3 +1,5 @@
+import datetime
+
 from sqlalchemy.orm import sessionmaker
 
 from cato_server.configuration.scheduler_configuration import (
@@ -6,6 +8,7 @@ from cato_server.configuration.scheduler_configuration import (
 )
 from cato_common.domain.project import Project
 from cato_server.configuration.sentry_configuration import SentryConfiguration
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
@@ -48,6 +51,9 @@ def test_create_storage_bindings_for_postgres():
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -84,6 +90,9 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -127,6 +136,9 @@ def test_create_scheduler_bindings_no_scheduler():
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
     bindings_factory = BindingsFactory(config)
 
@@ -150,6 +162,7 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     ),
     scheduler_configuration=DeadlineSchedulerConfiguration("test"),
     sentry_configuration=SentryConfiguration(url=None),
+    session_configuration=SessionConfiguration(lifetime=datetime.timedelta(hours=2)),
 )
 
 

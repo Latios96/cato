@@ -16,6 +16,9 @@ file_storage_url = file_storage_url
 [scheduler]
 name = None
 
+[session]
+lifetime = 2 hours
+
 """
 
 EXPECTED_SENTRY = """[sentry]

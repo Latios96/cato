@@ -56,6 +56,7 @@ from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
@@ -580,6 +581,9 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

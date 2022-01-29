@@ -1,4 +1,5 @@
 import configparser
+import datetime
 
 import os
 
@@ -14,6 +15,7 @@ from cato_server.configuration.scheduler_configuration import (
     DeadlineSchedulerConfiguration,
 )
 from cato_server.configuration.sentry_configuration import SentryConfiguration
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
@@ -34,6 +36,7 @@ class AppConfigurationReader:
         logging_configuration = self._read_logging_configuration(config)
         scheduler_configuration = self._read_scheduler_configuration(config)
         sentry_configuration = self._read_sentry_configuration(config)
+        session_configuration = self._read_session_configuration(config)
 
         return AppConfiguration(
             port=config.getint(
@@ -46,6 +49,7 @@ class AppConfigurationReader:
             logging_configuration=logging_configuration,
             scheduler_configuration=scheduler_configuration,
             sentry_configuration=sentry_configuration,
+            session_configuration=session_configuration,
         )
 
     def _read_storage_configuration(
@@ -92,3 +96,11 @@ class AppConfigurationReader:
     def _read_sentry_configuration(self, config):
         sentry_url = config.get("sentry", "url", fallback=None)
         return SentryConfiguration(url=sentry_url)
+
+    def _read_session_configuration(self, config):
+        session_lifetime_str = config.get("session", "lifetime", fallback=None)
+        if not session_lifetime_str:
+            return SessionConfiguration(lifetime=datetime.timedelta(hours=2))
+        session_lifetime_seconds = humanfriendly.parse_timespan(session_lifetime_str)
+        session_lifetime = datetime.timedelta(seconds=session_lifetime_seconds)
+        return SessionConfiguration(lifetime=session_lifetime)

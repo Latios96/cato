@@ -1,6 +1,7 @@
 import os
 import subprocess
 import sys
+import datetime
 
 import humanfriendly
 
@@ -10,6 +11,7 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from tests.conftest import random_port
 from cato_common.utils.change_cwd import change_cwd
@@ -27,6 +29,9 @@ def test_run_db_load_test(tmp_path, snapshot):
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)

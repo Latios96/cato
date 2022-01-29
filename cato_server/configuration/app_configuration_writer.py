@@ -2,6 +2,8 @@ import configparser
 import logging
 from typing import IO
 
+import humanfriendly
+
 from cato_server.configuration.app_configuration import AppConfiguration
 
 logger = logging.getLogger(__name__)
@@ -13,6 +15,7 @@ class AppConfigurationWriter:
         config_reader.add_section("app")
         config_reader.add_section("storage")
         config_reader.add_section("scheduler")
+        config_reader.add_section("session")
         config_reader.set("app", "port", str(config.port))
         config_reader.set("app", "debug", str(config.debug))
         config_reader.set(
@@ -30,6 +33,14 @@ class AppConfigurationWriter:
         if config.sentry_configuration.url:
             config_reader.add_section("sentry")
             config_reader.set("sentry", "url", config.sentry_configuration.url)
+
+        config_reader.set(
+            "session",
+            "lifetime",
+            humanfriendly.format_timespan(
+                config.session_configuration.lifetime.seconds
+            ),
+        )
 
         config_reader.write(stream)
 

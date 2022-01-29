@@ -1,4 +1,5 @@
 import configparser
+import datetime
 import os
 
 import humanfriendly
@@ -12,6 +13,7 @@ from cato_server.configuration.scheduler_configuration import (
     DeadlineSchedulerConfiguration,
 )
 from cato_server.configuration.sentry_configuration import SentryConfiguration
+from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 
 VALID_INI_FILE = """[app]
@@ -103,6 +105,15 @@ name=Deadline
 deadline_url=http://localhost:8085
 """
 
+WITH_SESSION_LIFETIME = """[app]
+port=5000
+debug=True
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[session]
+lifetime=1h"""
+
 
 @pytest.fixture
 def ini_file_creator(tmp_path):
@@ -138,6 +149,9 @@ def test_read_valid_file(ini_file_creator):
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
 
 
@@ -169,6 +183,9 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
 
 
@@ -189,6 +206,9 @@ def test_read_with_logging(ini_file_creator):
         ),
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
 
 
@@ -225,6 +245,9 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
             url="http://localhost:8082"
         ),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
     )
 
 
@@ -245,4 +268,30 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
             url="http://localhost:8085"
         ),
         sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=2)
+        ),
+    )
+
+
+def test_read_with_session_lifetime(ini_file_creator):
+    ini_path = ini_file_creator(WITH_SESSION_LIFETIME)
+    reader = AppConfigurationReader()
+
+    config = reader.read_file(ini_path)
+
+    assert config == AppConfiguration(
+        port=5000,
+        debug=True,
+        storage_configuration=StorageConfiguration(
+            database_url="my_database_url", file_storage_url="my_file_storage_url"
+        ),
+        logging_configuration=LoggingConfiguration(
+            "log.txt", True, humanfriendly.parse_size("10mb"), 10
+        ),
+        scheduler_configuration=SchedulerConfiguration(),
+        sentry_configuration=SentryConfiguration(url=None),
+        session_configuration=SessionConfiguration(
+            lifetime=datetime.timedelta(hours=1)
+        ),
     )
