@@ -25,6 +25,7 @@ from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
+from cato_server.storage.abstract.session_repository import SessionRepository
 from cato_server.storage.abstract.submission_info_repository import (
     SubmissionInfoRepository,
 )
@@ -54,6 +55,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
+    SqlAlchemySessionRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
     SqlAlchemySubmissionInfoRepository,
@@ -89,6 +93,7 @@ class StorageBindings:
     submission_info_repository: Type[SubmissionInfoRepository]
     test_edit_repository: Type[TestEditRepository]
     auth_user_repository: Type[AuthUserRepository]
+    session_repository: Type[SessionRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -168,6 +173,10 @@ class PinjectBindings(pinject.BindingSpec):
             "auth_user_repository",
             to_class=self._bindings.storage_bindings.auth_user_repository,
         )
+        bind(
+            "session_repository",
+            to_class=self._bindings.storage_bindings.session_repository,
+        )
 
 
 class BindingsFactory:
@@ -199,6 +208,7 @@ class BindingsFactory:
             submission_info_repository=SqlAlchemySubmissionInfoRepository,
             test_edit_repository=SqlAlchemyTestEditRepository,
             auth_user_repository=SqlAlchemyAuthUserRepository,
+            session_repository=SqlAlchemySessionRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )
