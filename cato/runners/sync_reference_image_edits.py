@@ -2,10 +2,12 @@ import os
 from typing import List
 
 from cato.domain.config import RunConfig
-from cato.domain.test_suite import filter_by_test_identifier
+from cato.domain.test import Test
+from cato.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_common.domain.image import Image
 from cato_common.domain.test_edit import ReferenceImageEdit
 
 
@@ -24,7 +26,7 @@ class SyncReferenceImageEdits:
         self,
         config: RunConfig,
         comparison_settings_edits: List[ReferenceImageEdit],
-    ):
+    ) -> None:
         for edit in comparison_settings_edits:
             self._update_test(config, edit)
 
@@ -57,7 +59,9 @@ class SyncReferenceImageEdits:
             return None, None
         return the_suite[0], the_suite[0].tests[0]
 
-    def _get_image_path(self, config: RunConfig, suite, test, image) -> str:
+    def _get_image_path(
+        self, config: RunConfig, suite: TestSuite, test: Test, image: Image
+    ) -> str:
         variables = self._variable_processor.evaluate_variables(config, suite, test)
         image_file_extension = os.path.splitext(image.name)[1]
         if image_file_extension == ".png":

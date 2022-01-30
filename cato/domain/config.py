@@ -43,7 +43,8 @@ class RunConfig:
         return sum(map(lambda x: len(x.tests), self.suites))
 
     @classmethod
-    def from_config(cls, config: Config, resource_path: str, output_folder: str):
+    def from_config(cls, config, resource_path, output_folder):
+        # type: (Config, str, str)->RunConfig
         return RunConfig(
             project_name=config.project_name,
             resource_path=resource_path,

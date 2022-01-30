@@ -21,9 +21,9 @@ class SyncComparisonSettings:
     def update(
         self,
         config: RunConfig,
-        path,
+        path: str,
         comparison_settings_edits: List[ComparisonSettingsEdit],
-    ):
+    ) -> None:
         config_was_changed = False
         for edit in comparison_settings_edits:
             had_update = self._update_test(config, edit)

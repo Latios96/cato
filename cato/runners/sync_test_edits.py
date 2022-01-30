@@ -8,6 +8,7 @@ from cato_common.domain.test_edit import (
     EditTypes,
     ComparisonSettingsEdit,
     ReferenceImageEdit,
+    AbstractTestEdit,
 )
 
 T = TypeVar("T")
@@ -24,7 +25,7 @@ class SyncTestEdits:
         self._update_comparison_settings = sync_comparison_settings
         self._sync_reference_images = sync_reference_image_edits
 
-    def update(self, config: RunConfig, path: str, run_id):
+    def update(self, config: RunConfig, path: str, run_id: int) -> None:
         all_test_edits = self._cato_api_client.get_test_edits_to_sync_for_run(run_id)
 
         all_comparison_settings_edits = self._filter_edits_by(
@@ -40,11 +41,14 @@ class SyncTestEdits:
         self._sync_reference_images.update(config, all_reference_image_edits)
 
     def _filter_edits_by(
-        self, all_test_edits, edit_type: EditTypes, edit_class: Type[T]
+        self,
+        all_test_edits: List[AbstractTestEdit],
+        edit_type: EditTypes,
+        edit_class: Type[T],
     ) -> List[T]:
         return list(
             map(
-                lambda x: cast(edit_class, x),
+                lambda x: cast(edit_class, x),  # type: ignore
                 filter(
                     lambda x: x.edit_type == edit_type,
                     all_test_edits,

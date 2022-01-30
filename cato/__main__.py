@@ -135,7 +135,7 @@ def worker_run(
     worker_command.execute(submission_info_id, test_identifier_str)
 
 
-def sync_test_edits(path: str, url: str, run_id: int):
+def sync_test_edits(path: str, url: str, run_id: int) -> None:
     obj_graph = create_object_graph(url)
     sync_test_edits_command = provide_safe(obj_graph, SyncTestEditsCommand)
 
