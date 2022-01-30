@@ -33,7 +33,7 @@ class CreateThumbnail:
     def create_thumbnail(self, test_result: TestResult) -> None:
         image_id = self._resolve_image_id(test_result)
         if not image_id:
-            raise ValueError(f"Test result has no images!")
+            raise ValueError("Test result has no images!")
         image = self._image_repository.find_by_id(image_id)
         if not image:
             raise ValueError(f"No Image found with id {image_id}")
