@@ -29,7 +29,7 @@ class ObjectMapper:
     def from_json(self, json_str: str, cls: Type[T]) -> T:
         return self.from_dict(json.loads(json_str), cls)
 
-    def many_to_dict(self, objs: Iterable[T]) -> List[T]:
+    def many_to_dict(self, objs: Iterable[T]) -> List[Dict]:
         return list(map(self.to_dict, objs))
 
     def many_to_json(self, objs: Iterable[T]) -> str:

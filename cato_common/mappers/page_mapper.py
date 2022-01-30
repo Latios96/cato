@@ -27,7 +27,7 @@ class PageMapper:
             entities=self._object_mapper.many_from_dict(the_dict["entities"], cls),
         )
 
-    def to_json(self, obj: T) -> str:
+    def to_json(self, obj: Page[T]) -> str:
         return json.dumps(self.to_dict(obj))
 
     def from_json(self, json_str: str, cls: Type[T]) -> Page[T]:

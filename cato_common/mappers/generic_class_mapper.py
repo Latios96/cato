@@ -1,11 +1,12 @@
 import copy
 import datetime
 import json
-from dataclasses import _is_dataclass_instance, fields, is_dataclass
+import typing
+from dataclasses import _is_dataclass_instance, fields, is_dataclass  # type: ignore
 from enum import Enum
 from typing import Type, Dict, TypeVar, Collection
 
-from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder
+from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder  # type: ignore
 from dateutil.parser import parse
 
 from cato_common.mappers.mapper_registry import MapperRegistry
@@ -18,11 +19,12 @@ class GenericClassMapper:
         self._mapper_registry = mapper_registry
 
     def map_from_dict(self, json_data: Dict, cls: Type[T]) -> T:
-        return self._from_dict(json_data, cls)
+        return self._from_dict(json_data, cls)  # type: ignore
 
     def map_to_dict(self, obj: T) -> Dict:
-        return self._to_dict(obj)
+        return self._to_dict(obj)  # type: ignore
 
+    @typing.no_type_check
     def _to_dict(self, obj):
         if self._mapper_registry.value_mapper_for_cls(obj.__class__):
             mapper = self._mapper_registry.value_mapper_for_cls(obj.__class__)
@@ -51,7 +53,8 @@ class GenericClassMapper:
         else:
             return copy.deepcopy(obj)
 
-    def _from_dict(self, json_data, cls, name=""):
+    @typing.no_type_check
+    def _from_dict(self, json_data: Dict, cls: Type[T], name=""):
         type_hint_args = getattr(cls, "__args__", ())
         is_optional = None.__class__ in type_hint_args
         if is_optional:
