@@ -116,3 +116,4 @@ def test_not_running_and_timed_out_test_should_not_be_failed():
     fail_timed_out_tests.fail_timed_out_tests()
 
     finish_test.fail_test.assert_not_called()
+    test_heartbeat_repository.delete_by_id.assert_called_with(1)

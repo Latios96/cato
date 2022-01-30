@@ -46,3 +46,6 @@ class FailTimedOutTests:
                 self._finish_test.fail_test(
                     test_result.id, "Test timed out!", TestFailureReason.TIMED_OUT
                 )
+            else:
+                logger.info("Deleting timed out heartbeat %s", timed_out_heartbeat)
+                self._test_heartbeat_repository.delete_by_id(timed_out_heartbeat.id)
