@@ -98,6 +98,17 @@ task pythonIntegrationTests(type: PythonTask){
     outputs.file('pytestOutput')
 }
 
+task pythonDetectFlakySeleniumTests(type: PythonTask){
+    dependsOn 'pythonInstall'
+    dependsOn 'copyFrontendToBuild'
+    command = "-m pytest --flake-finder --flake-runs=50 -n auto -v tests/integrationtests/cato_server/selenium --html=tests/reports/integrationtests-flake-detect.html --self-contained-html"
+    inputs.dir('cato')
+    inputs.dir('cato_server')
+    inputs.dir('cato_api_client')
+    inputs.dir('tests')
+    outputs.file('pytestOutput')
+}
+
 task copyFrontendToBuild {
     dependsOn(':frontend:yarnBuild')
     doLast {
