@@ -159,6 +159,13 @@ task lintPython(type:PythonTask){
     outputs.file('lintPython')
 }
 
+task mypyCheck(type:PythonTask){
+    command = '-m mypy -p cato -p cato_common'
+    inputs.dir('cato')
+    inputs.dir('cato_common')
+    outputs.file('mypyCheck')
+}
+
 task formatCheck{
     dependsOn 'formatPythonCheck'
     dependsOn ':frontend:formatTypescriptCheck'
@@ -172,6 +179,7 @@ task format{
 task lint{
     dependsOn 'lintPython'
     dependsOn ':frontend:lintTypescript'
+    dependsOn 'mypyCheck'
 }
 
 task buildConjure{
