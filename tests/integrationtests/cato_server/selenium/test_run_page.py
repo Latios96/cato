@@ -193,8 +193,11 @@ class TestRunTestPage:
         )
 
     def _assert_first_test_has_icon_with_title(self, selenium_driver, title):
-        assert selenium_driver.find_element_by_id("testList").find_element_by_xpath(
-            f'//*[@id="testList"]/tbody/tr/td[1]/span[@title="{title}"]'
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_id("testList").find_element_by_xpath(
+                f'//*[@id="testList"]/tbody/tr/td[1]/span[@title="{title}"]'
+            ),
+            20,
         )
 
     def _should_display_test_result(self, selenium_driver, test_result):

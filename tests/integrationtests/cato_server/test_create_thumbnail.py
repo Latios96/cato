@@ -16,7 +16,7 @@ from tests.utils import mock_safe
 
 
 def test_should_create_thumbnail(test_result_factory, tmp_path, test_resource_provider):
-    test_result = test_result_factory()
+    test_result = test_result_factory(reference_image=1)
     image = Image(
         id=0,
         name="the_image.png",
