@@ -57,6 +57,7 @@ def test_context(test_result_factory):
 
 
 def test_should_create_thumbnail_with_success(test_context):
+    test_context.test_result.reference_image = 20
     test_context.create_thumbnail.create_thumbnail(test_context.test_result)
 
     test_context.mock_test_result_repository.save.assert_called_with(
@@ -87,9 +88,10 @@ def test_should_resolve_image_id_to_None(test_context):
     test_context.test_result.reference_image = None
     test_context.test_result.image_output = None
 
-    test_context.create_thumbnail.create_thumbnail(test_context.test_result)
+    with pytest.raises(ValueError):
+        test_context.create_thumbnail.create_thumbnail(test_context.test_result)
 
-    test_context.mock_image_repository.find_by_id.assert_called_with(None)
+    test_context.mock_image_repository.find_by_id.assert_not_called()
 
 
 def test_image_not_found_should_throw_exception(test_context):
@@ -107,6 +109,7 @@ def test_file_not_found_should_throw_exception(test_context):
 
 
 def test_thumbnail_file_not_written_should_throw_exception(test_context):
+    test_context.test_result.reference_image = 20
     test_context.mock_oiio_command_executor.execute_command = lambda x: x
 
     with pytest.raises(RuntimeError):
