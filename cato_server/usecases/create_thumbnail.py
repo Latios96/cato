@@ -30,8 +30,10 @@ class CreateThumbnail:
         self._test_result_repository = test_result_repository
         self._oiio_command_executor = oiio_command_executor
 
-    def create_thumbnail(self, test_result: TestResult):
+    def create_thumbnail(self, test_result: TestResult) -> None:
         image_id = self._resolve_image_id(test_result)
+        if not image_id:
+            raise ValueError(f"Test result has no images!")  # TODO tests
         image = self._image_repository.find_by_id(image_id)
         if not image:
             raise ValueError(f"No Image found with id {image_id}")
@@ -60,8 +62,9 @@ class CreateThumbnail:
             test_result.id,
         )
 
-    def _resolve_image_id(self, test_result) -> Optional[int]:
+    def _resolve_image_id(self, test_result: TestResult) -> Optional[int]:
         if test_result.reference_image:
             return test_result.reference_image
         if test_result.image_output:
             return test_result.image_output
+        return None

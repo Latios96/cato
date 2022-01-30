@@ -1,5 +1,5 @@
 import datetime
-from typing import Tuple, Optional
+from typing import Tuple, Optional, cast
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.test_edit import (
@@ -38,7 +38,7 @@ class CreateComparisonSettingsEdit:
             return False, str(e)
 
     def create_edit(
-        self, test_result_id, comparison_settings: ComparisonSettings
+        self, test_result_id: int, comparison_settings: ComparisonSettings
     ) -> ComparisonSettingsEdit:
         output_image, reference_image, test_result = self._validate_test_result_input(
             test_result_id
@@ -71,7 +71,7 @@ class CreateComparisonSettingsEdit:
             test_result_id,
         )
 
-        return saved_edit
+        return cast(ComparisonSettingsEdit, saved_edit)
 
     def _validate_test_result_input(self, test_result_id):
         test_result = self._test_result_repository.find_by_id(test_result_id)

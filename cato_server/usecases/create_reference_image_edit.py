@@ -1,9 +1,11 @@
 import datetime
-from typing import Tuple, Optional
+from typing import Tuple, Optional, cast
 
 from cato_common.domain.image import Image
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
+from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.utils.typing import safe_unwrap
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
@@ -71,7 +73,9 @@ class CreateReferenceImageEdit:
 
         test_result.reference_image = test_result.image_output
         test_result.diff_image = result.diff_image_id
-        test_result.status = result.status
+        test_result.unified_test_status = UnifiedTestStatus.from_result_status(
+            result.status
+        )
         test_result.message = result.message
         self._test_result_repository.save(test_result)
 
@@ -81,7 +85,7 @@ class CreateReferenceImageEdit:
             test_result_id,
         )
 
-        return saved_edit
+        return cast(ReferenceImageEdit, saved_edit)
 
     def _validate_test_result_input(
         self, test_result_id: int
@@ -98,7 +102,9 @@ class CreateReferenceImageEdit:
                 "Can't edit a test result which has no comparison settings!"
             )
 
-        image_output = self._image_repository.find_by_id(test_result.image_output)
+        image_output = safe_unwrap(
+            self._image_repository.find_by_id(test_result.image_output)
+        )
         return image_output, test_result
 
     def _get_created_at(self):

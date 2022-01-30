@@ -14,4 +14,15 @@ class UnifiedTestStatus(str, Enum):
             return ResultStatus.SUCCESS
         elif self.value == "FAILED":
             return ResultStatus.FAILED
-        raise ValueError(f"Value {self.value} is not a TestStatus!")
+        raise ValueError(f"Value {self.value} is not a ResultStatus!")
+
+    @staticmethod
+    def from_result_status(result_status):
+        # type: (ResultStatus)->UnifiedTestStatus
+        if result_status == "SUCCESS":
+            return UnifiedTestStatus.SUCCESS
+        elif result_status == "FAILED":
+            return UnifiedTestStatus.FAILED
+        raise ValueError(
+            f"Value {result_status} can not be mapped to UnifiedTestStatus"
+        )

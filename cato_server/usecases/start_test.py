@@ -43,7 +43,6 @@ class StartTest:
         logger.info(
             "Resetting data from previos run for test with id %s", test_result.id
         )
-        test_result.status = None
         test_result.seconds = None
         test_result.message = None
         test_result.image_output = None
