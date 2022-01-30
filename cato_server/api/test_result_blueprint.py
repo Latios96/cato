@@ -258,7 +258,7 @@ class TestResultsBlueprint(APIRouter):
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
 
-    def _map_to_image_dto(self, image_output) -> Optional[ImageDto]:
+    def _map_to_image_dto(self, image_output: int) -> Optional[ImageDto]:
         image = self._image_repository.find_by_id(image_output)
         if image:
             return ImageDto(
@@ -269,6 +269,7 @@ class TestResultsBlueprint(APIRouter):
                 width=image.width,
                 height=image.height,
             )
+        return None
 
     def _to_channel_dto(self, channel: ImageChannel) -> ImageChannelDto:
         return ImageChannelDto(
@@ -327,7 +328,7 @@ class TestResultsBlueprint(APIRouter):
         )
 
     def get_test_result_by_run_id_and_test_status(
-        self, run_id, test_status
+        self, run_id: int, test_status: str
     ) -> Response:
         try:
             test_status = UnifiedTestStatus(test_status)

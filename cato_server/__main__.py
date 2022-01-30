@@ -84,8 +84,8 @@ def create_app(
         logger.info("Created background tasks..")
         task_creator = obj_graph.provide(BackgroundTaskCreator)
         task_creator.create()
-        app.scheduler_runner = BackgroundSchedulerRunner(schedule)
-        app.scheduler_runner.start()
+        app.scheduler_runner = BackgroundSchedulerRunner(schedule)  # type: ignore
+        app.scheduler_runner.start()  # type: ignore
 
     @app.middleware("http")
     async def timing(request: Request, call_next: RequestResponseEndpoint) -> Response:

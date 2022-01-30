@@ -1,10 +1,13 @@
 import configparser
 import logging
-from typing import IO
+from typing import IO, cast
 
 import humanfriendly
 
 from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.scheduler_configuration import (
+    DeadlineSchedulerConfiguration,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -28,7 +31,11 @@ class AppConfigurationWriter:
         scheduler_configuration = config.scheduler_configuration
         config_reader.set("scheduler", "name", scheduler_configuration.name)
         if scheduler_configuration.name == "Deadline":
-            config_reader.set("scheduler", "deadline_url", scheduler_configuration.url)
+            config_reader.set(
+                "scheduler",
+                "deadline_url",
+                cast(DeadlineSchedulerConfiguration, scheduler_configuration).url,
+            )
 
         if config.sentry_configuration.url:
             config_reader.add_section("sentry")

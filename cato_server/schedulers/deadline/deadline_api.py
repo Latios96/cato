@@ -13,7 +13,7 @@ class DeadlineApiError(Exception):
 
 
 class DeadlineApi:
-    def __init__(self, deadline_url: str, http_module=requests):
+    def __init__(self, deadline_url: str, http_module=requests) -> None:
         self._deadline_url = deadline_url
         self._http_module = http_module
 

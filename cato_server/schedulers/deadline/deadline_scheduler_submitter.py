@@ -52,7 +52,9 @@ class DeadlineSchedulerSubmitter:
 
         return plugin_info
 
-    def _create_command(self, submission_info, test_identifier_str: str) -> List[str]:
+    def _create_command(
+        self, submission_info: SubmissionInfo, test_identifier_str: str
+    ) -> List[str]:
         command = [
             "-m",
             "cato",

@@ -132,7 +132,7 @@ class RunsBlueprint(APIRouter):
         )
         return JSONResponse(content=self._page_mapper.to_dict(page))
 
-    def run_id_exists(self, run_id) -> Response:
+    def run_id_exists(self, run_id: int) -> Response:
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)
@@ -164,7 +164,7 @@ class RunsBlueprint(APIRouter):
         run = self._create_run_usecase.create_run(create_run_dto)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
-    def summary(self, run_id) -> Response:
+    def summary(self, run_id: int) -> Response:
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)

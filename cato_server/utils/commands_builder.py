@@ -3,12 +3,12 @@ from typing import List
 
 class CommandsBuilder:
     def __init__(self, base_command: str, max_length: int):
-        self._commands = []
+        self._commands: List[str] = []
         self._base_command = base_command
         self._init_current_command()
         self._max_length = max_length
 
-    def push(self, part_str: str):
+    def push(self, part_str: str) -> None:
         complete_length = len(self._current_command) + len(part_str)
 
         max_length_not_exceeded = complete_length < self._max_length
@@ -24,8 +24,8 @@ class CommandsBuilder:
         self._commands.append(self._current_command)
         return self._commands
 
-    def _init_current_command(self):
+    def _init_current_command(self) -> None:
         self._current_command = self._base_command
 
-    def _push_to_current_command(self, part_str):
+    def _push_to_current_command(self, part_str: str) -> None:
         self._current_command += part_str

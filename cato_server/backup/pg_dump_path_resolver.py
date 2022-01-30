@@ -23,6 +23,8 @@ class PgDumpPathResolver:
         if platform.system() == "Windows":
             return self._resolve_windows()
 
+        return None
+
     def _resolve_windows(self) -> Optional[str]:
         postgres_default_install_location_matches = glob.glob(
             r"C:\Program Files\PostgreSQL\*\bin\pg_dump.exe"

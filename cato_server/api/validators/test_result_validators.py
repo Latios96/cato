@@ -26,7 +26,7 @@ class CreateOutputValidator(SchemaValidator):
     def validate(self, data: Dict) -> Dict[str, List[str]]:
         errors = super(CreateOutputValidator, self).validate(data)
 
-        test_result_id = data.get("test_result_id")
+        test_result_id: int = data.get("test_result_id")
         test_result = self._test_result_repository.find_by_id(test_result_id)
         existing_output = self._output_repository.find_by_test_result_id(test_result_id)
         if test_result_id and not test_result:

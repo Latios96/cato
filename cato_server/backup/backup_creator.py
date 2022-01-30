@@ -48,7 +48,7 @@ class BackupCreator:
 
     def _create_individual_parts_of_the_backup(
         self, folder, now, tmpdirname, mode: BackupMode
-    ):
+    ) -> str:
         file_storage_backup_path = os.path.join(
             tmpdirname, f"cato-backup-filestorage-{now}.tar"
         )
@@ -71,7 +71,7 @@ class BackupCreator:
         db_backup_path,
         file_storage_backup_path,
         mode: BackupMode,
-    ):
+    ) -> None:
         logger.info("Creating compressed cato backup archive..")
         with tarfile.open(cato_backup_path, "w:gz") as tar:
             if self._include_file_storage_in_backup(mode):
@@ -79,11 +79,11 @@ class BackupCreator:
             if self._include_db_in_backup(mode):
                 self._add_to_tar(db_backup_path, tar)
 
-    def _add_to_tar(self, db_backup_path, tar):
+    def _add_to_tar(self, db_backup_path, tar) -> None:
         tar.add(db_backup_path, arcname=os.path.basename(db_backup_path))
 
-    def _include_file_storage_in_backup(self, mode: BackupMode):
+    def _include_file_storage_in_backup(self, mode: BackupMode) -> bool:
         return mode in [BackupMode.FULL, BackupMode.ONLY_FILESTORAGE]
 
-    def _include_db_in_backup(self, mode: BackupMode):
+    def _include_db_in_backup(self, mode: BackupMode) -> bool:
         return mode in [BackupMode.FULL, BackupMode.ONLY_DATABASE]

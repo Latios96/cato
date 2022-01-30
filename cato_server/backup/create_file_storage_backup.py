@@ -26,5 +26,5 @@ class CreateFileStorageBackup:
         completed_process = subprocess.run(command)
         if completed_process.returncode:
             raise Exception(
-                f"Exit code {completed_process.returncode} when running command {command}: output was: {completed_process.stdout}"
+                f"Exit code {completed_process.returncode} when running command {command}: output was: {completed_process.stdout.decode('utf-8')}"
             )
