@@ -26,15 +26,15 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
         is_insert = True if not domain_object.id else False
 
-        project_mapping = self.to_entity(domain_object)
+        mapped_entity = self.to_entity(domain_object)
 
         if is_insert:
-            session.add(project_mapping)
+            session.add(mapped_entity)
         else:
-            session.merge(project_mapping)
+            session.merge(mapped_entity)
         session.flush()
 
-        domain_object = self.to_domain_object(project_mapping)
+        domain_object = self.to_domain_object(mapped_entity)
 
         session.commit()
         session.close()
@@ -44,15 +44,15 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
     def insert_many(self, domain_objects: List[T]) -> List[T]:
         session = self._session_maker()
 
-        project_mappings = list(map(self.to_entity, domain_objects))
+        mapped_entities = list(map(self.to_entity, domain_objects))
 
-        session.bulk_save_objects(project_mappings, return_defaults=True)
+        session.bulk_save_objects(mapped_entities, return_defaults=True)
 
         session.flush()
         session.commit()
         session.close()
 
-        domain_objects = list(map(self.to_domain_object, project_mappings))
+        domain_objects = list(map(self.to_domain_object, mapped_entities))
 
         return domain_objects
 
