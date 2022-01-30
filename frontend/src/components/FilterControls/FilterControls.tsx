@@ -16,6 +16,7 @@ function FilterControls(props: Props) {
     <div className={styles.filterControlContainer}>
       <div className={styles.checkboxContainer}>
         <Form.Check
+          inline
           id="All"
           label="All"
           name={"Filter"}
@@ -31,6 +32,7 @@ function FilterControls(props: Props) {
           onChange={(e) => {}}
         />
         <Form.Check
+          inline
           id="Failed"
           label="Failed"
           name={"Filter"}
@@ -46,6 +48,7 @@ function FilterControls(props: Props) {
           onChange={(e) => {}}
         />
         <Form.Check
+          inline
           id="Success"
           label="Success"
           name={"Filter"}
@@ -61,6 +64,7 @@ function FilterControls(props: Props) {
           onChange={(e) => {}}
         />
         <Form.Check
+          inline
           id="Running"
           label="Running"
           name={"Filter"}
@@ -76,6 +80,7 @@ function FilterControls(props: Props) {
           onChange={(e) => {}}
         />
         <Form.Check
+          inline
           id="Not Started"
           label={"Not Started"}
           name={"Filter"}

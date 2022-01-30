@@ -8,13 +8,6 @@
   flex-direction: column;
 }
 .checkboxContainer {
-  display: flex;
-  div {
-    margin-left: 5px;
-    input {
-      margin-left: -16px;
-    }
-  }
 }
 .failureReasonFilterControls {
   display: flex;
