@@ -19,7 +19,7 @@
     "bootstrap": "^4.5.3",
     "humanize-duration": "^3.24.0",
     "lodash": "^4.17.20",
-    "node-sass": "^6.0.0",
+    "node-sass": "^7.0.0",
     "query-string": "^7.0.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
