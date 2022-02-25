@@ -19,7 +19,6 @@
     "bootstrap": "^4.5.3",
     "humanize-duration": "^3.24.0",
     "lodash": "^4.17.20",
-    "node-sass": "^6.0.0",
     "query-string": "^7.0.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
@@ -35,6 +34,7 @@
     "react-spinners": "^0.10.4",
     "rooks": "^5.4.6",
     "s-ago": "^2.2.0",
+    "sass": "^1.49.9",
     "typescript": "^4.0.3",
     "use-http": "^1.0.22",
     "web-vitals": "^1.1.0"
