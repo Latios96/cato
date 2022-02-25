@@ -128,7 +128,7 @@ describe("TestResultComparisonResultImpl", () => {
       },
       { isEditable: { can_edit: true }, isEditableChecking: false }
     );
-    rendered.debug();
+
     fireEvent.click(rendered.getByText("Edit"));
 
     expect(dispatch).toBeCalledWith({ type: ActionType.START_EDITING });
