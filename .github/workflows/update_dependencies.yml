@@ -3,7 +3,7 @@ name: Update Dependencies
 on: [push]
 
 jobs:
-  build:
+  yarn_upgrade:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
@@ -11,7 +11,7 @@ jobs:
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
     - name: Update Dependencies
-      run: ./gradlew updateDependencies
+      run: ./gradlew :frontend:yarnUpgrade
 
     - name: Disable Git Hooks
       run: rm -rf .git/hooks
@@ -20,7 +20,29 @@ jobs:
       uses: peter-evans/create-pull-request@v3
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        branch: update/update-dependencies
-        title: Update yarn and poetry dependencies
-        commit-message: "chore(deps): Update yarn and poetry dependencies"
+        branch: update/update-yarn-dependencies
+        title: Update yarn dependencies
+        commit-message: "chore(deps): Update yarn dependencies"
         delete-branch: true
+
+  poetry_update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Update Dependencies
+        run: ./gradlew poetryUpdate
+
+      - name: Disable Git Hooks
+        run: rm -rf .git/hooks
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v3
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: update/update-poetry-dependencies
+          title: Update poetry dependencies
+          commit-message: "chore(deps): Update poetry dependencies"
+          delete-branch: true
