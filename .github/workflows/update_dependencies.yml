@@ -1,0 +1,23 @@
+name: Update Dependencies
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Grant execute permission for gradlew
+      run: chmod +x gradlew
+    - name: Update Dependencies
+      run: ./gradlew updateDependencies
+
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v3
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        branch: update/update-dependencies
+        title: Update yarn and poetry dependencies
+        commit-message: "chore(deps): Update yarn and poetry dependencies"
+        delete-branch: true
