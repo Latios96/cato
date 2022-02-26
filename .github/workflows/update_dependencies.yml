@@ -1,6 +1,8 @@
 name: Update Dependencies
 
-on: [push]
+on:
+  schedule:
+    - cron: '0 8 * * *'
 
 jobs:
   yarn_upgrade:
