@@ -30,6 +30,7 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update/update-yarn-dependencies
           title: Update yarn dependencies
+          body:  Update yarn dependencies
           commit-message: "chore(deps): Update yarn dependencies"
           delete-branch: true
 
@@ -58,5 +59,6 @@ jobs:
           token: ${{ steps.generate-token.outputs.token }}
           branch: update/update-poetry-dependencies
           title: Update poetry dependencies
+          body:  Update poetry dependencies
           commit-message: "chore(deps): Update poetry dependencies"
           delete-branch: true
