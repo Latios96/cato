@@ -134,6 +134,10 @@ task poetryBuild(type: PythonTask){
     outputs.dir('dist')
 }
 
+task poetryUpdate(type: PythonTask){
+    command = '-m poetry update'
+}
+
 install.dependsOn('pythonInstall')
 check.dependsOn('pythonUnitTests')
 check.dependsOn('pythonIntegrationTests')
@@ -196,4 +200,9 @@ task lint{
 task buildConjure{
     dependsOn 'copyConjurePythonModels'
     dependsOn ':frontend:copyConjureTypescriptModels'
+}
+
+task updateDependencies{
+    dependsOn 'poetryUpdate'
+    dependsOn ':frontend:yarnUpgrade'
 }

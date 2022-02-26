@@ -68,6 +68,10 @@ task yarnBuild(type: YarnTask) {
     outputs.dir('build')
 }
 
+task yarnUpgrade(type: YarnTask) {
+    args = ['upgrade']
+}
+
 task lintTypescript(type: YarnTask) {
     args = ['run', 'eslint',  'src', '--max-warnings=0']
     inputs.dir('src')
