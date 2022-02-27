@@ -2,6 +2,11 @@ import logging
 import os.path
 import uuid
 
+# https://github.com/opencv/opencv/issues/21326
+import os
+
+os.environ["OPENCV_IO_ENABLE_OPENEXR"] = "1"
+
 import cv2
 import numpy
 from skimage import metrics
