@@ -2,7 +2,7 @@ import React, { useCallback, useContext, useEffect, useReducer } from "react";
 import { ComparisonSettingsDto, TestResultDto } from "../../catoapimodels";
 import axios from "axios";
 import { ActionType, getInitialState, reducer } from "./reducer";
-import TestResultComparisonResultImpl from "./TestResultComparisonResultImpl";
+import { TestResultComparisonResultImpl } from "./TestResultComparisonResultImpl";
 import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
 
 interface Props {

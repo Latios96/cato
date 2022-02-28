@@ -1,11 +1,14 @@
 import { fireEvent, render } from "@testing-library/react";
-import { ComparisonMethodDto, TestResultDto } from "../../catoapimodels";
-import TestResultComparisonResultImpl from "./TestResultComparisonResultImpl";
+import { ComparisonMethodDto } from "../../catoapimodels";
+import {
+  TestResultComparisonResultImpl,
+  TestResultDtoComparisonPick,
+} from "./TestResultComparisonResultImpl";
 import { ActionType, getInitialState, State } from "./reducer";
 
 describe("TestResultComparisonResultImpl", () => {
   const setup = (
-    testResult: Pick<TestResultDto, "comparison_settings" | "error_value">,
+    testResult: TestResultDtoComparisonPick,
     state?: Partial<State>
   ) => {
     const dispatch = jest.fn();

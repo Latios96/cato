@@ -2,8 +2,8 @@ import { CanBeEdited } from "../../models/EditableInformation";
 import {
   ComparisonMethodDto,
   ComparisonSettingsDto,
-  TestResultDto,
 } from "../../catoapimodels";
+import { TestResultDtoComparisonPick } from "./TestResultComparisonResultImpl";
 
 export interface State {
   isEditing: boolean;
@@ -96,7 +96,7 @@ function getInitialMethod(comparison_settings?: ComparisonSettingsDto | null) {
 }
 
 export function getInitialState(
-  testResult: Pick<TestResultDto, "comparison_settings" | "error_value">
+  testResult: TestResultDtoComparisonPick
 ): State {
   return {
     isEditing: false,

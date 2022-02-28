@@ -12,14 +12,19 @@ import InformationIcon from "../InformationIcon/InformationIcon";
 import { Action, ActionType, State } from "./reducer";
 import Button from "../Button/Button";
 
+export type TestResultDtoComparisonPick = Pick<
+  TestResultDto,
+  "comparison_settings" | "error_value"
+>;
+
 interface Props {
-  testResult: Pick<TestResultDto, "comparison_settings" | "error_value">; // TODO use own type for this
+  testResult: TestResultDtoComparisonPick;
   state: State;
   dispatch: (action: Action) => void;
   updateComparisonSettings: (settings: ComparisonSettingsDto) => void;
 }
 
-function TestResultComparisonResultImpl(props: Props) {
+export function TestResultComparisonResultImpl(props: Props) {
   const state = props.state;
 
   const update = () =>
@@ -183,5 +188,3 @@ function toFixed(error_value?: number | "NaN" | null) {
   }
   return error_value.toFixed(3);
 }
-
-export default TestResultComparisonResultImpl;
