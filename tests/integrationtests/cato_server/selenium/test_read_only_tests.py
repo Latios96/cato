@@ -169,6 +169,8 @@ class RunView:
 
 
 class TestResultPage:
+    __test__ = False
+
     def __init__(self, stateless_test):
         self.stateless_test = stateless_test
 
@@ -357,6 +359,8 @@ class ProjectPageNavigation(ReadOnlySeleniumTest):
 
 
 class TestResultFunctionality(ReadOnlySeleniumTest):
+    __test__ = False
+
     def execute(self):
         self.navigate_to_test()
 
