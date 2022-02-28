@@ -32,9 +32,18 @@ task copyConjureTypescriptModels {
     }
 }
 
+task yarnCheckTypescript(type: YarnTask){
+    dependsOn('yarnInstallDependencies')
+    dependsOn('copyConjureTypescriptModels')
+    args = ["run","tsc","--noEmit"]
+    inputs.dir('src')
+    outputs.file('yarnCheckTypescript')
+}
+
 task yarnTest(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
     dependsOn('copyConjureTypescriptModels')
+    dependsOn('yarnCheckTypescript')
     args = ['test']
     inputs.dir('public')
     inputs.dir('src')
