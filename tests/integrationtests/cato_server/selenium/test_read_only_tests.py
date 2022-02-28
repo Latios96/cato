@@ -1,9 +1,9 @@
 import time
 
-import pytest
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.select import Select
 
+from tests.integrationtests.cato_server import selenium_test
 from tests.integrationtests.conftest import MyChromeDriver
 
 
@@ -386,6 +386,7 @@ class TestResultFunctionality(ReadOnlySeleniumTest):
         )
 
 
+@selenium_test
 def test_read_only_tests(live_server, selenium_driver, project, finished_test_result):
     test = ProjectPageShouldNavigateToProjectTest(
         live_server, selenium_driver, project, finished_test_result

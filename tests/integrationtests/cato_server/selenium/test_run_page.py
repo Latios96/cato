@@ -9,9 +9,11 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from tests.integrationtests.cato_server import selenium_test
 from tests.integrationtests.conftest import MyChromeDriver
 
 
+@selenium_test
 class TestRunOverviewPage:
     def test_navigate_back_to_project_page(
         self, live_server, selenium_driver: MyChromeDriver, run

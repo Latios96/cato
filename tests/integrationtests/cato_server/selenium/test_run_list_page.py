@@ -9,9 +9,11 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from tests.integrationtests.cato_server import selenium_test
 from tests.integrationtests.conftest import MyChromeDriver
 
 
+@selenium_test
 class TestRunListPage:
     def test_run_list_pagination(
         self,
