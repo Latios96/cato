@@ -54,7 +54,7 @@ describe("FilterControls", () => {
           filterOptionsChanged={filterChangedCallback}
         />
       );
-      expect(rendered.queryByText("Failure Reason")).toBeInTheDocument();
+      expect(rendered.getByText("Failure Reason")).toBeInTheDocument();
     });
 
     it("should not display failure reasons because its disabled", () => {

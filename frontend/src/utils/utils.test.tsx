@@ -24,6 +24,6 @@ describe("renderIf", () => {
 
   it("should render callback result", () => {
     const rendered = render(<TestingComponent value={"testvalue"} />);
-    expect(rendered.queryByTestId("test")).toBeInTheDocument();
+    expect(rendered.getByTestId("test")).toBeInTheDocument();
   });
 });
