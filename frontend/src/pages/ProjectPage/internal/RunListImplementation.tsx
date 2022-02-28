@@ -16,7 +16,7 @@ interface Props {
   runs: Page<RunDto> | undefined;
   isLoading: boolean;
   error?: Error;
-  pageChangedCallback: (pageRequest: PageRequest) => void; // TODO make the naming consistent here
+  pageChanged: (pageRequest: PageRequest) => void;
   filteredBranchesChanged: (branches: Set<string>) => void;
   branches: string[];
   selectedBranches: Set<string>;
@@ -100,7 +100,7 @@ function RunListImplementation(props: Props) {
         <div className={styles.paginationControls}>
           <SimplePaginationControls
             currentPage={props.runs}
-            pageChangedCallback={props.pageChangedCallback}
+            pageChangedCallback={props.pageChanged}
           />
         </div>
       ) : null}

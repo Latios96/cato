@@ -75,7 +75,7 @@ function RunList(props: Props) {
       runs={runs}
       isLoading={loadingRuns}
       error={errorRuns}
-      pageChangedCallback={(page) => {
+      pageChanged={(page) => {
         history.push({
           // todo can we make this better?
           search: updateQueryString(history.location.search, {

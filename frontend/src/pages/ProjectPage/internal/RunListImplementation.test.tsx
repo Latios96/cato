@@ -15,7 +15,7 @@ describe("RunListImplementation", () => {
         error={undefined}
         branches={[]}
         selectedBranches={new Set()}
-        pageChangedCallback={jest.fn()}
+        pageChanged={jest.fn()}
         filteredBranchesChanged={jest.fn()}
       />
     );
@@ -33,7 +33,7 @@ describe("RunListImplementation", () => {
         error={new Error("My error message")}
         branches={[]}
         selectedBranches={new Set()}
-        pageChangedCallback={jest.fn()}
+        pageChanged={jest.fn()}
         filteredBranchesChanged={jest.fn()}
       />
     );
@@ -82,7 +82,7 @@ describe("RunListImplementation", () => {
           error={undefined}
           branches={[]}
           selectedBranches={new Set()}
-          pageChangedCallback={jest.fn()}
+          pageChanged={jest.fn()}
           filteredBranchesChanged={jest.fn()}
         />
       </HashRouter>
