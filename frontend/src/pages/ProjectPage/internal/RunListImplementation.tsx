@@ -16,7 +16,7 @@ interface Props {
   runs: Page<RunDto> | undefined;
   isLoading: boolean;
   error?: Error;
-  pageChangedCallback: (pageRequest: PageRequest) => void;
+  pageChangedCallback: (pageRequest: PageRequest) => void; // TODO make the naming consistent here
   filteredBranchesChanged: (branches: Set<string>) => void;
   branches: string[];
   selectedBranches: Set<string>;

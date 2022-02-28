@@ -1,6 +1,5 @@
 import { act, renderHook } from "@testing-library/react-hooks";
 import { usePagination } from "./usePagination";
-import { PageRequest } from "./PageRequest";
 import {
   firstPage,
   lastPageFittingExactly,
@@ -8,6 +7,7 @@ import {
   middlePage,
   smallPage,
 } from "./PaginationTestData";
+import { PageRequest } from "./Page";
 
 describe("usePagination hook", () => {
   it("should have the initial page", () => {

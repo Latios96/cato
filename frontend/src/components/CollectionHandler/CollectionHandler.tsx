@@ -1,4 +1,4 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 
 interface Props<T> {
   data?: T[];
@@ -6,7 +6,7 @@ interface Props<T> {
   renderElements: (data: T[]) => JSX.Element[];
 }
 
-export const CollectionHandler = <T,>(props: PropsWithChildren<Props<T>>) => {
+export const CollectionHandler = <T extends {}>(props: Props<T>) => {
   return (
     <>
       {props.data && props.data.length > 0

@@ -15,6 +15,8 @@ describe("RunListImplementation", () => {
         error={undefined}
         branches={[]}
         selectedBranches={new Set()}
+        pageChangedCallback={jest.fn()}
+        filteredBranchesChanged={jest.fn()}
       />
     );
     expect(
@@ -31,6 +33,8 @@ describe("RunListImplementation", () => {
         error={new Error("My error message")}
         branches={[]}
         selectedBranches={new Set()}
+        pageChangedCallback={jest.fn()}
+        filteredBranchesChanged={jest.fn()}
       />
     );
 
@@ -48,18 +52,24 @@ describe("RunListImplementation", () => {
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
           status: RunStatusDto.SUCCESS,
+          duration: 1,
+          branch_name: "default",
         },
         {
           id: 2,
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
           status: RunStatusDto.SUCCESS,
+          duration: 1,
+          branch_name: "default",
         },
         {
           id: 3,
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
           status: RunStatusDto.SUCCESS,
+          duration: 1,
+          branch_name: "default",
         },
       ],
     };
@@ -72,6 +82,8 @@ describe("RunListImplementation", () => {
           error={undefined}
           branches={[]}
           selectedBranches={new Set()}
+          pageChangedCallback={jest.fn()}
+          filteredBranchesChanged={jest.fn()}
         />
       </HashRouter>
     );

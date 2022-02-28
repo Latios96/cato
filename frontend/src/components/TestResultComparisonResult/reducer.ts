@@ -95,12 +95,14 @@ function getInitialMethod(comparison_settings?: ComparisonSettingsDto | null) {
   return comparison_settings?.method || ComparisonMethodDto.SSIM;
 }
 
-export function getInitialState(testResult: TestResultDto) {
+export function getInitialState(
+  testResult: Pick<TestResultDto, "comparison_settings" | "error_value">
+): State {
   return {
     isEditing: false,
     isUpdating: false,
     isEditableChecking: true,
-    isEditable: false,
+    isEditable: { can_edit: false, message: "" },
     currentThreshold: getInitialThreshold(testResult.comparison_settings),
     currentMethod: getInitialMethod(testResult.comparison_settings),
     originalThreshold: getInitialThreshold(testResult.comparison_settings),

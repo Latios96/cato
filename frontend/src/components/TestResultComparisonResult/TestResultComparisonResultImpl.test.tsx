@@ -5,7 +5,7 @@ import { ActionType, getInitialState, State } from "./reducer";
 
 describe("TestResultComparisonResultImpl", () => {
   const setup = (
-    testResult: Partial<TestResultDto>,
+    testResult: Pick<TestResultDto, "comparison_settings" | "error_value">,
     state?: Partial<State>
   ) => {
     const dispatch = jest.fn();

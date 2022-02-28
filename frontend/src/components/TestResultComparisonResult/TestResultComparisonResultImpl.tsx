@@ -13,7 +13,7 @@ import { Action, ActionType, State } from "./reducer";
 import Button from "../Button/Button";
 
 interface Props {
-  testResult: TestResultDto;
+  testResult: Pick<TestResultDto, "comparison_settings" | "error_value">; // TODO use own type for this
   state: State;
   dispatch: (action: Action) => void;
   updateComparisonSettings: (settings: ComparisonSettingsDto) => void;

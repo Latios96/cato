@@ -6,7 +6,14 @@ export interface StatusPercentage {
   failed: number;
 }
 export function calculateStatusPercentage(
-  runSummaryDto: RunSummaryDto
+  runSummaryDto: Pick<
+    RunSummaryDto,
+    | "waiting_test_count"
+    | "test_count"
+    | "running_test_count"
+    | "succeeded_test_count"
+    | "failed_test_count"
+  >
 ): StatusPercentage {
   return {
     waitingToStart:
