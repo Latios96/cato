@@ -1,7 +1,6 @@
 import pytest
 
 from cato_server.domain.auth.secret_str import SecretStr
-from cato_server.domain.auth.username import Username
 
 
 def test_create_from_empty_string_should_not_work():
