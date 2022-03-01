@@ -111,7 +111,7 @@ class TestSchemaConstraints:
             repository.save(auth_user)
 
 
-class TestFindByUsername:
+class TestByUsername:
     def test_find_by_username_should_return_existing_user(self, sessionmaker_fixture):
         repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
         auth_user = AuthUser(
@@ -122,7 +122,7 @@ class TestFindByUsername:
         )
         auth_user = repository.save(auth_user)
 
-        found_user = repository.find_by_username("someuser")
+        found_user = repository.find_by_username(Username("someuser"))
 
         assert found_user == auth_user
 
@@ -132,12 +132,32 @@ class TestFindByUsername:
     ):
         repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
 
-        found_user = repository.find_by_username("someuser")
+        found_user = repository.find_by_username(Username("someuser"))
 
         assert found_user is None
 
+    def test_exists_by_username_should_return_true(self, sessionmaker_fixture):
+        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+        auth_user = AuthUser(
+            id=0,
+            username=Username("someuser"),
+            fullname=Username("User Userson"),
+            email=Email("foo@bar.com"),
+        )
+        repository.save(auth_user)
 
-class TestFindByEmail:
+        assert repository.exists_by_username(Username("someuser"))
+
+    def test_exists_by_username_should_return_false(
+        self,
+        sessionmaker_fixture,
+    ):
+        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+
+        assert not repository.find_by_username(Username("someuser"))
+
+
+class TestByEmail:
     def test_find_by_email_should_return_existing_user(self, sessionmaker_fixture):
         repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
         auth_user = AuthUser(
@@ -161,3 +181,23 @@ class TestFindByEmail:
         found_user = repository.find_by_email(Email("foo@bar.com"))
 
         assert found_user is None
+
+    def test_exists_by_email_should_return_true(self, sessionmaker_fixture):
+        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+        auth_user = AuthUser(
+            id=0,
+            username=Username("someuser"),
+            fullname=Username("User Userson"),
+            email=Email("foo@bar.com"),
+        )
+        repository.save(auth_user)
+
+        assert repository.exists_by_email(Email("foo@bar.com"))
+
+    def test_exists_by_email_should_return_false(
+        self,
+        sessionmaker_fixture,
+    ):
+        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+
+        assert not repository.exists_by_email(Email("foo@bar.com"))

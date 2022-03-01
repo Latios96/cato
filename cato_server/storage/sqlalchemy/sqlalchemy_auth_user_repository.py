@@ -60,5 +60,25 @@ class SqlAlchemyAuthUserRepository(
         session.close()
         return self._map_one_to_domain_object(query.first())
 
+    def exists_by_username(self, username: Username) -> bool:
+        session = self._session_maker()
+
+        query = session.query(self.mapping_cls()).filter(
+            self.mapping_cls().username == str(username)
+        )
+        exists = session.query(query.exists()).scalar()
+        session.close()
+        return exists
+
+    def exists_by_email(self, email: Email) -> bool:
+        session = self._session_maker()
+
+        query = session.query(self.mapping_cls()).filter(
+            self.mapping_cls().email == str(email)
+        )
+        exists = session.query(query.exists()).scalar()
+        session.close()
+        return exists
+
     def mapping_cls(self):
         return _AuthUserMapping

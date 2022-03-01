@@ -12,3 +12,9 @@ class AuthUserRepository(AbstractRepository[AuthUser, int]):
 
     def find_by_email(self, email: Email) -> Optional[AuthUser]:
         raise NotImplementedError()
+
+    def exists_by_username(self, username: Username) -> bool:
+        raise NotImplementedError()
+
+    def exists_by_email(self, email: Email) -> bool:
+        raise NotImplementedError()
