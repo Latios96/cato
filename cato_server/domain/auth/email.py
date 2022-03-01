@@ -6,7 +6,7 @@ class Email:
         value = value.strip()
         if not value:
             raise ValueError("A email address can not be empty or blank.")
-        self._value = validate_email(value, check_deliverability=False).email
+        self._value = validate_email(value.lower(), check_deliverability=False).email
 
     def __repr__(self):
         return self._value

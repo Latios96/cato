@@ -6,6 +6,7 @@ from freezegun import freeze_time
 from cato_server.authentication.session_backend import SessionBackend
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
+from cato_server.domain.auth.email import Email
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
@@ -106,6 +107,7 @@ def test_create_session(session_backend_fixture):
         id=1,
         username=Username("username"),
         fullname=Username("User Username"),
+        email=Email("foo@bar.com"),
     )
 
     session = session_backend.create_session(auth_user)

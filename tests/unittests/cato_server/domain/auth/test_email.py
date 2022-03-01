@@ -13,6 +13,10 @@ def test_create_valid_email():
     Email("foo@bar.com")
 
 
+def test_email_should_be_case_insensitive():
+    assert Email("foo@bar.com") == Email("Foo@Bar.com")
+
+
 def test_to_str():
     email = Email("foo@bar.com")
 

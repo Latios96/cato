@@ -59,6 +59,7 @@ from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
+from cato_server.domain.auth.email import Email
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
 from cato_server.schedulers.abstract_scheduler_submitter import (
@@ -552,6 +553,7 @@ def auth_user(sessionmaker_fixture):
         id=0,
         username=Username("username"),
         fullname=Username("User Username"),
+        email=Email("foo@bar.com"),
     )
     return repository.save(auth_user)
 
