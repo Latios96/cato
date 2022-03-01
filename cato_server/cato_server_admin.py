@@ -6,10 +6,9 @@ from pinject.object_graph import ObjectGraph
 import cato
 import cato_common
 import cato_server.server_logging
-from cato_common.utils.bindings import imported_modules, provide_safe
+from cato_common.utils.bindings import imported_modules
 from cato_server.admin_commands.config_template_command import ConfigTemplateCommand
 from cato_server.admin_commands.create_backup_command import CreateBackupCommand
-from cato_server.admin_commands.create_user_command import CreateUserCommand
 from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
@@ -57,14 +56,6 @@ def create_backup(path, pg_dump_executable, mode_str):
     create_backup_command.create_backup(path, pg_dump_executable, mode_str)
 
 
-def create_user(path):
-    path = get_config_path(path)
-    obj_graph = create_obj_graph(path)
-
-    create_user_command = provide_safe(obj_graph, CreateUserCommand)
-    create_user_command.create_user()
-
-
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -102,11 +93,6 @@ def main():
         help="mode for backup. Possible values are FULL (default), ONLY_DATABASE, ONLY_FILESTORAGE",
     )
 
-    create_user_parser = commands_subparser.add_parser(
-        "create-user", help="Create a new user", parents=[parent_parser]
-    )
-    create_user_parser.add_argument("--config", help="path to config.ini")
-
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -115,8 +101,6 @@ def main():
         migrate_db(args.config)
     elif args.command == "create-backup":
         create_backup(args.config, args.pg_dump_path, args.backup_mode)
-    elif args.command == "create-user":
-        create_user(args.config)
     else:
         logger.error(f"No method found to run command {args.command}")
 

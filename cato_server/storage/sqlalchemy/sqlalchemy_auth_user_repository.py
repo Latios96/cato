@@ -3,7 +3,6 @@ from typing import Optional
 from sqlalchemy import Column, Integer, Text
 
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
 from cato_server.storage.abstract.auth_user_repository import (
     AuthUserRepository,
@@ -19,7 +18,6 @@ class _AuthUserMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     username = Column(Text, nullable=False)
     fullname = Column(Text, nullable=False)
-    hashed_password = Column(Text, nullable=False)
 
 
 class SqlAlchemyAuthUserRepository(
@@ -31,7 +29,6 @@ class SqlAlchemyAuthUserRepository(
             id=domain_object.id if domain_object.id else None,
             username=str(domain_object.username),
             fullname=str(domain_object.fullname),
-            hashed_password=domain_object.hashed_password.get_secret_value(),
         )
 
     def to_domain_object(self, entity: _AuthUserMapping) -> AuthUser:
@@ -39,7 +36,6 @@ class SqlAlchemyAuthUserRepository(
             id=entity.id,
             username=Username(entity.username),
             fullname=Username(entity.fullname),
-            hashed_password=SecretStr(entity.hashed_password),
         )
 
     def find_by_username(self, username: Username) -> Optional[AuthUser]:

@@ -1,14 +1,12 @@
+import logging
 from dataclasses import dataclass
 
 from cato_server.authentication.crypto_context import CryptoContext
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
 from cato_server.storage.abstract.auth_user_repository import (
     AuthUserRepository,
 )
-
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -17,7 +15,6 @@ logger = logging.getLogger(__name__)
 class CreateUserData:
     username: Username
     fullname: Username
-    password: SecretStr
 
 
 class UsernameAlreadyExistsException(Exception):
@@ -45,15 +42,10 @@ class CreateUser:
             # Note: We consider this safe, because only already registered users should be allowed to create a new user
             raise UsernameAlreadyExistsException()
 
-        hashed_password = self._crypto_context.hash_password(
-            create_user_data.password.get_secret_value()
-        )
-
         auth_user = AuthUser(
             id=0,
             username=create_user_data.username,
             fullname=create_user_data.fullname,
-            hashed_password=SecretStr(hashed_password),
         )
         auth_user = self._auth_user_repository.save(auth_user)
 

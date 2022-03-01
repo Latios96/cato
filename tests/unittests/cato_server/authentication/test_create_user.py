@@ -16,7 +16,6 @@ from tests.utils import mock_safe
 
 USERNAME = Username("username")
 FULLNAME = Username("User Username")
-SECRET_STR = SecretStr("secret_str")
 
 
 def mocked_safe(auth_user):
@@ -40,9 +39,7 @@ def test_create_user_successfully(create_user_data_fixture):
         mock_auth_user_repository,
         mock_crypto_context,
     ) = create_user_data_fixture
-    create_user_data = CreateUserData(
-        username=USERNAME, fullname=FULLNAME, password=SECRET_STR
-    )
+    create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME)
     mock_auth_user_repository.find_by_username.return_value = None
     created_user = create_user.create_user(create_user_data)
 
@@ -50,7 +47,6 @@ def test_create_user_successfully(create_user_data_fixture):
         id=1,
         username=USERNAME,
         fullname=FULLNAME,
-        hashed_password=SecretStr("the_hash"),
     )
     mock_auth_user_repository.find_by_username.assert_called_with(USERNAME)
     mock_auth_user_repository.save.assert_called_with(
@@ -58,7 +54,6 @@ def test_create_user_successfully(create_user_data_fixture):
             id=1,
             username=USERNAME,
             fullname=FULLNAME,
-            hashed_password=SecretStr("the_hash"),
         )
     )
 
@@ -71,11 +66,9 @@ def test_create_user_should_fail_because_username_already_exists(
         mock_auth_user_repository,
         mock_crypto_context,
     ) = create_user_data_fixture
-    create_user_data = CreateUserData(
-        username=USERNAME, fullname=FULLNAME, password=SECRET_STR
-    )
+    create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME)
     mock_auth_user_repository.find_by_username.return_value = AuthUser(
-        id=1, username=USERNAME, fullname=FULLNAME, hashed_password=SECRET_STR
+        id=1, username=USERNAME, fullname=FULLNAME
     )
 
     with pytest.raises(UsernameAlreadyExistsException):

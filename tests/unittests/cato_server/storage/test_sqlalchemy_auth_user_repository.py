@@ -16,7 +16,6 @@ def test_save(sessionmaker_fixture):
         id=0,
         username=Username("someuser"),
         fullname=Username("User Userson"),
-        hashed_password=SecretStr("the_hashed_password"),
     )
 
     saved_auth_user = repository.save(auth_user)
@@ -33,23 +32,15 @@ class TestSchemaConstraints:
                 id=None,
                 username=None,
                 fullname="User Username",
-                hashed_password="the_hashed_password",
             ),
             _AuthUserMapping(
                 id=None,
                 username="someuser",
                 fullname=None,
-                hashed_password="the_hashed_password",
-            ),
-            _AuthUserMapping(
-                id=None,
-                username="someuser",
-                fullname="User Username",
-                hashed_password=None,
             ),
         ],
     )
-    def test_without_username_fullname_or_hash_should_fail(
+    def test_without_username_or_fullname_should_fail(
         self, auth_user_mapping, sessionmaker_fixture
     ):
         session = sessionmaker_fixture()
@@ -64,7 +55,6 @@ class TestSchemaConstraints:
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
-            hashed_password=SecretStr("the_hashed_password"),
         )
         repository.save(auth_user)
 
@@ -79,7 +69,6 @@ class TestSchemaConstraints:
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
-            hashed_password=SecretStr("the_hashed_password"),
         )
         repository.save(auth_user)
         auth_user.username = "someUser"
@@ -94,7 +83,6 @@ def test_find_by_username_should_return_existing_user(sessionmaker_fixture):
         id=0,
         username=Username("someuser"),
         fullname=Username("User Userson"),
-        hashed_password=SecretStr("the_hashed_password"),
     )
     auth_user = repository.save(auth_user)
 

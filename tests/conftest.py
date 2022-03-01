@@ -552,7 +552,6 @@ def auth_user(sessionmaker_fixture):
         id=0,
         username=Username("username"),
         fullname=Username("User Username"),
-        hashed_password=SecretStr("password"),
     )
     return repository.save(auth_user)
 

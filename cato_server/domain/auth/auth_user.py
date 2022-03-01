@@ -1,6 +1,5 @@
 from dataclasses import dataclass
 
-from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.username import Username
 
 
@@ -9,4 +8,3 @@ class AuthUser:
     id: int
     username: Username
     fullname: Username
-    hashed_password: SecretStr

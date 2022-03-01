@@ -106,7 +106,6 @@ def test_create_session(session_backend_fixture):
         id=1,
         username=Username("username"),
         fullname=Username("User Username"),
-        hashed_password=SecretStr("hashed password"),
     )
 
     session = session_backend.create_session(auth_user)
