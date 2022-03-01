@@ -43,16 +43,16 @@ class CreateUser:
         self._crypto_context = crypto_context
 
     def create_user(self, create_user_data: CreateUserData) -> AuthUser:
-        username_already_exists = (
-            self._auth_user_repository.find_by_username(create_user_data.username)
-            is not None
+        username_already_exists = self._auth_user_repository.exists_by_username(
+            create_user_data.username
         )
+
         if username_already_exists:
             # Note: We consider this safe, because only already registered users should be allowed to create a new user
             raise UsernameAlreadyExistsException()
 
-        email_already_exists = (
-            self._auth_user_repository.find_by_email(create_user_data.email) is not None
+        email_already_exists = self._auth_user_repository.exists_by_email(
+            create_user_data.email
         )
         if email_already_exists:
             # Note: We consider this safe, because only already registered users should be allowed to create a new user

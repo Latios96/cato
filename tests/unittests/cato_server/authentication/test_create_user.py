@@ -43,14 +43,15 @@ def test_create_user_successfully(create_user_data_fixture):
         mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
-    mock_auth_user_repository.find_by_username.return_value = None
-    mock_auth_user_repository.find_by_email.return_value = None
+    mock_auth_user_repository.exists_by_username.return_value = False
+    mock_auth_user_repository.exists_by_email.return_value = False
     created_user = create_user.create_user(create_user_data)
 
     assert created_user == AuthUser(
         id=1, username=USERNAME, fullname=FULLNAME, email=EMAIL
     )
-    mock_auth_user_repository.find_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_email.assert_called_with(EMAIL)
     mock_auth_user_repository.save.assert_called_with(
         AuthUser(id=1, username=USERNAME, fullname=FULLNAME, email=EMAIL)
     )
@@ -65,15 +66,14 @@ def test_create_user_should_fail_because_username_already_exists(
         mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
-    mock_auth_user_repository.find_by_username.return_value = AuthUser(
-        id=1, username=USERNAME, fullname=FULLNAME, email=EMAIL
-    )
-    mock_auth_user_repository.find_by_email.return_value = None
+    mock_auth_user_repository.exists_by_username.return_value = True
+    mock_auth_user_repository.exists_by_email.return_value = False
 
     with pytest.raises(UsernameAlreadyExistsException):
         create_user.create_user(create_user_data)
 
-    mock_auth_user_repository.find_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_email.assert_not_called()
     mock_auth_user_repository.save.assert_not_called()
 
 
@@ -86,13 +86,12 @@ def test_create_user_should_fail_because_email_already_exists(
         mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
-    mock_auth_user_repository.find_by_username.return_value = None
-    mock_auth_user_repository.find_by_email.return_value = AuthUser(
-        id=1, username=USERNAME, fullname=FULLNAME, email=EMAIL
-    )
+    mock_auth_user_repository.exists_by_username.return_value = False
+    mock_auth_user_repository.exists_by_email.return_value = True
 
     with pytest.raises(EmailAlreadyExistsException):
         create_user.create_user(create_user_data)
 
-    mock_auth_user_repository.find_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_username.assert_called_with(USERNAME)
+    mock_auth_user_repository.exists_by_email.assert_called_with(EMAIL)
     mock_auth_user_repository.save.assert_not_called()
