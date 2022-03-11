@@ -781,7 +781,7 @@ typing-inspect = "^0.7.1"
 
 [package.source]
 type = "git"
-url = "git@github.com:Latios96/py-typescript-generator.git"
+url = "https://github.com/Latios96/py-typescript-generator.git"
 reference = "v0.1.0"
 resolved_reference = "81a3097299ad8b53ab112331e0c991289e1e9bec"
 
@@ -1357,7 +1357,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.11"
-content-hash = "2ab04290631d12eb6c916759c01a9a4d3775426ee277b0d70a43b5d511a6abe3"
+content-hash = "ae1bda343bda0221bac585123dcb33d081bc8d7aaea98909002b01f3466ef717"
 
 [metadata.files]
 aiofiles = [
