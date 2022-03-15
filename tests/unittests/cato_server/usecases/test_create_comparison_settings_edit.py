@@ -4,6 +4,7 @@ import pytest
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
@@ -218,7 +219,7 @@ def test_can_create_should_return_true(test_result_factory):
 
     result = create_comparison_settings_edit.can_create_edit(5)
 
-    assert result == (True, None)
+    assert result == CanBeEdited.yes()
 
 
 def test_can_create_should_return_false(test_result_factory):
@@ -242,4 +243,4 @@ def test_can_create_should_return_false(test_result_factory):
 
     result = create_comparison_settings_edit.can_create_edit(5)
 
-    assert result == (False, "Can not edit test result with no output image!")
+    assert result == CanBeEdited.no("Can not edit test result with no output image!")

@@ -64,21 +64,21 @@ class TestEditBlueprint(APIRouter):
         self,
         test_result_id: int,
     ) -> Response:
-        can_edit, message = self._create_comparison_settings_edit.can_create_edit(
+        can_be_edited = self._create_comparison_settings_edit.can_create_edit(
             test_result_id
         )
 
-        return JSONResponse(content={"can_edit": can_edit, "message": message})
+        return JSONResponse(content=self._object_mapper.to_dict(can_be_edited))
 
     def can_edit_reference_image(
         self,
         test_result_id: int,
     ) -> Response:
-        can_edit, message = self._create_reference_image_edit.can_create_edit(
+        can_create_edit = self._create_reference_image_edit.can_create_edit(
             test_result_id
         )
 
-        return JSONResponse(content={"can_edit": can_edit, "message": message})
+        return JSONResponse(content=self._object_mapper.to_dict(can_create_edit))
 
     def test_edits_by_run_id(self, run_id: int, request: Request) -> Response:
         edits = self._test_edit_repository.find_by_run_id(run_id)

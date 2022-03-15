@@ -2,6 +2,7 @@ import datetime
 from typing import Tuple, Optional, cast
 
 from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
@@ -30,12 +31,14 @@ class CreateComparisonSettingsEdit:
         self._compare_image = compare_image
         self._image_repository = image_repository
 
-    def can_create_edit(self, test_result_id: int) -> Tuple[bool, Optional[str]]:
+    def can_create_edit(
+        self, test_result_id: int
+    ) -> CanBeEdited:  # todo rename to can_be_edited
         try:
             self._validate_test_result_input(test_result_id)
-            return True, None
+            return CanBeEdited.yes()
         except ValueError as e:
-            return False, str(e)
+            return CanBeEdited.no(str(e))
 
     def create_edit(
         self, test_result_id: int, comparison_settings: ComparisonSettings
