@@ -64,7 +64,7 @@ class TestEditBlueprint(APIRouter):
         self,
         test_result_id: int,
     ) -> Response:
-        can_be_edited = self._create_comparison_settings_edit.can_create_edit(
+        can_be_edited = self._create_comparison_settings_edit.can_be_edited(
             test_result_id
         )
 
@@ -74,11 +74,9 @@ class TestEditBlueprint(APIRouter):
         self,
         test_result_id: int,
     ) -> Response:
-        can_create_edit = self._create_reference_image_edit.can_create_edit(
-            test_result_id
-        )
+        can_be_edited = self._create_reference_image_edit.can_be_edited(test_result_id)
 
-        return JSONResponse(content=self._object_mapper.to_dict(can_create_edit))
+        return JSONResponse(content=self._object_mapper.to_dict(can_be_edited))
 
     def test_edits_by_run_id(self, run_id: int, request: Request) -> Response:
         edits = self._test_edit_repository.find_by_run_id(run_id)

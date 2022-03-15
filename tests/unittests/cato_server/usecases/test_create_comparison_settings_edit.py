@@ -217,7 +217,7 @@ def test_can_create_should_return_true(test_result_factory):
         mock_image_repository,
     )
 
-    result = create_comparison_settings_edit.can_create_edit(5)
+    result = create_comparison_settings_edit.can_be_edited(5)
 
     assert result == CanBeEdited.yes()
 
@@ -241,6 +241,6 @@ def test_can_create_should_return_false(test_result_factory):
         mock_image_repository,
     )
 
-    result = create_comparison_settings_edit.can_create_edit(5)
+    result = create_comparison_settings_edit.can_be_edited(5)
 
     assert result == CanBeEdited.no("Can not edit test result with no output image!")

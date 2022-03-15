@@ -30,7 +30,7 @@ class CreateReferenceImageEdit:
         self._compare_image = compare_image
         self._image_repository = image_repository
 
-    def can_create_edit(self, test_result_id: int) -> CanBeEdited:
+    def can_be_edited(self, test_result_id: int) -> CanBeEdited:
         try:
             self._validate_test_result_input(test_result_id)
             return CanBeEdited.yes()

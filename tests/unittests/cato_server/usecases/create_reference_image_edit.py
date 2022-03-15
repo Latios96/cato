@@ -14,7 +14,7 @@ from tests.utils import mock_safe
 original_reference_image_id = 9
 
 
-def test_can_create_edit_should_return_ok(test_result_factory):
+def test_can_be_edited_should_return_ok(test_result_factory):
     image = Image(
         id=1, name="test.png", original_file_id=1, channels=[], width=1920, height=1080
     )
@@ -33,12 +33,12 @@ def test_can_create_edit_should_return_ok(test_result_factory):
         mock_image_repository,
     )
 
-    result = create_reference_image_edit.can_create_edit(1)
+    result = create_reference_image_edit.can_be_edited(1)
 
     assert result == (True, None)
 
 
-def test_can_create_edit_should_return_not_ok_no_test_result_found():
+def test_can_be_edited_should_return_not_ok_no_test_result_found():
     mock_test_edit_repository = mock_safe(TestEditRepository)
     mock_test_result_repository = mock_safe(TestResultRepository)
     mock_test_result_repository.find_by_id.return_value = None
@@ -51,12 +51,12 @@ def test_can_create_edit_should_return_not_ok_no_test_result_found():
         mock_image_repository,
     )
 
-    result = create_reference_image_edit.can_create_edit(1)
+    result = create_reference_image_edit.can_be_edited(1)
 
     assert result == (False, "Could not find a test result with id 1")
 
 
-def test_can_create_edit_should_return_not_ok_no_image_output(test_result_factory):
+def test_can_be_edited_should_return_not_ok_no_image_output(test_result_factory):
     mock_test_edit_repository = mock_safe(TestEditRepository)
     mock_test_result_repository = mock_safe(TestResultRepository)
     mock_test_result_repository.find_by_id.return_value = test_result_factory(
@@ -71,12 +71,12 @@ def test_can_create_edit_should_return_not_ok_no_image_output(test_result_factor
         mock_image_repository,
     )
 
-    result = create_reference_image_edit.can_create_edit(1)
+    result = create_reference_image_edit.can_be_edited(1)
 
     assert result == (False, "Can't edit a test result which has no image_output!")
 
 
-def test_can_create_edit_should_return_not_ok_no_comparison_settings(
+def test_can_be_edited_should_return_not_ok_no_comparison_settings(
     test_result_factory,
 ):
     mock_test_edit_repository = mock_safe(TestEditRepository)
@@ -93,7 +93,7 @@ def test_can_create_edit_should_return_not_ok_no_comparison_settings(
         mock_image_repository,
     )
 
-    result = create_reference_image_edit.can_create_edit(1)
+    result = create_reference_image_edit.can_be_edited(1)
 
     assert result == (
         False,
