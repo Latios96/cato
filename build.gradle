@@ -146,7 +146,7 @@ build.dependsOn('poetryBuild')
 install.dependsOn(':frontend:yarnInstallDependencies')
 
 task formatPythonCheck(type: PythonTask){
-    command = '-m black cato cato_server tests cato_api_client cato_common --check'
+    command = '-m black cato cato_server tests cato_api_client cato_common scripts --check'
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
@@ -156,7 +156,7 @@ task formatPythonCheck(type: PythonTask){
 }
 
 task formatPython(type:PythonTask){
-    command = '-m black cato cato_server tests cato_api_client cato_common'
+    command = '-m black cato cato_server tests cato_api_client cato_common scripts '
     inputs.dir('cato')
     inputs.dir('tests')
     inputs.dir('cato_server')
@@ -205,4 +205,9 @@ task buildConjure{
 task updateDependencies{
     dependsOn 'poetryUpdate'
     dependsOn ':frontend:yarnUpgrade'
+}
+
+task generatePyTypescriptModel(type: PythonTask){
+    dependsOn 'pythonInstall'
+    command = 'scripts/generate_typescript_models.py'
 }

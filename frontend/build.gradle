@@ -32,9 +32,14 @@ task copyConjureTypescriptModels {
     }
 }
 
+task typescriptModels{
+    dependsOn('copyConjureTypescriptModels')
+    dependsOn(':generatePyTypescriptModel')
+}
+
 task yarnCheckTypescript(type: YarnTask){
     dependsOn('yarnInstallDependencies')
-    dependsOn('copyConjureTypescriptModels')
+    dependsOn('typescriptModels')
     args = ["run","tsc","--noEmit"]
     inputs.dir('src')
     outputs.file('yarnCheckTypescript')
@@ -42,7 +47,7 @@ task yarnCheckTypescript(type: YarnTask){
 
 task yarnTest(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
-    dependsOn('copyConjureTypescriptModels')
+    dependsOn('typescriptModels')
     dependsOn('yarnCheckTypescript')
     args = ['test']
     inputs.dir('public')
@@ -52,7 +57,7 @@ task yarnTest(type: YarnTask) {
 
 task yarnBuildStory(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
-    dependsOn('copyConjureTypescriptModels')
+    dependsOn('typescriptModels')
     args = ['build-storybook']
     inputs.dir('public')
     inputs.dir('src')
@@ -69,7 +74,7 @@ task yarnLokiTest(type: YarnTask) {
 
 task yarnBuild(type: YarnTask) {
     dependsOn('yarnInstallDependencies')
-    dependsOn('copyConjureTypescriptModels')
+    dependsOn('typescriptModels')
     dependsOn('yarnTest')
     args = ['build']
     inputs.dir('public')
