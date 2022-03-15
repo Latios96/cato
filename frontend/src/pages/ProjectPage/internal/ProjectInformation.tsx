@@ -2,8 +2,8 @@ import React from "react";
 import styles from "./ProjectInformation.module.scss";
 import { useFetch } from "use-http";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import Project from "../../../models/Project";
 import { Helmet } from "react-helmet";
+import { Project } from "../../../catoapimodels/catoapimodels";
 interface Props {
   projectId: number;
 }

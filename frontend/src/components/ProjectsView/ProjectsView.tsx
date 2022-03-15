@@ -1,5 +1,4 @@
 import React from "react";
-import Project from "../../models/Project";
 import styles from "./ProjectsView.module.css";
 import LinkCard from "../LinkCard/LinkCard";
 import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
@@ -13,6 +12,7 @@ import {
   LoadingStateHandler,
 } from "../LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../ErrorMessageBox/ErrorMessageBox";
+import { Project } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   fetchResult: FetchResult<Project[]>;
