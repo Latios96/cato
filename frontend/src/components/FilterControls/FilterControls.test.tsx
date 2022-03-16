@@ -1,8 +1,9 @@
 import each from "jest-each";
 import FilterControls from "./FilterControls";
 import { fireEvent, render } from "@testing-library/react";
-import { FilterOptions, StatusFilter } from "../../models/FilterOptions";
+import { FilterOptions } from "../../models/FilterOptions";
 import { TestFailureReasonDto } from "../../catoapimodels";
+import { StatusFilter } from "../../catoapimodels/catoapimodels";
 
 describe("FilterControls", () => {
   each([

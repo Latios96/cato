@@ -1,9 +1,10 @@
 import React from "react";
 import { Form } from "react-bootstrap";
 import styles from "./FilterControls.module.scss";
-import { FilterOptions, StatusFilter } from "../../models/FilterOptions";
+import { FilterOptions } from "../../models/FilterOptions";
 import { TestFailureReasonDto } from "../../catoapimodels";
 import { getNiceName } from "../../models/testFailureReasonNiceNames";
+import { StatusFilter } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   currentFilterOptions: FilterOptions;

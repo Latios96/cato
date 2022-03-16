@@ -1,6 +1,7 @@
 import queryString from "query-string";
-import { FilterOptions, StatusFilter } from "../models/FilterOptions";
+import { FilterOptions } from "../models/FilterOptions";
 import { TestFailureReasonDto } from "../catoapimodels";
+import { StatusFilter } from "../catoapimodels/catoapimodels";
 
 export function filterOptionsFromQueryString(
   theQueryString: string

@@ -1,6 +1,7 @@
 import { filterOptionsFromQueryString } from "./filterOptionUtils";
-import { FilterOptions, StatusFilter } from "../models/FilterOptions";
+import { FilterOptions } from "../models/FilterOptions";
 import { TestFailureReasonDto } from "../catoapimodels";
+import { StatusFilter } from "../catoapimodels/catoapimodels";
 
 describe("filterOptionUtils", () => {
   describe("filterOptionsFromQueryString", () => {

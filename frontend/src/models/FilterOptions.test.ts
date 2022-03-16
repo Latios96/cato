@@ -1,4 +1,5 @@
-import { FilterOptions, StatusFilter } from "./FilterOptions";
+import { FilterOptions } from "./FilterOptions";
+import { StatusFilter } from "../catoapimodels/catoapimodels";
 
 describe("FilterOptions", () => {
   it("should construct with default status filter NONE", () => {

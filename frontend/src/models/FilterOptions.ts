@@ -1,12 +1,5 @@
 import { TestFailureReasonDto } from "../catoapimodels";
-
-export enum StatusFilter {
-  NONE = "NONE",
-  NOT_STARTED = "NOT_STARTED",
-  RUNNING = "RUNNING",
-  FAILED = "FAILED",
-  SUCCESS = "SUCCESS",
-}
+import { StatusFilter } from "../catoapimodels/catoapimodels";
 
 export class FilterOptions {
   constructor(status?: StatusFilter, failureReason?: TestFailureReasonDto) {
