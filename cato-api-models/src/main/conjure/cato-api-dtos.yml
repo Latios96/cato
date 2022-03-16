@@ -62,30 +62,3 @@ types:
           running_test_count: integer
           failed_test_count: integer
           succeeded_test_count: integer
-
-      TestStatusDto:
-        values:
-          - SUCCESS
-          - FAILED
-
-      UnifiedTestStatusDto:
-        values:
-          - NOT_STARTED
-          - RUNNING
-          - SUCCESS
-          - FAILED
-
-      ImageChannelDto:
-        fields:
-          id: integer
-          name: string
-          file_id: integer
-
-      ImageDto:
-        fields:
-          id: integer
-          name: string
-          original_file_id: integer
-          channels: list<ImageChannelDto>
-          width: integer
-          height: integer

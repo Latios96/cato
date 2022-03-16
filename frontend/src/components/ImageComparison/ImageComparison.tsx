@@ -1,14 +1,14 @@
 import React, { useState } from "react";
-import { ImageDto } from "../../catoapimodels";
 import MultiChannelImageComparison from "./MultiChannelImageComparison/MultiChannelImageComparison";
 import { Button } from "react-bootstrap";
 import { Fullscreen } from "react-bootstrap-icons";
 import ImageComparisonFullScreenModal from "./ImageComparisonFullScreenModal/ImageComparisonFullScreenModal";
 import styles from "./ImageComparison.module.scss";
+import { Image } from "../../catoapimodels/catoapimodels";
 interface Props {
-  imageOutput: ImageDto | null | undefined;
-  referenceImage: ImageDto | null | undefined;
-  diffImage: ImageDto | null | undefined;
+  imageOutput: Image | null | undefined;
+  referenceImage: Image | null | undefined;
+  diffImage: Image | null | undefined;
 }
 const ImageComparison = (props: Props) => {
   const [modalIsOpen, setModalOpen] = useState(false);

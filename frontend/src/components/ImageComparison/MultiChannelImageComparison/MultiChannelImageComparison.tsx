@@ -1,16 +1,16 @@
 import React, { Component } from "react";
 import SingleChannelComparison from "../SingleChannelComparison/SingleChannelComparison";
-import { ImageDto } from "../../../catoapimodels";
 import { Form } from "react-bootstrap";
 import styles from "./MultiChannelImageComparion.module.scss";
 import { CompareModes } from "../CompareModes";
 import AlphaButton from "../AlphaButton/AlphaButton";
 import SingleImageDisplay from "../SingleImageDisplay/SingleImageDisplay";
+import { Image } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
-  imageOutput: ImageDto | null | undefined;
-  referenceImage: ImageDto | null | undefined;
-  diffImage: ImageDto | null | undefined;
+  imageOutput: Image | null | undefined;
+  referenceImage: Image | null | undefined;
+  diffImage: Image | null | undefined;
   id: string;
 }
 
@@ -51,9 +51,9 @@ class MultiChannelImageComparison extends Component<Props, State> {
   }
 
   renderImageComparison = (
-    imageOutput: ImageDto | null | undefined,
-    referenceImage: ImageDto | null | undefined,
-    diffImage: ImageDto | null | undefined
+    imageOutput: Image | null | undefined,
+    referenceImage: Image | null | undefined,
+    diffImage: Image | null | undefined
   ) => {
     const imageOutputOrReferenceImage = this.getDefined(
       imageOutput,
@@ -165,7 +165,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     );
   };
 
-  channelFileIdByName = (image: ImageDto | null | undefined, name: string) => {
+  channelFileIdByName = (image: Image | null | undefined, name: string) => {
     if (!image) {
       return "0";
     }
@@ -176,7 +176,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     return channel.file_id;
   };
 
-  channelByName = (image: ImageDto, name: string) => {
+  channelByName = (image: Image, name: string) => {
     let index = image.channels.findIndex((ch) => {
       return ch.name === name;
     });
@@ -217,8 +217,8 @@ class MultiChannelImageComparison extends Component<Props, State> {
   };
 
   getDefined = (
-    first: ImageDto | null | undefined,
-    second: ImageDto | null | undefined
+    first: Image | null | undefined,
+    second: Image | null | undefined
   ) => {
     return first ? first : second;
   };

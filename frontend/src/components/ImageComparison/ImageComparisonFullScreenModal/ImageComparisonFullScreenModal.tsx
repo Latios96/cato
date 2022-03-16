@@ -2,16 +2,16 @@ import React from "react";
 import Modal from "react-modal";
 import { X } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
-import { ImageDto } from "../../../catoapimodels";
 import MultiChannelImageComparison from "../MultiChannelImageComparison/MultiChannelImageComparison";
 import styles from "./ImageComparisonFullScreenModal.module.scss";
+import { Image } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
   modalIsOpen: boolean;
   onCloseRequest: () => void;
-  imageOutput: ImageDto | null | undefined;
-  referenceImage: ImageDto | null | undefined;
-  diffImage: ImageDto | null | undefined;
+  imageOutput: Image | null | undefined;
+  referenceImage: Image | null | undefined;
+  diffImage: Image | null | undefined;
 }
 
 const ImageComparisonFullScreenModal = (props: Props) => {

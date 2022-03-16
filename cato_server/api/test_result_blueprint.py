@@ -1,14 +1,10 @@
 import logging
 from http.client import BAD_REQUEST
 
-from cato_api_models.catoapimodels import (
-    ImageChannelDto,
-)
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from cato_common.domain.image import ImageChannel
 from cato_common.domain.output import Output
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_identifier import TestIdentifier
