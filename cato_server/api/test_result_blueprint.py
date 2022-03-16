@@ -178,7 +178,7 @@ class TestResultsBlueprint(APIRouter):
                 TestResultShortSummaryDto(
                     id=test_result.id,
                     name=test_result.test_name,
-                    test_identifier=str(test_result.test_identifier),
+                    test_identifier=test_result.test_identifier,
                     unified_test_status=test_result.unified_test_status,
                     thumbnail_file_id=test_result.thumbnail_file_id,
                 )
@@ -203,10 +203,8 @@ class TestResultsBlueprint(APIRouter):
                 TestResultShortSummaryDto(
                     id=test_result.id,
                     name=test_result.test_name,
-                    test_identifier=str(test_result.test_identifier),
-                    unified_test_status=UnifiedTestStatusDto(
-                        test_result.unified_test_status.value
-                    ),
+                    test_identifier=test_result.test_identifier,
+                    unified_test_status=test_result.unified_test_status,
                     thumbnail_file_id=test_result.thumbnail_file_id,
                 )
             )

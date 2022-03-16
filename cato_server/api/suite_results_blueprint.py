@@ -136,9 +136,7 @@ class SuiteResultsBlueprint(APIRouter):
                 TestResultShortSummaryDto(
                     id=test.id,
                     name=test.test_name,
-                    test_identifier=str(
-                        test.test_identifier
-                    ),  # todo we can use TestIdentifier type here, this will be handled by object mapper
+                    test_identifier=test.test_identifier,
                     unified_test_status=test.unified_test_status,
                     thumbnail_file_id=test.thumbnail_file_id,
                 )
