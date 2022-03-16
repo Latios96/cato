@@ -7,6 +7,7 @@ from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.project import Project
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.dtos.suite_result_dto import SuiteResultDto
 from cato_common.dtos.test_result_dto import TestResultDto
@@ -26,6 +27,7 @@ if __name__ == "__main__":
             SuiteResultDto,
             TestResultDto,
             RunSummaryDto,
+            CreateFullRunDto,
         ]
     ).with_type_overrides({TestIdentifier: str, BranchName: str}).to_file(
         Path(__file__).parent.parent

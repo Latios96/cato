@@ -2,15 +2,15 @@ import datetime
 
 from freezegun import freeze_time
 
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-    TestSuiteForRunCreation,
-    TestForRunCreation,
-    ComparisonSettingsDto,
-    ComparisonMethodDto,
-)
+from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
+from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.dtos.create_full_run_dto import (
+    TestSuiteForRunCreation,
+    TestForRunCreation,
+    CreateFullRunDto,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
 )
@@ -31,12 +31,10 @@ TEST_SUITES = [
         tests=[
             TestForRunCreation(
                 test_command="cmd",
-                test_identifier="test/identifier",
+                test_identifier=TestIdentifier.from_string("test/identifier"),
                 test_name="test_name",
                 test_variables={},
-                comparison_settings=ComparisonSettingsDto(
-                    method=ComparisonMethodDto.SSIM, threshold=0.8
-                ),
+                comparison_settings=ComparisonSettings.default(),
             )
         ],
     )
@@ -93,7 +91,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
         CreateFullRunDto(
             project_id=project.id,
             test_suites=TEST_SUITES,
-            branch_name="main",
+            branch_name=BranchName("main"),
         )
     )
 

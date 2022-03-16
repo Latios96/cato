@@ -13,15 +13,13 @@ from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-    TestSuiteForRunCreation,
-    TestForRunCreation,
-    ComparisonSettingsDto,
-    ComparisonMethodDto,
-)
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.dtos.create_full_run_dto import (
+    TestForRunCreation,
+    TestSuiteForRunCreation,
+    CreateFullRunDto,
+)
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 logger = logging.getLogger(__name__)
@@ -69,13 +67,10 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 tests.append(
                     TestForRunCreation(
                         test_name=test.name,
-                        test_identifier=str(TestIdentifier(test_suite.name, test.name)),
+                        test_identifier=TestIdentifier(test_suite.name, test.name),
                         test_command=test.command,
                         test_variables=test.variables,
-                        comparison_settings=ComparisonSettingsDto(
-                            method=ComparisonMethodDto(test.comparison_settings.method),
-                            threshold=test.comparison_settings.threshold,
-                        ),
+                        comparison_settings=test.comparison_settings,
                     )
                 )
             suites.append(
@@ -89,9 +84,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         branch_name = self._branch_detector.detect_branch(config.resource_path)
 
         create_run_dto = CreateFullRunDto(
-            project_id=project.id,
-            test_suites=suites,
-            branch_name=branch_name.name if branch_name else None,
+            project_id=project.id, test_suites=suites, branch_name=branch_name
         )
         suite_count = len(suites)
         test_count = sum(map(lambda x: len(x.tests), suites))

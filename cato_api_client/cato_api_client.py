@@ -9,9 +9,6 @@ import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus
 from cato_api_client.http_template import AbstractHttpTemplate
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-)
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
@@ -23,6 +20,7 @@ from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.mappers.object_mapper import ObjectMapper

@@ -3,13 +3,12 @@ import logging
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_api_models.catoapimodels import CreateFullRunDto
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult
-from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -63,9 +62,7 @@ class CreateRunUsecase:
                         id=0,
                         suite_result_id=suite_result.id,
                         test_name=test_dto.test_name,
-                        test_identifier=TestIdentifier.from_string(
-                            test_dto.test_identifier
-                        ),
+                        test_identifier=test_dto.test_identifier,
                         test_command=test_dto.test_command,
                         test_variables=test_dto.test_variables,
                         unified_test_status=UnifiedTestStatus.NOT_STARTED,
@@ -90,9 +87,7 @@ class CreateRunUsecase:
 
     def _get_branch_name(self, create_run_dto):
         branch_name = (
-            BranchName(create_run_dto.branch_name)
-            if create_run_dto.branch_name
-            else DEFAULT_BRANCH
+            create_run_dto.branch_name if create_run_dto.branch_name else DEFAULT_BRANCH
         )
         return branch_name
 

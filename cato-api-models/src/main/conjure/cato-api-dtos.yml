@@ -7,32 +7,3 @@ types:
           cpu_name: string
           cores: integer
           memory: double
-
-      ComparisonMethodDto:
-        values:
-          - SSIM
-
-      ComparisonSettingsDto:
-        fields:
-          method: ComparisonMethodDto
-          threshold: double
-
-      TestForRunCreation:
-        fields:
-          test_name: string
-          test_identifier: string
-          test_command: string
-          test_variables: map<string, string>
-          comparison_settings: ComparisonSettingsDto
-
-      TestSuiteForRunCreation:
-        fields:
-          suite_name: string
-          suite_variables: map<string, string>
-          tests: list<TestForRunCreation>
-
-      CreateFullRunDto:
-        fields:
-          project_id: integer
-          test_suites: list<TestSuiteForRunCreation>
-          branch_name: optional<string>

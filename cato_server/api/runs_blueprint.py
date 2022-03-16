@@ -1,13 +1,12 @@
 import logging
 from http.client import BAD_REQUEST
 
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-)
+
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
+from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.run_dto import RunDto
 from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper

@@ -1,7 +1,7 @@
-import { ComparisonMethodDto } from "../../catoapimodels";
 import { TestResultDtoComparisonPick } from "./TestResultComparisonResultImpl";
 import {
   CanBeEdited,
+  ComparisonMethod,
   ComparisonSettings,
 } from "../../catoapimodels/catoapimodels";
 
@@ -90,7 +90,7 @@ function getInitialThreshold(comparison_settings?: ComparisonSettings) {
 }
 
 function getInitialMethod(comparison_settings?: ComparisonSettings) {
-  return comparison_settings?.method || ComparisonMethodDto.SSIM;
+  return comparison_settings?.method || ComparisonMethod.SSIM;
 }
 
 export function getInitialState(

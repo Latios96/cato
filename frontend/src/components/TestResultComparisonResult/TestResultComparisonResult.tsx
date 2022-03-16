@@ -1,10 +1,12 @@
 import React, { useCallback, useContext, useEffect, useReducer } from "react";
-import { ComparisonSettingsDto } from "../../catoapimodels";
 import axios from "axios";
 import { ActionType, getInitialState, reducer } from "./reducer";
 import { TestResultComparisonResultImpl } from "./TestResultComparisonResultImpl";
 import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
-import { TestResultDto } from "../../catoapimodels/catoapimodels";
+import {
+  ComparisonSettings,
+  TestResultDto,
+} from "../../catoapimodels/catoapimodels";
 
 interface Props {
   testResult: TestResultDto;
@@ -47,9 +49,7 @@ function TestResultComparisonResult(props: Props) {
     props.testResult.comparison_settings,
   ]);
 
-  const updateComparisonSettings = (
-    comparisonSettings: ComparisonSettingsDto
-  ) => {
+  const updateComparisonSettings = (comparisonSettings: ComparisonSettings) => {
     dispatch({ type: ActionType.UPDATING_START });
     axios
       .post("/api/v1/test_edits/comparison_settings", {

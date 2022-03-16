@@ -15,14 +15,6 @@ from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-    TestSuiteForRunCreation,
-    TestForRunCreation,
-    MachineInfoDto,
-    ComparisonMethodDto,
-    ComparisonSettingsDto,
-)
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image
 from cato_common.domain.machine_info import MachineInfo
@@ -31,6 +23,11 @@ from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.create_full_run_dto import (
+    CreateFullRunDto,
+    TestSuiteForRunCreation,
+    TestForRunCreation,
+)
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from tests.utils import mock_safe
 
@@ -125,18 +122,18 @@ class TestTestExecutionDbReporter:
                         tests=[
                             TestForRunCreation(
                                 test_command="my_command",
-                                test_identifier="my_suite/my_test",
+                                test_identifier=TestIdentifier.from_string(
+                                    "my_suite/my_test"
+                                ),
                                 test_name="my_test",
                                 test_variables={},
-                                comparison_settings=ComparisonSettingsDto(
-                                    method=ComparisonMethodDto.SSIM, threshold=0.8
-                                ),
+                                comparison_settings=ComparisonSettings.default(),
                             )
                         ],
                         suite_variables={},
                     )
                 ],
-                branch_name="my_branch",
+                branch_name=BranchName("my_branch"),
             )
         )
         assert test_context.test_execution_db_reporter._run_id == 5

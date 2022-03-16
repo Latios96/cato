@@ -1,8 +1,4 @@
 import React from "react";
-import {
-  ComparisonMethodDto,
-  ComparisonSettingsDto,
-} from "../../catoapimodels";
 import styles from "./TestResultComparisonResult.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
 import { Form } from "react-bootstrap";
@@ -10,7 +6,11 @@ import Spinner from "../Spinner/Spinner";
 import InformationIcon from "../InformationIcon/InformationIcon";
 import { Action, ActionType, State } from "./reducer";
 import Button from "../Button/Button";
-import { TestResultDto } from "../../catoapimodels/catoapimodels";
+import {
+  ComparisonMethod,
+  ComparisonSettings,
+  TestResultDto,
+} from "../../catoapimodels/catoapimodels";
 
 export type TestResultDtoComparisonPick = Pick<
   TestResultDto,
@@ -21,7 +21,7 @@ interface Props {
   testResult: TestResultDtoComparisonPick;
   state: State;
   dispatch: (action: Action) => void;
-  updateComparisonSettings: (settings: ComparisonSettingsDto) => void;
+  updateComparisonSettings: (settings: ComparisonSettings) => void;
 }
 
 export function TestResultComparisonResultImpl(props: Props) {
@@ -30,9 +30,9 @@ export function TestResultComparisonResultImpl(props: Props) {
   const update = () =>
     props.updateComparisonSettings({
       method:
-        state.currentMethod === ComparisonMethodDto.SSIM
-          ? ComparisonMethodDto.SSIM
-          : ComparisonMethodDto.SSIM,
+        state.currentMethod === ComparisonMethod.SSIM
+          ? ComparisonMethod.SSIM
+          : ComparisonMethod.SSIM,
       threshold: parseFloat(state.currentThreshold),
     });
 
@@ -54,7 +54,7 @@ export function TestResultComparisonResultImpl(props: Props) {
                         value={state.currentMethod}
                         data-testid={"edit-comparison-settings-method"}
                       >
-                        {Object.values(ComparisonMethodDto).map((v) => {
+                        {Object.values(ComparisonMethod).map((v) => {
                           return <option key={v}>{v}</option>;
                         })}
                       </Form.Control>

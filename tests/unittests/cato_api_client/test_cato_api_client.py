@@ -8,14 +8,7 @@ from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
-from cato_api_models.catoapimodels import (
-    CreateFullRunDto,
-    TestSuiteForRunCreation,
-    TestForRunCreation,
-    MachineInfoDto,
-    ComparisonMethodDto,
-    ComparisonSettingsDto,
-)
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel
@@ -28,6 +21,11 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.create_full_run_dto import (
+    CreateFullRunDto,
+    TestSuiteForRunCreation,
+    TestForRunCreation,
+)
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 
@@ -235,17 +233,15 @@ def test_create_run_success(cato_api_client, project):
                 tests=[
                     TestForRunCreation(
                         test_command="cmd",
-                        test_identifier="test/identifier",
+                        test_identifier=TestIdentifier.from_string("test/identifier"),
                         test_name="test_name",
                         test_variables={},
-                        comparison_settings=ComparisonSettingsDto(
-                            method=ComparisonMethodDto.SSIM, threshold=0.8
-                        ),
+                        comparison_settings=ComparisonSettings.default(),
                     )
                 ],
             )
         ],
-        branch_name="default",
+        branch_name=BranchName("default"),
     )
     run = cato_api_client.create_run(dto)
     assert run.id == project.id
@@ -261,17 +257,15 @@ def test_create_run_failure(cato_api_client):
                 tests=[
                     TestForRunCreation(
                         test_command="cmd",
-                        test_identifier="test/identifier",
+                        test_identifier=TestIdentifier.from_string("test/identifier"),
                         test_name="test_name",
                         test_variables={},
-                        comparison_settings=ComparisonSettingsDto(
-                            method=ComparisonMethodDto.SSIM, threshold=0.8
-                        ),
+                        comparison_settings=ComparisonSettings.default(),
                     )
                 ],
             )
         ],
-        branch_name="default",
+        branch_name=BranchName("default"),
     )
     with pytest.raises(ValueError):
         cato_api_client.create_run(dto)
