@@ -1,5 +1,6 @@
 import datetime
-from typing import Tuple, Optional, cast
+import logging
+from typing import cast
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.can_be_edited import CanBeEdited
@@ -12,8 +13,6 @@ from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.compare_image import CompareImage
-
-import logging
 
 logger = logging.getLogger(__name__)
 

@@ -1,18 +1,17 @@
 import datetime
-from typing import Tuple, Optional, cast
+import logging
+from typing import Tuple, cast
 
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.image import Image
-from cato_common.domain.test_result import TestResult
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
+from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.utils.typing import safe_unwrap
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.compare_image import CompareImage
-
-import logging
 
 logger = logging.getLogger(__name__)
 
