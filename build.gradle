@@ -210,4 +210,5 @@ task updateDependencies{
 task generatePyTypescriptModel(type: PythonTask){
     dependsOn 'pythonInstall'
     command = 'scripts/generate_typescript_models.py'
+    mustRunAfter(":frontend:copyConjureTypescriptModels")
 }
