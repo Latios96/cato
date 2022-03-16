@@ -36,19 +36,3 @@ types:
           project_id: integer
           test_suites: list<TestSuiteForRunCreation>
           branch_name: optional<string>
-
-      RunStatusDto:
-        values:
-          - NOT_STARTED
-          - RUNNING
-          - SUCCESS
-          - FAILED
-
-      RunDto:
-        fields:
-          id: integer
-          project_id: integer
-          started_at: datetime
-          status: RunStatusDto
-          duration: double
-          branch_name: string

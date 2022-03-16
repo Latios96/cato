@@ -4,7 +4,6 @@ import {
   PageRequest,
   requestFirstPageOfSize,
 } from "../../../components/Pagination/Page";
-import { RunDto } from "../../../catoapimodels";
 import RunListImplementation from "./RunListImplementation";
 import { useReFetch } from "../../../hooks/useReFetch";
 import { useHistory } from "react-router-dom";
@@ -14,6 +13,7 @@ import {
   updateQueryString,
 } from "../../../utils/queryStringUtils";
 import { fromCommaSeparatedString, toCommaSeparatedString } from "./utils";
+import { RunDto } from "../../../catoapimodels/catoapimodels";
 interface Props {
   projectId: number;
 }

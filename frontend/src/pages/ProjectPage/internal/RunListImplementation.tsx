@@ -3,13 +3,13 @@ import styles from "./RunList.module.scss";
 import RunStatus from "../../../components/Status/RunStatus";
 import { Link } from "react-router-dom";
 import { formatDuration, formatTime } from "../../../utils/dateUtils";
-import { RunDto } from "../../../catoapimodels";
 import { Page, PageRequest } from "../../../components/Pagination/Page";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
 import { SelectInput } from "../../../components/Inputs/Select/SelectInput";
+import { RunDto } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
   projectId: number;

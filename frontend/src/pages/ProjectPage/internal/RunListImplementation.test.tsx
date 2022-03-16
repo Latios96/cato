@@ -2,8 +2,8 @@ import RunListImplementation from "./RunListImplementation";
 import React from "react";
 import { render } from "@testing-library/react";
 import { Page } from "../../../components/Pagination/Page";
-import { RunDto, RunStatusDto } from "../../../catoapimodels";
 import { HashRouter } from "react-router-dom";
+import { RunDto, RunStatus } from "../../../catoapimodels/catoapimodels";
 
 describe("RunListImplementation", () => {
   it("should display a loading skeletion while loading", () => {
@@ -51,7 +51,7 @@ describe("RunListImplementation", () => {
           id: 1,
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
-          status: RunStatusDto.SUCCESS,
+          status: RunStatus.SUCCESS,
           duration: 1,
           branch_name: "default",
         },
@@ -59,7 +59,7 @@ describe("RunListImplementation", () => {
           id: 2,
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
-          status: RunStatusDto.SUCCESS,
+          status: RunStatus.SUCCESS,
           duration: 1,
           branch_name: "default",
         },
@@ -67,7 +67,7 @@ describe("RunListImplementation", () => {
           id: 3,
           project_id: 2,
           started_at: "2021-08-05T19:10:52.815332",
-          status: RunStatusDto.SUCCESS,
+          status: RunStatus.SUCCESS,
           duration: 1,
           branch_name: "default",
         },
