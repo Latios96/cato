@@ -6,6 +6,7 @@ from starlette.responses import Response, JSONResponse
 
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_server.api.dtos.test_edit_count import TestEditCount
 from cato_server.api.validators.create_test_edits_validators import (
     CreateComparisonSettingsEditValidator,
     CreateReferenceImageEditValidator,
@@ -91,7 +92,7 @@ class TestEditBlueprint(APIRouter):
     def has_edits_to_sync_by_run_id(self, run_id: int, request: Request) -> Response:
         result = self._test_edit_repository.edits_to_sync_by_run_id_count(run_id)
 
-        return JSONResponse(content={"count": result})
+        return JSONResponse(self._object_mapper.to_dict(TestEditCount(count=result)))
 
     async def create_comparison_settings_edit(self, request: Request) -> Response:
         request_json = await request.json()
