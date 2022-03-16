@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 import FinishedTestResultComponent from "./FinishedTestResultComponent";
 import WaitingOrRunningTestResultComponent from "./WaitingOrRunningTestResultComponent";
-import { TestResultDto } from "../../catoapimodels";
 import TestResultBreadCrumb from "../TestResultBreadCrumb/TestResultBreadCrumb";
 import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
+import { TestResultDto } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   resultId: number;

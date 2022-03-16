@@ -1,10 +1,10 @@
 import { fireEvent, render } from "@testing-library/react";
-import { ComparisonMethodDto } from "../../catoapimodels";
 import {
   TestResultComparisonResultImpl,
   TestResultDtoComparisonPick,
 } from "./TestResultComparisonResultImpl";
 import { ActionType, getInitialState, State } from "./reducer";
+import { ComparisonMethod } from "../../catoapimodels/catoapimodels";
 
 describe("TestResultComparisonResultImpl", () => {
   const setup = (
@@ -26,8 +26,8 @@ describe("TestResultComparisonResultImpl", () => {
 
   it("should display a placeholder for non existing comparison settings and error value", () => {
     const { rendered } = setup({
-      comparison_settings: null,
-      error_value: null,
+      comparison_settings: undefined,
+      error_value: undefined,
     });
 
     expect(rendered.getByTestId("comparison-method-method")).toHaveTextContent(
@@ -42,7 +42,7 @@ describe("TestResultComparisonResultImpl", () => {
   it("should render the comparison settings and error value", () => {
     const { rendered } = setup({
       comparison_settings: {
-        method: ComparisonMethodDto.SSIM,
+        method: ComparisonMethod.SSIM,
         threshold: 0.9,
       },
       error_value: 1.5,
@@ -60,7 +60,7 @@ describe("TestResultComparisonResultImpl", () => {
   it("should display the edit button disabled by default", () => {
     const { rendered } = setup({
       comparison_settings: {
-        method: ComparisonMethodDto.SSIM,
+        method: ComparisonMethod.SSIM,
         threshold: 0.9,
       },
       error_value: 1.5,
@@ -74,7 +74,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -89,7 +89,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -105,7 +105,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -124,7 +124,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered, dispatch } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -141,7 +141,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -164,7 +164,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered, dispatch } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -189,7 +189,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered, dispatch } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -206,7 +206,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered, dispatch } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,
@@ -226,7 +226,7 @@ describe("TestResultComparisonResultImpl", () => {
     const { rendered, updateComparisonSettings } = setup(
       {
         comparison_settings: {
-          method: ComparisonMethodDto.SSIM,
+          method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
         error_value: 1.5,

@@ -254,8 +254,8 @@ def test_get_test_result_by_id(client, test_result):
         "id": 1,
         "diff_image": {
             "channels": [
-                {"file_id": 1, "id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "name": "alpha"},
+                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
             ],
             "height": 1080,
             "id": 1,
@@ -265,8 +265,8 @@ def test_get_test_result_by_id(client, test_result):
         },
         "image_output": {
             "channels": [
-                {"file_id": 1, "id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "name": "alpha"},
+                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
@@ -278,8 +278,8 @@ def test_get_test_result_by_id(client, test_result):
         "message": "success",
         "reference_image": {
             "channels": [
-                {"file_id": 1, "id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "name": "alpha"},
+                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
@@ -315,8 +315,8 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
         "diff_image": None,
         "image_output": {
             "channels": [
-                {"file_id": 1, "id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "name": "alpha"},
+                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
@@ -328,8 +328,8 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
         "message": "success",
         "reference_image": {
             "channels": [
-                {"file_id": 1, "id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "name": "alpha"},
+                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
+                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",

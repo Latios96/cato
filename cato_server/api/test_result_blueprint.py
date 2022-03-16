@@ -1,27 +1,21 @@
 import logging
 from http.client import BAD_REQUEST
-from typing import Optional
 
+from cato_api_models.catoapimodels import (
+    ImageChannelDto,
+)
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from cato_api_models.catoapimodels import (
-    TestResultDto,
-    ImageDto,
-    ImageChannelDto,
-    UnifiedTestStatusDto,
-    MachineInfoDto,
-    ComparisonSettingsDto,
-    ComparisonMethodDto,
-)
 from cato_common.domain.image import ImageChannel
 from cato_common.domain.output import Output
-from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_common.dtos.test_result_dto import TestResultDto
 from cato_common.dtos.test_result_short_summary_dto import TestResultShortSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
@@ -216,60 +210,27 @@ class TestResultsBlueprint(APIRouter):
         if not result:
             return Response(status_code=404)
 
-        image_output_dto = self._map_to_image_dto(result.image_output)
-        reference_image_dto = self._map_to_image_dto(result.reference_image)
-        diff_image_dto = self._map_to_image_dto(result.diff_image)
-
         test_result_dto = TestResultDto(
             id=result.id,
             suite_result_id=result.suite_result_id,
             test_name=result.test_name,
-            test_identifier=str(result.test_identifier),
+            test_identifier=result.test_identifier,
             test_command=result.test_command,
             test_variables=result.test_variables,
-            machine_info=MachineInfoDto(
-                cpu_name=result.machine_info.cpu_name,
-                cores=result.machine_info.cores,
-                memory=result.machine_info.memory,
-            )
-            if result.machine_info
-            else None,
-            unified_test_status=UnifiedTestStatusDto(result.unified_test_status.value),
+            machine_info=result.machine_info,
+            unified_test_status=result.unified_test_status,
             seconds=result.seconds if result.seconds is not None else 0,
             message=result.message if result.message else None,
-            image_output=image_output_dto,
-            reference_image=reference_image_dto,
-            diff_image=diff_image_dto,
-            started_at=result.started_at.isoformat() if result.started_at else None,
-            finished_at=result.finished_at.isoformat() if result.finished_at else None,
-            comparison_settings=ComparisonSettingsDto(
-                method=ComparisonMethodDto(result.comparison_settings.method.value),
-                threshold=result.comparison_settings.threshold,
-            )
-            if result.comparison_settings
-            else None,
+            image_output=self._image_repository.find_by_id(result.image_output),
+            reference_image=self._image_repository.find_by_id(result.reference_image),
+            diff_image=self._image_repository.find_by_id(result.diff_image),
+            started_at=result.started_at,
+            finished_at=result.finished_at,
+            comparison_settings=result.comparison_settings,
             error_value=result.error_value,
             thumbnail_file_id=result.thumbnail_file_id,
         )
         return JSONResponse(content=self._object_mapper.to_dict(test_result_dto))
-
-    def _map_to_image_dto(self, image_output: int) -> Optional[ImageDto]:
-        image = self._image_repository.find_by_id(image_output)
-        if image:
-            return ImageDto(
-                id=image.id,
-                name=image.name,
-                original_file_id=image.original_file_id,
-                channels=list(map(self._to_channel_dto, image.channels)),
-                width=image.width,
-                height=image.height,
-            )
-        return None
-
-    def _to_channel_dto(self, channel: ImageChannel) -> ImageChannelDto:
-        return ImageChannelDto(
-            id=channel.id, name=channel.name, file_id=channel.file_id
-        )
 
     async def finish_test_result(self, request: Request) -> Response:
         request_json = await request.json()

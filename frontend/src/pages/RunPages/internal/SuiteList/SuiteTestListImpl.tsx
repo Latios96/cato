@@ -1,4 +1,3 @@
-import { TestResultDto } from "../../../../catoapimodels";
 import styles from "./SuiteListEntry.module.scss";
 import {
   DataLoadedState,
@@ -11,6 +10,7 @@ import Skeleton from "react-loading-skeleton";
 import TestStatus from "../../../../components/Status/TestStatus";
 import React from "react";
 import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
+import { TestResultDto } from "../../../../catoapimodels/catoapimodels";
 interface Props {
   loading: boolean;
   error?: Error;

@@ -89,24 +89,3 @@ types:
           channels: list<ImageChannelDto>
           width: integer
           height: integer
-
-      TestResultDto:
-        fields:
-          id: integer
-          suite_result_id: integer
-          test_name: string
-          test_identifier: string
-          test_command: string
-          test_variables: map<string, string>
-          machine_info: MachineInfoDto
-          unified_test_status: UnifiedTestStatusDto
-          seconds: optional<double>
-          message: optional<string>
-          image_output: optional<ImageDto>
-          reference_image: optional<ImageDto>
-          diff_image: optional<ImageDto>
-          started_at: optional<datetime>
-          finished_at: optional<datetime>
-          comparison_settings: optional<ComparisonSettingsDto>
-          error_value: optional<double>
-          thumbnail_file_id: optional<integer>

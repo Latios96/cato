@@ -1,9 +1,9 @@
-import {
-  ComparisonMethodDto,
-  ComparisonSettingsDto,
-} from "../../catoapimodels";
+import { ComparisonMethodDto } from "../../catoapimodels";
 import { TestResultDtoComparisonPick } from "./TestResultComparisonResultImpl";
-import { CanBeEdited } from "../../catoapimodels/catoapimodels";
+import {
+  CanBeEdited,
+  ComparisonSettings,
+} from "../../catoapimodels/catoapimodels";
 
 export interface State {
   isEditing: boolean;
@@ -82,16 +82,14 @@ export function reducer(state: State, action: Action) {
       throw new Error();
   }
 }
-function getInitialThreshold(
-  comparison_settings?: ComparisonSettingsDto | null
-) {
-  if (comparison_settings && comparison_settings.threshold !== "NaN") {
+function getInitialThreshold(comparison_settings?: ComparisonSettings) {
+  if (comparison_settings) {
     return comparison_settings.threshold.toFixed(3);
   }
   return "0.8";
 }
 
-function getInitialMethod(comparison_settings?: ComparisonSettingsDto | null) {
+function getInitialMethod(comparison_settings?: ComparisonSettings) {
   return comparison_settings?.method || ComparisonMethodDto.SSIM;
 }
 

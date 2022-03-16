@@ -2,7 +2,6 @@ import React from "react";
 import {
   ComparisonMethodDto,
   ComparisonSettingsDto,
-  TestResultDto,
 } from "../../catoapimodels";
 import styles from "./TestResultComparisonResult.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
@@ -11,6 +10,7 @@ import Spinner from "../Spinner/Spinner";
 import InformationIcon from "../InformationIcon/InformationIcon";
 import { Action, ActionType, State } from "./reducer";
 import Button from "../Button/Button";
+import { TestResultDto } from "../../catoapimodels/catoapimodels";
 
 export type TestResultDtoComparisonPick = Pick<
   TestResultDto,
@@ -167,8 +167,7 @@ export function TestResultComparisonResultImpl(props: Props) {
               <tr>
                 <td>Error value</td>
                 <td data-testid={"error-value"}>
-                  {props.testResult.error_value &&
-                  props.testResult.error_value !== "NaN" ? (
+                  {props.testResult.error_value ? (
                     props.testResult.error_value.toFixed(3)
                   ) : (
                     <>&mdash;</>

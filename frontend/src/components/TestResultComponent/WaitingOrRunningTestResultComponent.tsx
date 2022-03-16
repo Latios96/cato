@@ -1,10 +1,10 @@
 import React from "react";
-import { TestResultDto } from "../../catoapimodels";
 import {
   NotStartedMessageBox,
   IsRenderingMessageBox,
 } from "./MessageBoxes/MessageBoxes";
 import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
+import { TestResultDto } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   result: TestResultDto;

@@ -1,7 +1,6 @@
 import React from "react";
 import { formatDuration } from "../../utils/dateUtils";
 import DisplayLogComponent from "../DisplayLogComponent/DisplayLogComponent";
-import { TestResultDto } from "../../catoapimodels";
 import styles from "./FinishedTestResultComponent.module.scss";
 import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
@@ -9,6 +8,7 @@ import ImageComparison from "../ImageComparison/ImageComparison";
 import { FailureMessageBox } from "./MessageBoxes/MessageBoxes";
 import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
 import UpdateReferenceImageButton from "./UpdateReferenceImageButton";
+import { TestResultDto } from "../../catoapimodels/catoapimodels";
 interface Props {
   result: TestResultDto;
 }

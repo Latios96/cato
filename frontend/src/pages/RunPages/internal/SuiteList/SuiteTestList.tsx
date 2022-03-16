@@ -1,11 +1,13 @@
 import React from "react";
 import { updateQueryString } from "../../../../utils/queryStringUtils";
-import { TestResultDto } from "../../../../catoapimodels";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import { SuiteTestListImpl } from "./SuiteTestListImpl";
-import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
+import {
+  SuiteResultDto,
+  TestResultDto,
+} from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   suite: SuiteResultDto;
