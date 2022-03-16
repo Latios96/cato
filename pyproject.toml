@@ -5,13 +5,11 @@ description = "Cato is a visual regression testing tool intended for the develop
 authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
 include = [
     "cato_server/static/**/*",
-    "cato_api_models/**/*"
 ]
 packages = [
     { include = "cato" },
     { include = "cato_server" },
     { include = "cato_api_client" },
-    { include = "cato_api_models" },
     { include = "cato_common" },
 ]
 

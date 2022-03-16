@@ -1,7 +1,6 @@
 import pytest
 
 from cato_common.domain.project import Project
-from cato_api_models.catoapimodels import MachineInfoDto
 from cato_common.storage.page import Page
 
 

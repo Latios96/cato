@@ -158,9 +158,6 @@ build
 cato_server/static/*
 log.txt*
 .eslintcache
-cato_api_models/catoapimodels
-cato_api_models/__init__.py
-cato_api_models/_impl.py
 frontend/src/catoapimodels
 ui_mockup
 /workdir/

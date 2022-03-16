@@ -113,7 +113,6 @@ task poetryBuild(type: PythonTask){
     inputs.dir('cato')
     inputs.dir('cato_server')
     inputs.dir('cato_api_client')
-    inputs.dir('cato_api_models')
     inputs.file('pyproject.toml')
     inputs.file('poetry.lock')
     outputs.dir('dist')
