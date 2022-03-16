@@ -2,13 +2,11 @@ import datetime
 
 import pytest
 
-from cato_api_models.catoapimodels import TestResultStartedDto
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.domain.event import Event
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.start_test import StartTest
 from tests.utils import mock_safe
@@ -50,8 +48,6 @@ class TestStartTest:
         test_result.unified_test_status = UnifiedTestStatus.NOT_STARTED
         test_context.test_result_repository.find_by_id.return_value = test_result
         test_context.test_result_repository.save.return_value = test_result
-        event_dto = TestResultStartedDto(test_result.id)
-        event = Event("TEST_RESULT_STARTED", event_dto)
 
         test_context.start_test_usecase.start_test(1, MachineInfo("cpu_name", 1, 1))
 

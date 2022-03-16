@@ -177,7 +177,3 @@ types:
       TestResultFinishedDto:
         fields:
           id: integer
-
-      TestResultStartedDto:
-        fields:
-          id: integer
