@@ -1,18 +1,18 @@
-import { TestFailureReasonDto } from "../catoapimodels";
+import { TestFailureReason } from "../catoapimodels/catoapimodels";
 
-export function getNiceName(failureReason: TestFailureReasonDto): string {
+export function getNiceName(failureReason: TestFailureReason): string {
   switch (failureReason) {
-    case TestFailureReasonDto.EXIT_CODE_NON_ZERO:
+    case TestFailureReason.EXIT_CODE_NON_ZERO:
       return "Exit code was non zero";
-    case TestFailureReasonDto.IMAGES_ARE_NOT_EQUAL:
+    case TestFailureReason.IMAGES_ARE_NOT_EQUAL:
       return "Images are not equal";
-    case TestFailureReasonDto.OUTPUT_IMAGE_MISSING:
+    case TestFailureReason.OUTPUT_IMAGE_MISSING:
       return "Output image is missing";
-    case TestFailureReasonDto.REFERENCE_IMAGE_MISSING:
+    case TestFailureReason.REFERENCE_IMAGE_MISSING:
       return "Reference image is missing";
-    case TestFailureReasonDto.REFERENCE_AND_OUTPUT_IMAGE_MISSING:
+    case TestFailureReason.REFERENCE_AND_OUTPUT_IMAGE_MISSING:
       return "Reference and output image is missing";
-    case TestFailureReasonDto.TIMED_OUT:
+    case TestFailureReason.TIMED_OUT:
       return "Test timed out";
   }
 }

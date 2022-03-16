@@ -1,7 +1,9 @@
 import queryString from "query-string";
 import { FilterOptions } from "../models/FilterOptions";
-import { TestFailureReasonDto } from "../catoapimodels";
-import { StatusFilter } from "../catoapimodels/catoapimodels";
+import {
+  StatusFilter,
+  TestFailureReason,
+} from "../catoapimodels/catoapimodels";
 
 export function filterOptionsFromQueryString(
   theQueryString: string
@@ -19,8 +21,8 @@ export function filterOptionsFromQueryString(
     filterOptions.status === StatusFilter.FAILED
   ) {
     filterOptions = filterOptions.withChangedFailureReason(
-      TestFailureReasonDto[
-        parsedData.failureReasonFilter as keyof typeof TestFailureReasonDto
+      TestFailureReason[
+        parsedData.failureReasonFilter as keyof typeof TestFailureReason
       ]
     );
   }

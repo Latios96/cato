@@ -2,9 +2,11 @@ import React from "react";
 import { Form } from "react-bootstrap";
 import styles from "./FilterControls.module.scss";
 import { FilterOptions } from "../../models/FilterOptions";
-import { TestFailureReasonDto } from "../../catoapimodels";
 import { getNiceName } from "../../models/testFailureReasonNiceNames";
-import { StatusFilter } from "../../catoapimodels/catoapimodels";
+import {
+  StatusFilter,
+  TestFailureReason,
+} from "../../catoapimodels/catoapimodels";
 
 interface Props {
   currentFilterOptions: FilterOptions;
@@ -111,9 +113,9 @@ function FilterControls(props: Props) {
             onChange={(event) => {
               const newValue =
                 event.currentTarget.value !== "NONE"
-                  ? TestFailureReasonDto[
+                  ? TestFailureReason[
                       event.currentTarget
-                        .value as keyof typeof TestFailureReasonDto
+                        .value as keyof typeof TestFailureReason
                     ]
                   : undefined;
               props.filterOptionsChanged(
@@ -129,13 +131,11 @@ function FilterControls(props: Props) {
           >
             {" "}
             <option value={"NONE"}>None</option>
-            {Object.keys(TestFailureReasonDto).map((reason) => {
+            {Object.keys(TestFailureReason).map((reason) => {
               return (
                 <option key={reason} value={reason}>
                   {getNiceName(
-                    TestFailureReasonDto[
-                      reason as keyof typeof TestFailureReasonDto
-                    ]
+                    TestFailureReason[reason as keyof typeof TestFailureReason]
                   )}
                 </option>
               );

@@ -1,7 +1,9 @@
 import { filterOptionsFromQueryString } from "./filterOptionUtils";
 import { FilterOptions } from "../models/FilterOptions";
-import { TestFailureReasonDto } from "../catoapimodels";
-import { StatusFilter } from "../catoapimodels/catoapimodels";
+import {
+  StatusFilter,
+  TestFailureReason,
+} from "../catoapimodels/catoapimodels";
 
 describe("filterOptionUtils", () => {
   describe("filterOptionsFromQueryString", () => {
@@ -25,7 +27,7 @@ describe("filterOptionUtils", () => {
       );
 
       expect(filterOptions).toStrictEqual(
-        new FilterOptions(StatusFilter.FAILED, TestFailureReasonDto.TIMED_OUT)
+        new FilterOptions(StatusFilter.FAILED, TestFailureReason.TIMED_OUT)
       );
     });
 

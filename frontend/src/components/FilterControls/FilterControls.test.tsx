@@ -2,8 +2,10 @@ import each from "jest-each";
 import FilterControls from "./FilterControls";
 import { fireEvent, render } from "@testing-library/react";
 import { FilterOptions } from "../../models/FilterOptions";
-import { TestFailureReasonDto } from "../../catoapimodels";
-import { StatusFilter } from "../../catoapimodels/catoapimodels";
+import {
+  StatusFilter,
+  TestFailureReason,
+} from "../../catoapimodels/catoapimodels";
 
 describe("FilterControls", () => {
   each([
@@ -76,29 +78,29 @@ describe("FilterControls", () => {
   each([
     ["None", undefined],
     [
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
     ],
     [
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
     ],
     [
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
     ],
     [
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
-      TestFailureReasonDto.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
+      TestFailureReason.EXIT_CODE_NON_ZERO,
     ],
     [
-      TestFailureReasonDto.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
-      TestFailureReasonDto.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
+      TestFailureReason.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
+      TestFailureReason.REFERENCE_AND_OUTPUT_IMAGE_MISSING,
     ],
-    [TestFailureReasonDto.TIMED_OUT, TestFailureReasonDto.TIMED_OUT],
+    [TestFailureReason.TIMED_OUT, TestFailureReason.TIMED_OUT],
   ]).it(
     "should report the correct failureReason selection when clicking",
-    (value: string, failureReason?: TestFailureReasonDto) => {
+    (value: string, failureReason?: TestFailureReason) => {
       const filterChangedCallback = jest.fn();
       const rendered = render(
         <FilterControls
@@ -142,7 +144,7 @@ describe("FilterControls", () => {
     const rendered = render(
       <FilterControls
         currentFilterOptions={
-          new FilterOptions(StatusFilter.FAILED, TestFailureReasonDto.TIMED_OUT)
+          new FilterOptions(StatusFilter.FAILED, TestFailureReason.TIMED_OUT)
         }
         filterOptionsChanged={filterChangedCallback}
       />
