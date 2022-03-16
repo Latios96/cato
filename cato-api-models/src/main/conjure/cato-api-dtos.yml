@@ -173,7 +173,3 @@ types:
         fields:
           id: integer
           machine_info: MachineInfoDto
-
-      TestResultFinishedDto:
-        fields:
-          id: integer
