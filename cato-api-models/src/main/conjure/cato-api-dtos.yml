@@ -110,18 +110,3 @@ types:
           comparison_settings: optional<ComparisonSettingsDto>
           error_value: optional<double>
           thumbnail_file_id: optional<integer>
-
-      SuiteStatusDto:
-        values:
-          - NOT_STARTED
-          - RUNNING
-          - SUCCESS
-          - FAILED
-
-      SuiteResultDto:
-        fields:
-          id: integer
-          run_id: integer
-          suite_name: string
-          suite_variables: map<string, string>
-          status: SuiteStatusDto

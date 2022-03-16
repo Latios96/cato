@@ -1,5 +1,4 @@
 import React from "react";
-import { SuiteResultDto } from "../../../../catoapimodels";
 import {
   DataLoadedState,
   ErrorState,
@@ -16,6 +15,7 @@ import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
+import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
 interface Props {
   projectId: number;
   runId: number;

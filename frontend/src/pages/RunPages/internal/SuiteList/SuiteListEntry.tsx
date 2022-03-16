@@ -2,7 +2,6 @@ import React from "react";
 import { ChevronDown, ChevronRight } from "react-bootstrap-icons";
 import SuiteStatus from "../../../../components/Status/SuiteStatus";
 import styles from "./SuiteListEntry.module.scss";
-import { SuiteResultDto } from "../../../../catoapimodels";
 import { useToggle } from "rooks";
 
 import { useHistory } from "react-router-dom";
@@ -13,6 +12,7 @@ import {
 } from "../../../../utils/queryStringUtils";
 import SuiteTestList from "./SuiteTestList";
 import queryString from "query-string";
+import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   suite: SuiteResultDto;

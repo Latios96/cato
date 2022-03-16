@@ -4,11 +4,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
-from cato_api_models.catoapimodels import (
-    SuiteResultDto,
-    SuiteStatusDto,
-)
-
+from cato_common.dtos.suite_result_dto import SuiteResultDto
 from cato_common.dtos.suite_result_summary_dto import SuiteResultSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
@@ -78,7 +74,7 @@ class SuiteResultsBlueprint(APIRouter):
                         run_id=suite_result.run_id,
                         suite_name=suite_result.suite_name,
                         suite_variables=suite_result.suite_variables,
-                        status=SuiteStatusDto(status.value),
+                        status=status.value,
                     )
                 )
         return JSONResponse(content=self._object_mapper.many_to_dict(suite_result_dtos))
@@ -109,7 +105,7 @@ class SuiteResultsBlueprint(APIRouter):
                         run_id=suite_result.run_id,
                         suite_name=suite_result.suite_name,
                         suite_variables=suite_result.suite_variables,
-                        status=SuiteStatusDto(status.value),
+                        status=status.value,
                     )
                 )
         page = Page(

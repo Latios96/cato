@@ -1,9 +1,9 @@
 import React from "react";
-import { SuiteResultDto } from "../../catoapimodels";
 import { Check, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../Icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
 import styles from "./StatusStyles.module.scss";
+import { SuiteResultDto } from "../../catoapimodels/catoapimodels";
 interface Props {
   suiteResult: SuiteResultDto;
 }
