@@ -168,8 +168,3 @@ types:
           diff_image: optional<integer>
           error_value: optional<double>
           failure_reason: optional<TestFailureReasonDto>
-
-      StartTestResultDto:
-        fields:
-          id: integer
-          machine_info: MachineInfoDto

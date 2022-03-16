@@ -20,7 +20,6 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     MachineInfoDto,
-    StartTestResultDto,
     ComparisonMethodDto,
     ComparisonSettingsDto,
 )
@@ -32,6 +31,7 @@ from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from tests.utils import mock_safe
 
 SUITES = [
@@ -188,7 +188,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.start_test.assert_called_with(
             StartTestResultDto(
                 id=test_result.id,
-                machine_info=MachineInfoDto(cpu_name="my_cpu", cores=8, memory=8),
+                machine_info=MachineInfo(cpu_name="my_cpu", cores=8, memory=8),
             )
         )
 

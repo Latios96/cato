@@ -14,16 +14,15 @@ from cato_api_models.catoapimodels import (
     MachineInfoDto,
     TestResultShortSummaryDto,
     FinishTestResultDto,
-    StartTestResultDto,
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
 from cato_common.domain.image import ImageChannel
-from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
@@ -313,13 +312,9 @@ class TestResultsBlueprint(APIRouter):
             request_json, StartTestResultDto
         )
 
-        machine_info_dto = start_test_result_dto.machine_info
-        machine_info = MachineInfo(
-            cpu_name=machine_info_dto.cpu_name,
-            cores=machine_info_dto.cores,
-            memory=machine_info_dto.memory,
+        self._start_test.start_test(
+            start_test_result_dto.id, start_test_result_dto.machine_info
         )
-        self._start_test.start_test(start_test_result_dto.id, machine_info)
 
         return JSONResponse(content=self._object_mapper.to_dict(ApiSuccess.ok()))
 

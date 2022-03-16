@@ -17,13 +17,12 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
-    StartTestResultDto,
-    MachineInfoDto,
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 logger = logging.getLogger(__name__)
 
@@ -126,13 +125,8 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
         logger.debug(f"Reporting execution start of test {test_identifier}..")
         machine_info = self._get_machine_info()
-        machine_info_dto = MachineInfoDto(
-            cpu_name=machine_info.cpu_name,
-            cores=machine_info.cores,
-            memory=machine_info.memory,
-        )
         start_test_result = StartTestResultDto(
-            id=test_result.id, machine_info=machine_info_dto
+            id=test_result.id, machine_info=machine_info
         )
         self._cato_api_client.start_test(start_test_result)
 

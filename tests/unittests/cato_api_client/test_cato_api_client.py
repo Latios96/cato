@@ -13,11 +13,9 @@ from cato_api_models.catoapimodels import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     MachineInfoDto,
-    StartTestResultDto,
     ComparisonMethodDto,
     ComparisonSettingsDto,
 )
-from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel
@@ -30,6 +28,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 
 class FastApiClientHttpTemplateResponse(HttpTemplateResponse):
@@ -368,7 +367,7 @@ def test_start_test_success(cato_api_client, test_result):
     cato_api_client.start_test(
         StartTestResultDto(
             id=test_result.id,
-            machine_info=MachineInfoDto(cpu_name="Intel", cores=1, memory=1),
+            machine_info=MachineInfo(cpu_name="Intel", cores=1, memory=1),
         )
     )
 
@@ -377,7 +376,7 @@ def test_start_test_failure(cato_api_client):
     with pytest.raises(ValueError):
         cato_api_client.start_test(
             StartTestResultDto(
-                id=43, machine_info=MachineInfoDto(cpu_name="Intel", cores=1, memory=1)
+                id=43, machine_info=MachineInfo(cpu_name="Intel", cores=1, memory=1)
             )
         )
 
