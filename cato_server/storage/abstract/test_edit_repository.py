@@ -18,5 +18,5 @@ class TestEditRepository(AbstractRepository[AbstractTestEdit, int]):
     def find_edits_to_sync_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
         pass
 
-    def edits_to_sync_by_run_id_count(self, run_id: int) -> bool:
+    def edits_to_sync_by_run_id_count(self, run_id: int) -> int:
         pass
