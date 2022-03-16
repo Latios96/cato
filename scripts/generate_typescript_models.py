@@ -7,6 +7,7 @@ from cato_common.domain.project import Project
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
+from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.dtos.suite_result_dto import SuiteResultDto
 from cato_common.dtos.test_result_dto import TestResultDto
 from cato_common.dtos.test_result_short_summary_dto import TestResultShortSummaryDto
@@ -24,6 +25,7 @@ if __name__ == "__main__":
             TestResultShortSummaryDto,
             SuiteResultDto,
             TestResultDto,
+            RunSummaryDto,
         ]
     ).with_type_overrides({TestIdentifier: str}).to_file(
         Path(__file__).parent.parent

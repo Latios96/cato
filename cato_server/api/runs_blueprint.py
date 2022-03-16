@@ -1,16 +1,15 @@
 import logging
 from http.client import BAD_REQUEST
 
+from cato_api_models.catoapimodels import (
+    CreateFullRunDto,
+)
 from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
-from cato_api_models.catoapimodels import (
-    RunDto,
-    RunStatusDto,
-    RunSummaryDto,
-    CreateFullRunDto,
-)
+from cato_common.dtos.run_dto import RunDto
+from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
@@ -86,10 +85,10 @@ class RunsBlueprint(APIRouter):
                 RunDto(
                     id=run.id,
                     project_id=run.id,
-                    started_at=run.started_at.isoformat(),
-                    status=RunStatusDto(status),
+                    started_at=run.started_at,
+                    status=status,
                     duration=duration_by_run_id[run.id],
-                    branch_name=run.branch_name.name,
+                    branch_name=run.branch_name,
                 )
             )
         return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
@@ -118,10 +117,10 @@ class RunsBlueprint(APIRouter):
                 RunDto(
                     id=run.id,
                     project_id=run.id,
-                    started_at=run.started_at.isoformat(),
-                    status=RunStatusDto(status),
+                    started_at=run.started_at,
+                    status=status,
                     duration=duration_by_run_id[run.id],
-                    branch_name=run.branch_name.name,
+                    branch_name=run.branch_name,
                 )
             )
         page = Page(
@@ -178,10 +177,10 @@ class RunsBlueprint(APIRouter):
         run_dto = RunDto(
             id=run.id,
             project_id=run.id,
-            started_at=run.started_at.isoformat(),
-            status=RunStatusDto(status),
+            started_at=run.started_at,
+            status=status,
             duration=duration,
-            branch_name=run.branch_name.name,
+            branch_name=run.branch_name,
         )
         suite_count = self._suite_result_repository.suite_count_by_run_id(run_id)
         test_count = self._test_result_repository.test_count_by_run_id(run_id)

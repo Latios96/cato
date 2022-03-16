@@ -2,10 +2,10 @@ import React, { Component } from "react";
 import styles from "./RunSummary.module.scss";
 
 import { Spinner } from "react-bootstrap";
-import { RunSummaryDto } from "../../catoapimodels";
 import { formatDuration } from "../../utils/dateUtils";
 import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
+import { RunSummaryDto } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   projectId: number;
@@ -91,14 +91,7 @@ class RunSummary extends Component<Props, State> {
           title={"failed tests"}
         />
         <InfoBoxElement
-          value={
-            "" +
-            formatDuration(
-              runSummaryDto.run.duration !== "NaN"
-                ? runSummaryDto.run.duration
-                : 0
-            )
-          }
+          value={"" + formatDuration(runSummaryDto.run.duration)}
           title={"duration"}
         />
       </InfoBox>

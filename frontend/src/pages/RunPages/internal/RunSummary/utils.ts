@@ -1,4 +1,5 @@
-import { RunSummaryDto } from "../../../../catoapimodels";
+import { RunSummaryDto } from "../../../../catoapimodels/catoapimodels";
+
 export interface StatusPercentage {
   waitingToStart: number;
   running: number;
