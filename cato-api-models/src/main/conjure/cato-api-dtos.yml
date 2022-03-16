@@ -125,11 +125,3 @@ types:
           suite_name: string
           suite_variables: map<string, string>
           status: SuiteStatusDto
-
-      TestResultShortSummaryDto:
-        fields:
-          id: integer
-          name: string
-          test_identifier: string
-          unified_test_status: UnifiedTestStatusDto
-          thumbnail_file_id: optional<integer>

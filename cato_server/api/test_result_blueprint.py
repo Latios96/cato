@@ -12,7 +12,6 @@ from cato_api_models.catoapimodels import (
     ImageChannelDto,
     UnifiedTestStatusDto,
     MachineInfoDto,
-    TestResultShortSummaryDto,
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
@@ -23,6 +22,7 @@ from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_common.dtos.test_result_short_summary_dto import TestResultShortSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
@@ -179,9 +179,7 @@ class TestResultsBlueprint(APIRouter):
                     id=test_result.id,
                     name=test_result.test_name,
                     test_identifier=str(test_result.test_identifier),
-                    unified_test_status=UnifiedTestStatusDto(
-                        test_result.unified_test_status.value
-                    ),
+                    unified_test_status=test_result.unified_test_status,
                     thumbnail_file_id=test_result.thumbnail_file_id,
                 )
             )

@@ -1,5 +1,4 @@
 import React from "react";
-import { TestResultShortSummaryDto } from "../../../../catoapimodels";
 import styles from "./TestList.module.scss";
 import TestStatus from "../../../../components/Status/TestStatus";
 import { useReFetch } from "../../../../hooks/useReFetch";
@@ -17,6 +16,7 @@ import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils"
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
+import { TestResultShortSummaryDto } from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   projectId: number;
