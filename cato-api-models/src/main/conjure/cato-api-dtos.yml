@@ -181,7 +181,3 @@ types:
       TestResultStartedDto:
         fields:
           id: integer
-
-      ApiSuccess:
-        fields:
-          success: boolean

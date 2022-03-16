@@ -14,7 +14,6 @@ from cato_api_models.catoapimodels import (
     FinishTestResultDto,
     TestStatusDto,
     TestHeartbeatDto,
-    ApiSuccess,
     StartTestResultDto,
     TestFailureReasonDto,
 )
@@ -35,6 +34,7 @@ from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ReferenceImageEdit,
 )
+from cato_server.api.dtos.api_success import ApiSuccess
 
 logger = logging.getLogger(__name__)
 

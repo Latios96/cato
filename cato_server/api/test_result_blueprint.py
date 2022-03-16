@@ -14,7 +14,6 @@ from cato_api_models.catoapimodels import (
     MachineInfoDto,
     TestResultShortSummaryDto,
     FinishTestResultDto,
-    ApiSuccess,
     StartTestResultDto,
     ComparisonSettingsDto,
     ComparisonMethodDto,
@@ -28,6 +27,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
+from cato_server.api.dtos.api_success import ApiSuccess
 from cato_server.api.filter_option_utils import result_filter_options_from_request
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
@@ -299,9 +299,7 @@ class TestResultsBlueprint(APIRouter):
             finish_test_result_dto.error_value,
             finish_test_result_dto.failure_reason,
         )
-        return JSONResponse(
-            content=self._object_mapper.to_dict(ApiSuccess(success=True))
-        )
+        return JSONResponse(content=self._object_mapper.to_dict(ApiSuccess.ok()))
 
     async def start_test_result(self, request: Request) -> Response:
         request_json = await request.json()
@@ -323,9 +321,7 @@ class TestResultsBlueprint(APIRouter):
         )
         self._start_test.start_test(start_test_result_dto.id, machine_info)
 
-        return JSONResponse(
-            content=self._object_mapper.to_dict(ApiSuccess(success=True))
-        )
+        return JSONResponse(content=self._object_mapper.to_dict(ApiSuccess.ok()))
 
     def get_test_result_by_run_id_and_test_status(
         self, run_id: int, test_status: str

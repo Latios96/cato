@@ -7,11 +7,9 @@ import pytest
 
 from cato_common.mappers.abstract_class_mapper import AbstractClassMapper, T
 from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
-from cato_api_models.catoapimodels import (
-    ApiSuccess,
-)
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry import MapperRegistry
+from cato_server.api.dtos.api_success import ApiSuccess
 
 
 class DateTimeValueMapper(AbstractValueMapper[datetime.datetime, str]):
@@ -170,9 +168,7 @@ class TestMapToDict:
         assert result == {"my_int": 42, "my_string": "my_test"}
 
     def test_map_conjure_type(self):
-        result = GenericClassMapper(MapperRegistry()).map_to_dict(
-            ApiSuccess(success=True)
-        )
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(ApiSuccess.ok())
 
         assert result == {"success": True}
 
@@ -454,7 +450,7 @@ class TestMapFromDict:
             {"success": True}, ApiSuccess
         )
 
-        assert result == ApiSuccess(success=True)
+        assert result == ApiSuccess.ok()
 
     def test_map_enum(self):
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
