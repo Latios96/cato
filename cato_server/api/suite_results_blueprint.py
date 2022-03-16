@@ -7,10 +7,9 @@ from starlette.responses import JSONResponse, Response
 from cato_api_models.catoapimodels import (
     SuiteResultDto,
     SuiteStatusDto,
-    SuiteResultSummaryDto,
-    TestResultShortSummaryDto,
-    UnifiedTestStatusDto,
 )
+
+from cato_common.dtos.suite_result_summary_dto import SuiteResultSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
@@ -129,14 +128,18 @@ class SuiteResultsBlueprint(APIRouter):
         tests = self._test_result_repository.find_by_suite_result_id(suite_id)
         tests_result_short_summary_dtos = []
         for test in tests:
+            from cato_common.dtos.test_result_short_summary_dto import (
+                TestResultShortSummaryDto,
+            )
+
             tests_result_short_summary_dtos.append(
                 TestResultShortSummaryDto(
                     id=test.id,
                     name=test.test_name,
-                    test_identifier=str(test.test_identifier),
-                    unified_test_status=UnifiedTestStatusDto(
-                        test.unified_test_status.value
-                    ),
+                    test_identifier=str(
+                        test.test_identifier
+                    ),  # todo we can use TestIdentifier type here, this will be handled by object mapper
+                    unified_test_status=test.unified_test_status,
                     thumbnail_file_id=test.thumbnail_file_id,
                 )
             )

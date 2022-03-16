@@ -133,11 +133,3 @@ types:
           test_identifier: string
           unified_test_status: UnifiedTestStatusDto
           thumbnail_file_id: optional<integer>
-
-      SuiteResultSummaryDto:
-        fields:
-          id: integer
-          runId: integer
-          suite_name: string
-          suite_variables: map<string, string>
-          tests: list<TestResultShortSummaryDto>

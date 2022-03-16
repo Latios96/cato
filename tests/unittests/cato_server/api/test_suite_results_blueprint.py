@@ -121,7 +121,7 @@ def test_get_by_id_should_find(client, suite_result):
     assert rv.status_code == 200
     assert rv.json() == {
         "id": 1,
-        "runId": 1,
+        "run_id": 1,
         "suite_name": "my_suite",
         "suite_variables": {"key": "value"},
         "tests": [],
@@ -138,7 +138,7 @@ def test_get_by_id_should_find_should_contain_no_tests(
     assert rv.status_code == 200
     assert rv.json() == {
         "id": 1,
-        "runId": 1,
+        "run_id": 1,
         "suite_name": "my_suite",
         "suite_variables": {"key": "value"},
         "tests": [
