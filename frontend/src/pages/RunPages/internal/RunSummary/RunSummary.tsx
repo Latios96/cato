@@ -14,9 +14,9 @@ import {
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import UnsyncedEdits from "../../../../components/UnsyncedEdits/UnsyncedEdits";
-import { TestEditCount } from "../../../../models/TestEditCount";
 import { calculateStatusPercentage } from "./utils";
 import { RunSummaryProgressBar } from "./RunSummaryProgressBar";
+import { TestEditCount } from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   runId: number;
