@@ -54,9 +54,7 @@ class TestEditBlueprint(APIRouter):
         )
         self.post("/test_edits/reference_image")(self.create_reference_image_edit)
 
-    def test_edits_by_test_result_id(
-        self, test_result_id: int, request: Request
-    ) -> Response:
+    def test_edits_by_test_result_id(self, test_result_id: int) -> Response:
         edits = self._test_edit_repository.find_by_test_id(test_result_id)
 
         return JSONResponse(content=self._object_mapper.many_to_dict(edits))
@@ -79,17 +77,17 @@ class TestEditBlueprint(APIRouter):
 
         return JSONResponse(content=self._object_mapper.to_dict(can_be_edited))
 
-    def test_edits_by_run_id(self, run_id: int, request: Request) -> Response:
+    def test_edits_by_run_id(self, run_id: int) -> Response:
         edits = self._test_edit_repository.find_by_run_id(run_id)
 
         return JSONResponse(content=self._object_mapper.many_to_dict(edits))
 
-    def test_edits_to_sync_by_run_id(self, run_id: int, request: Request) -> Response:
+    def test_edits_to_sync_by_run_id(self, run_id: int) -> Response:
         edits = self._test_edit_repository.find_edits_to_sync_by_run_id(run_id)
 
         return JSONResponse(content=self._object_mapper.many_to_dict(edits))
 
-    def has_edits_to_sync_by_run_id(self, run_id: int, request: Request) -> Response:
+    def has_edits_to_sync_by_run_id(self, run_id: int) -> Response:
         result = self._test_edit_repository.edits_to_sync_by_run_id_count(run_id)
 
         return JSONResponse(self._object_mapper.to_dict(TestEditCount(count=result)))
