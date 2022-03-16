@@ -1,11 +1,11 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import Button from "../Button/Button";
-import { CanBeEdited } from "../../models/EditableInformation";
 import styles from "./UpdateReferenceImageButton.module.scss";
 import Spinner from "../Spinner/Spinner";
 import InformationIcon from "../InformationIcon/InformationIcon";
 import { TestResultUpdateContext } from "../TestResultUpdateContext/TestResultUpdateContext";
+import { CanBeEdited } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   testResultId: number;

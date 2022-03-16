@@ -1,9 +1,9 @@
-import { CanBeEdited } from "../../models/EditableInformation";
 import {
   ComparisonMethodDto,
   ComparisonSettingsDto,
 } from "../../catoapimodels";
 import { TestResultDtoComparisonPick } from "./TestResultComparisonResultImpl";
+import { CanBeEdited } from "../../catoapimodels/catoapimodels";
 
 export interface State {
   isEditing: boolean;
