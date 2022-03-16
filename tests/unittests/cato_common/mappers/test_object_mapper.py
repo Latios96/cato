@@ -6,13 +6,6 @@ from cato_common.storage.page import Page
 
 
 class TestMapToDict:
-    def test_should_map_conjure_type_to_dict(self, object_mapper):
-        object = MachineInfoDto(cpu_name="test", cores=8, memory=4)
-
-        result = object_mapper.to_dict(object)
-
-        assert result == {"cores": 8, "cpu_name": "test", "memory": 4}
-
     def test_should_map_with_dedicated_mapper_to_dict(self, object_mapper):
         object = Project(id=1, name="test")
 
@@ -29,13 +22,6 @@ class TestMapToDict:
 
 
 class TestMapFromDict:
-    def test_should_map_conjure_type_to_dict(self, object_mapper):
-        the_dict = {"cores": 8, "cpu_name": "test", "memory": 4}
-
-        result = object_mapper.from_dict(the_dict, MachineInfoDto)
-
-        assert result == MachineInfoDto(cpu_name="test", cores=8, memory=4)
-
     def test_should_map_with_dedicated_mapper_to_dict(self, object_mapper):
         the_dict = {"id": 1, "name": "test"}
 

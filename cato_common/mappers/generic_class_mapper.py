@@ -1,12 +1,10 @@
 import copy
 import datetime
-import json
 import typing
 from dataclasses import _is_dataclass_instance, fields, is_dataclass  # type: ignore
 from enum import Enum
 from typing import Type, Dict, TypeVar, Collection
 
-from conjure_python_client import ConjureBeanType, ConjureEncoder, ConjureDecoder  # type: ignore
 from dateutil.parser import parse
 
 from cato_common.mappers.mapper_registry import MapperRegistry
@@ -44,8 +42,6 @@ class GenericClassMapper:
             and not isinstance(obj, dict)
         ):
             return [self._to_dict(o) for o in obj]
-        elif issubclass(obj.__class__, ConjureBeanType):
-            return json.loads(ConjureEncoder().encode(obj))
         elif isinstance(obj, Enum):
             return obj.name
         elif isinstance(obj, datetime.datetime):
@@ -84,8 +80,6 @@ class GenericClassMapper:
         elif isinstance(json_data, list):
             collection_type = cls.__args__[0]
             return [self._from_dict(o, collection_type) for o in json_data]
-        elif self._is_subclass(cls, ConjureBeanType):
-            return ConjureDecoder().decode(json_data, cls)
         elif self._is_subclass(cls, Enum):
             return cls(json_data)
         elif self._is_subclass(cls, datetime.datetime):
