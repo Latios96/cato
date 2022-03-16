@@ -13,7 +13,6 @@ from cato_api_models.catoapimodels import (
     CreateFullRunDto,
     FinishTestResultDto,
     TestStatusDto,
-    TestHeartbeatDto,
     TestFailureReasonDto,
 )
 from cato_common.domain.compare_image_result import CompareImageResult
@@ -35,6 +34,7 @@ from cato_common.domain.test_edit import (
     ReferenceImageEdit,
 )
 from cato_server.api.dtos.api_success import ApiSuccess
+from cato_server.domain.test_heartbeat import TestHeartbeat
 
 logger = logging.getLogger(__name__)
 
@@ -178,7 +178,7 @@ class CatoApiClient:
         url = self._build_url(
             f"/api/v1/test_heartbeats/run/{run_id}/{test_identifier.suite_name}/{test_identifier.test_name}"
         )
-        response = self._http_template.post_for_entity(url, {}, TestHeartbeatDto)
+        response = self._http_template.post_for_entity(url, {}, TestHeartbeat)
         if response.status_code() != 200:
             raise ValueError(f"Something went wrong when sending heartbeat: {response}")
 

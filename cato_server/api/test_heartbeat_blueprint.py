@@ -4,7 +4,6 @@ import logging
 from fastapi import APIRouter
 from starlette.responses import JSONResponse, Response
 
-from cato_api_models.catoapimodels import TestHeartbeatDto
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.mappers.object_mapper import ObjectMapper
@@ -87,9 +86,5 @@ class TestHeartbeatBlueprint(APIRouter):
             )
             test_heartbeat.last_beat = beat_time
         test_heartbeat = self._test_heartbeat_repository.save(test_heartbeat)
-        test_heartbeat_dto = TestHeartbeatDto(
-            id=test_heartbeat.id,
-            test_result_id=test_heartbeat.test_result_id,
-            last_beat=test_heartbeat.last_beat.isoformat(),
-        )
-        return JSONResponse(self._object_mapper.to_dict(test_heartbeat_dto))
+
+        return JSONResponse(self._object_mapper.to_dict(test_heartbeat))

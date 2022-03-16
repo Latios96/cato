@@ -142,12 +142,6 @@ types:
           suite_variables: map<string, string>
           tests: list<TestResultShortSummaryDto>
 
-      TestHeartbeatDto:
-        fields:
-          id: integer
-          test_result_id: integer
-          last_beat: datetime
-
       TestFailureReasonDto:
         values:
           - EXIT_CODE_NON_ZERO
