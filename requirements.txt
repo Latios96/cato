@@ -1,4 +1,3 @@
-conjure_python_client
 scikit-image
 cycler
 kiwisolver

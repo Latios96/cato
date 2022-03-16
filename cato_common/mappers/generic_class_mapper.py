@@ -87,8 +87,8 @@ class GenericClassMapper:
         else:
             return copy.deepcopy(json_data)
 
-    def _is_subclass(self, cls, ConjureBeanType):
+    def _is_subclass(self, cls: Type, other_cls: Type) -> bool:
         try:
-            return issubclass(cls, ConjureBeanType)
+            return issubclass(cls, other_cls)
         except TypeError:
             return False

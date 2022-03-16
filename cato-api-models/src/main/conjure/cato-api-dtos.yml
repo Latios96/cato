@@ -1,9 +1,0 @@
-types:
-  definitions:
-    default-package: org.cato.catoapimodels
-    objects:
-      MachineInfoDto:
-        fields:
-          cpu_name: string
-          cores: integer
-          memory: double

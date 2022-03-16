@@ -20,20 +20,8 @@ task yarnInstallDependencies(type: YarnTask) {
   outputs.file('yarnInstallDependencies')
 }
 
-task copyConjureTypescriptModels {
-    dependsOn(':cato-api-models:compileConjureTypeScript')
-    dependsOn(':cato-api-models:fixTypescriptNames')
-    doLast {
-    delete "${rootDir}/frontend/src/catoapimodels"
-        copy {
-            from "${rootDir}/cato-api-models/cato-api-models-typescript/src/catoapimodels"
-            into "${rootDir}/frontend/src/catoapimodels"
-        }
-    }
-}
 
 task typescriptModels{
-    dependsOn('copyConjureTypescriptModels')
     dependsOn(':generatePyTypescriptModel')
 }
 

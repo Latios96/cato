@@ -167,11 +167,6 @@ class TestMapToDict:
 
         assert result == {"my_int": 42, "my_string": "my_test"}
 
-    def test_map_conjure_type(self):
-        result = GenericClassMapper(MapperRegistry()).map_to_dict(ApiSuccess.ok())
-
-        assert result == {"success": True}
-
     def test_map_enum(self):
         result = GenericClassMapper(MapperRegistry()).map_to_dict(
             DataClassWithEnum(enum_value=MyEnum.VALUE)
@@ -444,13 +439,6 @@ class TestMapFromDict:
                 {},
                 DataClassWithNestedClass,
             )
-
-    def test_map_conjure_type(self):
-        result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"success": True}, ApiSuccess
-        )
-
-        assert result == ApiSuccess.ok()
 
     def test_map_enum(self):
         result = GenericClassMapper(MapperRegistry()).map_from_dict(

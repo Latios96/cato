@@ -2,10 +2,6 @@ buildscript {
     repositories {
         mavenCentral()
     }
-
-    dependencies {
-        classpath 'com.palantir.gradle.conjure:gradle-conjure:4.27.2'
-    }
 }
 
 plugins {
@@ -46,19 +42,8 @@ githook {
     }
 }
 
-task copyConjurePythonModels {
-    dependsOn ':cato-api-models:compileConjurePython'
-    doLast {
-        copy {
-            from "${rootDir}/cato-api-models/cato-api-models-python/python/cato_api_models"
-            into "${rootDir}/cato_api_models"
-        }
-    }
-}
-
 task poetryInstall(type: PythonTask) {
 	dependsOn 'pipInstall'
-	dependsOn 'copyConjurePythonModels'
     command = "-m poetry install"
     inputs.file('pyproject.toml')
     inputs.file('poetry.lock')
@@ -197,11 +182,6 @@ task lint{
     dependsOn 'mypyCheck'
 }
 
-task buildConjure{
-    dependsOn 'copyConjurePythonModels'
-    dependsOn ':frontend:copyConjureTypescriptModels'
-}
-
 task updateDependencies{
     dependsOn 'poetryUpdate'
     dependsOn ':frontend:yarnUpgrade'
@@ -210,5 +190,4 @@ task updateDependencies{
 task generatePyTypescriptModel(type: PythonTask){
     dependsOn 'pythonInstall'
     command = 'scripts/generate_typescript_models.py'
-    mustRunAfter(":frontend:copyConjureTypescriptModels")
 }
