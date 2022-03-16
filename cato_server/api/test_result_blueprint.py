@@ -13,7 +13,6 @@ from cato_api_models.catoapimodels import (
     UnifiedTestStatusDto,
     MachineInfoDto,
     TestResultShortSummaryDto,
-    FinishTestResultDto,
     ComparisonSettingsDto,
     ComparisonMethodDto,
 )
@@ -22,6 +21,7 @@ from cato_common.domain.output import Output
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper

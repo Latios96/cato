@@ -11,9 +11,6 @@ from cato_common.domain.result_status import ResultStatus
 from cato_api_client.http_template import AbstractHttpTemplate
 from cato_api_models.catoapimodels import (
     CreateFullRunDto,
-    FinishTestResultDto,
-    TestStatusDto,
-    TestFailureReasonDto,
 )
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
@@ -26,6 +23,7 @@ from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.domain.test_edit import (
@@ -207,16 +205,14 @@ class CatoApiClient:
         url = self._build_url("/api/v1/test_results/finish")
         dto = FinishTestResultDto(
             id=test_result_id,
-            status=TestStatusDto(status.value),
+            status=status.value,
             seconds=seconds,
             message=message,
             image_output=image_output,
             reference_image=reference_image,
             diff_image=diff_image,
             error_value=error_value,
-            failure_reason=TestFailureReasonDto(failure_reason.value)
-            if failure_reason
-            else None,
+            failure_reason=failure_reason.value if failure_reason else None,
         )
         response = self._http_template.post_for_entity(url, dto, FinishTestResultDto)
         if response.status_code() != 200:
