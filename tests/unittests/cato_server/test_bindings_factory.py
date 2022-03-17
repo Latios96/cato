@@ -1,14 +1,22 @@
-import datetime
-
 from sqlalchemy.orm import sessionmaker
 
+from cato_common.domain.project import Project
+from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
+from cato_server.configuration.bindings_factory import (
+    BindingsFactory,
+)
+from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
-from cato_common.domain.project import Project
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
+from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
@@ -24,21 +32,13 @@ from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
-from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.app_configuration_defaults import (
-    AppConfigurationDefaults,
-)
-from cato_server.configuration.bindings_factory import (
-    BindingsFactory,
-)
-from cato_server.configuration.logging_configuration import LoggingConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
 
 
 def test_create_storage_bindings_for_postgres():
     configuration = AppConfiguration(
         port=5000,
         debug=True,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
             file_storage_url="some_path",
@@ -76,6 +76,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
     configuration = AppConfiguration(
         port=5000,
         debug=True,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -120,6 +121,7 @@ def test_create_scheduler_bindings_no_scheduler():
     config = AppConfiguration(
         port=5000,
         debug=True,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -144,6 +146,7 @@ def test_create_scheduler_bindings_no_scheduler():
 CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     port=5000,
     debug=True,
+    secret=SecretStr("SECRET"),
     storage_configuration=StorageConfiguration(
         database_url="sqlite:///:memory:",
         file_storage_url="some_path",

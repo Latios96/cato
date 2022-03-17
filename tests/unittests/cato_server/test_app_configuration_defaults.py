@@ -1,5 +1,5 @@
-import datetime
 import os
+from unittest import mock
 
 import humanfriendly
 
@@ -12,9 +12,12 @@ from cato_server.configuration.scheduler_configuration import SchedulerConfigura
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.domain.auth.secret_str import SecretStr
 
 
-def test_create_default_config():
+@mock.patch("secrets.token_urlsafe")
+def test_create_default_config(mock_secrets_token_urlsafe):
+    mock_secrets_token_urlsafe.return_value = "SECRET"
     configuration_default = AppConfigurationDefaults()
 
     config = configuration_default.create()
@@ -22,6 +25,7 @@ def test_create_default_config():
     assert config == AppConfiguration(
         port=5000,
         debug=False,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="db_url", file_storage_url="file_storage_url"
         ),
@@ -34,7 +38,9 @@ def test_create_default_config():
     )
 
 
-def test_create_default_config_ready_to_use():
+@mock.patch("secrets.token_urlsafe")
+def test_create_default_config_ready_to_use(mock_secrets_token_urlsafe):
+    mock_secrets_token_urlsafe.return_value = "SECRET"
     configuration_default = AppConfigurationDefaults()
 
     config = configuration_default.create_ready_to_use("a/path/to/a/config/folder")
@@ -42,6 +48,7 @@ def test_create_default_config_ready_to_use():
     assert config == AppConfiguration(
         port=5000,
         debug=False,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///{}".format(
                 os.path.join("a/path/to/a/config/folder", "cato.db")

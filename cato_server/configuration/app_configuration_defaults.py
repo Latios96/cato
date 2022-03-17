@@ -1,4 +1,5 @@
 import os
+import secrets
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
@@ -6,6 +7,7 @@ from cato_server.configuration.scheduler_configuration import SchedulerConfigura
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.domain.auth.secret_str import SecretStr
 
 TEN_MEGABYTES = 10_000_000
 
@@ -22,6 +24,7 @@ class AppConfigurationDefaults:
         return AppConfiguration(
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
+            secret=SecretStr(secrets.token_urlsafe()),
             storage_configuration=StorageConfiguration(
                 database_url="db_url", file_storage_url="file_storage_url"
             ),
@@ -40,6 +43,7 @@ class AppConfigurationDefaults:
         return AppConfiguration(
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
+            secret=SecretStr(secrets.token_urlsafe()),
             storage_configuration=StorageConfiguration(
                 database_url="sqlite:///{}".format(
                     os.path.join(config_folder, "cato.db")

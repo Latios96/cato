@@ -20,6 +20,8 @@ from cato_server.configuration.storage_configuration import StorageConfiguration
 
 import logging
 
+from cato_server.domain.auth.secret_str import SecretStr
+
 logger = logging.getLogger(__name__)
 
 
@@ -45,6 +47,7 @@ class AppConfigurationReader:
             debug=config.getboolean(
                 "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
             ),
+            secret=SecretStr(config.get("app", "secret")),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
             scheduler_configuration=scheduler_configuration,

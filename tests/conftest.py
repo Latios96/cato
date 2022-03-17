@@ -574,6 +574,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
     config = AppConfiguration(
         port=random_port(),
         debug=True,
+        secret=SecretStr("SECRET"),
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),
