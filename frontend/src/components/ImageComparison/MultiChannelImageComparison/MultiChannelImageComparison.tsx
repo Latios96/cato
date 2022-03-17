@@ -173,7 +173,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
     if (channel === null) {
       return null;
     }
-    return channel.file_id;
+    return channel.fileId;
   };
 
   channelByName = (image: Image, name: string) => {

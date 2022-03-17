@@ -5,6 +5,7 @@ from dataclasses import _is_dataclass_instance, fields, is_dataclass  # type: ig
 from enum import Enum
 from typing import Type, Dict, TypeVar, Collection
 
+from caseconverter import camelcase, snakecase  # type: ignore
 from dateutil.parser import parse
 
 from cato_common.mappers.mapper_registry import MapperRegistry
@@ -33,7 +34,9 @@ class GenericClassMapper:
         elif _is_dataclass_instance(obj):
             result = {}
             for field in fields(obj):
-                result[field.name] = self._to_dict(getattr(obj, field.name))
+                result[self._case_convert_write(field.name)] = self._to_dict(
+                    getattr(obj, field.name)
+                )
             return result
         elif (
             isinstance(obj, Collection)
@@ -73,8 +76,10 @@ class GenericClassMapper:
         elif is_dataclass(cls):
             args_dict = {}
             for field in fields(cls):
-                args_dict[field.name] = self._from_dict(
-                    json_data.get(field.name), field.type, field.name
+                args_dict[self._case_convert_read(field.name)] = self._from_dict(
+                    json_data.get(self._case_convert_write(field.name)),
+                    field.type,
+                    self._case_convert_read(field.name),
                 )
             return cls(**args_dict)
         elif isinstance(json_data, list):
@@ -92,3 +97,9 @@ class GenericClassMapper:
             return issubclass(cls, other_cls)
         except TypeError:
             return False
+
+    def _case_convert_write(self, name):
+        return camelcase(name)
+
+    def _case_convert_read(self, name):
+        return snakecase(name)

@@ -100,9 +100,9 @@ class TestEditBlueprint(APIRouter):
         if errors:
             return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
-        test_result_id = request_json["test_result_id"]
+        test_result_id = request_json["testResultId"]
         comparison_settings = self._object_mapper.from_dict(
-            request_json["new_value"], ComparisonSettings
+            request_json["newValue"], ComparisonSettings
         )
 
         edit = self._create_comparison_settings_edit.create_edit(
@@ -121,7 +121,7 @@ class TestEditBlueprint(APIRouter):
         if errors:
             return JSONResponse(content=errors, status_code=BAD_REQUEST)
 
-        test_result_id = request_json["test_result_id"]
+        test_result_id = request_json["testResultId"]
 
         edit = self._create_reference_image_edit.create_edit(test_result_id)
 

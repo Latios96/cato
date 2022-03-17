@@ -7,9 +7,9 @@ def test_should_create_new_test_heartbeat(client, test_result):
     assert rv.status_code == 200
     json = rv.json()
     assert json["id"] == 1
-    assert json["test_result_id"] == 1
+    assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -20,9 +20,9 @@ def test_should_update_new_test_heartbeat(client, test_result):
     assert rv.status_code == 200
     json = rv.json()
     assert json["id"] == 1
-    assert json["test_result_id"] == 1
+    assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -30,7 +30,7 @@ def test_not_existing_test_result_id_should_400(client):
     rv = client.post("/api/v1/test_heartbeats/42")
 
     assert rv.status_code == 400
-    assert rv.json() == {"test_result_id": "No test result found with id 42"}
+    assert rv.json() == {"testResultId": "No test result found with id 42"}
 
 
 def test_should_create_new_test_heartbeat_for_run_id_and_test_identifier(
@@ -43,9 +43,9 @@ def test_should_create_new_test_heartbeat_for_run_id_and_test_identifier(
     assert rv.status_code == 200
     json = rv.json()
     assert json["id"] == 1
-    assert json["test_result_id"] == 1
+    assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -62,9 +62,9 @@ def test_should_update_new_test_heartbeat_for_run_id_and_test_identifier(
     assert rv.status_code == 200
     json = rv.json()
     assert json["id"] == 1
-    assert json["test_result_id"] == 1
+    assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["last_beat"])
+        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -73,6 +73,6 @@ def test_not_existing_test_result_id_should_400_for_run_id_and_test_identifier(c
 
     assert rv.status_code == 400
     assert rv.json() == {
-        "run_id": "No test result found with run id 42 and test identifier suite_name/test_name",
-        "test_identifier": "No test result found with run id 42 and test identifier suite_name/test_name",
+        "runId": "No test result found with run id 42 and test identifier suite_name/test_name",
+        "testIdentifier": "No test result found with run id 42 and test identifier suite_name/test_name",
     }

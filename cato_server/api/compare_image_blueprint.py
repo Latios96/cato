@@ -27,12 +27,12 @@ class CompareImagesBlueprint(APIRouter):
     ) -> Response:
         if not reference_image.filename:
             return JSONResponse(
-                content={"reference_image": "Filename can not be empty!"},
+                content={"referenceImage": "Filename can not be empty!"},
                 status_code=400,
             )
         if not output_image.filename:
             return JSONResponse(
-                content={"output_image": "Filename can not be empty!"}, status_code=400
+                content={"outputImage": "Filename can not be empty!"}, status_code=400
             )
         try:
             parsed_comparison_settings = self._object_mapper.from_json(
@@ -41,7 +41,7 @@ class CompareImagesBlueprint(APIRouter):
         except Exception as e:
             return JSONResponse(
                 content={
-                    "comparison_settings": "Error when parsing comparison settings: {}".format(
+                    "comparisonSettings": "Error when parsing comparison settings: {}".format(
                         e
                     )
                 },

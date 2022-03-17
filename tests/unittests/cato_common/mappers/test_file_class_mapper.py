@@ -18,5 +18,5 @@ def test_map_to_dict(object_mapper):
         "id": 1,
         "name": "file_name",
         "hash": "the_hash",
-        "value_counter": 0,
+        "valueCounter": 0,
     }

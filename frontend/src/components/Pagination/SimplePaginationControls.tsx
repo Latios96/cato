@@ -11,7 +11,7 @@ interface Props<T extends Object> {
 const SimplePaginationControls = <T extends Object>(props: Props<T>) => {
   const controls = usePagination(
     props.currentPage,
-    props.currentPage.page_size,
+    props.currentPage.pageSize,
     props.pageChangedCallback
   );
 

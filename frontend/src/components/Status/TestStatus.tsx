@@ -3,16 +3,15 @@ import { Check, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../Icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
 import styles from "./StatusStyles.module.scss";
+import { TestResultDto } from "../../catoapimodels/catoapimodels";
 
-interface TestStatusData {
-  unified_test_status: string;
-}
+type TestStatusData = Pick<TestResultDto, "unifiedTestStatus">;
 
 interface Props {
   testResult: TestStatusData;
 }
 const TestStatus = (props: Props) => {
-  if (props.testResult.unified_test_status === "NOT_STARTED") {
+  if (props.testResult.unifiedTestStatus === "NOT_STARTED") {
     return (
       <span
         className="d-inline-block"
@@ -22,19 +21,19 @@ const TestStatus = (props: Props) => {
         <Hourglass size={27} />
       </span>
     );
-  } else if (props.testResult.unified_test_status === "RUNNING") {
+  } else if (props.testResult.unifiedTestStatus === "RUNNING") {
     return (
       <span className="d-inline-block" data-toggle="tooltip" title="running">
         <RenderingBucketIcon isActive={false} />
       </span>
     );
-  } else if (props.testResult.unified_test_status === "SUCCESS") {
+  } else if (props.testResult.unifiedTestStatus === "SUCCESS") {
     return (
       <span className="d-inline-block" data-toggle="tooltip" title="success">
         <Check color="green" size={27} />
       </span>
     );
-  } else if (props.testResult.unified_test_status === "FAILED") {
+  } else if (props.testResult.unifiedTestStatus === "FAILED") {
     return (
       <span className="d-inline-block" data-toggle="tooltip" title="failed">
         <XCircleIcon size={27} className={styles.errorIcon} />

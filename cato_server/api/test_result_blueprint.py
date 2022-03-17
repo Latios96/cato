@@ -144,7 +144,7 @@ class TestResultsBlueprint(APIRouter):
         logger.info(
             "Saved output with id %s for test result with id %s",
             output.id,
-            request_json["test_result_id"],
+            output.test_result_id,
         )
         return JSONResponse(
             content=self._object_mapper.to_dict(output), status_code=201

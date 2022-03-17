@@ -24,7 +24,7 @@ class JsonConfigParser:
         schema = self._read_json_from_file(self._schema_path())
         validate(instance=data, schema=schema)
         return Config(
-            data["project_name"],
+            data["projectName"],
             self._transform_suites(data),
             variables=data["variables"] if data.get("variables") else {},
         )

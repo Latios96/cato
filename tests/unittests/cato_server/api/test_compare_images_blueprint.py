@@ -22,9 +22,9 @@ def test_upload_images_for_comparison_success(
 
     assert response.json() == {
         "message": None,
-        "output_image_id": 1,
-        "reference_image_id": 2,
-        "diff_image_id": 3,
+        "outputImageId": 1,
+        "referenceImageId": 2,
+        "diffImageId": 3,
         "status": "SUCCESS",
         "error": 1.0,
     }
@@ -46,7 +46,7 @@ def test_upload_images_should_fail_no_parsable_comparison_settings(
     )
 
     assert response.json() == {
-        "comparison_settings": "Error when parsing comparison settings: Expecting "
+        "comparisonSettings": "Error when parsing comparison settings: Expecting "
         "value: line 1 column 1 (char 0)"
     }
     assert response.status_code == 400

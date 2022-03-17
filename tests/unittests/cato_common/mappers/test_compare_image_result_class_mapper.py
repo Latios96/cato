@@ -7,9 +7,9 @@ def test_map_from(object_mapper):
         {
             "status": "SUCCESS",
             "message": "message",
-            "reference_image_id": 1,
-            "output_image_id": 2,
-            "diff_image_id": 3,
+            "referenceImageId": 1,
+            "outputImageId": 2,
+            "diffImageId": 3,
             "error": 4,
         },
         CompareImageResult,
@@ -29,9 +29,9 @@ def test_map_from_optional_data(object_mapper):
     result = object_mapper.from_dict(
         {
             "status": "SUCCESS",
-            "reference_image_id": 1,
-            "output_image_id": 2,
-            "diff_image_id": 3,
+            "referenceImageId": 1,
+            "outputImageId": 2,
+            "diffImageId": 3,
             "error": 4,
         },
         CompareImageResult,
@@ -62,8 +62,8 @@ def test_map_to(object_mapper):
     assert result == {
         "status": "SUCCESS",
         "message": "message",
-        "reference_image_id": 1,
-        "output_image_id": 2,
-        "diff_image_id": 3,
+        "referenceImageId": 1,
+        "outputImageId": 2,
+        "diffImageId": 3,
         "error": 4,
     }

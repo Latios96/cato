@@ -16,7 +16,10 @@ import { useReFetch } from "../../../../hooks/useReFetch";
 import UnsyncedEdits from "../../../../components/UnsyncedEdits/UnsyncedEdits";
 import { calculateStatusPercentage } from "./utils";
 import { RunSummaryProgressBar } from "./RunSummaryProgressBar";
-import { TestEditCount } from "../../../../catoapimodels/catoapimodels";
+import {
+  RunSummaryDto,
+  TestEditCount,
+} from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   runId: number;
@@ -27,7 +30,9 @@ export function RunSummary(props: Props) {
     data: runSummaryDto,
     isLoading,
     error,
-  } = useReFetch(`/api/v1/runs/${props.runId}/summary`, 5000, [props.runId]);
+  } = useReFetch<RunSummaryDto>(`/api/v1/runs/${props.runId}/summary`, 5000, [
+    props.runId,
+  ]);
 
   const {
     data: editsToSync,
@@ -39,23 +44,23 @@ export function RunSummary(props: Props) {
     [props.runId]
   );
 
-  function renderSummary() {
+  function renderSummary(runSummaryDto: RunSummaryDto) {
     const statusPercentage = calculateStatusPercentage(runSummaryDto);
     return (
       <>
         <InfoBox>
           <InfoBoxElement
-            value={"" + runSummaryDto.suite_count}
+            value={"" + runSummaryDto.suiteCount}
             title={"suites"}
             id={"runSummary suites"}
           />
           <InfoBoxElement
-            value={"" + runSummaryDto.test_count}
+            value={"" + runSummaryDto.testCount}
             title={"tests"}
             id={"runSummary tests"}
           />
           <InfoBoxElement
-            value={"" + runSummaryDto.failed_test_count}
+            value={"" + runSummaryDto.failedTestCount}
             title={"failed tests"}
             id={"runSummary failed tests"}
           />
@@ -63,9 +68,7 @@ export function RunSummary(props: Props) {
             value={
               "" +
               formatDuration(
-                runSummaryDto.run.duration !== "NaN"
-                  ? runSummaryDto.run.duration
-                  : 0
+                runSummaryDto.run.duration ? runSummaryDto.run.duration : 0
               )
             }
             title={"duration"}
@@ -97,7 +100,7 @@ export function RunSummary(props: Props) {
           />
         </ErrorState>
         <DataLoadedState>
-          {runSummaryDto ? renderSummary() : null}
+          {runSummaryDto ? renderSummary(runSummaryDto) : null}
         </DataLoadedState>
       </LoadingStateHandler>
       <LoadingStateHandler

@@ -8,10 +8,10 @@ def test_upload_image(client, test_resource_provider):
 
     assert response.status_code == 201
     assert response.json() == {
-        "channels": [{"file_id": 2, "id": 1, "image_id": 1, "name": "rgb"}],
+        "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
         "id": 1,
         "name": "test_image_white.jpg",
-        "original_file_id": 1,
+        "originalFileId": 1,
         "width": 100,
         "height": 100,
     }
@@ -42,10 +42,10 @@ def test_get_image_found_image(client, test_resource_provider):
 
     assert response.status_code == 200
     assert response.json() == {
-        "channels": [{"file_id": 2, "id": 1, "image_id": 1, "name": "rgb"}],
+        "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
         "id": 1,
         "name": "test_image_white.jpg",
-        "original_file_id": 1,
+        "originalFileId": 1,
         "width": 100,
         "height": 100,
     }

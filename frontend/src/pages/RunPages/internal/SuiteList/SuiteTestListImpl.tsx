@@ -67,15 +67,15 @@ export function SuiteTestListImpl(props: Props) {
                     <span>
                       <Thumbnail
                         url={
-                          test.thumbnail_file_id
-                            ? `/api/v1/files/${test.thumbnail_file_id}`
+                          test.thumbnailFileId
+                            ? `/api/v1/files/${test.thumbnailFileId}`
                             : undefined
                         }
                         width={"55px"}
                         height={"30px"}
                       />
                     </span>
-                    <span>{test.test_name}</span>
+                    <span>{test.testName}</span>
                   </div>
                 );
               })}

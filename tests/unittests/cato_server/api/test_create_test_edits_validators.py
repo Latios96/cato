@@ -19,7 +19,7 @@ class TestCreateComparisonSettingsEditValidator:
             ),
         )
         validator = CreateComparisonSettingsEditValidator(mock_test_result_repository)
-        data = {"test_result_id": 1, "new_value": {"method": "SSIM", "threshold": 1}}
+        data = {"testResultId": 1, "newValue": {"method": "SSIM", "threshold": 1}}
 
         errors = validator.validate(data)
 
@@ -29,13 +29,13 @@ class TestCreateComparisonSettingsEditValidator:
         "data,expected_errors",
         [
             (
-                {"test_result_id": 1, "new_value": {"method": "SSIM", "threshold": 1}},
+                {"testResultId": 1, "newValue": {"method": "SSIM", "threshold": 1}},
                 {"id": ["No TestResult with id 1 exists!"]},
             ),
             (
-                {"test_result_id": 2, "new_value": {"method": "SSIM", "threshold": 1}},
+                {"testResultId": 2, "newValue": {"method": "SSIM", "threshold": 1}},
                 {
-                    "comparison_settings": [
+                    "comparisonSettings": [
                         "Can't edit a test result which has no comparison " "settings!"
                     ]
                 },
@@ -64,7 +64,7 @@ class TestCreateReferenceImageSettingsEditValidator:
             ),
         )
         validator = CreateReferenceImageEditValidator(mock_test_result_repository)
-        data = {"test_result_id": 1}
+        data = {"testResultId": 1}
 
         errors = validator.validate(data)
 
@@ -74,21 +74,21 @@ class TestCreateReferenceImageSettingsEditValidator:
         "data,expected_errors",
         [
             (
-                {"test_result_id": 1},
+                {"testResultId": 1},
                 {"id": ["No TestResult with id 1 exists!"]},
             ),
             (
-                {"test_result_id": 2},
+                {"testResultId": 2},
                 {
-                    "test_result_id": [
+                    "testResultId": [
                         "Can't edit a test result which has no image output!"
                     ]
                 },
             ),
             (
-                {"test_result_id": 3},
+                {"testResultId": 3},
                 {
-                    "comparison_settings": [
+                    "comparisonSettings": [
                         "Can't edit a test result which has no comparison " "settings!"
                     ]
                 },

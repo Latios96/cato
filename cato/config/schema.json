@@ -21,7 +21,7 @@
     }
   ],
   "required": [
-    "suites","project_name"
+    "suites","projectName"
   ],
   "properties": {
     "suites": {
@@ -214,7 +214,7 @@
         }
       ]
     },
-    "project_name": {
+    "projectName": {
       "$id": "#/properties/suites/items/anyOf/0/properties/name",
       "type": "string",
       "title": "The Project name",

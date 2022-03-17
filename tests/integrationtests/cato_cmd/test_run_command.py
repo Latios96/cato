@@ -53,18 +53,18 @@ def assert_the_failure_result_is_available_on_the_server(command_result, live_se
     run_json = _read_run_from_server(live_server, run_id)
     assert run_json == [
         {
-            "unified_test_status": "FAILED",
+            "unifiedTestStatus": "FAILED",
             "id": 2,
             "name": "write_black_image",
-            "test_identifier": "WriteImages/write_black_image",
-            "thumbnail_file_id": 6,
+            "testIdentifier": "WriteImages/write_black_image",
+            "thumbnailFileId": 6,
         },
         {
-            "unified_test_status": "FAILED",
+            "unifiedTestStatus": "FAILED",
             "id": 1,
             "name": "write_white_image",
-            "test_identifier": "WriteImages/write_white_image",
-            "thumbnail_file_id": 3,
+            "testIdentifier": "WriteImages/write_white_image",
+            "thumbnailFileId": 3,
         },
     ]
 
@@ -113,18 +113,18 @@ def assert_the_success_result_is_available_on_the_server(command_result, live_se
     run_json = _read_run_from_server(live_server, run_id)
     assert run_json == [
         {
-            "unified_test_status": "SUCCESS",
+            "unifiedTestStatus": "SUCCESS",
             "id": 2,
             "name": "write_black_image",
-            "test_identifier": "WriteImages/write_black_image",
-            "thumbnail_file_id": 16,
+            "testIdentifier": "WriteImages/write_black_image",
+            "thumbnailFileId": 16,
         },
         {
-            "unified_test_status": "SUCCESS",
+            "unifiedTestStatus": "SUCCESS",
             "id": 1,
             "name": "write_white_image",
-            "test_identifier": "WriteImages/write_white_image",
-            "thumbnail_file_id": 8,
+            "testIdentifier": "WriteImages/write_white_image",
+            "thumbnailFileId": 8,
         },
     ]
 

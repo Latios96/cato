@@ -11,7 +11,7 @@ describe("PageRequest", () => {
   it("should create first page correctly", () => {
     const firstPageRequest = requestFirstPageOfSize(10);
 
-    expect(firstPageRequest).toStrictEqual({ page_number: 1, page_size: 10 });
+    expect(firstPageRequest).toStrictEqual({ pageNumber: 1, pageSize: 10 });
   });
 });
 
@@ -20,17 +20,17 @@ describe("Page", () => {
     [
       1,
       {
-        page_number: 1,
-        page_size: 10,
-        total_pages: 10,
+        pageNumber: 1,
+        pageSize: 10,
+        totaPages: 10,
       },
     ],
     [
       11,
       {
-        page_number: 2,
-        page_size: 10,
-        total_pages: 10,
+        pageNumber: 2,
+        pageSize: 10,
+        totalPages: 10,
       },
     ],
   ]).it(
@@ -45,25 +45,25 @@ describe("Page", () => {
     [
       10,
       {
-        page_number: 1,
-        page_size: 10,
-        total_entity_count: 100,
+        pageNumber: 1,
+        pageSize: 10,
+        totalEntityCount: 100,
       },
     ],
     [
       20,
       {
-        page_number: 2,
-        page_size: 10,
-        total_entity_count: 20,
+        pageNumber: 2,
+        pageSize: 10,
+        totalEntityCount: 20,
       },
     ],
     [
       18,
       {
-        page_number: 2,
-        page_size: 10,
-        total_entity_count: 18,
+        pageNumber: 2,
+        pageSize: 10,
+        totalEntityCount: 18,
       },
     ],
   ]).it(
@@ -86,9 +86,9 @@ describe("Page", () => {
     "should calculate total page count for %s entites correctly",
     (totalEntityCount: number, totalPageCount: number) => {
       const first = totalPages({
-        page_number: 1,
-        page_size: 10,
-        total_entity_count: totalEntityCount,
+        pageNumber: 1,
+        pageSize: 10,
+        totalEntityCount: totalEntityCount,
       });
 
       expect(first).toBe(totalPageCount);

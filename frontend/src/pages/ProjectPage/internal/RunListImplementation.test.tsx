@@ -43,33 +43,33 @@ describe("RunListImplementation", () => {
 
   it("should display a list of runs", () => {
     const page: Page<RunDto> = {
-      page_number: 1,
-      page_size: 3,
-      total_entity_count: 3,
+      pageNumber: 1,
+      pageSize: 3,
+      totalEntityCount: 3,
       entities: [
         {
           id: 1,
-          project_id: 2,
-          started_at: "2021-08-05T19:10:52.815332",
+          projectId: 2,
+          startedAt: "2021-08-05T19:10:52.815332",
           status: RunStatus.SUCCESS,
           duration: 1,
-          branch_name: "default",
+          branchName: "default",
         },
         {
           id: 2,
-          project_id: 2,
-          started_at: "2021-08-05T19:10:52.815332",
+          projectId: 2,
+          startedAt: "2021-08-05T19:10:52.815332",
           status: RunStatus.SUCCESS,
           duration: 1,
-          branch_name: "default",
+          branchName: "default",
         },
         {
           id: 3,
-          project_id: 2,
-          started_at: "2021-08-05T19:10:52.815332",
+          projectId: 2,
+          startedAt: "2021-08-05T19:10:52.815332",
           status: RunStatus.SUCCESS,
           duration: 1,
-          branch_name: "default",
+          branchName: "default",
         },
       ],
     };

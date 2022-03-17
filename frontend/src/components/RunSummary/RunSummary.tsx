@@ -82,12 +82,12 @@ class RunSummary extends Component<Props, State> {
     return (
       <InfoBox>
         <InfoBoxElement
-          value={"" + runSummaryDto.suite_count}
+          value={"" + runSummaryDto.suiteCount}
           title={"suites"}
         />
-        <InfoBoxElement value={"" + runSummaryDto.test_count} title={"tests"} />
+        <InfoBoxElement value={"" + runSummaryDto.testCount} title={"tests"} />
         <InfoBoxElement
-          value={"" + runSummaryDto.failed_test_count}
+          value={"" + runSummaryDto.failedTestCount}
           title={"failed tests"}
         />
         <InfoBoxElement

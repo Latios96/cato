@@ -9,20 +9,19 @@ export interface StatusPercentage {
 export function calculateStatusPercentage(
   runSummaryDto: Pick<
     RunSummaryDto,
-    | "waiting_test_count"
-    | "test_count"
-    | "running_test_count"
-    | "succeeded_test_count"
-    | "failed_test_count"
+    | "waitingTestCount"
+    | "testCount"
+    | "runningTestCount"
+    | "succeededTestCount"
+    | "failedTestCount"
   >
 ): StatusPercentage {
   return {
     waitingToStart:
-      (runSummaryDto.waiting_test_count / runSummaryDto.test_count) * 100,
-    running:
-      (runSummaryDto.running_test_count / runSummaryDto.test_count) * 100,
+      (runSummaryDto.waitingTestCount / runSummaryDto.testCount) * 100,
+    running: (runSummaryDto.runningTestCount / runSummaryDto.testCount) * 100,
     succeeded:
-      (runSummaryDto.succeeded_test_count / runSummaryDto.test_count) * 100,
-    failed: (runSummaryDto.failed_test_count / runSummaryDto.test_count) * 100,
+      (runSummaryDto.succeededTestCount / runSummaryDto.testCount) * 100,
+    failed: (runSummaryDto.failedTestCount / runSummaryDto.testCount) * 100,
   };
 }

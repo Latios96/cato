@@ -16,8 +16,8 @@ class TestSubmissionInfoSchema:
     def test_success(self):
         data = {
             "config": VALID_CONFIG,
-            "run_id": 2,
-            "resource_path": "some/path",
+            "runId": 2,
+            "resourcePath": "some/path",
             "executable": "some/path",
         }
         schema = SubmissionInfoSchema()
@@ -34,8 +34,8 @@ class TestSubmissionInfoSchema:
                 {
                     "config": ["Missing data for required field."],
                     "executable": ["Missing data for required field."],
-                    "resource_path": ["Missing data for required field."],
-                    "run_id": ["Missing data for required field."],
+                    "resourcePath": ["Missing data for required field."],
+                    "runId": ["Missing data for required field."],
                 },
             )
         ],
@@ -71,6 +71,6 @@ class TestConfigSchema:
         errors = schema.validate(config)
 
         assert errors == {
-            "project_name": ["Missing data for required field."],
+            "projectName": ["Missing data for required field."],
             "suites": ["Missing data for required field."],
         }

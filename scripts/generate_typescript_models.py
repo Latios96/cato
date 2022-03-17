@@ -35,4 +35,4 @@ if __name__ == "__main__":
         / "src"
         / "catoapimodels"
         / "catoapimodels.ts"
-    ).build().run()
+    ).convert_field_names_to_camel_case().build().run()

@@ -31,7 +31,7 @@ function TestResultComparisonResult(props: Props) {
       .catch(() => {
         dispatch({
           type: ActionType.SET_IS_EDITABLE,
-          payload: { can_edit: false },
+          payload: { canEdit: false },
         });
       });
   }, [props.testResult.id]);
@@ -46,15 +46,15 @@ function TestResultComparisonResult(props: Props) {
     dispatch,
     props.testResult,
     checkIsEditable,
-    props.testResult.comparison_settings,
+    props.testResult.comparisonSettings,
   ]);
 
   const updateComparisonSettings = (comparisonSettings: ComparisonSettings) => {
     dispatch({ type: ActionType.UPDATING_START });
     axios
       .post("/api/v1/test_edits/comparison_settings", {
-        test_result_id: props.testResult.id,
-        new_value: comparisonSettings,
+        testResultId: props.testResult.id,
+        newValue: comparisonSettings,
       })
       .then(() => {
         dispatch({ type: ActionType.UPDATING_END });

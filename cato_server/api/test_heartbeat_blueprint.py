@@ -38,7 +38,7 @@ class TestHeartbeatBlueprint(APIRouter):
         if not self._test_result_repository.find_by_id(test_result_id):
             return JSONResponse(
                 content={
-                    "test_result_id": f"No test result found with id {test_result_id}"
+                    "testResultId": f"No test result found with id {test_result_id}"
                 },
                 status_code=400,
             )
@@ -55,8 +55,8 @@ class TestHeartbeatBlueprint(APIRouter):
         if not test_result:
             return JSONResponse(
                 content={
-                    "run_id": f"No test result found with run id {run_id} and test identifier {test_identifier}",
-                    "test_identifier": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                    "runId": f"No test result found with run id {run_id} and test identifier {test_identifier}",
+                    "testIdentifier": f"No test result found with run id {run_id} and test identifier {test_identifier}",
                 },
                 status_code=400,
             )

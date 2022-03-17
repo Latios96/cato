@@ -16,7 +16,7 @@ TEST_JSON = "test/test.json"
 EXAMPLE_PROJECT = "example project"
 
 VALID_CONFIG = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -48,7 +48,7 @@ EXPECTED_VALID_CONFIG = Config(
 )
 
 VALID_CONFIG_WITH_VARIABLES = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -64,7 +64,7 @@ VALID_CONFIG_WITH_VARIABLES = {
 }
 
 VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -82,7 +82,7 @@ VALID_CONFIG_WITH_VARIABLES_IN_SUITE_AND_TEST = {
 }
 
 VALID_CONFIG_NO_COMPARISON_SETTINGS = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -97,7 +97,7 @@ VALID_CONFIG_NO_COMPARISON_SETTINGS = {
 }
 
 VALID_CONFIG_WITH_COMPARISON_SETTINGS = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -125,7 +125,7 @@ INVALID_CONFIG = {
 }
 
 INVALID_COMPARISON_METHOD = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -141,7 +141,7 @@ INVALID_COMPARISON_METHOD = {
 }
 
 INVALID_COMPARISON_THRESHOLD = {
-    "project_name": EXAMPLE_PROJECT,
+    "projectName": EXAMPLE_PROJECT,
     "suites": [
         {
             "name": "My_first_test_Suite",

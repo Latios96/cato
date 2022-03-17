@@ -97,17 +97,17 @@ function TestList(props: Props) {
                       <td>
                         <Thumbnail
                           url={
-                            test.thumbnail_file_id
-                              ? `/api/v1/files/${test.thumbnail_file_id}`
+                            test.thumbnailFileId
+                              ? `/api/v1/files/${test.thumbnailFileId}`
                               : undefined
                           }
                           width={"60px"}
                           height={"35px"}
                         />
                       </td>
-                      <td>{test.test_identifier.split("/")[0]}</td>
+                      <td>{test.testIdentifier.split("/")[0]}</td>
                       <td>/</td>
-                      <td>{test.test_identifier.split("/")[1]}</td>
+                      <td>{test.testIdentifier.split("/")[1]}</td>
                     </tr>
                   );
                 })

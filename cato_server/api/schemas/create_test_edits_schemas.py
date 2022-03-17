@@ -5,9 +5,9 @@ from cato_server.api.schemas.run_schemas import ComparisonSettingsSchema
 
 
 class CreateComparisonSettingsEditSchema(Schema):
-    test_result_id = ID_FIELD
-    new_value = fields.Nested(ComparisonSettingsSchema, required=True)
+    testResultId = ID_FIELD
+    newValue = fields.Nested(ComparisonSettingsSchema, required=True)
 
 
 class CreateReferenceImageSettingsEditSchema(Schema):
-    test_result_id = ID_FIELD
+    testResultId = ID_FIELD

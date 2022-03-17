@@ -43,6 +43,6 @@ class MachineInfoSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    cpu_name = fields.String(required=True, validate=[Length(min=1)])
+    cpuName = fields.String(required=True, validate=[Length(min=1)])
     cores = fields.Integer(required=True, validate=[Range(min=1)])
     memory = fields.Float(required=True, validate=[Range(min=0)])

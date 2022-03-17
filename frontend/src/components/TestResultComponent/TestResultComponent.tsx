@@ -31,8 +31,8 @@ function TestResultComponent(props: Props) {
 
   let renderTestResult = (testResult: TestResultDto) => {
     if (
-      testResult.unified_test_status !== "NOT_STARTED" &&
-      testResult.unified_test_status !== "RUNNING"
+      testResult.unifiedTestStatus !== "NOT_STARTED" &&
+      testResult.unifiedTestStatus !== "RUNNING"
     ) {
       return <FinishedTestResultComponent result={testResult} />;
     }
@@ -45,9 +45,9 @@ function TestResultComponent(props: Props) {
         <TestResultBreadCrumb
           projectId={props.projectId}
           runId={props.runId}
-          suiteId={result ? result.suite_result_id : 0}
-          suiteName={result ? result.test_identifier.split("/")[0] : ""}
-          testName={result ? result.test_name : ""}
+          suiteId={result ? result.suiteResultId : 0}
+          suiteName={result ? result.testIdentifier.split("/")[0] : ""}
+          testName={result ? result.testName : ""}
         />
         {result ? renderTestResult(result) : <React.Fragment />}
       </TestResultUpdateContext.Provider>

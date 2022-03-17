@@ -55,11 +55,11 @@ class SchedulersBlueprint(APIRouter):
         return JSONResponse(content={"success": True})
 
     def _read_submission_info(self, request_json) -> SubmissionInfo:
-        return SubmissionInfo(
+        return SubmissionInfo(  # todo use object mapper here
             id=0,
             config=self._json_config_parser.parse_dict(request_json["config"]),
-            run_id=request_json["run_id"],
-            resource_path=request_json["resource_path"],
+            run_id=request_json["runId"],
+            resource_path=request_json["resourcePath"],
             executable=request_json["executable"],
         )
 

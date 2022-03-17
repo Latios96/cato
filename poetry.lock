@@ -98,7 +98,7 @@ bump2version = "*"
 name = "case-converter"
 version = "1.0.2"
 description = "A string case conversion package."
-category = "dev"
+category = "main"
 optional = false
 python-versions = "*"
 
@@ -1360,7 +1360,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.11"
-content-hash = "276a460156baba6e67698161433ef7908a24793e2c994953c358e43b53cb85a9"
+content-hash = "43c5b3dde307ddb27eda6c9ad6bc100ad3b3d885c299f656b145e462c96dab52"
 
 [metadata.files]
 aiofiles = [

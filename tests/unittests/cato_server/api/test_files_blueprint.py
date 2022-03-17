@@ -12,7 +12,7 @@ def test_upload_file(client):
         "hash": "43cb15ad0b6b6a956dfb128d0dd4d1fc93462968bdbf7a285579eda534772514",
         "id": 1,
         "name": "my_file_name",
-        "value_counter": 0,
+        "valueCounter": 0,
     }
 
 

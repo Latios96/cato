@@ -23,7 +23,7 @@ class CreateOutputSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    test_result_id = ID_FIELD
+    testResultId = ID_FIELD
     text = fields.String(
         required=True,
         allow_none=False,
@@ -36,13 +36,13 @@ class FinishTestResultSchema(Schema):
     status = EnumField(ResultStatus, required=True)
     seconds = fields.Float(min=0, required=True)
     message = fields.String(validate=[Length(0)], required=True)
-    image_output = fields.Integer(required=False, allow_none=True)
-    reference_image = fields.Integer(required=False, allow_none=True)
-    diff_image = fields.Integer(required=False, allow_none=True)
-    error_value = fields.Float(required=True, allow_none=True)
-    failure_reason = EnumField(TestFailureReason, required=False, allow_none=True)
+    imageOutput = fields.Integer(required=False, allow_none=True)
+    referenceImage = fields.Integer(required=False, allow_none=True)
+    diffImage = fields.Integer(required=False, allow_none=True)
+    errorValue = fields.Float(required=True, allow_none=True)
+    failureReason = EnumField(TestFailureReason, required=False, allow_none=True)
 
 
 class StartTestResultSchema(Schema):
     id = ID_FIELD
-    machine_info = fields.Nested(MachineInfoSchema, required=True)
+    machineInfo = fields.Nested(MachineInfoSchema, required=True)

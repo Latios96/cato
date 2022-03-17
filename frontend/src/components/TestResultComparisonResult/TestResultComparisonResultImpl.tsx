@@ -14,7 +14,7 @@ import {
 
 export type TestResultDtoComparisonPick = Pick<
   TestResultDto,
-  "comparison_settings" | "error_value"
+  "comparisonSettings" | "errorValue"
 >;
 
 interface Props {
@@ -45,7 +45,7 @@ export function TestResultComparisonResultImpl(props: Props) {
               <tr>
                 <td>Comparison Method</td>
                 <td data-testid={"comparison-method-method"}>
-                  {props.testResult.comparison_settings ? (
+                  {props.testResult.comparisonSettings ? (
                     state.isEditing ? (
                       <Form.Control
                         as="select"
@@ -69,7 +69,7 @@ export function TestResultComparisonResultImpl(props: Props) {
               <tr>
                 <td>Threshold</td>
                 <td data-testid={"comparison-method-threshold"}>
-                  {props.testResult.comparison_settings ? (
+                  {props.testResult.comparisonSettings ? (
                     state.isEditing ? (
                       <>
                         <input
@@ -94,7 +94,7 @@ export function TestResultComparisonResultImpl(props: Props) {
                           onClick={() => {
                             props.dispatch({
                               type: ActionType.SET_CURRENT_THRESHOLD,
-                              payload: toFixed(props.testResult.error_value),
+                              payload: toFixed(props.testResult.errorValue),
                             });
                           }}
                           solid={true}
@@ -136,7 +136,7 @@ export function TestResultComparisonResultImpl(props: Props) {
                         })
                       }
                       disabled={
-                        state.isEditableChecking || !state.isEditable.can_edit
+                        state.isEditableChecking || !state.isEditable.canEdit
                       }
                       solid={true}
                     >
@@ -146,7 +146,7 @@ export function TestResultComparisonResultImpl(props: Props) {
                       <div className={styles.spinner}>
                         <Spinner />
                       </div>
-                    ) : !state.isEditable.can_edit ? (
+                    ) : !state.isEditable.canEdit ? (
                       <div className={styles.information}>
                         <InformationIcon
                           informationText={state.isEditable.message || ""}
@@ -167,8 +167,8 @@ export function TestResultComparisonResultImpl(props: Props) {
               <tr>
                 <td>Error value</td>
                 <td data-testid={"error-value"}>
-                  {props.testResult.error_value ? (
-                    props.testResult.error_value.toFixed(3)
+                  {props.testResult.errorValue ? (
+                    props.testResult.errorValue.toFixed(3)
                   ) : (
                     <>&mdash;</>
                   )}

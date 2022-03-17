@@ -6,7 +6,7 @@ def test_should_existing_get_submission_info(client, submission_info):
     assert rv.status_code == 200
     assert rv.json() == {
         "config": {
-            "project_name": "EXAMPLE_PROJECT",
+            "projectName": "EXAMPLE_PROJECT",
             "suites": [
                 {
                     "name": "My_first_test_Suite",
@@ -18,7 +18,7 @@ def test_should_existing_get_submission_info(client, submission_info):
                             "{image_output}/{test_name.png}",
                             "name": "My_first_test",
                             "variables": {"frame": "7"},
-                            "comparison_settings": {"method": "SSIM", "threshold": 0.8},
+                            "comparisonSettings": {"method": "SSIM", "threshold": 0.8},
                         }
                     ],
                     "variables": {"my_var": "from_suite"},
@@ -28,8 +28,8 @@ def test_should_existing_get_submission_info(client, submission_info):
         },
         "executable": "executable",
         "id": 1,
-        "resource_path": "resource_path",
-        "run_id": 1,
+        "resourcePath": "resource_path",
+        "runId": 1,
     }
 
 

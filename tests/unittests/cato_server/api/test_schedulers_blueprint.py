@@ -8,8 +8,8 @@ def test_success(client, run, mocked_scheduler_submitter):
         "/api/v1/schedulers/submit",
         json={
             "config": VALID_CONFIG,  # todo extract to own fixture
-            "run_id": run.id,
-            "resource_path": "some/path",
+            "runId": run.id,
+            "resourcePath": "some/path",
             "executable": "some/path",
         },
     )
@@ -31,12 +31,12 @@ def test_invalid_run_id_should_return_400(client, mocked_scheduler_submitter):
         "/api/v1/schedulers/submit",
         json={
             "config": VALID_CONFIG,  # todo extract to own fixture
-            "run_id": 3,
-            "resource_path": "some/path",
+            "runId": 3,
+            "resourcePath": "some/path",
             "executable": "some/path",
         },
     )
 
-    assert response.json() == {"run_id": ["No run exists for id 3."]}
+    assert response.json() == {"runId": ["No run exists for id 3."]}
     assert response.status_code == 400
     mocked_scheduler_submitter.submit_tests.assert_not_called()

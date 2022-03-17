@@ -17,7 +17,7 @@ def test_map_to_dict(config_fixture, object_mapper):
     assert the_dict == {
         "id": 0,
         "config": {
-            "project_name": "EXAMPLE_PROJECT",
+            "projectName": "EXAMPLE_PROJECT",
             "suites": [
                 {
                     "name": "My_first_test_Suite",
@@ -29,7 +29,7 @@ def test_map_to_dict(config_fixture, object_mapper):
                             "{image_output}/{test_name.png}",
                             "name": "My_first_test",
                             "variables": {"frame": "7"},
-                            "comparison_settings": {"method": "SSIM", "threshold": 0.8},
+                            "comparisonSettings": {"method": "SSIM", "threshold": 0.8},
                         }
                     ],
                     "variables": {"my_var": "from_suite"},
@@ -38,8 +38,8 @@ def test_map_to_dict(config_fixture, object_mapper):
             "variables": {"my_var": "from_config"},
         },
         "executable": "C:/Python27/python.exe",
-        "resource_path": "resource_path",
-        "run_id": 42,
+        "resourcePath": "resource_path",
+        "runId": 42,
     }
 
 
@@ -47,7 +47,7 @@ def test_map_from_dict(config_fixture, object_mapper):
     the_dict = {
         "id": 0,
         "config": {
-            "project_name": "EXAMPLE_PROJECT",
+            "projectName": "EXAMPLE_PROJECT",
             "suites": [
                 {
                     "name": "My_first_test_Suite",
@@ -59,7 +59,7 @@ def test_map_from_dict(config_fixture, object_mapper):
                             "{image_output}/{test_name.png}",
                             "name": "My_first_test",
                             "variables": {"frame": "7"},
-                            "comparison_settings": {"method": "SSIM", "threshold": 0.8},
+                            "comparisonSettings": {"method": "SSIM", "threshold": 0.8},
                         }
                     ],
                     "variables": {"my_var": "from_suite"},
@@ -68,8 +68,8 @@ def test_map_from_dict(config_fixture, object_mapper):
             "variables": {"my_var": "from_config"},
         },
         "executable": "C:/Python27/python.exe",
-        "resource_path": "resource_path",
-        "run_id": 42,
+        "resourcePath": "resource_path",
+        "runId": 42,
     }
 
     submission_info = object_mapper.from_dict(the_dict, SubmissionInfo)

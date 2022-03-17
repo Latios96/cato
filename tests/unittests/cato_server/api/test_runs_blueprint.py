@@ -7,7 +7,7 @@ def test_get_run_by_project_id_should_return(client, project, run):
     json = rv.json()
     assert len(json) == 1
     assert json[0]["id"] == 1
-    assert json[0]["project_id"] == 1
+    assert json[0]["projectId"] == 1
 
 
 def test_get_run_by_project_id_should_return_empty_list(client, project):
@@ -20,7 +20,7 @@ def test_get_run_by_project_id_should_return_empty_list(client, project):
 
 
 def test_get_run_by_project_id_paged_should_return(client, project, run):
-    url = "/api/v1/runs/project/{}?page_number=1&page_size=10".format(project.id)
+    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
 
     rv = client.get(url)
 
@@ -29,23 +29,23 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
         "entities": [
             {
                 "id": 1,
-                "project_id": 1,
-                "started_at": run.started_at.isoformat(),
+                "projectId": 1,
+                "startedAt": run.started_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
-                "branch_name": "default",
+                "branchName": "default",
             }
         ],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
     }
 
 
 def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should_return_empty(
     client, project, run
 ):
-    url = "/api/v1/runs/project/{}?page_number=1&page_size=10&branches={}".format(
+    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
         project.id, "test"
     )
 
@@ -54,16 +54,16 @@ def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should
     assert rv.status_code == 200
     assert rv.json() == {
         "entities": [],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 0,
     }
 
 
 def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_return(
     client, project, run
 ):
-    url = "/api/v1/runs/project/{}?page_number=1&page_size=10&branches={}".format(
+    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
         project.id, "default"
     )
 
@@ -74,30 +74,30 @@ def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_ret
         "entities": [
             {
                 "id": 1,
-                "project_id": 1,
-                "started_at": run.started_at.isoformat(),
+                "projectId": 1,
+                "startedAt": run.started_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
-                "branch_name": "default",
+                "branchName": "default",
             }
         ],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
     }
 
 
 def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
-    url = "/api/v1/runs/project/{}?page_number=1&page_size=10".format(project.id)
+    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
 
     rv = client.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
         "entities": [],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 0,
     }
 
 
@@ -118,20 +118,20 @@ def test_get_run_summary(client, run, test_result):
     rv = client.get(f"/api/v1/runs/{run.id}/summary")
 
     assert rv.json() == {
-        "waiting_test_count": 1,
-        "failed_test_count": 0,
-        "running_test_count": 0,
-        "succeeded_test_count": 0,
+        "waitingTestCount": 1,
+        "failedTestCount": 0,
+        "runningTestCount": 0,
+        "succeededTestCount": 0,
         "run": {
             "id": 1,
-            "project_id": 1,
-            "started_at": run.started_at.isoformat(),
+            "projectId": 1,
+            "startedAt": run.started_at.isoformat(),
             "status": "NOT_STARTED",
             "duration": 5.0,
-            "branch_name": "default",
+            "branchName": "default",
         },
-        "suite_count": 1,
-        "test_count": 1,
+        "suiteCount": 1,
+        "testCount": 1,
     }
     assert rv.status_code == 200
 

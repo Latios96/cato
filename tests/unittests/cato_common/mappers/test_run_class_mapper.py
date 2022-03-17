@@ -10,10 +10,10 @@ def test_map_from_dict(object_mapper):
     result = object_mapper.from_dict(
         {
             "id": 1,
-            "project_id": 1,
-            "started_at": started_at.isoformat(),
-            "branch_name": "default",
-            "previous_run_id": None,
+            "projectId": 1,
+            "startedAt": started_at.isoformat(),
+            "branchName": "default",
+            "previousRunId": None,
         },
         Run,
     )
@@ -42,8 +42,8 @@ def test_map_to_dict(object_mapper):
 
     assert result == {
         "id": 1,
-        "project_id": 1,
-        "started_at": started_at.isoformat(),
-        "branch_name": "default",
-        "previous_run_id": None,
+        "projectId": 1,
+        "startedAt": started_at.isoformat(),
+        "branchName": "default",
+        "previousRunId": None,
     }

@@ -24,7 +24,7 @@ function FinishedTestResultComponent(props: Props) {
         />
       </InfoBox>
       <TestResultComparisonResult testResult={props.result} />
-      {props.result.unified_test_status === "FAILED"
+      {props.result.unifiedTestStatus === "FAILED"
         ? renderFailureInformation(props.result)
         : ""}
       {renderImages(props.result)}
@@ -42,9 +42,9 @@ function renderImages(result: TestResultDto): React.ReactNode {
   return (
     <React.Fragment>
       <ImageComparison
-        imageOutput={result.image_output}
-        referenceImage={result.reference_image}
-        diffImage={result.diff_image}
+        imageOutput={result.imageOutput}
+        referenceImage={result.referenceImage}
+        diffImage={result.diffImage}
       />
     </React.Fragment>
   );

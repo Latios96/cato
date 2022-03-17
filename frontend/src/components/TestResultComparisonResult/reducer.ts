@@ -100,10 +100,10 @@ export function getInitialState(
     isEditing: false,
     isUpdating: false,
     isEditableChecking: true,
-    isEditable: { can_edit: false, message: "" },
-    currentThreshold: getInitialThreshold(testResult.comparison_settings),
-    currentMethod: getInitialMethod(testResult.comparison_settings),
-    originalThreshold: getInitialThreshold(testResult.comparison_settings),
-    originalMethod: getInitialMethod(testResult.comparison_settings),
+    isEditable: { canEdit: false, message: "" },
+    currentThreshold: getInitialThreshold(testResult.comparisonSettings),
+    currentMethod: getInitialMethod(testResult.comparisonSettings),
+    originalThreshold: getInitialThreshold(testResult.comparisonSettings),
+    originalMethod: getInitialMethod(testResult.comparisonSettings),
   };
 }

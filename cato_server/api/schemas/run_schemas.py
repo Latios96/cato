@@ -23,21 +23,21 @@ class TestForRunCreationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    test_name = NAME_FIELD
-    test_identifier = fields.String(
+    testName = NAME_FIELD
+    testIdentifier = fields.String(
         required=True, validate=[Length(min=3), is_test_identifier]
     )
-    test_command = fields.String(required=True, validate=[Length(1)])
-    test_variables = VARIABLES_FIELD
-    comparison_settings = fields.Nested(ComparisonSettingsSchema, required=True)
+    testCommand = fields.String(required=True, validate=[Length(1)])
+    testVariables = VARIABLES_FIELD
+    comparisonSettings = fields.Nested(ComparisonSettingsSchema, required=True)
 
 
 class TestSuiteForRunCreationSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    suite_name = NAME_FIELD
-    suite_variables = VARIABLES_FIELD
+    suiteName = NAME_FIELD
+    suiteVariables = VARIABLES_FIELD
     tests = fields.List(fields.Nested(TestForRunCreationSchema), required=True)
 
 
@@ -45,10 +45,10 @@ class CreateFullRunSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    project_id = ID_FIELD
-    test_suites = fields.List(
+    projectId = ID_FIELD
+    testSuites = fields.List(
         fields.Nested(TestSuiteForRunCreationSchema), required=True
     )
-    branch_name = fields.String(
+    branchName = fields.String(
         validate=[Length(min=1)], required=False, allow_none=True
     )

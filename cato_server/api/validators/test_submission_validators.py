@@ -12,12 +12,12 @@ class SubmissionInfoValidator(SchemaValidator):
 
     def validate(self, data: Dict) -> Dict[str, List[str]]:
         errors = super(SubmissionInfoValidator, self).validate(data)
-        run_id = data.get("run_id")
+        run_id = data.get("runId")
         run = self._run_repository.find_by_id(run_id)
         if run_id and not run:
             self.add_error(
                 errors,
-                "run_id",
+                "runId",
                 f"No run exists for id {run_id}.",
             )
 

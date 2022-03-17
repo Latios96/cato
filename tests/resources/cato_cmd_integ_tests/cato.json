@@ -1,5 +1,5 @@
 {
-  "project_name": "CatoIntegrationTests",
+  "projectName": "CatoIntegrationTests",
   "suites": [
     {
       "name": "WriteImages",

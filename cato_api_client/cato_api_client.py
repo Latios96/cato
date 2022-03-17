@@ -23,6 +23,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.domain.test_edit import (
     AbstractTestEdit,
@@ -33,7 +34,6 @@ from cato_server.api.dtos.api_success import ApiSuccess
 from cato_server.domain.test_heartbeat import TestHeartbeat
 
 logger = logging.getLogger(__name__)
-
 T = TypeVar("T")
 R = TypeVar("R")
 
@@ -167,7 +167,7 @@ class CatoApiClient:
     def upload_output(self, test_result_id: int, output: str) -> Output:
         url = self._build_url("/api/v1/test_results/output")
         return self._create_with_http_template(
-            url, {"test_result_id": test_result_id, "text": output}, Output
+            url, UploadOutputDto(test_result_id=test_result_id, text=output), Output
         )
 
     def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier) -> None:
@@ -253,16 +253,16 @@ class CatoApiClient:
             dict_list = response.get_entities()
             entity_list = []
             for d in dict_list:
-                if d["edit_type"] == "COMPARISON_SETTINGS":
+                if d["editType"] == "COMPARISON_SETTINGS":
                     entity_list.append(
                         self._object_mapper.from_dict(d, ComparisonSettingsEdit)
                     )
-                elif d["edit_type"] == "REFERENCE_IMAGE":
+                elif d["editType"] == "REFERENCE_IMAGE":
                     entity_list.append(
                         self._object_mapper.from_dict(d, ReferenceImageEdit)
                     )
                 else:
-                    raise ValueError("Unsupported edit type: {}".format(d["edit_type"]))
+                    raise ValueError("Unsupported edit type: {}".format(d["editType"]))
             return entity_list
         raise ValueError(
             "Bad parameters: {}".format(

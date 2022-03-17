@@ -13,17 +13,17 @@ class PageMapper:
 
     def to_dict(self, page: Page[T]) -> Dict:
         return {
-            "page_number": page.page_number,
-            "page_size": page.page_size,
-            "total_entity_count": page.total_entity_count,
+            "pageNumber": page.page_number,
+            "pageSize": page.page_size,
+            "totalEntityCount": page.total_entity_count,
             "entities": self._object_mapper.many_to_dict(page.entities),
         }
 
     def from_dict(self, the_dict: Dict, cls: Type[T]) -> Page[T]:
         return Page(
-            page_number=the_dict["page_number"],
-            page_size=the_dict["page_size"],
-            total_entity_count=the_dict["total_entity_count"],
+            page_number=the_dict["pageNumber"],
+            page_size=the_dict["pageSize"],
+            total_entity_count=the_dict["totalEntityCount"],
             entities=self._object_mapper.many_from_dict(the_dict["entities"], cls),
         )
 

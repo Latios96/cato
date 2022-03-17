@@ -26,8 +26,8 @@ describe("TestResultComparisonResultImpl", () => {
 
   it("should display a placeholder for non existing comparison settings and error value", () => {
     const { rendered } = setup({
-      comparison_settings: undefined,
-      error_value: undefined,
+      comparisonSettings: undefined,
+      errorValue: undefined,
     });
 
     expect(rendered.getByTestId("comparison-method-method")).toHaveTextContent(
@@ -41,11 +41,11 @@ describe("TestResultComparisonResultImpl", () => {
 
   it("should render the comparison settings and error value", () => {
     const { rendered } = setup({
-      comparison_settings: {
+      comparisonSettings: {
         method: ComparisonMethod.SSIM,
         threshold: 0.9,
       },
-      error_value: 1.5,
+      errorValue: 1.5,
     });
 
     expect(rendered.getByTestId("comparison-method-method")).toHaveTextContent(
@@ -59,11 +59,11 @@ describe("TestResultComparisonResultImpl", () => {
 
   it("should display the edit button disabled by default", () => {
     const { rendered } = setup({
-      comparison_settings: {
+      comparisonSettings: {
         method: ComparisonMethod.SSIM,
         threshold: 0.9,
       },
-      error_value: 1.5,
+      errorValue: 1.5,
     });
 
     expect(rendered.getByText("Edit")).toBeInTheDocument();
@@ -73,13 +73,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should display the edit button enabled", () => {
     const { rendered } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true } }
+      { isEditable: { canEdit: true } }
     );
 
     expect(rendered.getByText("Edit")).toBeInTheDocument();
@@ -88,13 +88,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should display the edit button disabled because its not editable", () => {
     const { rendered } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: false, message: "can not be edited" } }
+      { isEditable: { canEdit: false, message: "can not be edited" } }
     );
 
     expect(rendered.getByText("Edit")).toBeInTheDocument();
@@ -104,11 +104,11 @@ describe("TestResultComparisonResultImpl", () => {
   it("should display the edit button disabled because its editableChecking", () => {
     const { rendered } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
       {
         isEditable: undefined,
@@ -123,13 +123,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should dispatch START_EDITING when clicking edit button", () => {
     const { rendered, dispatch } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true }, isEditableChecking: false }
+      { isEditable: { canEdit: true }, isEditableChecking: false }
     );
 
     fireEvent.click(rendered.getByText("Edit"));
@@ -140,13 +140,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should display edit inputs and buttons when editing", () => {
     const { rendered } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true }, isEditing: true }
+      { isEditable: { canEdit: true }, isEditing: true }
     );
 
     expect(rendered.queryByText("Edit")).not.toBeInTheDocument();
@@ -163,13 +163,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should dispatch changed threshold when editing", () => {
     const { rendered, dispatch } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true }, isEditing: true }
+      { isEditable: { canEdit: true }, isEditing: true }
     );
 
     fireEvent.change(
@@ -188,13 +188,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should dispatch CANCEL with when canceling", () => {
     const { rendered, dispatch } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true }, isEditing: true }
+      { isEditable: { canEdit: true }, isEditing: true }
     );
 
     fireEvent.click(rendered.getByText("Cancel"));
@@ -205,13 +205,13 @@ describe("TestResultComparisonResultImpl", () => {
   it("should dispatch error value when pressing the match button", () => {
     const { rendered, dispatch } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
-      { isEditable: { can_edit: true }, isEditing: true }
+      { isEditable: { canEdit: true }, isEditing: true }
     );
 
     fireEvent.click(rendered.getByText("match error"));
@@ -225,14 +225,14 @@ describe("TestResultComparisonResultImpl", () => {
   it("should call update with correct value when pressing OK", () => {
     const { rendered, updateComparisonSettings } = setup(
       {
-        comparison_settings: {
+        comparisonSettings: {
           method: ComparisonMethod.SSIM,
           threshold: 0.9,
         },
-        error_value: 1.5,
+        errorValue: 1.5,
       },
       {
-        isEditable: { can_edit: true },
+        isEditable: { canEdit: true },
         isEditing: true,
         currentThreshold: "0.5",
       }

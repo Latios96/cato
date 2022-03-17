@@ -2,7 +2,7 @@ from dataclasses import dataclass
 
 
 @dataclass
-class ApiSuccess:
+class ApiSuccess:  # todo this belogns to cato_common
     success: bool
 
     @staticmethod

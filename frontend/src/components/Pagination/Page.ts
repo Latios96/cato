@@ -1,37 +1,37 @@
 export interface Page<T extends Object> {
-  page_number: number;
-  page_size: number;
-  total_entity_count: number;
+  pageNumber: number;
+  pageSize: number;
+  totalEntityCount: number;
   entities: T[];
 }
 export interface ControllablePage {
-  page_number: number;
-  page_size: number;
-  total_entity_count: number;
+  pageNumber: number;
+  pageSize: number;
+  totalEntityCount: number;
 }
 export interface PageRequest {
-  page_number: number;
-  page_size: number;
+  pageNumber: number;
+  pageSize: number;
 }
 
 export function requestFirstPageOfSize(size: number): PageRequest {
-  return { page_number: 1, page_size: size };
+  return { pageNumber: 1, pageSize: size };
 }
 
 export function firstEntityOnPage(page: ControllablePage) {
-  return page.page_size * (page.page_number - 1) + 1;
+  return page.pageSize * (page.pageNumber - 1) + 1;
 }
 
 export function lastEntityOnPage(page: ControllablePage) {
-  const lastEntity = page.page_size * page.page_number;
-  if (lastEntity > page.total_entity_count) {
-    return page.total_entity_count;
+  const lastEntity = page.pageSize * page.pageNumber;
+  if (lastEntity > page.totalEntityCount) {
+    return page.totalEntityCount;
   }
   return lastEntity;
 }
 
 export function totalPages(page: ControllablePage) {
-  let totalPages = Math.ceil(page.total_entity_count / page.page_size);
+  let totalPages = Math.ceil(page.totalEntityCount / page.pageSize);
   if (totalPages === 0) {
     totalPages = 1;
   }

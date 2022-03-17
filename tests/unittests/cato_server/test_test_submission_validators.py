@@ -14,8 +14,8 @@ def test_success():
     errors = validator.validate(
         {
             "config": VALID_CONFIG,
-            "run_id": 2,
-            "resource_path": "some/path",
+            "runId": 2,
+            "resourcePath": "some/path",
             "executable": "some/path",
         }
     )
@@ -31,10 +31,10 @@ def test_not_existing_run_id_should_fail():
     errors = validator.validate(
         {
             "config": VALID_CONFIG,
-            "run_id": 2,
-            "resource_path": "some/path",
+            "runId": 2,
+            "resourcePath": "some/path",
             "executable": "some/path",
         }
     )
 
-    assert errors == {"run_id": ["No run exists for id 2."]}
+    assert errors == {"runId": ["No run exists for id 2."]}

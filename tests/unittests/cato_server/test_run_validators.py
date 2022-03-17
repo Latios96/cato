@@ -12,23 +12,23 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 1,
-                "test_suites": [
+                "projectId": 1,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -48,23 +48,23 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 42,
-                "test_suites": [
+                "projectId": 42,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -75,7 +75,7 @@ class TestCreateFullRunValidator:
             }
         )
 
-        assert errors == {"project_id": ["No project with id 42 exists!"]}
+        assert errors == {"projectId": ["No project with id 42 exists!"]}
 
     def test_invalid_nested(self):
         project_repository = mock_safe(ProjectRepository)
@@ -83,18 +83,18 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 42,
-                "test_suites": [
+                "projectId": 42,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "testd_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "comparison_settings": {
+                                "testName": "test_name",
+                                "testdIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -106,10 +106,10 @@ class TestCreateFullRunValidator:
         )
 
         assert errors == {
-            "test_suites": {
+            "testSuites": {
                 0: {
                     "tests": {
-                        0: {"test_identifier": ["Missing data for " "required field."]}
+                        0: {"testIdentifier": ["Missing data for " "required field."]}
                     }
                 }
             }
@@ -121,23 +121,23 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 1,
-                "test_suites": [
+                "projectId": 1,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -145,20 +145,20 @@ class TestCreateFullRunValidator:
                         ],
                     },
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -169,7 +169,7 @@ class TestCreateFullRunValidator:
             }
         )
 
-        assert errors == {"test_suites": ["duplicate suite name(s): ['my_suite']"]}
+        assert errors == {"testSuites": ["duplicate suite name(s): ['my_suite']"]}
 
     def test_duplicate_test_name(self):
         project_repository = mock_safe(ProjectRepository)
@@ -177,38 +177,38 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 1,
-                "test_suites": [
+                "projectId": 1,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
                             },
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -219,7 +219,7 @@ class TestCreateFullRunValidator:
             }
         )
 
-        assert errors == {"test_results": ["duplicate test name(s): ['test_name']"]}
+        assert errors == {"testResults": ["duplicate test name(s): ['test_name']"]}
 
     def test_invalid_branch_name(self):
         project_repository = mock_safe(ProjectRepository)
@@ -227,23 +227,23 @@ class TestCreateFullRunValidator:
 
         errors = validator.validate(
             {
-                "project_id": 1,
-                "test_suites": [
+                "projectId": 1,
+                "testSuites": [
                     {
-                        "suite_name": "my_suite",
-                        "suite_variables": {},
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
                         "tests": [
                             {
-                                "test_name": "test_name",
-                                "test_identifier": "test/identifier",
-                                "test_command": "cmd",
-                                "test_variables": {},
-                                "machine_info": {
-                                    "cpu_name": "test",
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
                                     "cores": 8,
                                     "memory": 8,
                                 },
-                                "comparison_settings": {
+                                "comparisonSettings": {
                                     "method": "SSIM",
                                     "threshold": 1,
                                 },
@@ -251,8 +251,8 @@ class TestCreateFullRunValidator:
                         ],
                     }
                 ],
-                "branch_name": "",
+                "branchName": "",
             }
         )
 
-        assert errors == {"branch_name": ["Shorter than minimum length 1."]}
+        assert errors == {"branchName": ["Shorter than minimum length 1."]}

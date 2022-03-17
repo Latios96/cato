@@ -22,7 +22,7 @@ class TestCreateOutputValidator:
         output_repository.find_by_test_result_id.return_value = None
         validator = CreateOutputValidator(test_result_repo, output_repository)
 
-        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+        errors = validator.validate({"testResultId": 1, "text": "my text"})
 
         assert errors == {}
 
@@ -33,9 +33,9 @@ class TestCreateOutputValidator:
         output_repository.find_by_test_result_id.return_value = None
         validator = CreateOutputValidator(test_result_repo, output_repository)
 
-        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+        errors = validator.validate({"testResultId": 1, "text": "my text"})
 
-        assert errors == {"test_result_id": ["No test result exists for id 1."]}
+        assert errors == {"testResultId": ["No test result exists for id 1."]}
 
     def test_failure_existing_output(self):
         test_result_repo = mock_safe(TestResultRepository)
@@ -44,10 +44,10 @@ class TestCreateOutputValidator:
         output_repository.find_by_test_result_id.return_value = True
         validator = CreateOutputValidator(test_result_repo, output_repository)
 
-        errors = validator.validate({"test_result_id": 1, "text": "my text"})
+        errors = validator.validate({"testResultId": 1, "text": "my text"})
 
         assert errors == {
-            "test_result_id": ["An output already exists for test result with id 1."]
+            "testResultId": ["An output already exists for test result with id 1."]
         }
 
 
@@ -60,55 +60,55 @@ class TestFinishTestResultValidator:
                 "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
-                "image_output": 1,
-                "reference_image": 2,
-                "error_value": 1,
+                "imageOutput": 1,
+                "referenceImage": 2,
+                "errorValue": 1,
             },
             {
                 "id": 1,
                 "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
-                "image_output": None,
-                "reference_image": None,
-                "error_value": 1,
+                "imageOutput": None,
+                "referenceImage": None,
+                "errorValue": 1,
             },
             {
                 "id": 1,
                 "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
-                "image_output": 1,
-                "reference_image": None,
-                "error_value": 1,
+                "imageOutput": 1,
+                "referenceImage": None,
+                "errorValue": 1,
             },
             {
                 "id": 1,
                 "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
-                "image_output": None,
-                "reference_image": 2,
-                "error_value": 1,
+                "imageOutput": None,
+                "referenceImage": 2,
+                "errorValue": 1,
             },
             {
                 "id": 1,
                 "status": ResultStatus.SUCCESS,
                 "message": "test",
                 "seconds": 1,
-                "image_output": None,
-                "reference_image": 2,
-                "error_value": None,
+                "imageOutput": None,
+                "referenceImage": 2,
+                "errorValue": None,
             },
             {
                 "id": 1,
                 "status": ResultStatus.FAILED,
                 "message": "test",
                 "seconds": 1,
-                "image_output": None,
-                "reference_image": 2,
-                "error_value": None,
-                "failure_reason": "TIMED_OUT",
+                "imageOutput": None,
+                "referenceImage": 2,
+                "errorValue": None,
+                "failureReason": "TIMED_OUT",
             },
         ],
     )
@@ -131,9 +131,9 @@ class TestFinishTestResultValidator:
                     "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
-                    "image_output": 1,
-                    "reference_image": 2,
-                    "error_value": None,
+                    "imageOutput": 1,
+                    "referenceImage": 2,
+                    "errorValue": None,
                 },
                 {"id": ["No TestResult with id 42 exists!"]},
             ),
@@ -143,11 +143,11 @@ class TestFinishTestResultValidator:
                     "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
-                    "image_output": 42,
-                    "reference_image": 2,
-                    "error_value": None,
+                    "imageOutput": 42,
+                    "referenceImage": 2,
+                    "errorValue": None,
                 },
-                {"image_output": ["No image exists for id 42."]},
+                {"imageOutput": ["No image exists for id 42."]},
             ),
             (
                 {
@@ -155,11 +155,11 @@ class TestFinishTestResultValidator:
                     "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
-                    "image_output": 1,
-                    "reference_image": 42,
-                    "error_value": None,
+                    "imageOutput": 1,
+                    "referenceImage": 42,
+                    "errorValue": None,
                 },
-                {"reference_image": ["No image exists for id 42."]},
+                {"referenceImage": ["No image exists for id 42."]},
             ),
             (
                 {
@@ -167,12 +167,12 @@ class TestFinishTestResultValidator:
                     "status": ResultStatus.SUCCESS,
                     "message": "test",
                     "seconds": 1,
-                    "image_output": 1,
-                    "reference_image": 1,
-                    "diff_image": 42,
-                    "error_value": None,
+                    "imageOutput": 1,
+                    "referenceImage": 1,
+                    "diffImage": 42,
+                    "errorValue": None,
                 },
-                {"diff_image": ["No image exists for id 42."]},
+                {"diffImage": ["No image exists for id 42."]},
             ),
             (
                 {
@@ -180,14 +180,14 @@ class TestFinishTestResultValidator:
                     "status": ResultStatus.FAILED,
                     "message": "test",
                     "seconds": 1,
-                    "image_output": 1,
-                    "reference_image": 1,
-                    "diff_image": 1,
-                    "error_value": None,
+                    "imageOutput": 1,
+                    "referenceImage": 1,
+                    "diffImage": 1,
+                    "errorValue": None,
                 },
                 {
-                    "failure_reason": [
-                        "failure_reason is required is test_status is FAILED"
+                    "failureReason": [
+                        "failureReason is required if test_status is 'FAILED'"
                     ]
                 },
             ),
@@ -212,8 +212,8 @@ class TestStartTestResultValidator:
         [
             {
                 "id": 1,
-                "machine_info": {
-                    "cpu_name": "test",
+                "machineInfo": {
+                    "cpuName": "test",
                     "cores": 8,
                     "memory": 8,
                 },
@@ -233,8 +233,8 @@ class TestStartTestResultValidator:
             (
                 {
                     "id": 42,
-                    "machine_info": {
-                        "cpu_name": "test",
+                    "machineInfo": {
+                        "cpuName": "test",
                         "cores": 8,
                         "memory": 8,
                     },

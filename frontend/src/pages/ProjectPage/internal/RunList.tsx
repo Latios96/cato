@@ -31,9 +31,9 @@ function parseStateFromQueryString(theQueryString: string): State {
     branches: new Set<string>(),
   };
 
-  if (queryParams.page_number && queryParams.page_size) {
-    state.page.page_size = Number(queryParams.page_size);
-    state.page.page_number = Number(queryParams.page_number);
+  if (queryParams.pageNumber && queryParams.pageSize) {
+    state.page.pageSize = Number(queryParams.pageSize);
+    state.page.pageNumber = Number(queryParams.pageNumber);
   }
   if (queryParams.branches) {
     state.branches = fromCommaSeparatedString("" + queryParams.branches);
@@ -50,15 +50,15 @@ function RunList(props: Props) {
     error: errorRuns,
     data: runs,
   } = useReFetch<Page<RunDto>>(
-    `/api/v1/runs/project/${props.projectId}?page_number=${
-      state.page.page_number
-    }&page_size=${state.page.page_size}&branches=${toCommaSeparatedString(
+    `/api/v1/runs/project/${props.projectId}?pageNumber=${
+      state.page.pageNumber
+    }&pageSize=${state.page.pageSize}&branches=${toCommaSeparatedString(
       state.branches
     )}`,
     5000,
     [
-      state.page.page_size,
-      state.page.page_number,
+      state.page.pageSize,
+      state.page.pageNumber,
       toCommaSeparatedString(state.branches),
     ]
   );
@@ -79,8 +79,8 @@ function RunList(props: Props) {
         history.push({
           // todo can we make this better?
           search: updateQueryString(history.location.search, {
-            page_number: page.page_number,
-            page_size: page.page_size,
+            pageNumber: page.pageNumber,
+            pageSize: page.pageSize,
           }),
         });
       }}

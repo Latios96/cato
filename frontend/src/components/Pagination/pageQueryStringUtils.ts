@@ -2,8 +2,8 @@ import { PageRequest } from "./Page";
 import queryString from "query-string";
 export function toQueryString(pageRequest: PageRequest): string {
   return queryString.stringify({
-    page_number: pageRequest.page_number,
-    page_size: pageRequest.page_size,
+    pageNumber: pageRequest.pageNumber,
+    pageSize: pageRequest.pageSize,
   });
 }
 
@@ -12,8 +12,8 @@ export function fromQueryString(
   defaultPage?: PageRequest
 ): PageRequest {
   const parsed = queryString.parse(theQueryString, { parseNumbers: true });
-  const pageNumber = Number(parsed.page_number);
-  const pageSize = Number(parsed.page_size);
+  const pageNumber = Number(parsed.pageNumber);
+  const pageSize = Number(parsed.pageSize);
   const invalidData = Number.isNaN(pageNumber) || Number.isNaN(pageSize);
   if (invalidData && !defaultPage) {
     throw new Error("Invalid query string: " + theQueryString);
@@ -21,7 +21,7 @@ export function fromQueryString(
     return defaultPage;
   }
   return {
-    page_number: pageNumber,
-    page_size: pageSize,
+    pageNumber: pageNumber,
+    pageSize: pageSize,
   };
 }

@@ -18,19 +18,19 @@ class CreateComparisonSettingsEditValidator(SchemaValidator):
     def validate(self, data: Dict) -> Dict[str, List[str]]:
         errors = super(CreateComparisonSettingsEditValidator, self).validate(data)
 
-        test_result_id = data.get("test_result_id")
+        test_result_id = data.get("testResultId")
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if test_result_id and not test_result:
             self.add_error(
                 errors,
                 "id",
-                f"No TestResult with id {data.get('test_result_id')} exists!",
+                f"No TestResult with id {data.get('testResultId')} exists!",
             )
 
         if test_result and not test_result.comparison_settings:
             self.add_error(
                 errors,
-                "comparison_settings",
+                "comparisonSettings",
                 "Can't edit a test result which has no comparison settings!",
             )
 
@@ -47,26 +47,26 @@ class CreateReferenceImageEditValidator(SchemaValidator):
     def validate(self, data: Dict) -> Dict[str, List[str]]:
         errors = super(CreateReferenceImageEditValidator, self).validate(data)
 
-        test_result_id = data.get("test_result_id")
+        test_result_id = data.get("testResultId")
         test_result = self._test_result_repository.find_by_id(test_result_id)
         if test_result_id and not test_result:
             self.add_error(
                 errors,
                 "id",
-                f"No TestResult with id {data.get('test_result_id')} exists!",
+                f"No TestResult with id {data.get('testResultId')} exists!",
             )
 
         if test_result and not test_result.image_output:
             self.add_error(
                 errors,
-                "test_result_id",
+                "testResultId",
                 "Can't edit a test result which has no image output!",
             )
 
         if test_result and not test_result.comparison_settings:
             self.add_error(
                 errors,
-                "comparison_settings",
+                "comparisonSettings",
                 "Can't edit a test result which has no comparison settings!",
             )
 

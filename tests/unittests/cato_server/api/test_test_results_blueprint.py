@@ -56,7 +56,7 @@ def test_get_test_result_output_should_return(client, test_result, output):
     assert rv.status_code == 200
     assert rv.json() == {
         "id": 1,
-        "test_result_id": 1,
+        "testResultId": 1,
         "text": "This is a long text",
     }
 
@@ -78,25 +78,25 @@ def test_get_test_result_by_run_and_identifier_success(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "unified_test_status": "NOT_STARTED",
-        "finished_at": test_result.finished_at.isoformat(),
+        "unifiedTestStatus": "NOT_STARTED",
+        "finishedAt": test_result.finished_at.isoformat(),
         "id": 1,
-        "image_output": 1,
-        "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+        "imageOutput": 1,
+        "machineInfo": {"cores": 56, "cpuName": "cpu", "memory": 8},
         "message": "success",
-        "reference_image": 1,
+        "referenceImage": 1,
         "seconds": 5.0,
-        "started_at": test_result.started_at.isoformat(),
-        "suite_result_id": 1,
-        "test_command": "my_command",
-        "test_identifier": "my_suite/my_test_name",
-        "test_name": "my_test_name",
-        "test_variables": {"testkey": "test_value"},
-        "diff_image": 1,
-        "comparison_settings": None,
-        "error_value": None,
-        "thumbnail_file_id": None,
-        "failure_reason": None,
+        "startedAt": test_result.started_at.isoformat(),
+        "suiteResultId": 1,
+        "testCommand": "my_command",
+        "testIdentifier": "my_suite/my_test_name",
+        "testName": "my_test_name",
+        "testVariables": {"testkey": "test_value"},
+        "diffImage": 1,
+        "comparisonSettings": None,
+        "errorValue": None,
+        "thumbnailFileId": None,
+        "failureReason": None,
     }
 
 
@@ -117,24 +117,24 @@ def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifi
 def test_create_output_success(client, test_result):
     rv = client.post(
         "/api/v1/test_results/output",
-        json={"test_result_id": test_result.id, "text": "my text"},
+        json={"testResultId": test_result.id, "text": "my text"},
     )
 
     assert rv.status_code == 201
     assert rv.json() == {
         "id": 1,
-        "test_result_id": test_result.id,
+        "testResultId": test_result.id,
         "text": "my text",
     }
 
 
 def test_create_output_failure(client, test_result):
     rv = client.post(
-        "/api/v1/test_results/output", json={"test_result_id": 42, "text": "my text"}
+        "/api/v1/test_results/output", json={"testResultId": 42, "text": "my text"}
     )
 
     assert rv.status_code == 400
-    assert rv.json() == {"test_result_id": ["No test result exists for id 42."]}
+    assert rv.json() == {"testResultId": ["No test result exists for id 42."]}
 
 
 def test_get_test_results_by_run_id_should_find(client, run, test_result):
@@ -145,11 +145,11 @@ def test_get_test_results_by_run_id_should_find(client, run, test_result):
     assert rv.status_code == 200
     assert rv.json() == [
         {
-            "unified_test_status": "NOT_STARTED",
+            "unifiedTestStatus": "NOT_STARTED",
             "id": 1,
             "name": "my_test_name",
-            "test_identifier": "my_suite/my_test_name",
-            "thumbnail_file_id": None,
+            "testIdentifier": "my_suite/my_test_name",
+            "thumbnailFileId": None,
         }
     ]
 
@@ -164,11 +164,11 @@ def test_get_test_results_by_run_id_should_find_with_status_filter(
     assert rv.status_code == 200
     assert rv.json() == [
         {
-            "unified_test_status": "NOT_STARTED",
+            "unifiedTestStatus": "NOT_STARTED",
             "id": 1,
             "name": "my_test_name",
-            "test_identifier": "my_suite/my_test_name",
-            "thumbnail_file_id": None,
+            "testIdentifier": "my_suite/my_test_name",
+            "thumbnailFileId": None,
         }
     ]
 
@@ -183,22 +183,22 @@ def test_get_test_results_by_run_id_should_return_empty_list(client):
 
 
 def test_get_test_results_by_run_id_paginated_should_find(client, run, test_result):
-    url = f"/api/v1/test_results/run/{run.id}?page_number=1&page_size=10"
+    url = f"/api/v1/test_results/run/{run.id}?pageNumber=1&pageSize=10"
 
     rv = client.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
         "entities": [
             {
-                "unified_test_status": "NOT_STARTED",
+                "unifiedTestStatus": "NOT_STARTED",
                 "id": 1,
                 "name": "my_test_name",
-                "test_identifier": "my_suite/my_test_name",
-                "thumbnail_file_id": None,
+                "testIdentifier": "my_suite/my_test_name",
+                "thumbnailFileId": None,
             }
         ],
     }
@@ -207,37 +207,37 @@ def test_get_test_results_by_run_id_paginated_should_find(client, run, test_resu
 def test_get_test_results_by_run_id_paginated_should_find_with_status_filter(
     client, run, test_result
 ):
-    url = f"/api/v1/test_results/run/{run.id}?page_number=1&page_size=10&status_filter=NOT_STARTED"
+    url = f"/api/v1/test_results/run/{run.id}?pageNumber=1&pageSize=10&status_filter=NOT_STARTED"
 
     rv = client.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
         "entities": [
             {
-                "unified_test_status": "NOT_STARTED",
+                "unifiedTestStatus": "NOT_STARTED",
                 "id": 1,
                 "name": "my_test_name",
-                "test_identifier": "my_suite/my_test_name",
-                "thumbnail_file_id": None,
+                "testIdentifier": "my_suite/my_test_name",
+                "thumbnailFileId": None,
             }
         ],
     }
 
 
 def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
-    url = f"/api/v1/test_results/run/{42}?page_number=1&page_size=10"
+    url = f"/api/v1/test_results/run/{42}?pageNumber=1&pageSize=10"
 
     rv = client.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 0,
         "entities": [],
     }
 
@@ -249,54 +249,54 @@ def test_get_test_result_by_id(client, test_result):
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "unified_test_status": "NOT_STARTED",
-        "finished_at": test_result.finished_at.isoformat(),
+        "unifiedTestStatus": "NOT_STARTED",
+        "finishedAt": test_result.finished_at.isoformat(),
         "id": 1,
-        "diff_image": {
+        "diffImage": {
             "channels": [
-                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
+                {"fileId": 1, "id": 1, "imageId": 1, "name": "rgb"},
+                {"fileId": 2, "id": 2, "imageId": 1, "name": "alpha"},
             ],
             "height": 1080,
             "id": 1,
             "name": "test.exr",
-            "original_file_id": 1,
+            "originalFileId": 1,
             "width": 1920,
         },
-        "image_output": {
+        "imageOutput": {
             "channels": [
-                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
+                {"fileId": 1, "id": 1, "imageId": 1, "name": "rgb"},
+                {"fileId": 2, "id": 2, "imageId": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
-            "original_file_id": 1,
+            "originalFileId": 1,
             "width": 1920,
             "height": 1080,
         },
-        "machine_info": {"cores": 56, "cpu_name": "cpu", "memory": 8},
+        "machineInfo": {"cores": 56, "cpuName": "cpu", "memory": 8},
         "message": "success",
-        "reference_image": {
+        "referenceImage": {
             "channels": [
-                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
+                {"fileId": 1, "id": 1, "imageId": 1, "name": "rgb"},
+                {"fileId": 2, "id": 2, "imageId": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
-            "original_file_id": 1,
+            "originalFileId": 1,
             "width": 1920,
             "height": 1080,
         },
         "seconds": 5.0,
-        "started_at": test_result.started_at.isoformat(),
-        "suite_result_id": 1,
-        "test_command": "my_command",
-        "test_identifier": "my_suite/my_test_name",
-        "test_name": "my_test_name",
-        "test_variables": {"testkey": "test_value"},
-        "error_value": None,
-        "comparison_settings": None,
-        "thumbnail_file_id": None,
+        "startedAt": test_result.started_at.isoformat(),
+        "suiteResultId": 1,
+        "testCommand": "my_command",
+        "testIdentifier": "my_suite/my_test_name",
+        "testName": "my_test_name",
+        "testVariables": {"testkey": "test_value"},
+        "errorValue": None,
+        "comparisonSettings": None,
+        "thumbnailFileId": None,
     }
 
 
@@ -309,44 +309,44 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "unified_test_status": "NOT_STARTED",
-        "finished_at": test_result_no_machine_info.finished_at.isoformat(),
+        "unifiedTestStatus": "NOT_STARTED",
+        "finishedAt": test_result_no_machine_info.finished_at.isoformat(),
         "id": 1,
-        "diff_image": None,
-        "image_output": {
+        "diffImage": None,
+        "imageOutput": {
             "channels": [
-                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
+                {"fileId": 1, "id": 1, "imageId": 1, "name": "rgb"},
+                {"fileId": 2, "id": 2, "imageId": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
-            "original_file_id": 1,
+            "originalFileId": 1,
             "width": 1920,
             "height": 1080,
         },
-        "machine_info": None,
+        "machineInfo": None,
         "message": "success",
-        "reference_image": {
+        "referenceImage": {
             "channels": [
-                {"file_id": 1, "id": 1, "image_id": 1, "name": "rgb"},
-                {"file_id": 2, "id": 2, "image_id": 1, "name": "alpha"},
+                {"fileId": 1, "id": 1, "imageId": 1, "name": "rgb"},
+                {"fileId": 2, "id": 2, "imageId": 1, "name": "alpha"},
             ],
             "id": 1,
             "name": "test.exr",
-            "original_file_id": 1,
+            "originalFileId": 1,
             "width": 1920,
             "height": 1080,
         },
         "seconds": 5.0,
-        "started_at": test_result_no_machine_info.started_at.isoformat(),
-        "suite_result_id": 1,
-        "test_command": "my_command",
-        "test_identifier": "my_suite/my_test_name",
-        "test_name": "my_test_name",
-        "test_variables": {"testkey": "test_value"},
-        "comparison_settings": None,
-        "error_value": None,
-        "thumbnail_file_id": None,
+        "startedAt": test_result_no_machine_info.started_at.isoformat(),
+        "suiteResultId": 1,
+        "testCommand": "my_command",
+        "testIdentifier": "my_suite/my_test_name",
+        "testName": "my_test_name",
+        "testVariables": {"testkey": "test_value"},
+        "comparisonSettings": None,
+        "errorValue": None,
+        "thumbnailFileId": None,
     }
 
 
@@ -365,9 +365,9 @@ def test_finish_test_success(client, test_result, stored_image):
         "status": "SUCCESS",
         "seconds": 3,
         "message": "this is my finishing message",
-        "image_output": stored_image.id,
-        "reference_image": stored_image.id,
-        "error_value": 1,
+        "imageOutput": stored_image.id,
+        "referenceImage": stored_image.id,
+        "errorValue": 1,
     }
     rv = client.post(url, json=data)
 
@@ -381,14 +381,14 @@ def test_finish_test_failure(client, test_result, stored_image):
         "status": "SUCCESS",
         "seconds": 3,
         "message": "this is my finishing message",
-        "image_output": 42,
-        "reference_image": stored_image.id,
-        "error_value": 1,
+        "imageOutput": 42,
+        "referenceImage": stored_image.id,
+        "errorValue": 1,
     }
     rv = client.post(url, json=data)
 
     assert rv.status_code == 400
-    assert rv.json() == {"image_output": ["No image exists for id 42."]}
+    assert rv.json() == {"imageOutput": ["No image exists for id 42."]}
 
 
 def test_should_find_by_run_id_and_test_status(client, run, test_result):
@@ -422,8 +422,8 @@ def test_start_test_success(client, test_result):
     url = "/api/v1/test_results/start"
     data = {
         "id": test_result.id,
-        "machine_info": {
-            "cpu_name": "test",
+        "machineInfo": {
+            "cpuName": "test",
             "cores": 8,
             "memory": 8,
         },
@@ -437,8 +437,8 @@ def test_start_test_failure(client):
     url = "/api/v1/test_results/start"
     data = {
         "id": 42,
-        "machine_info": {
-            "cpu_name": "test",
+        "machineInfo": {
+            "cpuName": "test",
             "cores": 8,
             "memory": 8,
         },

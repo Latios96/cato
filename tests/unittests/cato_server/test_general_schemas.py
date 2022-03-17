@@ -98,7 +98,7 @@ class TestMaschineInfoSchema:
     def test_success(self):
         schema = MachineInfoSchema()
 
-        result = schema.validate({"cpu_name": "name", "cores": 8, "memory": 1})
+        result = schema.validate({"cpuName": "name", "cores": 8, "memory": 1})
 
         assert result == {}
 
@@ -107,14 +107,14 @@ class TestMaschineInfoSchema:
         [
             (
                 {"cores": 8, "memory": 1},
-                {"cpu_name": ["Missing data for required field."]},
+                {"cpuName": ["Missing data for required field."]},
             ),
             (
-                {"cpu_name": "name", "cores": -1, "memory": 1},
+                {"cpuName": "name", "cores": -1, "memory": 1},
                 {"cores": ["Must be greater than or equal to 1."]},
             ),
             (
-                {"cpu_name": "name", "cores": -1, "memory": -1},
+                {"cpuName": "name", "cores": -1, "memory": -1},
                 {
                     "cores": ["Must be greater than or equal to 1."],
                     "memory": ["Must be greater than or equal to 0."],

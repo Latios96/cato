@@ -26,19 +26,19 @@ class CreateOutputValidator(SchemaValidator):
     def validate(self, data: Dict) -> Dict[str, List[str]]:
         errors = super(CreateOutputValidator, self).validate(data)
 
-        test_result_id: int = data.get("test_result_id")
+        test_result_id: int = data.get("testResultId")
         test_result = self._test_result_repository.find_by_id(test_result_id)
         existing_output = self._output_repository.find_by_test_result_id(test_result_id)
         if test_result_id and not test_result:
             self.add_error(
                 errors,
-                "test_result_id",
+                "testResultId",
                 f"No test result exists for id {test_result_id}.",
             )
         elif test_result_id and existing_output:
             self.add_error(
                 errors,
-                "test_result_id",
+                "testResultId",
                 f"An output already exists for test result with id {test_result_id}.",
             )
 
@@ -64,30 +64,28 @@ class FinishTestResultValidator(SchemaValidator):
                 errors, "id", f"No TestResult with id {data.get('id')} exists!"
             )
 
-        image_output = data.get("image_output")
+        image_output = data.get("imageOutput")
         if image_output and not self._image_repository.find_by_id(image_output):
             self.add_error(
-                errors, "image_output", f"No image exists for id {image_output}."
+                errors, "imageOutput", f"No image exists for id {image_output}."
             )
 
-        reference_image = data.get("reference_image")
+        reference_image = data.get("referenceImage")
         if reference_image and not self._image_repository.find_by_id(reference_image):
             self.add_error(
-                errors, "reference_image", f"No image exists for id {reference_image}."
+                errors, "referenceImage", f"No image exists for id {reference_image}."
             )
 
-        diff_image = data.get("diff_image")
+        diff_image = data.get("diffImage")
         if diff_image and not self._image_repository.find_by_id(diff_image):
-            self.add_error(
-                errors, "diff_image", f"No image exists for id {diff_image}."
-            )
+            self.add_error(errors, "diffImage", f"No image exists for id {diff_image}.")
 
         if data.get("status") == "FAILED":
-            if not data.get("failure_reason"):
+            if not data.get("failureReason"):
                 self.add_error(
                     errors,
-                    "failure_reason",
-                    "failure_reason is required is test_status is FAILED",
+                    "failureReason",
+                    "failureReason is required if test_status is 'FAILED'",
                 )
 
         return errors

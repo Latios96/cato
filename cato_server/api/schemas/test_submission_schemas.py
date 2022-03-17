@@ -35,7 +35,7 @@ class ConfigSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
-    project_name = NAME_FIELD
+    projectName = NAME_FIELD
     suites = fields.List(fields.Nested(TestSuiteSchema), required=True)
     variables = OPTIONAL_VARIABLES_FIELD
 
@@ -45,6 +45,6 @@ class SubmissionInfoSchema(Schema):
         unknown = EXCLUDE
 
     config = fields.Nested(ConfigSchema, required=True)
-    run_id = ID_FIELD
-    resource_path = FILE_PATH_FIELD
+    runId = ID_FIELD
+    resourcePath = FILE_PATH_FIELD
     executable = FILE_PATH_FIELD

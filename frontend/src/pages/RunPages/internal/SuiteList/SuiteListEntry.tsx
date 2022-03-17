@@ -60,7 +60,7 @@ function SuiteListEntry(props: Props) {
         <span>
           <SuiteStatus suiteResult={props.suite} />
         </span>
-        <span>{props.suite.suite_name}</span>
+        <span>{props.suite.suiteName}</span>
       </div>
       <div>{expanded ? <SuiteTestList suite={props.suite} /> : ""}</div>
     </div>

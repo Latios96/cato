@@ -155,9 +155,9 @@ describe("usePagination hook", () => {
       });
 
       const newPage = {
-        page_number: 2,
-        page_size: firstPage.page_size,
-        total_entity_count: firstPage.total_entity_count,
+        pageNumber: 2,
+        pageSize: firstPage.pageSize,
+        totalEntityCount: firstPage.totalEntityCount,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -174,9 +174,9 @@ describe("usePagination hook", () => {
       });
 
       const newPage = {
-        page_number: 9,
-        page_size: lastPageFittingExactly.page_size,
-        total_entity_count: lastPageFittingExactly.total_entity_count,
+        pageNumber: 9,
+        pageSize: lastPageFittingExactly.pageSize,
+        totalEntityCount: lastPageFittingExactly.totalEntityCount,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -185,7 +185,7 @@ describe("usePagination hook", () => {
     it("should change to next page when calling next page on middle page", () => {
       const mockCallBack = jest.fn();
       const { result } = renderHook(() =>
-        usePagination(middlePage, middlePage.page_size, mockCallBack)
+        usePagination(middlePage, middlePage.pageSize, mockCallBack)
       );
 
       act(() => {
@@ -193,9 +193,9 @@ describe("usePagination hook", () => {
       });
 
       const newPage = {
-        page_number: 6,
-        page_size: middlePage.page_size,
-        total_entity_count: middlePage.total_entity_count,
+        pageNumber: 6,
+        pageSize: middlePage.pageSize,
+        totalEntityCount: middlePage.totalEntityCount,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -204,7 +204,7 @@ describe("usePagination hook", () => {
     it("should change to previous page when calling previous page on middle page", () => {
       const mockCallBack = jest.fn();
       const { result } = renderHook(() =>
-        usePagination(middlePage, middlePage.page_size, mockCallBack)
+        usePagination(middlePage, middlePage.pageSize, mockCallBack)
       );
 
       act(() => {
@@ -212,9 +212,9 @@ describe("usePagination hook", () => {
       });
 
       const newPage = {
-        page_number: 4,
-        page_size: middlePage.page_size,
-        total_entity_count: middlePage.total_entity_count,
+        pageNumber: 4,
+        pageSize: middlePage.pageSize,
+        totalEntityCount: middlePage.totalEntityCount,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);
@@ -225,7 +225,7 @@ describe("usePagination hook", () => {
     it("should change elements per page", () => {
       const mockCallBack = jest.fn();
       const { result } = renderHook(() =>
-        usePagination(smallPage, middlePage.page_size, mockCallBack)
+        usePagination(smallPage, middlePage.pageSize, mockCallBack)
       );
 
       act(() => {
@@ -233,9 +233,9 @@ describe("usePagination hook", () => {
       });
 
       const newPage = {
-        page_number: smallPage.page_number,
-        page_size: 11,
-        total_entity_count: smallPage.total_entity_count,
+        pageNumber: smallPage.pageNumber,
+        pageSize: 11,
+        totalEntityCount: smallPage.totalEntityCount,
       };
       expect(result.current.currentPage).toStrictEqual(newPage);
       expect(mockCallBack).toHaveBeenCalledWith(newPage);

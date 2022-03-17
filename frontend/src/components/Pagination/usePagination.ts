@@ -22,11 +22,11 @@ export function usePagination(
   );
 
   const isFirstPage = (): boolean => {
-    return currentPage.page_number === 1;
+    return currentPage.pageNumber === 1;
   };
 
   const isLastPage = (): boolean => {
-    return currentPage.page_number === totalPages(currentPage);
+    return currentPage.pageNumber === totalPages(currentPage);
   };
 
   const nextPage = () => {
@@ -34,9 +34,9 @@ export function usePagination(
       return;
     }
     const newPage: ControllablePage = {
-      page_number: currentPage.page_number + 1,
-      page_size: elementsPerPage,
-      total_entity_count: currentPage.total_entity_count,
+      pageNumber: currentPage.pageNumber + 1,
+      pageSize: elementsPerPage,
+      totalEntityCount: currentPage.totalEntityCount,
     };
     setCurrentPage(newPage);
     pageChangedCallback(newPage);
@@ -47,9 +47,9 @@ export function usePagination(
       return;
     }
     const newPage: ControllablePage = {
-      page_number: currentPage.page_number - 1,
-      page_size: elementsPerPage,
-      total_entity_count: currentPage.total_entity_count,
+      pageNumber: currentPage.pageNumber - 1,
+      pageSize: elementsPerPage,
+      totalEntityCount: currentPage.totalEntityCount,
     };
     setCurrentPage(newPage);
     pageChangedCallback(newPage);
@@ -61,9 +61,9 @@ export function usePagination(
     changeCurrentElementsPerPage: (count: number) => {
       setElementsPerPage(count);
       const newPage = {
-        page_number: currentPage.page_number,
-        page_size: count,
-        total_entity_count: currentPage.total_entity_count,
+        pageNumber: currentPage.pageNumber,
+        pageSize: count,
+        totalEntityCount: currentPage.totalEntityCount,
       };
       setCurrentPage(newPage);
       pageChangedCallback(newPage);

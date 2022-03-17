@@ -14,7 +14,7 @@ interface Props {
 function UpdateReferenceImageButton(props: Props) {
   const [isDoingIo, setIsDoingIo] = useState(false);
   const [isEditable, setIsEditable] = useState<CanBeEdited>({
-    can_edit: false,
+    canEdit: false,
   });
 
   const { update } = useContext(TestResultUpdateContext);
@@ -28,7 +28,7 @@ function UpdateReferenceImageButton(props: Props) {
         setIsDoingIo(false);
       })
       .catch(() => {
-        setIsEditable({ can_edit: false });
+        setIsEditable({ canEdit: false });
         setIsDoingIo(false);
       });
   }, [props.testResultId]);
@@ -40,7 +40,7 @@ function UpdateReferenceImageButton(props: Props) {
           setIsDoingIo(true);
           axios
             .post("/api/v1/test_edits/reference_image", {
-              test_result_id: props.testResultId,
+              testResultId: props.testResultId,
             })
             .then(() => {
               setIsDoingIo(false);
@@ -50,7 +50,7 @@ function UpdateReferenceImageButton(props: Props) {
               setIsDoingIo(false);
             });
         }}
-        disabled={!isEditable.can_edit || isDoingIo}
+        disabled={!isEditable.canEdit || isDoingIo}
       >
         Update Reference Image
       </Button>
@@ -58,7 +58,7 @@ function UpdateReferenceImageButton(props: Props) {
         <div className={styles.spinner}>
           <Spinner />
         </div>
-      ) : !isEditable.can_edit ? (
+      ) : !isEditable.canEdit ? (
         <div className={styles.information}>
           <InformationIcon informationText={isEditable.message || ""} />
         </div>

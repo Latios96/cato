@@ -14,28 +14,28 @@ def test_get_test_edits_by_test_result_id(client, test_edit, test_result):
 
     json = rv.json()
     now = datetime.datetime.now()
-    json[0]["created_at"] = now
+    json[0]["createdAt"] = now
     assert json == [
         {
-            "created_at": now,
-            "edit_type": "COMPARISON_SETTINGS",
+            "createdAt": now,
+            "editType": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {
-                "comparison_settings": {"method": "SSIM", "threshold": 10.0},
-                "diff_image_id": 2,
+            "newValue": {
+                "comparisonSettings": {"method": "SSIM", "threshold": 10.0},
+                "diffImageId": 2,
                 "message": "still success",
                 "status": "SUCCESS",
-                "error_value": 0.1,
+                "errorValue": 0.1,
             },
-            "old_value": {
-                "comparison_settings": {"method": "SSIM", "threshold": 1.0},
-                "diff_image_id": 1,
+            "oldValue": {
+                "comparisonSettings": {"method": "SSIM", "threshold": 1.0},
+                "diffImageId": 1,
                 "message": "success",
                 "status": "SUCCESS",
-                "error_value": 1,
+                "errorValue": 1.0,
             },
-            "test_id": 1,
-            "test_identifier": "my_suite/my_test_name",
+            "testId": 1,
+            "testIdentifier": "my_suite/my_test_name",
         }
     ]
 
@@ -59,28 +59,28 @@ def test_get_test_edits_by_run_id(client, test_edit, test_result, run):
 
     json = rv.json()
     now = datetime.datetime.now()
-    json[0]["created_at"] = now
+    json[0]["createdAt"] = now
     assert json == [
         {
-            "created_at": now,
-            "edit_type": "COMPARISON_SETTINGS",
+            "createdAt": now,
+            "editType": "COMPARISON_SETTINGS",
             "id": 1,
-            "new_value": {
-                "comparison_settings": {"method": "SSIM", "threshold": 10.0},
-                "diff_image_id": 2,
+            "newValue": {
+                "comparisonSettings": {"method": "SSIM", "threshold": 10.0},
+                "diffImageId": 2,
                 "message": "still success",
                 "status": "SUCCESS",
-                "error_value": 0.1,
+                "errorValue": 0.1,
             },
-            "old_value": {
-                "comparison_settings": {"method": "SSIM", "threshold": 1.0},
-                "diff_image_id": 1,
+            "oldValue": {
+                "comparisonSettings": {"method": "SSIM", "threshold": 1.0},
+                "diffImageId": 1,
                 "message": "success",
                 "status": "SUCCESS",
-                "error_value": 1,
+                "errorValue": 1,
             },
-            "test_id": 1,
-            "test_identifier": "my_suite/my_test_name",
+            "testId": 1,
+            "testIdentifier": "my_suite/my_test_name",
         }
     ]
 
@@ -115,35 +115,35 @@ def test_create_comparison_settings_edit_success(
     rv = client.post(
         url,
         json={
-            "test_result_id": test_result.id,
-            "new_value": {"method": "SSIM", "threshold": 1},
+            "testResultId": test_result.id,
+            "newValue": {"method": "SSIM", "threshold": 1},
         },
     )
 
     assert rv.status_code == 201
     json = rv.json()
     now = datetime.datetime.now()
-    json["created_at"] = now
+    json["createdAt"] = now
     assert json == {
-        "created_at": now,
-        "edit_type": "COMPARISON_SETTINGS",
+        "createdAt": now,
+        "editType": "COMPARISON_SETTINGS",
         "id": 1,
-        "new_value": {
-            "comparison_settings": {"method": "SSIM", "threshold": 1},
-            "diff_image_id": 3,
+        "newValue": {
+            "comparisonSettings": {"method": "SSIM", "threshold": 1},
+            "diffImageId": 3,
             "message": None,
             "status": "SUCCESS",
-            "error_value": 1,
+            "errorValue": 1,
         },
-        "old_value": {
-            "comparison_settings": {"method": "SSIM", "threshold": 1.0},
-            "diff_image_id": None,
+        "oldValue": {
+            "comparisonSettings": {"method": "SSIM", "threshold": 1.0},
+            "diffImageId": None,
             "message": "success",
             "status": "SUCCESS",
-            "error_value": None,
+            "errorValue": None,
         },
-        "test_id": 1,
-        "test_identifier": "my_suite/my_test_name",
+        "testId": 1,
+        "testIdentifier": "my_suite/my_test_name",
     }
 
 
@@ -155,8 +155,8 @@ def test_create_comparison_settings_edit_failure(
     rv = client.post(
         url,
         json={
-            "test_result_id": 1,
-            "new_value": {"method": "SSIM", "threshold": 1},
+            "testResultId": 1,
+            "newValue": {"method": "SSIM", "threshold": 1},
         },
     )
 
@@ -180,7 +180,7 @@ def test_can_create_comparison_settings_edit_should_return_true(
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.json() == {"can_edit": True, "message": None}
+    assert rv.json() == {"canEdit": True, "message": None}
 
 
 def test_can_create_comparison_settings_edit_should_return_false(
@@ -195,7 +195,7 @@ def test_can_create_comparison_settings_edit_should_return_false(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "can_edit": False,
+        "canEdit": False,
         "message": "Can't edit a test result which has no comparison settings!",
     }
 
@@ -216,7 +216,7 @@ def test_can_create_reference_image_edit_should_return_true(
     rv = client.get(url)
 
     assert rv.status_code == 200
-    assert rv.json() == {"can_edit": True, "message": None}
+    assert rv.json() == {"canEdit": True, "message": None}
 
 
 def test_can_create_reference_image_edit_should_return_false(
@@ -231,7 +231,7 @@ def test_can_create_reference_image_edit_should_return_false(
 
     assert rv.status_code == 200
     assert rv.json() == {
-        "can_edit": False,
+        "canEdit": False,
         "message": "Can't edit a test result which has no image_output!",
     }
 
@@ -255,33 +255,33 @@ def test_create_reference_image_edit_success(
 
     rv = client.post(
         url,
-        json={"test_result_id": test_result.id},
+        json={"testResultId": test_result.id},
     )
 
     assert rv.status_code == 201
     json = rv.json()
     now = datetime.datetime.now()
-    json["created_at"] = now
+    json["createdAt"] = now
     assert json == {
-        "created_at": now,
-        "edit_type": "REFERENCE_IMAGE",
+        "createdAt": now,
+        "editType": "REFERENCE_IMAGE",
         "id": 1,
-        "new_value": {
-            "diff_image_id": 3,
-            "error_value": 1.0,
+        "newValue": {
+            "diffImageId": 3,
+            "errorValue": 1.0,
             "message": None,
-            "reference_image_id": 1,
+            "referenceImageId": 1,
             "status": "SUCCESS",
         },
-        "old_value": {
-            "diff_image_id": None,
-            "error_value": None,
+        "oldValue": {
+            "diffImageId": None,
+            "errorValue": None,
             "message": "success",
-            "reference_image_id": 2,
+            "referenceImageId": 2,
             "status": "SUCCESS",
         },
-        "test_id": 1,
-        "test_identifier": "my_suite/my_test_name",
+        "testId": 1,
+        "testIdentifier": "my_suite/my_test_name",
     }
 
 
@@ -293,7 +293,7 @@ def test_create_reference_image_edit_failure(
     rv = client.post(
         url,
         json={
-            "test_result_id": 1,
+            "testResultId": 1,
         },
     )
 
@@ -315,25 +315,25 @@ def test_test_edits_by_run_id_should_return_test_edit(
     json = rv.json()
     assert json == [
         {
-            "created_at": now.isoformat(),
-            "edit_type": "REFERENCE_IMAGE",
+            "createdAt": now.isoformat(),
+            "editType": "REFERENCE_IMAGE",
             "id": 1,
-            "new_value": {
-                "diff_image_id": 3,
-                "error_value": 1.0,
+            "newValue": {
+                "diffImageId": 3,
+                "errorValue": 1.0,
                 "message": None,
-                "reference_image_id": 2,
+                "referenceImageId": 2,
                 "status": "SUCCESS",
             },
-            "old_value": {
-                "diff_image_id": 5,
-                "error_value": 0.5,
+            "oldValue": {
+                "diffImageId": 5,
+                "errorValue": 0.5,
                 "message": "Failed",
-                "reference_image_id": 4,
+                "referenceImageId": 4,
                 "status": "FAILED",
             },
-            "test_id": 1,
-            "test_identifier": "some/test",
+            "testId": 1,
+            "testIdentifier": "some/test",
         }
     ]
 

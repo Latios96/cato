@@ -17,10 +17,10 @@ def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
     assert rv.json() == [
         {
             "id": 1,
-            "run_id": 1,
+            "runId": 1,
             "status": "NOT_STARTED",
-            "suite_name": "my_suite",
-            "suite_variables": {"key": "value"},
+            "suiteName": "my_suite",
+            "suiteVariables": {"key": "value"},
         }
     ]
 
@@ -34,10 +34,10 @@ def test_get_suite_result_by_run_id_filtered_should_return(client, suite_result,
     assert rv.json() == [
         {
             "id": 1,
-            "run_id": 1,
+            "runId": 1,
             "status": "NOT_STARTED",
-            "suite_name": "my_suite",
-            "suite_variables": {"key": "value"},
+            "suiteName": "my_suite",
+            "suiteVariables": {"key": "value"},
         }
     ]
 
@@ -52,7 +52,7 @@ def test_get_suite_result_by_run_id_should_return_empty_list(client):
 
 
 def test_get_suite_by_run_id_paged_should_return(client, suite_result, run):
-    url = "/api/v1/suite_results/run/{}?page_number=1&page_size=10".format(run.id)
+    url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10".format(run.id)
 
     rv = client.get(url)
 
@@ -61,22 +61,22 @@ def test_get_suite_by_run_id_paged_should_return(client, suite_result, run):
         "entities": [
             {
                 "id": 1,
-                "run_id": 1,
+                "runId": 1,
                 "status": "NOT_STARTED",
-                "suite_name": "my_suite",
-                "suite_variables": {"key": "value"},
+                "suiteName": "my_suite",
+                "suiteVariables": {"key": "value"},
             }
         ],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
     }
 
 
 def test_get_suite_by_run_id_paged_and_filtered_should_return(
     client, suite_result, run
 ):
-    url = "/api/v1/suite_results/run/{}?page_number=1&page_size=10&statusFilter=NOT_STARTED".format(
+    url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10&statusFilter=NOT_STARTED".format(
         run.id
     )
 
@@ -87,29 +87,29 @@ def test_get_suite_by_run_id_paged_and_filtered_should_return(
         "entities": [
             {
                 "id": 1,
-                "run_id": 1,
+                "runId": 1,
                 "status": "NOT_STARTED",
-                "suite_name": "my_suite",
-                "suite_variables": {"key": "value"},
+                "suiteName": "my_suite",
+                "suiteVariables": {"key": "value"},
             }
         ],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 1,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 1,
     }
 
 
 def test_get_suite_by_run_id_pages_should_return_empty_page(client, project):
-    url = "/api/v1/suite_results/run/{}?page_number=1&page_size=10".format(project.id)
+    url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10".format(project.id)
 
     rv = client.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
         "entities": [],
-        "page_number": 1,
-        "page_size": 10,
-        "total_entity_count": 0,
+        "pageNumber": 1,
+        "pageSize": 10,
+        "totalEntityCount": 0,
     }
 
 
@@ -121,9 +121,9 @@ def test_get_by_id_should_find(client, suite_result):
     assert rv.status_code == 200
     assert rv.json() == {
         "id": 1,
-        "run_id": 1,
-        "suite_name": "my_suite",
-        "suite_variables": {"key": "value"},
+        "runId": 1,
+        "suiteName": "my_suite",
+        "suiteVariables": {"key": "value"},
         "tests": [],
     }
 
@@ -138,16 +138,16 @@ def test_get_by_id_should_find_should_contain_no_tests(
     assert rv.status_code == 200
     assert rv.json() == {
         "id": 1,
-        "run_id": 1,
-        "suite_name": "my_suite",
-        "suite_variables": {"key": "value"},
+        "runId": 1,
+        "suiteName": "my_suite",
+        "suiteVariables": {"key": "value"},
         "tests": [
             {
                 "id": 1,
                 "name": "my_test_name",
-                "unified_test_status": "NOT_STARTED",
-                "test_identifier": "my_suite/my_test_name",
-                "thumbnail_file_id": None,
+                "unifiedTestStatus": "NOT_STARTED",
+                "testIdentifier": "my_suite/my_test_name",
+                "thumbnailFileId": None,
             }
         ],
     }

@@ -13,14 +13,14 @@ class TestCreateOutputSchema:
     def test_success(self):
         schema = CreateOutputSchema()
 
-        errors = schema.validate({"test_result_id": 1, "text": "This is a long text"})
+        errors = schema.validate({"testResultId": 1, "text": "This is a long text"})
 
         assert errors == {}
 
     def test_success_max_length_string(self):
         schema = CreateOutputSchema()
 
-        errors = schema.validate({"test_result_id": 1, "text": STRING_WITH_MAX_SIZE})
+        errors = schema.validate({"testResultId": 1, "text": STRING_WITH_MAX_SIZE})
 
         assert errors == {}
 
@@ -30,20 +30,20 @@ class TestCreateOutputSchema:
             (
                 {},
                 {
-                    "test_result_id": ["Missing data for required field."],
+                    "testResultId": ["Missing data for required field."],
                     "text": ["Missing data for required field."],
                 },
             ),
             (
-                {"test_result_id": "wurst", "text": "This is a long text"},
-                {"test_result_id": ["Not a valid integer."]},
+                {"testResultId": "wurst", "text": "This is a long text"},
+                {"testResultId": ["Not a valid integer."]},
             ),
             (
-                {"test_result_id": 1, "text": ["This is a long text"]},
+                {"testResultId": 1, "text": ["This is a long text"]},
                 {"text": ["Not a valid string."]},
             ),
             (
-                {"test_result_id": 1, "text": STRING_WITH_MAX_SIZE + "x"},
+                {"testResultId": 1, "text": STRING_WITH_MAX_SIZE + "x"},
                 {"text": ["Longer than maximum length 10000000."]},
             ),
         ],
@@ -61,7 +61,7 @@ class TestStartTestResultSchema:
         schema = StartTestResultSchema()
 
         errors = schema.validate(
-            {"id": 42, "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24}}
+            {"id": 42, "machineInfo": {"cpuName": "Intel", "cores": 8, "memory": 24}}
         )
 
         assert errors == {}
@@ -73,41 +73,41 @@ class TestStartTestResultSchema:
                 {},
                 {
                     "id": ["Missing data for required field."],
-                    "machine_info": ["Missing data for required field."],
+                    "machineInfo": ["Missing data for required field."],
                 },
             ),
             (
                 {
                     "id": "w",
-                    "machine_info": {"cpu_name": "Intel", "cores": 8, "memory": 24},
+                    "machineInfo": {"cpuName": "Intel", "cores": 8, "memory": 24},
                 },
                 {"id": ["Not a valid integer."]},
             ),
             (
                 {
                     "id": 42,
-                    "machine_info": {"cpu_wname": "Intel", "cores": 8, "memory": 24},
+                    "machineInfo": {"cpu_wname": "Intel", "cores": 8, "memory": 24},
                 },
-                {"machine_info": {"cpu_name": ["Missing data for required field."]}},
+                {"machineInfo": {"cpuName": ["Missing data for required field."]}},
             ),
             (
                 {
                     "id": 42,
-                    "machine_info": {
-                        "cpu_name": "Intel",
+                    "machineInfo": {
+                        "cpuName": "Intel",
                         "cores": "eight",
                         "memory": 24,
                     },
                 },
-                {"machine_info": {"cores": ["Not a valid integer."]}},
+                {"machineInfo": {"cores": ["Not a valid integer."]}},
             ),
             (
                 {
                     "id": 42,
-                    "machine_info": {"cpu_name": "Intel", "cores": -8, "memory": -24},
+                    "machineInfo": {"cpuName": "Intel", "cores": -8, "memory": -24},
                 },
                 {
-                    "machine_info": {
+                    "machineInfo": {
                         "cores": ["Must be greater than or equal to 1."],
                         "memory": ["Must be greater than or equal to 0."],
                     }

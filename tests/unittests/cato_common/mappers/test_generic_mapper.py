@@ -89,7 +89,7 @@ class TestMapToDict:
             SimpleDataClass(my_int=1, my_string="my_string")
         )
 
-        assert result == {"my_int": 1, "my_string": "my_string"}
+        assert result == {"myInt": 1, "myString": "my_string"}
 
     def test_map_dataclass_with_simple_list(self):
 
@@ -99,7 +99,7 @@ class TestMapToDict:
             )
         )
 
-        assert result == {"my_int": 1, "my_string_list": ["my", "string", "list"]}
+        assert result == {"myInt": 1, "myStringList": ["my", "string", "list"]}
 
     def test_map_dataclass_with_list_of_dataclasses(self):
 
@@ -115,11 +115,11 @@ class TestMapToDict:
         )
 
         assert result == {
-            "my_int": 1,
-            "my_list": [
-                {"my_int": 1, "my_string": "my_string1"},
-                {"my_int": 2, "my_string": "my_string2"},
-                {"my_int": 3, "my_string": "my_string3"},
+            "myInt": 1,
+            "myList": [
+                {"myInt": 1, "myString": "my_string1"},
+                {"myInt": 2, "myString": "my_string2"},
+                {"myInt": 3, "myString": "my_string3"},
             ],
         }
 
@@ -135,12 +135,12 @@ class TestMapToDict:
             )
         )
 
-        assert result == {"my_datetime": "my datetime string", "my_int": 1}
+        assert result == {"myDatetime": "my datetime string", "myInt": 1}
 
     def test_map_dataclass_with_custom_class_mapper_for_field(self):
         class CustomMapper(AbstractClassMapper[NestedClass]):
             def map_to_dict(self, test_result: NestedClass) -> Dict:
-                return {"my_int": 42, "my_string": test_result.my_string}
+                return {"myInt": 42, "myString": test_result.my_string}
 
         registry = MapperRegistry()
         registry.register_class_mapper(NestedClass, CustomMapper())
@@ -152,12 +152,12 @@ class TestMapToDict:
             )
         )
 
-        assert result == {"my_nested_class": {"my_int": 42, "my_string": "my_test"}}
+        assert result == {"myNestedClass": {"myInt": 42, "myString": "my_test"}}
 
     def test_map_dataclass_with_custom_mapper_for_dataclass(self):
         class CustomMapper(AbstractClassMapper[SimpleDataClass]):
             def map_to_dict(self, test_result: SimpleDataClass) -> Dict:
-                return {"my_int": 42, "my_string": test_result.my_string}
+                return {"myInt": 42, "myString": test_result.my_string}
 
         registry = MapperRegistry()
         registry.register_class_mapper(SimpleDataClass, CustomMapper())
@@ -165,14 +165,14 @@ class TestMapToDict:
 
         result = mapper.map_to_dict(SimpleDataClass(my_int=1, my_string="my_test"))
 
-        assert result == {"my_int": 42, "my_string": "my_test"}
+        assert result == {"myInt": 42, "myString": "my_test"}
 
     def test_map_enum(self):
         result = GenericClassMapper(MapperRegistry()).map_to_dict(
             DataClassWithEnum(enum_value=MyEnum.VALUE)
         )
 
-        assert result == {"enum_value": "VALUE"}
+        assert result == {"enumValue": "VALUE"}
 
     def test_map_datetime(self):
         result = GenericClassMapper(MapperRegistry()).map_to_dict(
@@ -181,14 +181,14 @@ class TestMapToDict:
             )
         )
 
-        assert result == {"my_int": 1, "my_datetime": "2021-08-05T09:53:00"}
+        assert result == {"myInt": 1, "myDatetime": "2021-08-05T09:53:00"}
 
 
 class TestMapFromDict:
     def test_simple_class(self):
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_int": 1, "my_string": "my_string"}, SimpleDataClass
+            {"myInt": 1, "myString": "my_string"}, SimpleDataClass
         )
 
         assert result == SimpleDataClass(my_int=1, my_string="my_string")
@@ -196,7 +196,7 @@ class TestMapFromDict:
     def test_simple_class_with_simple_list(self):
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_int": 1, "my_string_list": ["my", "test", "list"]},
+            {"myInt": 1, "myStringList": ["my", "test", "list"]},
             SimpleDataClassWithStringList,
         )
 
@@ -208,11 +208,11 @@ class TestMapFromDict:
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
             {
-                "my_int": 1,
-                "my_list": [
-                    {"my_int": 1, "my_string": "my1"},
-                    {"my_int": 2, "my_string": "my2"},
-                    {"my_int": 3, "my_string": "my3"},
+                "myInt": 1,
+                "myList": [
+                    {"myInt": 1, "myString": "my1"},
+                    {"myInt": 2, "myString": "my2"},
+                    {"myInt": 3, "myString": "my3"},
                 ],
             },
             SimpleDataClassWithListedClassList,
@@ -231,7 +231,7 @@ class TestMapFromDict:
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
             {
-                "my_nested_class": {"my_int": 1, "my_string": "test"},
+                "myNestedClass": {"myInt": 1, "myString": "test"},
             },
             DataClassWithNestedClass,
         )
@@ -242,14 +242,14 @@ class TestMapFromDict:
     def test_map_dataclass_with_custom_class_mapper_for_field(self):
         class CustomMapper(AbstractClassMapper[NestedClass]):
             def map_from_dict(self, json_data: Dict) -> T:
-                return NestedClass(my_int=42, my_string=json_data["my_string"])
+                return NestedClass(my_int=42, my_string=json_data["myString"])
 
         registry = MapperRegistry()
         registry.register_class_mapper(NestedClass, CustomMapper())
         mapper = GenericClassMapper(registry)
 
         result = mapper.map_from_dict(
-            {"my_nested_class": {"my_int": 1, "my_string": "my_test"}},
+            {"myNestedClass": {"myInt": 1, "myString": "my_test"}},
             DataClassWithNestedClass,
         )
 
@@ -260,14 +260,14 @@ class TestMapFromDict:
     def test_map_dataclass_with_custom_mapper(self):
         class CustomMapper(AbstractClassMapper[SimpleDataClass]):
             def map_from_dict(self, json_data: Dict) -> T:
-                return SimpleDataClass(my_int=42, my_string=json_data["my_string"])
+                return SimpleDataClass(my_int=42, my_string=json_data["myString"])
 
         registry = MapperRegistry()
         registry.register_class_mapper(SimpleDataClass, CustomMapper())
         mapper = GenericClassMapper(registry)
 
         result = mapper.map_from_dict(
-            {"my_int": 1, "my_string": "my_test"}, SimpleDataClass
+            {"myInt": 1, "myString": "my_test"}, SimpleDataClass
         )
 
         assert result == SimpleDataClass(my_int=42, my_string="my_test")
@@ -279,7 +279,7 @@ class TestMapFromDict:
         mapper = GenericClassMapper(registry)
 
         result = mapper.map_from_dict(
-            {"my_datetime": "2021-07-31T09:31:00", "my_int": 1}, DataClassWithDatetime
+            {"myDatetime": "2021-07-31T09:31:00", "myInt": 1}, DataClassWithDatetime
         )
 
         assert result == DataClassWithDatetime(
@@ -293,7 +293,7 @@ class TestMapFromDict:
             my_optional: Optional[int]
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_optional": json_value}, SimpleDataClassWithOptionalField
+            {"myOptional": json_value}, SimpleDataClassWithOptionalField
         )
 
         assert result == SimpleDataClassWithOptionalField(parsed_value)
@@ -307,7 +307,7 @@ class TestMapFromDict:
             my_optional: Optional[str]
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_optional": json_value}, SimpleDataClassWithOptionalField
+            {"myOptional": json_value}, SimpleDataClassWithOptionalField
         )
 
         assert result == SimpleDataClassWithOptionalField(parsed_value)
@@ -323,7 +323,7 @@ class TestMapFromDict:
     def test_map_dataclass_nested_optional_class_and_other_value(self):
 
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_string": "test"},
+            {"myString": "test"},
             DataClassWithOptionalNestedClass,
         )
         assert result == DataClassWithOptionalNestedClass(
@@ -346,7 +346,7 @@ class TestMapFromDict:
 
         result = mapper.map_from_dict(
             {
-                "my_int": 1,
+                "myInt": 1,
             },
             ClassWithCustomMapper,
         )
@@ -363,7 +363,7 @@ class TestMapFromDict:
         registry.register_value_mapper(datetime.datetime, DateTimeValueMapper())
         mapper = GenericClassMapper(registry)
 
-        result = mapper.map_from_dict({"my_int": 1}, DataClassWithDatetime)
+        result = mapper.map_from_dict({"myInt": 1}, DataClassWithDatetime)
 
         assert result == DataClassWithDatetime(my_int=1, my_datetime=None)
 
@@ -381,7 +381,7 @@ class TestMapFromDict:
         mapper = GenericClassMapper(MapperRegistry())
 
         result = mapper.map_from_dict(
-            {"my_int": 1, "my_nested_class": {"my_int": 2}}, ClassWithCustomMapper
+            {"myInt": 1, "myNestedClass": {"myInt": 2}}, ClassWithCustomMapper
         )
 
         assert result == ClassWithCustomMapper(
@@ -396,7 +396,7 @@ class TestMapFromDict:
         mapper = GenericClassMapper(MapperRegistry())
 
         result = mapper.map_from_dict(
-            {"my_list": [1, 0, 2, 3, None]}, ClassWithListOfOptionals
+            {"myList": [1, 0, 2, 3, None]}, ClassWithListOfOptionals
         )
 
         assert result == ClassWithListOfOptionals(my_list=[1, 0, 2, 3, None])
@@ -410,10 +410,10 @@ class TestMapFromDict:
 
         result = mapper.map_from_dict(
             {
-                "my_list": [
-                    {"my_int": 1, "my_string": "2"},
+                "myList": [
+                    {"myInt": 1, "myString": "2"},
                     None,
-                    {"my_int": 2, "my_string": "3"},
+                    {"myInt": 2, "myString": "3"},
                 ]
             },
             ClassWithListOfOptionals,
@@ -442,7 +442,7 @@ class TestMapFromDict:
 
     def test_map_enum(self):
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"enum_value": "VALUE"}, DataClassWithEnum
+            {"enumValue": "VALUE"}, DataClassWithEnum
         )
 
         assert result == DataClassWithEnum(enum_value=MyEnum.VALUE)
@@ -460,7 +460,7 @@ class TestMapFromDict:
 
     def test_map_datetime(self):
         result = GenericClassMapper(MapperRegistry()).map_from_dict(
-            {"my_int": 1, "my_datetime": "2021-08-05T09:53:00"}, DataClassWithDatetime
+            {"myInt": 1, "myDatetime": "2021-08-05T09:53:00"}, DataClassWithDatetime
         )
 
         assert result == DataClassWithDatetime(
