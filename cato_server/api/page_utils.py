@@ -6,10 +6,10 @@ from cato_common.storage.page import PageRequest
 
 
 def page_request_from_request(
-    flask_request_args: ImmutableMultiDict,
+    request_args: ImmutableMultiDict,
 ) -> Optional[PageRequest]:
-    page_number = flask_request_args.get("pageNumber")
-    page_size = flask_request_args.get("pageSize")
+    page_number = request_args.get("pageNumber")
+    page_size = request_args.get("pageSize")
 
     if page_number is None and page_size is None:
         return None
