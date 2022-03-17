@@ -50,10 +50,8 @@ def test_create_storage_bindings_for_postgres():
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -89,10 +87,8 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -135,10 +131,8 @@ def test_create_scheduler_bindings_no_scheduler():
             backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
     bindings_factory = BindingsFactory(config)
 
@@ -161,8 +155,8 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
         backup_count=AppConfigurationDefaults.BACKUP_COUNT_DEFAULT,
     ),
     scheduler_configuration=DeadlineSchedulerConfiguration("test"),
-    sentry_configuration=SentryConfiguration(url=None),
-    session_configuration=SessionConfiguration(lifetime=datetime.timedelta(hours=2)),
+    sentry_configuration=SentryConfiguration.default(),
+    session_configuration=SessionConfiguration.default(),
 )
 
 

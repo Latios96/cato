@@ -20,7 +20,7 @@ def session_backend_fixture():
     mock_session_repository = mock_safe(SessionRepository)
     session_backend = SessionBackend(
         mock_session_repository,
-        SessionConfiguration(lifetime=datetime.timedelta(hours=2)),
+        SessionConfiguration.default(),
     )
     yield session_backend, mock_session_repository
 

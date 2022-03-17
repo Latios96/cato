@@ -148,10 +148,8 @@ def test_read_valid_file(ini_file_creator):
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -182,10 +180,8 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -205,10 +201,8 @@ def test_read_with_logging(ini_file_creator):
             "cato-log.txt", False, humanfriendly.parse_size("100mb"), 100
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -244,10 +238,8 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
         scheduler_configuration=DeadlineSchedulerConfiguration(
             url="http://localhost:8082"
         ),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -267,10 +259,8 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
         scheduler_configuration=DeadlineSchedulerConfiguration(
             url="http://localhost:8085"
         ),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -290,7 +280,7 @@ def test_read_with_session_lifetime(ini_file_creator):
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
+        sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration(
             lifetime=datetime.timedelta(hours=1)
         ),

@@ -100,7 +100,7 @@ class AppConfigurationReader:
     def _read_session_configuration(self, config):
         session_lifetime_str = config.get("session", "lifetime", fallback=None)
         if not session_lifetime_str:
-            return SessionConfiguration(lifetime=datetime.timedelta(hours=2))
+            return SessionConfiguration.default()
         session_lifetime_seconds = humanfriendly.parse_timespan(session_lifetime_str)
         session_lifetime = datetime.timedelta(seconds=session_lifetime_seconds)
         return SessionConfiguration(lifetime=session_lifetime)

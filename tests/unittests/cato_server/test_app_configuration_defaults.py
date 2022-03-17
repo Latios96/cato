@@ -29,10 +29,8 @@ def test_create_default_config():
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
 
 
@@ -54,8 +52,6 @@ def test_create_default_config_ready_to_use():
             "log.txt", True, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )

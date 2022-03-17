@@ -1,4 +1,3 @@
-import datetime
 import os
 
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -33,10 +32,8 @@ class AppConfigurationDefaults:
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
             scheduler_configuration=SchedulerConfiguration(),
-            sentry_configuration=SentryConfiguration(url=None),
-            session_configuration=SessionConfiguration(
-                lifetime=datetime.timedelta(hours=2)
-            ),
+            sentry_configuration=SentryConfiguration.default(),
+            session_configuration=SessionConfiguration.default(),
         )
 
     def create_ready_to_use(self, config_folder) -> AppConfiguration:
@@ -56,8 +53,6 @@ class AppConfigurationDefaults:
                 backup_count=self.BACKUP_COUNT_DEFAULT,
             ),
             scheduler_configuration=SchedulerConfiguration(),
-            sentry_configuration=SentryConfiguration(url=None),
-            session_configuration=SessionConfiguration(
-                lifetime=datetime.timedelta(hours=2)
-            ),
+            sentry_configuration=SentryConfiguration.default(),
+            session_configuration=SessionConfiguration.default(),
         )

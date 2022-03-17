@@ -28,10 +28,8 @@ def test_run_db_load_test(tmp_path, snapshot):
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)

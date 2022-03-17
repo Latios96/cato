@@ -581,10 +581,8 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
         ),
         scheduler_configuration=SchedulerConfiguration(),
-        sentry_configuration=SentryConfiguration(url=None),
-        session_configuration=SessionConfiguration(
-            lifetime=datetime.timedelta(hours=2)
-        ),
+        sentry_configuration=SentryConfiguration.default(),
+        session_configuration=SessionConfiguration.default(),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()
