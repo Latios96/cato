@@ -21,6 +21,7 @@ VALID_INI_FILE = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -31,6 +32,7 @@ MISSING_DATABASE_URL = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 file_storage_url=my_file_storage_url"""
 
@@ -38,17 +40,26 @@ MISSING_FILE_STORAGE_URL = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url"""
 
 MISSING_DEBUG = """[app]
 port=5000
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url"""
 
 MISSING_SECRET = """[app]
+port=5000
+hostname=127.0.0.1
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url"""
+
+MISSING_HOSTNAME = """[app]
 port=5000
 [storage]
 database_url=my_database_url
@@ -57,6 +68,7 @@ file_storage_url=my_file_storage_url"""
 WITH_LOGGING = """[app]
 port=5000
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -69,6 +81,7 @@ backup_count=100"""
 WITH_LOGGING_INVALID_USE_FILE_HANDLER = """[app]
 port=5000
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -80,6 +93,7 @@ backup_count=100"""
 WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
 port=5000
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -91,6 +105,7 @@ backup_count=100"""
 WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
 port=5000
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -103,6 +118,7 @@ WITH_DEADLINE_SCHEDULER_NO_URL = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -114,6 +130,7 @@ WITH_DEADLINE_SCHEDULER_WITH_URL = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -126,6 +143,7 @@ WITH_SESSION_LIFETIME = """[app]
 port=5000
 debug=True
 secret=SECRET
+hostname=127.0.0.1
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -160,6 +178,7 @@ def test_read_valid_file(ini_file_creator):
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -173,7 +192,8 @@ def test_read_valid_file(ini_file_creator):
 
 
 @pytest.mark.parametrize(
-    "invalid_config", [MISSING_DATABASE_URL, MISSING_FILE_STORAGE_URL, MISSING_SECRET]
+    "invalid_config",
+    [MISSING_DATABASE_URL, MISSING_FILE_STORAGE_URL, MISSING_SECRET, MISSING_HOSTNAME],
 )
 def test_read_missing_should_fail(invalid_config, ini_file_creator):
     ini_path = ini_file_creator(invalid_config)
@@ -193,6 +213,7 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         port=5000,
         debug=False,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -215,6 +236,7 @@ def test_read_with_logging(ini_file_creator):
         port=5000,
         debug=False,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -253,6 +275,7 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -275,6 +298,7 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -297,6 +321,7 @@ def test_read_with_session_lifetime(ini_file_creator):
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
+        hostname="127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),

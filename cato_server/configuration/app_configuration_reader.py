@@ -48,6 +48,7 @@ class AppConfigurationReader:
                 "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
             ),
             secret=SecretStr(config.get("app", "secret")),
+            hostname=config.get("app", "hostname"),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
             scheduler_configuration=scheduler_configuration,

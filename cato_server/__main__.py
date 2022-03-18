@@ -135,8 +135,8 @@ def main():
 
         app = SentryAsgiMiddleware(app)
 
-    logger.info(f"Starting on http://127.0.0.1:{config.port}")
-    uvicorn.run(app, host="127.0.0.1", port=config.port)
+    logger.info(f"Starting on http://{config.hostname}:{config.port}")
+    uvicorn.run(app, host=config.hostname, port=config.port)
 
 
 def get_config_path(args):
