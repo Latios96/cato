@@ -38,7 +38,11 @@ def upgrade():
         "select id,config from submission_info_entity"
     ).fetchall()
     for (submission_info_id, submission_info) in submission_infos:
-        data = json.loads(submission_info)
+        data = (
+            json.loads(submission_info)
+            if not isinstance(submission_info, dict)
+            else submission_info
+        )
         converted_data = _case_convert_dict(data)
         converted_submission_info = json.dumps(converted_data)
         conn.execute(

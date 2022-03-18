@@ -87,4 +87,10 @@ def test_upgrade_submission_info_camel_case_conversion(
     with engine.connect() as connection:
         assert connection.execute(
             "select config from submission_info_entity"
-        ).all() == [(json.dumps(CONVERTED_CONFIG_TEMPLATE),)]
+        ).all() == [
+            (
+                json.dumps(CONVERTED_CONFIG_TEMPLATE)
+                if "sqlite" in mapped_db_connection_string
+                else CONVERTED_CONFIG_TEMPLATE,
+            )
+        ]
