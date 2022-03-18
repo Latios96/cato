@@ -18,7 +18,7 @@ CONFIG_TEMPLATE = {
 }
 
 CONVERTED_CONFIG_TEMPLATE = {
-    "project_name": "Example",
+    "projectName": "Example",
     "suites": [
         {
             "name": "My_first_test_Suite",
@@ -39,7 +39,7 @@ def revision_3984bd2a425d_before_camel_case_conversion(
             file_storage_url="", database_url=mapped_db_connection_string
         )
     )
-    db_migrator.migrate("3984bd2a425d")
+    db_migrator.migrate("9bf8a029dc0e")
 
     def insert_project(name):
         if "sqlite" in mapped_db_connection_string:
@@ -82,7 +82,7 @@ def test_upgrade_submission_info_camel_case_conversion(
             file_storage_url="", database_url=mapped_db_connection_string
         )
     )
-    db_migrator.migrate("1c7cc834809b")
+    db_migrator.migrate("3984bd2a425d")
 
     with engine.connect() as connection:
         assert connection.execute(
