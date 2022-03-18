@@ -1,5 +1,7 @@
 from io import StringIO
 
+from pydantic import SecretStr
+
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
@@ -8,6 +10,8 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 EXPECTED = """[app]
 port = 5000
 debug = False
+secret = secret
+hostname = 127.0.0.1
 
 [storage]
 database_url = db_url
@@ -30,6 +34,7 @@ def test_write_stream():
     string_stream = StringIO()
     app_configuration_writer = AppConfigurationWriter()
     config = AppConfigurationDefaults().create()
+    config.secret = SecretStr("secret")
 
     app_configuration_writer.write_stream(config, string_stream)
 
