@@ -56,7 +56,7 @@ def revision_3984bd2a425d_before_camel_case_conversion(
                 f"INSERT INTO run_entity (project_entity_id,started_at,branch_name) VALUES({project_id},CURRENT_TIMESTAMP,'default')"
             ).lastrowid
         return connection.execute(
-            f"INSERT INTO run_entity (project_entity_id,started_at) VALUES({project_id},CURRENT_TIMESTAMP) RETURNING id"
+            f"INSERT INTO run_entity (project_entity_id,started_at,branch_name) VALUES({project_id},CURRENT_TIMESTAMP,'default') RETURNING id"
         ).first()[0]
 
     def insert_submission_info(run_id):
