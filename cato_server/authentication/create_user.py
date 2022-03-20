@@ -69,3 +69,19 @@ class CreateUser:
         logger.info('Created user "%s"', auth_user.username)
 
         return auth_user
+
+    def create_or_update_user(self, create_user_data: CreateUserData):
+        auth_user = self._auth_user_repository.find_by_username(
+            create_user_data.username
+        )
+        if not auth_user:
+            return self.create_user(create_user_data)
+
+        auth_user.fullname = create_user_data.fullname
+        auth_user.email = create_user_data.email
+
+        auth_user = self._auth_user_repository.save(auth_user)
+
+        logger.info('Updated user "%s"', auth_user.username)
+
+        return auth_user
