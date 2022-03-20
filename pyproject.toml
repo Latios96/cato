@@ -83,6 +83,7 @@ pytest-rerunfailures = "^10.2"
 py-typescript-generator = {git = "https://github.com/Latios96/py-typescript-generator.git", rev = "v0.1.3"}
 testcontainers = "^3.4.2"
 python-keycloak = "^0.27.0"
+pywin32 = "^303"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
