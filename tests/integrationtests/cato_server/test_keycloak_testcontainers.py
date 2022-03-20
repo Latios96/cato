@@ -9,6 +9,8 @@ from keycloak import KeycloakAdmin
 from testcontainers.core.container import DockerContainer
 from testcontainers.core.waiting_utils import wait_container_is_ready
 
+from tests.integrationtests.cato_server import testcontainers_test
+
 
 class KeycloakContainer(DockerContainer):
     def __init__(
@@ -91,6 +93,7 @@ def keycloak_with_realm_and_users(keycloak_with_realm: KeycloakFixture):
     yield keycloak_with_realm
 
 
+@testcontainers_test
 def test_keycloak_testcontainer(keycloak_with_realm_and_users: KeycloakFixture):
     users = keycloak_with_realm_and_users.keycloak_admin.get_users()
     assert users[0]["username"] == "test"
