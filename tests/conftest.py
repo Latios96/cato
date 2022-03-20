@@ -587,7 +587,7 @@ def app_and_config_fixture(
         port=random_port(),
         debug=True,
         secret=SecretStr("SECRET"),
-        hostname="http://127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),

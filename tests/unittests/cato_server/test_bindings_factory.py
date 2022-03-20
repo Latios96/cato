@@ -40,7 +40,7 @@ def test_create_storage_bindings_for_postgres():
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
             file_storage_url="some_path",
@@ -84,7 +84,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -135,7 +135,7 @@ def test_create_scheduler_bindings_no_scheduler():
         port=5000,
         debug=True,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -166,7 +166,7 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     port=5000,
     debug=True,
     secret=SecretStr("SECRET"),
-    hostname="127.0.0.1",
+    public_hostname="http://127.0.0.1",
     storage_configuration=StorageConfiguration(
         database_url="sqlite:///:memory:",
         file_storage_url="some_path",

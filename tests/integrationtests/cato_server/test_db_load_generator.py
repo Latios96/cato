@@ -24,7 +24,7 @@ def test_run_db_load_test(tmp_path, snapshot):
         port=random_port(),
         debug=True,
         secret=SecretStr("secret"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),

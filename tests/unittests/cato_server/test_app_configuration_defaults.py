@@ -27,7 +27,7 @@ def test_create_default_config(mock_secrets_token_urlsafe):
         port=5000,
         debug=False,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="db_url", file_storage_url="file_storage_url"
         ),
@@ -56,7 +56,7 @@ def test_create_default_config_ready_to_use(mock_secrets_token_urlsafe):
         port=5000,
         debug=False,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///{}".format(
                 os.path.join("a/path/to/a/config/folder", "cato.db")

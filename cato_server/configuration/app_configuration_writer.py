@@ -23,7 +23,7 @@ class AppConfigurationWriter:
         config_writer.set("app", "port", str(config.port))
         config_writer.set("app", "debug", str(config.debug))
         config_writer.set("app", "secret", config.secret.get_secret_value())
-        config_writer.set("app", "hostname", config.hostname)
+        config_writer.set("app", "public_hostname", config.public_hostname)
         config_writer.set(
             "storage", "database_url", config.storage_configuration.database_url
         )

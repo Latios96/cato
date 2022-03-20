@@ -11,7 +11,7 @@ EXPECTED = """[app]
 port = 5000
 debug = False
 secret = secret
-hostname = 127.0.0.1
+public_hostname = http://127.0.0.1
 
 [storage]
 database_url = db_url

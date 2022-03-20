@@ -48,9 +48,7 @@ class AuthBlueprint(APIRouter):
         self.get("/auth")(self.auth)
 
     async def login(self, request: Request):
-        redirect_uri = (
-            f"{self._app_configuration.hostname}:{self._app_configuration.port}/auth"
-        )
+        redirect_uri = f"{self._app_configuration.public_hostname}:{self._app_configuration.port}/auth"
         return await self._oauth.keycloak.authorize_redirect(request, redirect_uri)
 
     async def auth(self, request: Request):
