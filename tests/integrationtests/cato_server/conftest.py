@@ -80,8 +80,8 @@ def keycloak_with_realm_and_users(keycloak_with_realm: KeycloakFixture):
             "username": "test",
             "emailVerified": True,
             "email": "test@foo.com",
-            "firstName": "Jan",
-            "lastName": "Honsbrok",  # todo other name
+            "firstName": "Test",
+            "lastName": "Testerson",
         }
     )
     keycloak_with_realm.keycloak_admin.set_user_password(

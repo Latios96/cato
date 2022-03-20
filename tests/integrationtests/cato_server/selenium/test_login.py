@@ -36,3 +36,5 @@ def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
     selenium_driver.find_element_by_id("kc-login").click()
 
     selenium_driver.find_element_by_xpath("//*[text()='test_name']")
+
+    # todo verify user information once whoami route is implemented
