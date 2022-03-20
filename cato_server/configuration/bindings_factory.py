@@ -104,10 +104,16 @@ class SchedulerBindings:
 
 
 @dataclass
+class ConfigurationBindings:
+    app_configuration: AppConfiguration
+
+
+@dataclass
 class Bindings:
     storage_bindings: StorageBindings
     app_configuration: AppConfiguration
     scheduler_bindings: SchedulerBindings
+    configuration_bindings: ConfigurationBindings
 
 
 class PinjectBindings(pinject.BindingSpec):
@@ -154,6 +160,30 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
         bind(
+            "storage_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.storage_configuration,
+        )
+        bind(
+            "logging_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.logging_configuration,
+        )
+        bind(
+            "scheduler_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.scheduler_configuration,
+        )
+        bind(
+            "sentry_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.sentry_configuration,
+        )
+        bind(
+            "session_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.session_configuration,
+        )
+        bind(
+            "oidc_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.oidc_configuration,
+        )
+        bind(
             "mapper_registry",
             to_instance=MapperRegistryFactory().create_mapper_registry(),
         )
@@ -187,10 +217,13 @@ class BindingsFactory:
         logger.info("Creating bindings..")
         storage_bindings = self.create_storage_bindings()
         scheduler_bindings = self.create_scheduler_bindings()
+        configuration_bindings = self.create_configuration_bindings()
+
         bindings = Bindings(
             storage_bindings,
             self._configuration,
             scheduler_bindings,
+            configuration_bindings,
         )
         return PinjectBindings(bindings)
 
@@ -268,3 +301,6 @@ class BindingsFactory:
     def _deadline_is_available(self, url: str) -> bool:
         response = requests.get(url + "/api/users?NamesOnly=true")
         return response.status_code == 200
+
+    def create_configuration_bindings(self):
+        return ConfigurationBindings(app_configuration=self._configuration)
