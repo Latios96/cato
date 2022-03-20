@@ -31,19 +31,14 @@ def mocked_safe(auth_user):
 def create_user_data_fixture():
     mock_auth_user_repository = mock_safe(AuthUserRepository)
     mock_auth_user_repository.save.side_effect = mocked_safe
-    mock_crypto_context = mock_safe(CryptoContext)
-    mock_crypto_context.hash_password.return_value = (
-        "the_hash"  # todo remove CryptoContext mock
-    )
-    create_user = CreateUser(mock_auth_user_repository, mock_crypto_context)
-    yield create_user, mock_auth_user_repository, mock_crypto_context
+    create_user = CreateUser(mock_auth_user_repository)
+    yield create_user, mock_auth_user_repository
 
 
 def test_create_user_successfully(create_user_data_fixture):
     (
         create_user,
         mock_auth_user_repository,
-        mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
     mock_auth_user_repository.exists_by_username.return_value = False
@@ -66,7 +61,6 @@ def test_create_user_should_fail_because_username_already_exists(
     (
         create_user,
         mock_auth_user_repository,
-        mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
     mock_auth_user_repository.exists_by_username.return_value = True
@@ -86,7 +80,6 @@ def test_create_user_should_fail_because_email_already_exists(
     (
         create_user,
         mock_auth_user_repository,
-        mock_crypto_context,
     ) = create_user_data_fixture
     create_user_data = CreateUserData(username=USERNAME, fullname=FULLNAME, email=EMAIL)
     mock_auth_user_repository.exists_by_username.return_value = False
@@ -104,7 +97,6 @@ def test_create_or_update_user_should_create_user(create_user_data_fixture):
     (
         create_user,
         mock_auth_user_repository,
-        mock_crypto_context,
     ) = create_user_data_fixture
     mock_auth_user_repository.find_by_username.return_value = None
     expected_created_user = AuthUser(
@@ -123,7 +115,6 @@ def test_create_or_update_user_should_update_user(create_user_data_fixture):
     (
         create_user,
         mock_auth_user_repository,
-        mock_crypto_context,
     ) = create_user_data_fixture
     mock_auth_user_repository.find_by_username.return_value = AuthUser(
         id=1, username=USERNAME, fullname=FULLNAME, email=EMAIL

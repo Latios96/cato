@@ -1,7 +1,6 @@
 import logging
 from dataclasses import dataclass
 
-from cato_server.authentication.crypto_context import CryptoContext
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.email import Email
 from cato_server.domain.auth.username import Username
@@ -37,10 +36,8 @@ class CreateUser:
     def __init__(
         self,
         auth_user_repository: AuthUserRepository,
-        crypto_context: CryptoContext,
     ):
         self._auth_user_repository = auth_user_repository
-        self._crypto_context = crypto_context
 
     def create_user(self, create_user_data: CreateUserData) -> AuthUser:
         username_already_exists = self._auth_user_repository.exists_by_username(
