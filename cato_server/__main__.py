@@ -9,6 +9,7 @@ import uvicorn
 from fastapi import FastAPI
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.middleware.base import RequestResponseEndpoint
+from starlette.middleware.sessions import SessionMiddleware
 from starlette.requests import Request
 from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
@@ -94,6 +95,8 @@ def create_app(
         stop = time.time()
         logger.info("%s %.3fs", request.url, stop - start)
         return response
+
+    app.add_middleware(SessionMiddleware, secret_key=app_configuration.secret)
 
     return app
 
