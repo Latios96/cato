@@ -3,8 +3,8 @@ from typing import Optional
 from sqlalchemy import Column, Integer, Text
 
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.email import Email
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.email import Email
+from cato_common.domain.auth.username import Username
 from cato_server.storage.abstract.auth_user_repository import (
     AuthUserRepository,
 )

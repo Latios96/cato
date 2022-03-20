@@ -6,11 +6,10 @@ from freezegun import freeze_time
 from cato_server.authentication.session_backend import SessionBackend
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.email import Email
-from cato_server.domain.auth.secret_str import SecretStr
+from cato_common.domain.auth.email import Email
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.username import Username
 from cato_server.storage.abstract.session_repository import SessionRepository
 from tests.utils import mock_safe
 

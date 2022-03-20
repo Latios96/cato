@@ -2,9 +2,8 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.email import Email
-from cato_server.domain.auth.secret_str import SecretStr
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.email import Email
+from cato_common.domain.auth.username import Username
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
     _AuthUserMapping,

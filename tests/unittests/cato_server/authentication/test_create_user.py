@@ -8,10 +8,9 @@ from cato_server.authentication.create_user import (
     UsernameAlreadyExistsException,
     EmailAlreadyExistsException,
 )
-from cato_server.authentication.crypto_context import CryptoContext
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.email import Email
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.email import Email
+from cato_common.domain.auth.username import Username
 from cato_server.storage.abstract.auth_user_repository import (
     AuthUserRepository,
 )

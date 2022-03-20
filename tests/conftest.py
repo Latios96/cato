@@ -60,13 +60,12 @@ from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_server.domain.auth.email import Email
+from cato_common.domain.auth.email import Email
 from cato_server.domain.auth.secret_str import SecretStr
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.username import Username
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
-from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,

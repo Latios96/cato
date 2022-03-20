@@ -1,6 +1,6 @@
 import pytest
 
-from cato_server.domain.auth.email import Email
+from cato_common.domain.auth.email import Email
 
 
 @pytest.mark.parametrize("invalid_string", ["", "  ", "foo", "foo@bar", "@bar"])

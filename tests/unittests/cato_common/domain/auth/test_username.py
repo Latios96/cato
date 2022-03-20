@@ -1,6 +1,6 @@
 import pytest
 
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.username import Username
 
 
 @pytest.mark.parametrize("invalid_string", ["", "  "])

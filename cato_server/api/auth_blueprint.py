@@ -9,8 +9,8 @@ from starlette.responses import RedirectResponse, Response
 from cato_server.authentication.create_user import CreateUser, CreateUserData
 from cato_server.authentication.session_backend import SessionBackend
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.domain.auth.email import Email
-from cato_server.domain.auth.username import Username
+from cato_common.domain.auth.email import Email
+from cato_common.domain.auth.username import Username
 from cato_server.storage.abstract.auth_user_repository import AuthUserRepository
 
 logger = logging.getLogger(__name__)
