@@ -570,13 +570,24 @@ def mocked_scheduler_submitter():
     return mock_safe(AbstractSchedulerSubmitter)
 
 
+@pytest.fixture
+def oidc_configuration():
+    return OidcConfiguration(
+        client_id="client-id",
+        client_secret=SecretStr("secret"),
+        well_known_url="http://somewhere",
+    )
+
+
 @pytest.fixture()
-def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_submitter):
+def app_and_config_fixture(
+    sessionmaker_fixture, tmp_path, mocked_scheduler_submitter, oidc_configuration
+):
     config = AppConfiguration(
         port=random_port(),
         debug=True,
         secret=SecretStr("SECRET"),
-        hostname="127.0.0.1",
+        hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),
@@ -586,11 +597,7 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
-        oidc_configuration=OidcConfiguration(
-            client_id="client-id",
-            client_secret=SecretStr("secret"),
-            well_known_url="http://somewhere",
-        ),
+        oidc_configuration=oidc_configuration,
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()
@@ -598,7 +605,12 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
     scheduler_bindings = SchedulerBindings(
         scheduler_submitter_binding=OptionalComponent(mocked_scheduler_submitter)
     )
-    bindings = Bindings(storage_bindings, config, scheduler_bindings)
+    bindings = Bindings(
+        storage_bindings,
+        config,
+        scheduler_bindings,
+        configuration_bindings=bindings_factory.create_configuration_bindings(),
+    )
     pinject_bindings = PinjectBindings(bindings)
 
     app = create_app(config, pinject_bindings)
