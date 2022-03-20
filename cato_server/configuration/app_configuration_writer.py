@@ -19,6 +19,7 @@ class AppConfigurationWriter:
         config_writer.add_section("storage")
         config_writer.add_section("scheduler")
         config_writer.add_section("session")
+        config_writer.add_section("oidc")
         config_writer.set("app", "port", str(config.port))
         config_writer.set("app", "debug", str(config.debug))
         config_writer.set("app", "secret", config.secret.get_secret_value())
@@ -49,6 +50,16 @@ class AppConfigurationWriter:
             humanfriendly.format_timespan(
                 config.session_configuration.lifetime.seconds
             ),
+        )
+
+        config_writer.set("oidc", "client_id", config.oidc_configuration.client_id)
+        config_writer.set(
+            "oidc",
+            "client_secret",
+            config.oidc_configuration.client_secret.get_secret_value(),
+        )
+        config_writer.set(
+            "oidc", "well_known_url", config.oidc_configuration.well_known_url
         )
 
         config_writer.write(stream)

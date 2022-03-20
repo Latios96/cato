@@ -53,6 +53,7 @@ from cato_server.configuration.bindings_factory import (
     SchedulerBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
@@ -585,6 +586,11 @@ def app_and_config_fixture(sessionmaker_fixture, tmp_path, mocked_scheduler_subm
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

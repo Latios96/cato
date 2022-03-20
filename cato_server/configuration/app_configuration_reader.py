@@ -10,6 +10,7 @@ from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
@@ -39,6 +40,7 @@ class AppConfigurationReader:
         scheduler_configuration = self._read_scheduler_configuration(config)
         sentry_configuration = self._read_sentry_configuration(config)
         session_configuration = self._read_session_configuration(config)
+        oidc_configuration = self._read_oidc_configuration(config)
 
         return AppConfiguration(
             port=config.getint(
@@ -54,6 +56,7 @@ class AppConfigurationReader:
             scheduler_configuration=scheduler_configuration,
             sentry_configuration=sentry_configuration,
             session_configuration=session_configuration,
+            oidc_configuration=oidc_configuration,
         )
 
     def _read_storage_configuration(
@@ -108,3 +111,10 @@ class AppConfigurationReader:
         session_lifetime_seconds = humanfriendly.parse_timespan(session_lifetime_str)
         session_lifetime = datetime.timedelta(seconds=session_lifetime_seconds)
         return SessionConfiguration(lifetime=session_lifetime)
+
+    def _read_oidc_configuration(self, config):
+        return OidcConfiguration(
+            client_id=config.get("oidc", "client_id"),
+            client_secret=SecretStr(config.get("oidc", "client_secret")),
+            well_known_url=config.get("oidc", "well_known_url"),
+        )

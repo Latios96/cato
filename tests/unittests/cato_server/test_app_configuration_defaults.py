@@ -8,6 +8,7 @@ from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
@@ -36,6 +37,11 @@ def test_create_default_config(mock_secrets_token_urlsafe):
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
 
 
@@ -63,4 +69,9 @@ def test_create_default_config_ready_to_use(mock_secrets_token_urlsafe):
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )

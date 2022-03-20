@@ -9,6 +9,7 @@ from cato_server.configuration.bindings_factory import (
     BindingsFactory,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
@@ -53,6 +54,11 @@ def test_create_storage_bindings_for_postgres():
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -92,6 +98,11 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -138,6 +149,11 @@ def test_create_scheduler_bindings_no_scheduler():
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
     bindings_factory = BindingsFactory(config)
 
@@ -164,6 +180,11 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     scheduler_configuration=DeadlineSchedulerConfiguration("test"),
     sentry_configuration=SentryConfiguration.default(),
     session_configuration=SessionConfiguration.default(),
+    oidc_configuration=OidcConfiguration(
+        client_id="client-id",
+        client_secret=SecretStr("secret"),
+        well_known_url="http://somewhere",
+    ),
 )
 
 

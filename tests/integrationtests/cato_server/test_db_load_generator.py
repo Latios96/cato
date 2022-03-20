@@ -9,6 +9,7 @@ from cato_server import db_load_generator
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_writer import AppConfigurationWriter
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
@@ -33,6 +34,11 @@ def test_run_db_load_test(tmp_path, snapshot):
         scheduler_configuration=SchedulerConfiguration(),
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
+        oidc_configuration=OidcConfiguration(
+            client_id="client-id",
+            client_secret=SecretStr("secret"),
+            well_known_url="http://somewhere",
+        ),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)

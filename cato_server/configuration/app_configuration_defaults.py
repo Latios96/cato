@@ -3,6 +3,7 @@ import secrets
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
@@ -38,6 +39,11 @@ class AppConfigurationDefaults:
             scheduler_configuration=SchedulerConfiguration(),
             sentry_configuration=SentryConfiguration.default(),
             session_configuration=SessionConfiguration.default(),
+            oidc_configuration=OidcConfiguration(
+                client_id="client-id",
+                client_secret=SecretStr("secret"),
+                well_known_url="http://somewhere",
+            ),
         )
 
     def create_ready_to_use(self, config_folder) -> AppConfiguration:
@@ -61,4 +67,9 @@ class AppConfigurationDefaults:
             scheduler_configuration=SchedulerConfiguration(),
             sentry_configuration=SentryConfiguration.default(),
             session_configuration=SessionConfiguration.default(),
+            oidc_configuration=OidcConfiguration(
+                client_id="client-id",
+                client_secret=SecretStr("secret"),
+                well_known_url="http://somewhere",
+            ),
         )

@@ -23,6 +23,11 @@ name = None
 [session]
 lifetime = 2 hours
 
+[oidc]
+client_id = client-id
+client_secret = secret
+well_known_url = http://somewhere
+
 """
 
 EXPECTED_SENTRY = """[sentry]
