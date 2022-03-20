@@ -1,0 +1,34 @@
+.loginBackground {
+  width: 100vw;
+  height: 100vh;
+  background-color: black;
+  background-image: url("./login_keyvisual.jpg");
+  background-position: top left;
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+}
+.loginContainer {
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+  padding: 30px;
+  width: 250px;
+  height: 250px;
+  border: 1px solid orange;
+
+  button {
+    background-color: #ff008c;
+    margin-top: 20px;
+  }
+}
+.logo {
+  font-size: 60px;
+  color: white;
+  font-family: "Poppins", sansserif;
+  font-weight: 600;
+  margin: 20px;
+  margin-top: 5px;
+  text-align: center;
+}
