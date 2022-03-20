@@ -2,6 +2,7 @@ import pytest
 
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.domain.auth.secret_str import SecretStr
+from tests.integrationtests.cato_server import testcontainers_test
 
 
 @pytest.fixture
@@ -28,6 +29,7 @@ def live_server_with_keycloak(
     yield live_server
 
 
+@testcontainers_test
 def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}/login")
 
