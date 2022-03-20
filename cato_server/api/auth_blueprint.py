@@ -54,7 +54,7 @@ class AuthBlueprint(APIRouter):
     async def auth(self, request: Request):
         try:
             token = await self._oauth.keycloak.authorize_access_token(request)
-        except Exception as error:
+        except OAuthError as error:
             logging.error(error)
             return Response(status_code=401)
         user = await self._oauth.keycloak.userinfo(token=token)
