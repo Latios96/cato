@@ -21,6 +21,7 @@ import cato_server.server_logging
 from cato_common.utils.bindings import imported_modules
 from cato_server.api.about_blueprint import AboutBlueprint
 from cato_server.api.auth_blueprint import AuthBlueprint
+from cato_server.api.auth_user_blueprint import AuthUserBlueprint
 from cato_server.api.compare_image_blueprint import CompareImagesBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
@@ -76,6 +77,7 @@ def create_app(
     app.include_router(obj_graph.provide(TestResultsBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(CompareImagesBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(TestEditBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(AuthUserBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(AuthBlueprint))
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")

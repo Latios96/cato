@@ -99,6 +99,14 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from tests.utils import mock_safe
 
+from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
+    http_session_factory,
+    http_session,
+    http_session_cookie_factory,
+    http_session_cookie,
+    client_with_session,
+)
+
 
 @event.listens_for(Engine, "connect")
 def set_sqlite_pragma(dbapi_connection, connection_record):
