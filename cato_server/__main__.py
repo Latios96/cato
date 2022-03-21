@@ -98,7 +98,9 @@ def create_app(
         logger.info("%s %.3fs", request.url, stop - start)
         return response
 
-    app.add_middleware(SessionMiddleware, secret_key=app_configuration.secret)
+    app.add_middleware(
+        SessionMiddleware, secret_key=app_configuration.secret.get_secret_value()
+    )
 
     return app
 
