@@ -1,4 +1,4 @@
-from base64 import b64encode
+from base64 import b64encode, b64decode
 
 import itsdangerous
 
@@ -24,3 +24,9 @@ class ApiTokenSigner:
         signed_data = self._signer.sign(data)
 
         return ApiTokenStr(signed_data)
+
+    def unsign(self, api_token_str: ApiTokenStr):
+        signed_data = self._signer.unsign(str(api_token_str))
+        json_str = b64decode(signed_data).decode("utf-8")
+        api_token = self._object_mapper.from_json(json_str, ApiToken)
+        return api_token
