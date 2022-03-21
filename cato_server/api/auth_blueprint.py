@@ -6,6 +6,7 @@ from starlette.config import Config
 from starlette.requests import Request
 from starlette.responses import RedirectResponse, Response
 
+from cato_server.api.authentication.user_from_request import UserFromRequest
 from cato_server.authentication.create_user import CreateUser, CreateUserData
 from cato_server.authentication.session_backend import SessionBackend
 from cato_server.configuration.app_configuration import AppConfiguration
@@ -23,12 +24,14 @@ class AuthBlueprint(APIRouter):
         auth_user_repository: AuthUserRepository,
         create_user: CreateUser,
         app_configuration: AppConfiguration,
+        user_from_request: UserFromRequest,
     ):
         super(AuthBlueprint, self).__init__()
         self._session_backend = session_backend
         self._auth_user_repository = auth_user_repository
         self._create_user = create_user
         self._app_configuration = app_configuration
+        self._user_from_request = user_from_request
 
         self._oauth_config = Config(
             environ={
@@ -46,10 +49,19 @@ class AuthBlueprint(APIRouter):
 
         self.get("/login")(self.login)
         self.get("/auth")(self.auth)
+        self.post("/logout")(self.logout)
 
     async def login(self, request: Request):
         redirect_uri = f"{self._app_configuration.public_hostname}:{self._app_configuration.port}/auth"
         return await self._oauth.keycloak.authorize_redirect(request, redirect_uri)
+
+    async def logout(self, request: Request):
+        session = self._user_from_request.session_from_request(request)
+        if not session:
+            pass
+        auth_user = self._user_from_request.user_from_request(request)
+        self._session_backend.logout_from_session(session)
+        logger.info('User "%s" signed out', auth_user.username)
 
     async def auth(self, request: Request):
         try:

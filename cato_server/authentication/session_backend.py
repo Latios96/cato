@@ -1,4 +1,5 @@
 import datetime
+import logging
 from typing import Optional
 
 from cato_server.configuration.session_configuration import SessionConfiguration
@@ -40,3 +41,10 @@ class SessionBackend:
             expires_at=datetime.datetime.now() + self._session_configuration.lifetime,
         )
         return self._session_repository.save(session)
+
+    def logout_from_session(self, session: Session) -> None:
+        try:
+            self._session_repository.delete_by_id(session.id)
+        except ValueError as e:
+            logging.warning(e)
+            pass
