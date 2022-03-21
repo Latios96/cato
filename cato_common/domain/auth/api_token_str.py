@@ -13,7 +13,7 @@ class ApiTokenStr:
         return str(self._value)
 
     def __str__(self):
-        return str(self._value)
+        return str(self._value.decode("utf-8"))
 
     def __eq__(self, other):
         return self._value == other._value
