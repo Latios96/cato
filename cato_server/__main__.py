@@ -1,6 +1,5 @@
 import argparse
 import os.path
-import time
 
 import pinject
 import schedule
@@ -8,15 +7,12 @@ import sentry_sdk
 import uvicorn
 from fastapi import FastAPI
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
-from starlette.middleware.base import RequestResponseEndpoint
 from starlette.middleware.sessions import SessionMiddleware
-from starlette.requests import Request
-from starlette.responses import Response
 from starlette.staticfiles import StaticFiles
 
 import cato
-import cato_server
 import cato_common
+import cato_server
 import cato_server.server_logging
 from cato_common.utils.bindings import imported_modules
 from cato_server.api.about_blueprint import AboutBlueprint
@@ -25,6 +21,7 @@ from cato_server.api.auth_user_blueprint import AuthUserBlueprint
 from cato_server.api.compare_image_blueprint import CompareImagesBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
+from cato_server.api.middlewares.timing_middleware import TimingMiddleware
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.schedulers_blueprint import SchedulersBlueprint
@@ -92,13 +89,7 @@ def create_app(
         app.scheduler_runner = BackgroundSchedulerRunner(schedule)  # type: ignore
         app.scheduler_runner.start()  # type: ignore
 
-    @app.middleware("http")
-    async def timing(request: Request, call_next: RequestResponseEndpoint) -> Response:
-        start = time.time()
-        response = await call_next(request)
-        stop = time.time()
-        logger.info("%s %.3fs", request.url, stop - start)
-        return response
+    app.middleware("http")(obj_graph.provide(TimingMiddleware))
 
     app.add_middleware(
         SessionMiddleware, secret_key=app_configuration.secret.get_secret_value()
