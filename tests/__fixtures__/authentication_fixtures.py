@@ -4,6 +4,7 @@ from base64 import b64encode
 import itsdangerous
 import pytest
 
+from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_server.authentication.session_backend import SessionBackend
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
@@ -55,3 +56,10 @@ def client_with_session(http_session_cookie, client):
     cookie_name, cookie_value = http_session_cookie
     client.cookies.set(cookie_name, cookie_value)
     return client
+
+
+@pytest.fixture
+def api_token_str():
+    return ApiTokenStr(
+        b"eyJuYW1lIjogInRlc3QiLCAiaWQiOiAiYWI1ZDIwMDA4YmIxZjI3YTE0NDJhNGRhMzk4YzAxNzEyYjQ4NThkMDYyMWJlZjA4NjAyYjc2ZjEwNGNlZjE2ZiIsICJjcmVhdGVkQXQiOiAiMjAyMi0wMy0yMVQxNzoxNToyNC4zMjg2MzMiLCAiZXhwaXJlc0F0IjogIjIwMjItMDMtMjFUMTk6MTU6MjQuMzI4NjMzIn0=.Yjikng.4DHH2-KIXCUigxgQHJ_W2My3IBw"
+    )
