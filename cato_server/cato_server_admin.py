@@ -6,8 +6,9 @@ from pinject.object_graph import ObjectGraph
 import cato
 import cato_common
 import cato_server.server_logging
-from cato_common.utils.bindings import imported_modules
+from cato_common.utils.bindings import imported_modules, provide_safe
 from cato_server.admin_commands.config_template_command import ConfigTemplateCommand
+from cato_server.admin_commands.create_api_token_command import CreateApiTokenCommand
 from cato_server.admin_commands.create_backup_command import CreateBackupCommand
 from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
@@ -56,6 +57,14 @@ def create_backup(path, pg_dump_executable, mode_str):
     create_backup_command.create_backup(path, pg_dump_executable, mode_str)
 
 
+def create_api_token(path):
+    path = get_config_path(path)
+    obj_graph = create_obj_graph(path)
+
+    create_api_token = provide_safe(obj_graph, CreateApiTokenCommand)
+    create_api_token.create_api_token()
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -93,6 +102,11 @@ def main():
         help="mode for backup. Possible values are FULL (default), ONLY_DATABASE, ONLY_FILESTORAGE",
     )
 
+    create_api_token_parser = commands_subparser.add_parser(
+        "create-api-token", help="Create a new api token", parents=[parent_parser]
+    )
+    create_api_token_parser.add_argument("--config", help="path to config.ini")
+
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -101,6 +115,8 @@ def main():
         migrate_db(args.config)
     elif args.command == "create-backup":
         create_backup(args.config, args.pg_dump_path, args.backup_mode)
+    elif args.command == "create-api-token":
+        create_api_token(args.config)
     else:
         logger.error(f"No method found to run command {args.command}")
 
