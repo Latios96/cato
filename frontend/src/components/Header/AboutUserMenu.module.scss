@@ -1,0 +1,24 @@
+@import "../../custom.scss";
+$border-color: #d0d0d0;
+.inputContainer {
+  background-color: white;
+  border: 1px solid $border-color;
+  max-height: 500px;
+  box-shadow: 0px 2px 27px 6px rgba(0, 0, 0, 0.15);
+  border-radius: 3px;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  font-size: 14px;
+}
+.menuContent {
+  padding: 5px 10px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid $border-color;
+}
+.menuContentClickable:hover {
+  background-color: $cato-highlight;
+  color: white;
+  cursor: pointer;
+}
