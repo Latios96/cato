@@ -11,7 +11,7 @@ import styles from "./ArrowButton.module.scss";
 type Direction = "up" | "down" | "left" | "right";
 
 interface Props {
-  text: string;
+  text?: string;
   direction: Direction;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
 }

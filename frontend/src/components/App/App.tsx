@@ -13,6 +13,7 @@ import { QueryClient, QueryClientProvider } from "react-query";
 import RunOverviewPage from "../../pages/RunPages/RunOverviewPage";
 import RunSuitePage from "../../pages/RunPages/RunSuitesPage";
 import RunTestsPage from "../../pages/RunPages/RunTestsPage";
+import { AuthenticatedUserProvider } from "../../contexts/AuthenticatedUserContext/AuthenticatedUserContext";
 
 interface ProjectPageMatchParams {
   projectId: string;
@@ -29,55 +30,57 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <HashRouter>
         <Switch>
-          <Route exact path="/" component={() => <ProjectsPage />} />
-          <Route exact path="/about" component={() => <AboutPage />} />
-          <Route
-            exact
-            path="/projects/:projectId"
-            component={(props: ProjectPageMatchProps) => {
-              return (
-                <ProjectPage
-                  projectId={parseInt(props.match.params.projectId)}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            path="/projects/:projectId/runs/:runId"
-            component={(props: ProjectPageMatchProps) => {
-              return (
-                <RunOverviewPage
-                  projectId={parseInt(props.match.params.projectId)}
-                  runId={parseInt(props.match.params.runId)}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            path="/projects/:projectId/runs/:runId/suites"
-            component={(props: ProjectPageMatchProps) => {
-              return (
-                <RunSuitePage
-                  projectId={parseInt(props.match.params.projectId)}
-                  runId={parseInt(props.match.params.runId)}
-                />
-              );
-            }}
-          />
-          <Route
-            exact
-            path="/projects/:projectId/runs/:runId/tests"
-            component={(props: ProjectPageMatchProps) => {
-              return (
-                <RunTestsPage
-                  projectId={parseInt(props.match.params.projectId)}
-                  runId={parseInt(props.match.params.runId)}
-                />
-              );
-            }}
-          />
+          <AuthenticatedUserProvider>
+            <Route exact path="/" component={() => <ProjectsPage />} />
+            <Route exact path="/about" component={() => <AboutPage />} />
+            <Route
+              exact
+              path="/projects/:projectId"
+              component={(props: ProjectPageMatchProps) => {
+                return (
+                  <ProjectPage
+                    projectId={parseInt(props.match.params.projectId)}
+                  />
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/projects/:projectId/runs/:runId"
+              component={(props: ProjectPageMatchProps) => {
+                return (
+                  <RunOverviewPage
+                    projectId={parseInt(props.match.params.projectId)}
+                    runId={parseInt(props.match.params.runId)}
+                  />
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/projects/:projectId/runs/:runId/suites"
+              component={(props: ProjectPageMatchProps) => {
+                return (
+                  <RunSuitePage
+                    projectId={parseInt(props.match.params.projectId)}
+                    runId={parseInt(props.match.params.runId)}
+                  />
+                );
+              }}
+            />
+            <Route
+              exact
+              path="/projects/:projectId/runs/:runId/tests"
+              component={(props: ProjectPageMatchProps) => {
+                return (
+                  <RunTestsPage
+                    projectId={parseInt(props.match.params.projectId)}
+                    runId={parseInt(props.match.params.runId)}
+                  />
+                );
+              }}
+            />
+          </AuthenticatedUserProvider>
         </Switch>
       </HashRouter>
     </QueryClientProvider>

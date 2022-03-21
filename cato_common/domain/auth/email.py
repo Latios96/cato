@@ -1,4 +1,4 @@
-from email_validator import validate_email
+from email_validator import validate_email  # type: ignore
 
 
 class Email:
