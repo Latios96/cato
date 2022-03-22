@@ -21,6 +21,9 @@ from cato_server.api.auth_user_blueprint import AuthUserBlueprint
 from cato_server.api.compare_image_blueprint import CompareImagesBlueprint
 from cato_server.api.files_blueprint import FilesBlueprint
 from cato_server.api.images_blueprint import ImagesBlueprint
+from cato_server.api.middlewares.authentication_middleware import (
+    AuthenticationMiddleware,
+)
 from cato_server.api.middlewares.timing_middleware import TimingMiddleware
 from cato_server.api.projects_blueprint import ProjectsBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
@@ -90,6 +93,7 @@ def create_app(
         app.scheduler_runner.start()  # type: ignore
 
     app.middleware("http")(obj_graph.provide(TimingMiddleware))
+    app.middleware("http")(obj_graph.provide(AuthenticationMiddleware))
 
     app.add_middleware(
         SessionMiddleware, secret_key=app_configuration.secret.get_secret_value()
