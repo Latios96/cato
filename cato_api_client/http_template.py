@@ -106,11 +106,7 @@ class HttpTemplate:
         else:
             response = self._requests_impl.patch(url, json=params)
         logger.debug("Received response %s", response)
-        if response.status_code == 500:
-            raise HttpTemplateException(
-                "Internal Server Error!"
-            )  # todo custom exception
-        return self._construct_http_template_response(response, response_cls)
+        return self._handle_response(response, response_cls)
 
     def _handle_response(
         self, response: requests.Response, response_cls: Type[R]
