@@ -5,7 +5,10 @@ from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_api_client.http_template import AbstractHttpTemplate
+
+
+from cato_api_client.http_template import HttpTemplate
+
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
@@ -38,7 +41,7 @@ R = TypeVar("R")
 
 class CatoApiClient:
     def __init__(
-        self, url: str, http_template: AbstractHttpTemplate, object_mapper: ObjectMapper
+        self, url: str, http_template: HttpTemplate, object_mapper: ObjectMapper
     ) -> None:
         self._url = url
         self._http_template = http_template

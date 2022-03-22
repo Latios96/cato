@@ -3,12 +3,11 @@ import os
 from typing import Dict, Type, Optional
 
 import pytest
-from requests.models import Response
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse, R
+from cato_api_client.http_template import HttpTemplate
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
@@ -16,11 +15,11 @@ from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import (
     CreateFullRunDto,
@@ -30,73 +29,13 @@ from cato_common.dtos.create_full_run_dto import (
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 
-class FastApiClientHttpTemplateResponse(HttpTemplateResponse):
-    def __init__(self, response, response_cls, mapper) -> None:
-        super(FastApiClientHttpTemplateResponse, self).__init__(response_cls, mapper)
-        self._response = response
-
-    def status_code(self) -> int:
-        return self._response.status_code
-
-    def get_json(self):
-        return self._response.json()
-
-    def text(self):
-        return self._response.text
-
-    def content(self):
-        return self._response.content
-
-
-class FastApiClientHttpTemplate(AbstractHttpTemplate):
-    def __init__(self, client, object_mapper):
-        self._client = client
-        self._object_mapper = object_mapper
-
-    def _post(self, url, params):
-        return self._client.post(url, json=params)
-
-    def _get(self, url):
-        return self._client.get(url)
-
-    def _patch(self, url, params):
-        return self._client.patch(url, json=params)
-
-    def _construct_http_template_response(self, response, response_cls):
-        return FastApiClientHttpTemplateResponse(
-            response, response_cls, self._object_mapper
-        )
-
-    def post_files_for_entity(
-        self, url: str, body: Optional, files: Dict[str, str], response_cls: Type[R]
-    ) -> HttpTemplateResponse[R]:
-        response = self._client.post(url, data=body, files=files)
-        return self._construct_http_template_response(response, response_cls)
-
-
-class CatoApiTestClient(CatoApiClient):
-    def __init__(self, url, client, object_mapper):
-        super(CatoApiTestClient, self).__init__(
-            url, FastApiClientHttpTemplate(client, object_mapper), object_mapper
-        )
-        self._client = client
-
-    def _get(self, url: str) -> Response:
-        get = self._client.get(url.replace(self._url, ""))
-        return get
-
-    def _post_json(self, url, params):
-        return self._client.post(url.replace(self._url, ""), json=params)
-
-    def _get_json(self, reponse):
-        return reponse.json()
-
-
 @pytest.fixture
 def cato_api_client(app_and_config_fixture, client, object_mapper):
     pp, config = app_and_config_fixture
-    api_client = CatoApiTestClient(
-        f"http://localhost:{config.port}", client, object_mapper
+    api_client = CatoApiClient(
+        f"http://localhost:{config.port}",
+        HttpTemplate(object_mapper, client),
+        object_mapper,
     )
     return api_client
 
