@@ -87,9 +87,6 @@ class CatoApiTestClient(CatoApiClient):
     def _get_json(self, reponse):
         return reponse.json()
 
-    def _get_url(self, url):
-        return self._client.get(url.replace(self._url, ""))
-
 
 @pytest.fixture
 def cato_api_client(app_and_config_fixture, client, object_mapper):
