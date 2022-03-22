@@ -50,6 +50,16 @@ class HttpTemplateException(Exception):
     pass
 
 
+class InternalServerError(HttpTemplateException):
+    def __init__(self):
+        super(InternalServerError, self).__init__("Internal Server Error.")
+
+
+class Unauthorized(HttpTemplateException):
+    def __init__(self):
+        super(Unauthorized, self).__init__("Unauthorized.")
+
+
 class HttpTemplate:
     def __init__(self, object_mapper: ObjectMapper, requests_impl=requests):
         self._object_mapper = object_mapper
@@ -122,11 +132,9 @@ class HttpTemplate:
         self, response: requests.Response, response_cls: Type[R]
     ) -> HttpTemplateResponse[R]:
         if response.status_code == 500:
-            raise HttpTemplateException(
-                "Internal Server Error!"
-            )  # todo use dedicated exception and use dot
+            raise InternalServerError()
         if response.status_code == 401:
-            raise HttpTemplateException("Unauthorized.")  # todo use dedicated exception
+            raise Unauthorized()
         return self._construct_http_template_response(response, response_cls)
 
     def _construct_http_template_response(

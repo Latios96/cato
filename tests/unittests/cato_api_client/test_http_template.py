@@ -2,7 +2,12 @@ from unittest import mock
 
 import pytest
 
-from cato_api_client.http_template import HttpTemplate, HttpTemplateException
+from cato_api_client.http_template import (
+    HttpTemplate,
+    HttpTemplateException,
+    InternalServerError,
+    Unauthorized,
+)
 from cato_common.domain.project import Project
 
 
@@ -59,7 +64,16 @@ def test_get_for_entity_500(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(500, None)
     http_template = HttpTemplate(object_mapper)
 
-    with pytest.raises(HttpTemplateException):
+    with pytest.raises(InternalServerError):
+        http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
+
+
+@mock.patch("requests.get")
+def test_get_for_entity_401(mock_requests_get, object_mapper):
+    mock_requests_get.return_value = Response(401, None)
+    http_template = HttpTemplate(object_mapper)
+
+    with pytest.raises(Unauthorized):
         http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
 
