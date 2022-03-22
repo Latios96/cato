@@ -105,7 +105,7 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     http_session_cookie_factory,
     http_session_cookie,
     client_with_session,
-    api_token_str,
+    fixed_api_token_str,
 )
 
 

@@ -47,8 +47,8 @@ def test_sign_api_token(object_mapper, api_token_signer):
     }
 
 
-def test_unsign_valid_api_token(api_token_str, api_token_signer):
-    api_token = api_token_signer.unsign(api_token_str)
+def test_unsign_valid_api_token(fixed_api_token_str, api_token_signer):
+    api_token = api_token_signer.unsign(fixed_api_token_str)
 
     assert api_token == ApiToken(
         name=ApiTokenName("test"),
@@ -60,6 +60,6 @@ def test_unsign_valid_api_token(api_token_str, api_token_signer):
     )
 
 
-def test_unsign_invalid_api_token(api_token_str, api_token_signer):
+def test_unsign_invalid_api_token(fixed_api_token_str, api_token_signer):
     with pytest.raises(BadTimeSignature):
-        api_token_signer.unsign(ApiTokenStr(bytes(api_token_str) + b"1"))
+        api_token_signer.unsign(ApiTokenStr(bytes(fixed_api_token_str) + b"1"))
