@@ -70,18 +70,6 @@ class HttpTemplate:
     ) -> HttpTemplateResponse[R]:
         return self._launch_request_with_body(url, body, response_cls, "POST")
 
-    def post_files_for_entity(
-        self,
-        url: str,
-        body: Optional[B],
-        files: Dict[str, IO],
-        response_cls: Type[R],
-    ) -> HttpTemplateResponse[R]:
-        response = self._requests_impl.post(
-            url, data=self._object_mapper.to_dict(body) if body else None, files=files
-        )
-        return self._construct_http_template_response(response, response_cls)
-
     def patch_for_entity(
         self,
         url: str,
@@ -107,6 +95,18 @@ class HttpTemplate:
             response = self._requests_impl.patch(url, json=params)
         logger.debug("Received response %s", response)
         return self._handle_response(response, response_cls)
+
+    def post_files_for_entity(
+        self,
+        url: str,
+        body: Optional[B],
+        files: Dict[str, IO],
+        response_cls: Type[R],
+    ) -> HttpTemplateResponse[R]:
+        response = self._requests_impl.post(
+            url, data=self._object_mapper.to_dict(body) if body else None, files=files
+        )
+        return self._construct_http_template_response(response, response_cls)
 
     def _handle_response(
         self, response: requests.Response, response_cls: Type[R]
