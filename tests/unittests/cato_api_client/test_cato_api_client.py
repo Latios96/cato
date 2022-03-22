@@ -1,5 +1,6 @@
 import datetime
 import os
+from typing import Dict, Type, Optional
 
 import pytest
 from requests.models import Response
@@ -7,7 +8,7 @@ from requests.models import Response
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse
+from cato_api_client.http_template import AbstractHttpTemplate, HttpTemplateResponse, R
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
@@ -65,6 +66,12 @@ class FastApiClientHttpTemplate(AbstractHttpTemplate):
         return FastApiClientHttpTemplateResponse(
             response, response_cls, self._object_mapper
         )
+
+    def post_files_for_entity(
+        self, url: str, body: Optional, files: Dict[str, str], response_cls: Type[R]
+    ) -> HttpTemplateResponse[R]:
+        response = self._client.post(url, data=body, files=files)
+        return self._construct_http_template_response(response, response_cls)
 
 
 class CatoApiTestClient(CatoApiClient):

@@ -1,7 +1,8 @@
 import logging
-from typing import TypeVar, Generic, Type, List
+from typing import TypeVar, Generic, Type, List, Dict, Optional
 
 import requests
+from typing.io import IO
 
 from cato_common.mappers.object_mapper import ObjectMapper
 
@@ -84,6 +85,18 @@ class AbstractHttpTemplate:
         response_cls: Type[R],
     ) -> HttpTemplateResponse[R]:
         return self._launch_request_with_body(url, body, response_cls, "POST")
+
+    def post_files_for_entity(
+        self,
+        url: str,
+        body: Optional[B],
+        files: Dict[str, IO],
+        response_cls: Type[R],
+    ) -> HttpTemplateResponse[R]:
+        response = requests.post(
+            url, data=self._object_mapper.to_dict(body) if body else None, files=files
+        )
+        return self._construct_http_template_response(response, response_cls)
 
     def patch_for_entity(
         self,

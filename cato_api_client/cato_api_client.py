@@ -63,10 +63,10 @@ class CatoApiClient:
         files = {"file": open(path, "rb")}
 
         logger.info("Uploading file %s", path)
-        response = self._post_form(url, {}, files=files)
+        response = self._http_template.post_files_for_entity(url, None, files, File)
 
-        if response.status_code == 201:
-            return self._object_mapper.from_dict(self._get_json(response), File)
+        if response.status_code() == 201:
+            return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
 
     def upload_image(self, path: str) -> Image:
@@ -77,10 +77,10 @@ class CatoApiClient:
         files = {"file": (os.path.basename(path), open(path, "rb"))}
 
         logger.info("Uploading image %s", path)
-        response = self._post_form(url, {}, files=files)
+        response = self._http_template.post_files_for_entity(url, None, files, Image)
 
-        if response.status_code == 201:
-            return self._object_mapper.from_dict(self._get_json(response), Image)
+        if response.status_code() == 201:
+            return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
 
     def download_original_image(self, image_id: int) -> Optional[bytes]:
@@ -131,12 +131,12 @@ class CatoApiClient:
             output_image,
             comparison_settings,
         )
-        response = self._post_form(url, data, files=files)
+        response = self._http_template.post_files_for_entity(
+            url, data, files, CompareImageResult
+        )
 
-        if response.status_code == 201:
-            return self._object_mapper.from_dict(
-                self._get_json(response), CompareImageResult
-            )
+        if response.status_code() == 201:
+            return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
 
     def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
@@ -315,7 +315,7 @@ class CatoApiClient:
                 " ".join(
                     [
                         "{}: {}".format(key, value)
-                        for key, value in self._get_json(response).items()
+                        for key, value in response.get_json().items()
                     ]
                 )
             )
