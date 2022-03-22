@@ -263,16 +263,7 @@ class CatoApiClient:
                 else:
                     raise ValueError("Unsupported edit type: {}".format(d["editType"]))
             return entity_list
-        raise ValueError(
-            "Bad parameters: {}".format(
-                " ".join(
-                    [
-                        "{}: {}".format(key, value)
-                        for key, value in response.get_json().items()
-                    ]
-                )
-            )
-        )
+        self._raise_bad_parameters(response)
 
     def _build_url(self, url):
         return self._url + quote(url)
@@ -284,31 +275,13 @@ class CatoApiClient:
         response = self._http_template.post_for_entity(url, body, response_cls)
         if response.status_code() == 201:
             return response.get_entity()
-        raise ValueError(
-            "Bad parameters: {}".format(
-                " ".join(
-                    [
-                        "{}: {}".format(key, value)
-                        for key, value in response.get_json().items()
-                    ]
-                )
-            )
-        )
+        self._raise_bad_parameters(response)
 
     def _patch_with_http_template(self, url, body, response_cls):
         response = self._http_template.patch_for_entity(url, body, response_cls)
         if response.status_code() == 200:
             return response.get_entity()
-        raise ValueError(
-            "Bad parameters: {}".format(
-                " ".join(
-                    [
-                        "{}: {}".format(key, value)
-                        for key, value in response.get_json().items()
-                    ]
-                )
-            )
-        )
+        self._raise_bad_parameters(response)
 
     def _create_value_error_for_bad_request(self, response):
         return ValueError(
@@ -328,16 +301,7 @@ class CatoApiClient:
             return None
         if response.status_code() == 200:
             return response.get_entity()
-        raise ValueError(
-            "Bad parameters: {}".format(
-                " ".join(
-                    [
-                        "{}: {}".format(key, value)
-                        for key, value in response.get_json().items()
-                    ]
-                )
-            )
-        )
+        self._raise_bad_parameters(response)
 
     def _find_many_with_http_template(
         self, url: str, response_cls: Type[T]
@@ -347,6 +311,9 @@ class CatoApiClient:
             return None
         if response.status_code() == 200:
             return response.get_entities()
+        self._raise_bad_parameters(response)
+
+    def _raise_bad_parameters(self, response):
         raise ValueError(
             "Bad parameters: {}".format(
                 " ".join(
