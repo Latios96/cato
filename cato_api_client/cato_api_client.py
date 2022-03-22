@@ -5,10 +5,8 @@ from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
-
-
 from cato_api_client.http_template import HttpTemplate
-
+from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
@@ -41,11 +39,23 @@ R = TypeVar("R")
 
 class CatoApiClient:
     def __init__(
-        self, url: str, http_template: HttpTemplate, object_mapper: ObjectMapper
+        self,
+        url: str,
+        http_template: HttpTemplate,
+        object_mapper: ObjectMapper,
+        api_token_str: ApiTokenStr = None,
     ) -> None:
         self._url = url
         self._http_template = http_template
         self._object_mapper = object_mapper
+        if api_token_str:
+            self._login(api_token_str)
+
+    def _login(self, api_token_str: ApiTokenStr):
+        self._http_template.set_authorization_header(str(api_token_str.to_bearer()))
+        self._http_template.get_for_entity(
+            self._build_url("/api_tokens/is_valid"), ApiSuccess
+        )
 
     def get_project_by_name(self, project_name: str) -> Optional[Project]:
         url = self._build_url("/api/v1/projects/name/{}".format(project_name))

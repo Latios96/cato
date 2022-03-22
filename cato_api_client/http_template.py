@@ -1,6 +1,7 @@
 import logging
 from typing import TypeVar, Generic, Type, List, Dict, Optional
 
+
 import requests
 from typing.io import IO
 
@@ -53,12 +54,16 @@ class HttpTemplate:
     def __init__(self, object_mapper: ObjectMapper, requests_impl=requests):
         self._object_mapper = object_mapper
         self._requests_impl = requests_impl
+        self._headers: Dict[str, str] = {}
+
+    def set_authorization_header(self, value: str):
+        self._headers["Authorization"] = value
 
     def get_for_entity(
         self, url: str, response_cls: Type[R]
     ) -> HttpTemplateResponse[R]:
         logger.debug("Launching GET request to %s ", url)
-        response = self._requests_impl.get(url)
+        response = self._requests_impl.get(url, headers=self._headers)
         logger.debug("Received response %s", response)
         return self._handle_response(response, response_cls)
 
@@ -90,9 +95,11 @@ class HttpTemplate:
         logger.debug("Launching %s request to %s with json %s", method, url, params)
         assert method in ["POST", "PATCH"]
         if method == "POST":
-            response = self._requests_impl.post(url, json=params)
+            response = self._requests_impl.post(url, json=params, headers=self._headers)
         else:
-            response = self._requests_impl.patch(url, json=params)
+            response = self._requests_impl.patch(
+                url, json=params, headers=self._headers
+            )
         logger.debug("Received response %s", response)
         return self._handle_response(response, response_cls)
 
@@ -104,7 +111,10 @@ class HttpTemplate:
         response_cls: Type[R],
     ) -> HttpTemplateResponse[R]:
         response = self._requests_impl.post(
-            url, data=self._object_mapper.to_dict(body) if body else None, files=files
+            url,
+            data=self._object_mapper.to_dict(body) if body else None,
+            files=files,
+            headers=self._headers,
         )
         return self._construct_http_template_response(response, response_cls)
 
@@ -112,7 +122,11 @@ class HttpTemplate:
         self, response: requests.Response, response_cls: Type[R]
     ) -> HttpTemplateResponse[R]:
         if response.status_code == 500:
-            raise HttpTemplateException("Internal Server Error!")
+            raise HttpTemplateException(
+                "Internal Server Error!"
+            )  # todo use dedicated exception and use dot
+        if response.status_code == 401:
+            raise HttpTemplateException("Unauthorized.")  # todo use dedicated exception
         return self._construct_http_template_response(response, response_cls)
 
     def _construct_http_template_response(

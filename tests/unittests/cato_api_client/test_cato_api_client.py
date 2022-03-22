@@ -1,6 +1,5 @@
 import datetime
 import os
-from typing import Dict, Type, Optional
 
 import pytest
 
@@ -30,12 +29,13 @@ from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
 
 @pytest.fixture
-def cato_api_client(app_and_config_fixture, client, object_mapper):
+def cato_api_client(app_and_config_fixture, client, object_mapper, api_token_str):
     pp, config = app_and_config_fixture
     api_client = CatoApiClient(
         f"http://localhost:{config.port}",
         HttpTemplate(object_mapper, client),
         object_mapper,
+        api_token_str=api_token_str,
     )
     return api_client
 
