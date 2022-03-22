@@ -154,13 +154,11 @@ class CatoApiClient:
         return self._find_with_http_template(url, TestResult)
 
     def run_id_exists(self, run_id: int) -> bool:
-        url = self._build_url(
-            "/api/v1/runs/{}/exists".format(run_id)
-        )  # todo use ApiSuccess class
-        response = self._get_url(url)
-        if response.status_code == 200:
+        url = self._build_url("/api/v1/runs/{}/exists".format(run_id))
+        response = self._http_template.get_for_entity(url, ApiSuccess)
+        if response.status_code() == 200:
             return True
-        elif response.status_code == 404:
+        elif response.status_code() == 404:
             return False
         raise ValueError(f"Something went wrong: {response}")
 
