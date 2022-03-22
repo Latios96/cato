@@ -1,6 +1,6 @@
 import logging
 import os
-from typing import Optional, Type, TypeVar, List, Dict
+from typing import Optional, Type, TypeVar, List, Dict, Callable
 from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
@@ -43,13 +43,13 @@ class CatoApiClient:
         url: str,
         http_template: HttpTemplate,
         object_mapper: ObjectMapper,
-        api_token_str: ApiTokenStr = None,
+        api_token_provider: Callable[[], ApiTokenStr],
     ) -> None:
         self._url = url
         self._http_template = http_template
         self._object_mapper = object_mapper
-        if api_token_str:
-            self._login(api_token_str)
+        if api_token_provider:
+            self._login(api_token_provider())
 
     def _login(self, api_token_str: ApiTokenStr):
         self._http_template.set_authorization_header(str(api_token_str.to_bearer()))

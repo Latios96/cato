@@ -35,7 +35,7 @@ def cato_api_client(app_and_config_fixture, client, object_mapper, api_token_str
         f"http://localhost:{config.port}",
         HttpTemplate(object_mapper, client),
         object_mapper,
-        api_token_str=api_token_str,
+        api_token_provider=lambda: api_token_str,
     )
     return api_client
 

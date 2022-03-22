@@ -1,5 +1,6 @@
 import argparse
 import logging
+import os.path
 from typing import Optional
 
 import pinject
@@ -9,6 +10,7 @@ import cato
 import cato_api_client
 import cato_common
 from cato import logger
+from cato.authentication.api_token_storage import ApiTokenStorage
 from cato.commands.config_template_command import ConfigTemplateCommand
 from cato.commands.list_tests_command import ListTestsCommand
 from cato.commands.run_command import RunCommand
@@ -19,6 +21,7 @@ from cato.commands.update_missing_reference_images_command import (
 )
 from cato.commands.update_reference_image_command import UpdateReferenceImageCommand
 from cato.commands.worker_run_command import WorkerRunCommand
+from cato.config.user_config.user_config_repository import UserConfigRepository
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
@@ -60,6 +63,13 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind(
             "last_run_information_repository_factory",
             to_instance=lambda x: LastRunInformationRepository(x),
+        )
+        bind(
+            "api_token_provider",
+            to_instance=lambda: ApiTokenStorage(
+                self._url,
+                UserConfigRepository(os.path.expanduser("~/.cato/config.json")),
+            ).get_api_token(),
         )
 
 
