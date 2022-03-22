@@ -19,6 +19,10 @@ def test_create_valid_bearer_token():
     BearerToken("the_value")
 
 
+def test_parse_from_header():
+    assert BearerToken.parse_from_header("Bearer the_value") == BearerToken("the_value")
+
+
 def test_to_str():
     bearer_token = BearerToken("the_value")
 
