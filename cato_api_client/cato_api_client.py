@@ -3,19 +3,22 @@ import os
 from typing import Optional, Type, TypeVar, List, Dict
 from urllib.parse import quote
 
-import requests
-
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.result_status import ResultStatus
 from cato_api_client.http_template import AbstractHttpTemplate
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import Run
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_common.domain.test_edit import (
+    AbstractTestEdit,
+    ComparisonSettingsEdit,
+    ReferenceImageEdit,
+)
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
@@ -25,11 +28,6 @@ from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_common.domain.test_edit import (
-    AbstractTestEdit,
-    ComparisonSettingsEdit,
-    ReferenceImageEdit,
-)
 from cato_server.api.dtos.api_success import ApiSuccess
 from cato_server.domain.test_heartbeat import TestHeartbeat
 
@@ -320,12 +318,6 @@ class CatoApiClient:
                 )
             )
         )
-
-    def _post_form(self, url, params, files=None):
-        logger.debug("Launching POST request to %s with params %s", url, params)
-        response = requests.post(url, data=params, files=files)
-        logger.debug("Received response %s", response)
-        return response
 
     def _find_with_http_template(self, url: str, response_cls: Type[T]) -> Optional[T]:
         response = self._http_template.get_for_entity(url, response_cls)

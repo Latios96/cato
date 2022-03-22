@@ -85,9 +85,6 @@ class CatoApiTestClient(CatoApiClient):
         get = self._client.get(url.replace(self._url, ""))
         return get
 
-    def _post_form(self, url, params, files=None):
-        return self._client.post(url.replace(self._url, ""), data=params, files=files)
-
     def _post_json(self, url, params):
         return self._client.post(url.replace(self._url, ""), json=params)
 
