@@ -1,11 +1,16 @@
+import datetime
 import json
 from base64 import b64encode
 
 import itsdangerous
 import pytest
 
+from cato_common.domain.auth.api_token_id import ApiTokenId
+from cato_common.domain.auth.api_token_name import ApiTokenName
 from cato_common.domain.auth.api_token_str import ApiTokenStr
+from cato_server.authentication.api_token_signer import ApiTokenSigner
 from cato_server.authentication.session_backend import SessionBackend
+from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
 from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
@@ -63,3 +68,27 @@ def fixed_api_token_str():
     return ApiTokenStr(
         b"eyJuYW1lIjogInRlc3QiLCAiaWQiOiAiYWI1ZDIwMDA4YmIxZjI3YTE0NDJhNGRhMzk4YzAxNzEyYjQ4NThkMDYyMWJlZjA4NjAyYjc2ZjEwNGNlZjE2ZiIsICJjcmVhdGVkQXQiOiAiMjAyMi0wMy0yMVQxNzoxNToyNC4zMjg2MzMiLCAiZXhwaXJlc0F0IjogIjIwMjItMDMtMjFUMTk6MTU6MjQuMzI4NjMzIn0=.Yjikng.4DHH2-KIXCUigxgQHJ_W2My3IBw"
     )
+
+
+@pytest.fixture
+def api_token_str_factory(app_and_config_fixture, object_mapper):
+    app, config = app_and_config_fixture
+    api_token_signer = ApiTokenSigner(object_mapper, config)
+
+    def factory():
+        created_at = datetime.datetime.now()
+        expires_at = created_at + datetime.timedelta(hours=2)
+        api_token = ApiToken(
+            name=ApiTokenName("test"),
+            id=ApiTokenId.generate(),
+            created_at=created_at,
+            expires_at=expires_at,
+        )
+        return api_token_signer.sign(api_token)
+
+    return factory
+
+
+@pytest.fixture
+def api_token_str(api_token_str_factory):
+    return api_token_str_factory()
