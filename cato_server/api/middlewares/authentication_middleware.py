@@ -13,6 +13,8 @@ from cato_server.authentication.api_token_signer import (
 
 logger = logging.getLogger(__name__)
 
+FORCE = False
+
 
 class AuthenticationMiddleware:
     def __init__(self, api_token_signer: ApiTokenSigner):
@@ -22,6 +24,9 @@ class AuthenticationMiddleware:
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         api_token_str = self._read_api_token_from_request(request)
+        if FORCE and not api_token_str:
+            if not api_token_str:
+                return Response(status_code=401)
         if api_token_str:
             try:
                 self._api_token_signer.unsign(api_token_str)
