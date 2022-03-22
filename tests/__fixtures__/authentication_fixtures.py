@@ -10,8 +10,12 @@ from cato_common.domain.auth.api_token_name import ApiTokenName
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_server.authentication.api_token_signer import ApiTokenSigner
 from cato_server.authentication.session_backend import SessionBackend
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.auth_user import AuthUser
+from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.session import Session
 from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
     SqlAlchemySessionRepository,
@@ -72,15 +76,29 @@ def fixed_api_token_str():
 
 @pytest.fixture
 def api_token_str_factory(app_and_config_fixture, object_mapper):
-    app, config = app_and_config_fixture
-    api_token_signer = ApiTokenSigner(object_mapper, config)
+    def factory(
+        name=ApiTokenName("test"),
+        id=ApiTokenId.generate(),
+        created_at=None,
+        expires_at=None,
+        secret: SecretStr = None,
+    ):
+        if not created_at:
+            created_at = datetime.datetime.now()
+        if not expires_at:
+            expires_at = created_at + datetime.timedelta(hours=2)
 
-    def factory():
-        created_at = datetime.datetime.now()
-        expires_at = created_at + datetime.timedelta(hours=2)
+        if not secret:
+            app_config = app_and_config_fixture[1]
+        else:
+            app_config = AppConfigurationDefaults().create()
+            app_config.secret = secret
+
+        api_token_signer = ApiTokenSigner(object_mapper, app_config)
+
         api_token = ApiToken(
-            name=ApiTokenName("test"),
-            id=ApiTokenId.generate(),
+            name=name,
+            id=id,
             created_at=created_at,
             expires_at=expires_at,
         )

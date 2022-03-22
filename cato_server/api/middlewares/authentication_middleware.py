@@ -1,12 +1,15 @@
-from itsdangerous import BadSignature
+import logging
+
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.domain.auth.bearer_token import BearerToken
-from cato_server.authentication.api_token_signer import ApiTokenSigner
-import logging
+from cato_server.authentication.api_token_signer import (
+    ApiTokenSigner,
+    InvalidApiTokenException,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -22,7 +25,7 @@ class AuthenticationMiddleware:
         if api_token_str:
             try:
                 self._api_token_signer.unsign(api_token_str)
-            except BadSignature as err:
+            except InvalidApiTokenException as err:
                 logger.error(err)
                 return Response(status_code=401)
 
