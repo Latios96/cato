@@ -1,14 +1,14 @@
 import React from "react";
 import styles from "./Header.module.scss";
 import { Link } from "react-router-dom";
-import { useUserContext } from "../../contexts/AuthenticatedUserContext/AuthenticatedUserContext";
 import { LoginButton } from "../LoginButton/LoginButton";
 import { AboutUserMenu } from "./AboutUserMenu";
+import RenderOnAnonymous from "../Authentication/RenderOnAnonymous";
+import RenderOnAuthenticated from "../Authentication/RenderOnAuthenticated";
 
 interface Props {}
 
 function Header(props: Props) {
-  const userContext = useUserContext();
   return (
     <div className={styles.header}>
       <Link to={"/"}>
@@ -19,11 +19,12 @@ function Header(props: Props) {
       <span
         className={"d-flex flex-column justify-content-center ml-auto mr-3"}
       >
-        {userContext.id === 0 ? (
+        <RenderOnAnonymous>
           <LoginButton />
-        ) : (
-          <AboutUserMenu user={userContext} />
-        )}
+        </RenderOnAnonymous>
+        <RenderOnAuthenticated>
+          <AboutUserMenu />
+        </RenderOnAuthenticated>
       </span>
       )
     </div>

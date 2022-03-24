@@ -1,12 +1,13 @@
-import { AuthUser } from "../../catoapimodels/catoapimodels";
 import { OverlayTrigger } from "react-bootstrap";
 import styles from "./AboutUserMenu.module.scss";
 import Avatar from "../Avatar/Avatar";
 import ArrowButton from "../Button/ArrowButton";
 import React from "react";
 import axios from "axios";
+import { useAuthenticatedUser } from "../../contexts/AuthenticatedUserContext/AuthenticatedUserContext";
 
-export function AboutUserMenu(props: { user: AuthUser }) {
+export function AboutUserMenu() {
+  const authenticatedUser = useAuthenticatedUser();
   return (
     <OverlayTrigger
       placement="bottom"
@@ -15,8 +16,10 @@ export function AboutUserMenu(props: { user: AuthUser }) {
       overlay={
         <div className={styles.inputContainer}>
           <div className={styles.menuContent}>
-            <span className={"font-weight-bolder"}>{props.user.fullname}</span>
-            <span>@{props.user.username}</span>
+            <span className={"font-weight-bolder"}>
+              {authenticatedUser.fullname}
+            </span>
+            <span>@{authenticatedUser.username}</span>
           </div>
           <div
             className={styles.menuContent + " " + styles.menuContentClickable}
@@ -35,7 +38,7 @@ export function AboutUserMenu(props: { user: AuthUser }) {
       }
     >
       <div className={"d-flex"}>
-        <Avatar user={props.user} />
+        <Avatar user={authenticatedUser} />
         <ArrowButton direction={"down"} />
       </div>
     </OverlayTrigger>

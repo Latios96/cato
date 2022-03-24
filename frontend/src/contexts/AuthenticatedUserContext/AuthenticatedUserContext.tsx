@@ -1,30 +1,27 @@
-import { useQuery } from "react-query";
 import { AuthUser } from "../../catoapimodels/catoapimodels";
 import React, { PropsWithChildren, useContext } from "react";
+import { useUser } from "./UserContext";
 
-const UserContext = React.createContext<AuthUser>({
+const AuthenticatedUserContext = React.createContext<AuthUser>({
   id: 0,
   email: "",
   username: "",
   fullname: "",
 });
 
-export function useUserContext() {
-  return useContext<AuthUser>(UserContext);
-}
-
 export function AuthenticatedUserProvider(props: PropsWithChildren<{}>) {
-  const { data: user } = useQuery<AuthUser, string>("about", () =>
-    fetch("/api/v1/users/whoami").then((res) =>
-      res.status === 200 ? res.json() : undefined
-    )
-  );
+  const user = useUser();
 
   if (!user) {
     return <>{props.children}</>;
   }
-
   return (
-    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+    <AuthenticatedUserContext.Provider value={user}>
+      {props.children}
+    </AuthenticatedUserContext.Provider>
   );
+}
+
+export function useAuthenticatedUser() {
+  return useContext<AuthUser>(AuthenticatedUserContext);
 }

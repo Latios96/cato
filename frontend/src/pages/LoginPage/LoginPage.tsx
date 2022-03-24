@@ -1,5 +1,4 @@
 import React from "react";
-import { Button } from "react-bootstrap";
 import styles from "./LoginPage.module.scss";
 
 function LoginPage() {
@@ -7,7 +6,9 @@ function LoginPage() {
     <div className={styles.loginBackground}>
       <div className={styles.loginContainer}>
         <span className={styles.logo}>cato</span>
-        <Button>Login</Button>
+        <a className="btn btn-primary" href={"/login"}>
+          Login
+        </a>
       </div>
     </div>
   );

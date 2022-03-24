@@ -1,7 +1,7 @@
 const { createProxyMiddleware } = require("http-proxy-middleware");
 
 module.exports = function (app) {
-  ["/login", "/logout", "/api/*"].forEach((route) => {
+  ["/login", "/logout", "/auth", "/api/*"].forEach((route) => {
     app.use(
       route,
       createProxyMiddleware({
