@@ -597,11 +597,12 @@ def oidc_configuration():
 def app_and_config_fixture(
     sessionmaker_fixture, tmp_path, mocked_scheduler_submitter, oidc_configuration
 ):
+    port = random_port()
     config = AppConfiguration(
-        port=random_port(),
+        port=port,
         debug=True,
         secret=SecretStr("SECRET"),
-        public_hostname="http://127.0.0.1",
+        public_hostname=f"http://127.0.0.1:{port}",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),
