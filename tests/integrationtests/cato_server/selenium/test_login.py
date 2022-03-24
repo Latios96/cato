@@ -30,13 +30,15 @@ def live_server_with_keycloak(
 
 
 @testcontainers_test
-def test_login_via_keycloak(live_server_with_keycloak, authenticated_selenium_driver):
-    authenticated_selenium_driver.get(f"{live_server_with_keycloak.server_url()}/login")
+def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
+    selenium_driver.get(f"{live_server_with_keycloak.server_url()}")
 
-    authenticated_selenium_driver.find_element_by_id("username").send_keys("test")
-    authenticated_selenium_driver.find_element_by_id("password").send_keys("password")
-    authenticated_selenium_driver.find_element_by_id("kc-login").click()
+    selenium_driver.find_element_by_id("login").click()
 
-    authenticated_selenium_driver.find_element_by_xpath("//*[text()='test_name']")
+    selenium_driver.find_element_by_id("username").send_keys("test")
+    selenium_driver.find_element_by_id("password").send_keys("password")
+    selenium_driver.find_element_by_id("kc-login").click()
+
+    selenium_driver.find_element_by_xpath("//*[text()='test_name']")
 
     # todo verify user information once whoami route is implemented

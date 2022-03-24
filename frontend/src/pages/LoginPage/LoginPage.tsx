@@ -11,7 +11,7 @@ function LoginPage() {
       </video>
       <div className={styles.loginContainer}>
         <span className={styles.logo}>cato</span>
-        <a className="btn btn-primary" href={"/login"}>
+        <a id={"login"} className="btn btn-primary" href={"/login"}>
           Login
         </a>
       </div>
