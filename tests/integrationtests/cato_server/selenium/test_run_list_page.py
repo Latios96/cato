@@ -18,67 +18,71 @@ class TestRunListPage:
     def test_run_list_pagination(
         self,
         live_server,
-        selenium_driver: MyChromeDriver,
+        authenticated_selenium_driver,
         project,
         sessionmaker_fixture,
     ):
         self._insert_many_runs(project, sessionmaker_fixture)
-        self._visit_project_page(live_server, project, selenium_driver)
+        self._visit_project_page(live_server, project, authenticated_selenium_driver)
         next_page = self._pagination_buttons_should_be_correctly_enabled(
-            selenium_driver
+            authenticated_selenium_driver
         )
-        self._run_50_should_be_on_page(selenium_driver)
+        self._run_50_should_be_on_page(authenticated_selenium_driver)
 
         next_page.click()
 
-        self._run_25_should_be_on_page(selenium_driver)
-        selenium_driver.refresh()
-        self._run_25_should_be_on_page(selenium_driver)
+        self._run_25_should_be_on_page(authenticated_selenium_driver)
+        authenticated_selenium_driver.refresh()
+        self._run_25_should_be_on_page(authenticated_selenium_driver)
 
     def test_run_list_auto_update(
         self,
         live_server,
-        selenium_driver: MyChromeDriver,
+        authenticated_selenium_driver,
         project,
         test_result,
         sessionmaker_fixture,
     ):
-        self._visit_project_page(live_server, project, selenium_driver)
-        self._assert_first_run_status_icon_has_title(selenium_driver, "not started")
+        self._visit_project_page(live_server, project, authenticated_selenium_driver)
+        self._assert_first_run_status_icon_has_title(
+            authenticated_selenium_driver, "not started"
+        )
 
         self._update_run_status(sessionmaker_fixture, test_result)
 
-        self._assert_first_run_status_icon_has_title(selenium_driver, "running")
+        self._assert_first_run_status_icon_has_title(
+            authenticated_selenium_driver, "running"
+        )
 
     def test_run_list_filter_by_branch(
         self,
         project,
         live_server,
-        selenium_driver: MyChromeDriver,
+        authenticated_selenium_driver,
         sessionmaker_fixture,
     ):
         self._insert_many_runs(project, sessionmaker_fixture)
-        self._visit_project_page(live_server, project, selenium_driver)
+        self._visit_project_page(live_server, project, authenticated_selenium_driver)
 
-        self._assert_first_run_has_branch_default(selenium_driver)
-        self._select_dev_branch(selenium_driver)
-        self._wait_until_first_run_has_branch_dev(selenium_driver)
-        self._wait_until_url_contains_branch_name(selenium_driver)
+        self._assert_first_run_has_branch_default(authenticated_selenium_driver)
+        self._select_dev_branch(authenticated_selenium_driver)
+        self._wait_until_first_run_has_branch_dev(authenticated_selenium_driver)
+        self._wait_until_url_contains_branch_name(authenticated_selenium_driver)
 
     def test_run_list_filter_by_branch_should_survive_page_refresh(
         self,
         project,
         live_server,
-        selenium_driver: MyChromeDriver,
+        authenticated_selenium_driver,
         sessionmaker_fixture,
     ):
         self._insert_many_runs(project, sessionmaker_fixture)
 
         self._visit_project_page_with_branch_filter_dev(
-            live_server, project, selenium_driver
+            live_server, project, authenticated_selenium_driver
         )
 
-        self._wait_until_first_run_has_branch_dev(selenium_driver)
+        self._wait_until_first_run_has_branch_dev(authenticated_selenium_driver)
 
     def _visit_project_page_with_branch_filter_dev(
         self, live_server, project, selenium_driver

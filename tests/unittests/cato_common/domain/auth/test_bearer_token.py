@@ -29,6 +29,12 @@ def test_to_str():
     assert str(bearer_token) == "Bearer the_value"
 
 
+def test_to_bytes():
+    bearer_token = BearerToken("the_value")
+
+    assert bytes(bearer_token) == b"Bearer the_value"
+
+
 def test_bearer_tokens_with_same_str_should_be_equal():
     a = BearerToken("the_value")
     b = BearerToken("the_value")

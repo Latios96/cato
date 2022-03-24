@@ -8,10 +8,12 @@ from cato_server.storage.abstract.suite_result_filter_options import (
 )
 
 
-def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
+def test_get_suite_result_by_run_id_should_return(
+    client_with_session, suite_result, run
+):
     url = "/api/v1/suite_results/run/{}".format(run.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == [
@@ -25,10 +27,12 @@ def test_get_suite_result_by_run_id_should_return(client, suite_result, run):
     ]
 
 
-def test_get_suite_result_by_run_id_filtered_should_return(client, suite_result, run):
+def test_get_suite_result_by_run_id_filtered_should_return(
+    client_with_session, suite_result, run
+):
     url = "/api/v1/suite_results/run/{}?statusFilter=NOT_STARTED".format(run.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == [
@@ -42,19 +46,21 @@ def test_get_suite_result_by_run_id_filtered_should_return(client, suite_result,
     ]
 
 
-def test_get_suite_result_by_run_id_should_return_empty_list(client):
+def test_get_suite_result_by_run_id_should_return_empty_list(client_with_session):
     url = "/api/v1/suite_results/run/42"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_get_suite_by_run_id_paged_should_return(client, suite_result, run):
+def test_get_suite_by_run_id_paged_should_return(
+    client_with_session, suite_result, run
+):
     url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10".format(run.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -74,13 +80,13 @@ def test_get_suite_by_run_id_paged_should_return(client, suite_result, run):
 
 
 def test_get_suite_by_run_id_paged_and_filtered_should_return(
-    client, suite_result, run
+    client_with_session, suite_result, run
 ):
     url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10&statusFilter=NOT_STARTED".format(
         run.id
     )
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -99,10 +105,12 @@ def test_get_suite_by_run_id_paged_and_filtered_should_return(
     }
 
 
-def test_get_suite_by_run_id_pages_should_return_empty_page(client, project):
+def test_get_suite_by_run_id_pages_should_return_empty_page(
+    client_with_session, project
+):
     url = "/api/v1/suite_results/run/{}?pageNumber=1&pageSize=10".format(project.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -113,10 +121,10 @@ def test_get_suite_by_run_id_pages_should_return_empty_page(client, project):
     }
 
 
-def test_get_by_id_should_find(client, suite_result):
+def test_get_by_id_should_find(client_with_session, suite_result):
     url = f"/api/v1/suite_results/{suite_result.id}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -129,11 +137,11 @@ def test_get_by_id_should_find(client, suite_result):
 
 
 def test_get_by_id_should_find_should_contain_no_tests(
-    client, suite_result, test_result
+    client_with_session, suite_result, test_result
 ):
     url = f"/api/v1/suite_results/{suite_result.id}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -153,10 +161,10 @@ def test_get_by_id_should_find_should_contain_no_tests(
     }
 
 
-def test_get_by_id_should_404(client):
+def test_get_by_id_should_404(client_with_session):
     url = "/api/v1/suite_results/42"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 404
 

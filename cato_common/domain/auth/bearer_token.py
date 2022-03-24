@@ -31,6 +31,9 @@ class BearerToken:
     def __str__(self):
         return f"Bearer {self._value}"
 
+    def __bytes__(self):
+        return str(self).encode("utf-8")
+
     def __eq__(self, other):
         return self._value == other._value
 

@@ -1,8 +1,10 @@
+import datetime
 import os
 import socket
 import threading
 import time
-from typing import Callable
+from dataclasses import dataclass
+from typing import Callable, List
 
 import pytest
 import uvicorn
@@ -75,7 +77,37 @@ def live_server(app_and_config_fixture, project):
     live_server.terminate()
 
 
+@dataclass
+class Cookie:
+    name: str
+    value: str
+    domain: str = "127.0.0.1"
+    expires: datetime.datetime = datetime.datetime.now() + datetime.timedelta(hours=2)
+    http_only: bool = True
+    path: str = "/"
+    same_site: str = "Lax"
+    secure: bool = False
+
+
 class MyChromeDriver(webdriver.Chrome):
+    def set_startup_cookies(self, cookies: List[Cookie]):
+        self.execute_cdp_cmd("Network.enable", {})
+
+        for cookie in cookies:
+            cookie_dict = {
+                "name": cookie.name,
+                "value": cookie.value,
+                "domain": cookie.domain,
+                "expires": int(cookie.expires.timestamp()),
+                "httpOnly": cookie.http_only,
+                "path": cookie.path,
+                "sameSite": cookie.same_site,
+                "secure": cookie.secure,
+            }
+            self.execute_cdp_cmd("Network.setCookie", cookie_dict)
+
+        self.execute_cdp_cmd("Network.disable", {})
+
     def find_element_by_css_module_class_name(self, class_name: str):
         return self.find_element_by_css_selector(f'[class^="{class_name}"]')
 
@@ -101,7 +133,7 @@ def wrap_catch_webdriver_exceptions(predicate: Callable[[webdriver.Chrome], bool
 
 
 @pytest.fixture
-def selenium_driver():
+def selenium_driver() -> MyChromeDriver:
     chrome_options = Options()
     chrome_options.add_argument("--headless")
     driver_path = (
@@ -118,3 +150,12 @@ def selenium_driver():
     driver.implicitly_wait(5)
     yield driver
     driver.close()
+
+
+@pytest.fixture
+def authenticated_selenium_driver(selenium_driver, http_session_cookie):
+    session_cookie_name, cookie_value = http_session_cookie
+    selenium_driver.set_startup_cookies(
+        [Cookie(name=session_cookie_name, value=cookie_value)]
+    )
+    yield selenium_driver

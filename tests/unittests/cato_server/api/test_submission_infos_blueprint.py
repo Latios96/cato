@@ -1,7 +1,7 @@
-def test_should_existing_get_submission_info(client, submission_info):
+def test_should_existing_get_submission_info(client_with_session, submission_info):
     url = "/api/v1/submission_infos/{}".format(submission_info.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -33,9 +33,9 @@ def test_should_existing_get_submission_info(client, submission_info):
     }
 
 
-def test_not_existing_should_return_404(client):
+def test_not_existing_should_return_404(client_with_session):
     url = "/api/v1/submission_infos/1"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 404

@@ -4,11 +4,9 @@ from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
 from starlette.responses import Response
 
-from cato_common.domain.auth.api_token_str import ApiTokenStr
-from cato_common.domain.auth.bearer_token import BearerToken
+from cato_server.api.authentication.user_from_request import UserFromRequest
 from cato_server.authentication.api_token_signer import (
     ApiTokenSigner,
-    InvalidApiTokenException,
 )
 
 logger = logging.getLogger(__name__)
@@ -17,29 +15,34 @@ FORCE = False
 
 
 class AuthenticationMiddleware:
-    def __init__(self, api_token_signer: ApiTokenSigner):
+    def __init__(
+        self, api_token_signer: ApiTokenSigner, user_from_request: UserFromRequest
+    ):
         self._api_token_signer = api_token_signer
+        self._user_from_request = user_from_request
 
     async def __call__(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
-        api_token_str = self._read_api_token_from_request(request)
-        if FORCE and not api_token_str:
-            if not api_token_str:
-                return Response(status_code=401)
-        if api_token_str:
-            try:
-                self._api_token_signer.unsign(api_token_str)
-            except InvalidApiTokenException as err:
-                logger.error(err)
-                return Response(status_code=401)
+        if self._is_unprotected_route(request):
+            return await call_next(request)
+
+        has_valid_api_token = self._user_from_request.api_token_from_request(request)
+        if has_valid_api_token:
+            return await call_next(request)
+
+        has_valid_session = self._user_from_request.session_from_request(request)
+        if not has_valid_session:
+            return Response(status_code=401)
 
         return await call_next(request)
 
-    def _read_api_token_from_request(self, request):
-        header = request.headers.get("Authorization")
-        if not header:
-            return None
-
-        token_str = BearerToken.parse_from_header(header)
-        return ApiTokenStr.from_bearer(token_str)
+    def _is_unprotected_route(self, request: Request):
+        request_route = request.url.path
+        if request_route in {"/", "/index.html"}:
+            return True
+        unprotected_routes = ["/login", "/auth", "/static"]
+        for unprotected_route in unprotected_routes:
+            if request_route.startswith(unprotected_route):
+                return True
+        return False

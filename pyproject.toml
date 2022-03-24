@@ -84,6 +84,8 @@ py-typescript-generator = {git = "https://github.com/Latios96/py-typescript-gene
 testcontainers = "^3.4.2"
 python-keycloak = "^0.27.0"
 pywin32 = { version = "^^303", markers = "sys_platform == 'win32'" }
+asyncmock = "^0.4.2"
+pytest-asyncio = "^0.18.2"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

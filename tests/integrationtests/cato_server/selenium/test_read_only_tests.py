@@ -12,18 +12,14 @@ class HomePage:
         self.stateless_test = stateless_test
 
     def the_link_card_for_the_project_should_be_displayed(self):
-        link_card = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "LinkCard_cardContentDiv"
-            )
+        link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "LinkCard_cardContentDiv"
         )
         assert link_card.text == self.stateless_test.project.name
 
     def when_clicking_the_card_it_should_navigate_to_project_page(self):
-        link_card = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "LinkCard_cardContentDiv"
-            )
+        link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "LinkCard_cardContentDiv"
         )
         link_card.click()
 
@@ -33,20 +29,26 @@ class ProjectPage:
         self.stateless_test = stateless_test
 
     def the_project_name_should_be_visible(self):
-        project_name = self.stateless_test.selenium_driver.find_element_by_tag_name(
-            "h1"
+        project_name = (
+            self.stateless_test.authenticated_selenium_driver.find_element_by_tag_name(
+                "h1"
+            )
         )
         assert project_name.text == self.stateless_test.project.name
 
     def should_display_run_list(self):
-        placeholder = self.stateless_test.selenium_driver.find_element_by_xpath(
-            "//a[text()='Run #1']"
+        placeholder = (
+            self.stateless_test.authenticated_selenium_driver.find_element_by_xpath(
+                "//a[text()='Run #1']"
+            )
         )
         assert placeholder
 
     def select_run(self):
-        run_number = self.stateless_test.selenium_driver.find_element_by_xpath(
-            "//a[text()='Run #1']"
+        run_number = (
+            self.stateless_test.authenticated_selenium_driver.find_element_by_xpath(
+                "//a[text()='Run #1']"
+            )
         )
         run_number.click()
         self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
@@ -57,28 +59,28 @@ class RunView:
         self.stateless_test = stateless_test
 
     def should_show_run_headline(self):
-        run_summary_headline = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "RunSummary_runSummaryHeadline"
-            )
+        run_summary_headline = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "RunSummary_runSummaryHeadline"
         )
         assert run_summary_headline.text == "Run Summary: #1"
 
     def the_suites_tab_should_be_selected(self):
-        suites_tab = self.stateless_test.selenium_driver.find_element_by_id(
-            "controlled-tab-example-tab-suites"
+        suites_tab = (
+            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
+                "controlled-tab-example-tab-suites"
+            )
         )
         assert suites_tab.get_attribute("class") == "nav-item nav-link active"
 
     def the_suites_tab_should_display_one_entry(self):
-        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        suite_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         assert len(suite_list) == 1
         assert suite_list[0].find_elements_by_tag_name("span")[1].text == "my_suite"
 
     def clicking_on_suite_entry_should_show_suite_tests(self):
-        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        suite_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[0].click()
@@ -86,24 +88,22 @@ class RunView:
 
     def the_breadcrumb_should_be_shown(self):
         time.sleep(0.5)
-        breadcrumb_entries = (
-            self.stateless_test.selenium_driver.find_elements_by_class_name(
-                "breadcrumb-item"
-            )
+        breadcrumb_entries = self.stateless_test.authenticated_selenium_driver.find_elements_by_class_name(
+            "breadcrumb-item"
         )
         assert len(breadcrumb_entries) == 2
         assert breadcrumb_entries[0].find_element_by_tag_name("a").text == "Run #1"
         assert breadcrumb_entries[1].find_element_by_tag_name("a").text == "my_suite"
 
     def the_suites_tests_should_be_shown(self):
-        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        suite_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         assert len(suite_list) == 1
         assert suite_list[0].find_elements_by_tag_name("span")[1].text == "my_test_name"
 
     def clicking_on_test_name_in_test_list_should_show_test(self):
-        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        suite_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
 
@@ -112,10 +112,8 @@ class RunView:
 
     def the_breadcrumb_should_be_shown_and_show_test_name(self):
         time.sleep(0.5)
-        breadcrumb_entries = (
-            self.stateless_test.selenium_driver.find_elements_by_class_name(
-                "breadcrumb-item"
-            )
+        breadcrumb_entries = self.stateless_test.authenticated_selenium_driver.find_elements_by_class_name(
+            "breadcrumb-item"
         )
         assert len(breadcrumb_entries) == 3
         assert breadcrumb_entries[0].find_element_by_tag_name("a").text == "Run #1"
@@ -126,33 +124,29 @@ class RunView:
 
     def should_navigate_to_suite_by_breadcrumb(self):
         time.sleep(0.5)
-        breadcrumb_entries = (
-            self.stateless_test.selenium_driver.find_elements_by_class_name(
-                "breadcrumb-item"
-            )
+        breadcrumb_entries = self.stateless_test.authenticated_selenium_driver.find_elements_by_class_name(
+            "breadcrumb-item"
         )
         breadcrumb_entries[1].click()
         self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites/1")
 
     def should_navigate_to_run_by_breadcrumb(self):
         time.sleep(0.5)
-        breadcrumb_entries = (
-            self.stateless_test.selenium_driver.find_elements_by_class_name(
-                "breadcrumb-item"
-            )
+        breadcrumb_entries = self.stateless_test.authenticated_selenium_driver.find_elements_by_class_name(
+            "breadcrumb-item"
         )
         breadcrumb_entries[0].click()
         self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
 
     def select_tests_tab(self):
-        self.stateless_test.selenium_driver.find_element_by_id(
+        self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "controlled-tab-example-tab-tests"
         ).click()
         self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests")
 
     def the_tests_tab_should_display_one_entry(self):
         time.sleep(0.5)
-        tests_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        tests_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         assert (
@@ -161,7 +155,7 @@ class RunView:
         )
 
     def clicking_on_test_name_in_test_tab_should_show_test(self):
-        suite_list = self.stateless_test.selenium_driver.find_elements_by_css_selector(
+        suite_list = self.stateless_test.authenticated_selenium_driver.find_elements_by_css_selector(
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[1].click()
@@ -176,7 +170,7 @@ class TestResultPage:
 
     def should_display_test_duration(self, duration):
         assert (
-            self.stateless_test.selenium_driver.find_element_by_id(
+            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
                 "test-duration-value"
             ).text
             == duration
@@ -186,35 +180,29 @@ class TestResultPage:
         assert self.get_log_button()
 
     def get_log_button(self):
-        return (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "DisplayLogComponent_logButton"
-            )
+        return self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "DisplayLogComponent_logButton"
         )
 
     def clicking_show_log_should_show_log(self):
         self.get_log_button().click()
-        assert (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "LogComponent_terminalContent"
-            )
+        assert self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "LogComponent_terminalContent"
         )
 
     def clicking_show_log_should_hide_log(self):
         self.get_log_button().click()
         time.sleep(0.5)
         try:
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+            self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
                 "LogComponent_terminalContent"
             )
         except NoSuchElementException:
             pass
 
     def channel_dropdown_should_contain_channels(self, channels):
-        dropdown = (
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
-                "MultiChannelImageComparion_selectChannel"
-            )
+        dropdown = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+            "MultiChannelImageComparion_selectChannel"
         )
         options = dropdown.find_elements_by_tag_name("option")
         for i, channel in enumerate(channels):
@@ -222,14 +210,14 @@ class TestResultPage:
 
     def change_channel_to_alpha(self):
         dropdown = Select(
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+            self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
                 "MultiChannelImageComparion_selectChannel"
             )
         )
         dropdown.select_by_visible_text("alpha")
 
     def alpha_image_should_be_shown(self):
-        images = self.stateless_test.selenium_driver.find_element_by_id(
+        images = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "ImageCompariontest"
         ).find_elements_by_tag_name("img")
         assert (
@@ -239,12 +227,12 @@ class TestResultPage:
 
     def rgb_channel_should_be_selected_and_shown(self):
         dropdown = Select(
-            self.stateless_test.selenium_driver.find_element_by_css_module_class_name(
+            self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
                 "MultiChannelImageComparion_selectChannel"
             )
         )
         assert dropdown.first_selected_option.text == "rgb"
-        images = self.stateless_test.selenium_driver.find_element_by_id(
+        images = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "ImageCompariontest"
         ).find_elements_by_tag_name("img")
         assert (
@@ -253,25 +241,25 @@ class TestResultPage:
         )
 
     def click_full_screen_button(self):
-        button = self.stateless_test.selenium_driver.find_element_by_id(
+        button = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "app-open-image-comparison-modal"
         )
         button.click()
 
     def image_comparison_modal_should_be_shown(self):
-        assert self.stateless_test.selenium_driver.find_element_by_id(
+        assert self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "app-image-comparison-modal"
         )
 
     def click_image_comparison_close_modal_button(self):
-        button = self.stateless_test.selenium_driver.find_element_by_id(
+        button = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "app-close-image-comparison-modal"
         )
         button.click()
 
     def image_comparison_modal_should_not_be_shown(self):
         try:
-            self.stateless_test.selenium_driver.find_element_by_id(
+            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
                 "app-image-comparison-modal"
             )
         except NoSuchElementException:
@@ -280,10 +268,14 @@ class TestResultPage:
 
 class ReadOnlySeleniumTest:
     def __init__(
-        self, live_server, selenium_driver: MyChromeDriver, project, test_result
+        self,
+        live_server,
+        authenticated_selenium_driver: MyChromeDriver,
+        project,
+        test_result,
     ):
         self.live_server = live_server
-        self.selenium_driver = selenium_driver
+        self.authenticated_selenium_driver = authenticated_selenium_driver
         self.project = project
         self.test_result = test_result
         self.home_page = HomePage(self)
@@ -295,18 +287,23 @@ class ReadOnlySeleniumTest:
         raise NotImplementedError()
 
     def assert_current_url_is(self, url):
-        assert self.selenium_driver.current_url == self.live_server.server_url() + url
+        assert (
+            self.authenticated_selenium_driver.current_url
+            == self.live_server.server_url() + url
+        )
 
     def navigate_to_home(self):
-        self.selenium_driver.get(self.live_server.server_url())
-        self.selenium_driver.find_element_by_css_module_class_name(
+        self.authenticated_selenium_driver.get(self.live_server.server_url())
+        self.authenticated_selenium_driver.find_element_by_css_module_class_name(
             "LinkCard_cardContentDiv"
         )
-        assert self.selenium_driver.title == "Cato"
+        assert self.authenticated_selenium_driver.title == "Cato"
 
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
-        header_link = self.selenium_driver.find_element_by_css_module_class_name(
-            "Header_logoCato"
+        header_link = (
+            self.authenticated_selenium_driver.find_element_by_css_module_class_name(
+                "Header_logoCato"
+            )
         )
         header_link.click()
         self.assert_current_url_is("/#/")
@@ -317,7 +314,7 @@ class ReadOnlySeleniumTest:
         self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
         time.sleep(0.5)
-        assert self.selenium_driver.title == self.project.name
+        assert self.authenticated_selenium_driver.title == self.project.name
 
 
 class ProjectPageShouldNavigateToProjectTest(ReadOnlySeleniumTest):
@@ -336,9 +333,9 @@ class NavigateBackAndForwardShouldWorkTest(ReadOnlySeleniumTest):
         self.home_page.the_link_card_for_the_project_should_be_displayed()
         self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
-        self.selenium_driver.back()
+        self.authenticated_selenium_driver.back()
         self.home_page.the_link_card_for_the_project_should_be_displayed()
-        self.selenium_driver.forward()
+        self.authenticated_selenium_driver.forward()
         self.project_page.the_project_name_should_be_visible()
 
 
@@ -381,29 +378,31 @@ class TestResultFunctionality(ReadOnlySeleniumTest):
         self.test_result_page.image_comparison_modal_should_not_be_shown()
 
     def navigate_to_test(self):
-        self.selenium_driver.get(
+        self.authenticated_selenium_driver.get(
             self.live_server.server_url() + "/#/projects/1/runs/1/tests/1"
         )
 
 
 @selenium_test
-def test_read_only_tests(live_server, selenium_driver, project, finished_test_result):
+def test_read_only_tests(
+    live_server, authenticated_selenium_driver, project, finished_test_result
+):
     test = ProjectPageShouldNavigateToProjectTest(
-        live_server, selenium_driver, project, finished_test_result
+        live_server, authenticated_selenium_driver, project, finished_test_result
     )
     test.execute()
 
     test = NavigateBackAndForwardShouldWorkTest(
-        live_server, selenium_driver, project, finished_test_result
+        live_server, authenticated_selenium_driver, project, finished_test_result
     )
     test.execute()
 
     test = DisplayProjectPage(
-        live_server, selenium_driver, project, finished_test_result
+        live_server, authenticated_selenium_driver, project, finished_test_result
     )
     test.execute()
 
     test = ProjectPageNavigation(
-        live_server, selenium_driver, project, finished_test_result
+        live_server, authenticated_selenium_driver, project, finished_test_result
     )
     test.execute()

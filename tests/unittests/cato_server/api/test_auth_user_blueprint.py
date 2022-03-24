@@ -1,7 +1,7 @@
 def test_should_return_404_when_no_session_exists(client):
     response = client.get("/api/v1/users/whoami")
 
-    assert response.status_code == 404
+    assert response.status_code == 401
 
 
 def test_should_return_user_from_session_with_fixtures(client_with_session):

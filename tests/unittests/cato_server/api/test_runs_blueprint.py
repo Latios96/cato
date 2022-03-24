@@ -1,7 +1,7 @@
-def test_get_run_by_project_id_should_return(client, project, run):
+def test_get_run_by_project_id_should_return(client_with_session, project, run):
     url = "/api/v1/runs/project/{}".format(project.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     json = rv.json()
@@ -10,19 +10,19 @@ def test_get_run_by_project_id_should_return(client, project, run):
     assert json[0]["projectId"] == 1
 
 
-def test_get_run_by_project_id_should_return_empty_list(client, project):
+def test_get_run_by_project_id_should_return_empty_list(client_with_session, project):
     url = "/api/v1/runs/project/{}".format(project.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_get_run_by_project_id_paged_should_return(client, project, run):
+def test_get_run_by_project_id_paged_should_return(client_with_session, project, run):
     url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -43,13 +43,13 @@ def test_get_run_by_project_id_paged_should_return(client, project, run):
 
 
 def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should_return_empty(
-    client, project, run
+    client_with_session, project, run
 ):
     url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
         project.id, "test"
     )
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -61,13 +61,13 @@ def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should
 
 
 def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_return(
-    client, project, run
+    client_with_session, project, run
 ):
     url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
         project.id, "default"
     )
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -87,10 +87,12 @@ def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_ret
     }
 
 
-def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
+def test_get_run_by_project_id_pages_should_return_empty_page(
+    client_with_session, project
+):
     url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -101,21 +103,21 @@ def test_get_run_by_project_id_pages_should_return_empty_page(client, project):
     }
 
 
-def test_get_status(client, run, test_result):
-    rv = client.get(f"/api/v1/runs/{run.id}/status")
+def test_get_status(client_with_session, run, test_result):
+    rv = client_with_session.get(f"/api/v1/runs/{run.id}/status")
 
     assert rv.status_code == 200
     assert rv.json() == {"status": "NOT_STARTED"}
 
 
-def test_get_status_404(client, run):
-    rv = client.get(f"/api/v1/runs/{run.id}/status")
+def test_get_status_404(client_with_session, run):
+    rv = client_with_session.get(f"/api/v1/runs/{run.id}/status")
 
     assert rv.status_code == 404
 
 
-def test_get_run_summary(client, run, test_result):
-    rv = client.get(f"/api/v1/runs/{run.id}/summary")
+def test_get_run_summary(client_with_session, run, test_result):
+    rv = client_with_session.get(f"/api/v1/runs/{run.id}/summary")
 
     assert rv.json() == {
         "waitingTestCount": 1,
@@ -136,33 +138,33 @@ def test_get_run_summary(client, run, test_result):
     assert rv.status_code == 200
 
 
-def test_get_run_summary_should_error(client):
-    rv = client.get("/api/v1/runs/42/summary")
+def test_get_run_summary_should_error(client_with_session):
+    rv = client_with_session.get("/api/v1/runs/42/summary")
 
     assert rv.status_code == 404
 
 
-def test_run_id_exists_success(client, run):
-    rv = client.get(f"/api/v1/runs/{run.id}/exists")
+def test_run_id_exists_success(client_with_session, run):
+    rv = client_with_session.get(f"/api/v1/runs/{run.id}/exists")
 
     assert rv.status_code == 200
 
 
-def test_run_id_exists_failure(client):
-    rv = client.get("/api/v1/runs/42/exists")
+def test_run_id_exists_failure(client_with_session):
+    rv = client_with_session.get("/api/v1/runs/42/exists")
 
     assert rv.status_code == 404
 
 
-def test_get_empty_branch_list(client, project):
-    rv = client.get(f"/api/v1/runs/project/{project.id}/branches")
+def test_get_empty_branch_list(client_with_session, project):
+    rv = client_with_session.get(f"/api/v1/runs/project/{project.id}/branches")
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_get_branch_list_with_default_branch(client, project, run):
-    rv = client.get(f"/api/v1/runs/project/{project.id}/branches")
+def test_get_branch_list_with_default_branch(client_with_session, project, run):
+    rv = client_with_session.get(f"/api/v1/runs/project/{project.id}/branches")
 
     assert rv.status_code == 200
     assert rv.json() == ["default"]

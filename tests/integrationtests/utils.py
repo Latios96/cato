@@ -15,10 +15,16 @@ def _trim_output(output, trimmers: Dict[str, str]):
     return output
 
 
-def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = None):
+def snapshot_output(
+    snapshot, command, workdir=None, trimmers: Dict[str, str] = None, env=None
+):
     with change_cwd(workdir if workdir else os.getcwd()):
         output = subprocess.check_output(
-            command, stderr=subprocess.STDOUT, universal_newlines=True, encoding="utf-8"
+            command,
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            encoding="utf-8",
+            env=env,
         )
 
         if trimmers:
@@ -28,11 +34,11 @@ def snapshot_output(snapshot, command, workdir=None, trimmers: Dict[str, str] = 
 
 
 def run_command(
-    command, workdir=None, trimmers: Dict[str, str] = None
+    command, workdir=None, trimmers: Dict[str, str] = None, env=None
 ) -> Tuple[str, str, int]:
     with change_cwd(workdir if workdir else os.getcwd()):
         completed_process = subprocess.run(
-            command, capture_output=True, universal_newlines=True
+            command, capture_output=True, universal_newlines=True, env=env
         )
 
         stdout = _trim_output(completed_process.stdout, trimmers)

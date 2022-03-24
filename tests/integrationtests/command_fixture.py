@@ -37,7 +37,7 @@ class CommandResult:
         return longest_match.size == len(lines_to_contain)
 
 
-def run_command(cmd: List[str]) -> CommandResult:
+def run_command(cmd: List[str], env=None) -> CommandResult:
     if sys.platform == "linux":
         cmd = " ".join(cmd)
     output_lines = []
@@ -48,6 +48,7 @@ def run_command(cmd: List[str]) -> CommandResult:
         universal_newlines=True,
         shell=True,
         encoding="utf-8",
+        env=env,
     )
 
     stdout = popen.stdout
@@ -62,11 +63,11 @@ def run_command(cmd: List[str]) -> CommandResult:
     return CommandResult(exit_code=return_code, output=output_lines)
 
 
-def run_cato_command(cmd: List[str]) -> CommandResult:
+def run_cato_command(cmd: List[str], env=None) -> CommandResult:
     cato_cmd = [
         sys.executable,
         "-m",
         "cato",
     ]
     cato_cmd.extend(cmd)
-    return run_command(cato_cmd)
+    return run_command(cato_cmd, env)

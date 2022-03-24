@@ -43,7 +43,9 @@ def run_config(tmp_path, test_resource_provider, object_mapper):
 @pytest.mark.skipif(
     sys.platform != "win32", reason="not working on linux, to be removed anyway"
 )
-def test_submit_command(live_server, snapshot, run_config, test_resource_provider):
+def test_submit_command(
+    live_server, snapshot, run_config, test_resource_provider, env_with_api_token
+):
     snapshot_output(
         snapshot,
         [
@@ -58,10 +60,13 @@ def test_submit_command(live_server, snapshot, run_config, test_resource_provide
         ],
         workdir=test_resource_provider.resource_by_name("cato_test_config"),
         trimmers={r"127.0.0.1:\d+": "127.0.0.1:12345"},
+        env=env_with_api_token,
     )
 
 
-def test_worker_run_command(live_server, snapshot, run_config, test_resource_provider):
+def test_worker_run_command(
+    live_server, snapshot, run_config, test_resource_provider, env_with_api_token
+):
     snapshot_output(
         snapshot,
         [
@@ -76,6 +81,7 @@ def test_worker_run_command(live_server, snapshot, run_config, test_resource_pro
         ],
         workdir=test_resource_provider.resource_by_name("cato_test_config"),
         trimmers={r"127.0.0.1:\d+": "127.0.0.1:12345"},
+        env=env_with_api_token,
     )
 
     command = [
@@ -102,7 +108,8 @@ def test_worker_run_command(live_server, snapshot, run_config, test_resource_pro
             "Found image output at path .*": "Found image output at path <foo>",
             "Found reference image at path .*": "Found image output at path <bar>",
         },
+        env=env_with_api_token,
     )
 
-    assert exit_code == 0
     snapshot.assert_match(stderr)
+    assert exit_code == 0

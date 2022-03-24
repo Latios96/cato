@@ -3,14 +3,14 @@ from cato.domain.comparison_settings import ComparisonSettings
 
 
 def test_upload_images_for_comparison_success(
-    client, test_resource_provider, object_mapper
+    client_with_session, test_resource_provider, object_mapper
 ):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {
         "reference_image": ("reference_image.png", open(test_image, "rb")),
         "output_image": ("output_image.png", open(test_image, "rb")),
     }
-    response = client.post(
+    response = client_with_session.post(
         "/api/v1/compare_image",
         files=data,
         data={
@@ -32,14 +32,14 @@ def test_upload_images_for_comparison_success(
 
 
 def test_upload_images_should_fail_no_parsable_comparison_settings(
-    client, test_resource_provider, object_mapper
+    client_with_session, test_resource_provider, object_mapper
 ):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {
         "reference_image": ("reference_image.png", open(test_image, "rb")),
         "output_image": ("output_image.png", open(test_image, "rb")),
     }
-    response = client.post(
+    response = client_with_session.post(
         "/api/v1/compare_image",
         files=data,
         data={"comparison_settings": "test"},
@@ -53,13 +53,13 @@ def test_upload_images_should_fail_no_parsable_comparison_settings(
 
 
 def test_upload_images_should_fail_no_reference_image(
-    client, test_resource_provider, object_mapper
+    client_with_session, test_resource_provider, object_mapper
 ):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {
         "output_image": ("output_image.png", open(test_image, "rb")),
     }
-    response = client.post(
+    response = client_with_session.post(
         "/api/v1/compare_image",
         files=data,
         data={
@@ -82,14 +82,14 @@ def test_upload_images_should_fail_no_reference_image(
 
 
 def test_upload_should_fail_with_non_image_data(
-    client, test_resource_provider, object_mapper
+    client_with_session, test_resource_provider, object_mapper
 ):
     test_image = test_resource_provider.resource_by_name("unsupported-file.txt")
     data = {
         "reference_image": ("reference_image.png", open(test_image, "rb")),
         "output_image": ("output_image.png", open(test_image, "rb")),
     }
-    response = client.post(
+    response = client_with_session.post(
         "/api/v1/compare_image",
         files=data,
         data={

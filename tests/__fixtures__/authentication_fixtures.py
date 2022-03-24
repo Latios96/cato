@@ -1,9 +1,12 @@
 import datetime
 import json
+import os
 from base64 import b64encode
+from typing import Dict, Optional
 
 import itsdangerous
 import pytest
+from starlette.requests import Request
 
 from cato_common.domain.auth.api_token_id import ApiTokenId
 from cato_common.domain.auth.api_token_name import ApiTokenName
@@ -17,9 +20,11 @@ from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.session import Session
+from cato_server.domain.auth.session_id import SessionId
 from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
     SqlAlchemySessionRepository,
 )
+from dateutil.parser import parse
 
 
 @pytest.fixture
@@ -68,6 +73,30 @@ def client_with_session(http_session_cookie, client):
 
 
 @pytest.fixture
+def fixed_http_session():
+    created_at = datetime.datetime.now()
+    expires_at = created_at + datetime.timedelta(hours=2)
+    return Session(
+        id=SessionId("qfq0kpmAKSz2mXqr2AsI8hoN-oVrvovk9nxnIG6MpMM"),
+        user_id=1,
+        created_at=created_at,
+        expires_at=expires_at,
+    )
+
+
+@pytest.fixture
+def fixed_api_token():
+    return ApiToken(
+        name=ApiTokenName("test"),
+        id=ApiTokenId(
+            "ab5d20008bb1f27a1442a4da398c01712b4858d0621bef08602b76f104cef16f"
+        ),
+        created_at=parse("2022-03-21T17:15:24.328633"),
+        expires_at=parse("2022-03-21T19:15:24.328633"),
+    )
+
+
+@pytest.fixture
 def fixed_api_token_str():
     return ApiTokenStr(
         b"eyJuYW1lIjogInRlc3QiLCAiaWQiOiAiYWI1ZDIwMDA4YmIxZjI3YTE0NDJhNGRhMzk4YzAxNzEyYjQ4NThkMDYyMWJlZjA4NjAyYjc2ZjEwNGNlZjE2ZiIsICJjcmVhdGVkQXQiOiAiMjAyMi0wMy0yMVQxNzoxNToyNC4zMjg2MzMiLCAiZXhwaXJlc0F0IjogIjIwMjItMDMtMjFUMTk6MTU6MjQuMzI4NjMzIn0=.Yjikng.4DHH2-KIXCUigxgQHJ_W2My3IBw"
@@ -110,3 +139,69 @@ def api_token_str_factory(app_and_config_fixture, object_mapper):
 @pytest.fixture
 def api_token_str(api_token_str_factory):
     return api_token_str_factory()
+
+
+@pytest.fixture
+def env_with_api_token(api_token_str):
+    env_copy = os.environ.copy()
+    env_copy["CATO_API_TOKEN"] = str(api_token_str)
+    return env_copy
+
+
+@pytest.fixture
+def request_factory():
+    def factory(
+        route: str,
+        session_dict: Optional[Dict[str, str]] = None,
+        auth_header: Optional[bytes] = None,
+    ):
+        headers = [
+            (b"host", b"localhost:5000"),
+            (b"connection", b"keep-alive"),
+            (
+                b"sec-ch-ua",
+                b'" Not A;Brand";v="99", "Chromium";v="99", "Google Chrome";v="99"',
+            ),
+            (b"sec-ch-ua-mobile", b"?0"),
+            (b"sec-ch-ua-platform", b'"Windows"'),
+            (b"upgrade-insecure-requests", b"1"),
+            (
+                b"user-agent",
+                b"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36",
+            ),
+            (
+                b"accept",
+                b"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9",
+            ),
+            (b"sec-fetch-site", b"none"),
+            (b"sec-fetch-mode", b"navigate"),
+            (b"sec-fetch-user", b"?1"),
+            (b"sec-fetch-dest", b"document"),
+            (b"accept-encoding", b"gzip, deflate, br"),
+            (b"accept-language", b"de-DE,de;q=0.9,en;q=0.8,en-US;q=0.7"),
+        ]
+        if auth_header:
+            headers.append((b"authorization", auth_header))
+
+        scope = {
+            "type": "http",
+            "asgi": {"version": "3.0", "spec_version": "2.1"},
+            "http_version": "1.1",
+            "server": ("::1", 5000),
+            "client": ("::1", 55149),
+            "scheme": "http",
+            "method": "GET",
+            "root_path": "",
+            "path": route,
+            "raw_path": route,
+            "query_string": b"",
+            "headers": headers,
+            "state": {},
+        }
+        if not session_dict:
+            session_dict = {}
+        scope["session"] = session_dict
+
+        return Request(scope)
+
+    return factory

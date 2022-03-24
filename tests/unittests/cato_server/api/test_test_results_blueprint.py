@@ -1,5 +1,5 @@
 def test_get_test_result_by_suite_and_identifier_should_return(
-    client, suite_result, test_result
+    client_with_session, suite_result, test_result
 ):
     url = "/api/v1/test_results/suite_result/{suite_result_id}/{suite_name}/{test_name}".format(
         suite_result_id=suite_result.id,
@@ -7,7 +7,7 @@ def test_get_test_result_by_suite_and_identifier_should_return(
         test_name=test_result.test_name,
     )
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     json = rv.json()
@@ -15,20 +15,22 @@ def test_get_test_result_by_suite_and_identifier_should_return(
     assert json.get("output") is None
 
 
-def test_get_test_result_by_suite_and_identifier_should_404(client):
+def test_get_test_result_by_suite_and_identifier_should_404(client_with_session):
     url = "/api/v1/test_results/suite_result/1/suite_name/test_name"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 404
 
 
-def test_get_test_result_by_suite_id_should_return(client, suite_result, test_result):
+def test_get_test_result_by_suite_id_should_return(
+    client_with_session, suite_result, test_result
+):
     url = "/api/v1/test_results/suite_result/{suite_result_id}".format(
         suite_result_id=suite_result.id
     )
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     json = rv.json()
@@ -38,20 +40,20 @@ def test_get_test_result_by_suite_id_should_return(client, suite_result, test_re
 
 
 def test_get_test_result_by_suite_id_should_return_empty_list(
-    client, suite_result, test_result
+    client_with_session, suite_result, test_result
 ):
     url = "/api/v1/test_results/suite_result/42".format(suite_result_id=suite_result.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_get_test_result_output_should_return(client, test_result, output):
+def test_get_test_result_output_should_return(client_with_session, test_result, output):
     url = "/api/v1/test_results/{}/output".format(test_result.id)
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -61,18 +63,18 @@ def test_get_test_result_output_should_return(client, test_result, output):
     }
 
 
-def test_get_test_result_output_should_404(client, test_result):
+def test_get_test_result_output_should_404(client_with_session, test_result):
     url = "/api/v1/test_results/42/output"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 404
 
 
 def test_get_test_result_by_run_and_identifier_success(
-    client, suite_result, test_result
+    client_with_session, suite_result, test_result
 ):
-    rv = client.get(
+    rv = client_with_session.get(
         f"/api/v1/test_results/runs/{suite_result.run_id}/{suite_result.suite_name}/{test_result.test_name}"
     )
 
@@ -100,22 +102,26 @@ def test_get_test_result_by_run_and_identifier_success(
     }
 
 
-def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(client):
-    rv = client.get("/api/v1/test_results/runs/10/suite_name/test_name")
+def test_get_test_result_by_run_and_identifier_should_fail_invalid_run_id(
+    client_with_session,
+):
+    rv = client_with_session.get("/api/v1/test_results/runs/10/suite_name/test_name")
 
     assert rv.status_code == 404
 
 
 def test_get_test_result_by_run_and_identifier_should_fail_invalid_test_identifier(
-    client, suite_result
+    client_with_session, suite_result
 ):
-    rv = client.get(f"/api/v1/test_results/runs/{suite_result.run_id}/sdrft/test_name")
+    rv = client_with_session.get(
+        f"/api/v1/test_results/runs/{suite_result.run_id}/sdrft/test_name"
+    )
 
     assert rv.status_code == 404
 
 
-def test_create_output_success(client, test_result):
-    rv = client.post(
+def test_create_output_success(client_with_session, test_result):
+    rv = client_with_session.post(
         "/api/v1/test_results/output",
         json={"testResultId": test_result.id, "text": "my text"},
     )
@@ -128,8 +134,8 @@ def test_create_output_success(client, test_result):
     }
 
 
-def test_create_output_failure(client, test_result):
-    rv = client.post(
+def test_create_output_failure(client_with_session, test_result):
+    rv = client_with_session.post(
         "/api/v1/test_results/output", json={"testResultId": 42, "text": "my text"}
     )
 
@@ -137,10 +143,10 @@ def test_create_output_failure(client, test_result):
     assert rv.json() == {"testResultId": ["No test result exists for id 42."]}
 
 
-def test_get_test_results_by_run_id_should_find(client, run, test_result):
+def test_get_test_results_by_run_id_should_find(client_with_session, run, test_result):
     url = f"/api/v1/test_results/run/{run.id}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == [
@@ -155,11 +161,11 @@ def test_get_test_results_by_run_id_should_find(client, run, test_result):
 
 
 def test_get_test_results_by_run_id_should_find_with_status_filter(
-    client, run, test_result
+    client_with_session, run, test_result
 ):
     url = f"/api/v1/test_results/run/{run.id}?status_filter=NOT_STARTED"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == [
@@ -173,19 +179,21 @@ def test_get_test_results_by_run_id_should_find_with_status_filter(
     ]
 
 
-def test_get_test_results_by_run_id_should_return_empty_list(client):
+def test_get_test_results_by_run_id_should_return_empty_list(client_with_session):
     url = f"/api/v1/test_results/run/{42}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_get_test_results_by_run_id_paginated_should_find(client, run, test_result):
+def test_get_test_results_by_run_id_paginated_should_find(
+    client_with_session, run, test_result
+):
     url = f"/api/v1/test_results/run/{run.id}?pageNumber=1&pageSize=10"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -205,11 +213,11 @@ def test_get_test_results_by_run_id_paginated_should_find(client, run, test_resu
 
 
 def test_get_test_results_by_run_id_paginated_should_find_with_status_filter(
-    client, run, test_result
+    client_with_session, run, test_result
 ):
     url = f"/api/v1/test_results/run/{run.id}?pageNumber=1&pageSize=10&status_filter=NOT_STARTED"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -228,10 +236,12 @@ def test_get_test_results_by_run_id_paginated_should_find_with_status_filter(
     }
 
 
-def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
+def test_get_test_results_by_run_id_paginated_should_return_empty_page(
+    client_with_session,
+):
     url = f"/api/v1/test_results/run/{42}?pageNumber=1&pageSize=10"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -242,10 +252,10 @@ def test_get_test_results_by_run_id_paginated_should_return_empty_page(client):
     }
 
 
-def test_get_test_result_by_id(client, test_result):
+def test_get_test_result_by_id(client_with_session, test_result):
     url = f"/api/v1/test_results/{test_result.id}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -301,11 +311,11 @@ def test_get_test_result_by_id(client, test_result):
 
 
 def test_get_test_result_by_id_no_machine_info_no_diff_image(
-    client, test_result_no_machine_info
+    client_with_session, test_result_no_machine_info
 ):
     url = f"/api/v1/test_results/{test_result_no_machine_info.id}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == {
@@ -350,15 +360,15 @@ def test_get_test_result_by_id_no_machine_info_no_diff_image(
     }
 
 
-def test_get_test_results_by_run_id_should_404(client):
+def test_get_test_results_by_run_id_should_404(client_with_session):
     url = f"/api/v1/test_results/{42}"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 404
 
 
-def test_finish_test_success(client, test_result, stored_image):
+def test_finish_test_success(client_with_session, test_result, stored_image):
     url = "/api/v1/test_results/finish"
     data = {
         "id": test_result.id,
@@ -369,12 +379,12 @@ def test_finish_test_success(client, test_result, stored_image):
         "referenceImage": stored_image.id,
         "errorValue": 1,
     }
-    rv = client.post(url, json=data)
+    rv = client_with_session.post(url, json=data)
 
     assert rv.status_code == 200
 
 
-def test_finish_test_failure(client, test_result, stored_image):
+def test_finish_test_failure(client_with_session, test_result, stored_image):
     url = "/api/v1/test_results/finish"
     data = {
         "id": test_result.id,
@@ -385,40 +395,42 @@ def test_finish_test_failure(client, test_result, stored_image):
         "referenceImage": stored_image.id,
         "errorValue": 1,
     }
-    rv = client.post(url, json=data)
+    rv = client_with_session.post(url, json=data)
 
     assert rv.status_code == 400
     assert rv.json() == {"imageOutput": ["No image exists for id 42."]}
 
 
-def test_should_find_by_run_id_and_test_status(client, run, test_result):
+def test_should_find_by_run_id_and_test_status(client_with_session, run, test_result):
     url = f"/api/v1/test_results/run/{run.id}/test_status/NOT_STARTED"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == ["my_suite/my_test_name"]
 
 
-def test_should_not_find_by_run_id_and_test_status(client, run, test_result):
+def test_should_not_find_by_run_id_and_test_status(
+    client_with_session, run, test_result
+):
     url = f"/api/v1/test_results/run/{run.id}/test_status/FAILED"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 200
     assert rv.json() == []
 
 
-def test_invalid_test_status(client, run, test_result):
+def test_invalid_test_status(client_with_session, run, test_result):
     url = f"/api/v1/test_results/run/{run.id}/test_status/dd"
 
-    rv = client.get(url)
+    rv = client_with_session.get(url)
 
     assert rv.status_code == 400
     assert rv.json() == {"test_status": "Not a valid test status: dd."}
 
 
-def test_start_test_success(client, test_result):
+def test_start_test_success(client_with_session, test_result):
     url = "/api/v1/test_results/start"
     data = {
         "id": test_result.id,
@@ -428,12 +440,12 @@ def test_start_test_success(client, test_result):
             "memory": 8,
         },
     }
-    rv = client.post(url, json=data)
+    rv = client_with_session.post(url, json=data)
 
     assert rv.status_code == 200
 
 
-def test_start_test_failure(client):
+def test_start_test_failure(client_with_session):
     url = "/api/v1/test_results/start"
     data = {
         "id": 42,
@@ -443,7 +455,7 @@ def test_start_test_failure(client):
             "memory": 8,
         },
     }
-    rv = client.post(url, json=data)
+    rv = client_with_session.post(url, json=data)
 
     assert rv.status_code == 400
     assert rv.json() == {"id": ["No TestResult with id 42 exists!"]}

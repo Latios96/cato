@@ -108,6 +108,10 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     fixed_api_token_str,
     api_token_str_factory,
     api_token_str,
+    fixed_api_token,
+    fixed_http_session,
+    request_factory,
+    env_with_api_token,
 )
 
 
