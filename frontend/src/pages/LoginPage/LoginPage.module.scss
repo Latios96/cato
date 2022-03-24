@@ -2,10 +2,6 @@
   width: 100vw;
   height: 100vh;
   background-color: black;
-  background-image: url("./login_keyvisual.jpg");
-  background-position: top left;
-  background-size: cover;
-  background-repeat: no-repeat;
   display: flex;
 }
 .loginContainer {
@@ -17,6 +13,7 @@
   width: 250px;
   height: 250px;
   border: 1px solid orange;
+  z-index: 10;
 
   a {
     background-color: #ff008c;
@@ -32,4 +29,12 @@
   margin: 20px;
   margin-top: 5px;
   text-align: center;
+}
+.videoBackground {
+  position: absolute;
+  top: 0;
+  left: 0;
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
 }
