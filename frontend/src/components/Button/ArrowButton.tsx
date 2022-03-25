@@ -14,6 +14,7 @@ interface Props {
   text?: string;
   direction: Direction;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  color?: string;
 }
 
 function directionToIcon(direction: Direction) {
@@ -30,7 +31,11 @@ function directionToIcon(direction: Direction) {
 
 function ArrowButton(props: Props) {
   return (
-    <button className={styles.arrowButton} onClick={props.onClick}>
+    <button
+      className={styles.arrowButton}
+      onClick={props.onClick}
+      style={{ color: props.color || "#0f5b99" }}
+    >
       {props.text} {directionToIcon(props.direction)}
     </button>
   );

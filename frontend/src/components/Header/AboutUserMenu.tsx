@@ -39,7 +39,7 @@ export function AboutUserMenu() {
     >
       <div className={"d-flex"}>
         <Avatar user={authenticatedUser} />
-        <ArrowButton direction={"down"} />
+        <ArrowButton direction={"down"} color={"white"} />
       </div>
     </OverlayTrigger>
   );
