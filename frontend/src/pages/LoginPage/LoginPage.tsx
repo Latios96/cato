@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./LoginPage.module.scss";
 // @ts-ignore
-import video from "./cato_login_keyvisual_animation.mp4";
+import video from "./cato_login_keyvisual_animation_1080p.mp4";
 
 function LoginPage() {
   return (
