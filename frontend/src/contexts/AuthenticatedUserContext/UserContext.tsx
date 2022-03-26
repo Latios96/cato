@@ -1,6 +1,6 @@
-import { useQuery } from "react-query";
 import { AuthUser } from "../../catoapimodels/catoapimodels";
 import React, { PropsWithChildren, useContext } from "react";
+import { useFetch } from "../../hooks/useFetch";
 
 const UserContext = React.createContext<AuthUser | undefined>(undefined);
 
@@ -9,11 +9,7 @@ export function useUser() {
 }
 
 export function UserProvider(props: PropsWithChildren<{}>) {
-  const { data: user } = useQuery<AuthUser, string>("about", () =>
-    fetch("/api/v1/users/whoami").then((res) =>
-      res.status === 200 ? res.json() : undefined
-    )
-  );
+  const { data: user } = useFetch<AuthUser>("/api/v1/users/whoami");
 
   if (!user) {
     return <>{props.children}</>;
