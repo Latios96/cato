@@ -1,12 +1,15 @@
 import datetime
 import json
 import os
+import secrets
 from base64 import b64encode
 from typing import Dict, Optional
 
 import itsdangerous
 import pytest
+from itsdangerous import URLSafeSerializer
 from starlette.requests import Request
+from starlette_csrf import CSRFMiddleware
 
 from cato_common.domain.auth.api_token_id import ApiTokenId
 from cato_common.domain.auth.api_token_name import ApiTokenName
@@ -66,9 +69,28 @@ def http_session_cookie(http_session_cookie_factory, http_session):
 
 
 @pytest.fixture
-def client_with_session(http_session_cookie, client):
+def crsf_token_factory(app_and_config_fixture):
+    app, config = app_and_config_fixture
+
+    def factory():
+        return CSRFMiddleware(
+            None, config.secret.get_secret_value()
+        )._generate_csrf_token()
+
+    return factory
+
+
+@pytest.fixture
+def crsf_token(crsf_token_factory):
+    return crsf_token_factory()
+
+
+@pytest.fixture
+def client_with_session(http_session_cookie, crsf_token, client):
     cookie_name, cookie_value = http_session_cookie
     client.cookies.set(cookie_name, cookie_value)
+    client.cookies.set("XSRF-TOKEN", crsf_token)
+    client.headers["X-XSRF-TOKEN"] = crsf_token
     return client
 
 

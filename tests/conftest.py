@@ -112,6 +112,8 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     fixed_http_session,
     request_factory,
     env_with_api_token,
+    crsf_token_factory,
+    crsf_token,
 )
 
 

@@ -9,6 +9,7 @@ from fastapi import FastAPI
 from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
+from starlette_csrf import CSRFMiddleware
 
 import cato
 import cato_common
@@ -93,6 +94,14 @@ def create_app(
         task_creator.create()
         app.scheduler_runner = BackgroundSchedulerRunner(schedule)  # type: ignore
         app.scheduler_runner.start()  # type: ignore
+
+    app.add_middleware(
+        CSRFMiddleware,
+        secret=app_configuration.secret.get_secret_value(),
+        header_name="X-XSRF-TOKEN",
+        cookie_name="XSRF-TOKEN",
+        sensitive_cookies={"session"},
+    )
 
     app.middleware("http")(obj_graph.provide(TimingMiddleware))
     app.middleware("http")(obj_graph.provide(AuthenticationMiddleware))
