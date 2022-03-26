@@ -151,10 +151,13 @@ class TestRunListPage:
     def _select_dev_branch(self, selenium_driver):
         selenium_driver.find_element_by_xpath("//button[text()='Branch']").click()
         selenium_driver.wait_until(
-            lambda driver: driver.find_element_by_id("branchSelector-open")
-            .find_element_by_xpath("//*[text()='dev']")
-            .click()
+            lambda driver: driver.find_element_by_id(
+                "branchSelector-open"
+            ).find_element_by_xpath("//*[text()='dev']")
         )
+        selenium_driver.find_element_by_id("branchSelector-open").find_element_by_xpath(
+            "//*[text()='dev']"
+        ).click()
 
     def _wait_until_first_run_has_branch_dev(self, selenium_driver):
         selenium_driver.wait_until(
