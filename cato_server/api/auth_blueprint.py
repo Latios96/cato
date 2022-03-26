@@ -55,14 +55,6 @@ class AuthBlueprint(APIRouter):
         redirect_uri = f"{self._app_configuration.public_hostname}/auth"
         return await self._oauth.keycloak.authorize_redirect(request, redirect_uri)
 
-    async def logout(self, request: Request):
-        session = self._user_from_request.session_from_request(request)
-        if not session:
-            pass
-        auth_user = self._user_from_request.user_from_request(request)
-        self._session_backend.logout_from_session(session)
-        logger.info('User "%s" signed out', auth_user.username)
-
     async def auth(self, request: Request):
         try:
             token = await self._oauth.keycloak.authorize_access_token(request)
@@ -86,3 +78,11 @@ class AuthBlueprint(APIRouter):
         logger.info('User "%s" signed in', auth_user.username)
 
         return RedirectResponse(url="/")
+
+    async def logout(self, request: Request):
+        session = self._user_from_request.session_from_request(request)
+        if not session:
+            pass
+        auth_user = self._user_from_request.user_from_request(request)
+        self._session_backend.logout_from_session(session)
+        logger.info('User "%s" signed out', auth_user.username)
