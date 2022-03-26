@@ -27,19 +27,25 @@ export function AboutUserMenu() {
               axios
                 .post("/logout")
                 .then(() => {
-                  window.location.reload();
+                  window.location.href = "/";
                 })
                 .catch(() => {});
             }}
           >
-            <div className={styles.menuElement}>Logout</div>
+            <div id={"btn-logout"} className={styles.menuElement}>
+              Logout
+            </div>
           </div>
         </div>
       }
     >
       <div className={"d-flex"}>
         <Avatar user={authenticatedUser} />
-        <ArrowButton direction={"down"} color={"white"} />
+        <ArrowButton
+          id={"btn-about-user-menu"}
+          direction={"down"}
+          color={"white"}
+        />
       </div>
     </OverlayTrigger>
   );

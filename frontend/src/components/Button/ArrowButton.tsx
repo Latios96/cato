@@ -11,6 +11,7 @@ import styles from "./ArrowButton.module.scss";
 type Direction = "up" | "down" | "left" | "right";
 
 interface Props {
+  id?: string;
   text?: string;
   direction: Direction;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -32,6 +33,7 @@ function directionToIcon(direction: Direction) {
 function ArrowButton(props: Props) {
   return (
     <button
+      id={props.id}
       className={styles.arrowButton}
       onClick={props.onClick}
       style={{ color: props.color || "#0f5b99" }}
