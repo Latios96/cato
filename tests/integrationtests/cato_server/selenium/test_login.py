@@ -34,11 +34,41 @@ def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}")
 
     selenium_driver.find_element_by_id("login").click()
-
-    selenium_driver.find_element_by_id("username").send_keys("test")
-    selenium_driver.find_element_by_id("password").send_keys("password")
-    selenium_driver.find_element_by_id("kc-login").click()
+    _login_with_test_user(selenium_driver)
 
     selenium_driver.find_element_by_xpath("//*[text()='test_name']")
 
     # todo verify user information once whoami route is implemented
+
+
+def test_login_from_project_url_should_land_on_project_page(
+    live_server_with_keycloak, selenium_driver, project
+):
+    selenium_driver.get(f"{live_server_with_keycloak.server_url()}/projects/1")
+
+    selenium_driver.find_element_by_id("login").click()
+    _login_with_test_user(selenium_driver)
+
+    selenium_driver.wait_until(
+        lambda driver: driver.current_url.endswith("/projects/1")
+    )
+    selenium_driver.wait_until(
+        lambda driver: driver.find_element_by_tag_name("h1").text == "test_name"
+    )
+
+
+def test_login_from_login_url_should_land_on_home(
+    live_server_with_keycloak, selenium_driver, project
+):
+    selenium_driver.get(f"{live_server_with_keycloak.server_url()}/login")
+
+    _login_with_test_user(selenium_driver)
+
+    selenium_driver.find_element_by_xpath("//*[text()='test_name']")
+    assert selenium_driver.current_url == f"{live_server_with_keycloak.server_url()}/"
+
+
+def _login_with_test_user(selenium_driver):
+    selenium_driver.find_element_by_id("username").send_keys("test")
+    selenium_driver.find_element_by_id("password").send_keys("password")
+    selenium_driver.find_element_by_id("kc-login").click()

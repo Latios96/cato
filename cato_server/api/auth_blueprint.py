@@ -53,6 +53,10 @@ class AuthBlueprint(APIRouter):
 
     async def login(self, request: Request):
         redirect_uri = f"{self._app_configuration.public_hostname}/auth"
+        request.session["last_unauthorized_path"] = request.query_params.get(
+            "from", "/"
+        )
+        logger.debug("Saved last unauthorized path %s in session", request.url.path)
         return await self._oauth.keycloak.authorize_redirect(request, redirect_uri)
 
     async def auth(self, request: Request):
@@ -77,7 +81,15 @@ class AuthBlueprint(APIRouter):
 
         logger.info('User "%s" signed in', auth_user.username)
 
-        return RedirectResponse(url="/")
+        original_route = request.session.pop("last_unauthorized_path")
+        redirect_route = "/"
+        if not original_route.startswith("/login"):
+            redirect_route = original_route
+
+        redirect_route = f"{self._app_configuration.public_hostname}{redirect_route}"
+
+        logger.debug("Redirecting to %s", redirect_route)
+        return RedirectResponse(url=redirect_route)
 
     async def logout(self, request: Request):
         session = self._user_from_request.session_from_request(request)
