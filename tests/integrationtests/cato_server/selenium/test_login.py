@@ -41,6 +41,7 @@ def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
     # todo verify user information once whoami route is implemented
 
 
+@testcontainers_test
 def test_login_from_project_url_should_land_on_project_page(
     live_server_with_keycloak, selenium_driver, project
 ):
@@ -57,6 +58,7 @@ def test_login_from_project_url_should_land_on_project_page(
     )
 
 
+@testcontainers_test
 def test_login_from_login_url_should_land_on_home(
     live_server_with_keycloak, selenium_driver, project
 ):
