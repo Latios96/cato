@@ -97,17 +97,24 @@ class TestRunListPage:
         repository.save(test_result)
 
     def _assert_first_run_status_icon_has_title(self, selenium_driver, title):
-        assert selenium_driver.find_element_by_id("runList").find_element_by_xpath(
-            f'//*[@id="runList"]/tbody/tr/td[1]/span[@title="{title}"]'
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_id("runList").find_element_by_xpath(
+                f'//*[@id="runList"]/tbody/tr/td[1]/span[@title="{title}"]'
+            )
         )
 
     def _run_25_should_be_on_page(self, selenium_driver):
-        assert selenium_driver.find_element_by_link_text("Run #25")
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_link_text("Run #25")
+        )
 
     def _run_50_should_be_on_page(self, selenium_driver):
         assert selenium_driver.find_element_by_link_text("Run #50")
 
     def _pagination_buttons_should_be_correctly_enabled(self, selenium_driver):
+        selenium_driver.wait_until(
+            lambda driver: driver.find_elements_by_css_selector("[aria-label=Previous]")
+        )
         previous_button = selenium_driver.find_elements_by_css_selector(
             "[aria-label=Previous]"
         )[0]
@@ -137,13 +144,17 @@ class TestRunListPage:
         )
 
     def _assert_first_run_has_branch_default(self, selenium_driver):
-        assert self._select_first_run_branch_name(selenium_driver).text == "default"
+        selenium_driver.wait_until(
+            lambda driver: self._select_first_run_branch_name(driver).text == "default"
+        )
 
     def _select_dev_branch(self, selenium_driver):
         selenium_driver.find_element_by_xpath("//button[text()='Branch']").click()
-        selenium_driver.find_element_by_id("branchSelector-open").find_element_by_xpath(
-            "//*[text()='dev']"
-        ).click()
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_id("branchSelector-open")
+            .find_element_by_xpath("//*[text()='dev']")
+            .click()
+        )
 
     def _wait_until_first_run_has_branch_dev(self, selenium_driver):
         selenium_driver.wait_until(
