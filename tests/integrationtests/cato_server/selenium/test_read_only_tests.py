@@ -29,20 +29,15 @@ class ProjectPage:
         self.stateless_test = stateless_test
 
     def the_project_name_should_be_visible(self):
-        project_name = (
-            self.stateless_test.authenticated_selenium_driver.find_element_by_tag_name(
-                "h1"
-            )
+        self.stateless_test.authenticated_selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_tag_name("h1").text
+            == self.stateless_test.project.name
         )
-        assert project_name.text == self.stateless_test.project.name
 
     def should_display_run_list(self):
-        placeholder = (
-            self.stateless_test.authenticated_selenium_driver.find_element_by_xpath(
-                "//a[text()='Run #1']"
-            )
+        self.stateless_test.authenticated_selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_xpath("//a[text()='Run #1']")
         )
-        assert placeholder
 
     def select_run(self):
         run_number = (
@@ -294,8 +289,10 @@ class ReadOnlySeleniumTest:
 
     def navigate_to_home(self):
         self.authenticated_selenium_driver.get(self.live_server.server_url())
-        self.authenticated_selenium_driver.find_element_by_css_module_class_name(
-            "LinkCard_cardContentDiv"
+        self.authenticated_selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_css_module_class_name(
+                "LinkCard_cardContentDiv"
+            )
         )
         assert self.authenticated_selenium_driver.title == "Cato"
 
@@ -313,8 +310,9 @@ class ReadOnlySeleniumTest:
         self.home_page.the_link_card_for_the_project_should_be_displayed()
         self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
-        time.sleep(0.5)
-        assert self.authenticated_selenium_driver.title == self.project.name
+        assert self.authenticated_selenium_driver.wait_until(
+            lambda driver: driver.title == self.project.name
+        )
 
 
 class ProjectPageShouldNavigateToProjectTest(ReadOnlySeleniumTest):
