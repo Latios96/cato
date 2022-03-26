@@ -20,7 +20,7 @@ interface Output {
 function DisplayLogComponent(props: Props) {
   const [expanded, toggle] = useToggle(false);
   const { data, loading, get } = useFetch<Output>(
-    `api/v1/test_results/${props.testResultId}/output`,
+    `/api/v1/test_results/${props.testResultId}/output`,
     {
       cachePolicy: CachePolicies.NO_CACHE,
     }

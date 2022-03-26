@@ -3,11 +3,7 @@ import React from "react";
 
 export function LoginButton() {
   return (
-    <a
-      href={
-        `${window.location.origin}/login` /*TODO adjust this once HashRouter is removed*/
-      }
-    >
+    <a href={"/login"}>
       <Button primary>Login</Button>
     </a>
   );

@@ -88,7 +88,7 @@ class TestRunListPage:
         self, live_server, project, selenium_driver
     ):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{project.id}?branches=dev"
+            f"{live_server.server_url()}/projects/{project.id}?branches=dev"
         )
 
     def _update_run_status(self, sessionmaker_fixture, test_result):
@@ -126,7 +126,7 @@ class TestRunListPage:
         return next_page
 
     def _visit_project_page(self, live_server, project, selenium_driver):
-        selenium_driver.get(f"{live_server.server_url()}/#/projects/{project.id}")
+        selenium_driver.get(f"{live_server.server_url()}/projects/{project.id}")
 
     def _insert_many_runs(self, project, sessionmaker_fixture):
         repository = SqlAlchemyRunRepository(sessionmaker_fixture)

@@ -54,7 +54,7 @@ class TestRunOverviewPage:
 
     def _visit_run_overview_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
+            f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}"
         )
 
 
@@ -201,7 +201,7 @@ class TestRunTestPage:
 
     def _visit_run_test_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/tests"
+            f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}/tests"
         )
 
     def _assert_first_test_has_icon_with_title(self, selenium_driver, title):
@@ -233,7 +233,7 @@ class TestRunTestPage:
 
     def _visit_run_overview_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
+            f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}"
         )
 
     def _edit_tests_threshold(self, selenium_driver):
@@ -446,7 +446,7 @@ class TestRunSuitePage:
 
     def _visit_run_overview_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}"
+            f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}"
         )
 
     def _switch_to_suites_page(self, selenium_driver):
@@ -464,7 +464,7 @@ class TestRunSuitePage:
 
     def _visit_run_suite_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
-            f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/suites"
+            f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}/suites"
         )
 
     def _click_expand_icon(self, selenium_driver, suite_result):
@@ -501,7 +501,7 @@ def test_filtering_suites_and_tests_should_work(
     authenticated_selenium_driver, live_server, run, test_result, page
 ):
     authenticated_selenium_driver.get(
-        f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/{page}s"
+        f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}/{page}s"
     )
     authenticated_selenium_driver.find_element_by_xpath(
         f'//*[@id="{page}List"]//*[@title="not started"]'
@@ -531,7 +531,7 @@ def test_filtering_suites_and_tests_should_read_from_url(
     authenticated_selenium_driver, live_server, run, test_result, page
 ):
     authenticated_selenium_driver.get(
-        f"{live_server.server_url()}/#/projects/{run.project_id}/runs/{run.id}/{page}s?statusFilter=FAILED"
+        f"{live_server.server_url()}/projects/{run.project_id}/runs/{run.id}/{page}s?statusFilter=FAILED"
     )
 
     authenticated_selenium_driver.wait_until_not(

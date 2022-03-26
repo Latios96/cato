@@ -228,7 +228,7 @@ class CatoApiClient:
             )
 
     def generate_run_url(self, project_id: int, run_id: int) -> str:
-        return f"{self._url}/#/projects/{project_id}/runs/{run_id}"
+        return f"{self._url}/projects/{project_id}/runs/{run_id}"
 
     def get_test_results_by_run_id_and_test_status(
         self, run_id: int, test_status: UnifiedTestStatus

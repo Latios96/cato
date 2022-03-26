@@ -15,7 +15,7 @@ interface Props {
 
 function SuiteTestList(props: Props) {
   const { data, isLoading, error } = useReFetch<TestResultDto[]>(
-    `api/v1/test_results/suite_result/${props.suite.id}`,
+    `/api/v1/test_results/suite_result/${props.suite.id}`,
     5000,
     [props.suite.id]
   );

@@ -4,7 +4,7 @@ import {
   Switch,
   Route,
   RouteComponentProps,
-  HashRouter,
+  BrowserRouter,
 } from "react-router-dom";
 import ProjectsPage from "../../pages/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage/ProjectPage";
@@ -38,7 +38,7 @@ function App() {
             <LoginPage />
           </RenderOnAnonymous>
           <RenderOnAuthenticated>
-            <HashRouter>
+            <BrowserRouter>
               <Switch>
                 <Route exact path="/" component={() => <ProjectsPage />} />
                 <Route exact path="/about" component={() => <AboutPage />} />
@@ -90,7 +90,7 @@ function App() {
                   }}
                 />
               </Switch>
-            </HashRouter>
+            </BrowserRouter>
           </RenderOnAuthenticated>
         </AuthenticatedUserProvider>
       </UserProvider>

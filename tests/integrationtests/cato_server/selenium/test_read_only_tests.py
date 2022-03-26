@@ -46,7 +46,7 @@ class ProjectPage:
             )
         )
         run_number.click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1")
 
 
 class RunView:
@@ -79,7 +79,7 @@ class RunView:
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[0].click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1/suites/1")
 
     def the_breadcrumb_should_be_shown(self):
         time.sleep(0.5)
@@ -103,7 +103,7 @@ class RunView:
         )
 
         suite_list[0].click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1/tests/1")
 
     def the_breadcrumb_should_be_shown_and_show_test_name(self):
         time.sleep(0.5)
@@ -123,7 +123,7 @@ class RunView:
             "breadcrumb-item"
         )
         breadcrumb_entries[1].click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/suites/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1/suites/1")
 
     def should_navigate_to_run_by_breadcrumb(self):
         time.sleep(0.5)
@@ -131,13 +131,13 @@ class RunView:
             "breadcrumb-item"
         )
         breadcrumb_entries[0].click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1")
 
     def select_tests_tab(self):
         self.stateless_test.authenticated_selenium_driver.find_element_by_id(
             "controlled-tab-example-tab-tests"
         ).click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1/tests")
 
     def the_tests_tab_should_display_one_entry(self):
         time.sleep(0.5)
@@ -154,7 +154,7 @@ class RunView:
             f'[class^="SuiteAndTestLists_listEntry"]'
         )
         suite_list[1].click()
-        self.stateless_test.assert_current_url_is("/#/projects/1/runs/1/tests/1")
+        self.stateless_test.assert_current_url_is("/projects/1/runs/1/tests/1")
 
 
 class TestResultPage:
@@ -303,7 +303,7 @@ class ReadOnlySeleniumTest:
             )
         )
         header_link.click()
-        self.assert_current_url_is("/#/")
+        self.assert_current_url_is("/")
 
     def navigate_to_project_page(self):
         self.navigate_to_home()
@@ -377,7 +377,7 @@ class TestResultFunctionality(ReadOnlySeleniumTest):
 
     def navigate_to_test(self):
         self.authenticated_selenium_driver.get(
-            self.live_server.server_url() + "/#/projects/1/runs/1/tests/1"
+            self.live_server.server_url() + "/projects/1/runs/1/tests/1"
         )
 
 

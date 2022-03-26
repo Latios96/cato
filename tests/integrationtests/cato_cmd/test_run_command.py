@@ -155,7 +155,7 @@ def _read_run_from_server(live_server, run_id, api_token_str):
 
 def _parse_run_id_from_output(command_result):
     match = command_result.output_contains_line_matching(
-        "You can find your run at http://127.0.0.1:\d+/#/projects/\d+/runs/(\d+)"
+        "You can find your run at http://127.0.0.1:\d+/projects/\d+/runs/(\d+)"
     )
     assert match
     run_id = match.group(1)
