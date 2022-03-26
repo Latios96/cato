@@ -3,12 +3,7 @@ from pathlib import Path
 
 from starlette.middleware.base import RequestResponseEndpoint
 from starlette.requests import Request
-from starlette.responses import Response, RedirectResponse, FileResponse
-
-from cato_server.api.authentication.user_from_request import UserFromRequest
-from cato_server.authentication.api_token_signer import (
-    ApiTokenSigner,
-)
+from starlette.responses import Response, FileResponse
 
 logger = logging.getLogger(__name__)
 
