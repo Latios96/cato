@@ -19,6 +19,7 @@ from cato_server.authentication.session_backend import SessionBackend
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
@@ -53,7 +54,9 @@ def http_session_cookie_factory(app_and_config_fixture):
     app, config = app_and_config_fixture
 
     def factory(session: Session):
-        signer = itsdangerous.TimestampSigner(config.secret.get_secret_value())
+        signer = itsdangerous.TimestampSigner(
+            config.secrets_configuration.sessions_secret.get_secret_value()
+        )
 
         session_data = {"session_id": str(session.id)}
         data = b64encode(json.dumps(session_data).encode("utf-8"))
@@ -74,7 +77,7 @@ def crsf_token_factory(app_and_config_fixture):
 
     def factory():
         return CSRFMiddleware(
-            None, config.secret.get_secret_value()
+            None, config.secrets_configuration.csrf_secret.get_secret_value()
         )._generate_csrf_token()
 
     return factory
@@ -140,12 +143,12 @@ def api_token_str_factory(app_and_config_fixture, object_mapper):
             expires_at = created_at + datetime.timedelta(hours=2)
 
         if not secret:
-            app_config = app_and_config_fixture[1]
+            secrets_config = app_and_config_fixture[1].secrets_configuration
         else:
-            app_config = AppConfigurationDefaults().create()
-            app_config.secret = secret
+            secrets_config = SecretsConfiguration.default()
+            secrets_config.api_tokens_secret = secret
 
-        api_token_signer = ApiTokenSigner(object_mapper, app_config)
+        api_token_signer = ApiTokenSigner(object_mapper, secrets_config)
 
         api_token = ApiToken(
             name=name,

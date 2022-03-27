@@ -10,6 +10,7 @@ from cato_server.configuration.app_configuration_defaults import (
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -26,7 +27,9 @@ def test_create_default_config(mock_secrets_token_urlsafe):
     assert config == AppConfiguration(
         port=5000,
         debug=False,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            SecretStr("SECRET"), SecretStr("SECRET"), SecretStr("SECRET")
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="db_url", file_storage_url="file_storage_url"
@@ -55,7 +58,9 @@ def test_create_default_config_ready_to_use(mock_secrets_token_urlsafe):
     assert config == AppConfiguration(
         port=5000,
         debug=False,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            SecretStr("SECRET"), SecretStr("SECRET"), SecretStr("SECRET")
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///{}".format(

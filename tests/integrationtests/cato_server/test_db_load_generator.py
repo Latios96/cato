@@ -11,6 +11,7 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -23,8 +24,12 @@ def test_run_db_load_test(tmp_path, snapshot):
     config = AppConfiguration(
         port=random_port(),
         debug=True,
-        secret=SecretStr("secret"),
         public_hostname="http://127.0.0.1",
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),

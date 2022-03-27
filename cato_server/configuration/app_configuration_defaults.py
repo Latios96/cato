@@ -1,10 +1,10 @@
 import os
-import secrets
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -25,7 +25,7 @@ class AppConfigurationDefaults:
         return AppConfiguration(
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
-            secret=SecretStr(secrets.token_urlsafe()),
+            secrets_configuration=SecretsConfiguration.default(),
             public_hostname="http://127.0.0.1",
             storage_configuration=StorageConfiguration(
                 database_url="db_url", file_storage_url="file_storage_url"
@@ -50,7 +50,7 @@ class AppConfigurationDefaults:
         return AppConfiguration(
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
-            secret=SecretStr(secrets.token_urlsafe()),
+            secrets_configuration=SecretsConfiguration.default(),
             public_hostname="http://127.0.0.1",
             storage_configuration=StorageConfiguration(
                 database_url="sqlite:///{}".format(

@@ -24,8 +24,8 @@ def secret():
 @pytest.fixture
 def api_token_signer(object_mapper, secret):
     app_config = AppConfigurationDefaults().create()
-    app_config.secret = secret
-    api_token_signer = ApiTokenSigner(object_mapper, app_config)
+    app_config.secrets_configuration.api_tokens_secret = secret
+    api_token_signer = ApiTokenSigner(object_mapper, app_config.secrets_configuration)
     return api_token_signer
 
 

@@ -13,6 +13,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -21,8 +22,11 @@ from cato_server.domain.auth.secret_str import SecretStr
 VALID_INI_FILE = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -36,8 +40,11 @@ well_known_url=http://somewhere"""
 MISSING_DATABASE_URL = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 file_storage_url=my_file_storage_url
 [oidc]
@@ -48,8 +55,11 @@ well_known_url=http://somewhere"""
 MISSING_FILE_STORAGE_URL = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 [oidc]
@@ -59,8 +69,11 @@ well_known_url=http://somewhere"""
 
 MISSING_DEBUG = """[app]
 port=5000
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -69,9 +82,42 @@ client_id=client-id
 client_secret=secret
 well_known_url=http://somewhere"""
 
-MISSING_SECRET = """[app]
+MISSING_SESSIONS_SECRET = """[app]
 port=5000
 public_hostname=http://127.0.0.1
+[secrets]
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[oidc]
+client_id=client-id
+client_secret=secret
+well_known_url=http://somewhere"""
+
+
+MISSING_CSRF_SECRET = """[app]
+port=5000
+public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+api_tokens_secret=API_TOKENS_SECRET
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[oidc]
+client_id=client-id
+client_secret=secret
+well_known_url=http://somewhere"""
+
+
+MISSING_API_TOKENS_SECRET = """[app]
+port=5000
+public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -82,6 +128,10 @@ well_known_url=http://somewhere"""
 
 MISSING_HOSTNAME = """[app]
 port=5000
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -92,6 +142,10 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_CLIENT_ID = """[app]
 port=5000
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -101,6 +155,10 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_SECRET = """[app]
 port=5000
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -110,6 +168,10 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_WELL_KNOWN_URL = """[app]
 port=5000
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -120,8 +182,11 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING = """[app]
 port=5000
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -137,8 +202,11 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_USE_FILE_HANDLER = """[app]
 port=5000
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -153,8 +221,11 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
 port=5000
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -169,8 +240,11 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
 port=5000
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -186,8 +260,11 @@ well_known_url=http://somewhere"""
 WITH_DEADLINE_SCHEDULER_NO_URL = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -202,8 +279,11 @@ well_known_url=http://somewhere
 WITH_DEADLINE_SCHEDULER_WITH_URL = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -219,8 +299,11 @@ well_known_url=http://somewhere
 WITH_SESSION_LIFETIME = """[app]
 port=5000
 debug=True
-secret=SECRET
 public_hostname=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
 [storage]
 database_url=my_database_url
 file_storage_url=my_file_storage_url
@@ -258,7 +341,11 @@ def test_read_valid_file(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
@@ -286,7 +373,11 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=False,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
@@ -314,7 +405,11 @@ def test_read_with_logging(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=False,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
@@ -341,7 +436,9 @@ def test_read_with_logging(ini_file_creator):
         (WITH_LOGGING_INVALID_BACKUP_COUNT, ValueError),
         (MISSING_DATABASE_URL, configparser.NoOptionError),
         (MISSING_FILE_STORAGE_URL, configparser.NoOptionError),
-        (MISSING_SECRET, configparser.NoOptionError),
+        (MISSING_SESSIONS_SECRET, configparser.NoOptionError),
+        (MISSING_CSRF_SECRET, configparser.NoOptionError),
+        (MISSING_API_TOKENS_SECRET, configparser.NoOptionError),
         (MISSING_HOSTNAME, configparser.NoOptionError),
         (MISSING_OIDC_CLIENT_ID, configparser.NoOptionError),
         (MISSING_OIDC_SECRET, configparser.NoOptionError),
@@ -365,7 +462,11 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
@@ -393,7 +494,11 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
@@ -421,7 +526,11 @@ def test_read_with_session_lifetime(ini_file_creator):
     assert config == AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"

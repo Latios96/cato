@@ -160,6 +160,10 @@ class PinjectBindings(pinject.BindingSpec):
         )
         bind("app_configuration", to_instance=self._bindings.app_configuration)
         bind(
+            "secrets_configuration",
+            to_instance=self._bindings.app_configuration.secrets_configuration,
+        )
+        bind(
             "storage_configuration",
             to_instance=self._bindings.configuration_bindings.app_configuration.storage_configuration,
         )

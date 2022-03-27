@@ -16,14 +16,29 @@ class AppConfigurationWriter:
     def write_stream(self, config: AppConfiguration, stream: IO) -> None:
         config_writer = configparser.ConfigParser()
         config_writer.add_section("app")
+        config_writer.add_section("secrets")
         config_writer.add_section("storage")
         config_writer.add_section("scheduler")
         config_writer.add_section("session")
         config_writer.add_section("oidc")
         config_writer.set("app", "port", str(config.port))
         config_writer.set("app", "debug", str(config.debug))
-        config_writer.set("app", "secret", config.secret.get_secret_value())
         config_writer.set("app", "public_hostname", config.public_hostname)
+        config_writer.set(
+            "secrets",
+            "sessions_secret",
+            config.secrets_configuration.sessions_secret.get_secret_value(),
+        )
+        config_writer.set(
+            "secrets",
+            "csrf_secret",
+            config.secrets_configuration.csrf_secret.get_secret_value(),
+        )
+        config_writer.set(
+            "secrets",
+            "api_tokens_secret",
+            config.secrets_configuration.api_tokens_secret.get_secret_value(),
+        )
         config_writer.set(
             "storage", "database_url", config.storage_configuration.database_url
         )

@@ -15,6 +15,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -35,6 +36,7 @@ class AppConfigurationReader:
         logger.info("Reading config from path %s..", path)
         config.read(path)
 
+        secrets_configuration = self._read_secrets_configuration(config)
         storage_configuration = self._read_storage_configuration(config)
         logging_configuration = self._read_logging_configuration(config)
         scheduler_configuration = self._read_scheduler_configuration(config)
@@ -49,7 +51,7 @@ class AppConfigurationReader:
             debug=config.getboolean(
                 "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
             ),
-            secret=SecretStr(config.get("app", "secret")),
+            secrets_configuration=secrets_configuration,
             public_hostname=config.get("app", "public_hostname"),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
@@ -57,6 +59,13 @@ class AppConfigurationReader:
             sentry_configuration=sentry_configuration,
             session_configuration=session_configuration,
             oidc_configuration=oidc_configuration,
+        )
+
+    def _read_secrets_configuration(self, config) -> SecretsConfiguration:
+        return SecretsConfiguration(
+            sessions_secret=SecretStr(config.get("secrets", "sessions_secret")),
+            csrf_secret=SecretStr(config.get("secrets", "csrf_secret")),
+            api_tokens_secret=SecretStr(config.get("secrets", "api_tokens_secret")),
         )
 
     def _read_storage_configuration(

@@ -1,12 +1,12 @@
-from base64 import b64encode, b64decode
 import datetime
+from base64 import b64encode, b64decode
 
 import itsdangerous
 from itsdangerous import BadSignature
 
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.domain.auth.api_token import ApiToken
 
 
@@ -16,11 +16,11 @@ class InvalidApiTokenException(Exception):
 
 class ApiTokenSigner:
     def __init__(
-        self, object_mapper: ObjectMapper, app_configuration: AppConfiguration
+        self, object_mapper: ObjectMapper, secrets_configuration: SecretsConfiguration
     ):
         self._object_mapper = object_mapper
         self._signer = itsdangerous.TimestampSigner(
-            app_configuration.secret.get_secret_value()
+            secrets_configuration.api_tokens_secret.get_secret_value()
         )
 
     def sign(self, api_token: ApiToken) -> ApiTokenStr:

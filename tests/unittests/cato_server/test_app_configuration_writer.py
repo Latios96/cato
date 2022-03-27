@@ -10,8 +10,12 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 EXPECTED = """[app]
 port = 5000
 debug = False
-secret = secret
 public_hostname = http://127.0.0.1
+
+[secrets]
+sessions_secret = SESSIONS_SECRET
+csrf_secret = CSRF_SECRET
+api_tokens_secret = API_TOKENS_SECRET
 
 [storage]
 database_url = db_url
@@ -39,7 +43,9 @@ def test_write_stream():
     string_stream = StringIO()
     app_configuration_writer = AppConfigurationWriter()
     config = AppConfigurationDefaults().create()
-    config.secret = SecretStr("secret")
+    config.secrets_configuration.sessions_secret = SecretStr("SESSIONS_SECRET")
+    config.secrets_configuration.csrf_secret = SecretStr("CSRF_SECRET")
+    config.secrets_configuration.api_tokens_secret = SecretStr("API_TOKENS_SECRET")
 
     app_configuration_writer.write_stream(config, string_stream)
 

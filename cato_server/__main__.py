@@ -100,7 +100,7 @@ def create_app(
 
     app.add_middleware(
         CSRFMiddleware,
-        secret=app_configuration.secret.get_secret_value(),
+        secret=app_configuration.secrets_configuration.csrf_secret.get_secret_value(),
         header_name="X-XSRF-TOKEN",
         cookie_name="XSRF-TOKEN",
         sensitive_cookies={"session"},
@@ -111,7 +111,8 @@ def create_app(
     app.middleware("http")(obj_graph.provide(RedirectToFrontendMiddleware))
 
     app.add_middleware(
-        SessionMiddleware, secret_key=app_configuration.secret.get_secret_value()
+        SessionMiddleware,
+        secret_key=app_configuration.secrets_configuration.sessions_secret.get_secret_value(),
     )
 
     return app

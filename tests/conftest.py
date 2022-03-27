@@ -56,6 +56,7 @@ from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -603,7 +604,11 @@ def app_and_config_fixture(
     config = AppConfiguration(
         port=port,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname=f"http://127.0.0.1:{port}",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)

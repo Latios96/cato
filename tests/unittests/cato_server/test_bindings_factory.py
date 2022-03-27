@@ -14,6 +14,7 @@ from cato_server.configuration.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
+from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
@@ -39,7 +40,11 @@ def test_create_storage_bindings_for_postgres():
     configuration = AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
@@ -83,7 +88,11 @@ def test_create_storage_bindings_using_sqlite_in_memory():
     configuration = AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
@@ -134,7 +143,11 @@ def test_create_scheduler_bindings_no_scheduler():
     config = AppConfiguration(
         port=5000,
         debug=True,
-        secret=SecretStr("SECRET"),
+        secrets_configuration=SecretsConfiguration(
+            sessions_secret=SecretStr("SESSIONS_SECRET"),
+            csrf_secret=SecretStr("CSRF_SECRET"),
+            api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+        ),
         public_hostname="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
@@ -165,7 +178,11 @@ def test_create_scheduler_bindings_no_scheduler():
 CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
     port=5000,
     debug=True,
-    secret=SecretStr("SECRET"),
+    secrets_configuration=SecretsConfiguration(
+        sessions_secret=SecretStr("SESSIONS_SECRET"),
+        csrf_secret=SecretStr("CSRF_SECRET"),
+        api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
+    ),
     public_hostname="http://127.0.0.1",
     storage_configuration=StorageConfiguration(
         database_url="sqlite:///:memory:",
