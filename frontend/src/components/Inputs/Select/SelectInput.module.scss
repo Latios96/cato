@@ -20,7 +20,6 @@ $border-color: #d0d0d0;
 }
 .inputElement {
   height: 30px;
-  border-bottom: 1px solid $border-color;
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -29,6 +28,9 @@ $border-color: #d0d0d0;
     margin-right: 10px;
     min-width: 20px;
   }
+}
+.inputElementBorder {
+  border-bottom: 1px solid $border-color;
 }
 .inputElement:hover {
   cursor: pointer;

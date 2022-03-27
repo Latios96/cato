@@ -3,6 +3,8 @@ import React, { useCallback, useState } from "react";
 import ArrowButton from "../../Button/ArrowButton";
 import styles from "./SelectInput.module.scss";
 import { CheckLg } from "react-bootstrap-icons";
+import { joinClassnames } from "../../../utils/classnameUtils";
+import { isNotLast } from "../../../utils/arrayUtils";
 interface Props {
   id?: string;
   title: string;
@@ -46,10 +48,13 @@ export function SelectInput(props: Props) {
             <div className={styles.subtitle}>{props.subtitle}</div>
           ) : null}
           <div className={styles.elementsContainer}>
-            {props.elements.map((element) => {
+            {props.elements.map((element, i) => {
               return (
                 <div
-                  className={styles.inputElement}
+                  className={joinClassnames([
+                    styles.inputElement,
+                    isNotLast(i, props.elements) && styles.inputElementBorder,
+                  ])}
                   onClick={() => handleClick(element)}
                   key={element}
                 >
