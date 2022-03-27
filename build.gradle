@@ -119,6 +119,11 @@ task poetryBuild(type: PythonTask){
     outputs.dir('dist')
 }
 
+task patchRequirementsTxtIntoWheel(type: PythonTask){
+    command = 'scripts/path_wheel_with_requirements_txt.py'
+}
+poetryBuild.finalizedBy patchRequirementsTxtIntoWheel
+
 task poetryUpdate(type: PythonTask){
     command = '-m poetry update'
 }
