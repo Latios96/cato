@@ -1,17 +1,15 @@
 import React from "react";
-import { useQuery } from "react-query";
 import styles from "./AboutComponent.module.css";
 import { Spinner } from "react-bootstrap";
+import { useFetch } from "../../hooks/useFetch";
 
 interface AboutInformation {
   version: string;
 }
 
 const AboutComponent = () => {
-  const { isLoading, error, data } = useQuery<AboutInformation, string>(
-    "about",
-    () => fetch("/api/v1/about").then((res) => res.json())
-  );
+  const { isLoading, error, data } =
+    useFetch<AboutInformation>("/api/v1/about");
 
   if (isLoading)
     return (
