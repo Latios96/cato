@@ -12,7 +12,7 @@ function Footer() {
     []
   );
   return (
-    <div className={`${styles.footer}`}>
+    <div className={styles.footer}>
       <div>
         <span>Cato</span>
         <span>Build info: {data?.version}</span>
