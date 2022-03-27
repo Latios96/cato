@@ -97,6 +97,7 @@ task pythonDetectFlakySeleniumTests(type: PythonTask){
 task copyFrontendToBuild {
     dependsOn(':frontend:yarnBuild')
     doLast {
+        delete "${rootDir}/cato_server/static"
         copy {
             from "${rootDir}/frontend/build"
             into "${rootDir}/cato_server/static"
