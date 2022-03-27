@@ -10,7 +10,7 @@ const AuthenticatedUserContext = React.createContext<AuthUser>({
 });
 
 export function AuthenticatedUserProvider(props: PropsWithChildren<{}>) {
-  const user = useUser();
+  const { user } = useUser();
 
   if (!user) {
     return <>{props.children}</>;

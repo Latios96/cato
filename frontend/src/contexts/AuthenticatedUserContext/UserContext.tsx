@@ -1,21 +1,21 @@
 import { AuthUser } from "../../catoapimodels/catoapimodels";
 import React, { PropsWithChildren, useContext } from "react";
 import { useFetch } from "../../hooks/useFetch";
-
-const UserContext = React.createContext<AuthUser | undefined>(undefined);
+interface AuthUserContext {
+  user?: AuthUser;
+  isLoading: boolean;
+}
+const UserContext = React.createContext<AuthUserContext>({ isLoading: true });
 
 export function useUser() {
-  return useContext<AuthUser | undefined>(UserContext);
+  return useContext<AuthUserContext>(UserContext);
 }
 
 export function UserProvider(props: PropsWithChildren<{}>) {
-  const { data: user } = useFetch<AuthUser>("/api/v1/users/whoami");
-
-  if (!user) {
-    return <>{props.children}</>;
-  }
-
+  const { data: user, isLoading } = useFetch<AuthUser>("/api/v1/users/whoami");
   return (
-    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
+    <UserContext.Provider value={{ user, isLoading }}>
+      {props.children}
+    </UserContext.Provider>
   );
 }

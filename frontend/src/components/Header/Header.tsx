@@ -19,12 +19,8 @@ function Header(props: Props) {
       <span
         className={"d-flex flex-column justify-content-center ml-auto mr-3"}
       >
-        <RenderOnAnonymous>
-          <LoginButton />
-        </RenderOnAnonymous>
-        <RenderOnAuthenticated>
-          <AboutUserMenu />
-        </RenderOnAuthenticated>
+        <RenderOnAnonymous render={() => <LoginButton />} />
+        <RenderOnAuthenticated render={() => <AboutUserMenu />} />
       </span>
       )
     </div>

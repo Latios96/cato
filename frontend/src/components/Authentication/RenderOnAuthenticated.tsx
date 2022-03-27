@@ -1,9 +1,11 @@
-import React, { PropsWithChildren } from "react";
+import React from "react";
 import { useUser } from "../../contexts/AuthenticatedUserContext/UserContext";
-
-function RenderOnAuthenticated(props: PropsWithChildren<{}>) {
-  const userContext = useUser();
-  return <>{userContext !== undefined ? props.children : null}</>;
+interface Props {
+  render: () => JSX.Element;
+}
+function RenderOnAuthenticated(props: Props) {
+  const { user } = useUser();
+  return <>{user !== undefined ? props.render() : null}</>;
 }
 
 export default RenderOnAuthenticated;
