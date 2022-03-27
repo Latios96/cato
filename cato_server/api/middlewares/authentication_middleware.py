@@ -39,7 +39,7 @@ class AuthenticationMiddleware:
 
     def _is_unprotected_route(self, request: Request):
         request_route = request.url.path
-        if request_route in {"/", "/index.html"}:
+        if request_route in {"/", "/index.html", "/favicon.ico", "/manifest.json"}:
             return True
         unprotected_routes = ["/login", "/auth", "/static"]
         for unprotected_route in unprotected_routes:

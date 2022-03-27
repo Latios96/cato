@@ -13,7 +13,15 @@ from cato_server.api.middlewares.authentication_middleware import (
 from cato_server.authentication.api_token_signer import ApiTokenSigner
 from tests.utils import mock_safe
 
-UNPROTECTED_ROUTES = ["/", "/index.html", "/static", "/login", "/auth"]
+UNPROTECTED_ROUTES = [
+    "/",
+    "/index.html",
+    "/static",
+    "/login",
+    "/auth",
+    "/favicon.ico",
+    "/manifest.json",
+]
 PROTECTED_ROUTES = ["/api/v1/projects"]
 
 
