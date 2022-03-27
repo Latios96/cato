@@ -30,7 +30,11 @@ function PopoverMenu(props: Props) {
               isNotLast(i, props.menuItems) && styles.menuItemBorder,
             ]);
             return (
-              <div id={props.id + "-" + menuItem.id} className={classNames}>
+              <div
+                id={props.id + "-" + menuItem.id}
+                className={classNames}
+                onClick={menuItem.onClick}
+              >
                 {menuItem.element}
               </div>
             );
