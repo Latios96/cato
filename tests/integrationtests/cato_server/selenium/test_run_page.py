@@ -10,7 +10,6 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
 from tests.integrationtests.cato_server import selenium_test
-from tests.integrationtests.conftest import MyChromeDriver
 
 
 @selenium_test
