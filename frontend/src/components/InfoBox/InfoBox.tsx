@@ -1,5 +1,6 @@
 import React from "react";
 import styles from "./InfoBox.module.scss";
+import { joinClassnames } from "../../utils/classnameUtils";
 
 interface Props {
   className?: string;
@@ -7,7 +8,7 @@ interface Props {
 
 const InfoBox: React.FunctionComponent<Props> = (props) => {
   return (
-    <div className={styles.infoBox + " " + props.className}>
+    <div className={joinClassnames([styles.infoBox, props.className])}>
       {props.children}
     </div>
   );

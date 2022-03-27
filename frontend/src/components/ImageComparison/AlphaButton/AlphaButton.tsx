@@ -1,6 +1,7 @@
 import React from "react";
 import { CircleFill } from "react-bootstrap-icons";
 import styles from "./AlphaButton.module.scss";
+import { joinClassnames } from "../../../utils/classnameUtils";
 
 interface Props {
   isToggled: boolean;
@@ -28,9 +29,10 @@ const AlphaButton = (props: Props) => {
       }}
     >
       <CircleFill
-        className={`${styles.icon} ${
-          props.isToggled ? styles.iconEnabled : ""
-        }`}
+        className={joinClassnames([
+          styles.icon,
+          props.isToggled && styles.iconEnabled,
+        ])}
       />
     </div>
   );

@@ -3,6 +3,7 @@ import styles from "./SideBar.module.scss";
 import { Link } from "react-router-dom";
 import { CurrentPage } from "./CurrentPage";
 import { ChevronLeft } from "react-bootstrap-icons";
+import { joinClassnames } from "../../../../utils/classnameUtils";
 interface Props {
   currentPage: CurrentPage;
   projectId: number;
@@ -12,9 +13,10 @@ interface Props {
 function SideBar(props: Props) {
   return (
     <div
-      className={
-        "d-flex flex-column flex-shrink-0 p-3 text-white " + styles.sideMenu
-      }
+      className={joinClassnames([
+        "d-flex flex-column flex-shrink-0 p-3 text-white",
+        styles.sideMenu,
+      ])}
       id={"sidebar"}
     >
       <ul className={`nav nav-pills flex-column mb-aut o`}>
