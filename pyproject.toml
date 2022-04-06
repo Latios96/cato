@@ -55,6 +55,7 @@ itsdangerous = "^2.1.2"
 Authlib = "^1.0.0"
 httpx = "^0.22.0"
 starlette-csrf = "^1.4.3"
+tenacity = "^8.0.1"
 
 [tool.poetry.dev-dependencies]
 black = "^20.8b1"
