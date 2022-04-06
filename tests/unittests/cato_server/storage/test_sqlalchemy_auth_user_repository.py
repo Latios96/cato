@@ -10,8 +10,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
 )
 
 
-def test_save(sessionmaker_fixture):
-    repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+def test_save(sqlalchemy_auth_user_repository):
     auth_user = AuthUser(
         id=0,
         username=Username("someuser"),
@@ -19,7 +18,7 @@ def test_save(sessionmaker_fixture):
         email=Email("foo@bar.com"),
     )
 
-    saved_auth_user = repository.save(auth_user)
+    saved_auth_user = sqlalchemy_auth_user_repository.save(auth_user)
 
     auth_user.id = 1
     assert saved_auth_user == auth_user
@@ -49,154 +48,154 @@ class TestSchemaConstraints:
             session.add(auth_user_mapping)
             session.commit()
 
-    def test_inserting_same_username_twice_should_fail(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_inserting_same_username_twice_should_fail(
+        self, sqlalchemy_auth_user_repository
+    ):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
 
         with pytest.raises(IntegrityError):
-            repository.save(auth_user)
+            sqlalchemy_auth_user_repository.save(auth_user)
 
     def test_inserting_same_username_different_casing_twice_should_fail(
-        self, sessionmaker_fixture
+        self, sqlalchemy_auth_user_repository
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
         auth_user.username = "someUser"
 
         with pytest.raises(IntegrityError):
-            repository.save(auth_user)
+            sqlalchemy_auth_user_repository.save(auth_user)
 
-    def test_inserting_same_email_twice_should_fail(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_inserting_same_email_twice_should_fail(
+        self, sqlalchemy_auth_user_repository
+    ):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
         auth_user.username = Username("someothername")
 
         with pytest.raises(IntegrityError):
-            repository.save(auth_user)
+            sqlalchemy_auth_user_repository.save(auth_user)
 
     def test_inserting_same_email_different_casing_twice_should_fail(
-        self, sessionmaker_fixture
+        self, sqlalchemy_auth_user_repository
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
         auth_user.username = Username("someothername")
         auth_user.email = Email("Foo@Bar.com")
 
         with pytest.raises(IntegrityError):
-            repository.save(auth_user)
+            sqlalchemy_auth_user_repository.save(auth_user)
 
 
 class TestByUsername:
-    def test_find_by_username_should_return_existing_user(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_find_by_username_should_return_existing_user(
+        self, sqlalchemy_auth_user_repository
+    ):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        auth_user = repository.save(auth_user)
+        auth_user = sqlalchemy_auth_user_repository.save(auth_user)
 
-        found_user = repository.find_by_username(Username("someuser"))
+        found_user = sqlalchemy_auth_user_repository.find_by_username(
+            Username("someuser")
+        )
 
         assert found_user == auth_user
 
     def test_find_by_username_should_return_none_for_not_existing_user(
         self,
-        sessionmaker_fixture,
+        sqlalchemy_auth_user_repository,
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
-
-        found_user = repository.find_by_username(Username("someuser"))
+        found_user = sqlalchemy_auth_user_repository.find_by_username(
+            Username("someuser")
+        )
 
         assert found_user is None
 
-    def test_exists_by_username_should_return_true(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_exists_by_username_should_return_true(
+        self, sqlalchemy_auth_user_repository
+    ):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
 
-        assert repository.exists_by_username(Username("someuser"))
+        assert sqlalchemy_auth_user_repository.exists_by_username(Username("someuser"))
 
     def test_exists_by_username_should_return_false(
         self,
-        sessionmaker_fixture,
+        sqlalchemy_auth_user_repository,
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
-
-        assert not repository.find_by_username(Username("someuser"))
+        assert not sqlalchemy_auth_user_repository.find_by_username(
+            Username("someuser")
+        )
 
 
 class TestByEmail:
-    def test_find_by_email_should_return_existing_user(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_find_by_email_should_return_existing_user(
+        self, sqlalchemy_auth_user_repository
+    ):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        auth_user = repository.save(auth_user)
+        auth_user = sqlalchemy_auth_user_repository.save(auth_user)
 
-        found_user = repository.find_by_email(Email("foo@bar.com"))
+        found_user = sqlalchemy_auth_user_repository.find_by_email(Email("foo@bar.com"))
 
         assert found_user == auth_user
 
     def test_find_by_email_should_return_none_for_not_existing_user(
         self,
-        sessionmaker_fixture,
+        sqlalchemy_auth_user_repository,
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
-
-        found_user = repository.find_by_email(Email("foo@bar.com"))
+        found_user = sqlalchemy_auth_user_repository.find_by_email(Email("foo@bar.com"))
 
         assert found_user is None
 
-    def test_exists_by_email_should_return_true(self, sessionmaker_fixture):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+    def test_exists_by_email_should_return_true(self, sqlalchemy_auth_user_repository):
         auth_user = AuthUser(
             id=0,
             username=Username("someuser"),
             fullname=Username("User Userson"),
             email=Email("foo@bar.com"),
         )
-        repository.save(auth_user)
+        sqlalchemy_auth_user_repository.save(auth_user)
 
-        assert repository.exists_by_email(Email("foo@bar.com"))
+        assert sqlalchemy_auth_user_repository.exists_by_email(Email("foo@bar.com"))
 
     def test_exists_by_email_should_return_false(
         self,
-        sessionmaker_fixture,
+        sqlalchemy_auth_user_repository,
     ):
-        repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
-
-        assert not repository.exists_by_email(Email("foo@bar.com"))
+        assert not sqlalchemy_auth_user_repository.exists_by_email(Email("foo@bar.com"))

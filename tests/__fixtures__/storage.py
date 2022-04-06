@@ -1,5 +1,8 @@
 import pytest
 
+from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
+    SqlAlchemyAuthUserRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
@@ -58,3 +61,8 @@ def sqlalchemy_test_heartbeat_repository(sessionmaker_fixture):
 @pytest.fixture
 def sqlalchemy_test_result_repository(sessionmaker_fixture):
     return SqlAlchemyTestResultRepository(sessionmaker_fixture)
+
+
+@pytest.fixture
+def sqlalchemy_auth_user_repository(sessionmaker_fixture):
+    return SqlAlchemyAuthUserRepository(sessionmaker_fixture)
