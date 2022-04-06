@@ -116,7 +116,10 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     crsf_token_factory,
     crsf_token,
 )
-from tests.__fixtures__.db import sqlalchemy_output_repository  # noqa: F401
+from tests.__fixtures__.storage import (  # noqa: F401
+    sqlalchemy_output_repository,
+    sqlalchemy_suite_result_repository,
+)
 
 
 @event.listens_for(Engine, "connect")
