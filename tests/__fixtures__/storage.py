@@ -1,5 +1,7 @@
 import pytest
 
+from cato.config.config_file_parser import JsonConfigParser
+from cato.config.config_file_writer import ConfigFileWriter
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
 )
@@ -19,6 +21,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
     SqlAlchemySessionRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
+    SqlAlchemySubmissionInfoRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
@@ -82,3 +87,10 @@ def sqlalchemy_run_repository(sessionmaker_fixture):
 @pytest.fixture
 def sqlalchemy_test_edit_repository(sessionmaker_fixture):
     return SqlAlchemyTestEditRepository(sessionmaker_fixture)
+
+
+@pytest.fixture
+def sqlalchemy_submission_info_repository(sessionmaker_fixture, object_mapper):
+    return SqlAlchemySubmissionInfoRepository(
+        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
+    )

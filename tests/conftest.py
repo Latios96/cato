@@ -15,18 +15,20 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from starlette.testclient import TestClient
 
-from cato.config.config_file_parser import JsonConfigParser
 from cato.config.config_file_writer import ConfigFileWriter
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato_common.domain.auth.email import Email
+from cato_common.domain.auth.username import Username
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import Run
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.suite_result import SuiteResult
@@ -39,7 +41,6 @@ from cato_common.domain.test_edit import (
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
-from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
@@ -61,45 +62,14 @@ from cato_server.configuration.sentry_configuration import SentryConfiguration
 from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.configuration.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
-from cato_common.domain.auth.email import Email
 from cato_server.domain.auth.secret_str import SecretStr
-from cato_common.domain.auth.username import Username
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
-from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
-    SqlAlchemyAuthUserRepository,
-)
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
-from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
-    SqlAlchemyImageRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
-    SqlAlchemyOutputRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
-    SqlAlchemyProjectRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
-    SqlAlchemyRunRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
-    SqlAlchemySubmissionInfoRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
-    SqlAlchemySuiteResultRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
-    SqlAlchemyTestEditRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
-from tests.utils import mock_safe
-
 from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     http_session_factory,
     http_session,
@@ -127,7 +97,9 @@ from tests.__fixtures__.storage import (  # noqa: F401
     sqlalchemy_auth_user_repository,
     sqlalchemy_run_repository,
     sqlalchemy_test_edit_repository,
+    sqlalchemy_submission_info_repository,
 )
+from tests.utils import mock_safe
 
 
 @event.listens_for(Engine, "connect")
@@ -237,15 +209,13 @@ def sessionmaker_fixture(
 
 
 @pytest.fixture
-def project(sessionmaker_fixture):
-    repository = SqlAlchemyProjectRepository(sessionmaker_fixture)
+def project(sqlalchemy_project_repository):
     project = Project(id=0, name="test_name")
-    return repository.save(project)
+    return sqlalchemy_project_repository.save(project)
 
 
 @pytest.fixture
-def run(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def run(sqlalchemy_run_repository, project):
     run = Run(
         id=0,
         project_id=project.id,
@@ -253,7 +223,7 @@ def run(sessionmaker_fixture, project):
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    return repository.save(run)
+    return sqlalchemy_run_repository.save(run)
 
 
 @pytest.fixture
@@ -271,14 +241,13 @@ def run_factory():
 
 
 @pytest.fixture
-def saving_run_factory(sessionmaker_fixture, project, run_factory):
+def saving_run_factory(sqlalchemy_run_repository, project, run_factory):
     def func(project_id=None, started_at=None):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
         run = run_factory(
             project_id=or_default(project_id, project.id),
             started_at=started_at,
         )
-        return repository.save(run)
+        return sqlalchemy_run_repository.save(run)
 
     return func
 
@@ -297,26 +266,26 @@ def suite_result_factory():
 
 
 @pytest.fixture
-def saving_suite_result_factory(sessionmaker_fixture, run, suite_result_factory):
+def saving_suite_result_factory(
+    sqlalchemy_suite_result_repository, run, suite_result_factory
+):
     def func(run_id=None, suite_name=None, suite_variables=None):
-        repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
         suite_result = suite_result_factory(
             run_id=or_default(run_id, run.id),
             suite_name=or_default(suite_name, "my_suite"),
             suite_variables=or_default(suite_variables, {"key": "value"}),
         )
-        return repository.save(suite_result)
+        return sqlalchemy_suite_result_repository.save(suite_result)
 
     return func
 
 
 @pytest.fixture
-def suite_result(sessionmaker_fixture, run):
-    repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+def suite_result(sqlalchemy_suite_result_repository, run):
     suite_result = SuiteResult(
         id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
     )
-    return repository.save(suite_result)
+    return sqlalchemy_suite_result_repository.save(suite_result)
 
 
 def or_default(value, default_value):
@@ -447,8 +416,7 @@ def test_result(
 
 
 @pytest.fixture
-def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
-    repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
+def test_edit(sqlalchemy_test_edit_repository, test_result, stored_image_factory):
     test_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
@@ -473,7 +441,7 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
             error_value=0.1,
         ),
     )
-    return repository.save(test_edit)
+    return sqlalchemy_test_edit_repository.save(test_edit)
 
 
 @pytest.fixture
@@ -520,12 +488,10 @@ def stored_file_alpha(sessionmaker_fixture, tmp_path, test_resource_provider):
 
 @pytest.fixture()
 def stored_image_factory(
-    sessionmaker_fixture, tmp_path, stored_file, stored_file_alpha
+    sqlalchemy_image_repository, tmp_path, stored_file, stored_file_alpha
 ):
-    repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
     def func():
-        return repository.save(
+        return sqlalchemy_image_repository.save(
             Image(
                 id=0,
                 name="test.exr",
@@ -550,26 +516,23 @@ def stored_image(stored_image_factory):
 
 
 @pytest.fixture()
-def output(sessionmaker_fixture, test_result):
-    repository = SqlAlchemyOutputRepository(sessionmaker_fixture)
-    return repository.save(
+def output(sqlalchemy_output_repository, test_result):
+    return sqlalchemy_output_repository.save(
         Output(id=0, test_result_id=test_result.id, text="This is a long text")
     )
 
 
 @pytest.fixture()
-def output_for_finished_test(sessionmaker_fixture, finished_test_result):
-    repository = SqlAlchemyOutputRepository(sessionmaker_fixture)
-    return repository.save(
+def output_for_finished_test(sqlalchemy_output_repository, finished_test_result):
+    return sqlalchemy_output_repository.save(
         Output(id=0, test_result_id=finished_test_result.id, text="This is a long text")
     )
 
 
 @pytest.fixture()
-def submission_info(sessionmaker_fixture, run, config_fixture, object_mapper):
-    repository = SqlAlchemySubmissionInfoRepository(
-        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
-    )
+def submission_info(
+    sqlalchemy_submission_info_repository, run, config_fixture, object_mapper
+):
     sub_info = SubmissionInfo(
         id=0,
         config=config_fixture.CONFIG,
@@ -577,19 +540,18 @@ def submission_info(sessionmaker_fixture, run, config_fixture, object_mapper):
         resource_path="resource_path",
         executable="executable",
     )
-    return repository.save(sub_info)
+    return sqlalchemy_submission_info_repository.save(sub_info)
 
 
 @pytest.fixture
-def auth_user(sessionmaker_fixture):
-    repository = SqlAlchemyAuthUserRepository(sessionmaker_fixture)
+def auth_user(sqlalchemy_auth_user_repository):
     auth_user = AuthUser(
         id=0,
         username=Username("username"),
         fullname=Username("User Username"),
         email=Email("foo@bar.com"),
     )
-    return repository.save(auth_user)
+    return sqlalchemy_auth_user_repository.save(auth_user)
 
 
 def random_port():
@@ -730,10 +692,11 @@ def config_file_fixture(tmp_path, config_fixture):
 
 
 @pytest.fixture
-def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_fixture):
+def saving_comparison_settings_edit_factory(
+    stored_image_factory, sqlalchemy_test_edit_repository
+):
     def func(test_id, created_at):
-        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-        return repository.save(
+        return sqlalchemy_test_edit_repository.save(
             ComparisonSettingsEdit(
                 id=0,
                 test_id=test_id,
@@ -764,10 +727,11 @@ def saving_comparison_settings_edit_factory(stored_image_factory, sessionmaker_f
 
 
 @pytest.fixture
-def saving_reference_image_edit_factory(stored_image_factory, sessionmaker_fixture):
+def saving_reference_image_edit_factory(
+    stored_image_factory, sqlalchemy_test_edit_repository
+):
     def func(test_id, created_at):
-        repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
-        return repository.save(
+        return sqlalchemy_test_edit_repository.save(
             ReferenceImageEdit(
                 id=0,
                 test_id=test_id,
