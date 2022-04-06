@@ -23,6 +23,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
+    SqlAlchemyTestEditRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_test_heartbeat_repository import (
     SqlAlchemyTestHeartbeatRepository,
 )
@@ -74,3 +77,8 @@ def sqlalchemy_auth_user_repository(sessionmaker_fixture):
 @pytest.fixture
 def sqlalchemy_run_repository(sessionmaker_fixture):
     return SqlAlchemyRunRepository(sessionmaker_fixture)
+
+
+@pytest.fixture
+def sqlalchemy_test_edit_repository(sessionmaker_fixture):
+    return SqlAlchemyTestEditRepository(sessionmaker_fixture)
