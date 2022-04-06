@@ -43,13 +43,15 @@ TEST_SUITES = [
 
 @freeze_time(STARTED_AT)
 def test_should_create_without_branch_name_and_no_previous_run(
-    sessionmaker_fixture, sqlalchemy_test_result_repository, project, object_mapper
+    sqlalchemy_run_repository,
+    sqlalchemy_suite_result_repository,
+    sqlalchemy_test_result_repository,
+    project,
+    object_mapper,
 ):
-    run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     usecase = CreateRunUsecase(
-        run_repository,
-        suite_result_repository,
+        sqlalchemy_run_repository,
+        sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
     )
@@ -74,13 +76,15 @@ def test_should_create_without_branch_name_and_no_previous_run(
 
 @freeze_time(STARTED_AT)
 def test_should_create_with_explicit_branch_name_and_no_previous_run(
-    sessionmaker_fixture, sqlalchemy_test_result_repository, project, object_mapper
+    sqlalchemy_run_repository,
+    sqlalchemy_suite_result_repository,
+    sqlalchemy_test_result_repository,
+    project,
+    object_mapper,
 ):
-    run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
     usecase = CreateRunUsecase(
-        run_repository,
-        suite_result_repository,
+        sqlalchemy_run_repository,
+        sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
     )
@@ -111,13 +115,13 @@ def test_should_create_with_previous_run(
     project,
     object_mapper,
     run_factory,
+    sqlalchemy_suite_result_repository,
+    sqlalchemy_run_repository,
 ):
-    run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    previous_run = run_repository.save(run_factory(project_id=project.id))
-    suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
+    previous_run = sqlalchemy_run_repository.save(run_factory(project_id=project.id))
     usecase = CreateRunUsecase(
-        run_repository,
-        suite_result_repository,
+        sqlalchemy_run_repository,
+        sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
     )
