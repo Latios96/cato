@@ -11,6 +11,9 @@ from cato_server.admin_commands.config_template_command import ConfigTemplateCom
 from cato_server.admin_commands.create_api_token_command import CreateApiTokenCommand
 from cato_server.admin_commands.create_backup_command import CreateBackupCommand
 from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
+from cato_server.admin_commands.wait_for_db_connection_command import (
+    WaitForDbConnectionCommand,
+)
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
 
@@ -65,6 +68,14 @@ def create_api_token(path):
     create_api_token.create_api_token()
 
 
+def wait_for_db_connection(path):
+    path = get_config_path(path)
+    obj_graph = create_obj_graph(path)
+
+    wait_for_connection_command = provide_safe(obj_graph, WaitForDbConnectionCommand)
+    wait_for_connection_command.wait_for_connection()
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -107,6 +118,13 @@ def main():
     )
     create_api_token_parser.add_argument("--config", help="path to config.ini")
 
+    wait_for_db_connection_parser = commands_subparser.add_parser(
+        "wait-for-db-connection",
+        help="Waits until the application can connect to the database",
+        parents=[parent_parser],
+    )
+    wait_for_db_connection_parser.add_argument("--config", help="path to config.ini")
+
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -117,6 +135,8 @@ def main():
         create_backup(args.config, args.pg_dump_path, args.backup_mode)
     elif args.command == "create-api-token":
         create_api_token(args.config)
+    elif args.command == "wait-for-db-connection":
+        wait_for_db_connection(args.config)
     else:
         logger.error(f"No method found to run command {args.command}")
 
