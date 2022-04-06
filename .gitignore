@@ -164,3 +164,4 @@ ui_mockup
 /example_suite/.cato_last_run.json
 /example_suite/result/
 /tests/reports/
+/docker_experiments/
