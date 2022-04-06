@@ -32,11 +32,11 @@ class TestRunOverviewPage:
         authenticated_selenium_driver,
         run,
         test_result,
-        sessionmaker_fixture,
+        sqlalchemy_test_result_repository,
     ):
         self._visit_run_overview_page(live_server, run, authenticated_selenium_driver)
         self._verify_failed_tests_count_to_be(authenticated_selenium_driver, 0)
-        self._fail_test(sessionmaker_fixture, test_result)
+        self._fail_test(sqlalchemy_test_result_repository, test_result)
         self._verify_failed_tests_count_to_be(authenticated_selenium_driver, 0)
 
     def _verify_failed_tests_count_to_be(self, selenium_driver, count):
@@ -46,10 +46,9 @@ class TestRunOverviewPage:
             )
         )
 
-    def _fail_test(self, sessionmaker_fixture, test_result):
-        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    def _fail_test(self, sqlalchemy_test_result_repository, test_result):
         test_result.status = ResultStatus.FAILED
-        repository.save(test_result)
+        sqlalchemy_test_result_repository.save(test_result)
 
     def _visit_run_overview_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
@@ -73,7 +72,7 @@ class TestRunTestPage:
         authenticated_selenium_driver,
         run,
         test_result,
-        sessionmaker_fixture,
+        sqlalchemy_test_result_repository,
     ):
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
 
@@ -81,7 +80,7 @@ class TestRunTestPage:
             authenticated_selenium_driver, "not started"
         )
 
-        self._update_test_result_status(sessionmaker_fixture, test_result)
+        self._update_test_result_status(sqlalchemy_test_result_repository, test_result)
 
         self._assert_first_test_has_icon_with_title(
             authenticated_selenium_driver, "running"
@@ -193,10 +192,11 @@ class TestRunTestPage:
             "selectedTestContainer"
         ).find_element_by_xpath("//*[text()='No test selected']")
 
-    def _update_test_result_status(self, sessionmaker_fixture, test_result):
-        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    def _update_test_result_status(
+        self, sqlalchemy_test_result_repository, test_result
+    ):
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
-        repository.save(test_result)
+        sqlalchemy_test_result_repository.save(test_result)
 
     def _visit_run_test_page(self, live_server, run, selenium_driver):
         selenium_driver.get(
@@ -409,7 +409,7 @@ class TestRunSuitePage:
         run,
         suite_result,
         test_result,
-        sessionmaker_fixture,
+        sqlalchemy_test_result_repository,
     ):
         self._visit_run_suite_page(live_server, run, authenticated_selenium_driver)
         self._click_expand_icon(authenticated_selenium_driver, suite_result)
@@ -418,7 +418,7 @@ class TestRunSuitePage:
             authenticated_selenium_driver, "not started"
         )
 
-        self._update_run_status(sessionmaker_fixture, test_result)
+        self._update_run_status(sqlalchemy_test_result_repository, test_result)
 
         self._assert_first_test_status_icon_has_title(
             authenticated_selenium_driver, "running"
@@ -489,10 +489,9 @@ class TestRunSuitePage:
             f'//*[@id="suite-1-test-1"]/span[1]/span[@title="{title}"]'
         )
 
-    def _update_run_status(self, sessionmaker_fixture, test_result):
-        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    def _update_run_status(self, sqlalchemy_test_result_repository, test_result):
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
-        repository.save(test_result)
+        sqlalchemy_test_result_repository.save(test_result)
 
 
 @pytest.mark.parametrize("page", ["suite", "test"])

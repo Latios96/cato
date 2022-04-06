@@ -123,6 +123,7 @@ from tests.__fixtures__.storage import (  # noqa: F401
     sqlalchemy_session_repository,
     sqlalchemy_image_repository,
     sqlalchemy_test_heartbeat_repository,
+    sqlalchemy_test_result_repository,
 )
 
 
@@ -379,7 +380,9 @@ def test_result_factory():
 
 
 @pytest.fixture
-def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_fixture):
+def saving_test_result_factory(
+    test_result_factory, suite_result, sqlalchemy_test_result_repository
+):
     def func(
         id: Optional[int] = None,
         suite_result_id: Optional[int] = None,
@@ -401,7 +404,6 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
         thumbnail_file_id: Optional[int] = None,
         failure_reason: Optional[TestFailureReason] = None,
     ):
-        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
         test_result = test_result_factory(
             id,
             suite_result_id,
@@ -423,21 +425,22 @@ def saving_test_result_factory(test_result_factory, suite_result, sessionmaker_f
             thumbnail_file_id,
             failure_reason,
         )
-        return repository.save(test_result)
+        return sqlalchemy_test_result_repository.save(test_result)
 
     return func
 
 
 @pytest.fixture
-def test_result(sessionmaker_fixture, test_result_factory, suite_result, stored_image):
-    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+def test_result(
+    sqlalchemy_test_result_repository, test_result_factory, suite_result, stored_image
+):
     test_result = test_result_factory(
         suite_result_id=suite_result.id,
         image_output=stored_image.id,
         reference_image=stored_image.id,
         diff_image=stored_image.id,
     )
-    return repository.save(test_result)
+    return sqlalchemy_test_result_repository.save(test_result)
 
 
 @pytest.fixture
@@ -472,30 +475,32 @@ def test_edit(sessionmaker_fixture, test_result, stored_image_factory):
 
 @pytest.fixture
 def test_result_no_machine_info(
-    sessionmaker_fixture, test_result_factory, suite_result, stored_image
+    sessionmaker_fixture,
+    sqlalchemy_test_result_repository,
+    test_result_factory,
+    suite_result,
+    stored_image,
 ):
-    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result = test_result_factory(
         suite_result_id=suite_result.id,
         image_output=stored_image.id,
         reference_image=stored_image.id,
     )
     test_result.machine_info = None
-    return repository.save(test_result)
+    return sqlalchemy_test_result_repository.save(test_result)
 
 
 @pytest.fixture
 def finished_test_result(
-    sessionmaker_fixture, test_result_factory, suite_result, stored_image
+    sqlalchemy_test_result_repository, test_result_factory, suite_result, stored_image
 ):
-    repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     test_result = test_result_factory(
         suite_result_id=suite_result.id,
         image_output=stored_image.id,
         reference_image=stored_image.id,
         unified_test_status=UnifiedTestStatus.SUCCESS,
     )
-    return repository.save(test_result)
+    return sqlalchemy_test_result_repository.save(test_result)
 
 
 @pytest.fixture()

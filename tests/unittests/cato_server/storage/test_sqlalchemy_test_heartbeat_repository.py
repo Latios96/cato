@@ -42,13 +42,14 @@ def test_should_not_save_test_heartbeat_duplicate_test_result_id(
 
 
 def test_find_last_beat_older_than_should_return_correctly(
-    sessionmaker_fixture, sqlalchemy_test_heartbeat_repository, test_result
+    sessionmaker_fixture,
+    sqlalchemy_test_result_repository,
+    sqlalchemy_test_heartbeat_repository,
+    test_result,
 ):
     old_id = test_result.id
     test_result.id = 0
-    test_result2 = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(
-        test_result
-    )
+    test_result2 = sqlalchemy_test_result_repository.save(test_result)
     test_result.id = old_id
     now = datetime.datetime.now()
     two_weeks_ago = now - datetime.timedelta(weeks=2)

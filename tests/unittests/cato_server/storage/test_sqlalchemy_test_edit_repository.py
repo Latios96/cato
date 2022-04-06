@@ -127,7 +127,12 @@ def test_find_by_test_id_should_find_empty_list(sessionmaker_fixture):
     assert result == []
 
 
-def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory):
+def test_find_by_test_id(
+    sessionmaker_fixture,
+    sqlalchemy_test_result_repository,
+    test_result,
+    stored_image_factory,
+):
     repository = SqlAlchemyTestEditRepository(sessionmaker_fixture)
     now = datetime.datetime.now()
     test_edits = [
@@ -160,7 +165,7 @@ def test_find_by_test_id(sessionmaker_fixture, test_result, stored_image_factory
     repository.insert_many(test_edits)
     test_result_id = test_result.id
     test_result.id = 0
-    test_result = SqlAlchemyTestResultRepository(sessionmaker_fixture).save(test_result)
+    test_result = sqlalchemy_test_result_repository.save(test_result)
     repository.save(
         ComparisonSettingsEdit(
             id=0,

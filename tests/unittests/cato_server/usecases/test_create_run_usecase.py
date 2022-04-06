@@ -43,15 +43,14 @@ TEST_SUITES = [
 
 @freeze_time(STARTED_AT)
 def test_should_create_without_branch_name_and_no_previous_run(
-    sessionmaker_fixture, project, object_mapper
+    sessionmaker_fixture, sqlalchemy_test_result_repository, project, object_mapper
 ):
     run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
-    test_result_repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     usecase = CreateRunUsecase(
         run_repository,
         suite_result_repository,
-        test_result_repository,
+        sqlalchemy_test_result_repository,
         object_mapper,
     )
 
@@ -69,21 +68,20 @@ def test_should_create_without_branch_name_and_no_previous_run(
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    assert test_result_repository.find_by_id(1).machine_info == None
-    assert test_result_repository.find_by_id(1).failure_reason == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
 
 
 @freeze_time(STARTED_AT)
 def test_should_create_with_explicit_branch_name_and_no_previous_run(
-    sessionmaker_fixture, project, object_mapper
+    sessionmaker_fixture, sqlalchemy_test_result_repository, project, object_mapper
 ):
     run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
-    test_result_repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     usecase = CreateRunUsecase(
         run_repository,
         suite_result_repository,
-        test_result_repository,
+        sqlalchemy_test_result_repository,
         object_mapper,
     )
 
@@ -102,22 +100,25 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
         branch_name=BranchName("main"),
         previous_run_id=None,
     )
-    assert test_result_repository.find_by_id(1).machine_info == None
-    assert test_result_repository.find_by_id(1).failure_reason == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
 
 
 @freeze_time(STARTED_AT)
 def test_should_create_with_previous_run(
-    sessionmaker_fixture, project, object_mapper, run_factory
+    sessionmaker_fixture,
+    sqlalchemy_test_result_repository,
+    project,
+    object_mapper,
+    run_factory,
 ):
     run_repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     previous_run = run_repository.save(run_factory(project_id=project.id))
     suite_result_repository = SqlAlchemySuiteResultRepository(sessionmaker_fixture)
-    test_result_repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
     usecase = CreateRunUsecase(
         run_repository,
         suite_result_repository,
-        test_result_repository,
+        sqlalchemy_test_result_repository,
         object_mapper,
     )
 
@@ -135,5 +136,5 @@ def test_should_create_with_previous_run(
         branch_name=BranchName("default"),
         previous_run_id=previous_run.id,
     )
-    assert test_result_repository.find_by_id(1).machine_info == None
-    assert test_result_repository.find_by_id(1).failure_reason == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
+    assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None

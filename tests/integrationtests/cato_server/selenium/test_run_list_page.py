@@ -41,14 +41,14 @@ class TestRunListPage:
         authenticated_selenium_driver,
         project,
         test_result,
-        sessionmaker_fixture,
+        sqlalchemy_test_result_repository,
     ):
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
         self._assert_first_run_status_icon_has_title(
             authenticated_selenium_driver, "not started"
         )
 
-        self._update_run_status(sessionmaker_fixture, test_result)
+        self._update_run_status(sqlalchemy_test_result_repository, test_result)
 
         self._assert_first_run_status_icon_has_title(
             authenticated_selenium_driver, "running"
@@ -91,10 +91,9 @@ class TestRunListPage:
             f"{live_server.server_url()}/projects/{project.id}?branches=dev"
         )
 
-    def _update_run_status(self, sessionmaker_fixture, test_result):
-        repository = SqlAlchemyTestResultRepository(sessionmaker_fixture)
+    def _update_run_status(self, sqlalchemy_test_result_repository, test_result):
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
-        repository.save(test_result)
+        sqlalchemy_test_result_repository.save(test_result)
 
     def _assert_first_run_status_icon_has_title(self, selenium_driver, title):
         selenium_driver.wait_until(
