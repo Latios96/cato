@@ -1,5 +1,8 @@
 import pytest
 
+from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
+    SqlAlchemyImageRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
 )
@@ -34,3 +37,8 @@ def sqlalchemy_suite_result_repository(sessionmaker_fixture):
 @pytest.fixture
 def sqlalchemy_session_repository(sessionmaker_fixture):
     return SqlAlchemySessionRepository(sessionmaker_fixture)
+
+
+@pytest.fixture
+def sqlalchemy_image_repository(sessionmaker_fixture):
+    return SqlAlchemyImageRepository(sessionmaker_fixture)

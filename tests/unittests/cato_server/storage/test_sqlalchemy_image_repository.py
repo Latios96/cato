@@ -7,10 +7,8 @@ from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
 )
 
 
-def test_should_save(sessionmaker_fixture, stored_file):
-    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
-    image = image_repository.save(
+def test_should_save(sqlalchemy_image_repository, stored_file):
+    image = sqlalchemy_image_repository.save(
         Image(
             id=0,
             name="test.exr",
@@ -31,11 +29,11 @@ def test_should_save(sessionmaker_fixture, stored_file):
     )
 
 
-def test_save_should_fail_not_existing_file_id(sessionmaker_fixture, stored_file):
-    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
+def test_save_should_fail_not_existing_file_id(
+    sqlalchemy_image_repository, stored_file
+):
     with pytest.raises(IntegrityError):
-        image_repository.save(
+        sqlalchemy_image_repository.save(
             Image(
                 id=0,
                 name="test.exr",
@@ -48,12 +46,10 @@ def test_save_should_fail_not_existing_file_id(sessionmaker_fixture, stored_file
 
 
 def test_save_should_fail_not_existing_file_id_for_channel(
-    sessionmaker_fixture, stored_file
+    sqlalchemy_image_repository, stored_file
 ):
-    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
     with pytest.raises(IntegrityError):
-        image_repository.save(
+        sqlalchemy_image_repository.save(
             Image(
                 id=0,
                 name="test.exr",
@@ -65,16 +61,12 @@ def test_save_should_fail_not_existing_file_id_for_channel(
         )
 
 
-def test_should_not_find(sessionmaker_fixture):
-    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
-    assert not image_repository.find_by_id(42)
+def test_should_not_find(sqlalchemy_image_repository):
+    assert not sqlalchemy_image_repository.find_by_id(42)
 
 
-def test_should_find(sessionmaker_fixture, stored_file):
-    image_repository = SqlAlchemyImageRepository(sessionmaker_fixture)
-
-    image = image_repository.save(
+def test_should_find(sqlalchemy_image_repository, stored_file):
+    image = sqlalchemy_image_repository.save(
         Image(
             id=0,
             name="test.exr",
@@ -87,4 +79,4 @@ def test_should_find(sessionmaker_fixture, stored_file):
         )
     )
 
-    assert image_repository.find_by_id(image.id) == image
+    assert sqlalchemy_image_repository.find_by_id(image.id) == image
