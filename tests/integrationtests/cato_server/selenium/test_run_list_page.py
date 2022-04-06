@@ -74,9 +74,9 @@ class TestRunListPage:
         project,
         live_server,
         authenticated_selenium_driver,
-        sessionmaker_fixture,
+        sqlalchemy_run_repository,
     ):
-        self._insert_many_runs(project, sessionmaker_fixture)
+        self._insert_many_runs(project, sqlalchemy_run_repository)
 
         self._visit_project_page_with_branch_filter_dev(
             live_server, project, authenticated_selenium_driver
@@ -127,9 +127,8 @@ class TestRunListPage:
     def _visit_project_page(self, live_server, project, selenium_driver):
         selenium_driver.get(f"{live_server.server_url()}/projects/{project.id}")
 
-    def _insert_many_runs(self, project, sessionmaker_fixture):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-        repository.insert_many(
+    def _insert_many_runs(self, project, sqlalchemy_run_repository):
+        sqlalchemy_run_repository.insert_many(
             [
                 Run(
                     id=0,

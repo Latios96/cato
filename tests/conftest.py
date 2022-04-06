@@ -125,6 +125,7 @@ from tests.__fixtures__.storage import (  # noqa: F401
     sqlalchemy_test_heartbeat_repository,
     sqlalchemy_test_result_repository,
     sqlalchemy_auth_user_repository,
+    sqlalchemy_run_repository,
 )
 
 

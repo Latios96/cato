@@ -17,8 +17,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 )
 
 
-def test_to_entity(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_to_entity(sqlalchemy_run_repository):
     now = datetime.datetime.now()
     run = Run(
         id=1,
@@ -28,15 +27,14 @@ def test_to_entity(sessionmaker_fixture):
         previous_run_id=None,
     )
 
-    entity = repository.to_entity(run)
+    entity = sqlalchemy_run_repository.to_entity(run)
 
     assert entity.id == 1
     assert entity.project_entity_id == 2
     assert entity.started_at == now
 
 
-def test_to_domain_object(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_to_domain_object(sqlalchemy_run_repository):
     now = datetime.datetime.now()
     run_entity = _RunMapping(
         id=1,
@@ -46,7 +44,7 @@ def test_to_domain_object(sessionmaker_fixture):
         previous_run_id=None,
     )
 
-    run = repository.to_domain_object(run_entity)
+    run = sqlalchemy_run_repository.to_domain_object(run_entity)
 
     assert run == Run(
         id=1,
@@ -57,8 +55,7 @@ def test_to_domain_object(sessionmaker_fixture):
     )
 
 
-def test_save(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_save(sqlalchemy_run_repository, project):
     start_time = datetime.datetime.now()
     run = Run(
         id=0,
@@ -68,15 +65,14 @@ def test_save(sessionmaker_fixture, project):
         previous_run_id=None,
     )
 
-    run = repository.save(run)
+    run = sqlalchemy_run_repository.save(run)
 
     assert run.id == 1
     assert run.project_id == 1
     assert run.started_at == start_time
 
 
-def test_save_no_project_id(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_save_no_project_id(sqlalchemy_run_repository):
     run = Run(
         id=0,
         project_id=2,
@@ -86,11 +82,10 @@ def test_save_no_project_id(sessionmaker_fixture):
     )
 
     with pytest.raises(IntegrityError):
-        run = repository.save(run)
+        run = sqlalchemy_run_repository.save(run)
 
 
-def test_save_with_no_previous_run_id_is_possible(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_save_with_no_previous_run_id_is_possible(sqlalchemy_run_repository, project):
     run = Run(
         id=0,
         project_id=project.id,
@@ -99,13 +94,12 @@ def test_save_with_no_previous_run_id_is_possible(sessionmaker_fixture, project)
         previous_run_id=None,
     )
 
-    repository.save(run)
+    sqlalchemy_run_repository.save(run)
 
 
 def test_save_with_not_existing_previous_run_id_is_not_possible(
-    sessionmaker_fixture, project
+    sqlalchemy_run_repository, project
 ):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     run = Run(
         id=0,
         project_id=project.id,
@@ -115,11 +109,10 @@ def test_save_with_not_existing_previous_run_id_is_not_possible(
     )
 
     with pytest.raises(IntegrityError):
-        repository.save(run)
+        sqlalchemy_run_repository.save(run)
 
 
-def test_find_by_id_should_find(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_find_by_id_should_find(sqlalchemy_run_repository, project):
     start_time = datetime.datetime.now()
     run = Run(
         id=0,
@@ -128,27 +121,21 @@ def test_find_by_id_should_find(sessionmaker_fixture, project):
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    run = repository.save(run)
+    run = sqlalchemy_run_repository.save(run)
 
-    assert repository.find_by_id(run.id).project_id == project.id
-    assert repository.find_by_id(run.id).started_at == start_time
-
-
-def test_find_by_id_should_not_find(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-    assert not repository.find_by_id(100)
+    assert sqlalchemy_run_repository.find_by_id(run.id).project_id == project.id
+    assert sqlalchemy_run_repository.find_by_id(run.id).started_at == start_time
 
 
-def test_find_by_project_id_should_find_empty(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-    assert repository.find_by_project_id(10) == []
+def test_find_by_id_should_not_find(sqlalchemy_run_repository):
+    assert not sqlalchemy_run_repository.find_by_id(100)
 
 
-def test_find_by_project_id_should_find_correct(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
+def test_find_by_project_id_should_find_empty(sqlalchemy_run_repository):
+    assert sqlalchemy_run_repository.find_by_project_id(10) == []
 
+
+def test_find_by_project_id_should_find_correct(sqlalchemy_run_repository, project):
     run = Run(
         id=0,
         project_id=project.id,
@@ -156,26 +143,24 @@ def test_find_by_project_id_should_find_correct(sessionmaker_fixture, project):
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    run = repository.save(run)
+    run = sqlalchemy_run_repository.save(run)
 
-    assert repository.find_by_project_id(project.id) == [run]
+    assert sqlalchemy_run_repository.find_by_project_id(project.id) == [run]
 
 
-def test_find_by_project_id_paginate_should_find_empty(sessionmaker_fixture):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
+def test_find_by_project_id_paginate_should_find_empty(sqlalchemy_run_repository):
     page_request = PageRequest.first(10)
 
-    assert repository.find_by_project_id_with_paging(
+    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
         10, page_request
     ) == Page.from_page_request(
         page_request=page_request, total_entity_count=0, entities=[]
     )
 
 
-def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, project):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
+def test_find_by_project_id_paginate_should_find_correct(
+    sqlalchemy_run_repository, project
+):
     run = Run(
         id=0,
         project_id=project.id,
@@ -183,11 +168,11 @@ def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, p
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    run = repository.save(run)
+    run = sqlalchemy_run_repository.save(run)
 
     page_request = PageRequest.first(10)
 
-    assert repository.find_by_project_id_with_paging(
+    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
         project.id, page_request
     ) == Page.from_page_request(
         page_request=page_request, total_entity_count=1, entities=[run]
@@ -195,9 +180,8 @@ def test_find_by_project_id_paginate_should_find_correct(sessionmaker_fixture, p
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
-    sessionmaker_fixture, project
+    sqlalchemy_run_repository, project
 ):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     run = Run(
         id=0,
         project_id=project.id,
@@ -205,8 +189,8 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    repository.save(run)
-    runs = repository.insert_many(
+    sqlalchemy_run_repository.save(run)
+    runs = sqlalchemy_run_repository.insert_many(
         [
             Run(
                 id=0,
@@ -221,7 +205,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
 
     page_request = PageRequest.first(1)
 
-    assert repository.find_by_project_id_with_paging(
+    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
         project.id, page_request
     ) == Page.from_page_request(
         page_request=page_request, total_entity_count=21, entities=[runs[19]]
@@ -229,9 +213,8 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
-    sessionmaker_fixture, project
+    sqlalchemy_run_repository, project
 ):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
     run = Run(
         id=0,
         project_id=project.id,
@@ -239,8 +222,8 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
-    run = repository.save(run)
-    runs = repository.insert_many(
+    run = sqlalchemy_run_repository.save(run)
+    runs = sqlalchemy_run_repository.insert_many(
         [
             Run(
                 id=0,
@@ -255,7 +238,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
 
     page_request = PageRequest(page_size=5, page_number=2)
 
-    assert repository.find_by_project_id_with_paging(
+    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
         project.id, page_request
     ) == Page.from_page_request(
         page_request=page_request,
@@ -265,15 +248,16 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
 
 
 def test_find_by_project_id_with_paging_should_filter_for_branches(
-    sessionmaker_fixture, project, run_factory
+    sqlalchemy_run_repository, project, run_factory
 ):
-    repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-    repository.save(
+    sqlalchemy_run_repository.save(
         run_factory(project_id=project.id, branch_name=BranchName("default"))
     )
-    repository.save(run_factory(project_id=project.id, branch_name=BranchName("main")))
+    sqlalchemy_run_repository.save(
+        run_factory(project_id=project.id, branch_name=BranchName("main"))
+    )
 
-    runs = repository.find_by_project_id_with_paging(
+    runs = sqlalchemy_run_repository.find_by_project_id_with_paging(
         project.id,
         PageRequest(page_size=5, page_number=1),
         RunFilterOptions(branches={BranchName("main")}),
@@ -284,60 +268,62 @@ def test_find_by_project_id_with_paging_should_filter_for_branches(
 
 
 class TestFindLastRunForProject:
-    def test_should_return_none_for_empty_project(self, sessionmaker_fixture, project):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-        result = repository.find_last_run_for_project(project.id, BranchName("default"))
+    def test_should_return_none_for_empty_project(
+        self, sqlalchemy_run_repository, project
+    ):
+        result = sqlalchemy_run_repository.find_last_run_for_project(
+            project.id, BranchName("default")
+        )
 
         assert result is None
 
-    def test_should_return_first_run(self, sessionmaker_fixture, project, run_factory):
-        project2 = SqlAlchemyProjectRepository(sessionmaker_fixture).save(
-            Project(id=0, name="test")
-        )
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-        runs = repository.insert_many(
+    def test_should_return_first_run(
+        self,
+        sqlalchemy_project_repository,
+        sqlalchemy_run_repository,
+        project,
+        run_factory,
+    ):
+        project2 = sqlalchemy_project_repository.save(Project(id=0, name="test"))
+        runs = sqlalchemy_run_repository.insert_many(
             [run_factory(project_id=project.id) for x in range(20)]
         )
-        repository.insert_many([run_factory(project_id=project2.id) for x in range(20)])
-        repository.insert_many(
+        sqlalchemy_run_repository.insert_many(
+            [run_factory(project_id=project2.id) for x in range(20)]
+        )
+        sqlalchemy_run_repository.insert_many(
             [run_factory(project_id=project.id, branch_name="dev") for x in range(20)]
         )
 
-        result = repository.find_last_run_for_project(project.id, BranchName("default"))
+        result = sqlalchemy_run_repository.find_last_run_for_project(
+            project.id, BranchName("default")
+        )
 
         assert result == runs[19]
 
 
 class TestFindBranchNamesForProject:
     def test_should_find_empty_list_for_not_existing_project(
-        self, sessionmaker_fixture
+        self, sqlalchemy_run_repository
     ):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-        result = repository.find_branches_for_project(42)
+        result = sqlalchemy_run_repository.find_branches_for_project(42)
 
         assert result == []
 
-    def test_should_find_empty_list(self, sessionmaker_fixture, project):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-        result = repository.find_branches_for_project(project.id)
+    def test_should_find_empty_list(self, sqlalchemy_run_repository, project):
+        result = sqlalchemy_run_repository.find_branches_for_project(project.id)
 
         assert result == []
 
-    def test_should_find_single_branch(self, sessionmaker_fixture, project, run):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-
-        result = repository.find_branches_for_project(project.id)
+    def test_should_find_single_branch(self, sqlalchemy_run_repository, project, run):
+        result = sqlalchemy_run_repository.find_branches_for_project(project.id)
 
         assert result == [BranchName("default")]
 
     def test_should_find_multiple_branches_and_sort(
-        self, sessionmaker_fixture, project, run_factory
+        self, sqlalchemy_run_repository, project, run_factory
     ):
-        repository = SqlAlchemyRunRepository(sessionmaker_fixture)
-        repository.insert_many(
+        sqlalchemy_run_repository.insert_many(
             [
                 run_factory(project_id=project.id, branch_name=x)
                 for x in [
@@ -352,6 +338,6 @@ class TestFindBranchNamesForProject:
             ]
         )
 
-        result = repository.find_branches_for_project(project.id)
+        result = sqlalchemy_run_repository.find_branches_for_project(project.id)
 
         assert result == [BranchName("dev"), BranchName("legacy"), BranchName("main")]
