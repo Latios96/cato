@@ -120,6 +120,7 @@ from tests.__fixtures__.storage import (  # noqa: F401
     sqlalchemy_output_repository,
     sqlalchemy_suite_result_repository,
     sqlalchemy_project_repository,
+    sqlalchemy_session_repository,
 )
 
 

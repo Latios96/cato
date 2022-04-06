@@ -32,13 +32,12 @@ from dateutil.parser import parse
 
 
 @pytest.fixture
-def http_session_factory(app_and_config_fixture, sessionmaker_fixture):
+def http_session_factory(app_and_config_fixture, sqlalchemy_session_repository):
     app, config = app_and_config_fixture
 
     def factory(auth_user: AuthUser) -> Session:
-        session_repository = SqlAlchemySessionRepository(sessionmaker_fixture)
         return SessionBackend(
-            session_repository, config.session_configuration
+            sqlalchemy_session_repository, config.session_configuration
         ).create_session(auth_user)
 
     return factory

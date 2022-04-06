@@ -11,8 +11,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
 )
 
 
-def test_insert_session(sessionmaker_fixture, auth_user):
-    repository = SqlAlchemySessionRepository(sessionmaker_fixture)
+def test_insert_session(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
@@ -20,120 +19,114 @@ def test_insert_session(sessionmaker_fixture, auth_user):
         expires_at=datetime.datetime.now(),
     )
 
-    saved_session = repository.save(session)
+    saved_session = sqlalchemy_session_repository.save(session)
 
     session.id = saved_session.id
     assert saved_session.id != SessionId.none()
     assert session == saved_session
 
 
-def test_find_by_id(sessionmaker_fixture, auth_user):
-    repository = SqlAlchemySessionRepository(sessionmaker_fixture)
+def test_find_by_id(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
         created_at=datetime.datetime.now(),
         expires_at=datetime.datetime.now(),
     )
-    saved_session = repository.save(session)
+    saved_session = sqlalchemy_session_repository.save(session)
 
-    found_session = repository.find_by_id(saved_session.id)
+    found_session = sqlalchemy_session_repository.find_by_id(saved_session.id)
 
     assert found_session == saved_session
 
 
-def test_delete_by_id(sessionmaker_fixture, auth_user):
-    repository = SqlAlchemySessionRepository(sessionmaker_fixture)
+def test_delete_by_id(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
         created_at=datetime.datetime.now(),
         expires_at=datetime.datetime.now(),
     )
-    saved_session = repository.save(session)
+    saved_session = sqlalchemy_session_repository.save(session)
 
-    repository.delete_by_id(saved_session.id)
+    sqlalchemy_session_repository.delete_by_id(saved_session.id)
 
-    assert repository.find_by_id(saved_session.id) is None
+    assert sqlalchemy_session_repository.find_by_id(saved_session.id) is None
 
 
-def test_update_session(sessionmaker_fixture, auth_user):
-    repository = SqlAlchemySessionRepository(sessionmaker_fixture)
+def test_update_session(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
         created_at=datetime.datetime.now(),
         expires_at=datetime.datetime.now(),
     )
-    session = repository.save(session)
+    session = sqlalchemy_session_repository.save(session)
     new_expires_at = datetime.datetime(year=2020, month=10, day=1)
 
     session.expires_at = new_expires_at
-    session = repository.save(session)
-    loaded_session = repository.find_by_id(session.id)
+    session = sqlalchemy_session_repository.save(session)
+    loaded_session = sqlalchemy_session_repository.find_by_id(session.id)
 
     assert loaded_session.expires_at == new_expires_at
 
 
 class TestFindExpiredSessions:
     def test_find_by_expires_at_is_older_than_should_return_empty_list_for_empty_table(
-        self, sessionmaker_fixture, auth_user
+        self, sqlalchemy_session_repository, auth_user
     ):
-        repository = SqlAlchemySessionRepository(sessionmaker_fixture)
-
-        results = repository.find_by_expires_at_is_older_than(datetime.datetime.now())
+        results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
+            datetime.datetime.now()
+        )
 
         assert results == []
 
     def test_find_by_expires_at_is_older_than_should_not_return_not_expired_sessions(
-        self, sessionmaker_fixture, auth_user
+        self, sqlalchemy_session_repository, auth_user
     ):
-        repository = SqlAlchemySessionRepository(sessionmaker_fixture)
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
             created_at=datetime.datetime(year=2020, month=10, day=1),
             expires_at=datetime.datetime(year=2020, month=10, day=2),
         )
-        repository.save(session)
+        sqlalchemy_session_repository.save(session)
 
-        results = repository.find_by_expires_at_is_older_than(
+        results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
             datetime.datetime(year=2020, month=10, day=1)
         )
 
         assert results == []
 
     def test_find_by_expires_at_is_older_than_should_not_return_not_expired_sessions_with_same_datetime(
-        self, sessionmaker_fixture, auth_user
+        self, sqlalchemy_session_repository, auth_user
     ):
-        repository = SqlAlchemySessionRepository(sessionmaker_fixture)
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
             created_at=datetime.datetime(year=2020, month=10, day=1),
             expires_at=datetime.datetime(year=2020, month=10, day=2),
         )
-        repository.save(session)
+        sqlalchemy_session_repository.save(session)
 
-        results = repository.find_by_expires_at_is_older_than(
+        results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
             datetime.datetime(year=2020, month=10, day=2)
         )
 
         assert results == []
 
     def test_find_by_expires_at_is_older_than_should_not_return_expired_sessions(
-        self, sessionmaker_fixture, auth_user
+        self, sqlalchemy_session_repository, auth_user
     ):
-        repository = SqlAlchemySessionRepository(sessionmaker_fixture)
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
             created_at=datetime.datetime(year=2020, month=10, day=1),
             expires_at=datetime.datetime(year=2020, month=10, day=2),
         )
-        saved_session = repository.save(session)
+        saved_session = sqlalchemy_session_repository.save(session)
 
-        results = repository.find_by_expires_at_is_older_than(
+        results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
             datetime.datetime(year=2020, month=10, day=3)
         )
 
@@ -203,8 +196,9 @@ class TestConstraints:
             session.add(session_mapping)
             session.commit()
 
-    def test_inserting_not_existing_user_id_should_not_work(self, sessionmaker_fixture):
-        repository = SqlAlchemySessionRepository(sessionmaker_fixture)
+    def test_inserting_not_existing_user_id_should_not_work(
+        self, sqlalchemy_session_repository
+    ):
         session = Session(
             id=SessionId.none(),
             user_id=42,
@@ -213,4 +207,4 @@ class TestConstraints:
         )
 
         with pytest.raises(IntegrityError):
-            repository.save(session)
+            sqlalchemy_session_repository.save(session)
