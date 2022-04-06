@@ -140,7 +140,10 @@ def main():
 
     @app.on_event("shutdown")
     def shutdown_event():
-        app.scheduler_runner.stop(),
+        if isinstance(app, SentryAsgiMiddleware):
+            app.app.scheduler_runner.stop()
+        else:
+            app.scheduler_runner.stop()
         exit(0),
 
     if config.sentry_configuration.url:
