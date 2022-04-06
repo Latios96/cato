@@ -5,9 +5,17 @@ from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
 )
 
 # todo move sessionmaker_fixture here
+from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
+    SqlAlchemyProjectRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     SqlAlchemySuiteResultRepository,
 )
+
+
+@pytest.fixture
+def sqlalchemy_project_repository(sessionmaker_fixture):
+    return SqlAlchemyProjectRepository(sessionmaker_fixture)
 
 
 @pytest.fixture

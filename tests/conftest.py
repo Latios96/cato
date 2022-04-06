@@ -119,6 +119,7 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
 from tests.__fixtures__.storage import (  # noqa: F401
     sqlalchemy_output_repository,
     sqlalchemy_suite_result_repository,
+    sqlalchemy_project_repository,
 )
 
 
