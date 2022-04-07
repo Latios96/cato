@@ -23,7 +23,7 @@ class AppConfigurationWriter:
         config_writer.add_section("oidc")
         config_writer.set("app", "port", str(config.port))
         config_writer.set("app", "debug", str(config.debug))
-        config_writer.set("app", "public_hostname", config.public_hostname)
+        config_writer.set("app", "public_hostname", config.hostname)
         config_writer.set(
             "secrets",
             "sessions_secret",

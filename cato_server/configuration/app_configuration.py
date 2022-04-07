@@ -14,7 +14,7 @@ class AppConfiguration:
     port: int
     debug: bool
     secrets_configuration: SecretsConfiguration
-    public_hostname: str
+    hostname: str
     storage_configuration: StorageConfiguration
     logging_configuration: LoggingConfiguration
     scheduler_configuration: SchedulerConfiguration

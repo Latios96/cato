@@ -52,7 +52,7 @@ class AppConfigurationReader:
                 "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
             ),
             secrets_configuration=secrets_configuration,
-            public_hostname=config.get("app", "public_hostname"),
+            hostname=config.get("app", "hostname"),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
             scheduler_configuration=scheduler_configuration,
