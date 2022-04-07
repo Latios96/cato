@@ -388,7 +388,7 @@ class TestRunSuitePage:
         run,
         suite_result,
         test_result,
-        sessionmaker_fixture,
+        sqlalchemy_test_result_repository,
     ):
         self._visit_run_suite_page(live_server, run, authenticated_selenium_driver)
 
@@ -396,7 +396,7 @@ class TestRunSuitePage:
             authenticated_selenium_driver, "not started"
         )
 
-        self._update_run_status(sessionmaker_fixture, test_result)
+        self._update_run_status(sqlalchemy_test_result_repository, test_result)
 
         self._assert_first_suite_status_icon_has_title(
             authenticated_selenium_driver, "running"

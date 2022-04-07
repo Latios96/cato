@@ -20,9 +20,9 @@ class TestRunListPage:
         live_server,
         authenticated_selenium_driver,
         project,
-        sessionmaker_fixture,
+        sqlalchemy_run_repository,
     ):
-        self._insert_many_runs(project, sessionmaker_fixture)
+        self._insert_many_runs(project, sqlalchemy_run_repository)
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
         next_page = self._pagination_buttons_should_be_correctly_enabled(
             authenticated_selenium_driver
@@ -59,9 +59,9 @@ class TestRunListPage:
         project,
         live_server,
         authenticated_selenium_driver,
-        sessionmaker_fixture,
+        sqlalchemy_run_repository,
     ):
-        self._insert_many_runs(project, sessionmaker_fixture)
+        self._insert_many_runs(project, sqlalchemy_run_repository)
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
 
         self._assert_first_run_has_branch_default(authenticated_selenium_driver)
