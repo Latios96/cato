@@ -52,7 +52,7 @@ class AuthBlueprint(APIRouter):
         self.post("/logout")(self.logout)
 
     async def login(self, request: Request):
-        redirect_uri = f"{self._app_configuration.hostname}/auth"
+        redirect_uri = f"{self._app_configuration.public_url}/auth"
         request.session["last_unauthorized_path"] = request.query_params.get(
             "from", "/"
         )
@@ -86,7 +86,7 @@ class AuthBlueprint(APIRouter):
         if not original_route.startswith("/login"):
             redirect_route = original_route
 
-        redirect_route = f"{self._app_configuration.hostname}{redirect_route}"
+        redirect_route = f"{self._app_configuration.public_url}{redirect_route}"
 
         logger.debug("Redirecting to %s", redirect_route)
         return RedirectResponse(url=redirect_route)

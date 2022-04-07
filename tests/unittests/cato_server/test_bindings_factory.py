@@ -45,7 +45,8 @@ def test_create_storage_bindings_for_postgres():
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="postgresql+psycopg2://username:password@localhost:5432/db_name",
             file_storage_url="some_path",
@@ -93,7 +94,8 @@ def test_create_storage_bindings_using_sqlite_in_memory():
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -148,7 +150,8 @@ def test_create_scheduler_bindings_no_scheduler():
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:",
             file_storage_url="some_path",
@@ -183,7 +186,8 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
         csrf_secret=SecretStr("CSRF_SECRET"),
         api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
     ),
-    hostname="http://127.0.0.1",
+    hostname="localhost",
+    public_url="http://127.0.0.1",
     storage_configuration=StorageConfiguration(
         database_url="sqlite:///:memory:",
         file_storage_url="some_path",

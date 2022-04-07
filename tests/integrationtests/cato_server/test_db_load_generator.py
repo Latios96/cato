@@ -24,7 +24,8 @@ def test_run_db_load_test(tmp_path, snapshot):
     config = AppConfiguration(
         port=random_port(),
         debug=True,
-        public_hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         secrets_configuration=SecretsConfiguration(
             sessions_secret=SecretStr("SESSIONS_SECRET"),
             csrf_secret=SecretStr("CSRF_SECRET"),

@@ -22,7 +22,8 @@ from cato_server.domain.auth.secret_str import SecretStr
 VALID_INI_FILE = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -40,7 +41,8 @@ well_known_url=http://somewhere"""
 MISSING_DATABASE_URL = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -55,7 +57,8 @@ well_known_url=http://somewhere"""
 MISSING_FILE_STORAGE_URL = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -69,7 +72,8 @@ well_known_url=http://somewhere"""
 
 MISSING_DEBUG = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -84,7 +88,8 @@ well_known_url=http://somewhere"""
 
 MISSING_SESSIONS_SECRET = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 csrf_secret=CSRF_SECRET
 api_tokens_secret=API_TOKENS_SECRET
@@ -99,7 +104,8 @@ well_known_url=http://somewhere"""
 
 MISSING_CSRF_SECRET = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 api_tokens_secret=API_TOKENS_SECRET
@@ -114,7 +120,8 @@ well_known_url=http://somewhere"""
 
 MISSING_API_TOKENS_SECRET = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -128,6 +135,22 @@ well_known_url=http://somewhere"""
 
 MISSING_HOSTNAME = """[app]
 port=5000
+public_url=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[oidc]
+client_id=client-id
+client_secret=secret
+well_known_url=http://somewhere"""
+
+MISSING_PUBLIC_URL = """[app]
+port=5000
+hostname=localhost
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -142,6 +165,8 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_CLIENT_ID = """[app]
 port=5000
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -155,6 +180,8 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_SECRET = """[app]
 port=5000
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -168,6 +195,8 @@ well_known_url=http://somewhere"""
 
 MISSING_OIDC_WELL_KNOWN_URL = """[app]
 port=5000
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -177,12 +206,12 @@ database_url=my_database_url
 file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
-client_secret=secret
-well_known_url=http://somewhere"""
+client_secret=secret"""
 
 WITH_LOGGING = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -202,7 +231,8 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_USE_FILE_HANDLER = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -221,7 +251,8 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -240,7 +271,8 @@ well_known_url=http://somewhere"""
 
 WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
 port=5000
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -260,7 +292,8 @@ well_known_url=http://somewhere"""
 WITH_DEADLINE_SCHEDULER_NO_URL = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -279,7 +312,8 @@ well_known_url=http://somewhere
 WITH_DEADLINE_SCHEDULER_WITH_URL = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -299,7 +333,8 @@ well_known_url=http://somewhere
 WITH_SESSION_LIFETIME = """[app]
 port=5000
 debug=True
-hostname=http://127.0.0.1
+hostname=localhost
+public_url=http://127.0.0.1
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -346,7 +381,8 @@ def test_read_valid_file(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -378,7 +414,8 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -410,7 +447,8 @@ def test_read_with_logging(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -440,6 +478,7 @@ def test_read_with_logging(ini_file_creator):
         (MISSING_CSRF_SECRET, configparser.NoOptionError),
         (MISSING_API_TOKENS_SECRET, configparser.NoOptionError),
         (MISSING_HOSTNAME, configparser.NoOptionError),
+        (MISSING_PUBLIC_URL, configparser.NoOptionError),
         (MISSING_OIDC_CLIENT_ID, configparser.NoOptionError),
         (MISSING_OIDC_SECRET, configparser.NoOptionError),
         (MISSING_OIDC_WELL_KNOWN_URL, configparser.NoOptionError),
@@ -467,7 +506,8 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -499,7 +539,8 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -531,7 +572,8 @@ def test_read_with_session_lifetime(ini_file_creator):
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname="http://127.0.0.1",
+        hostname="localhost",
+        public_url="http://127.0.0.1",
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),

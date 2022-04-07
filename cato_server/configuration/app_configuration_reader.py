@@ -53,6 +53,7 @@ class AppConfigurationReader:
             ),
             secrets_configuration=secrets_configuration,
             hostname=config.get("app", "hostname"),
+            public_url=config.get("app", "public_url"),
             storage_configuration=storage_configuration,
             logging_configuration=logging_configuration,
             scheduler_configuration=scheduler_configuration,

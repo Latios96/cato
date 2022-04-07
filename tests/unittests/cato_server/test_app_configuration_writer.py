@@ -10,7 +10,8 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 EXPECTED = """[app]
 port = 5000
 debug = False
-public_hostname = http://127.0.0.1
+hostname = localhost
+public_url = http://127.0.0.1
 
 [secrets]
 sessions_secret = SESSIONS_SECRET

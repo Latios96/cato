@@ -587,7 +587,8 @@ def app_and_config_fixture(
             csrf_secret=SecretStr("CSRF_SECRET"),
             api_tokens_secret=SecretStr("API_TOKENS_SECRET"),
         ),
-        hostname=f"http://127.0.0.1:{port}",
+        hostname=f"localhost",
+        public_url=f"http://127.0.0.1:{port}",
         storage_configuration=StorageConfiguration(
             database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
         ),

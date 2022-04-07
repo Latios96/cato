@@ -26,7 +26,8 @@ class AppConfigurationDefaults:
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
             secrets_configuration=SecretsConfiguration.default(),
-            hostname="http://127.0.0.1",
+            hostname="localhost",
+            public_url="http://127.0.0.1",
             storage_configuration=StorageConfiguration(
                 database_url="db_url", file_storage_url="file_storage_url"
             ),
@@ -51,7 +52,8 @@ class AppConfigurationDefaults:
             port=self.PORT_DEFAULT,
             debug=self.DEBUG_DEFAULT,
             secrets_configuration=SecretsConfiguration.default(),
-            hostname="http://127.0.0.1",
+            hostname="localhost",
+            public_url="http://127.0.0.1",
             storage_configuration=StorageConfiguration(
                 database_url="sqlite:///{}".format(
                     os.path.join(config_folder, "cato.db")

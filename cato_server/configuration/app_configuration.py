@@ -15,6 +15,7 @@ class AppConfiguration:
     debug: bool
     secrets_configuration: SecretsConfiguration
     hostname: str
+    public_url: str
     storage_configuration: StorageConfiguration
     logging_configuration: LoggingConfiguration
     scheduler_configuration: SchedulerConfiguration
