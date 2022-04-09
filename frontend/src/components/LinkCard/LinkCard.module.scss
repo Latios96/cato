@@ -8,6 +8,7 @@
   width: 307px;
   height: 132px;
   display: flex;
+  padding: 10px;
 }
 .linkCard:hover {
   background-color: $cato-black-hovered;
@@ -21,4 +22,7 @@
   margin: auto;
   font-size: 30px;
   font-weight: 500;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
 }

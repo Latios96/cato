@@ -11,7 +11,9 @@ const LinkCard = (props: Props) => {
   return (
     <Link to={props.linkTo} style={{ textDecoration: "none" }}>
       <div className={styles.linkCard}>
-        <div className={styles.cardContentDiv}>{props.name}</div>
+        <div className={styles.cardContentDiv} title={props.name}>
+          {props.name}
+        </div>
       </div>
     </Link>
   );
