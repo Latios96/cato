@@ -18,6 +18,7 @@ from cato.utils.url_format import format_url
         ("http://186.248.26.26", "http://186.248.26.26"),
         ("http://186.248.26.26/", "http://186.248.26.26"),
         ("http://www.github.com/", "http://www.github.com"),
+        ("https://www.github.com/", "https://www.github.com"),
     ],
 )
 def test_url_format(url, expected_url):
