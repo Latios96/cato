@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { PropsWithChildren, useState } from "react";
 import { Spinner } from "react-bootstrap";
 import styles from "./SingleImageDisplay.module.scss";
 import {
@@ -12,7 +12,7 @@ interface Props {
   informationText: string;
 }
 
-const SingleImageDisplay: FunctionComponent<Props> = (props) => {
+const SingleImageDisplay = (props: PropsWithChildren<Props>) => {
   const [isLoading, setLoading] = useState(true);
   const [hasError, setError] = useState(false);
   return (

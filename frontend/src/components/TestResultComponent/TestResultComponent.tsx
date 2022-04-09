@@ -14,7 +14,7 @@ interface Props {
 function TestResultComponent(props: Props) {
   let [result, setResult] = useState<TestResultDto>();
 
-  const fetchTest = useCallback((id) => {
+  const fetchTest = useCallback((id: any) => {
     fetch(`/api/v1/test_results/${id}`)
       .then((res) => res.json())
       .then(

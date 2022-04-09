@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import BasicPage from "../../../BasicPage";
 import SideBar from "./SideBar";
 import { CurrentPage } from "./CurrentPage";
@@ -9,7 +9,7 @@ interface Props {
   currentPage: CurrentPage;
 }
 
-const BasicRunPage: React.FunctionComponent<Props> = (props) => {
+const BasicRunPage = (props: PropsWithChildren<Props>) => {
   return (
     <BasicPage>
       <div style={{ display: "flex" }}>

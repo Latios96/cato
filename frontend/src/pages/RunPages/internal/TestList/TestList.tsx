@@ -44,7 +44,7 @@ function TestList(props: Props) {
     <LoadingStateHandler isLoading={isLoading} error={error}>
       <LoadingState>
         <div className={styles.loading}>
-          <SkeletonTheme color="#f7f7f7" highlightColor="white">
+          <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
             {_.range(10).map((i) => {
               return (
                 <p>

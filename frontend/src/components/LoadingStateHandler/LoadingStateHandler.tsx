@@ -1,19 +1,24 @@
-import React, { Component, FunctionComponent, ReactNode } from "react";
+import React, {
+  Component,
+  FunctionComponent,
+  PropsWithChildren,
+  ReactNode,
+} from "react";
 import _ from "lodash";
 
-export class LoadingState extends Component {
+export class LoadingState extends Component<PropsWithChildren<{}>> {
+  render(): React.ReactNode {
+    return this.props.children;
+  }
+}
+
+export class ErrorState extends Component<PropsWithChildren<{}>> {
   render() {
     return this.props.children;
   }
 }
 
-export class ErrorState extends Component {
-  render() {
-    return this.props.children;
-  }
-}
-
-export class DataLoadedState extends Component {
+export class DataLoadedState extends Component<PropsWithChildren<{}>> {
   render() {
     return this.props.children;
   }
@@ -24,7 +29,9 @@ interface Props {
   error?: Error;
 }
 
-export const LoadingStateHandler: FunctionComponent<Props> = (props) => {
+export const LoadingStateHandler: FunctionComponent<
+  React.PropsWithChildren<Props>
+> = (props) => {
   const getTypeOfChild = (child: any) => {
     return _.get(child, "type");
   };

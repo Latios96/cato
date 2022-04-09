@@ -84,7 +84,7 @@ export function RunSummary(props: Props) {
     <div className={styles.runSummary}>
       <LoadingStateHandler isLoading={isLoading} error={error}>
         <LoadingState>
-          <SkeletonTheme color="#f7f7f7" highlightColor="white">
+          <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
             <p>
               <Skeleton count={1} width={720} height={100} />
             </p>

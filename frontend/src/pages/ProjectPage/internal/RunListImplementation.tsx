@@ -86,7 +86,7 @@ function RunListImplementation(props: Props) {
         </tbody>
       </table>
       {props.isLoading ? (
-        <SkeletonTheme color="#f7f7f7" highlightColor="white">
+        <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
           {_.range(7).map((i) => {
             return (
               <p key={i}>

@@ -16,7 +16,7 @@ function ProjectInformation(props: Props) {
   if (loading) {
     return (
       <div className={styles.projectInformation}>
-        <SkeletonTheme color="#f7f7f7" highlightColor="white">
+        <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
           <p>
             <Skeleton count={1} width={160} height={50} />
           </p>

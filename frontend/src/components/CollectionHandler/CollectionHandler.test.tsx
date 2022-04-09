@@ -19,7 +19,7 @@ describe("CollectionHandler", () => {
       <CollectionHandler
         data={undefined}
         placeHolder={<div>Placeholder</div>}
-        renderElements={(data) => data.map((d) => <div>{d}</div>)}
+        renderElements={(data) => data.map((d) => <div />)}
       />
     );
 

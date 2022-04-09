@@ -1,4 +1,4 @@
-import React from "react";
+import React, { PropsWithChildren } from "react";
 import Header from "../components/Header/Header";
 import Footer from "../components/Footer/Footer";
 
@@ -6,7 +6,7 @@ interface Props {
   title?: string;
 }
 
-const BasicPage: React.FunctionComponent<Props> = (props) => {
+const BasicPage = (props: PropsWithChildren<Props>) => {
   return (
     <>
       <div style={{ minHeight: "100vh" }}>
