@@ -70,10 +70,13 @@ class MultiChannelImageComparison extends Component<Props, State> {
           <Form.Control
             className={styles.selectChannel}
             as="select"
-            onChange={this.handleChange}
+            onChange={(e) =>
+              this.handleChange(
+                e as unknown as React.ChangeEvent<HTMLSelectElement>
+              )
+            }
             value={this.state.selectedChannel}
             disabled={this.state.selectedMode === CompareModes.DIFF}
-            custom
           >
             {(imageOutputOrReferenceImage
               ? imageOutputOrReferenceImage.channels

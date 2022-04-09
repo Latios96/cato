@@ -122,7 +122,6 @@ function FilterControls(props: Props) {
                 props.currentFilterOptions.withChangedFailureReason(newValue)
               );
             }}
-            custom
             value={
               props.currentFilterOptions.failureReason
                 ? props.currentFilterOptions.failureReason
