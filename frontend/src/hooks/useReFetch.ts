@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { useInterval } from "rooks";
+import { useIntervalWhen } from "rooks";
 import { FetchResult } from "./useFetch";
 interface UseReFetchResult<T> {
   data?: T;
@@ -55,7 +55,7 @@ export function useReFetch<TData = any>(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...(dependencies || []), doFetch, setFetchResult]);
 
-  const [start] = useInterval(
+  useIntervalWhen(
     () => {
       if (!fetchResult.isLoading) {
         doFetch();
@@ -64,7 +64,6 @@ export function useReFetch<TData = any>(
     interval,
     true
   );
-  start();
   return {
     data: fetchResult.data,
     isLoading: isFirstFetch ? fetchResult.isLoading : false,
