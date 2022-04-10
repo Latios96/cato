@@ -11,14 +11,12 @@ FORCE = False
 
 
 class RedirectToFrontendMiddleware:
-
-    STATIC_FILES_FOLDER = Path(__file__).parent.parent.parent / "static" / "index.html"
-
     async def __call__(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         if self._needs_frontend_redirect(request):
-            return FileResponse(self.STATIC_FILES_FOLDER)
+            static_files_folder = Path(__file__).parent.parent.parent / "static"
+            return FileResponse(static_files_folder / request.url.path[1:])
 
         return await call_next(request)
 
