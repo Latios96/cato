@@ -1,5 +1,5 @@
 {
-  "project_name": "TestSpheres",
+  "projectName": "TestSpheres",
   "suites": [
     {
       "name": "exr",
