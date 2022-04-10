@@ -24,8 +24,14 @@ class RedirectToFrontendMiddleware:
         request_route = request.url.path
         if request_route in {"/", "/index.html"}:
             return False
-        unprotected_routes = ["/login", "/logout", "/auth", "/static", "/api"]
-        for unprotected_route in unprotected_routes:
-            if request_route.startswith(unprotected_route):
+        routes_with_no_frontend_redirect = [
+            "/login",
+            "/logout",
+            "/auth",
+            "/static",
+            "/api",
+        ]
+        for route_with_no_frontend_redirect in routes_with_no_frontend_redirect:
+            if request_route.startswith(route_with_no_frontend_redirect):
                 return False
         return True
