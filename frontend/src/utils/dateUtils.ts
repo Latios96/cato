@@ -5,7 +5,6 @@ export function formatTime(datestr: string | null | undefined): string {
   if (!datestr) {
     return "";
   }
-  datestr = datestr.replace(" GMT", "");
   var date = new Date(datestr);
   return ago(date);
 }
