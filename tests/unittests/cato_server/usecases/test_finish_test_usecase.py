@@ -12,20 +12,21 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.create_thumbnail import CreateThumbnail
 from cato_server.usecases.finish_test import FinishTest
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
 def test_should_finish(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.save.side_effect = lambda x: x
-    started_at = datetime.datetime.now()
-    finished_at = datetime.datetime.now()
+    started_at = aware_now_in_utc()
+    finished_at = aware_now_in_utc()
     test_result_repository.find_by_id.return_value = test_result_factory(
         id=42, started_at=started_at
     )
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
-        id=2, test_result_id=42, last_beat=datetime.datetime.now()
+        id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
@@ -70,7 +71,7 @@ def test_should_raise_no_test_result_with_id(object_mapper):
     test_result_repository.find_by_id.return_value = None
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
-        id=2, test_result_id=42, last_beat=datetime.datetime.now()
+        id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
@@ -95,14 +96,14 @@ def test_should_raise_no_test_result_with_id(object_mapper):
 def test_should_fail_test(test_result_factory, object_mapper):
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.save.side_effect = lambda x: x
-    started_at = datetime.datetime.now()
-    finished_at = datetime.datetime.now()
+    started_at = aware_now_in_utc()
+    finished_at = aware_now_in_utc()
     test_result_repository.find_by_id.return_value = test_result_factory(
         id=42, started_at=started_at
     )
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
-        id=2, test_result_id=42, last_beat=datetime.datetime.now()
+        id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
     mock_create_thumbnail = mock_safe(CreateThumbnail)
     finish_test = FinishTest(
@@ -140,7 +141,7 @@ def test_exception_during_thumbnail_creation_should_not_be_an_issue(
     test_result_repository = mock_safe(TestResultRepository)
     test_result_repository.save.side_effect = lambda x: x
     test_result_repository.find_by_id.return_value = test_result_factory(
-        id=42, started_at=(datetime.datetime.now())
+        id=42, started_at=(aware_now_in_utc())
     )
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
     mock_create_thumbnail = mock_safe(CreateThumbnail)

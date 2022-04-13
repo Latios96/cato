@@ -4,6 +4,7 @@ from cato_server.authentication.remove_expired_sessions import RemoveExpiredSess
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
 from cato_server.storage.abstract.session_repository import SessionRepository
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
@@ -24,8 +25,8 @@ def test_should_delete_expired_sessions():
         Session(
             id=session_id,
             user_id=1,
-            created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now(),
+            created_at=aware_now_in_utc(),
+            expires_at=aware_now_in_utc(),
         )
     ]
     remove_expired_sessions = RemoveExpiredSessions(mock_session_repository)

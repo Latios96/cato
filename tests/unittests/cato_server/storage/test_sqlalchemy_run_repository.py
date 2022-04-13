@@ -8,17 +8,14 @@ from cato_common.domain.project import Project
 from cato_common.domain.run import Run
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.run_filter_options import RunFilterOptions
-from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
-    SqlAlchemyProjectRepository,
-)
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
-    SqlAlchemyRunRepository,
     _RunMapping,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_to_entity(sqlalchemy_run_repository):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     run = Run(
         id=1,
         project_id=2,
@@ -35,7 +32,7 @@ def test_to_entity(sqlalchemy_run_repository):
 
 
 def test_to_domain_object(sqlalchemy_run_repository):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     run_entity = _RunMapping(
         id=1,
         project_entity_id=2,
@@ -56,7 +53,7 @@ def test_to_domain_object(sqlalchemy_run_repository):
 
 
 def test_save(sqlalchemy_run_repository, project):
-    start_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
     run = Run(
         id=0,
         project_id=project.id,
@@ -76,7 +73,7 @@ def test_save_no_project_id(sqlalchemy_run_repository):
     run = Run(
         id=0,
         project_id=2,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -89,7 +86,7 @@ def test_save_with_no_previous_run_id_is_possible(sqlalchemy_run_repository, pro
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -103,7 +100,7 @@ def test_save_with_not_existing_previous_run_id_is_not_possible(
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=42,
     )
@@ -113,7 +110,7 @@ def test_save_with_not_existing_previous_run_id_is_not_possible(
 
 
 def test_find_by_id_should_find(sqlalchemy_run_repository, project):
-    start_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
     run = Run(
         id=0,
         project_id=project.id,
@@ -139,7 +136,7 @@ def test_find_by_project_id_should_find_correct(sqlalchemy_run_repository, proje
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -164,7 +161,7 @@ def test_find_by_project_id_paginate_should_find_correct(
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -185,7 +182,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -195,7 +192,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
             Run(
                 id=0,
                 project_id=project.id,
-                started_at=datetime.datetime.now(),
+                started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,
             )
@@ -218,7 +215,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -228,7 +225,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
             Run(
                 id=0,
                 project_id=project.id,
-                started_at=datetime.datetime.now(),
+                started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,
             )

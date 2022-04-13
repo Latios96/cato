@@ -23,7 +23,7 @@ def create_api_token_fixture():
     return create_api_token, mock_api_token_signer
 
 
-@freeze_time(datetime.datetime(2022, 1, 29, 0, 0, 0))
+@freeze_time(datetime.datetime(2022, 1, 29, 0, 0, 0, tzinfo=datetime.timezone.utc))
 @mock.patch("secrets.token_hex")
 def test_create_api_token(mock_token_hex, create_api_token_fixture):
     mock_token_hex.return_value = "hexhexhex"
@@ -40,8 +40,12 @@ def test_create_api_token(mock_token_hex, create_api_token_fixture):
         ApiToken(
             name=create_api_token_data.name,
             id=ApiTokenId("hexhexhex"),
-            created_at=datetime.datetime(2022, 1, 29, 0, 0, 0),
-            expires_at=datetime.datetime(2022, 1, 29, 1, 0, 0),
+            created_at=datetime.datetime(
+                2022, 1, 29, 0, 0, 0, tzinfo=datetime.timezone.utc
+            ),
+            expires_at=datetime.datetime(
+                2022, 1, 29, 1, 0, 0, tzinfo=datetime.timezone.utc
+            ),
         )
     )
 

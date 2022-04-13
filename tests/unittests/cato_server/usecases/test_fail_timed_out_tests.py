@@ -1,5 +1,3 @@
-import datetime
-
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
@@ -12,6 +10,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
 from cato_server.usecases.finish_test import FinishTest
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
@@ -29,7 +28,7 @@ def test_nothing_to_do_should_do_nothing():
     finish_test.fail_test.assert_not_called()
 
 
-now = datetime.datetime.now()
+now = aware_now_in_utc()
 TIMED_OUT_TEST_RESULT = TestResult(
     id=0,
     suite_result_id=1,

@@ -9,14 +9,15 @@ from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
     SqlAlchemySessionRepository,
     _SessionMapping,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_insert_session(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
-        created_at=datetime.datetime.now(),
-        expires_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
+        expires_at=aware_now_in_utc(),
     )
 
     saved_session = sqlalchemy_session_repository.save(session)
@@ -30,8 +31,8 @@ def test_find_by_id(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
-        created_at=datetime.datetime.now(),
-        expires_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
+        expires_at=aware_now_in_utc(),
     )
     saved_session = sqlalchemy_session_repository.save(session)
 
@@ -44,8 +45,8 @@ def test_delete_by_id(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
-        created_at=datetime.datetime.now(),
-        expires_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
+        expires_at=aware_now_in_utc(),
     )
     saved_session = sqlalchemy_session_repository.save(session)
 
@@ -58,11 +59,13 @@ def test_update_session(sqlalchemy_session_repository, auth_user):
     session = Session(
         id=SessionId.none(),
         user_id=auth_user.id,
-        created_at=datetime.datetime.now(),
-        expires_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
+        expires_at=aware_now_in_utc(),
     )
     session = sqlalchemy_session_repository.save(session)
-    new_expires_at = datetime.datetime(year=2020, month=10, day=1)
+    new_expires_at = datetime.datetime(
+        year=2020, month=10, day=1, tzinfo=datetime.timezone.utc
+    )
 
     session.expires_at = new_expires_at
     session = sqlalchemy_session_repository.save(session)
@@ -76,7 +79,7 @@ class TestFindExpiredSessions:
         self, sqlalchemy_session_repository, auth_user
     ):
         results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
-            datetime.datetime.now()
+            aware_now_in_utc()
         )
 
         assert results == []
@@ -87,13 +90,17 @@ class TestFindExpiredSessions:
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
-            created_at=datetime.datetime(year=2020, month=10, day=1),
-            expires_at=datetime.datetime(year=2020, month=10, day=2),
+            created_at=datetime.datetime(
+                year=2020, month=10, day=1, tzinfo=datetime.timezone.utc
+            ),
+            expires_at=datetime.datetime(
+                year=2020, month=10, day=2, tzinfo=datetime.timezone.utc
+            ),
         )
         sqlalchemy_session_repository.save(session)
 
         results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
-            datetime.datetime(year=2020, month=10, day=1)
+            datetime.datetime(year=2020, month=10, day=1, tzinfo=datetime.timezone.utc)
         )
 
         assert results == []
@@ -104,13 +111,17 @@ class TestFindExpiredSessions:
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
-            created_at=datetime.datetime(year=2020, month=10, day=1),
-            expires_at=datetime.datetime(year=2020, month=10, day=2),
+            created_at=datetime.datetime(
+                year=2020, month=10, day=1, tzinfo=datetime.timezone.utc
+            ),
+            expires_at=datetime.datetime(
+                year=2020, month=10, day=2, tzinfo=datetime.timezone.utc
+            ),
         )
         sqlalchemy_session_repository.save(session)
 
         results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
-            datetime.datetime(year=2020, month=10, day=2)
+            datetime.datetime(year=2020, month=10, day=2, tzinfo=datetime.timezone.utc)
         )
 
         assert results == []
@@ -121,13 +132,17 @@ class TestFindExpiredSessions:
         session = Session(
             id=SessionId.none(),
             user_id=auth_user.id,
-            created_at=datetime.datetime(year=2020, month=10, day=1),
-            expires_at=datetime.datetime(year=2020, month=10, day=2),
+            created_at=datetime.datetime(
+                year=2020, month=10, day=1, tzinfo=datetime.timezone.utc
+            ),
+            expires_at=datetime.datetime(
+                year=2020, month=10, day=2, tzinfo=datetime.timezone.utc
+            ),
         )
         saved_session = sqlalchemy_session_repository.save(session)
 
         results = sqlalchemy_session_repository.find_by_expires_at_is_older_than(
-            datetime.datetime(year=2020, month=10, day=3)
+            datetime.datetime(year=2020, month=10, day=3, tzinfo=datetime.timezone.utc)
         )
 
         assert results == [saved_session]
@@ -142,14 +157,14 @@ class TestConstraints:
         auth_session1 = _SessionMapping(
             id=session_id,
             user_id=auth_user.id,
-            created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now(),
+            created_at=aware_now_in_utc(),
+            expires_at=aware_now_in_utc(),
         )
         auth_session2 = _SessionMapping(
             id=session_id,
             user_id=auth_user.id,
-            created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now(),
+            created_at=aware_now_in_utc(),
+            expires_at=aware_now_in_utc(),
         )
         session.add(auth_session1)
         session.commit()
@@ -164,25 +179,25 @@ class TestConstraints:
             _SessionMapping(
                 id=None,
                 user_id=1,
-                created_at=datetime.datetime.now(),
-                expires_at=datetime.datetime.now(),
+                created_at=aware_now_in_utc(),
+                expires_at=aware_now_in_utc(),
             ),
             _SessionMapping(
                 id=str(SessionId.generate()),
                 user_id=None,
-                created_at=datetime.datetime.now(),
-                expires_at=datetime.datetime.now(),
+                created_at=aware_now_in_utc(),
+                expires_at=aware_now_in_utc(),
             ),
             _SessionMapping(
                 id=str(SessionId.generate()),
                 user_id=1,
                 created_at=None,
-                expires_at=datetime.datetime.now(),
+                expires_at=aware_now_in_utc(),
             ),
             _SessionMapping(
                 id=str(SessionId.generate()),
                 user_id=1,
-                created_at=datetime.datetime.now(),
+                created_at=aware_now_in_utc(),
                 expires_at=None,
             ),
         ],
@@ -202,8 +217,8 @@ class TestConstraints:
         session = Session(
             id=SessionId.none(),
             user_id=42,
-            created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now(),
+            created_at=aware_now_in_utc(),
+            expires_at=aware_now_in_utc(),
         )
 
         with pytest.raises(IntegrityError):

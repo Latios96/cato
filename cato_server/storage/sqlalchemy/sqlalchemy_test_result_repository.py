@@ -1,9 +1,9 @@
 import dataclasses
-import datetime
 from collections import defaultdict
 from typing import Optional, Set, Dict, List
 
-from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, DateTime, func
+from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, func
+from sqlalchemy_utc import UtcDateTime
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
@@ -31,6 +31,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import _RunMapping
 from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
     _SuiteResultMapping,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 class _TestResultMapping(Base):
@@ -49,8 +50,8 @@ class _TestResultMapping(Base):
     image_output_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     reference_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
     diff_image_id = Column(Integer, ForeignKey("image_entity.id"), nullable=True)
-    started_at = Column(DateTime, nullable=True)
-    finished_at = Column(DateTime, nullable=True)
+    started_at = Column(UtcDateTime, nullable=True)
+    finished_at = Column(UtcDateTime, nullable=True)
     comparison_settings_method = Column(String, nullable=True)
     comparison_settings_threshold = Column(Float, nullable=True)
     error_value = Column(Float, nullable=True)
@@ -289,7 +290,7 @@ class SqlAlchemyTestResultRepository(
             .filter(_TestResultMapping.unified_test_status == "RUNNING")
             .all()
         )
-        now = datetime.datetime.now()
+        now = aware_now_in_utc()
         additional_durations = list(
             map(lambda x: (now - x.started_at).seconds, start_points_of_started_tests)
         )
@@ -322,7 +323,7 @@ class SqlAlchemyTestResultRepository(
             .filter(_TestResultMapping.unified_test_status == "RUNNING")
             .all()
         )
-        now = datetime.datetime.now()
+        now = aware_now_in_utc()
         additional_durations = {
             id: (now - started_at).seconds
             for id, started_at in start_points_of_started_tests

@@ -7,6 +7,7 @@ from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.timing_report_generator import TimingReportGenerator
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_generate():
@@ -28,8 +29,8 @@ def test_generate():
                         None,
                         None,
                         None,
-                        datetime.datetime.now(),
-                        datetime.datetime.now(),
+                        aware_now_in_utc(),
+                        aware_now_in_utc(),
                         1,
                         failure_reason=None,
                     ),
@@ -42,8 +43,8 @@ def test_generate():
                         None,
                         None,
                         None,
-                        datetime.datetime.now(),
-                        datetime.datetime.now(),
+                        aware_now_in_utc(),
+                        aware_now_in_utc(),
                         1,
                         failure_reason=None,
                     ),

@@ -28,6 +28,7 @@ from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 TEST = Test(
@@ -83,8 +84,8 @@ def test_context():
 
 class TestRunCommand:
     def test_should_run_all_suites_and_tests(self, test_context):
-        started_at = datetime.datetime.now()
-        finished_at = datetime.datetime.now()
+        started_at = aware_now_in_utc()
+        finished_at = aware_now_in_utc()
         result = [
             TestSuiteExecutionResult(
                 test_suite=TEST_SUITE,

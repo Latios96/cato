@@ -1,16 +1,16 @@
-import datetime
 import logging
 
 from fastapi import APIRouter
 from starlette.responses import JSONResponse, Response
 
-from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -67,7 +67,7 @@ class TestHeartbeatBlueprint(APIRouter):
         test_heartbeat = self._test_heartbeat_repository.find_by_test_result_id(
             test_result_id
         )
-        beat_time = datetime.datetime.now()
+        beat_time = aware_now_in_utc()
         if not test_heartbeat:
             logger.info(
                 "Creating a new heartbeat at %s for test result with id %s",

@@ -1,8 +1,7 @@
-import datetime
+import logging
 
 from cato_server.storage.abstract.session_repository import SessionRepository
-
-import logging
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -14,7 +13,7 @@ class RemoveExpiredSessions:
     def remove_expired_sessions(self):
         logger.info("Checking for expired sessions..")
         expired_sessions = self._session_repository.find_by_expires_at_is_older_than(
-            datetime.datetime.now()
+            aware_now_in_utc()
         )
 
         if not expired_sessions:

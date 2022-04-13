@@ -26,6 +26,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 @pytest.fixture
@@ -374,10 +375,10 @@ def test_get_test_edits_to_sync_for_run_should_return_edits(
 ):
     comparison_settings_edit = saving_comparison_settings_edit_factory(
         test_id=test_result.id,
-        created_at=datetime.datetime.now() - datetime.timedelta(seconds=10),
+        created_at=aware_now_in_utc() - datetime.timedelta(seconds=10),
     )
     reference_image_edit = saving_reference_image_edit_factory(
-        test_id=test_result.id, created_at=datetime.datetime.now()
+        test_id=test_result.id, created_at=aware_now_in_utc()
     )
     edits = cato_api_client.get_test_edits_to_sync_for_run(run.id)
 

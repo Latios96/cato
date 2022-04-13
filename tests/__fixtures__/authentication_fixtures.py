@@ -30,6 +30,8 @@ from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
 )
 from dateutil.parser import parse
 
+from cato_server.utils.datetime_utils import aware_now_in_utc
+
 
 @pytest.fixture
 def http_session_factory(app_and_config_fixture, sqlalchemy_session_repository):
@@ -98,7 +100,7 @@ def client_with_session(http_session_cookie, crsf_token, client):
 
 @pytest.fixture
 def fixed_http_session():
-    created_at = datetime.datetime.now()
+    created_at = aware_now_in_utc()
     expires_at = created_at + datetime.timedelta(hours=2)
     return Session(
         id=SessionId("qfq0kpmAKSz2mXqr2AsI8hoN-oVrvovk9nxnIG6MpMM"),
@@ -137,7 +139,7 @@ def api_token_str_factory(app_and_config_fixture, object_mapper):
         secret: SecretStr = None,
     ):
         if not created_at:
-            created_at = datetime.datetime.now()
+            created_at = aware_now_in_utc()
         if not expires_at:
             expires_at = created_at + datetime.timedelta(hours=2)
 

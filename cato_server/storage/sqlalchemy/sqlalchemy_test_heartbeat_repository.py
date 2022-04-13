@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional, List
 
-from sqlalchemy import Column, Integer, ForeignKey, DateTime
+from sqlalchemy import Column, Integer, ForeignKey
 
 from cato_server.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
@@ -11,6 +11,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )
+from sqlalchemy_utc import UtcDateTime
 
 
 class TestHeartbeatMapping(Base):
@@ -19,7 +20,7 @@ class TestHeartbeatMapping(Base):
     test_result_entity_id = Column(
         Integer, ForeignKey("test_result_entity.id"), unique=True
     )
-    last_beat = Column(DateTime, nullable=False)
+    last_beat = Column(UtcDateTime, nullable=False)
 
 
 class SqlAlchemyTestHeartbeatRepository(

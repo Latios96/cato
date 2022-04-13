@@ -11,6 +11,7 @@ from cato_server.storage.abstract.test_result_repository import TestResultReposi
 import logging
 
 from cato_server.usecases.finish_test import FinishTest
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 TESTS_TIMEOUT = datetime.timedelta(minutes=2)
 
@@ -30,7 +31,7 @@ class FailTimedOutTests:
 
     def fail_timed_out_tests(self):
         logger.info("Checking for timed out tests..")
-        timed_out_date = datetime.datetime.now() - TESTS_TIMEOUT
+        timed_out_date = aware_now_in_utc() - TESTS_TIMEOUT
         timed_out_heartbeats = (
             self._test_heartbeat_repository.find_last_beat_older_than(timed_out_date)
         )

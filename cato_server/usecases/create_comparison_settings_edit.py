@@ -1,4 +1,3 @@
-import datetime
 import logging
 from typing import cast
 
@@ -13,6 +12,7 @@ from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.compare_image import CompareImage
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -116,4 +116,4 @@ class CreateComparisonSettingsEdit:
         )
 
     def _get_created_at(self):
-        return datetime.datetime.now()
+        return aware_now_in_utc()

@@ -25,7 +25,7 @@ def test_get_run_by_project_id_paged_should_return(client_with_session, project,
     rv = client_with_session.get(url)
 
     assert rv.status_code == 200
-    assert rv.json() == {
+    assert {
         "entities": [
             {
                 "id": 1,
@@ -39,7 +39,7 @@ def test_get_run_by_project_id_paged_should_return(client_with_session, project,
         "pageNumber": 1,
         "pageSize": 10,
         "totalEntityCount": 1,
-    }
+    } == rv.json()
 
 
 def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should_return_empty(

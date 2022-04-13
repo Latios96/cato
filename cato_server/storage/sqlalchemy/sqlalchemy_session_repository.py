@@ -1,7 +1,8 @@
 import datetime
 from typing import Optional
 
-from sqlalchemy import Column, Integer, Text, DateTime
+from sqlalchemy import Column, Integer, Text
+from sqlalchemy_utc import UtcDateTime
 
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
@@ -17,8 +18,8 @@ class _SessionMapping(Base):
     __tablename__ = "session_entity"
     id = Column(Text, nullable=False, primary_key=True)
     user_id = Column(Integer, nullable=False)
-    created_at = Column(DateTime, nullable=False)
-    expires_at = Column(DateTime, nullable=False)
+    created_at = Column(UtcDateTime, nullable=False)
+    expires_at = Column(UtcDateTime, nullable=False)
 
 
 class SqlAlchemySessionRepository(

@@ -2,10 +2,11 @@ import datetime
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_map_from_dict(object_mapper):
-    started_at = datetime.datetime.now()
+    started_at = aware_now_in_utc()
 
     result = object_mapper.from_dict(
         {
@@ -28,7 +29,7 @@ def test_map_from_dict(object_mapper):
 
 
 def test_map_to_dict(object_mapper):
-    started_at = datetime.datetime.now()
+    started_at = aware_now_in_utc()
 
     result = object_mapper.to_dict(
         Run(

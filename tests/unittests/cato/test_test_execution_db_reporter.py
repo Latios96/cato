@@ -29,6 +29,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 SUITES = [
@@ -98,7 +99,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,
             project_id=1,
-            started_at=datetime.datetime.now(),
+            started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
         )
@@ -147,7 +148,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,
             project_id=1,
-            started_at=datetime.datetime.now(),
+            started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
         )
@@ -241,8 +242,8 @@ class TestTestExecutionDbReporter:
             width=1920,
             height=1080,
         )
-        started_at = datetime.datetime.now()
-        finished_at = datetime.datetime.now()
+        started_at = aware_now_in_utc()
+        finished_at = aware_now_in_utc()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
             status=ResultStatus.SUCCESS,
@@ -279,8 +280,8 @@ class TestTestExecutionDbReporter:
 
     def test_report_test_result_result_not_found_should_exit(self, test_context):
         test_context.test_execution_db_reporter._run_id = 5
-        started_at = datetime.datetime.now()
-        finished_at = datetime.datetime.now()
+        started_at = aware_now_in_utc()
+        finished_at = aware_now_in_utc()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
             status=ResultStatus.SUCCESS,
@@ -315,8 +316,8 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.find_test_result_by_run_id_and_identifier.return_value = (
             test_result
         )
-        started_at = datetime.datetime.now()
-        finished_at = datetime.datetime.now()
+        started_at = aware_now_in_utc()
+        finished_at = aware_now_in_utc()
         test_execution_result = TestExecutionResult(
             test=SUITES[0].tests[0],
             status=ResultStatus.SUCCESS,
@@ -362,8 +363,8 @@ class TestTestExecutionDbReporter:
             image_output=None,
             reference_image=None,
             diff_image=None,
-            started_at=datetime.datetime.now(),
-            finished_at=datetime.datetime.now(),
+            started_at=aware_now_in_utc(),
+            finished_at=aware_now_in_utc(),
             error_value=1,
             failure_reason=None,
         )

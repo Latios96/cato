@@ -21,13 +21,14 @@ from cato_server.storage.abstract.test_result_filter_options import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_save_success(
     sqlalchemy_test_result_repository, suite_result, stored_image_factory, stored_file
 ):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=suite_result.id,
@@ -62,8 +63,8 @@ def test_save_success(
 def test_save_with_success_no_failure_reason(
     sqlalchemy_test_result_repository, suite_result, stored_image_factory, stored_file
 ):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=suite_result.id,
@@ -98,8 +99,8 @@ def test_save_with_success_no_failure_reason(
 def test_save_success_no_machine_info_no_comparison_settings(
     sqlalchemy_test_result_repository, suite_result, stored_image_factory
 ):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=suite_result.id,
@@ -126,8 +127,8 @@ def test_save_success_no_machine_info_no_comparison_settings(
 
 
 def test_save_no_suite_result(sqlalchemy_test_result_repository, stored_image):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=0,
@@ -151,8 +152,8 @@ def test_save_no_suite_result(sqlalchemy_test_result_repository, stored_image):
 def test_find_by_suite_result_and_test_identifier(
     sqlalchemy_test_result_repository, suite_result, stored_image
 ):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=suite_result.id,
@@ -191,8 +192,8 @@ def test_find_find_by_suite_result_and_test_identifier_not_found(
 def test_find_by_suite_result(
     sqlalchemy_test_result_repository, suite_result, stored_image
 ):
-    start_time = datetime.datetime.now()
-    end_time = datetime.datetime.now()
+    start_time = aware_now_in_utc()
+    end_time = aware_now_in_utc()
     test_result = TestResult(
         id=0,
         suite_result_id=suite_result.id,
@@ -577,7 +578,7 @@ def test_duration_by_run_id_respect_running_tests(
 ):
     test_result.id = 0
     test_result.unified_test_status = UnifiedTestStatus.RUNNING
-    test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
+    test_result.started_at = aware_now_in_utc() - datetime.timedelta(seconds=10)
     sqlalchemy_test_result_repository.save(test_result)
 
     assert sqlalchemy_test_result_repository.duration_by_run_id(run.id) == 20
@@ -687,7 +688,7 @@ def test_duration_by_run_ids(
             suite_result_id=suite_result.id,
             unified_test_status=UnifiedTestStatus.RUNNING,
             seconds=0,
-            started_at=(datetime.datetime.now() - datetime.timedelta(seconds=5)),
+            started_at=(aware_now_in_utc() - datetime.timedelta(seconds=5)),
         )
     )
     durations = sqlalchemy_test_result_repository.duration_by_run_ids({run.id})
@@ -721,7 +722,7 @@ def test_duration_by_run_ids_respect_running_tests(
 ):
     test_result.id = 0
     test_result.unified_test_status = UnifiedTestStatus.RUNNING
-    test_result.started_at = datetime.datetime.now() - datetime.timedelta(seconds=10)
+    test_result.started_at = aware_now_in_utc() - datetime.timedelta(seconds=10)
     sqlalchemy_test_result_repository.save(test_result)
 
     assert sqlalchemy_test_result_repository.duration_by_run_ids({run.id}) == {1: 20.0}

@@ -1439,6 +1439,17 @@ mypy = ">=0.790"
 typing-extensions = ">=3.7.4"
 
 [[package]]
+name = "sqlalchemy-utc"
+version = "0.14.0"
+description = "SQLAlchemy type to store aware datetime values"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+SQLAlchemy = ">=0.9.0"
+
+[[package]]
 name = "starlette"
 version = "0.14.2"
 description = "The little ASGI library that shines."
@@ -1705,7 +1716,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.11"
-content-hash = "1dd210af6e396147e3af5f57d7331a3fa3ef9ff7c00a3be1c439308866a6df6c"
+content-hash = "a30450e65ee9aa760ff5c050f61f28ac0196f9fb29ac3e7548fa89df69a0043b"
 
 [metadata.files]
 aiofiles = [
@@ -2756,6 +2767,10 @@ sqlalchemy = [
 sqlalchemy-stubs = [
     {file = "sqlalchemy-stubs-0.4.tar.gz", hash = "sha256:c665d6dd4482ef642f01027fa06c3d5e91befabb219dc71fc2a09e7d7695f7ae"},
     {file = "sqlalchemy_stubs-0.4-py3-none-any.whl", hash = "sha256:5eec7aa110adf9b957b631799a72fef396b23ff99fe296df726645d01e312aa5"},
+]
+sqlalchemy-utc = [
+    {file = "SQLAlchemy-Utc-0.14.0.tar.gz", hash = "sha256:8e041624595b66d7b1d5ea8b6de486df5c1b9352697f3b24f862f0ded56cd7aa"},
+    {file = "SQLAlchemy_Utc-0.14.0-py2.py3-none-any.whl", hash = "sha256:d2379eed5cce372128b5e744ce382decd262b2c742ab31f7f22ca11c6647f60b"},
 ]
 starlette = [
     {file = "starlette-0.14.2-py3-none-any.whl", hash = "sha256:3c8e48e52736b3161e34c9f0e8153b4f32ec5d8995a3ee1d59410d92f75162ed"},

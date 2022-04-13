@@ -27,7 +27,7 @@ def backup_creator_fixture():
     yield backup_creator, mock_create_file_storage_backup, mock_create_db_backup
 
 
-@freeze_time(datetime.datetime(2022, 8, 1))
+@freeze_time(datetime.datetime(2022, 8, 1, tzinfo=datetime.timezone.utc))
 def test_should_create_full_backup_with_success(tmp_path, backup_creator_fixture):
     (
         backup_creator,
@@ -46,7 +46,7 @@ def test_should_create_full_backup_with_success(tmp_path, backup_creator_fixture
     )
 
 
-@freeze_time(datetime.datetime(2022, 8, 1))
+@freeze_time(datetime.datetime(2022, 8, 1, tzinfo=datetime.timezone.utc))
 def test_should_create_backup_with_filestorage_only(tmp_path, backup_creator_fixture):
     (
         backup_creator,
@@ -65,7 +65,7 @@ def test_should_create_backup_with_filestorage_only(tmp_path, backup_creator_fix
     mock_create_db_backup.create_backup.assert_not_called()
 
 
-@freeze_time(datetime.datetime(2022, 8, 1))
+@freeze_time(datetime.datetime(2022, 8, 1, tzinfo=datetime.timezone.utc))
 def test_should_create_backup_with_db_only(tmp_path, backup_creator_fixture):
     (
         backup_creator,

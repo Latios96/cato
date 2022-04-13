@@ -9,6 +9,7 @@ from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.start_test import StartTest
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
@@ -60,7 +61,7 @@ class TestStartTest:
         self, test_result_factory, test_context
     ):
         test_result = test_result_factory(
-            started_at=datetime.datetime.now(),
+            started_at=aware_now_in_utc(),
             unified_test_status=UnifiedTestStatus.FAILED,
             failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
         )

@@ -1,11 +1,8 @@
-import datetime
-
 import emoji
 
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.result_status import ResultStatus
 from cato.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.reporter.reporter import Reporter
@@ -15,8 +12,10 @@ from cato.runners.command_runner import CommandRunner
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 class TestRunner:
@@ -66,12 +65,12 @@ class TestRunner:
 
         self._output_folder.create_folder(config.output_folder, current_suite, test)
 
-        start = datetime.datetime.now()
+        start = aware_now_in_utc()
 
         self._reporter.report_test_command('Command: "{}"'.format(command))
         command_result = self._command_runner.run(command)
 
-        end = datetime.datetime.now()
+        end = aware_now_in_utc()
         elapsed = (end - start).total_seconds()
 
         if command_result.exit_code != 0:

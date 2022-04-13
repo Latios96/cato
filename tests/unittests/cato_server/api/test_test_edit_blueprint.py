@@ -3,6 +3,7 @@ import datetime
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_get_test_edits_by_test_result_id(client_with_session, test_edit, test_result):
@@ -13,7 +14,7 @@ def test_get_test_edits_by_test_result_id(client_with_session, test_edit, test_r
     assert rv.status_code == 200
 
     json = rv.json()
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     json[0]["createdAt"] = now
     assert json == [
         {
@@ -58,7 +59,7 @@ def test_get_test_edits_by_run_id(client_with_session, test_edit, test_result, r
     assert rv.status_code == 200
 
     json = rv.json()
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     json[0]["createdAt"] = now
     assert json == [
         {
@@ -122,7 +123,7 @@ def test_create_comparison_settings_edit_success(
 
     assert rv.status_code == 201
     json = rv.json()
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     json["createdAt"] = now
     assert json == {
         "createdAt": now,
@@ -268,7 +269,7 @@ def test_create_reference_image_edit_success(
 
     assert rv.status_code == 201
     json = rv.json()
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     json["createdAt"] = now
     assert json == {
         "createdAt": now,
@@ -312,7 +313,7 @@ def test_create_reference_image_edit_failure(
 def test_test_edits_by_run_id_should_return_test_edit(
     client_with_session, run, test_result, saving_reference_image_edit_factory
 ):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     saving_reference_image_edit_factory(test_id=test_result.id, created_at=now)
     url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync"
 
@@ -360,7 +361,7 @@ def test_test_edits_by_run_id_should_return_empty_list(client_with_session, run)
 def test_has_edits_by_run_id_should_return_test_edit(
     client_with_session, run, test_result, saving_reference_image_edit_factory
 ):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     saving_reference_image_edit_factory(test_id=test_result.id, created_at=now)
     url = f"/api/v1/test_edits/runs/{run.id}/edits-to-sync-count"
 

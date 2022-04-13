@@ -70,6 +70,7 @@ from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     http_session_factory,
     http_session,
@@ -219,7 +220,7 @@ def run(sqlalchemy_run_repository, project):
     run = Run(
         id=0,
         project_id=project.id,
-        started_at=datetime.datetime.now(),
+        started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
@@ -232,7 +233,7 @@ def run_factory():
         return Run(
             id=0,
             project_id=or_default(project_id, 1),
-            started_at=or_default(started_at, datetime.datetime.now()),
+            started_at=or_default(started_at, aware_now_in_utc()),
             branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
         )
@@ -340,8 +341,8 @@ def test_result_factory():
             image_output=or_default(image_output, None),
             reference_image=or_default(reference_image, None),
             diff_image=or_default(diff_image, None),
-            started_at=or_default(started_at, datetime.datetime.now()),
-            finished_at=or_default(finished_at, datetime.datetime.now()),
+            started_at=or_default(started_at, aware_now_in_utc()),
+            finished_at=or_default(finished_at, aware_now_in_utc()),
             comparison_settings=comparison_settings,
             error_value=or_default(error_value, None),
             thumbnail_file_id=or_default(thumbnail_file_id, None),
@@ -421,7 +422,7 @@ def test_edit(sqlalchemy_test_edit_repository, test_result, stored_image_factory
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         old_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1

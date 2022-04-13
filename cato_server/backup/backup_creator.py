@@ -1,4 +1,4 @@
-import datetime
+import logging
 import os.path
 import tarfile
 import tempfile
@@ -9,8 +9,7 @@ import humanfriendly
 from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
-
-import logging
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +28,7 @@ class BackupCreator:
         if not os.path.isdir(folder):
             raise ValueError(f"The provided path {folder} is not a folder!")
 
-        now = datetime.datetime.now().strftime("%m-%d-%Y-%H-%M-%S")
+        now = aware_now_in_utc().strftime("%m-%d-%Y-%H-%M-%S")
 
         logger.info("Creating cato backup..")
 

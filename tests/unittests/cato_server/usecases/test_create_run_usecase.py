@@ -1,5 +1,6 @@
 import datetime
 
+from dateutil.tz import tzlocal
 from freezegun import freeze_time
 
 from cato.domain.comparison_settings import ComparisonSettings
@@ -22,7 +23,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
 )
 from cato_server.usecases.create_run import CreateRunUsecase
 
-STARTED_AT = datetime.datetime(2021, 12, 4, 15, 8)
+STARTED_AT = datetime.datetime(2021, 12, 4, 15, 8, tzinfo=tzlocal())
 
 TEST_SUITES = [
     TestSuiteForRunCreation(

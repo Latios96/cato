@@ -1,4 +1,3 @@
-import datetime
 import logging
 from typing import Optional
 
@@ -6,9 +5,8 @@ from cato_server.configuration.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
-
-
 from cato_server.storage.abstract.session_repository import SessionRepository
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 class SessionBackend:
@@ -25,7 +23,7 @@ class SessionBackend:
         if not session:
             return None
 
-        now = datetime.datetime.now()
+        now = aware_now_in_utc()
         remaining_session_time = session.expires_at - now
         is_expired = remaining_session_time.total_seconds() <= 0
         if is_expired:
@@ -37,8 +35,8 @@ class SessionBackend:
         session = Session(
             id=SessionId.none(),
             user_id=user.id,
-            created_at=datetime.datetime.now(),
-            expires_at=datetime.datetime.now() + self._session_configuration.lifetime,
+            created_at=aware_now_in_utc(),
+            expires_at=aware_now_in_utc() + self._session_configuration.lifetime,
         )
         return self._session_repository.save(session)
 

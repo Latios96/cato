@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 from cato_common.domain.machine_info import MachineInfo
@@ -6,6 +5,7 @@ from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +30,7 @@ class StartTest:
         )
 
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
-        test_result.started_at = datetime.datetime.now()
+        test_result.started_at = aware_now_in_utc()
         test_result.machine_info = machine_info
 
         if test_was_already_started:

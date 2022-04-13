@@ -1,5 +1,7 @@
 import datetime
 
+from cato_server.utils.datetime_utils import aware_now_in_utc
+
 
 def test_should_create_new_test_heartbeat(client_with_session, test_result):
     rv = client_with_session.post(f"/api/v1/test_heartbeats/{test_result.id}")
@@ -9,7 +11,7 @@ def test_should_create_new_test_heartbeat(client_with_session, test_result):
     assert json["id"] == 1
     assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
+        aware_now_in_utc() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -22,7 +24,7 @@ def test_should_update_new_test_heartbeat(client_with_session, test_result):
     assert json["id"] == 1
     assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
+        aware_now_in_utc() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -45,7 +47,7 @@ def test_should_create_new_test_heartbeat_for_run_id_and_test_identifier(
     assert json["id"] == 1
     assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
+        aware_now_in_utc() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 
@@ -64,7 +66,7 @@ def test_should_update_new_test_heartbeat_for_run_id_and_test_identifier(
     assert json["id"] == 1
     assert json["testResultId"] == 1
     assert (
-        datetime.datetime.now() - datetime.datetime.fromisoformat(json["lastBeat"])
+        aware_now_in_utc() - datetime.datetime.fromisoformat(json["lastBeat"])
     ).seconds < 1
 
 

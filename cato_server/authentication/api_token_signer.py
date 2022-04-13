@@ -1,4 +1,3 @@
-import datetime
 from base64 import b64encode, b64decode
 
 import itsdangerous
@@ -8,6 +7,7 @@ from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.configuration.secrets_configuration import SecretsConfiguration
 from cato_server.domain.auth.api_token import ApiToken
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 class InvalidApiTokenException(Exception):
@@ -39,7 +39,7 @@ class ApiTokenSigner:
         json_str = b64decode(signed_data).decode("utf-8")
         api_token = self._object_mapper.from_json(json_str, ApiToken)
 
-        now = datetime.datetime.now()
+        now = aware_now_in_utc()
         remaining_session_time = api_token.expires_at - now
         is_expired = remaining_session_time.total_seconds() <= 0
         if is_expired:

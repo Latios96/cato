@@ -14,6 +14,7 @@ from cato_server.configuration.app_configuration_defaults import (
 )
 from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.secret_str import SecretStr
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 @pytest.fixture
@@ -33,7 +34,7 @@ def test_sign_api_token(object_mapper, api_token_signer):
     token_id = ApiTokenId(
         "ab5d20008bb1f27a1442a4da398c01712b4858d0621bef08602b76f104cef16f"
     )
-    created_at = datetime.datetime.now()
+    created_at = aware_now_in_utc()
     expires_at = created_at + datetime.timedelta(hours=2)
     api_token = ApiToken(
         name=ApiTokenName("test"),
@@ -56,7 +57,7 @@ def test_unsign_valid_api_token(api_token_str_factory, api_token_signer, secret)
     token_id = ApiTokenId(
         "379b493043dbd35fa8c22be22843993555f79b0ebbff945b8c726927612ddf50"
     )
-    created_at = datetime.datetime.now()
+    created_at = aware_now_in_utc()
     api_token_str = api_token_str_factory(
         id=token_id, created_at=created_at, secret=secret
     )
@@ -76,7 +77,7 @@ def test_unsign_invalid_api_token(fixed_api_token_str, api_token_signer):
 
 
 def test_unsign_expired_api_token(api_token_str_factory, api_token_signer, secret):
-    yesterday = datetime.datetime.now() - datetime.timedelta(days=1)
+    yesterday = aware_now_in_utc() - datetime.timedelta(days=1)
     created_at = yesterday
     api_token_str = api_token_str_factory(created_at=created_at, secret=secret)
 

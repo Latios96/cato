@@ -1,5 +1,4 @@
 import argparse
-import datetime
 import random
 import time
 from concurrent.futures.thread import ThreadPoolExecutor
@@ -33,6 +32,7 @@ from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = cato_server.server_logging.logger
 
@@ -116,7 +116,7 @@ class DbLoadGenerator:
                 Run(
                     id=0,
                     project_id=project.id,
-                    started_at=datetime.datetime.now(),
+                    started_at=aware_now_in_utc(),
                     branch_name=BranchName("default"),
                     previous_run_id=None,
                 )
@@ -199,8 +199,8 @@ class DbLoadGenerator:
                     message="success",
                     image_output=output_image.id,
                     reference_image=reference_image.id,
-                    started_at=datetime.datetime.now(),
-                    finished_at=datetime.datetime.now(),
+                    started_at=aware_now_in_utc(),
+                    finished_at=aware_now_in_utc(),
                 )
                 results_to_save.append(test_result)
                 insert_count = len(results_to_save)

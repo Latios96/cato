@@ -15,6 +15,8 @@ from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.utils import ChromeType
 
+from cato_server.utils.datetime_utils import aware_now_in_utc
+
 
 class LiveServer:
     def __init__(self, app, port, startup_timeout):
@@ -82,7 +84,7 @@ class Cookie:
     name: str
     value: str
     domain: str = "127.0.0.1"
-    expires: datetime.datetime = datetime.datetime.now() + datetime.timedelta(hours=2)
+    expires: datetime.datetime = aware_now_in_utc() + datetime.timedelta(hours=2)
     http_only: bool = True
     path: str = "/"
     same_site: str = "Lax"

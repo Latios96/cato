@@ -9,6 +9,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.integrationtests.cato_server import selenium_test
 from tests.integrationtests.conftest import MyChromeDriver
 
@@ -133,7 +134,7 @@ class TestRunListPage:
                 Run(
                     id=0,
                     project_id=project.id,
-                    started_at=datetime.datetime.now(),
+                    started_at=aware_now_in_utc(),
                     branch_name=BranchName("default") if x > 10 else BranchName("dev"),
                     previous_run_id=None,
                 )

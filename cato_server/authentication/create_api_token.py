@@ -6,6 +6,7 @@ from cato_common.domain.auth.api_token_name import ApiTokenName
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_server.authentication.api_token_signer import ApiTokenSigner
 from cato_server.domain.auth.api_token import ApiToken
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 @dataclass
@@ -24,7 +25,7 @@ class CreateApiToken:
         self._validate_lifetime(create_api_token_data.life_time)
 
         token_id = ApiTokenId.generate()
-        created_at = datetime.datetime.now()
+        created_at = aware_now_in_utc()
         expires_at = created_at + create_api_token_data.life_time
         api_token = ApiToken(
             name=create_api_token_data.name,
@@ -35,7 +36,7 @@ class CreateApiToken:
         return self._api_token_signer.sign(api_token)
 
     def _validate_lifetime(self, life_time):
-        now = datetime.datetime.now()
+        now = aware_now_in_utc()
         if now + life_time <= now:
             raise ValueError("The lifetime needs to be positive.")
         elif life_time.days > 365:

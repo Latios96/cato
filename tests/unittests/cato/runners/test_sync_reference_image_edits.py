@@ -10,6 +10,7 @@ from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
@@ -169,7 +170,7 @@ def create_reference_image_edit(test_identifier):
         id=0,
         test_id=1,
         test_identifier=test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ReferenceImageEditValue(
             status=ResultStatus.SUCCESS,
             message=None,

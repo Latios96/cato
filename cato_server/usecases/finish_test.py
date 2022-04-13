@@ -1,9 +1,8 @@
-import datetime
 import logging
 from typing import Optional
 
-from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.result_status import ResultStatus
+from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_heartbeat_repository import (
@@ -11,6 +10,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.create_thumbnail import CreateThumbnail
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 
@@ -92,4 +92,4 @@ class FinishTest:
         logger.info("Failed test with id %s", test_result_id)
 
     def _get_finished_time(self):
-        return datetime.datetime.now()
+        return aware_now_in_utc()

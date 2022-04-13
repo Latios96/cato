@@ -1,7 +1,8 @@
 from typing import List, Optional
 
-from sqlalchemy import Column, Integer, DateTime, ForeignKey, String
+from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
+from sqlalchemy_utc import UtcDateTime
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
@@ -19,7 +20,7 @@ class _RunMapping(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
-    started_at = Column(DateTime)
+    started_at = Column(UtcDateTime)
     branch_name = Column(String, nullable=False)
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
 

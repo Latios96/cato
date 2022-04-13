@@ -1,7 +1,8 @@
 from typing import Optional, List, cast
 
-from sqlalchemy import Column, Integer, ForeignKey, String, DateTime, Float, func
+from sqlalchemy import Column, Integer, ForeignKey, String, Float, func
 from sqlalchemy.orm import with_polymorphic
+from sqlalchemy_utc import UtcDateTime
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
@@ -35,7 +36,7 @@ class _TestEditMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     test_id = Column(Integer, ForeignKey("test_result_entity.id"), nullable=False)
     edit_type = Column(String, nullable=False)
-    created_at = Column(DateTime, nullable=False)
+    created_at = Column(UtcDateTime, nullable=False)
     test_identifier = Column(String, nullable=False)
 
     __mapper_args__ = {"polymorphic_identity": "test_edit", "polymorphic_on": edit_type}

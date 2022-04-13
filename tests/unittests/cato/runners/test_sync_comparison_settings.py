@@ -12,6 +12,7 @@ from cato_common.domain.test_edit import (
     ComparisonSettingsEditValue,
 )
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 
@@ -94,7 +95,7 @@ def create_comparison_settings_edit(test_identifier):
         id=0,
         test_id=1,
         test_identifier=test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1

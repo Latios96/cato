@@ -20,6 +20,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
     SqlAlchemyTestResultRepository,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
 def test_save_comparison_settings_edit(
@@ -29,7 +30,7 @@ def test_save_comparison_settings_edit(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1.0
@@ -63,7 +64,7 @@ def test_save_reference_image_edit(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ReferenceImageEditValue(
             status=ResultStatus.SUCCESS,
             message=None,
@@ -93,7 +94,7 @@ def test_save_not_existing_test_result(
         id=0,
         test_id=10,
         test_identifier=TestIdentifier.from_string("some/test"),
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1.0
@@ -130,7 +131,7 @@ def test_find_by_test_id(
     test_result,
     stored_image_factory,
 ):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     test_edits = [
         ComparisonSettingsEdit(
             id=0,
@@ -200,7 +201,7 @@ def test_find_by_test_id(
 def test_find_by_test_id_should_return_all_test_edit_instances(
     sqlalchemy_test_edit_repository, test_result, stored_image_factory
 ):
-    now = datetime.datetime.now()
+    now = aware_now_in_utc()
     comparison_settings_edit = ComparisonSettingsEdit(
         id=0,
         test_id=test_result.id,
@@ -229,7 +230,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ReferenceImageEditValue(
             status=ResultStatus.SUCCESS,
             message=None,
@@ -262,7 +263,7 @@ def test_find_by_test_id_with_edit_type(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
@@ -287,7 +288,7 @@ def test_find_by_test_id_with_edit_type(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ReferenceImageEditValue(
             status=ResultStatus.SUCCESS,
             message=None,
@@ -325,7 +326,7 @@ def test_find_by_run_id_should_find(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=datetime.datetime.now(),
+        created_at=aware_now_in_utc(),
         new_value=ComparisonSettingsEditValue(
             comparison_settings=ComparisonSettings(
                 method=ComparisonMethod.SSIM, threshold=1
@@ -459,32 +460,32 @@ def setup_test_edits_for_multiple_runs_and_tests(
     comparison_settings_edit_one_for_test_result_one = (
         saving_comparison_settings_edit_factory(
             test_id=test_result_one_run_one.id,
-            created_at=datetime.datetime.now() - datetime.timedelta(seconds=30),
+            created_at=aware_now_in_utc() - datetime.timedelta(seconds=30),
         )
     )
     comparison_settings_edit_two_for_test_result_one = (
         saving_comparison_settings_edit_factory(
             test_id=test_result_one_run_one.id,
-            created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+            created_at=aware_now_in_utc() - datetime.timedelta(seconds=20),
         )
     )
     comparison_settings_edit_two_for_test_result_two_run_one = (
         saving_comparison_settings_edit_factory(
             test_id=test_result_two_run_one.id,
-            created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+            created_at=aware_now_in_utc() - datetime.timedelta(seconds=20),
         )
     )
     reference_image_edit_one_for_run_one = saving_reference_image_edit_factory(
         test_id=test_result_one_run_one.id,
-        created_at=datetime.datetime.now() - datetime.timedelta(seconds=30),
+        created_at=aware_now_in_utc() - datetime.timedelta(seconds=30),
     )
     reference_image_edit_two_for_run_one = saving_reference_image_edit_factory(
         test_id=test_result_one_run_one.id,
-        created_at=datetime.datetime.now() - datetime.timedelta(seconds=20),
+        created_at=aware_now_in_utc() - datetime.timedelta(seconds=20),
     )
     comparison_settings_edit_for_run_two = saving_reference_image_edit_factory(
         test_id=test_result_run_two.id,
-        created_at=datetime.datetime.now() - datetime.timedelta(seconds=10),
+        created_at=aware_now_in_utc() - datetime.timedelta(seconds=10),
     )
     return (
         comparison_settings_edit_two_for_test_result_one,

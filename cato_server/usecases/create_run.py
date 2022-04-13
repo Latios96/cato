@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 from cato.domain.comparison_method import ComparisonMethod
@@ -15,6 +14,7 @@ from cato_server.storage.abstract.suite_result_repository import SuiteResultRepo
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
+from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 DEFAULT_BRANCH = BranchName("default")
@@ -40,7 +40,7 @@ class CreateRunUsecase:
         run = Run(
             id=0,
             project_id=create_run_dto.project_id,
-            started_at=datetime.datetime.now(),
+            started_at=aware_now_in_utc(),
             branch_name=branch_name,
             previous_run_id=previous_run_id,
         )
