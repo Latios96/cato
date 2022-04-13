@@ -11,12 +11,13 @@ FORCE = False
 
 
 class RedirectToFrontendMiddleware:
+    STATIC_FILES_FOLDER = Path(__file__).parent.parent.parent / "static" / "index.html"
+
     async def __call__(
         self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         if self._needs_frontend_redirect(request):
-            static_files_folder = Path(__file__).parent.parent.parent / "static"
-            return FileResponse(static_files_folder / request.url.path[1:])
+            return FileResponse(self.STATIC_FILES_FOLDER)
 
         return await call_next(request)
 
@@ -30,6 +31,8 @@ class RedirectToFrontendMiddleware:
             "/auth",
             "/static",
             "/api",
+            "/favicon.ico",
+            "/manifest.json",
         ]
         for route_with_no_frontend_redirect in routes_with_no_frontend_redirect:
             if request_route.startswith(route_with_no_frontend_redirect):
