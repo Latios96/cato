@@ -294,7 +294,7 @@ class ReadOnlySeleniumTest:
                 "LinkCard_cardContentDiv"
             )
         )
-        assert self.authenticated_selenium_driver.title == "Cato"
+        assert self.authenticated_selenium_driver.title == "Projects"
 
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
         header_link = (

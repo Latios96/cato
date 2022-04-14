@@ -1,7 +1,7 @@
 import React, { PropsWithChildren } from "react";
 import BasicPage from "../../../BasicPage";
 import SideBar from "./SideBar";
-import { CurrentPage } from "./CurrentPage";
+import { CurrentPage, toDisplayString } from "./CurrentPage";
 
 interface Props {
   projectId: number;
@@ -11,7 +11,9 @@ interface Props {
 
 const BasicRunPage = (props: PropsWithChildren<Props>) => {
   return (
-    <BasicPage>
+    <BasicPage
+      title={`Run #${props.runId} · ${toDisplayString(props.currentPage)}`}
+    >
       <div style={{ display: "flex" }}>
         <SideBar
           projectId={props.projectId}
