@@ -172,7 +172,7 @@ class TestRunTestPage:
     def _assert_other_test_is_selected(self, selenium_driver):
         assert selenium_driver.find_element_by_id(
             "selectedTestContainer"
-        ).find_element_by_xpath("//*[text()='started: just now']")
+        ).find_element_by_xpath("//*[text()='started: ']")
 
     def _select_other_test(self, selenium_driver):
         selenium_driver.find_element_by_xpath('//*[@id="testList"]/tbody/tr[2]').click()

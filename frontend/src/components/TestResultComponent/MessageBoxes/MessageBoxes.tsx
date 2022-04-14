@@ -1,11 +1,12 @@
 import React from "react";
 import styles from "./MessageBoxes.module.scss";
 import { ExclamationCircleFill, Hourglass } from "react-bootstrap-icons";
-import { formatTime } from "../../../utils/dateUtils";
 import RenderingBucketIcon from "../../Icons/RenderingBucketIcon";
+import FormattedTime from "../../FormattedTime/FormattedTime";
 
 interface BasicProps {
-  message: string | null | undefined;
+  message?: string | null;
+  messageElement?: JSX.Element;
   icon: JSX.Element;
   className?: string;
 }
@@ -18,7 +19,9 @@ const BasicMessageBox = (props: BasicProps) => {
   return (
     <div className={props.className ? props.className : styles.messageBoxBody}>
       {props.icon}
-      <span className={styles.messageText}>{props.message}</span>
+      <span className={styles.messageText}>
+        {props.message || props.messageElement}
+      </span>
     </div>
   );
 };
@@ -36,9 +39,15 @@ interface IsRenderingProps {
 export const IsRenderingMessageBox = (props: IsRenderingProps) => {
   return (
     <BasicMessageBox
-      message={
-        "started: " +
-        (props.startedAt ? formatTime(props.startedAt) : "unknown")
+      messageElement={
+        <>
+          {"started: "}
+          {props.startedAt ? (
+            <FormattedTime datestr={props.startedAt} />
+          ) : (
+            "unknown"
+          )}
+        </>
       }
       icon={<RenderingBucketIcon isActive={false} />}
     />

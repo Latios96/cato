@@ -18,6 +18,7 @@
     "axios": "^0.26.1",
     "babel-loader": "8.2.4",
     "bootstrap": "^4.5.3",
+    "date-fns": "^2.28.0",
     "humanize-duration": "^3.24.0",
     "lodash": "^4.17.20",
     "query-string": "^7.0.1",
