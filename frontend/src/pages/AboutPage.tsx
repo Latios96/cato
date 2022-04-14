@@ -1,13 +1,12 @@
 import React from "react";
-import Header from "../components/Header/Header";
 import AboutComponent from "../components/About/AboutComponent";
+import BasicPage from "./BasicPage";
 
 function AboutPage() {
   return (
-    <div>
-      <Header />
+    <BasicPage>
       <AboutComponent />
-    </div>
+    </BasicPage>
   );
 }
 
