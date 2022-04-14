@@ -6,7 +6,7 @@ interface Props {}
 
 function ProjectsPage(props: Props) {
   return (
-    <BasicPage>
+    <BasicPage title={"Projects"}>
       <ProjectsView />
     </BasicPage>
   );
