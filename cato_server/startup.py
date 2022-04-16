@@ -119,7 +119,6 @@ def create_app(
     app.mount("/", StaticFiles(directory=static_directory, html=True), name="static")
 
     if create_background_tasks:
-        logger.info("Created background tasks..")
         task_creator = obj_graph.provide(BackgroundTaskCreator)
         task_creator.create()
         app.scheduler_runner = BackgroundSchedulerRunner(schedule)  # type: ignore
