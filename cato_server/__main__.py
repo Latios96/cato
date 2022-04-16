@@ -22,7 +22,7 @@ app = setup_app_for_production(raw_app, config)
 
 
 def main():
-    logger.info(f"Starting on http://localhost:{config.port}")
+    logger.info(f"Starting on http://{config.hostname}:{config.port}")
     uvicorn.run(
         "cato_server.__main__:app",
         host=config.hostname,
