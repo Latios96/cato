@@ -165,3 +165,4 @@ ui_mockup
 /example_suite/result/
 /tests/reports/
 /docker_experiments/
+/cato_server/log_cato_beat.txt*

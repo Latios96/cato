@@ -71,10 +71,10 @@ def get_config_path(args):
     return path
 
 
-def setup_logger(config):
+def setup_logger(config, log_file_basename="log.txt"):
     if config.logging_configuration.use_file_handler:
         cato_server.server_logging.setup_file_handler(
-            "log.txt",
+            log_file_basename,
             config.logging_configuration.max_bytes,
             config.logging_configuration.backup_count,
         )

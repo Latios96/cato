@@ -1,5 +1,8 @@
 import threading
 import time
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class BackgroundSchedulerRunner:
@@ -23,3 +26,9 @@ class BackgroundSchedulerRunner:
 
     def stop(self):
         self._cease_continuous_run.set()
+
+    def start_scheduler_loop(self):
+        logger.info("Starting scheduler loop..")
+        while True:
+            self._scheduler.run_pending()
+            time.sleep(1)
