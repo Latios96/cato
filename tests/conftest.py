@@ -100,6 +100,7 @@ from tests.__fixtures__.storage.repositories import (  # noqa: F401
     sqlalchemy_test_edit_repository,
     sqlalchemy_submission_info_repository,
     sqlalchemy_simple_file_storage,
+    sqlalchemy_deduplicating_storage,
 )
 from tests.utils import mock_safe
 
@@ -477,15 +478,17 @@ def finished_test_result(
 
 
 @pytest.fixture()
-def stored_file(sessionmaker_fixture, tmp_path, test_resource_provider):
-    repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
-    return repository.save_file(test_resource_provider.resource_by_name("test.exr"))
+def stored_file(sqlalchemy_deduplicating_storage, test_resource_provider):
+    return sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name("test.exr")
+    )
 
 
 @pytest.fixture()
-def stored_file_alpha(sessionmaker_fixture, tmp_path, test_resource_provider):
-    repository = SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
-    return repository.save_file(test_resource_provider.resource_by_name("test.exr"))
+def stored_file_alpha(sqlalchemy_deduplicating_storage, test_resource_provider):
+    return sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name("test.exr")
+    )
 
 
 @pytest.fixture()

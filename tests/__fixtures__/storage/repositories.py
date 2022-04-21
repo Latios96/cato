@@ -5,6 +5,9 @@ from cato.config.config_file_writer import ConfigFileWriter
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+    SqlAlchemyDeduplicatingFileStorage,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
@@ -102,3 +105,8 @@ def sqlalchemy_submission_info_repository(sessionmaker_fixture, object_mapper):
 @pytest.fixture
 def sqlalchemy_simple_file_storage(sessionmaker_fixture, tmp_path):
     return SqlAlchemySimpleFileStorage(sessionmaker_fixture, str(tmp_path))
+
+
+@pytest.fixture
+def sqlalchemy_deduplicating_storage(sessionmaker_fixture, tmp_path):
+    return SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))

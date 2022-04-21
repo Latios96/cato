@@ -17,13 +17,13 @@ from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
 
 
 def test_store_rgb_jpeg(
-    sessionmaker_fixture, sqlalchemy_image_repository, tmp_path, test_resource_provider
+    sqlalchemy_deduplicating_storage,
+    sqlalchemy_image_repository,
+    tmp_path,
+    test_resource_provider,
 ):
-    file_storage = SqlAlchemyDeduplicatingFileStorage(
-        sessionmaker_fixture, str(tmp_path)
-    )
     store_image = StoreImage(
-        file_storage,
+        sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
         ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
@@ -43,13 +43,13 @@ def test_store_rgb_jpeg(
 
 
 def test_store_rgb_png(
-    sessionmaker_fixture, sqlalchemy_image_repository, tmp_path, test_resource_provider
+    sqlalchemy_deduplicating_storage,
+    sqlalchemy_image_repository,
+    tmp_path,
+    test_resource_provider,
 ):
-    file_storage = SqlAlchemyDeduplicatingFileStorage(
-        sessionmaker_fixture, str(tmp_path)
-    )
     store_image = StoreImage(
-        file_storage,
+        sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
         ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
@@ -69,13 +69,13 @@ def test_store_rgb_png(
 
 
 def test_store_multichannel_exr(
-    sessionmaker_fixture, sqlalchemy_image_repository, tmp_path, test_resource_provider
+    sqlalchemy_deduplicating_storage,
+    sqlalchemy_image_repository,
+    tmp_path,
+    test_resource_provider,
 ):
-    file_storage = SqlAlchemyDeduplicatingFileStorage(
-        sessionmaker_fixture, str(tmp_path)
-    )
     store_image = StoreImage(
-        file_storage,
+        sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
         ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
@@ -102,13 +102,10 @@ def test_store_multichannel_exr(
 
 
 def test_store_not_existing_image(
-    sessionmaker_fixture, sqlalchemy_image_repository, tmp_path
+    sqlalchemy_deduplicating_storage, sqlalchemy_image_repository, tmp_path
 ):
-    file_storage = SqlAlchemyDeduplicatingFileStorage(
-        sessionmaker_fixture, str(tmp_path)
-    )
     store_image = StoreImage(
-        file_storage,
+        sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
         ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
@@ -117,12 +114,11 @@ def test_store_not_existing_image(
         store_image.store_image("not_existing")
 
 
-def test_store_no_image(sessionmaker_fixture, sqlalchemy_image_repository, tmp_path):
-    file_storage = SqlAlchemyDeduplicatingFileStorage(
-        sessionmaker_fixture, str(tmp_path)
-    )
+def test_store_no_image(
+    sqlalchemy_deduplicating_storage, sqlalchemy_image_repository, tmp_path
+):
     store_image = StoreImage(
-        file_storage,
+        sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
         ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
     )
