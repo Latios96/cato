@@ -99,6 +99,7 @@ from tests.__fixtures__.storage.repositories import (  # noqa: F401
     sqlalchemy_run_repository,
     sqlalchemy_test_edit_repository,
     sqlalchemy_submission_info_repository,
+    sqlalchemy_simple_file_storage,
 )
 from tests.utils import mock_safe
 

@@ -22,6 +22,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
     SqlAlchemySessionRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
+    SqlAlchemySimpleFileStorage,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import (
     SqlAlchemySubmissionInfoRepository,
 )
@@ -94,3 +97,8 @@ def sqlalchemy_submission_info_repository(sessionmaker_fixture, object_mapper):
     return SqlAlchemySubmissionInfoRepository(
         sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
     )
+
+
+@pytest.fixture
+def sqlalchemy_simple_file_storage(sessionmaker_fixture, tmp_path):
+    return SqlAlchemySimpleFileStorage(sessionmaker_fixture, str(tmp_path))
