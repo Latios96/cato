@@ -2,7 +2,7 @@ import datetime
 from typing import Optional
 
 from sqlalchemy import Column, Integer, Text
-from sqlalchemy_utc import UtcDateTime
+from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId

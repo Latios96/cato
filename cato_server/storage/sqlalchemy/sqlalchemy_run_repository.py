@@ -2,7 +2,6 @@ from typing import List, Optional
 
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship
-from sqlalchemy_utc import UtcDateTime
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
@@ -13,6 +12,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )
+from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
 
 class _RunMapping(Base):

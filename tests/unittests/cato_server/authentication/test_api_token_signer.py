@@ -71,6 +71,26 @@ def test_unsign_valid_api_token(api_token_str_factory, api_token_signer, secret)
     )
 
 
+def test_unsign_valid_api_token_with_naive_datetime(
+    api_token_str_factory, api_token_signer, secret
+):
+    token_id = ApiTokenId(
+        "379b493043dbd35fa8c22be22843993555f79b0ebbff945b8c726927612ddf50"
+    )
+    created_at = datetime.datetime.now()
+    api_token_str = api_token_str_factory(
+        id=token_id, created_at=created_at, secret=secret
+    )
+    api_token = api_token_signer.unsign(api_token_str)
+
+    assert api_token == ApiToken(
+        name=ApiTokenName("test"),
+        id=token_id,
+        created_at=created_at,
+        expires_at=created_at + datetime.timedelta(hours=2),
+    )
+
+
 def test_unsign_invalid_api_token(fixed_api_token_str, api_token_signer):
     with pytest.raises(InvalidApiTokenException):
         api_token_signer.unsign(ApiTokenStr(bytes(fixed_api_token_str) + b"1"))

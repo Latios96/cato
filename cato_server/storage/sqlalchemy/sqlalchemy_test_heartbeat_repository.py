@@ -11,7 +11,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )
-from sqlalchemy_utc import UtcDateTime
+from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
 
 class TestHeartbeatMapping(Base):

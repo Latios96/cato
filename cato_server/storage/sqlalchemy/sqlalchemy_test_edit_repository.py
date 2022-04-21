@@ -2,7 +2,7 @@ from typing import Optional, List, cast
 
 from sqlalchemy import Column, Integer, ForeignKey, String, Float, func
 from sqlalchemy.orm import with_polymorphic
-from sqlalchemy_utc import UtcDateTime
+from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings

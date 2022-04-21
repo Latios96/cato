@@ -1,3 +1,4 @@
+import datetime
 from base64 import b64encode, b64decode
 
 import itsdangerous
@@ -40,7 +41,9 @@ class ApiTokenSigner:
         api_token = self._object_mapper.from_json(json_str, ApiToken)
 
         now = aware_now_in_utc()
-        remaining_session_time = api_token.expires_at - now
+        remaining_session_time = (
+            api_token.expires_at.astimezone(datetime.timezone.utc) - now
+        )
         is_expired = remaining_session_time.total_seconds() <= 0
         if is_expired:
             raise InvalidApiTokenException("The token expired.")
