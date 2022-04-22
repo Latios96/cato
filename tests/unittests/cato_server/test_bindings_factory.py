@@ -85,7 +85,7 @@ def test_create_storage_bindings_for_postgres():
     assert isinstance(storage_bindings.session_maker_binding, sessionmaker)
 
 
-def test_create_storage_bindings_using_sqlite_in_memory():
+def test_create_storage_bindings_using_sqlite_in_memory(sqlalchemy_project_repository):
     configuration = AppConfiguration(
         port=5000,
         debug=True,
@@ -133,12 +133,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
     assert storage_bindings.root_path_binding == "some_path"
     assert isinstance(storage_bindings.session_maker_binding, sessionmaker)
 
-    assert (
-        SqlAlchemyProjectRepository(storage_bindings.session_maker_binding)
-        .save(Project(id=0, name="test"))
-        .id
-        == 1
-    )
+    assert sqlalchemy_project_repository.save(Project(id=0, name="test")).id == 1
 
 
 def test_create_scheduler_bindings_no_scheduler():

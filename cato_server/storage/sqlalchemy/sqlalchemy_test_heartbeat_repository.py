@@ -45,16 +45,16 @@ class SqlAlchemyTestHeartbeatRepository(
         return TestHeartbeatMapping
 
     def find_by_test_result_id(self, test_result_id) -> Optional[TestHeartbeat]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         query = session.query(self.mapping_cls()).filter(
             self.mapping_cls().test_result_entity_id == test_result_id
         )
-        session.close()
+
         return self._map_one_to_domain_object(query.first())
 
     def find_last_beat_older_than(self, date: datetime.datetime) -> List[TestHeartbeat]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         results = (
             session.query(TestHeartbeatMapping)
@@ -62,5 +62,4 @@ class SqlAlchemyTestHeartbeatRepository(
             .all()
         )
 
-        session.close()
         return self._map_many_to_domain_object(results)

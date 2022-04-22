@@ -9,6 +9,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     Base,
     AbstractSqlAlchemyRepository,
 )
+from cato_server.storage.sqlalchemy.session_provider import SessionProvider
 
 
 @dataclass
@@ -45,8 +46,8 @@ def sessionmaker_fixture(sqlalchemy_engine):
 
 
 @pytest.fixture
-def example_repository(sessionmaker_fixture):
-    return ExampleRepository(sessionmaker_fixture)
+def example_repository(session_provider_with_session):
+    return ExampleRepository(session_provider_with_session)
 
 
 class TestSave:

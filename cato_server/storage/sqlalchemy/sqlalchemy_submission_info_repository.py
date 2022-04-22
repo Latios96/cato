@@ -27,11 +27,11 @@ class SqlAlchemySubmissionInfoRepository(
 ):
     def __init__(
         self,
-        session_maker,
+        session_provider,
         json_config_parser: JsonConfigParser,
         config_file_writer: ConfigFileWriter,
     ):
-        super(SqlAlchemySubmissionInfoRepository, self).__init__(session_maker)
+        super(SqlAlchemySubmissionInfoRepository, self).__init__(session_provider)
         self._json_config_parser = json_config_parser
         self._config_file_writer = config_file_writer
 

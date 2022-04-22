@@ -22,12 +22,11 @@ class _ProjectMapping(Base):
 
 class SqlAlchemyProjectRepository(AbstractSqlAlchemyRepository, ProjectRepository):
     def find_by_name(self, name: str) -> Optional[Project]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         project = (
             session.query(_ProjectMapping).filter(_ProjectMapping.name == name).first()
         )
-        session.close()
         if project:
             return self.to_domain_object(project)
 

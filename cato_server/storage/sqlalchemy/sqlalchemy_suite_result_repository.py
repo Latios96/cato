@@ -46,7 +46,7 @@ class SqlAlchemySuiteResultRepository(
         return _SuiteResultMapping
 
     def find_by_run_id(self, run_id: int) -> List[SuiteResult]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         entities = self._order_by_case_insensitive(
             session.query(self.mapping_cls()).filter(
@@ -54,13 +54,12 @@ class SqlAlchemySuiteResultRepository(
             ),
             self.mapping_cls().suite_name,
         ).all()
-        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id_with_paging(
         self, run_id: int, page_request: PageRequest
     ) -> Page[SuiteResult]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         page = self._pageginate(
             session,
@@ -72,11 +71,11 @@ class SqlAlchemySuiteResultRepository(
             ),
             page_request,
         )
-        session.close()
+
         return page
 
     def find_by_run_id_and_name(self, run_id: int, name: str) -> Optional[SuiteResult]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         entity = (
             session.query(self.mapping_cls())
@@ -84,18 +83,18 @@ class SqlAlchemySuiteResultRepository(
             .filter(self.mapping_cls().suite_name == name)
             .first()
         )
-        session.close()
+
         if entity:
             return self.to_domain_object(entity)
         return None
 
     def suite_count_by_run_id(self, run_id: int) -> int:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         count = (
             session.query(_SuiteResultMapping.id)
             .filter(self.mapping_cls().run_entity_id == run_id)
             .count()
         )
-        session.close()
+
         return count

@@ -192,7 +192,7 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
     def find_by_test_id(
         self, test_id: int, edit_type: Optional[EditTypes] = None
     ) -> List[AbstractTestEdit]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         query = session.query(
             with_polymorphic(
@@ -206,11 +206,10 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
 
         entities = query.order_by(self.mapping_cls().created_at.desc()).all()
 
-        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         entities = (
             session.query(
@@ -227,11 +226,10 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             .all()
         )
 
-        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_edits_to_sync_by_run_id(self, run_id: int) -> List[AbstractTestEdit]:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
 
         entity_ids = (
             session.query(func.max(_TestEditMapping.id))
@@ -256,11 +254,10 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             .all()
         )
 
-        session.close()
         return list(map(self.to_domain_object, entities))
 
     def edits_to_sync_by_run_id_count(self, run_id: int) -> int:
-        session = self._session_maker()
+        session = self._session_provider.get_session()
         count = (
             session.query(func.max(_TestEditMapping.id))
             .join(_TestResultMapping)
@@ -271,5 +268,5 @@ class SqlAlchemyTestEditRepository(AbstractSqlAlchemyRepository, TestEditReposit
             .group_by(_TestEditMapping.test_id)
             .count()
         )
-        session.close()
+
         return count

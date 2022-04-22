@@ -25,6 +25,7 @@ from cato_server.api.images_blueprint import ImagesBlueprint
 from cato_server.api.middlewares.authentication_middleware import (
     AuthenticationMiddleware,
 )
+from cato_server.api.middlewares.db_session_middleware import DbSessionMiddleware
 from cato_server.api.middlewares.redirect_to_frontend_middleware import (
     RedirectToFrontendMiddleware,
 )
@@ -135,6 +136,7 @@ def create_app(
     app.middleware("http")(obj_graph.provide(TimingMiddleware))
     app.middleware("http")(obj_graph.provide(AuthenticationMiddleware))
     app.middleware("http")(obj_graph.provide(RedirectToFrontendMiddleware))
+    app.middleware("http")(obj_graph.provide(DbSessionMiddleware))
 
     app.add_middleware(
         SessionMiddleware,
