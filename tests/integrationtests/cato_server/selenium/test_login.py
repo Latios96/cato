@@ -30,7 +30,10 @@ def live_server_with_keycloak(
 
 
 @testcontainers_test
-def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
+def test_login_via_keycloak(
+    live_server_with_keycloak, selenium_driver, session_provider
+):
+    session_provider.get_session().commit()
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}")
 
     selenium_driver.find_element_by_id("login").click()
@@ -41,8 +44,9 @@ def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
 
 @testcontainers_test
 def test_login_from_project_url_should_land_on_project_page(
-    live_server_with_keycloak, selenium_driver, project
+    live_server_with_keycloak, selenium_driver, project, session_provider
 ):
+    session_provider.get_session().commit()
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}/projects/1")
 
     selenium_driver.find_element_by_id("login").click()
@@ -58,8 +62,9 @@ def test_login_from_project_url_should_land_on_project_page(
 
 @testcontainers_test
 def test_login_from_login_url_should_land_on_home(
-    live_server_with_keycloak, selenium_driver, project
+    live_server_with_keycloak, selenium_driver, project, session_provider
 ):
+    session_provider.get_session().commit()
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}/login")
 
     _login_with_test_user(selenium_driver)
