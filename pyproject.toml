@@ -54,7 +54,7 @@ numpy = "1.21.5"
 case-converter = "^1.0.2"
 itsdangerous = "^2.1.2"
 Authlib = "^1.0.0"
-httpx = "^0.22.0"
+httpx = "0.23.0"
 starlette-csrf = "^1.4.3"
 tenacity = "^8.0.1"
 
