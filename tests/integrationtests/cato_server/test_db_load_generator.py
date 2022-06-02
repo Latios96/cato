@@ -50,14 +50,12 @@ def test_run_db_load_test(tmp_path, snapshot):
     AppConfigurationWriter().write_file(config, config_path)
 
     with change_cwd(str(tmp_path)):
-        # output = subprocess.check_output(
-        #    [sys.executable, db_load_generator.__file__],
-        #    stderr=subprocess.STDOUT,
-        #    universal_newlines=True,
-        #    encoding="utf-8",
-        # )
-
-        output = subprocess.getoutput([sys.executable, db_load_generator.__file__])
+        output = subprocess.check_output(
+            [sys.executable, db_load_generator.__file__],
+            stderr=subprocess.STDOUT,
+            universal_newlines=True,
+            encoding="utf-8",
+        )
 
         assert (
             "cato_server - INFO - Generating total 1 projects, 10 runs, 50 suites and 750 test results.."

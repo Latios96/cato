@@ -6,13 +6,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_submission_info_repository import
 )
 
 
-def test_save_submission_info(
-    config_fixture, session_provider_with_session, run, object_mapper
-):
+def test_save_submission_info(config_fixture, sessionmaker_fixture, run, object_mapper):
     repository = SqlAlchemySubmissionInfoRepository(
-        session_provider_with_session,
-        JsonConfigParser(),
-        ConfigFileWriter(object_mapper),
+        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
     )
     submission_info = SubmissionInfo(
         id=0,
@@ -29,12 +25,10 @@ def test_save_submission_info(
 
 
 def test_find_by_id_should_return(
-    config_fixture, session_provider_with_session, run, object_mapper
+    config_fixture, sessionmaker_fixture, run, object_mapper
 ):
     repository = SqlAlchemySubmissionInfoRepository(
-        session_provider_with_session,
-        JsonConfigParser(),
-        ConfigFileWriter(object_mapper),
+        sessionmaker_fixture, JsonConfigParser(), ConfigFileWriter(object_mapper)
     )
     submission_info = SubmissionInfo(
         id=0,

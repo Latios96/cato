@@ -144,7 +144,7 @@ class SqlAlchemyTestResultRepository(
     def find_by_suite_result_and_test_identifier(
         self, suite_result_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         entity = (
             session.query(self.mapping_cls())
@@ -152,25 +152,25 @@ class SqlAlchemyTestResultRepository(
             .filter(self.mapping_cls().test_identifier == str(test_identifier))
             .first()
         )
-
+        session.close()
         if entity:
             return self.to_domain_object(entity)
 
     def find_by_suite_result_id(self, suite_result_id: int) -> List[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         entities = (
             session.query(self.mapping_cls())
             .filter(self.mapping_cls().suite_result_entity_id == suite_result_id)
             .all()
         )
-
+        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id(
         self, run_id: int, filter_options: Optional[TestResultFilterOptions] = None
     ) -> List[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         query = (
             session.query(_TestResultMapping)
@@ -183,7 +183,7 @@ class SqlAlchemyTestResultRepository(
             query,
             self.mapping_cls().test_identifier,
         ).all()
-
+        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_run_id_with_paging(
@@ -192,7 +192,7 @@ class SqlAlchemyTestResultRepository(
         page_request: PageRequest,
         filter_options: Optional[TestResultFilterOptions] = None,
     ) -> Page[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         page = self._pageginate(
             session,
@@ -208,13 +208,13 @@ class SqlAlchemyTestResultRepository(
             ),
             page_request,
         )
-
+        session.close()
         return page
 
     def find_status_by_run_ids(
         self, run_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         results = (
             session.query(
@@ -227,7 +227,7 @@ class SqlAlchemyTestResultRepository(
             .filter(_RunMapping.id.in_(run_ids))
             .all()
         )
-
+        session.close()
         status_by_run_id = defaultdict(set)
         for unified_test_status, run_id in results:
             status_by_run_id[run_id].add(unified_test_status)
@@ -237,7 +237,7 @@ class SqlAlchemyTestResultRepository(
     def find_status_by_project_id(
         self, project_id: int
     ) -> Dict[int, Set[UnifiedTestStatus]]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         results = (
             session.query(
@@ -250,7 +250,7 @@ class SqlAlchemyTestResultRepository(
             .filter(_RunMapping.project_entity_id == project_id)
             .all()
         )
-
+        session.close()
         status_by_run_id = defaultdict(set)
         for unified_test_status, run_id in results:
             status_by_run_id[run_id].add(unified_test_status)
@@ -258,7 +258,7 @@ class SqlAlchemyTestResultRepository(
         return status_by_run_id
 
     def test_count_by_run_id(self, run_id: int) -> int:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         count = (
             session.query(_TestResultMapping)
@@ -267,11 +267,11 @@ class SqlAlchemyTestResultRepository(
             .filter(_RunMapping.id == run_id)
             .count()
         )
-
+        session.close()
         return count
 
     def duration_by_run_id(self, run_id: int) -> float:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         summed_duration = (
             session.query(func.sum(_TestResultMapping.seconds).label("duration"))
@@ -297,10 +297,11 @@ class SqlAlchemyTestResultRepository(
 
         total_duration = summed_duration + sum(additional_durations)
 
+        session.close()
         return total_duration
 
     def duration_by_run_ids(self, run_ids: Set[int]) -> Dict[int, float]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         summed_durations = (
             session.query(_RunMapping.id, func.sum(_TestResultMapping.seconds))
@@ -338,12 +339,14 @@ class SqlAlchemyTestResultRepository(
             elif summed_durations.get(run_id) is None:
                 summed_durations[run_id] = 0
 
+        session.close()
+
         return summed_durations
 
     def find_status_by_suite_ids(
         self, suite_ids: Set[int]
     ) -> Dict[int, Set[UnifiedTestStatus]]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         results = (
             session.query(
@@ -355,7 +358,7 @@ class SqlAlchemyTestResultRepository(
             .filter(_SuiteResultMapping.id.in_(suite_ids))
             .all()
         )
-
+        session.close()
         status_by_run_id = defaultdict(set)
         for unified_test_status, run_id in results:
             status_by_run_id[run_id].add(unified_test_status)
@@ -365,7 +368,7 @@ class SqlAlchemyTestResultRepository(
     def find_by_run_id_and_test_identifier(
         self, run_id: int, test_identifier: TestIdentifier
     ) -> Optional[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         entity = (
             session.query(_TestResultMapping)
@@ -375,14 +378,14 @@ class SqlAlchemyTestResultRepository(
             .filter(_TestResultMapping.test_identifier == str(test_identifier))
             .first()
         )
-
+        session.close()
         if entity:
             return self.to_domain_object(entity)
 
     def find_by_run_id_filter_by_test_status(
         self, run_id: int, test_status: UnifiedTestStatus
     ) -> List[TestResult]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         entities = self._order_by_case_insensitive(
             session.query(_TestResultMapping)
@@ -392,11 +395,12 @@ class SqlAlchemyTestResultRepository(
             .filter(_TestResultMapping.unified_test_status == test_status.value),
             self.mapping_cls().test_name,
         ).all()
+        session.close()
 
         return self._map_many_to_domain_object(entities)
 
     def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
         unified_status_counts = (
             session.query(
                 _TestResultMapping.unified_test_status,
@@ -418,6 +422,7 @@ class SqlAlchemyTestResultRepository(
         failed_count = unified_status_counts_dict.get("FAILED", 0)
         success_count = unified_status_counts_dict.get("SUCCESS", 0)
 
+        session.close()
         return TestResultStatusInformation(
             not_started=not_started_count,
             running=running_count,

@@ -50,7 +50,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         return _RunMapping
 
     def find_by_project_id(self, id: int) -> List[Run]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         entities = (
             session.query(self.mapping_cls())
@@ -60,6 +60,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             .all()
         )
 
+        session.close()
         return list(map(self.to_domain_object, entities))
 
     def find_by_project_id_with_paging(
@@ -68,7 +69,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         page_request: PageRequest,
         filter_options: Optional[RunFilterOptions] = None,
     ) -> Page[Run]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         query = session.query(self.mapping_cls()).filter(
             self.mapping_cls().project_entity_id == id
@@ -83,12 +84,13 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             page_request,
         )
 
+        session.close()
         return page
 
     def find_last_run_for_project(
         self, project_id: int, branch_name: BranchName
     ) -> Optional[Run]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         query = (
             session.query(_RunMapping)
@@ -96,7 +98,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             .filter(_RunMapping.branch_name == branch_name.name)
             .order_by(_RunMapping.id.desc())
         )
-
+        session.close()
         return self._map_one_to_domain_object(query.first())
 
     def _apply_filter_options(self, query, filter_options: RunFilterOptions):
@@ -107,7 +109,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         )
 
     def find_branches_for_project(self, project_id: int) -> List[BranchName]:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         query = (
             session.query(_RunMapping.branch_name)
@@ -116,5 +118,6 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         )
         query = self._order_by_case_insensitive(query, _RunMapping.branch_name)
         branch_names = query.all()
+        session.close()
 
         return [BranchName(x[0]) for x in branch_names]

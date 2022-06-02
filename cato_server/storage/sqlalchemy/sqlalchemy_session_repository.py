@@ -45,7 +45,7 @@ class SqlAlchemySessionRepository(
         return _SessionMapping
 
     def save(self, domain_object: Session) -> T:
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         is_insert = domain_object.id == SessionId.none()
 
@@ -60,6 +60,9 @@ class SqlAlchemySessionRepository(
 
         domain_object = self.to_domain_object(session_mapping)
 
+        session.commit()
+        session.close()
+
         return domain_object
 
     def find_by_id(self, id: SessionId) -> Optional[T]:
@@ -69,7 +72,7 @@ class SqlAlchemySessionRepository(
         super().delete_by_id(str(id))
 
     def find_by_expires_at_is_older_than(self, date: datetime.datetime):
-        session = self._session_provider.get_session()
+        session = self._session_maker()
 
         results = (
             session.query(_SessionMapping)
@@ -77,4 +80,5 @@ class SqlAlchemySessionRepository(
             .all()
         )
 
+        session.close()
         return self._map_many_to_domain_object(results)

@@ -18,10 +18,8 @@ logger = logging.getLogger(__name__)
 class SqlAlchemyDeduplicatingFileStorage(
     AbstractSqlAlchemyRepository[File, _FileMapping, int], AbstractFileStorage
 ):
-    def __init__(
-        self, session_provider, root_path: str, hash_calculatur=hashlib.sha3_256
-    ):
-        super(SqlAlchemyDeduplicatingFileStorage, self).__init__(session_provider)
+    def __init__(self, session_maker, root_path: str, hash_calculatur=hashlib.sha3_256):
+        super(SqlAlchemyDeduplicatingFileStorage, self).__init__(session_maker)
         self._root_path = root_path
         self._hash_calculatur = hash_calculatur
 

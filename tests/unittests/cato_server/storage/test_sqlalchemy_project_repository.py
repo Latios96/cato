@@ -3,6 +3,7 @@ from sqlalchemy.exc import IntegrityError
 
 from cato_common.domain.project import Project
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
+    SqlAlchemyProjectRepository,
     _ProjectMapping,
 )
 

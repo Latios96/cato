@@ -32,10 +32,6 @@ from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
-from cato_server.storage.sqlalchemy.session_provider import (
-    within_transaction,
-    SessionProvider,
-)
 from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = cato_server.server_logging.logger
@@ -74,7 +70,6 @@ class DbLoadGenerator:
         file_storage: AbstractFileStorage,
         test_result_repository: TestResultRepository,
         store_image: StoreImage,
-        session_provider: SessionProvider,
     ):
         self._project_repository = project_repository
         self._run_repository = run_repository
@@ -86,9 +81,8 @@ class DbLoadGenerator:
         self.alpha = None
         self.reference_image = None
         self.output_image = None
-        self._session_provider = session_provider
 
-    def generate_load(self, preset: str, threaded=False) -> None:
+    def generate_load(self, preset: str, threaded=True) -> None:
         self.current_preset = PRESETS[preset]
         project_count = len(self.current_preset["project_names"])
         run_count = project_count * self.current_preset["runs_per_project"]
@@ -111,10 +105,9 @@ class DbLoadGenerator:
         self._generate_project(self.current_preset["project_names"][0])
 
     def _generate_project(self, project_name):
-        with within_transaction(self._session_provider):
-            logger.info("Generating project %s", project_name)
-            project = self._project_repository.save(Project(id=0, name=project_name))
-            self._generate_runs(project)
+        logger.info("Generating project %s", project_name)
+        project = self._project_repository.save(Project(id=0, name=project_name))
+        self._generate_runs(project)
 
     def _generate_runs(self, project):
         logger.info("Generating runs for project %s", project.name)

@@ -67,9 +67,8 @@ from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
-from cato_server.storage.sqlalchemy.session_provider import (
-    SessionProvider,
-    NoSessionInitializedException,
+from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
+    SqlAlchemyDeduplicatingFileStorage,
 )
 from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
@@ -210,22 +209,6 @@ def sessionmaker_fixture(
     )
     db_migrator.migrate()
     return sessionmaker(bind=sqlalchemy_engine)
-
-
-@pytest.fixture
-def session_provider(sessionmaker_fixture):
-    session_provider = SessionProvider(sessionmaker_fixture)
-    yield session_provider
-    try:
-        session_provider.remove_session()
-    except NoSessionInitializedException:
-        pass
-
-
-@pytest.fixture
-def session_provider_with_session(session_provider):
-    session_provider.init_session()
-    yield session_provider
 
 
 @pytest.fixture

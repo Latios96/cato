@@ -135,7 +135,7 @@ def test_save_different_files_should_store_two_files_on_disk(
 
 
 def test_hash_collision_should_store_into_next_value_counter(
-    session_provider_with_session, tmp_path, test_resource_provider
+    sessionmaker_fixture, tmp_path, test_resource_provider
 ):
     the_hash = "7d9d649022a65fa9cf18a7dcb3bf07de41e3fd1b8fc4e8bf3d79007ef3b705bt"
 
@@ -147,7 +147,7 @@ def test_hash_collision_should_store_into_next_value_counter(
             return the_hash
 
     file_storage = SqlAlchemyDeduplicatingFileStorage(
-        session_provider_with_session, str(tmp_path), hash_calculatur=MockHashCalculator
+        sessionmaker_fixture, str(tmp_path), hash_calculatur=MockHashCalculator
     )
 
     f1 = file_storage.save_file(
