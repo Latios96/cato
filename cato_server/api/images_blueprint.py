@@ -1,7 +1,5 @@
 import logging
 import os
-import shutil
-import tempfile
 
 from fastapi import APIRouter, UploadFile
 from fastapi.params import File
@@ -41,13 +39,12 @@ class ImagesBlueprint(APIRouter):
             )
 
         try:
-            with tempfile.TemporaryDirectory() as tmpdirname:
-                tmp_path = os.path.join(tmpdirname, uploaded_file.filename)
-                with open(tmp_path, "wb") as tmp:
-                    shutil.copyfileobj(uploaded_file.file, tmp)
-                image = self._store_image.store_image(tmp_path)
-
-                logger.info("Deleting tmpdir %s", tmpdirname)
+            logger.info("Storing original image file in db..")
+            original_file = self._file_storage.save_stream(
+                uploaded_file.filename, uploaded_file.file
+            )
+            logger.info("Stored original file at %s", original_file)
+            image = self._store_image.store_image_from_file_entity(original_file)
         except Exception as e:
             logger.error(e, exc_info=True)
             return JSONResponse(

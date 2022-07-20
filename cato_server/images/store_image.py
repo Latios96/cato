@@ -4,6 +4,7 @@ import tempfile
 
 from PIL import Image as PillowImage
 
+from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel
 from cato_server.images.image_splitter import ImageSplitter
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
@@ -30,12 +31,17 @@ class StoreImage:
         original_file = self._file_storage.save_file(path)
         logger.info("Stored original file %s to %s", path, original_file)
 
+        return self.store_image_from_file_entity(original_file)
+
+    def store_image_from_file_entity(self, original_file: File):
         logger.info("Splitting image into channels..")
 
         channel_files = []
 
         with tempfile.TemporaryDirectory() as tmpdirname:
-            channels = self._image_splitter.split_image_into_channels(path, tmpdirname)
+            channels = self._image_splitter.split_image_into_channels(
+                self._file_storage.get_path(original_file), tmpdirname
+            )
             logger.debug("Image has channels %s", channels)
             for channel_name, channel_path in channels:
                 logger.debug("Saving channel %s to db..", channel_name)
@@ -53,7 +59,7 @@ class StoreImage:
 
         image = Image(
             id=0,
-            name=os.path.basename(path),
+            name=original_file.name,
             original_file_id=original_file.id,
             channels=channel_files,
             width=width,
