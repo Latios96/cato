@@ -270,7 +270,7 @@ class BindingsFactory:
             max_overflow,
         )
         return create_engine(
-            database_url, pool_size=pool_size, max_overflow=max_overflow, echo=True
+            database_url, pool_size=pool_size, max_overflow=max_overflow
         )
 
     def create_scheduler_bindings(self):
