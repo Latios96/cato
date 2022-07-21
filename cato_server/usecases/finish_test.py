@@ -9,7 +9,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
-from cato_server.usecases.create_thumbnail import CreateThumbnail
+from cato_server.task_queue.cato_celery import CatoCelery
 from cato_server.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
@@ -21,12 +21,12 @@ class FinishTest:
         test_result_repository: TestResultRepository,
         test_heartbeat_repository: TestHeartbeatRepository,
         object_mapper: ObjectMapper,
-        create_thumbnail: CreateThumbnail,
+        cato_celery: CatoCelery,
     ):
         self._test_result_repository = test_result_repository
         self._test_heartbeat_repository = test_heartbeat_repository
         self._object_mapper = object_mapper
-        self._create_thumbnail = create_thumbnail
+        self._cato_celery = cato_celery
 
     def finish_test(
         self,
@@ -69,10 +69,10 @@ class FinishTest:
 
         if test_result.reference_image or test_result.image_output:
             try:
-                self._create_thumbnail.create_thumbnail(test_result)
+                self._cato_celery.launch_create_thumbnail_task(test_result.id)
             except Exception as e:
                 logger.error(
-                    "Error when creating thumbnail for test result with id %s, test result won't have a thumbnail:",
+                    "Error when launching thumbnail task for test result with id %s, test result won't have a thumbnail:",
                     test_result_id,
                 )
                 logger.exception(e)

@@ -10,6 +10,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.task_queue.cato_celery import CatoCelery
 from cato_server.usecases.create_thumbnail import CreateThumbnail
 from cato_server.usecases.finish_test import FinishTest
 from cato_server.utils.datetime_utils import aware_now_in_utc
@@ -28,12 +29,12 @@ def test_should_finish(test_result_factory, object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
-    mock_create_thumbnail = mock_safe(CreateThumbnail)
+    mock_cato_celery = mock_safe(CatoCelery)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
         object_mapper,
-        mock_create_thumbnail,
+        mock_cato_celery,
     )
     finish_test._get_finished_time = lambda: finished_at
 
@@ -63,7 +64,9 @@ def test_should_finish(test_result_factory, object_mapper):
     )
     test_result_repository.save.assert_called_with(expected_test_result)
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
-    mock_create_thumbnail.create_thumbnail.assert_called_with(expected_test_result)
+    mock_cato_celery.launch_create_thumbnail_task.assert_called_with(
+        expected_test_result.id
+    )
 
 
 def test_should_raise_no_test_result_with_id(object_mapper):
@@ -73,12 +76,12 @@ def test_should_raise_no_test_result_with_id(object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
-    mock_create_thumbnail = mock_safe(CreateThumbnail)
+    mock_cato_celery = mock_safe(CatoCelery)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
         object_mapper,
-        mock_create_thumbnail,
+        mock_cato_celery,
     )
 
     with pytest.raises(ValueError):
@@ -105,12 +108,12 @@ def test_should_fail_test(test_result_factory, object_mapper):
     test_heartbeat_repository.find_by_test_result_id.return_value = TestHeartbeat(
         id=2, test_result_id=42, last_beat=aware_now_in_utc()
     )
-    mock_create_thumbnail = mock_safe(CreateThumbnail)
+    mock_cato_celery = mock_safe(CatoCelery)
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
         object_mapper,
-        mock_create_thumbnail,
+        mock_cato_celery,
     )
     finish_test._get_finished_time = lambda: finished_at
 
@@ -132,10 +135,10 @@ def test_should_fail_test(test_result_factory, object_mapper):
         )
     )
     test_heartbeat_repository.delete_by_id.assert_called_with(2)
-    mock_create_thumbnail.create_thumbnail.assert_not_called()
+    mock_cato_celery.launch_create_thumbnail_task.assert_not_called()
 
 
-def test_exception_during_thumbnail_creation_should_not_be_an_issue(
+def test_exception_during_thumbnail_creation_task_launch_should_not_be_an_issue(
     test_result_factory, object_mapper
 ):
     test_result_repository = mock_safe(TestResultRepository)
@@ -144,13 +147,13 @@ def test_exception_during_thumbnail_creation_should_not_be_an_issue(
         id=42, started_at=(aware_now_in_utc())
     )
     test_heartbeat_repository = mock_safe(TestHeartbeatRepository)
-    mock_create_thumbnail = mock_safe(CreateThumbnail)
-    mock_create_thumbnail.create_thumbnail.side_effect = Exception()
+    mock_cato_celery = mock_safe(CatoCelery)
+    mock_cato_celery.launch_create_thumbnail_task.side_effect = Exception()
     finish_test = FinishTest(
         test_result_repository,
         test_heartbeat_repository,
         object_mapper,
-        mock_create_thumbnail,
+        mock_cato_celery,
     )
     finish_test.finish_test(
         test_result_id=42,
@@ -164,4 +167,4 @@ def test_exception_during_thumbnail_creation_should_not_be_an_issue(
     )
 
     test_result_repository.save.assert_called_once()
-    mock_create_thumbnail.create_thumbnail.assert_called_once()
+    mock_cato_celery.launch_create_thumbnail_task.assert_called_once()
