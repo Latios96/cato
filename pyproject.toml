@@ -57,6 +57,7 @@ Authlib = "^1.0.1"
 httpx = "0.23.0"
 starlette-csrf = "^1.4.4"
 tenacity = "^8.0.1"
+celery = {extras = ["rabbitmq"], version = "^5.2.7"}
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
