@@ -1,6 +1,7 @@
 import os
 
 from cato_server.configuration.app_configuration import AppConfiguration
+from cato_server.configuration.celery_configuration import CeleryConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
@@ -45,6 +46,9 @@ class AppConfigurationDefaults:
                 client_secret=SecretStr("secret"),
                 well_known_url="http://somewhere",
             ),
+            celery_configuration=CeleryConfiguration(
+                broker_url="pyamqp://guest@localhost//"
+            ),
         )
 
     def create_ready_to_use(self, config_folder) -> AppConfiguration:
@@ -73,5 +77,8 @@ class AppConfigurationDefaults:
                 client_id="client-id",
                 client_secret=SecretStr("secret"),
                 well_known_url="http://somewhere",
+            ),
+            celery_configuration=CeleryConfiguration(
+                broker_url="pyamqp://guest@localhost//"
             ),
         )

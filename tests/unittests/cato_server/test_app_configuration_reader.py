@@ -7,6 +7,7 @@ import pytest
 
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
+from cato_server.configuration.celery_configuration import CeleryConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import (
@@ -36,7 +37,9 @@ name=None
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_DATABASE_URL = """[app]
 port=5000
@@ -52,7 +55,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_FILE_STORAGE_URL = """[app]
 port=5000
@@ -68,7 +73,9 @@ database_url=my_database_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_DEBUG = """[app]
 port=5000
@@ -84,7 +91,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_SESSIONS_SECRET = """[app]
 port=5000
@@ -99,7 +108,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 
 MISSING_CSRF_SECRET = """[app]
@@ -115,7 +126,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 
 MISSING_API_TOKENS_SECRET = """[app]
@@ -131,7 +144,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_HOSTNAME = """[app]
 port=5000
@@ -146,7 +161,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_PUBLIC_URL = """[app]
 port=5000
@@ -161,7 +178,9 @@ file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_OIDC_CLIENT_ID = """[app]
 port=5000
@@ -176,7 +195,9 @@ database_url=my_database_url
 file_storage_url=my_file_storage_url
 [oidc]
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_OIDC_SECRET = """[app]
 port=5000
@@ -191,9 +212,28 @@ database_url=my_database_url
 file_storage_url=my_file_storage_url
 [oidc]
 client_id=client-id
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 MISSING_OIDC_WELL_KNOWN_URL = """[app]
+port=5000
+hostname=localhost
+public_url=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[oidc]
+client_id=client-id
+client_secret=secret
+[celery]
+broker_url=pyamqp://guest@localhost//"""
+
+MISSING_CELERY_BROKER_URL = """[app]
 port=5000
 hostname=localhost
 public_url=http://127.0.0.1
@@ -227,7 +267,9 @@ backup_count=100
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 WITH_LOGGING_INVALID_USE_FILE_HANDLER = """[app]
 port=5000
@@ -247,7 +289,9 @@ backup_count=100
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 WITH_LOGGING_INVALID_MAX_FILE_SIZE = """[app]
 port=5000
@@ -267,7 +311,9 @@ backup_count=100
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 WITH_LOGGING_INVALID_BACKUP_COUNT = """[app]
 port=5000
@@ -287,7 +333,9 @@ backup_count=wurst
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 WITH_DEADLINE_SCHEDULER_NO_URL = """[app]
 port=5000
@@ -307,6 +355,8 @@ name=Deadline
 client_id=client-id
 client_secret=secret
 well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//
 """
 
 WITH_DEADLINE_SCHEDULER_WITH_URL = """[app]
@@ -328,6 +378,8 @@ deadline_url=http://localhost:8085
 client_id=client-id
 client_secret=secret
 well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//
 """
 
 WITH_SESSION_LIFETIME = """[app]
@@ -347,7 +399,9 @@ lifetime=1h
 [oidc]
 client_id=client-id
 client_secret=secret
-well_known_url=http://somewhere"""
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//"""
 
 
 @pytest.fixture
@@ -397,6 +451,9 @@ def test_read_valid_file(ini_file_creator):
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
         ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
+        ),
     )
 
 
@@ -429,6 +486,9 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
             client_id="client-id",
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
+        ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
         ),
     )
 
@@ -463,6 +523,9 @@ def test_read_with_logging(ini_file_creator):
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
         ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
+        ),
     )
 
 
@@ -482,6 +545,7 @@ def test_read_with_logging(ini_file_creator):
         (MISSING_OIDC_CLIENT_ID, configparser.NoOptionError),
         (MISSING_OIDC_SECRET, configparser.NoOptionError),
         (MISSING_OIDC_WELL_KNOWN_URL, configparser.NoOptionError),
+        (MISSING_CELERY_BROKER_URL, configparser.NoOptionError),
     ],
 )
 def test_read_missing_should_fail(invalid_config, exception, ini_file_creator):
@@ -522,6 +586,9 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
         ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
+        ),
     )
 
 
@@ -554,6 +621,9 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
             client_id="client-id",
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
+        ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
         ),
     )
 
@@ -589,5 +659,8 @@ def test_read_with_session_lifetime(ini_file_creator):
             client_id="client-id",
             client_secret=SecretStr("secret"),
             well_known_url="http://somewhere",
+        ),
+        celery_configuration=CeleryConfiguration(
+            broker_url="pyamqp://guest@localhost//"
         ),
     )

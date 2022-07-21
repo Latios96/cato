@@ -21,6 +21,7 @@ class AppConfigurationWriter:
         config_writer.add_section("scheduler")
         config_writer.add_section("session")
         config_writer.add_section("oidc")
+        config_writer.add_section("celery")
         config_writer.set("app", "port", str(config.port))
         config_writer.set("app", "debug", str(config.debug))
         config_writer.set("app", "hostname", config.hostname)
@@ -76,6 +77,9 @@ class AppConfigurationWriter:
         )
         config_writer.set(
             "oidc", "well_known_url", config.oidc_configuration.well_known_url
+        )
+        config_writer.set(
+            "celery", "broker_url", config.celery_configuration.broker_url
         )
 
         config_writer.write(stream)

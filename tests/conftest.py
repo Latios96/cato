@@ -45,6 +45,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_server.configuration.celery_configuration import CeleryConfiguration
 from cato_server.startup import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -603,6 +604,7 @@ def app_and_config_fixture(
         sentry_configuration=SentryConfiguration.default(),
         session_configuration=SessionConfiguration.default(),
         oidc_configuration=oidc_configuration,
+        celery_configuration=CeleryConfiguration(broker_url="test"),
     )
     bindings_factory = BindingsFactory(config)
     storage_bindings = bindings_factory.create_storage_bindings()

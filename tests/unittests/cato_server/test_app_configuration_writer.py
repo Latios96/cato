@@ -33,6 +33,9 @@ client_id = client-id
 client_secret = secret
 well_known_url = http://somewhere
 
+[celery]
+broker_url = pyamqp://guest@localhost//
+
 """
 
 EXPECTED_SENTRY = """[sentry]

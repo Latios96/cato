@@ -9,6 +9,7 @@ from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
+from cato_server.configuration.celery_configuration import CeleryConfiguration
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.scheduler_configuration import (
@@ -43,7 +44,7 @@ class AppConfigurationReader:
         sentry_configuration = self._read_sentry_configuration(config)
         session_configuration = self._read_session_configuration(config)
         oidc_configuration = self._read_oidc_configuration(config)
-
+        celery_configuration = self._read_celery_configuration(config)
         return AppConfiguration(
             port=config.getint(
                 "app", "port", fallback=AppConfigurationDefaults.PORT_DEFAULT
@@ -60,6 +61,7 @@ class AppConfigurationReader:
             sentry_configuration=sentry_configuration,
             session_configuration=session_configuration,
             oidc_configuration=oidc_configuration,
+            celery_configuration=celery_configuration,
         )
 
     def _read_secrets_configuration(self, config) -> SecretsConfiguration:
@@ -128,3 +130,6 @@ class AppConfigurationReader:
             client_secret=SecretStr(config.get("oidc", "client_secret")),
             well_known_url=config.get("oidc", "well_known_url"),
         )
+
+    def _read_celery_configuration(self, config):
+        return CeleryConfiguration(broker_url=config.get("celery", "broker_url"))
