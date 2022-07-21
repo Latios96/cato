@@ -29,10 +29,10 @@ def main():
             release=cato_server.__version__,
         )
 
-    celery_app = obj_graph.provide(CatoCelery)
+    cato_celery = obj_graph.provide(CatoCelery)
 
     argv = ["worker", "--loglevel=INFO", "--concurrency=1", "--pool=solo"]
-    celery_app.app.worker_main(argv)
+    cato_celery.app.worker_main(argv)
 
 
 if __name__ == "__main__":
