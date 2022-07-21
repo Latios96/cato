@@ -152,7 +152,6 @@ if postgres_available():
             return f"postgresql+psycopg2://{postgresql.info.user}:@{postgresql.info.host}:{postgresql.info.port}/{postgresql.info.dbname}"
         return "sqlite:///:memory:"
 
-
 else:
 
     @pytest.fixture
