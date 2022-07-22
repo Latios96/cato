@@ -17,6 +17,7 @@ packages = [
 cato = 'cato.__main__:main'
 cato_server_admin = 'cato_server.cato_server_admin:main'
 cato_beat = 'cato_server.cato_beat:main'
+cato_worker = 'cato_server.cato_worker:main'
 db_load_generator = 'cato_server.db_load_generator:main'
 
 [tool.poetry.dependencies]
