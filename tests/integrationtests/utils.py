@@ -3,6 +3,8 @@ import re
 import subprocess
 from typing import Dict, Tuple
 
+from tenacity import RetryCallState, _utils
+
 from cato_common.utils.change_cwd import change_cwd
 
 
@@ -45,3 +47,13 @@ def run_command(
         stderr = _trim_output(completed_process.stderr, trimmers)
 
         return stdout, stderr, completed_process.returncode
+
+
+def tenacity_before_print():
+    def print_it(retry_state: "RetryCallState") -> None:
+        print(f"Starting call to '{_utils.get_callback_name(retry_state.fn)}'")
+        print(
+            f"this is the {_utils.to_ordinal(retry_state.attempt_number)} time calling it."
+        )
+
+    return print_it

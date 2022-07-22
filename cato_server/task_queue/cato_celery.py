@@ -1,7 +1,6 @@
 from celery import Celery
 
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.task_queue.create_thumbnail_task import (
     CreateThumbnailTask,
     CreateThumbnailParams,
@@ -11,23 +10,15 @@ from cato_server.task_queue.create_thumbnail_task import (
 class CatoCelery:
     def __init__(
         self,
-        app_configuration: AppConfiguration,
+        celery_app: Celery,
         create_thumbnail_task: CreateThumbnailTask,
         object_mapper: ObjectMapper,
     ):
-        result_backend = (
-            "db+postgresql://"
-            + app_configuration.storage_configuration.database_url.split("://")[1]
-        )
-        self.app = Celery(
-            "tasks",
-            broker=app_configuration.celery_configuration.broker_url,
-            result_backend=result_backend,
-        )
+        self.celery_app = celery_app
         self._object_mapper = object_mapper
         self._create_thumbnail_task = create_thumbnail_task
 
-        @self.app.task
+        @self.celery_app.task
         def _create_thumbnail(params_str: str):
             return self._create_thumbnail_task.execute(params_str)
 

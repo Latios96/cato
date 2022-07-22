@@ -4,6 +4,7 @@ from typing import Type, Any
 
 import pinject
 import requests
+from celery import Celery
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -109,11 +110,17 @@ class ConfigurationBindings:
 
 
 @dataclass
+class TaskQueueBindings:
+    celery_app: Celery
+
+
+@dataclass
 class Bindings:
     storage_bindings: StorageBindings
     app_configuration: AppConfiguration
     scheduler_bindings: SchedulerBindings
     configuration_bindings: ConfigurationBindings
+    task_queue_bindings: TaskQueueBindings
 
 
 class PinjectBindings(pinject.BindingSpec):
@@ -212,6 +219,8 @@ class PinjectBindings(pinject.BindingSpec):
             to_class=self._bindings.storage_bindings.session_repository,
         )
 
+        bind("celery_app", to_instance=self._bindings.task_queue_bindings.celery_app)
+
 
 class BindingsFactory:
     def __init__(self, configuration: AppConfiguration):
@@ -222,12 +231,14 @@ class BindingsFactory:
         storage_bindings = self.create_storage_bindings()
         scheduler_bindings = self.create_scheduler_bindings()
         configuration_bindings = self.create_configuration_bindings()
+        task_queue_bindings = self.create_task_queue_bindings()
 
         bindings = Bindings(
             storage_bindings,
             self._configuration,
             scheduler_bindings,
             configuration_bindings,
+            task_queue_bindings,
         )
         return PinjectBindings(bindings)
 
@@ -308,3 +319,15 @@ class BindingsFactory:
 
     def create_configuration_bindings(self):
         return ConfigurationBindings(app_configuration=self._configuration)
+
+    def create_task_queue_bindings(self):
+        result_backend = (
+            "db+postgresql://"
+            + self._configuration.storage_configuration.database_url.split("://")[1]
+        )
+        celery_app = Celery(
+            "tasks",
+            broker=self._configuration.celery_configuration.broker_url,
+            result_backend=result_backend,
+        )
+        return TaskQueueBindings(celery_app=celery_app)

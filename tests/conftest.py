@@ -53,6 +53,7 @@ from cato_server.configuration.bindings_factory import (
     Bindings,
     PinjectBindings,
     SchedulerBindings,
+    TaskQueueBindings,
 )
 from cato_server.configuration.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
@@ -579,9 +580,18 @@ def oidc_configuration():
     )
 
 
+@pytest.fixture
+def celery_binding():
+    return None
+
+
 @pytest.fixture()
 def app_and_config_fixture(
-    sessionmaker_fixture, tmp_path, mocked_scheduler_submitter, oidc_configuration
+    sessionmaker_fixture,
+    tmp_path,
+    mocked_scheduler_submitter,
+    oidc_configuration,
+    celery_binding,
 ):
     port = random_port()
     config = AppConfiguration(
@@ -617,6 +627,11 @@ def app_and_config_fixture(
         config,
         scheduler_bindings,
         configuration_bindings=bindings_factory.create_configuration_bindings(),
+        task_queue_bindings=TaskQueueBindings(
+            bindings_factory.create_task_queue_bindings().celery_app
+            if not celery_binding
+            else celery_binding
+        ),
     )
     pinject_bindings = PinjectBindings(bindings)
 

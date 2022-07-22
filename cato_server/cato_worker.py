@@ -32,7 +32,7 @@ def main():
     cato_celery = obj_graph.provide(CatoCelery)
 
     argv = ["worker", "--loglevel=INFO", "--concurrency=1", "--pool=solo"]
-    cato_celery.app.worker_main(argv)
+    cato_celery.celery_app.worker_main(argv)
 
 
 if __name__ == "__main__":
