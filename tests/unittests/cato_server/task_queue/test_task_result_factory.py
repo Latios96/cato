@@ -1,10 +1,3 @@
-# from_async_result
-# pending
-# succcess
-# failed
-# pending
-# succcess
-# failed
 import uuid
 
 import pytest
