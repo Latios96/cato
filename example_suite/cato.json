@@ -1,61 +1,76 @@
 {
   "projectName": "TestSpheres",
+  "variables": {
+    "copy_image_command": "python -c \"import shutil;shutil.copy('{@reference_image_no_extension}{@extension}','{@image_output_no_extension}{@extension}')\""
+  },
   "suites": [
     {
       "name": "exr",
       "tests": [
         {
           "name": "exr_singlechannel_16_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_exr}','{@image_output_exr}')\""
+          "command": "{@copy_image_command}"
         },
         {
           "name": "exr_singlechannel_32_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_exr}','{@image_output_exr}')\""
+          "command": "{@copy_image_command}"
         },
         {
           "name": "exr_multichannel_16_bit_1080p",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_exr}','{@image_output_exr}')\""
+          "command": "{@copy_image_command}"
         },
         {
           "name": "exr_multichannel_16_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_exr}','{@image_output_exr}')\""
+          "command": "{@copy_image_command}"
         }
-      ]
+      ],
+      "variables": {
+        "extension": ".exr"
+      }
     },
     {
       "name": "jpg",
       "tests": [
         {
           "name": "jpeg",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_jpg}','{@image_output_jpg}')\""
+          "command": "{@copy_image_command}"
         }
-      ]
+      ],
+      "variables": {
+        "extension": ".jpg"
+      }
     },
     {
       "name": "png",
       "tests": [
         {
           "name": "png_8_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_png}','{@image_output_png}')\""
+          "command": "{@copy_image_command}"
         },
         {
           "name": "png_16_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_png}','{@image_output_png}')\""
+          "command": "{@copy_image_command}"
         }
-      ]
+      ],
+      "variables": {
+        "extension": ".png"
+      }
     },
     {
       "name": "tiff",
       "tests": [
         {
           "name": "tiff_8_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_tif}','{@image_output_tif}')\""
+          "command": "{@copy_image_command}"
         },
         {
           "name": "tiff_16_bit",
-          "command": "python -c \"import shutil;shutil.copy('{@reference_image_tif}','{@image_output_tif}')\""
+          "command": "{@copy_image_command}"
         }
-      ]
+      ],
+      "variables": {
+        "extension": ".tif"
+      }
     }
   ]
 }
