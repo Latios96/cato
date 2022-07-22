@@ -946,17 +946,6 @@ python-versions = ">=3.6"
 pyparsing = ">=2.0.2,<3.0.5 || >3.0.5"
 
 [[package]]
-name = "pamqp"
-version = "2.3.0"
-description = "RabbitMQ Focused AMQP low-level library"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.extras]
-codegen = ["lxml"]
-
-[[package]]
 name = "passlib"
 version = "1.7.4"
 description = "comprehensive password hashing framework supporting over 30 schemes"
@@ -988,19 +977,6 @@ python-versions = ">=3.6"
 
 [package.extras]
 test = ["allpairspy", "click", "faker", "pytest (>=6.0.1)", "pytest-discord (>=0.0.6)", "pytest-md-report (>=0.0.12)"]
-
-[[package]]
-name = "pika"
-version = "1.3.0"
-description = "Pika Python AMQP Client Library"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.extras]
-gevent = ["gevent"]
-tornado = ["tornado"]
-twisted = ["twisted"]
 
 [[package]]
 name = "pillow"
@@ -1348,23 +1324,6 @@ docs = ["sphinx"]
 tests = ["pytest-cov", "pytest-xdist"]
 
 [[package]]
-name = "pytest-rabbitmq"
-version = "2.2.1"
-description = "RabbitMQ process and client fixtures for pytest"
-category = "dev"
-optional = false
-python-versions = ">=3.7"
-
-[package.dependencies]
-mirakuru = ">=2.0.0"
-port-for = ">=0.6.0"
-pytest = ">=3.0.0"
-rabbitpy = "*"
-
-[package.extras]
-tests = ["pytest-cov", "pytest-xdist"]
-
-[[package]]
 name = "pytest-rerunfailures"
 version = "10.2"
 description = "pytest plugin to re-run tests to eliminate flaky failures"
@@ -1473,17 +1432,6 @@ optional = false
 python-versions = "*"
 
 [[package]]
-name = "rabbitpy"
-version = "2.0.1"
-description = "A pure python, thread-safe, minimalistic and pythonic RabbitMQ client library"
-category = "dev"
-optional = false
-python-versions = "*"
-
-[package.dependencies]
-pamqp = ">=2,<3"
-
-[[package]]
 name = "requests"
 version = "2.28.1"
 description = "Python HTTP for Humans."
@@ -1563,7 +1511,7 @@ urllib3 = "*"
 
 [[package]]
 name = "sentry-sdk"
-version = "1.7.2"
+version = "1.8.0"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
@@ -1581,6 +1529,7 @@ celery = ["celery (>=3)"]
 chalice = ["chalice (>=1.16.0)"]
 django = ["django (>=1.8)"]
 falcon = ["falcon (>=1.4)"]
+fastapi = ["fastapi (>=0.79.0)"]
 flask = ["flask (>=0.11)", "blinker (>=1.1)"]
 httpx = ["httpx (>=0.16.0)"]
 pure_eval = ["pure-eval", "executing", "asttokens"]
@@ -1589,6 +1538,7 @@ quart = ["quart (>=0.16.1)", "blinker (>=1.1)"]
 rq = ["rq (>=0.6)"]
 sanic = ["sanic (>=0.8)"]
 sqlalchemy = ["sqlalchemy (>=1.2)"]
+starlette = ["starlette (>=0.19.1)"]
 tornado = ["tornado (>=5)"]
 
 [[package]]
@@ -1970,7 +1920,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.7.1,<3.11"
-content-hash = "a7b09957e95013cbf9797dd69ddeca08f06caf362895be088f53e49eab6ab1aa"
+content-hash = "99d0cfe36c95b494d09ab6ced03f7c603ede6b0d46d2ccac9845c66b52fa587e"
 
 [metadata.files]
 aiofiles = [
@@ -2408,7 +2358,6 @@ packaging = [
     {file = "packaging-21.3-py3-none-any.whl", hash = "sha256:ef103e05f519cdc783ae24ea4e2e0f508a9c99b2d4969652eed6a2e1ea5bd522"},
     {file = "packaging-21.3.tar.gz", hash = "sha256:dd47c42927d89ab911e606518907cc2d3a1f38bbd026385970643f9c5b8ecfeb"},
 ]
-pamqp = []
 passlib = [
     {file = "passlib-1.7.4-py2.py3-none-any.whl", hash = "sha256:aa6bca462b8d8bda89c70b382f0c298a20b5560af6cbfa2dce410c0a2fb669f1"},
     {file = "passlib-1.7.4.tar.gz", hash = "sha256:defd50f72b65c5402ab2c573830a6978e5f202ad0d984793c8dde2c4152ebe04"},
@@ -2421,7 +2370,6 @@ pathvalidate = [
     {file = "pathvalidate-2.5.0-py3-none-any.whl", hash = "sha256:e5b2747ad557363e8f4124f0553d68878b12ecabd77bcca7e7312d5346d20262"},
     {file = "pathvalidate-2.5.0.tar.gz", hash = "sha256:119ba36be7e9a405d704c7b7aea4b871c757c53c9adc0ed64f40be1ed8da2781"},
 ]
-pika = []
 pillow = []
 pinject = [
     {file = "pinject-0.14.1-py3-none-any.whl", hash = "sha256:dfc4981a36d3f7cf2fa82bd8922f713c769004fe7af935def3e2a52147aeda66"},
@@ -2669,7 +2617,6 @@ pytest-metadata = []
 pytest-postgresql = [
     {file = "pytest_postgresql-2.6.1-py3-none-any.whl", hash = "sha256:5e24cc87d3a955a5ebe919ee5c1c15bd7300823a362269327b63526e6718cbdb"},
 ]
-pytest-rabbitmq = []
 pytest-rerunfailures = [
     {file = "pytest-rerunfailures-10.2.tar.gz", hash = "sha256:9e1e1bad51e07642c5bbab809fc1d4ec8eebcb7de86f90f1a26e6ef9de446697"},
     {file = "pytest_rerunfailures-10.2-py3-none-any.whl", hash = "sha256:d31d8e828dfd39363ad99cd390187bf506c7a433a89f15c3126c7d16ab723fe2"},
@@ -2712,7 +2659,6 @@ pywin32 = [
     {file = "pywin32-303-cp39-cp39-win32.whl", hash = "sha256:7d3271c98434617a11921c5ccf74615794d97b079e22ed7773790822735cc352"},
     {file = "pywin32-303-cp39-cp39-win_amd64.whl", hash = "sha256:79cbb862c11b9af19bcb682891c1b91942ec2ff7de8151e2aea2e175899cda34"},
 ]
-rabbitpy = []
 requests = []
 rfc3986 = [
     {file = "rfc3986-1.5.0-py2.py3-none-any.whl", hash = "sha256:a86d6e1f5b1dc238b218b012df0aa79409667bb209e58da56d0b94704e712a97"},
