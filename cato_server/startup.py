@@ -34,6 +34,7 @@ from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.schedulers_blueprint import SchedulersBlueprint
 from cato_server.api.submission_infos_blueprint import SubmissionInfosBlueprint
 from cato_server.api.suite_results_blueprint import SuiteResultsBlueprint
+from cato_server.api.task_result_blueprint import TaskResultBlueprint
 from cato_server.api.test_edit_blueprint import TestEditBlueprint
 from cato_server.api.test_heartbeat_blueprint import TestHeartbeatBlueprint
 from cato_server.api.test_result_blueprint import TestResultsBlueprint
@@ -111,6 +112,7 @@ def create_app(
     app.include_router(obj_graph.provide(TestEditBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(AuthUserBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(ApiTokenBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(TaskResultBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(AuthBlueprint))
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
