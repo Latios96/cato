@@ -47,7 +47,7 @@ def test_thumbnail_should_be_created_async_after_finising_test(
     assert response.status_code == 200
 
     @retry(
-        stop=stop_after_attempt(20), wait=wait_fixed(1), before=tenacity_before_print()
+        stop=stop_after_attempt(20), wait=wait_fixed(2), before=tenacity_before_print()
     )
     def wait_for_thumbnail_to_appear():
         url = (
