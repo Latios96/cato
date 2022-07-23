@@ -304,8 +304,7 @@ class BindingsFactory:
                 )
                 return OptionalComponent(
                     DeadlineSchedulerSubmitter(
-                        url,
-                        DeadlineApi(url),
+                        url, DeadlineApi(url), self._configuration
                     )
                 )
             logger.info('Scheduler "Deadline" is not available')

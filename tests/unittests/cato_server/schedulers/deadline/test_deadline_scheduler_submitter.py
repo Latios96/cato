@@ -3,6 +3,9 @@ import pytest
 from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_job import DeadlineJob
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
@@ -17,7 +20,9 @@ def test_context():
         def __init__(self):
             self.deadline_api_mock = mock_safe(DeadlineApi)
             self.deadline_submitter = DeadlineSchedulerSubmitter(
-                "http://localhost:8085", self.deadline_api_mock
+                "http://localhost:8085",
+                self.deadline_api_mock,
+                AppConfigurationDefaults().create(),
             )
 
     return TestContext()
@@ -44,7 +49,7 @@ class TestDeadlineSchedulerSubmitter:
                         "BatchName": "EXAMPLE_PROJECT Run #42 My_first_test_Suite ",
                     },
                     plugin_info={
-                        "Arguments": '-m cato worker-run -u http://localhost:5000 -submission-info-id 0 -test-identifier "My_first_test_Suite/My_first_test"',
+                        "Arguments": '-m cato worker-run -u http://127.0.0.1 -submission-info-id 0 -test-identifier "My_first_test_Suite/My_first_test"',
                         "Executable": "python",
                         "Shell": "default",
                         "ShellExecute": "False",
@@ -84,7 +89,7 @@ class TestDeadlineSchedulerSubmitter:
                         "BatchName": "EXAMPLE_PROJECT Run #42 My_first_test_Suite ",
                     },
                     plugin_info={
-                        "Arguments": '-m cato worker-run -u http://localhost:5000 -submission-info-id 0 -test-identifier "My_first_test_Suite/My_first_test"',
+                        "Arguments": '-m cato worker-run -u http://127.0.0.1 -submission-info-id 0 -test-identifier "My_first_test_Suite/My_first_test"',
                         "Executable": "python",
                         "Shell": "default",
                         "ShellExecute": "False",
@@ -99,7 +104,7 @@ class TestDeadlineSchedulerSubmitter:
                         "BatchName": "EXAMPLE_PROJECT Run #42 My_first_test_Suite ",
                     },
                     plugin_info={
-                        "Arguments": '-m cato worker-run -u http://localhost:5000 -submission-info-id 0 -test-identifier "My_first_test_Suite/AnotherTest"',
+                        "Arguments": '-m cato worker-run -u http://127.0.0.1 -submission-info-id 0 -test-identifier "My_first_test_Suite/AnotherTest"',
                         "Executable": "python",
                         "Shell": "default",
                         "ShellExecute": "False",
