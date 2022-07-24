@@ -45,7 +45,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.configuration.celery_configuration import CeleryConfiguration
+from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.startup import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -55,23 +55,22 @@ from cato_server.configuration.bindings_factory import (
     SchedulerBindings,
     TaskQueueBindings,
 )
-from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.configuration.optional_component import OptionalComponent
-from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
-from cato_server.configuration.sentry_configuration import SentryConfiguration
-from cato_server.configuration.session_configuration import SessionConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.scheduler_configuration import (
+    SchedulerConfiguration,
+)
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.sentry_configuration import SentryConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
-from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
-    SqlAlchemyDeduplicatingFileStorage,
-)
 from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     http_session_factory,

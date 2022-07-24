@@ -1,11 +1,10 @@
-import os.path
 from subprocess import CompletedProcess
 from unittest import mock
 
 import pytest
 
 from cato_server.backup.create_db_backup import CreateDbBackup
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 
 
 @pytest.fixture

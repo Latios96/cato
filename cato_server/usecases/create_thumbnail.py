@@ -34,12 +34,15 @@ class CreateThumbnail:
         image_id = self._resolve_image_id(test_result)
         if not image_id:
             raise ValueError("Test result has no images!")
+
         image = self._image_repository.find_by_id(image_id)
         if not image:
             raise ValueError(f"No Image found with id {image_id}")
+
         file = self._file_storage.find_by_id(image.original_file_id)
         if not file:
             raise ValueError(f"No File found with id {image.original_file_id}")
+
         input_file_path = self._file_storage.get_path(file)
 
         with tempfile.TemporaryDirectory() as tmpdirname:

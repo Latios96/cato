@@ -3,7 +3,7 @@ import os
 from alembic import command
 from alembic.config import Config
 
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 
 
 class DbMigrator:

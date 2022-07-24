@@ -8,17 +8,17 @@ from cato_server.configuration.app_configuration_defaults import (
 from cato_server.configuration.bindings_factory import (
     BindingsFactory,
 )
-from cato_server.configuration.celery_configuration import CeleryConfiguration
-from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
+from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
-from cato_server.configuration.scheduler_configuration import (
+from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
-from cato_server.configuration.sentry_configuration import SentryConfiguration
-from cato_server.configuration.session_configuration import SessionConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.sentry_configuration import SentryConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
