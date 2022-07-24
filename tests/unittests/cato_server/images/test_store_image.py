@@ -1,5 +1,8 @@
 import pytest
 from cato_common.domain.image import ImageChannel, Image
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.images.image_splitter import ImageSplitter
 from cato_server.images.oiio_command_executor import (
     NotAnImageException,
@@ -25,7 +28,11 @@ def test_store_rgb_jpeg(
     store_image = StoreImage(
         sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
-        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
     )
 
     image = store_image.store_image(
@@ -51,7 +58,11 @@ def test_store_rgb_png(
     store_image = StoreImage(
         sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
-        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
     )
 
     image = store_image.store_image(
@@ -77,7 +88,11 @@ def test_store_multichannel_exr(
     store_image = StoreImage(
         sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
-        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
     )
 
     image = store_image.store_image(
@@ -107,7 +122,11 @@ def test_store_not_existing_image(
     store_image = StoreImage(
         sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
-        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
     )
 
     with pytest.raises(ValueError):
@@ -120,7 +139,11 @@ def test_store_no_image(
     store_image = StoreImage(
         sqlalchemy_deduplicating_storage,
         sqlalchemy_image_repository,
-        ImageSplitter(OiioBinariesDiscovery(), OiioCommandExecutor()),
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
     )
 
     with pytest.raises(NotAnImageException):
