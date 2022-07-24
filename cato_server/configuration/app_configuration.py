@@ -3,6 +3,7 @@ from dataclasses import dataclass
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
 from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
 )
@@ -26,3 +27,4 @@ class AppConfiguration:
     session_configuration: SessionConfiguration
     oidc_configuration: OidcConfiguration
     celery_configuration: CeleryConfiguration
+    oiio_configuration: OiioConfiguration

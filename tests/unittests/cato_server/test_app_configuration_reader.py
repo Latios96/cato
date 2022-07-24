@@ -10,6 +10,7 @@ from cato_server.configuration.app_configuration_reader import AppConfigurationR
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
 from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
@@ -39,7 +40,10 @@ client_id=client-id
 client_secret=secret
 well_known_url=http://somewhere
 [celery]
-broker_url=pyamqp://guest@localhost//"""
+broker_url=pyamqp://guest@localhost//
+[OpenImageIO]
+thread_count=3
+"""
 
 MISSING_DATABASE_URL = """[app]
 port=5000
@@ -248,6 +252,30 @@ file_storage_url=my_file_storage_url
 client_id=client-id
 client_secret=secret"""
 
+INVALID_OIIO_THREAD_COUNT = """[app]
+port=5000
+debug=True
+hostname=localhost
+public_url=http://127.0.0.1
+[secrets]
+sessions_secret=SESSIONS_SECRET
+csrf_secret=CSRF_SECRET
+api_tokens_secret=API_TOKENS_SECRET
+[storage]
+database_url=my_database_url
+file_storage_url=my_file_storage_url
+[scheduler]
+name=None
+[oidc]
+client_id=client-id
+client_secret=secret
+well_known_url=http://somewhere
+[celery]
+broker_url=pyamqp://guest@localhost//
+[OpenImageIO]
+thread_count=three
+"""
+
 WITH_LOGGING = """[app]
 port=5000
 hostname=localhost
@@ -454,6 +482,7 @@ def test_read_valid_file(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=3),
     )
 
 
@@ -490,6 +519,7 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
 
 
@@ -526,6 +556,7 @@ def test_read_with_logging(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
 
 
@@ -546,6 +577,7 @@ def test_read_with_logging(ini_file_creator):
         (MISSING_OIDC_SECRET, configparser.NoOptionError),
         (MISSING_OIDC_WELL_KNOWN_URL, configparser.NoOptionError),
         (MISSING_CELERY_BROKER_URL, configparser.NoOptionError),
+        (INVALID_OIIO_THREAD_COUNT, ValueError),
     ],
 )
 def test_read_missing_should_fail(invalid_config, exception, ini_file_creator):
@@ -589,6 +621,7 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
 
 
@@ -625,6 +658,7 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
 
 
@@ -663,4 +697,5 @@ def test_read_with_session_lifetime(ini_file_creator):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )

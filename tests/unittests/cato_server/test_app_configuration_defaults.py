@@ -10,6 +10,7 @@ from cato_server.configuration.app_configuration_defaults import (
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
 from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
 )
@@ -52,6 +53,7 @@ def test_create_default_config(mock_secrets_token_urlsafe):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
 
 
@@ -90,4 +92,5 @@ def test_create_default_config_ready_to_use(mock_secrets_token_urlsafe):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
