@@ -9,17 +9,18 @@ from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
-from cato_server.configuration.celery_configuration import CeleryConfiguration
-from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
+from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
-from cato_server.configuration.scheduler_configuration import (
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
+from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
-from cato_server.configuration.sentry_configuration import SentryConfiguration
-from cato_server.configuration.session_configuration import SessionConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.sentry_configuration import SentryConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 
 import logging
 
@@ -45,6 +46,8 @@ class AppConfigurationReader:
         session_configuration = self._read_session_configuration(config)
         oidc_configuration = self._read_oidc_configuration(config)
         celery_configuration = self._read_celery_configuration(config)
+        oiio_configuration = self._read_oiio_configuration(config)
+
         return AppConfiguration(
             port=config.getint(
                 "app", "port", fallback=AppConfigurationDefaults.PORT_DEFAULT
@@ -62,6 +65,7 @@ class AppConfigurationReader:
             session_configuration=session_configuration,
             oidc_configuration=oidc_configuration,
             celery_configuration=celery_configuration,
+            oiio_configuration=oiio_configuration,
         )
 
     def _read_secrets_configuration(self, config) -> SecretsConfiguration:
@@ -133,3 +137,7 @@ class AppConfigurationReader:
 
     def _read_celery_configuration(self, config):
         return CeleryConfiguration(broker_url=config.get("celery", "broker_url"))
+
+    def _read_oiio_configuration(self, config):
+        thread_count = config.getint("OpenImageIO", "thread_count", fallback=1)
+        return OiioConfiguration(thread_count=thread_count)

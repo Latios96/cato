@@ -1,13 +1,11 @@
 import datetime
 import json
 import os
-import secrets
 from base64 import b64encode
 from typing import Dict, Optional
 
 import itsdangerous
 import pytest
-from itsdangerous import URLSafeSerializer
 from starlette.requests import Request
 from starlette_csrf import CSRFMiddleware
 
@@ -16,18 +14,12 @@ from cato_common.domain.auth.api_token_name import ApiTokenName
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_server.authentication.api_token_signer import ApiTokenSigner
 from cato_server.authentication.session_backend import SessionBackend
-from cato_server.configuration.app_configuration_defaults import (
-    AppConfigurationDefaults,
-)
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
 from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
-from cato_server.storage.sqlalchemy.sqlalchemy_session_repository import (
-    SqlAlchemySessionRepository,
-)
 from dateutil.parser import parse
 
 from cato_server.utils.datetime_utils import aware_now_in_utc

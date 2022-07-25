@@ -1,4 +1,4 @@
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
 
 

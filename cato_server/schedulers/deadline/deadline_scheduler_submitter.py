@@ -3,6 +3,7 @@ from typing import List
 
 from cato.domain.test_suite import iterate_suites_and_tests
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_job import DeadlineJob
 
@@ -10,9 +11,15 @@ logger = logging.getLogger(__name__)
 
 
 class DeadlineSchedulerSubmitter:
-    def __init__(self, deadline_url, deadline_api: DeadlineApi):
+    def __init__(
+        self,
+        deadline_url,
+        deadline_api: DeadlineApi,
+        app_configuration: AppConfiguration,
+    ):
         self._deadline_url = deadline_url
         self._deadline_api = deadline_api
+        self._app_configuration = app_configuration
 
     def submit_tests(self, submission_info: SubmissionInfo) -> None:
         jobs = []
@@ -60,7 +67,7 @@ class DeadlineSchedulerSubmitter:
             "cato",
             "worker-run",
             "-u",
-            "http://localhost:5000",  # todo get from config
+            self._app_configuration.public_url,
             "-submission-info-id",
             "{}".format(submission_info.id),
             "-test-identifier",

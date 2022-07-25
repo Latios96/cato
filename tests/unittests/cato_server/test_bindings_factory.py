@@ -8,17 +8,18 @@ from cato_server.configuration.app_configuration_defaults import (
 from cato_server.configuration.bindings_factory import (
     BindingsFactory,
 )
-from cato_server.configuration.celery_configuration import CeleryConfiguration
-from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
+from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
-from cato_server.configuration.scheduler_configuration import (
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
+from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
     DeadlineSchedulerConfiguration,
 )
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
-from cato_server.configuration.sentry_configuration import SentryConfiguration
-from cato_server.configuration.session_configuration import SessionConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.sentry_configuration import SentryConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.secret_str import SecretStr
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
@@ -69,6 +70,7 @@ def test_create_storage_bindings_for_postgres():
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -121,6 +123,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
     bindings_factory = BindingsFactory(configuration)
 
@@ -180,6 +183,7 @@ def test_create_scheduler_bindings_no_scheduler():
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
     bindings_factory = BindingsFactory(config)
 
@@ -217,6 +221,7 @@ CONFIG_FOR_DEADLINE_TESTING = AppConfiguration(
         well_known_url="http://somewhere",
     ),
     celery_configuration=CeleryConfiguration(broker_url="test"),
+    oiio_configuration=OiioConfiguration(thread_count=1),
 )
 
 

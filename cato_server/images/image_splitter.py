@@ -5,6 +5,7 @@ import subprocess
 from collections import defaultdict
 from typing import List, Tuple, Iterable
 
+from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 from cato_server.images.oiio_command_executor import OiioCommandExecutor
 from cato_server.utils.commands_builder import CommandsBuilder
@@ -17,9 +18,11 @@ class ImageSplitter:
         self,
         oiio_binaries_discovery: OiioBinariesDiscovery,
         oiio_command_executor: OiioCommandExecutor,
+        app_configuration: AppConfiguration,
     ):
         self._oiio_binaries_discovery = oiio_binaries_discovery
         self._oiio_command_executor = oiio_command_executor
+        self._app_configuration = app_configuration
 
     def split_image_into_channels(
         self, image_path: str, work_folder: str
@@ -55,7 +58,8 @@ class ImageSplitter:
             images_to_channels[self.__get_key(channel)].append(channel)
 
         channel_paths = []
-        command_base = f"{self._oiio_binaries_discovery.get_oiiotool_executable()}"
+        thread_count = self._app_configuration.oiio_configuration.thread_count
+        command_base = f"{self._oiio_binaries_discovery.get_oiiotool_executable()} --threads {thread_count}"
         commands_builder = CommandsBuilder(command_base, 8000)
 
         for channel_name, channels in images_to_channels.items():

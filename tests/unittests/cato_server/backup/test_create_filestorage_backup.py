@@ -4,7 +4,7 @@ from unittest import mock
 import pytest
 
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 
 
 @pytest.fixture

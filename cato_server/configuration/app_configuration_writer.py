@@ -5,7 +5,7 @@ from typing import IO, cast
 import humanfriendly
 
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.scheduler_configuration import (
+from cato_server.configuration.parts.scheduler_configuration import (
     DeadlineSchedulerConfiguration,
 )
 

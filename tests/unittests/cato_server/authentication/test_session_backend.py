@@ -5,7 +5,7 @@ import pytest
 from freezegun import freeze_time
 
 from cato_server.authentication.session_backend import SessionBackend
-from cato_server.configuration.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_common.domain.auth.email import Email
 from cato_server.domain.auth.session import Session

@@ -1,14 +1,17 @@
 import os
 
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.configuration.celery_configuration import CeleryConfiguration
-from cato_server.configuration.logging_configuration import LoggingConfiguration
+from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
+from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
-from cato_server.configuration.scheduler_configuration import SchedulerConfiguration
-from cato_server.configuration.secrets_configuration import SecretsConfiguration
-from cato_server.configuration.sentry_configuration import SentryConfiguration
-from cato_server.configuration.session_configuration import SessionConfiguration
-from cato_server.configuration.storage_configuration import StorageConfiguration
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
+from cato_server.configuration.parts.scheduler_configuration import (
+    SchedulerConfiguration,
+)
+from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
+from cato_server.configuration.parts.sentry_configuration import SentryConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.domain.auth.secret_str import SecretStr
 
 TEN_MEGABYTES = 10_000_000
@@ -49,6 +52,7 @@ class AppConfigurationDefaults:
             celery_configuration=CeleryConfiguration(
                 broker_url="pyamqp://guest@localhost//"
             ),
+            oiio_configuration=OiioConfiguration(thread_count=1),
         )
 
     def create_ready_to_use(self, config_folder) -> AppConfiguration:
@@ -81,4 +85,5 @@ class AppConfigurationDefaults:
             celery_configuration=CeleryConfiguration(
                 broker_url="pyamqp://guest@localhost//"
             ),
+            oiio_configuration=OiioConfiguration(thread_count=1),
         )

@@ -4,6 +4,9 @@ import pytest
 
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
+from cato_server.configuration.app_configuration_defaults import (
+    AppConfigurationDefaults,
+)
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 from cato_server.images.oiio_command_executor import OiioCommandExecutor
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
@@ -51,6 +54,7 @@ def test_context(test_result_factory):
                 OiioBinariesDiscovery(),
                 self.mock_test_result_repository,
                 self.mock_oiio_command_executor,
+                AppConfigurationDefaults().create(),
             )
 
     return TestContext()

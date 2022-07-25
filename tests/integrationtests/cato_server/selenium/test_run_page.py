@@ -485,8 +485,10 @@ class TestRunSuitePage:
         )
 
     def _assert_first_test_status_icon_has_title(self, selenium_driver, title):
-        assert selenium_driver.find_element_by_id("suiteList").find_element_by_xpath(
-            f'//*[@id="suite-1-test-1"]/span[1]/span[@title="{title}"]'
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element_by_id("suiteList").find_element_by_xpath(
+                f'//*[@id="suite-1-test-1"]/span[1]/span[@title="{title}"]'
+            )
         )
 
     def _update_run_status(self, sqlalchemy_test_result_repository, test_result):

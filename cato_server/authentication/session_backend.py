@@ -1,7 +1,7 @@
 import logging
 from typing import Optional
 
-from cato_server.configuration.session_configuration import SessionConfiguration
+from cato_server.configuration.parts.session_configuration import SessionConfiguration
 from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
