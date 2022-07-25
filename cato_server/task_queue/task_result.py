@@ -20,8 +20,8 @@ class TaskResult(Generic[T]):
     task_id: str
     state: TaskResultState
     url: str
-    _result: Optional[T]
-    _error_message: Optional[str]
+    result_: Optional[T]
+    error_message_: Optional[str]
 
     @property
     def result(self) -> T:
@@ -29,7 +29,7 @@ class TaskResult(Generic[T]):
             raise IllegalStateError(
                 f"Can't get a result of a TaskResult with state {self.state}"
             )
-        return self._result
+        return self.result_
 
     @property
     def error_message(self):
@@ -37,4 +37,4 @@ class TaskResult(Generic[T]):
             raise IllegalStateError(
                 f"Can't get n error message of a TaskResult with state {self.state}"
             )
-        return self._error_message
+        return self.error_message_

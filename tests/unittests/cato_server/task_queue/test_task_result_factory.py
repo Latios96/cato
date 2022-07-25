@@ -32,8 +32,8 @@ def test_should_create_pending_task_result(task_result_factory):
         task_id=TASK_ID,
         state=TaskResultState.PENDING,
         url=TASK_URL,
-        _result=None,
-        _error_message=None,
+        result_=None,
+        error_message_=None,
     )
 
 
@@ -44,8 +44,8 @@ def test_should_create_successful_task_result(task_result_factory):
         task_id=TASK_ID,
         state=TaskResultState.SUCCESS,
         url=TASK_URL,
-        _result=42,
-        _error_message=None,
+        result_=42,
+        error_message_=None,
     )
 
 
@@ -58,8 +58,8 @@ def test_should_create_failed_task_result(task_result_factory):
         task_id=TASK_ID,
         state=TaskResultState.FAILURE,
         url=TASK_URL,
-        _result=None,
-        _error_message="this is my error message",
+        result_=None,
+        error_message_="this is my error message",
     )
 
 
@@ -80,8 +80,8 @@ class TestFromAsyncResult:
             task_id=TASK_ID,
             state=TaskResultState.PENDING,
             url=TASK_URL,
-            _result=None,
-            _error_message=None,
+            result_=None,
+            error_message_=None,
         )
 
     def test_should_create_successful_task_result(self, task_result_factory):
@@ -96,8 +96,8 @@ class TestFromAsyncResult:
             task_id=TASK_ID,
             state=TaskResultState.SUCCESS,
             url=TASK_URL,
-            _result={"value": 42},
-            _error_message=None,
+            result_={"value": 42},
+            error_message_=None,
         )
 
     @pytest.mark.parametrize(
@@ -125,6 +125,6 @@ class TestFromAsyncResult:
             task_id=TASK_ID,
             state=TaskResultState.FAILURE,
             url=TASK_URL,
-            _result=None,
-            _error_message=expected_message,
+            result_=None,
+            error_message_=expected_message,
         )

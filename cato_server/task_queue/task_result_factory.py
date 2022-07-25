@@ -39,8 +39,8 @@ class TaskResultFactory:
             task_id=task_id,
             state=TaskResultState.PENDING,
             url=self._create_url(task_id),
-            _result=None,
-            _error_message=None,
+            result_=None,
+            error_message_=None,
         )
 
     def create_success_result(self, task_id: str, result: T) -> TaskResult[T]:
@@ -48,8 +48,8 @@ class TaskResultFactory:
             task_id=task_id,
             state=TaskResultState.SUCCESS,
             url=self._create_url(task_id),
-            _result=result,
-            _error_message=None,
+            result_=result,
+            error_message_=None,
         )
 
     def create_failed_result(self, task_id: str, error_message: str) -> TaskResult:
@@ -57,8 +57,8 @@ class TaskResultFactory:
             task_id=task_id,
             state=TaskResultState.FAILURE,
             url=self._create_url(task_id),
-            _result=None,
-            _error_message=error_message,
+            result_=None,
+            error_message_=error_message,
         )
 
     def _create_url(self, task_id: str):

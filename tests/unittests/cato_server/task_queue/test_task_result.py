@@ -17,15 +17,15 @@ class TestAccessToResult:
                 task_id="test",
                 state=TaskResultState.PENDING,
                 url="/some/url",
-                _result=None,
-                _error_message=None,
+                result_=None,
+                error_message_=None,
             ),
             TaskResult(
                 task_id="test",
                 state=TaskResultState.FAILURE,
                 url="/some/url",
-                _result=None,
-                _error_message="error",
+                result_=None,
+                error_message_="error",
             ),
         ],
     )
@@ -38,8 +38,8 @@ class TestAccessToResult:
             task_id="test",
             state=TaskResultState.SUCCESS,
             url="/some/url",
-            _result=42,
-            _error_message=None,
+            result_=42,
+            error_message_=None,
         )
 
         assert task_result.result == 42
@@ -53,15 +53,15 @@ class TestAccessToErrorMessage:
                 task_id="test",
                 state=TaskResultState.PENDING,
                 url="/some/url",
-                _result=None,
-                _error_message=None,
+                result_=None,
+                error_message_=None,
             ),
             TaskResult(
                 task_id="test",
                 state=TaskResultState.SUCCESS,
                 url="/some/url",
-                _result=42,
-                _error_message=None,
+                result_=42,
+                error_message_=None,
             ),
         ],
     )
@@ -74,8 +74,8 @@ class TestAccessToErrorMessage:
             task_id="test",
             state=TaskResultState.FAILURE,
             url="/some/url",
-            _result=None,
-            _error_message="error",
+            result_=None,
+            error_message_="error",
         )
 
         assert task_result.error_message == "error"
