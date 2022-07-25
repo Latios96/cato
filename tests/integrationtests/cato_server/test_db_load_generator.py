@@ -10,6 +10,7 @@ from cato_server.configuration.app_configuration_writer import AppConfigurationW
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.logging_configuration import LoggingConfiguration
 from cato_server.configuration.oidc_config import OidcConfiguration
+from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
 from cato_server.configuration.parts.scheduler_configuration import (
     SchedulerConfiguration,
 )
@@ -50,6 +51,7 @@ def test_run_db_load_test(tmp_path, snapshot):
         celery_configuration=CeleryConfiguration(
             broker_url="pyamqp://guest@localhost//"
         ),
+        oiio_configuration=OiioConfiguration(thread_count=1),
     )
     config_path = os.path.join(str(tmp_path), "config.ini")
     AppConfigurationWriter().write_file(config, config_path)
