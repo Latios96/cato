@@ -99,7 +99,11 @@ class GenericClassMapper:
             return False
 
     def _case_convert_write(self, name):
+        if name.endswith("_"):
+            return camelcase(name) + "_"
         return camelcase(name)
 
     def _case_convert_read(self, name):
+        if name.endswith("_"):
+            return snakecase(name) + "_"
         return snakecase(name)

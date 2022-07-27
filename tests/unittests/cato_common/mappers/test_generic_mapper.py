@@ -52,6 +52,11 @@ class DataClassWithDatetime:
 
 
 @dataclass
+class DataClassWithUnderscoreMembers:
+    my_int_: int
+
+
+@dataclass
 class NestedClass:
     my_int: int
     my_string: str
@@ -182,6 +187,13 @@ class TestMapToDict:
         )
 
         assert result == {"myInt": 1, "myDatetime": "2021-08-05T09:53:00"}
+
+    def test_map_class_with_fields_ending_with_underscore(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            DataClassWithUnderscoreMembers(my_int_=1)
+        )
+
+        assert result == {"myInt_": 1}
 
 
 class TestMapFromDict:
@@ -466,3 +478,10 @@ class TestMapFromDict:
         assert result == DataClassWithDatetime(
             my_int=1, my_datetime=datetime.datetime(2021, 8, 5, 9, 53)
         )
+
+    def test_map_class_with_fields_ending_with_underscore(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {"myInt_": 1}, DataClassWithUnderscoreMembers
+        )
+
+        assert result == DataClassWithUnderscoreMembers(my_int_=1)
