@@ -26,8 +26,7 @@ class CreateThumbnailTask(Task):
         test_result = self._test_result_repository.find_by_id(params.test_result_id)
         if not test_result:
             raise RuntimeError(
-                "Did not expect to not find a TestResult with id %s in the db.",
-                params.test_result_id,
+                f"Did not expect to not find a TestResult with id {params.test_result_id} in the db.",
             )
 
         self._create_thumbnail.create_thumbnail(test_result)
