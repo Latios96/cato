@@ -27,11 +27,11 @@ class ImagesBlueprint(APIRouter):
         self._object_mapper = object_mapper
         self._store_image = store_image
 
-        self.post("/images")(self.upload_file)
+        self.post("/images")(self.upload_image)
         self.get("/images/original_file/{image_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
-    def upload_file(self, file: UploadFile = File(...)) -> Response:
+    def upload_image(self, file: UploadFile = File(...)) -> Response:
         uploaded_file = file
         if not uploaded_file.filename:
             return JSONResponse(
