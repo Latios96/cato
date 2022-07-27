@@ -6,7 +6,7 @@ from celery.result import AsyncResult
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
-from cato_server.task_queue.task_result import TaskResult, TaskResultState
+from cato_common.domain.tasks.task_result import TaskResult, TaskResultState
 from cato_server.task_queue.task_result_factory import TaskResultFactory
 from tests.utils import mock_safe
 

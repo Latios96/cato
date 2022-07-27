@@ -14,10 +14,10 @@ from tenacity import (
 
 from cato_api_client.http_template import HttpTemplate
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.task_queue.task_result import (
+from cato_common.domain.tasks.task_result import (
     TaskResult,
     TaskResultState,
-)  # todo move to cato_common
+)
 
 logger = logging.getLogger(__name__)
 

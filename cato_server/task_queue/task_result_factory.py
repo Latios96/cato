@@ -5,7 +5,7 @@ from celery.result import AsyncResult
 
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.configuration.app_configuration import AppConfiguration
-from cato_server.task_queue.task_result import TaskResult, TaskResultState
+from cato_common.domain.tasks.task_result import TaskResult, TaskResultState
 
 T = TypeVar("T")
 

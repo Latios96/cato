@@ -2,7 +2,7 @@
 # error message only for failed
 import pytest
 
-from cato_server.task_queue.task_result import (
+from cato_common.domain.tasks.task_result import (
     TaskResult,
     TaskResultState,
     IllegalStateError,

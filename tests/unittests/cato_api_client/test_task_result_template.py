@@ -6,7 +6,7 @@ import pytest
 
 from cato_api_client.http_template import HttpTemplate, HttpTemplateResponse
 from cato_api_client.task_result_template import TaskResultTemplate
-from cato_server.task_queue.task_result import TaskResult, TaskResultState
+from cato_common.domain.tasks.task_result import TaskResult, TaskResultState
 
 
 from tests.utils import mock_safe

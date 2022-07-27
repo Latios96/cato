@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.task_queue.task import Task, P, R, Void
+from cato_server.task_queue.task import Task, Void
 
 
 def test_should_handle_serialization_correctly(object_mapper):
