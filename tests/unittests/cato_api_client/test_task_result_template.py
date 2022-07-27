@@ -7,9 +7,27 @@ import pytest
 from cato_api_client.http_template import HttpTemplate, HttpTemplateResponse
 from cato_api_client.task_result_template import TaskResultTemplate
 from cato_server.task_queue.task_result import TaskResult, TaskResultState
+
+
 from tests.utils import mock_safe
 
 R = TypeVar("R")
+
+SUCCESSFUL_TASK_RESULT = {
+    "taskId": "id",
+    "state": TaskResultState.SUCCESS,
+    "url": "/test",
+    "result_": {"value": 42},
+    "errorMessage_": None,
+}
+
+PENDING_TASK_RESULT = {
+    "taskId": "id",
+    "state": TaskResultState.PENDING,
+    "url": "/test",
+    "result_": None,
+    "errorMessage_": None,
+}
 
 
 @pytest.fixture
@@ -62,35 +80,17 @@ def test_should_get_task_result_successfully(
 
     response_1 = mock_http_template_response_factory(
         200,
-        {
-            "taskId": "id",
-            "state": TaskResultState.PENDING,
-            "url": "/test",
-            "result_": None,
-            "errorMessage_": None,
-        },
+        PENDING_TASK_RESULT,
         TaskResult,
     )
     response_2 = mock_http_template_response_factory(
         200,
-        {
-            "taskId": "id",
-            "state": TaskResultState.PENDING,
-            "url": "/test",
-            "result_": None,
-            "errorMessage_": None,
-        },
+        PENDING_TASK_RESULT,
         TaskResult,
     )
     response_3 = mock_http_template_response_factory(
         200,
-        {
-            "taskId": "id",
-            "state": TaskResultState.SUCCESS,
-            "url": "/test",
-            "result_": {"value": 42},
-            "errorMessage_": None,
-        },
+        SUCCESSFUL_TASK_RESULT,
         TaskResult,
     )
     test_context.mock_http_template.get_for_entity.side_effect = [
@@ -120,13 +120,7 @@ def test_should_timeout(test_context, mock_http_template_response_factory):
 
     response_1 = mock_http_template_response_factory(
         200,
-        {
-            "taskId": "id",
-            "state": TaskResultState.PENDING,
-            "url": "/test",
-            "result_": None,
-            "errorMessage_": None,
-        },
+        PENDING_TASK_RESULT,
         TaskResult,
     )
     test_context.mock_http_template.get_for_entity.side_effect = [
@@ -155,13 +149,7 @@ def test_should_throw_when_requests_does_not_return_200(
 
     response_1 = mock_http_template_response_factory(
         500,
-        {
-            "taskId": "id",
-            "state": TaskResultState.PENDING,
-            "url": "/test",
-            "result_": None,
-            "errorMessage_": None,
-        },
+        PENDING_TASK_RESULT,
         TaskResult,
     )
 
