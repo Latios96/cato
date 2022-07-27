@@ -28,7 +28,6 @@ def authenticated_requests_session(http_session_cookie, crsf_token):
     return session
 
 
-@pytest.mark.skip(reason="Seems to be flaky in CI")
 def test_thumbnail_should_be_created_async_after_finising_test(
     live_server_with_celery, authenticated_requests_session, test_result, stored_image
 ):
