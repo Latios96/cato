@@ -1,7 +1,7 @@
 import pytest
 import requests
 from tenacity import stop_after_attempt, wait_fixed, retry
-
+from testcontainers.postgres import PostgresContainer
 from tests.integrationtests.utils import tenacity_before_print
 
 
@@ -26,6 +26,17 @@ def authenticated_requests_session(http_session_cookie, crsf_token):
     session.headers["X-XSRF-TOKEN"] = crsf_token
 
     return session
+
+
+class PgContainer(PostgresContainer):
+    def get_container_host_ip(self):
+        return "localhost"
+
+
+@pytest.fixture
+def db_connection_string():
+    with PgContainer() as postgres_container:
+        yield postgres_container.get_connection_url()
 
 
 def test_thumbnail_should_be_created_async_after_finising_test(
