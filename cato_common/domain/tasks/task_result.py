@@ -25,7 +25,7 @@ class TaskResult(Generic[T]):
 
     @property
     def result(self) -> T:
-        if not self.state == TaskResultState.SUCCESS:
+        if not self.state == TaskResultState.SUCCESS or self.result_ is None:
             raise IllegalStateError(
                 f"Can't get a result of a TaskResult with state {self.state}"
             )
