@@ -69,6 +69,7 @@ def test_thumbnail_should_be_created_async_after_finising_test(
         )
         rv = authenticated_requests_session.get(url)
 
+        print(rv.status_code, rv.text)
         assert rv.status_code == 200
         assert rv.json()["thumbnailFileId"] != None
 
