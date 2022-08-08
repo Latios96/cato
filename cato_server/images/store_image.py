@@ -33,7 +33,7 @@ class StoreImage:
 
         return self.store_image_from_file_entity(original_file)
 
-    def store_image_from_file_entity(self, original_file: File):
+    def store_image_from_file_entity(self, original_file: File) -> Image:
         logger.info("Splitting image into channels..")
 
         channel_files = []
