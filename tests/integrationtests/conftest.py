@@ -30,7 +30,9 @@ class LiveServer:
             @classmethod
             def run(cls):
                 print(f"Running server on port {self._port}")
-                config = uvicorn.Config(self._app, host="127.0.0.1", port=self._port)
+                config = uvicorn.Config(
+                    self._app, host="127.0.0.1", port=self._port, debug=True
+                )
                 self.server = uvicorn.Server(config)
                 self.server.run()
 

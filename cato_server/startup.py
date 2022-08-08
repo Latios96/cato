@@ -97,7 +97,7 @@ def create_app(
     logger.info("Creating FastApi app..")
     obj_graph = create_obj_graph(bindings)
 
-    app = FastAPI()
+    app = FastAPI(debug=app_configuration.debug)
     app.include_router(obj_graph.provide(AboutBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(ProjectsBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(FilesBlueprint), prefix="/api/v1")
