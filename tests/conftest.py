@@ -193,7 +193,7 @@ def sqlalchemy_engine(db_connection_string):
             connect_args={"check_same_thread": False},
             poolclass=StaticPool,
         )
-    return sqlalchemy.create_engine(db_connection_string, echo=True)
+    return sqlalchemy.create_engine(db_connection_string)
 
 
 @pytest.fixture
