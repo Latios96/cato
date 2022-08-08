@@ -592,6 +592,7 @@ def app_and_config_fixture(
     mocked_scheduler_submitter,
     oidc_configuration,
     celery_binding,
+    db_connection_string,
 ):
     port = random_port()
     config = AppConfiguration(
@@ -605,7 +606,7 @@ def app_and_config_fixture(
         hostname=f"localhost",
         public_url=f"http://127.0.0.1:{port}",
         storage_configuration=StorageConfiguration(
-            database_url="sqlite:///:memory:", file_storage_url=str(tmp_path)
+            database_url=db_connection_string, file_storage_url=str(tmp_path)
         ),
         logging_configuration=LoggingConfiguration(
             "log.txt", False, humanfriendly.parse_size("10mb"), 10
