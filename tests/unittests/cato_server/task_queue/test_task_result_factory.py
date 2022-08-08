@@ -11,7 +11,7 @@ from cato_server.task_queue.task_result_factory import TaskResultFactory
 from tests.utils import mock_safe
 
 TASK_ID = str(uuid.uuid4())
-TASK_URL = f"http://127.0.0.1/api/v1/task_results/{TASK_ID}"
+TASK_URL = f"http://127.0.0.1/api/v1/results/{TASK_ID}"
 
 REAL_TRACEBACK = """Traceback (most recent call last):
   File "C:\Python37\Lib\code.py", line 90, in runcode
