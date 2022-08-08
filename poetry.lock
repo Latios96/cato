@@ -1780,7 +1780,7 @@ python-versions = "*"
 
 [[package]]
 name = "types-psutil"
-version = "5.9.3"
+version = "5.9.4"
 description = "Typing stubs for psutil"
 category = "dev"
 optional = false
