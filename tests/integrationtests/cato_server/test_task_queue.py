@@ -6,7 +6,7 @@ import requests
 from tenacity import stop_after_attempt, wait_fixed, retry
 from testcontainers.postgres import PostgresContainer
 
-from tests.integrationtests.cato_server import testcontainers_test
+from tests.integrationtests.cato_server import testcontainers_test, celery_test
 from tests.integrationtests.utils import tenacity_before_print
 
 
@@ -44,10 +44,7 @@ def db_connection_string():
         yield postgres_container.get_connection_url()
 
 
-@pytest.mark.skipif(
-    reason="Test does not work on Linux in CI right now..",
-    condition=sys.platform == "linux" and os.environ.get("CI") is not None,
-)
+@celery_test
 @testcontainers_test
 def test_thumbnail_should_be_created_async_after_finising_test(
     live_server_with_celery, authenticated_requests_session, test_result, stored_image
