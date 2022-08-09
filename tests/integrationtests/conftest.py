@@ -7,6 +7,7 @@ from dataclasses import dataclass
 from typing import Callable, List
 
 import pytest
+import requests
 import uvicorn
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
@@ -79,6 +80,12 @@ def live_server(app_and_config_fixture, project):
     live_server.spawn_live_server()
     yield live_server
     live_server.terminate()
+
+
+@pytest.fixture
+def live_server_with_celery(live_server, celery_app, celery_worker):
+    celery_worker.reload()
+    return live_server
 
 
 @dataclass
@@ -163,3 +170,15 @@ def authenticated_selenium_driver(selenium_driver, http_session_cookie):
         [Cookie(name=session_cookie_name, value=cookie_value)]
     )
     yield selenium_driver
+
+
+@pytest.fixture
+def authenticated_requests_session(http_session_cookie, crsf_token):
+    session_cookie_name, session_cookie_value = http_session_cookie
+
+    session = requests.Session()
+    session.cookies.set(session_cookie_name, session_cookie_value)
+    session.cookies["XSRF-TOKEN"] = crsf_token
+    session.headers["X-XSRF-TOKEN"] = crsf_token
+
+    return session

@@ -1,41 +1,14 @@
-import os
-import sys
-
 import pytest
-import requests
 from tenacity import stop_after_attempt, wait_fixed, retry
-from testcontainers.postgres import PostgresContainer
 
 from tests.integrationtests.cato_server import testcontainers_test, celery_test
+from tests.integrationtests.postgres_testcontainer import PgContainer
 from tests.integrationtests.utils import tenacity_before_print
 
 
 @pytest.fixture
 def celery_binding(celery_app):
     return celery_app
-
-
-@pytest.fixture
-def live_server_with_celery(live_server, celery_app, celery_worker):
-    celery_worker.reload()
-    return live_server
-
-
-@pytest.fixture
-def authenticated_requests_session(http_session_cookie, crsf_token):
-    session_cookie_name, session_cookie_value = http_session_cookie
-
-    session = requests.Session()
-    session.cookies.set(session_cookie_name, session_cookie_value)
-    session.cookies["XSRF-TOKEN"] = crsf_token
-    session.headers["X-XSRF-TOKEN"] = crsf_token
-
-    return session
-
-
-class PgContainer(PostgresContainer):
-    def get_container_host_ip(self):
-        return "localhost"
 
 
 @pytest.fixture
