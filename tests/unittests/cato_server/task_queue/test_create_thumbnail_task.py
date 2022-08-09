@@ -33,6 +33,7 @@ def test_should_call_create_thumbnail_successfully(test_context, test_result_fac
     )
 
     test_context.mock_create_thumbnail.create_thumbnail.assert_called_with(test_result)
+    test_context.mock_test_result_repository.find_by_id.assert_called_with(42)
 
 
 def test_should_throw_if_test_result_not_found(test_context):
@@ -42,3 +43,4 @@ def test_should_throw_if_test_result_not_found(test_context):
         test_context.create_thumbnail_task._execute(
             CreateThumbnailParams(test_result_id=42)
         )
+    test_context.mock_test_result_repository.find_by_id.assert_called_with(42)
