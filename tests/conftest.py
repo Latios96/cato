@@ -24,6 +24,7 @@ from cato.domain.test_suite import TestSuite
 from cato_common.domain.auth.email import Email
 from cato_common.domain.auth.username import Username
 from cato_common.domain.branch_name import BranchName
+from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
@@ -483,6 +484,19 @@ def stored_file(sqlalchemy_deduplicating_storage, test_resource_provider):
     return sqlalchemy_deduplicating_storage.save_file(
         test_resource_provider.resource_by_name("test.exr")
     )
+
+
+@pytest.fixture()
+def stored_file_factory():
+    def func():
+        return File(
+            id=0,
+            name="test.exr",
+            hash="c9e76fde29d88e42dbc9b4a28c4b1eed67d8cb1247715768f9ca1ac5f3f3d5f1",
+            value_counter=0,
+        )
+
+    return func
 
 
 @pytest.fixture()
