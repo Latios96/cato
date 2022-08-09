@@ -21,6 +21,8 @@ from cato.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite
+from cato_api_client.cato_api_client import CatoApiClient
+from cato_api_client.http_template import HttpTemplate
 from cato_common.domain.auth.email import Email
 from cato_common.domain.auth.username import Username
 from cato_common.domain.branch_name import BranchName
@@ -793,3 +795,15 @@ def saving_reference_image_edit_factory(
         )
 
     return func
+
+
+@pytest.fixture
+def cato_api_client(app_and_config_fixture, client, object_mapper, api_token_str):
+    pp, config = app_and_config_fixture
+    api_client = CatoApiClient(
+        f"http://localhost:{config.port}",
+        HttpTemplate(object_mapper, client),
+        object_mapper,
+        api_token_provider=lambda: api_token_str,
+    )
+    return api_client
