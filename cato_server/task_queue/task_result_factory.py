@@ -62,7 +62,7 @@ class TaskResultFactory:
         )
 
     def _create_url(self, task_id: str):
-        return self._app_configuration.public_url + f"/api/v1/results/{task_id}"
+        return self._app_configuration.public_url + f"/api/v1/result/{task_id}"
 
     def _error_message_from_traceback(self, traceback):
         if traceback:
