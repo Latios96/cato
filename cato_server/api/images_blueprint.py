@@ -9,6 +9,8 @@ from cato_server.images.store_image import StoreImage
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
+from cato_server.task_queue.cato_celery import CatoCelery
+from cato_server.task_queue.task_result_factory import TaskResultFactory
 
 logger = logging.getLogger(__name__)
 
@@ -20,14 +22,19 @@ class ImagesBlueprint(APIRouter):
         image_repository: ImageRepository,
         object_mapper: ObjectMapper,
         store_image: StoreImage,
+        cato_celery: CatoCelery,
+        task_result_factory: TaskResultFactory,
     ):
         super(ImagesBlueprint, self).__init__()
         self._file_storage = file_storage
         self._image_repository = image_repository
         self._object_mapper = object_mapper
         self._store_image = store_image
+        self._cato_celery = cato_celery
+        self._task_result_factory = task_result_factory
 
         self.post("/images")(self.upload_image)
+        self.post("/images-async")(self.upload_image_async)
         self.get("/images/original_file/{image_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
@@ -52,6 +59,31 @@ class ImagesBlueprint(APIRouter):
             )
 
         return JSONResponse(content=self._object_mapper.to_dict(image), status_code=201)
+
+    def upload_image_async(self, file: UploadFile = File(...)) -> Response:
+        uploaded_file = file
+        if not uploaded_file.filename:
+            return JSONResponse(
+                content={"file": "Filename can not be empty!"}, status_code=400
+            )
+
+        try:
+            logger.info("Storing original image file in db..")
+            original_file = self._file_storage.save_stream(
+                uploaded_file.filename, uploaded_file.file
+            )
+            logger.info("Stored original file at %s", original_file)
+        except Exception as e:
+            logger.error(e, exc_info=True)
+            return JSONResponse(
+                content={"message": "Error when saving image"}, status_code=400
+            )
+
+        async_result = self._cato_celery.launch_store_image_task(original_file.id)
+        task_result = self._task_result_factory.from_async_result(async_result)
+        return JSONResponse(
+            content=self._object_mapper.to_dict(task_result), status_code=201
+        )
 
     def get_original_image_file(self, image_id: int) -> Response:
         image = self._image_repository.find_by_id(image_id)

@@ -1,4 +1,7 @@
+import pytest
+
 API_V_IMAGES = "/api/v1/images"
+API_V_IMAGES_ASYNC = "/api/v1/images-async"
 
 
 def test_upload_image(client_with_session, test_resource_provider):
@@ -58,6 +61,40 @@ def test_upload_unsupported_file(client_with_session, test_resource_provider):
     response = client_with_session.post(API_V_IMAGES, files=data)
 
     assert response.status_code == 400
+
+
+@pytest.fixture
+def celery_binding(celery_app, celery_worker):
+    celery_worker.reload()
+    return celery_app
+
+
+def test_upload_async_image(
+    client_with_session, test_resource_provider, app_and_config_fixture
+):
+    app, config = app_and_config_fixture
+    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
+    data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
+    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+
+    assert response.status_code == 201
+    assert response.json()["errorMessage_"] is None
+    assert response.json()["result_"] is None
+    assert response.json()["state"] == "PENDING"
+    assert len(response.json()["taskId"]) == 36
+    assert (
+        response.json()["url"]
+        == f"http://127.0.0.1:{config.port}/api/v1/result/{response.json()['taskId']}"
+    )
+
+
+def test_upload_image_async_no_filename(client_with_session, test_resource_provider):
+    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
+    data = {"file": ("", open(test_image, "rb"))}
+    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+
+    assert response.status_code == 400
+    assert response.json() == {"file": "Filename can not be empty!"}
 
 
 def test_get_original_image_file_should_return_file(client_with_session, stored_image):
