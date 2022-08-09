@@ -1,3 +1,4 @@
+import datetime
 import logging
 import os
 from typing import Optional, Type, TypeVar, List, Dict, Callable
@@ -6,6 +7,7 @@ from urllib.parse import quote
 import cato_api_client.api_client_logging  # noqa: F401
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_api_client.http_template import HttpTemplate
+from cato_api_client.task_result_template import TaskResultTemplate
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
@@ -15,6 +17,7 @@ from cato_common.domain.project import Project
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import Run
 from cato_common.domain.submission_info import SubmissionInfo
+from cato_common.domain.tasks.task_result import TaskResult
 from cato_common.domain.test_edit import (
     AbstractTestEdit,
     ComparisonSettingsEdit,
@@ -27,6 +30,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
+from cato_common.dtos.store_image_result import StoreImageResult
 from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.api.dtos.api_success import ApiSuccess
@@ -50,6 +54,9 @@ class CatoApiClient:
         self._object_mapper = object_mapper
         if api_token_provider:
             self._login(api_token_provider())
+        self._task_result_template = TaskResultTemplate(
+            self._http_template, self._object_mapper
+        )
 
     def _login(self, api_token_str: ApiTokenStr):
         self._http_template.set_authorization_header(str(api_token_str.to_bearer()))
@@ -93,6 +100,30 @@ class CatoApiClient:
         if response.status_code() == 201:
             return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
+
+    def upload_image_async(self, path: str) -> Image:
+        if not os.path.exists(path):
+            raise ValueError(f"Path {path} does not exists!")
+
+        url = self._build_url("/api/v1/images-async")
+        files = {"file": (os.path.basename(path), open(path, "rb"))}
+
+        logger.info("Uploading image %s", path)
+        response = self._http_template.post_files_for_entity(
+            url, None, files, TaskResult
+        )
+
+        if response.status_code() == 201:
+            task_result = response.get_entity()
+            store_image_result = (
+                self._task_result_template.wait_for_task_result_to_complete(
+                    task_result,
+                    StoreImageResult,
+                    timeout=datetime.timedelta(seconds=120),
+                    poll_interval=datetime.timedelta(seconds=1),
+                )
+            )
+            return store_image_result.image
 
     def download_original_image(self, image_id: int) -> Optional[bytes]:
         url = self._build_url(f"/api/v1/images/original_file/{image_id}")
