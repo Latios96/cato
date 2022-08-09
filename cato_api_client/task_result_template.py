@@ -24,6 +24,13 @@ logger = logging.getLogger(__name__)
 T = TypeVar("T")
 
 
+class TaskResultError(Exception):
+    def __init__(self, task_result: TaskResult):
+        super(TaskResultError, self).__init__(
+            f'Task with id {task_result.task_id} failed with message: "{task_result.error_message}"'
+        )
+
+
 class TaskResultTemplate:
     def __init__(self, http_template: HttpTemplate, object_mapper: ObjectMapper):
         self._http_template = http_template
@@ -45,7 +52,7 @@ class TaskResultTemplate:
         )
         def fetch_task_result():
             task_result_response = self._http_template.get_for_entity(
-                task_result.url, TaskResult[result_cls]
+                task_result.url, TaskResult
             )
             if not task_result_response.status_code() == 200:
                 raise ValueError(
@@ -54,6 +61,9 @@ class TaskResultTemplate:
 
             entity = task_result_response.get_entity()
             assert entity.state != TaskResultState.PENDING
+
+            if entity.state == TaskResultState.FAILURE:
+                raise TaskResultError(entity)
 
             return self._object_mapper.from_dict(entity.result, result_cls)
 

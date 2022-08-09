@@ -5,7 +5,7 @@ from typing import Dict, Type, TypeVar
 import pytest
 
 from cato_api_client.http_template import HttpTemplate, HttpTemplateResponse
-from cato_api_client.task_result_template import TaskResultTemplate
+from cato_api_client.task_result_template import TaskResultTemplate, TaskResultError
 from cato_common.domain.tasks.task_result import TaskResult, TaskResultState
 
 
@@ -27,6 +27,14 @@ PENDING_TASK_RESULT = {
     "url": "/test",
     "result_": None,
     "errorMessage_": None,
+}
+
+FAILED_TASK_RESULT = {
+    "taskId": "id",
+    "state": TaskResultState.FAILURE,
+    "url": "/test",
+    "result_": None,
+    "errorMessage_": "This is an error message",
 }
 
 
@@ -156,6 +164,34 @@ def test_should_throw_when_requests_does_not_return_200(
     test_context.mock_http_template.get_for_entity.side_effect = [response_1]
 
     with pytest.raises(ValueError):
+        test_context.task_result_template.wait_for_task_result_to_complete(
+            task_result_to_wait_for,
+            MyResult,
+            timeout=datetime.timedelta(seconds=10),
+            poll_interval=datetime.timedelta(seconds=0.5),
+        )
+
+
+def test_should_throw_when_task_result_is_failed(
+    test_context, mock_http_template_response_factory
+):
+    task_result_to_wait_for = TaskResult(
+        task_id="id",
+        state=TaskResultState.PENDING,
+        url="/test",
+        result_=None,
+        error_message_=None,
+    )
+
+    response_1 = mock_http_template_response_factory(
+        200,
+        FAILED_TASK_RESULT,
+        TaskResult,
+    )
+
+    test_context.mock_http_template.get_for_entity.side_effect = [response_1]
+
+    with pytest.raises(TaskResultError):
         test_context.task_result_template.wait_for_task_result_to_complete(
             task_result_to_wait_for,
             MyResult,
