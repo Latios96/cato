@@ -38,7 +38,7 @@ def test_context():
             self.mock_cato_api_client.upload_image.side_effect = (
                 self._mocked_store_image
             )
-            self.mock_cato_api_client.upload_image_async.side_effect = (
+            self.mock_cato_api_client.upload_image.side_effect = (
                 self._mocked_store_image
             )
             self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
@@ -299,7 +299,7 @@ class TestTestRunner:
         assert result.error_value == None
         assert result.failure_reason == TestFailureReason.REFERENCE_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
-        assert test_context.mock_cato_api_client.upload_image_async.call_count == 1
+        assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
     def test_should_have_failed_with_missing_image_output(self, test_context):
         test_context.output_folder.image_output_exists.return_value = False
@@ -342,7 +342,7 @@ class TestTestRunner:
         assert result.error_value == None
         assert result.failure_reason == TestFailureReason.OUTPUT_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
-        assert test_context.mock_cato_api_client.upload_image_async.call_count == 1
+        assert test_context.mock_cato_api_client.upload_image.call_count == 1
 
     def test_should_have_failed_with_missing_reference_and_image_output(
         self, test_context

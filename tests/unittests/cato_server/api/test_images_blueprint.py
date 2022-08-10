@@ -1,4 +1,4 @@
-API_V_IMAGES_ASYNC = "/api/v1/images-async"
+API_V_IMAGES = "/api/v1/images"
 
 
 def test_get_image_not_found(client_with_session):
@@ -10,7 +10,7 @@ def test_get_image_not_found(client_with_session):
 def test_get_image_found_image(client_with_session, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+    response = client_with_session.post(API_V_IMAGES, files=data)
     image_id = response.json()["result_"]["image"]["id"]
 
     response = client_with_session.get(f"/api/v1/images/{image_id}")
@@ -32,7 +32,7 @@ def test_upload_async_image(
     app, config = app_and_config_fixture
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+    response = client_with_session.post(API_V_IMAGES, files=data)
 
     assert response.status_code == 201
     response_json = response.json()
@@ -57,7 +57,7 @@ def test_upload_async_image(
 def test_upload_image_async_no_filename(client_with_session, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": ("", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+    response = client_with_session.post(API_V_IMAGES, files=data)
 
     assert response.status_code == 400
     assert response.json() == {"file": "Filename can not be empty!"}
@@ -67,7 +67,7 @@ def test_upload_async_unsupported_file(client_with_session, test_resource_provid
     test_file = test_resource_provider.resource_by_name("unsupported-file.txt")
     data = {"file": ("test_file.txt", open(test_file, "rb"))}
 
-    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+    response = client_with_session.post(API_V_IMAGES, files=data)
 
     assert response.json()["state"] == "FAILURE"
 

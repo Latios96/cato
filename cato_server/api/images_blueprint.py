@@ -33,7 +33,7 @@ class ImagesBlueprint(APIRouter):
         self._cato_celery = cato_celery
         self._task_result_factory = task_result_factory
 
-        self.post("/images-async")(self.upload_image_async)
+        self.post("/images")(self.upload_image_async)
         self.get("/images/original_file/{image_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
