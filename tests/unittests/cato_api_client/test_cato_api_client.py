@@ -167,6 +167,13 @@ def test_upload_image_async(cato_api_client, test_resource_provider):
     )
 
 
+def test_upload_image_async_not_existing(cato_api_client):
+    path = os.path.join(os.path.dirname(__file__), "seAERER")
+
+    with pytest.raises(ValueError):
+        cato_api_client.upload_image_async(path)
+
+
 def test_create_run_success(cato_api_client, project):
     dto = CreateFullRunDto(
         project_id=project.id,
