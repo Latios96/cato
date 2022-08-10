@@ -1,32 +1,4 @@
-import pytest
-
-API_V_IMAGES = "/api/v1/images"
 API_V_IMAGES_ASYNC = "/api/v1/images-async"
-
-
-def test_upload_image(client_with_session, test_resource_provider):
-    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
-    data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES, files=data)
-
-    assert response.status_code == 201
-    assert response.json() == {
-        "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
-        "id": 1,
-        "name": "test_image_white.jpg",
-        "originalFileId": 1,
-        "width": 100,
-        "height": 100,
-    }
-
-
-def test_upload_image_no_filename(client_with_session, test_resource_provider):
-    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
-    data = {"file": ("", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES, files=data)
-
-    assert response.status_code == 400
-    assert response.json() == {"file": "Filename can not be empty!"}
 
 
 def test_get_image_not_found(client_with_session):
@@ -38,8 +10,8 @@ def test_get_image_not_found(client_with_session):
 def test_get_image_found_image(client_with_session, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES, files=data)
-    image_id = response.json()["id"]
+    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+    image_id = response.json()["result_"]["image"]["id"]
 
     response = client_with_session.get(f"/api/v1/images/{image_id}")
 
@@ -52,15 +24,6 @@ def test_get_image_found_image(client_with_session, test_resource_provider):
         "width": 100,
         "height": 100,
     }
-
-
-def test_upload_unsupported_file(client_with_session, test_resource_provider):
-    test_file = test_resource_provider.resource_by_name("unsupported-file.txt")
-    data = {"file": ("test_file.txt", open(test_file, "rb"))}
-
-    response = client_with_session.post(API_V_IMAGES, files=data)
-
-    assert response.status_code == 400
 
 
 def test_upload_async_image(

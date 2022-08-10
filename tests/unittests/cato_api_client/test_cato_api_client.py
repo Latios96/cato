@@ -130,28 +130,6 @@ def test_upload_output_failure(cato_api_client):
         cato_api_client.upload_output(42, "my text")
 
 
-def test_upload_image(cato_api_client, test_resource_provider):
-    path = test_resource_provider.resource_by_name("test.exr")
-
-    f = cato_api_client.upload_image(path)
-
-    assert f == Image(
-        id=1,
-        name="test.exr",
-        original_file_id=1,
-        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
-        width=2048,
-        height=1556,
-    )
-
-
-def test_upload_image_not_existing(cato_api_client):
-    path = os.path.join(os.path.dirname(__file__), "seAERER")
-
-    with pytest.raises(ValueError):
-        cato_api_client.upload_image(path)
-
-
 def test_upload_image_async(cato_api_client, test_resource_provider):
     path = test_resource_provider.resource_by_name("test.exr")
 

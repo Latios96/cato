@@ -87,20 +87,6 @@ class CatoApiClient:
             return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
 
-    def upload_image(self, path: str) -> Image:
-        if not os.path.exists(path):
-            raise ValueError(f"Path {path} does not exists!")
-
-        url = self._build_url("/api/v1/images")
-        files = {"file": (os.path.basename(path), open(path, "rb"))}
-
-        logger.info("Uploading image %s", path)
-        response = self._http_template.post_files_for_entity(url, None, files, Image)
-
-        if response.status_code() == 201:
-            return response.get_entity()
-        raise self._create_value_error_for_bad_request(response)
-
     def upload_image_async(self, path: str) -> Image:
         if not os.path.exists(path):
             raise ValueError(f"Path {path} does not exists!")
