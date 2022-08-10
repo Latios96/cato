@@ -37,28 +37,6 @@ class ImagesBlueprint(APIRouter):
         self.get("/images/original_file/{image_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
-    def upload_image(self, file: UploadFile = File(...)) -> Response:
-        uploaded_file = file
-        if not uploaded_file.filename:
-            return JSONResponse(
-                content={"file": "Filename can not be empty!"}, status_code=400
-            )
-
-        try:
-            logger.info("Storing original image file in db..")
-            original_file = self._file_storage.save_stream(
-                uploaded_file.filename, uploaded_file.file
-            )
-            logger.info("Stored original file at %s", original_file)
-            image = self._store_image.store_image_from_file_entity(original_file)
-        except Exception as e:
-            logger.error(e, exc_info=True)
-            return JSONResponse(
-                content={"message": "Error when saving image"}, status_code=400
-            )
-
-        return JSONResponse(content=self._object_mapper.to_dict(image), status_code=201)
-
     def upload_image_async(self, file: UploadFile = File(...)) -> Response:
         uploaded_file = file
         if not uploaded_file.filename:
