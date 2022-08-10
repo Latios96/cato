@@ -167,6 +167,56 @@ class CatoApiClient:
             return response.get_entity()
         raise self._create_value_error_for_bad_request(response)
 
+    def compare_images_async(
+        self,
+        reference_image: str,
+        output_image: str,
+        comparison_settings: ComparisonSettings,
+    ) -> CompareImageResult:
+        if not os.path.exists(reference_image):
+            raise ValueError(f"Path {reference_image} does not exists!")
+
+        if not os.path.exists(output_image):
+            raise ValueError(f"Path {output_image} does not exists!")
+
+        url = self._build_url("/api/v1/compare_image-async")
+        files = {
+            "reference_image": (
+                os.path.basename(reference_image),
+                open(reference_image, "rb"),
+            ),
+            "output_image": (
+                os.path.basename(output_image),
+                open(output_image, "rb"),
+            ),
+        }
+
+        data = {"comparison_settings": self._object_mapper.to_json(comparison_settings)}
+
+        logger.info("Uploading images for comparison..")
+        logger.info(
+            "Uploading reference image %s, output image %s with comparison settings %s",
+            reference_image,
+            output_image,
+            comparison_settings,
+        )
+        response = self._http_template.post_files_for_entity(
+            url, data, files, TaskResult
+        )
+
+        if response.status_code() == 201:
+            task_result = response.get_entity()
+            compare_image_result = (
+                self._task_result_template.wait_for_task_result_to_complete(
+                    task_result,
+                    CompareImageResult,
+                    timeout=datetime.timedelta(seconds=120),
+                    poll_interval=datetime.timedelta(seconds=1),
+                )
+            )
+            return compare_image_result
+        raise self._create_value_error_for_bad_request(response)
+
     def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
         url = self._build_url("/api/v1/runs/full")
         return self._create_with_http_template(url, create_run_dto, Run)

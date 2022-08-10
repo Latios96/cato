@@ -174,7 +174,7 @@ class TestRunner:
         )
         if reference_image is not None and image_output is not None:
             self._reporter.report_message("Comparing images on the server..")
-            image_compare_result = self._cato_api_client.compare_images(
+            image_compare_result = self._cato_api_client.compare_images_async(
                 reference_image,
                 image_output,
                 test.comparison_settings,
