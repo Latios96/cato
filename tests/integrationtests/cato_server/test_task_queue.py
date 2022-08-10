@@ -1,10 +1,9 @@
 from tenacity import stop_after_attempt, wait_fixed, retry
 
-from tests.integrationtests.cato_server import testcontainers_test, celery_test
+from tests.integrationtests.cato_server import testcontainers_test
 from tests.integrationtests.utils import tenacity_before_print
 
 
-@celery_test
 @testcontainers_test
 def test_thumbnail_should_be_created_async_after_finising_test(
     live_server, authenticated_requests_session, test_result, stored_image

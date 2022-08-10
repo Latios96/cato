@@ -8,7 +8,3 @@ testcontainers_test = pytest.mark.skipif(
     reason="Testcontainers don't work in CI on Windows for now",
     condition=sys.platform == "win32" and os.environ.get("CI") is not None,
 )
-celery_test = pytest.mark.skipif(
-    reason="Test does not work on Linux in CI right now..",
-    condition=sys.platform == "linux" and os.environ.get("CI") is not None,
-)
