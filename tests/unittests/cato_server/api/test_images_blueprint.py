@@ -72,23 +72,23 @@ def test_upload_async_image(
     response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
 
     assert response.status_code == 201
-    assert response.json()["errorMessage_"] is None
-    assert response.json()["result_"] == {
-        "image": {
-            "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
-            "height": 100,
-            "id": 1,
-            "name": "test_image_white.jpg",
-            "originalFileId": 1,
-            "width": 100,
-        }
+    response_json = response.json()
+    assert len(response_json.pop("taskId")) == 36
+    assert response_json == {
+        "errorMessage_": None,
+        "result_": {
+            "image": {
+                "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
+                "height": 100,
+                "id": 1,
+                "name": "test_image_white.jpg",
+                "originalFileId": 1,
+                "width": 100,
+            }
+        },
+        "state": "SUCCESS",
+        "url": f"http://127.0.0.1:{config.port}/api/v1/result/{response.json()['taskId']}",
     }
-    assert response.json()["state"] == "SUCCESS"
-    assert len(response.json()["taskId"]) == 36
-    assert (
-        response.json()["url"]
-        == f"http://127.0.0.1:{config.port}/api/v1/result/{response.json()['taskId']}"
-    )
 
 
 def test_upload_image_async_no_filename(client_with_session, test_resource_provider):
