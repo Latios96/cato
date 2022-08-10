@@ -513,10 +513,10 @@ def stored_file_alpha(sqlalchemy_deduplicating_storage, test_resource_provider):
 def stored_image_factory(
     sqlalchemy_image_repository, tmp_path, stored_file, stored_file_alpha
 ):
-    def func():
+    def func(id=0):
         return sqlalchemy_image_repository.save(
             Image(
-                id=0,
+                id=id,
                 name="test.exr",
                 original_file_id=stored_file.id,
                 channels=[
