@@ -14,7 +14,7 @@ task formatTypescript(type: YarnTask) {
 
 
 task yarnInstallDependencies(type: YarnTask) {
-  args = ['install']
+  args = ['install', '--network-timeout', '60000']
   inputs.file('package.json')
   inputs.file('yarn.lock')
   outputs.file('yarnInstallDependencies')
