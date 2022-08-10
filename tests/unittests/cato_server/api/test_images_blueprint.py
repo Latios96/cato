@@ -100,6 +100,15 @@ def test_upload_image_async_no_filename(client_with_session, test_resource_provi
     assert response.json() == {"file": "Filename can not be empty!"}
 
 
+def test_upload_async_unsupported_file(client_with_session, test_resource_provider):
+    test_file = test_resource_provider.resource_by_name("unsupported-file.txt")
+    data = {"file": ("test_file.txt", open(test_file, "rb"))}
+
+    response = client_with_session.post(API_V_IMAGES_ASYNC, files=data)
+
+    assert response.json()["state"] == "FAILURE"
+
+
 def test_get_original_image_file_should_return_file(client_with_session, stored_image):
     response = client_with_session.get(
         f"/api/v1/images/original_file/{stored_image.id}"
