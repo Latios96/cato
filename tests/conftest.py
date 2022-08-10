@@ -491,9 +491,9 @@ def stored_file(sqlalchemy_deduplicating_storage, test_resource_provider):
 
 @pytest.fixture()
 def stored_file_factory():
-    def func():
+    def func(id=0):
         return File(
-            id=0,
+            id=id,
             name="test.exr",
             hash="c9e76fde29d88e42dbc9b4a28c4b1eed67d8cb1247715768f9ca1ac5f3f3d5f1",
             value_counter=0,
