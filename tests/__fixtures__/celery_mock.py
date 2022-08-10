@@ -48,6 +48,13 @@ class MockCeleryApp:
                 try:
                     result = callable(*args, **opts)
                 except Exception as e:
+                    app.results[task_id] = {
+                        "task_id": id,
+                        "status": "FAILURE",
+                        "result": None,
+                        "traceback": traceback.format_exc(),
+                        "date_done": datetime.datetime.utcnow(),
+                    }
                     return MockAsyncResult(
                         task_id, app, "FAILURE", None, traceback.format_exc()
                     )

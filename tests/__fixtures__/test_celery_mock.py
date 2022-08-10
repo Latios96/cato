@@ -100,3 +100,27 @@ def test_successful_celeryasync_result_should_work_with_task_result_factory(
         result_={"Hello": "Horst"},
         error_message_=None,
     )
+
+
+def test_failed_celeryasync_result_should_work_with_task_result_factory(
+    app_and_config_fixture, object_mapper
+):
+    app, config = app_and_config_fixture
+    task_result_factory = TaskResultFactory(config, object_mapper)
+    app = MockCeleryApp()
+
+    @app.task
+    def my_failure():
+        raise RuntimeError("Error")
+
+    mocked_async_result = my_failure.delay()
+    celery_async_result = AsyncResult(mocked_async_result.task_id, app=app)
+    task_result = task_result_factory.from_async_result(celery_async_result)
+
+    assert task_result == TaskResult(
+        task_id=mocked_async_result.task_id,
+        state=TaskResultState.FAILURE,
+        url=f"http://127.0.0.1:{config.port}/api/v1/result/{mocked_async_result.task_id}",
+        result_=None,
+        error_message_="RuntimeError: Error",
+    )
