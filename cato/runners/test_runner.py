@@ -113,7 +113,7 @@ class TestRunner:
 
         if no_reference_image and not no_image_output and image_output is not None:
             self._reporter.report_message(message_reference_image_missing)
-            image_output_image = self._cato_api_client.upload_image(image_output)
+            image_output_image = self._cato_api_client.upload_image_async(image_output)
             return TestExecutionResult(
                 test,
                 ResultStatus.FAILED,
@@ -131,7 +131,9 @@ class TestRunner:
 
         if no_image_output and not no_reference_image and reference_image is not None:
             self._reporter.report_message(message_image_output_missing)
-            reference_image_image = self._cato_api_client.upload_image(reference_image)
+            reference_image_image = self._cato_api_client.upload_image_async(
+                reference_image
+            )
             return TestExecutionResult(
                 test,
                 ResultStatus.FAILED,
