@@ -63,12 +63,6 @@ def test_upload_unsupported_file(client_with_session, test_resource_provider):
     assert response.status_code == 400
 
 
-@pytest.fixture
-def celery_binding(celery_app, celery_worker):
-    celery_worker.reload()
-    return celery_app
-
-
 def test_upload_async_image(
     client_with_session, test_resource_provider, app_and_config_fixture
 ):
@@ -79,8 +73,17 @@ def test_upload_async_image(
 
     assert response.status_code == 201
     assert response.json()["errorMessage_"] is None
-    assert response.json()["result_"] is None
-    assert response.json()["state"] == "PENDING"
+    assert response.json()["result_"] == {
+        "image": {
+            "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
+            "height": 100,
+            "id": 1,
+            "name": "test_image_white.jpg",
+            "originalFileId": 1,
+            "width": 100,
+        }
+    }
+    assert response.json()["state"] == "SUCCESS"
     assert len(response.json()["taskId"]) == 36
     assert (
         response.json()["url"]

@@ -92,6 +92,7 @@ from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     crsf_token_factory,
     crsf_token,
 )
+from tests.__fixtures__.celery_mock import MockCeleryApp
 from tests.__fixtures__.storage.repositories import (  # noqa: F401
     sqlalchemy_output_repository,
     sqlalchemy_suite_result_repository,
@@ -598,7 +599,7 @@ def oidc_configuration():
 
 @pytest.fixture
 def celery_binding():
-    return None
+    return MockCeleryApp()
 
 
 @pytest.fixture()

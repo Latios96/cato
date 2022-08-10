@@ -69,14 +69,14 @@ def assert_the_failure_result_is_available_on_the_server(
             "id": 2,
             "name": "write_black_image",
             "testIdentifier": "WriteImages/write_black_image",
-            "thumbnailFileId": None,
+            "thumbnailFileId": 6,
         },
         {
             "unifiedTestStatus": "FAILED",
             "id": 1,
             "name": "write_white_image",
             "testIdentifier": "WriteImages/write_white_image",
-            "thumbnailFileId": None,
+            "thumbnailFileId": 3,
         },
     ]
 
@@ -131,14 +131,14 @@ def assert_the_success_result_is_available_on_the_server(
             "id": 2,
             "name": "write_black_image",
             "testIdentifier": "WriteImages/write_black_image",
-            "thumbnailFileId": None,
+            "thumbnailFileId": 16,
         },
         {
             "unifiedTestStatus": "SUCCESS",
             "id": 1,
             "name": "write_white_image",
             "testIdentifier": "WriteImages/write_white_image",
-            "thumbnailFileId": None,
+            "thumbnailFileId": 8,
         },
     ]
 

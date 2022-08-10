@@ -82,12 +82,6 @@ def live_server(app_and_config_fixture, project):
     live_server.terminate()
 
 
-@pytest.fixture
-def live_server_with_celery(live_server, celery_app, celery_worker):
-    celery_worker.reload()
-    return live_server
-
-
 @dataclass
 class Cookie:
     name: str
