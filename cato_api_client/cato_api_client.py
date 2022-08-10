@@ -160,47 +160,6 @@ class CatoApiClient:
             comparison_settings,
         )
         response = self._http_template.post_files_for_entity(
-            url, data, files, CompareImageResult
-        )
-
-        if response.status_code() == 201:
-            return response.get_entity()
-        raise self._create_value_error_for_bad_request(response)
-
-    def compare_images_async(
-        self,
-        reference_image: str,
-        output_image: str,
-        comparison_settings: ComparisonSettings,
-    ) -> CompareImageResult:
-        if not os.path.exists(reference_image):
-            raise ValueError(f"Path {reference_image} does not exists!")
-
-        if not os.path.exists(output_image):
-            raise ValueError(f"Path {output_image} does not exists!")
-
-        url = self._build_url("/api/v1/compare_image-async")
-        files = {
-            "reference_image": (
-                os.path.basename(reference_image),
-                open(reference_image, "rb"),
-            ),
-            "output_image": (
-                os.path.basename(output_image),
-                open(output_image, "rb"),
-            ),
-        }
-
-        data = {"comparison_settings": self._object_mapper.to_json(comparison_settings)}
-
-        logger.info("Uploading images for comparison..")
-        logger.info(
-            "Uploading reference image %s, output image %s with comparison settings %s",
-            reference_image,
-            output_image,
-            comparison_settings,
-        )
-        response = self._http_template.post_files_for_entity(
             url, data, files, TaskResult
         )
 

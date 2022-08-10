@@ -345,58 +345,8 @@ def test_compare_images_success_should_fail_for_not_existing_output_image(
 def test_compare_images_success_should_fail_for_non_image(
     cato_api_client, test_resource_provider
 ):
-    with pytest.raises(ValueError):
-        cato_api_client.compare_images(
-            test_resource_provider.resource_by_name("unsupported-file.txt"),
-            test_resource_provider.resource_by_name("unsupported-file.txt"),
-            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-        )
-
-
-def test_compare_images_async_success(cato_api_client, test_resource_provider):
-    result = cato_api_client.compare_images_async(
-        test_resource_provider.resource_by_name("test_image_white.jpg"),
-        test_resource_provider.resource_by_name("test_image_white.jpg"),
-        ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-    )
-
-    assert result == CompareImageResult(
-        status=ResultStatus.SUCCESS,
-        message=None,
-        reference_image_id=2,
-        output_image_id=1,
-        diff_image_id=3,
-        error=1,
-    )
-
-
-def test_compare_images_async_success_should_fail_for_not_existing_reference_image(
-    cato_api_client, test_resource_provider
-):
-    with pytest.raises(ValueError):
-        cato_api_client.compare_images_async(
-            "not_existing.jpg",
-            test_resource_provider.resource_by_name("test_image_black.png"),
-            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-        )
-
-
-def test_compare_images_async_success_should_fail_for_not_existing_output_image(
-    cato_api_client, test_resource_provider
-):
-    with pytest.raises(ValueError):
-        cato_api_client.compare_images_async(
-            test_resource_provider.resource_by_name("test_image_black.png"),
-            "not_existing.jpg",
-            ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),
-        )
-
-
-def test_compare_images_async_success_should_fail_for_non_image(
-    cato_api_client, test_resource_provider
-):
     with pytest.raises(TaskResultError):
-        cato_api_client.compare_images_async(
+        cato_api_client.compare_images(
             test_resource_provider.resource_by_name("unsupported-file.txt"),
             test_resource_provider.resource_by_name("unsupported-file.txt"),
             ComparisonSettings(method=ComparisonMethod.SSIM, threshold=1),

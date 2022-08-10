@@ -41,15 +41,13 @@ def test_context():
             self.mock_cato_api_client.upload_image.side_effect = (
                 self._mocked_store_image
             )
-            self.mock_cato_api_client.compare_images_async.return_value = (
-                CompareImageResult(
-                    status=ResultStatus.SUCCESS,
-                    message="",
-                    reference_image_id=1,
-                    output_image_id=2,
-                    diff_image_id=3,
-                    error=1,
-                )
+            self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+                status=ResultStatus.SUCCESS,
+                message="",
+                reference_image_id=1,
+                output_image_id=2,
+                diff_image_id=3,
+                error=1,
             )
             self.test_runner = TestRunner(
                 self.command_runner,
@@ -183,7 +181,7 @@ class TestTestRunner:
         assert result.diff_image == 3
         assert result.failure_reason is None
         test_context.mock_cato_api_client.upload_image.assert_not_called()
-        test_context.mock_cato_api_client.compare_images_async.assert_called_with(
+        test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
         )
 
@@ -217,7 +215,7 @@ class TestTestRunner:
 
     def test_should_have_failed_with_images_not_equal(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
-        test_context.mock_cato_api_client.compare_images_async.return_value = (
+        test_context.mock_cato_api_client.compare_images.return_value = (
             CompareImageResult(
                 status=ResultStatus.FAILED,
                 message="Images are not equal!",
@@ -256,7 +254,7 @@ class TestTestRunner:
         assert result.error_value is not None
         assert result.failure_reason == TestFailureReason.IMAGES_ARE_NOT_EQUAL
         test_context.mock_cato_api_client.upload_image.assert_not_called()
-        test_context.mock_cato_api_client.compare_images_async.assert_called_with(
+        test_context.mock_cato_api_client.compare_images.assert_called_with(
             ANY, ANY, comparison_settings
         )
 
