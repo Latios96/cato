@@ -33,11 +33,11 @@ class ImagesBlueprint(APIRouter):
         self._cato_celery = cato_celery
         self._task_result_factory = task_result_factory
 
-        self.post("/images")(self.upload_image_async)
+        self.post("/images")(self.upload_image)
         self.get("/images/original_file/{image_id}")(self.get_original_image_file)
         self.get("/images/{image_id}")(self.get_image)
 
-    def upload_image_async(self, file: UploadFile = File(...)) -> Response:
+    def upload_image(self, file: UploadFile = File(...)) -> Response:
         uploaded_file = file
         if not uploaded_file.filename:
             return JSONResponse(
