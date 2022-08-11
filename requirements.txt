@@ -8,3 +8,4 @@ imageio
 networkx
 tifffile
 pywavelets
+
