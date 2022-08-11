@@ -90,16 +90,14 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
     def find_last_run_for_project(
         self, project_id: int, branch_name: BranchName
     ) -> Optional[Run]:
-        session = self._session_maker()
-
-        query = (
-            session.query(_RunMapping)
-            .filter(_RunMapping.project_entity_id == project_id)
-            .filter(_RunMapping.branch_name == branch_name.name)
-            .order_by(_RunMapping.id.desc())
-        )
-        session.close()
-        return self._map_one_to_domain_object(query.first())
+        with self._session_maker() as session:
+            query = (
+                session.query(_RunMapping)
+                .filter(_RunMapping.project_entity_id == project_id)
+                .filter(_RunMapping.branch_name == branch_name.name)
+                .order_by(_RunMapping.id.desc())
+            )
+            return self._map_one_to_domain_object(query.first())
 
     def _apply_filter_options(self, query, filter_options: RunFilterOptions):
         return query.filter(

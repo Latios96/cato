@@ -43,42 +43,32 @@ class SqlAlchemyAuthUserRepository(
         )
 
     def find_by_username(self, username: Username) -> Optional[AuthUser]:
-        session = self._session_maker()
-
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().username == str(username)
-        )
-        session.close()
-        return self._map_one_to_domain_object(query.first())
+        with self._session_maker() as session:
+            query = session.query(self.mapping_cls()).filter(
+                self.mapping_cls().username == str(username)
+            )
+            return self._map_one_to_domain_object(query.first())
 
     def find_by_email(self, email: Email) -> Optional[AuthUser]:
-        session = self._session_maker()
-
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().email == str(email)
-        )
-        session.close()
-        return self._map_one_to_domain_object(query.first())
+        with self._session_maker() as session:
+            query = session.query(self.mapping_cls()).filter(
+                self.mapping_cls().email == str(email)
+            )
+            return self._map_one_to_domain_object(query.first())
 
     def exists_by_username(self, username: Username) -> bool:
-        session = self._session_maker()
-
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().username == str(username)
-        )
-        exists = session.query(query.exists()).scalar()
-        session.close()
-        return exists
+        with self._session_maker() as session:
+            query = session.query(self.mapping_cls()).filter(
+                self.mapping_cls().username == str(username)
+            )
+            return session.query(query.exists()).scalar()
 
     def exists_by_email(self, email: Email) -> bool:
-        session = self._session_maker()
-
-        query = session.query(self.mapping_cls()).filter(
-            self.mapping_cls().email == str(email)
-        )
-        exists = session.query(query.exists()).scalar()
-        session.close()
-        return exists
+        with self._session_maker() as session:
+            query = session.query(self.mapping_cls()).filter(
+                self.mapping_cls().email == str(email)
+            )
+            return session.query(query.exists()).scalar()
 
     def mapping_cls(self):
         return _AuthUserMapping

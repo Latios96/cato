@@ -42,57 +42,51 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         return domain_object
 
     def insert_many(self, domain_objects: List[T]) -> List[T]:
-        session = self._session_maker()
+        with self._session_maker() as session:
+            mapped_entities = list(map(self.to_entity, domain_objects))
 
-        mapped_entities = list(map(self.to_entity, domain_objects))
+            session.bulk_save_objects(mapped_entities, return_defaults=True)
 
-        session.bulk_save_objects(mapped_entities, return_defaults=True)
+            session.flush()
+            session.commit()
 
-        session.flush()
-        session.commit()
-        session.close()
+            domain_objects = list(map(self.to_domain_object, mapped_entities))
 
-        domain_objects = list(map(self.to_domain_object, mapped_entities))
-
-        return domain_objects
+            return domain_objects
 
     def find_by_id(self, id: K) -> Optional[T]:
-        session = self._session_maker()
-
-        query = session.query(self.mapping_cls()).filter(self.mapping_cls().id == id)
-        session.close()
-        return self._map_one_to_domain_object(query.first())
+        with self._session_maker() as session:
+            query = session.query(self.mapping_cls()).filter(
+                self.mapping_cls().id == id
+            )
+            return self._map_one_to_domain_object(query.first())
 
     def find_all(self) -> List[T]:
-        session = self._session_maker()
-        results = session.query(self.mapping_cls()).all()
+        with self._session_maker() as session:
+            results = session.query(self.mapping_cls()).all()
 
-        session.close()
-        return self._map_many_to_domain_object(results)
+            return self._map_many_to_domain_object(results)
 
     def find_all_with_paging(self, page_request: PageRequest) -> Page[T]:
-        session = self._session_maker()
+        with self._session_maker() as session:
 
-        page = self._pageginate(
-            session, session.query(self.mapping_cls()), page_request
-        )
+            page = self._pageginate(
+                session, session.query(self.mapping_cls()), page_request
+            )
 
-        session.close()
-        return page
+            return page
 
     def delete_by_id(self, id: K) -> None:
-        session = self._session_maker()
-        entity = (
-            session.query(self.mapping_cls())
-            .filter(self.mapping_cls().id == id)
-            .first()
-        )
-        if not entity:
-            session.close()
-            raise ValueError(f"No entity with id {id} exists!")
-        session.delete(entity)
-        session.commit()
-        session.close()
+        with self._session_maker() as session, session.begin():
+            entity = (
+                session.query(self.mapping_cls())
+                .filter(self.mapping_cls().id == id)
+                .first()
+            )
+            if not entity:
+                session.close()
+                raise ValueError(f"No entity with id {id} exists!")
+            session.delete(entity)
 
     def to_entity(self, domain_object: T) -> E:
         raise NotImplementedError()
