@@ -27,9 +27,7 @@ def upgrade():
         sa.Column(
             "id",
             sa.Integer,
-            sa.Sequence("task_id_sequence"),
             primary_key=True,
-            autoincrement=True,
         ),
         sa.Column("task_id", sa.String(155), unique=True),
         sa.Column("status", sa.String(50), default=states.PENDING),
@@ -49,8 +47,6 @@ def upgrade():
         sa.Column(
             "id",
             sa.Integer,
-            sa.Sequence("taskset_id_sequence"),
-            autoincrement=True,
             primary_key=True,
         ),
         sa.Column("taskset_id", sa.String(155), unique=True),
