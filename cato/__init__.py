@@ -1,4 +1,4 @@
-__version__ = "0.54.1"
+__version__ = "0.54.2"
 import logging
 
 # create logger with 'spam_application'
