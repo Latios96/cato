@@ -2,7 +2,6 @@ from typing import Optional
 
 from starlette.requests import Request
 
-from cato import logger
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.domain.auth.bearer_token import BearerToken
 from cato_server.authentication.api_token_signer import (
@@ -17,6 +16,10 @@ from cato_server.domain.auth.session import Session
 # todo rename this to AuthenticationFromRequest?
 from cato_server.domain.auth.session_id import SessionId
 from cato_server.storage.abstract.auth_user_repository import AuthUserRepository
+
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class UserFromRequest:
