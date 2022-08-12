@@ -1,7 +1,7 @@
 import datetime
 from typing import Optional, List
 
-from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 

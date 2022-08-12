@@ -1,17 +1,14 @@
-import datetime
-
 import pytest
 
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.unified_test_status import UnifiedTestStatus
-from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.task_queue.cato_celery import CatoCelery
-from cato_server.usecases.create_thumbnail import CreateThumbnail
 from cato_server.usecases.finish_test import FinishTest
 from cato_server.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe

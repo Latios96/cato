@@ -34,7 +34,7 @@ from cato_common.dtos.store_image_result import StoreImageResult
 from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.dtos.api_success import ApiSuccess
-from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_common.domain.test_heartbeat import TestHeartbeat
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")

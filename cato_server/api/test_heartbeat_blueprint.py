@@ -5,7 +5,7 @@ from starlette.responses import JSONResponse, Response
 
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )

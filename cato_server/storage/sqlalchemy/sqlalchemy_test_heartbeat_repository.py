@@ -3,7 +3,7 @@ from typing import Optional, List
 
 from sqlalchemy import Column, Integer, ForeignKey
 
-from cato_server.domain.test_heartbeat import TestHeartbeat
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_server.storage.abstract.test_heartbeat_repository import (
     TestHeartbeatRepository,
 )

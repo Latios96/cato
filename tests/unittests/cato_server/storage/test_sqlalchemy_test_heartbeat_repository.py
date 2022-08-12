@@ -3,13 +3,7 @@ import datetime
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_server.domain.test_heartbeat import TestHeartbeat
-from cato_server.storage.sqlalchemy.sqlalchemy_test_heartbeat_repository import (
-    SqlAlchemyTestHeartbeatRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_server.utils.datetime_utils import aware_now_in_utc
 
 
