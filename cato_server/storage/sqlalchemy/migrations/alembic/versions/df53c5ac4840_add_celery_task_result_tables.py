@@ -14,6 +14,7 @@ import sqlalchemy as sa
 # revision identifiers, used by Alembic.
 from celery import states
 from sqlalchemy import PickleType
+from sqlalchemy.schema import Sequence, CreateSequence
 
 revision = "df53c5ac4840"
 down_revision = "3984bd2a425d"
@@ -22,12 +23,17 @@ depends_on = None
 
 
 def upgrade():
+    op.execute(CreateSequence(Sequence("task_id_sequence")))
+    op.execute(CreateSequence(Sequence("taskset_id_sequence")))
+
     op.create_table(
         "celery_taskmeta",
         sa.Column(
             "id",
             sa.Integer,
+            sa.Sequence("task_id_sequence"),
             primary_key=True,
+            autoincrement=True,
         ),
         sa.Column("task_id", sa.String(155), unique=True),
         sa.Column("status", sa.String(50), default=states.PENDING),
@@ -47,6 +53,8 @@ def upgrade():
         sa.Column(
             "id",
             sa.Integer,
+            sa.Sequence("taskset_id_sequence"),
+            autoincrement=True,
             primary_key=True,
         ),
         sa.Column("taskset_id", sa.String(155), unique=True),
