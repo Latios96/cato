@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Dict
 
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.validation import validate_name
+from cato_common.domain.validation import validate_name
 
 
 @dataclass

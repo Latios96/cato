@@ -1,8 +1,8 @@
 from dataclasses import dataclass, field
 from typing import List, Iterable, Tuple, Dict, Optional
 
-from cato.domain.test import Test
-from cato.domain.validation import validate_name
+from cato_common.domain.test import Test
+from cato_common.domain.validation import validate_name
 from cato_common.domain.test_identifier import TestIdentifier
 
 

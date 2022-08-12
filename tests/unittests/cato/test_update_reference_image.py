@@ -1,9 +1,9 @@
 from unittest import mock
 
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.runners.update_reference_images import UpdateReferenceImage
 from cato_common.domain.test_identifier import TestIdentifier

@@ -1,9 +1,9 @@
 import pytest
 
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.test import Test
+from cato_common.domain.test import Test
 from cato_common.domain.test_identifier import TestIdentifier
-from cato.domain.test_suite import (
+from cato_common.domain.test_suite import (
     TestSuite,
     iterate_suites_and_tests,
     count_suites,

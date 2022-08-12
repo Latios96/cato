@@ -4,9 +4,9 @@ import emoji
 import humanfriendly
 from tabulate import tabulate
 
-from cato.domain.test_execution_result import TestExecutionResult
+from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 
 def iterate_suite_results(

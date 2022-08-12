@@ -3,9 +3,9 @@ from io import StringIO
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import Config
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 
 test1 = Test("test1", "command", {"key": "value"}, ComparisonSettings.default())
 test2 = Test("test2", "command", {}, ComparisonSettings.default())

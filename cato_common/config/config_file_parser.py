@@ -6,9 +6,9 @@ from jsonschema import validate
 
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import Config
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 from cato_common.utils.typing import safe_cast
 
 

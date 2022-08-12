@@ -3,8 +3,8 @@ import shutil
 from typing import Callable
 
 from cato import logger
-from cato.domain.config import RunConfig
-from cato.domain.test_suite import iterate_suites_and_tests
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test_suite import iterate_suites_and_tests
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_processor import VariableProcessor
 

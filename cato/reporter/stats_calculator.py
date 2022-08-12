@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from typing import List
 
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 
 
 @dataclass

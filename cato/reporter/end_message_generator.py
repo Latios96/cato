@@ -2,7 +2,7 @@ from typing import List
 
 import emoji
 
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.stats_calculator import StatsCalculator
 
 

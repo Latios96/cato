@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import List, Optional
 
-from cato.domain.test import Test
+from cato_common.domain.test import Test
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
 

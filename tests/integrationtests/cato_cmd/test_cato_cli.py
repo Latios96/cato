@@ -5,9 +5,9 @@ import pytest
 
 from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 from tests.integrationtests.utils import snapshot_output, run_command
 
 

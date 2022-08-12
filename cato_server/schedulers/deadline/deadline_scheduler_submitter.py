@@ -1,7 +1,7 @@
 import logging
 from typing import List
 
-from cato.domain.test_suite import iterate_suites_and_tests
+from cato_common.domain.test_suite import iterate_suites_and_tests
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.schedulers.deadline.deadline_api import DeadlineApi

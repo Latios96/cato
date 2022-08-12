@@ -1,8 +1,8 @@
 from typing import Dict, Optional, List
 
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 from cato.variable_processing.variable_predefinition import VariablePredefinition
 from cato.vendor import lucidity
 

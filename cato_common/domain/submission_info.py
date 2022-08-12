@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from cato.domain.config import Config
+from cato_common.domain.config import Config
 
 
 @dataclass

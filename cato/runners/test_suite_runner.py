@@ -1,8 +1,8 @@
 from typing import List, Callable
 
-from cato.domain.config import RunConfig
+from cato_common.domain.config import RunConfig
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )

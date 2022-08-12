@@ -2,7 +2,7 @@ from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite import find_test_by_test_identifier
+from cato_common.domain.test_suite import find_test_by_test_identifier
 from cato.reporter.reporter import Reporter
 from cato.runners.sync_comparison_settings import SyncComparisonSettings
 from cato_common.domain.test_edit import (

@@ -1,9 +1,9 @@
 import os
 from typing import List
 
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
-from cato.domain.test_suite import filter_by_test_identifier, TestSuite
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient

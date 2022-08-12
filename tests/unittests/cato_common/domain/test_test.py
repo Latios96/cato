@@ -1,7 +1,7 @@
 import pytest
 
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.test import Test
+from cato_common.domain.test import Test
 
 
 def test_create_with_empty_name_should_fail():

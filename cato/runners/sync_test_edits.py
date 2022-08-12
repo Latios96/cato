@@ -1,6 +1,6 @@
 from typing import cast, TypeVar, Type, List
 
-from cato.domain.config import RunConfig
+from cato_common.domain.config import RunConfig
 from cato.runners.sync_comparison_settings import SyncComparisonSettings
 from cato.runners.sync_reference_image_edits import SyncReferenceImageEdits
 from cato_api_client.cato_api_client import CatoApiClient

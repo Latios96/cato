@@ -18,9 +18,9 @@ from starlette.testclient import TestClient
 from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import Config, RunConfig
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.config import Config, RunConfig
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_api_client.http_template import HttpTemplate
 from cato_common.domain.auth.email import Email

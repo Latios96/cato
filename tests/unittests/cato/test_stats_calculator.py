@@ -1,9 +1,9 @@
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.test import Test
-from cato.domain.test_execution_result import TestExecutionResult
+from cato_common.domain.test import Test
+from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite import TestSuite
-from cato.domain.test_suite_execution_result import TestSuiteExecutionResult
+from cato_common.domain.test_suite import TestSuite
+from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.reporter.stats_calculator import StatsCalculator, Stats
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.utils.datetime_utils import aware_now_in_utc

@@ -6,10 +6,10 @@ import pytest
 
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.test_suite import TestSuite
 from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter

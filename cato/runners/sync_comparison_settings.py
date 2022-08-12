@@ -1,8 +1,8 @@
 from typing import List
 
 from cato_common.config.config_file_writer import ConfigFileWriter
-from cato.domain.config import RunConfig
-from cato.domain.test_suite import (
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test_suite import (
     find_test_by_test_identifier,
 )
 from cato.reporter.reporter import Reporter

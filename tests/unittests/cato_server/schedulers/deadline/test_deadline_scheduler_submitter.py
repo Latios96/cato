@@ -1,7 +1,7 @@
 import pytest
 
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato.domain.test import Test
+from cato_common.domain.test import Test
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,

@@ -2,8 +2,8 @@ import logging
 import os
 from typing import Optional, Iterable
 
-from cato.domain.test import Test
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.test import Test
+from cato_common.domain.test_suite import TestSuite
 
 logger = logging.getLogger(__name__)
 

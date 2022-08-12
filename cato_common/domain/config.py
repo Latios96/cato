@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List, Dict
 
-from cato.domain.test_suite import TestSuite
+from cato_common.domain.test_suite import TestSuite
 
 
 @dataclass

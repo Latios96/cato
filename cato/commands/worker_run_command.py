@@ -2,10 +2,10 @@ import logging
 import os
 
 from cato.commands.base_command import BaseCliCommand
-from cato.domain.config import RunConfig
-from cato.domain.test import Test
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test import Test
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.test_suite import filter_by_test_identifier, TestSuite
+from cato_common.domain.test_suite import filter_by_test_identifier, TestSuite
 from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.reporter.verbose_mode import VerboseMode

@@ -1,7 +1,7 @@
 import json
 from typing import IO, Dict, Union
 
-from cato.domain.config import Config, RunConfig
+from cato_common.domain.config import Config, RunConfig
 from cato_common.mappers.object_mapper import ObjectMapper
 
 

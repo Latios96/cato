@@ -1,4 +1,4 @@
-from cato.domain.config import RunConfig
+from cato_common.domain.config import RunConfig
 
 
 class TestConfig:

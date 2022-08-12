@@ -2,8 +2,8 @@ from typing import Optional, Callable
 
 from cato.commands.base_command import BaseCliCommand
 from cato_common.config.config_file_parser import JsonConfigParser
-from cato.domain.config import RunConfig
-from cato.domain.test_suite import (
+from cato_common.domain.config import RunConfig
+from cato_common.domain.test_suite import (
     filter_by_suite_name,
     filter_by_test_identifier,
     filter_by_test_identifiers,
