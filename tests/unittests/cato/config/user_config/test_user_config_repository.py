@@ -1,7 +1,7 @@
 import pytest
 
-from cato.config.user_config.user_config import UserConfig
-from cato.config.user_config.user_config_repository import UserConfigRepository
+from cato_common.config.user_config.user_config import UserConfig
+from cato_common.config.user_config.user_config_repository import UserConfigRepository
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 
 

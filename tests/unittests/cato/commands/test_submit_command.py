@@ -6,7 +6,7 @@ import sys
 import pytest
 
 from cato.commands.submit_command import SubmitCommand
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,

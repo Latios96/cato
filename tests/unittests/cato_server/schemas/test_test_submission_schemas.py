@@ -4,7 +4,7 @@ from cato_server.api.schemas.test_submission_schemas import (
     SubmissionInfoSchema,
     ConfigSchema,
 )
-from tests.unittests.cato.test_config_file_parser import (
+from tests.unittests.cato_common.config.test_config_file_parser import (
     INVALID_CONFIG,
     VALID_CONFIG,
     VALID_CONFIG_WITH_VARIABLES,

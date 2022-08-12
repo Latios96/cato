@@ -2,7 +2,7 @@ from cato_server.api.validators.test_submission_validators import (
     SubmissionInfoValidator,
 )
 from cato_server.storage.abstract.run_repository import RunRepository
-from tests.unittests.cato.test_config_file_parser import VALID_CONFIG
+from tests.unittests.cato_common.config.test_config_file_parser import VALID_CONFIG
 from tests.utils import mock_safe
 
 

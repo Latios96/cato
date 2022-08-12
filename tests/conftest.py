@@ -15,7 +15,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 from starlette.testclient import TestClient
 
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig

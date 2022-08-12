@@ -1,6 +1,6 @@
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.submission_info import SubmissionInfo
-from tests.unittests.cato.test_config_file_parser import VALID_CONFIG
+from tests.unittests.cato_common.config.test_config_file_parser import VALID_CONFIG
 
 
 def test_success(client_with_session, run, mocked_scheduler_submitter):

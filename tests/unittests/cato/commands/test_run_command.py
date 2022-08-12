@@ -8,7 +8,7 @@ from unittest.mock import call
 import pytest
 
 from cato.commands.run_command import RunCommand
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test

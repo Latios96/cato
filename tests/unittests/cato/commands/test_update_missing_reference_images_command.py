@@ -1,7 +1,7 @@
 from cato.commands.update_missing_reference_images_command import (
     UpdateMissingReferenceImagesCommand,
 )
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.runners.update_missing_reference_images import UpdateMissingReferenceImages
 from tests.utils import mock_safe
 

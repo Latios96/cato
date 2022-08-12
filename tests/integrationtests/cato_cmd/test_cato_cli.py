@@ -3,7 +3,7 @@ import sys
 
 import pytest
 
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test

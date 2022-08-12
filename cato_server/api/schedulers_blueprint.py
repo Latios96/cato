@@ -5,7 +5,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato_server.api.validators.test_submission_validators import (
     SubmissionInfoValidator,
 )

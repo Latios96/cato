@@ -1,7 +1,7 @@
 import os
 
 from cato.commands.config_template_command import ConfigTemplateCommand
-from cato.config.config_template_generator import ConfigTemplateGenerator
+from cato_common.config.config_template_generator import ConfigTemplateGenerator
 
 
 def test_should_write_config_template(tmp_path):

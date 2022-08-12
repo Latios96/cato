@@ -1,7 +1,7 @@
 import pytest
 
-from cato.config.config_file_parser import JsonConfigParser
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_server.storage.sqlalchemy.sqlalchemy_auth_user_repository import (
     SqlAlchemyAuthUserRepository,
 )

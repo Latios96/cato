@@ -1,5 +1,5 @@
 from cato.commands.base_command import BaseCliCommand
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.runners.update_reference_images import UpdateReferenceImage
 from cato_common.domain.test_identifier import TestIdentifier
 

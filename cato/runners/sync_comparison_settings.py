@@ -1,6 +1,6 @@
 from typing import List
 
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato.domain.config import RunConfig
 from cato.domain.test_suite import (
     find_test_by_test_identifier,

@@ -1,6 +1,6 @@
 import os
 
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.domain.config import RunConfig
 
 

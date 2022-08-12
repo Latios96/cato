@@ -1,4 +1,4 @@
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus

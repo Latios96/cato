@@ -1,7 +1,7 @@
 import logging
 
 from cato.commands.base_command import BaseCliCommand
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.runners.sync_test_edits import SyncTestEdits
 
 

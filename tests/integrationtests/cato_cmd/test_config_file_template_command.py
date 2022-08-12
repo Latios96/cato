@@ -3,7 +3,7 @@ import os
 
 import pytest
 
-from cato.config.config_template_generator import TEMPLATE
+from cato_common.config.config_template_generator import TEMPLATE
 from tests.integrationtests.command_fixture import run_cato_command
 
 

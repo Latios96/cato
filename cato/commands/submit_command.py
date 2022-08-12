@@ -4,7 +4,7 @@ import sys
 from typing import Optional, Callable
 
 from cato.commands.run_command_interface import RunCommandInterface
-from cato.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_parser import JsonConfigParser
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )

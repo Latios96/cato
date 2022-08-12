@@ -1,6 +1,6 @@
 import json
 import os.path
-from cato.config.user_config.user_config import UserConfig
+from cato_common.config.user_config.user_config import UserConfig
 
 import logging
 

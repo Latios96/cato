@@ -1,7 +1,7 @@
 import os
 from typing import Dict, Optional
 
-from cato.config.user_config.user_config_repository import UserConfigRepository
+from cato_common.config.user_config.user_config_repository import UserConfigRepository
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 
 CATO_API_TOKEN_ENV_VARIABLE = "CATO_API_TOKEN"

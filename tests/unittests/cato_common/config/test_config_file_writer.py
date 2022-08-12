@@ -1,7 +1,7 @@
 from io import StringIO
 
-from cato.config.config_file_parser import JsonConfigParser
-from cato.config.config_file_writer import ConfigFileWriter
+from cato_common.config.config_file_parser import JsonConfigParser
+from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test

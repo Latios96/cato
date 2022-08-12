@@ -1,5 +1,5 @@
 from cato.commands.base_command import BaseCliCommand
-from cato.config.config_template_generator import ConfigTemplateGenerator
+from cato_common.config.config_template_generator import ConfigTemplateGenerator
 
 import logging
 
