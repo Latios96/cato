@@ -9,7 +9,6 @@ from PIL import Image as PilImage, ImageDraw as PilImageDraw
 from faker import Faker
 from sqlalchemy import create_engine
 
-import cato
 import cato_server
 import cato_server.server_logging
 from cato_common.domain.branch_name import BranchName
@@ -325,7 +324,7 @@ def main():
     bindings = bindings_factory.create_bindings()
 
     obj_graph = pinject.new_object_graph(
-        modules=[*imported_modules([cato, cato_server])], binding_specs=[bindings]
+        modules=[*imported_modules([cato_server])], binding_specs=[bindings]
     )
 
     obj_graph.provide(DbLoadGenerator).generate_load(

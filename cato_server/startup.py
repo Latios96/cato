@@ -10,7 +10,6 @@ from starlette.middleware.sessions import SessionMiddleware
 from starlette.staticfiles import StaticFiles
 from starlette_csrf import CSRFMiddleware
 
-import cato
 import cato_common
 import cato_server
 import cato_server.server_logging
@@ -148,7 +147,7 @@ def create_app(
 
 def create_obj_graph(bindings):
     obj_graph = pinject.new_object_graph(
-        modules=[*imported_modules([cato_common, cato, cato_server])],
+        modules=[*imported_modules([cato_common, cato_server])],
         binding_specs=[bindings],
     )
     return obj_graph

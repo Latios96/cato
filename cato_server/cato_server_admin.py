@@ -3,7 +3,6 @@ import argparse
 import pinject
 from pinject.object_graph import ObjectGraph
 
-import cato
 import cato_common
 import cato_server.server_logging
 from cato_common.utils.bindings import imported_modules, provide_safe
@@ -33,7 +32,7 @@ def create_obj_graph(path: str) -> ObjectGraph:
     bindings = bindings_factory.create_bindings()
 
     obj_graph = pinject.new_object_graph(
-        modules=[*imported_modules([cato_common, cato, cato_server])],
+        modules=[*imported_modules([cato_common, cato_server])],
         binding_specs=[bindings],
     )
     return obj_graph
