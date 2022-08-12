@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 from sqlalchemy.exc import IntegrityError
 
@@ -11,7 +9,7 @@ from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     _RunMapping,
 )
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_to_entity(sqlalchemy_run_repository):

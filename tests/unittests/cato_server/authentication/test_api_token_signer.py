@@ -14,7 +14,7 @@ from cato_server.configuration.app_configuration_defaults import (
 )
 from cato_server.domain.auth.api_token import ApiToken
 from cato_server.domain.auth.secret_str import SecretStr
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 @pytest.fixture

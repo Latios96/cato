@@ -11,7 +11,7 @@ from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.compare_image import CompareImage
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 

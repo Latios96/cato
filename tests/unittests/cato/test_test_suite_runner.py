@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 
 from cato.domain.comparison_settings import ComparisonSettings
@@ -16,7 +14,7 @@ from cato.reporter.reporter import Reporter
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.test_runner import TestRunner
 from cato.runners.test_suite_runner import TestSuiteRunner
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 EXAMPLE_PROJECT = "Example project"

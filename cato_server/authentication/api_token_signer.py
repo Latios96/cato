@@ -8,7 +8,7 @@ from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.configuration.parts.secrets_configuration import SecretsConfiguration
 from cato_server.domain.auth.api_token import ApiToken
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 class InvalidApiTokenException(Exception):

@@ -9,7 +9,7 @@ import humanfriendly
 from cato_server.backup.backup_mode import BackupMode
 from cato_server.backup.create_db_backup import CreateDbBackup
 from cato_server.backup.create_file_storage_backup import CreateFileStorageBackup
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 

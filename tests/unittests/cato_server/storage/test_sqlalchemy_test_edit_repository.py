@@ -14,13 +14,7 @@ from cato_common.domain.test_edit import (
     ReferenceImageEdit,
     ReferenceImageEditValue,
 )
-from cato_server.storage.sqlalchemy.sqlalchemy_test_edit_repository import (
-    SqlAlchemyTestEditRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_save_comparison_settings_edit(

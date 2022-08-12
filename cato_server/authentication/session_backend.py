@@ -6,7 +6,7 @@ from cato_server.domain.auth.auth_user import AuthUser
 from cato_server.domain.auth.session import Session
 from cato_server.domain.auth.session_id import SessionId
 from cato_server.storage.abstract.session_repository import SessionRepository
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 class SessionBackend:

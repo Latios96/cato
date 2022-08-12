@@ -1,8 +1,6 @@
-import datetime
-
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_map_from_dict(object_mapper):

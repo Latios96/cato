@@ -32,7 +32,7 @@ from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = cato_server.server_logging.logger
 

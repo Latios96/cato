@@ -6,7 +6,7 @@ from cato_common.domain.auth.api_token_name import ApiTokenName
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_server.authentication.api_token_signer import ApiTokenSigner
 from cato_server.domain.auth.api_token import ApiToken
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 @dataclass

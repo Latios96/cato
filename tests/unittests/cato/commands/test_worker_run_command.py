@@ -1,4 +1,3 @@
-import datetime
 import logging
 
 import pytest
@@ -13,7 +12,7 @@ from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 

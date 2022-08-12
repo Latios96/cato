@@ -1,7 +1,7 @@
 import logging
 
 from cato_server.storage.abstract.session_repository import SessionRepository
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 

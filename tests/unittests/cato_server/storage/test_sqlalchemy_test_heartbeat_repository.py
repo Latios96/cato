@@ -4,7 +4,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_common.domain.test_heartbeat import TestHeartbeat
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_should_save_test_heartbeat(sqlalchemy_test_heartbeat_repository, test_result):

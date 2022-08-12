@@ -11,7 +11,7 @@ from cato_server.storage.abstract.test_result_repository import TestResultReposi
 import logging
 
 from cato_server.usecases.finish_test import FinishTest
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 TESTS_TIMEOUT = datetime.timedelta(minutes=2)
 

@@ -5,7 +5,7 @@ from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 

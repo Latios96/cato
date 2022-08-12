@@ -25,7 +25,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_get_project_by_name_should_get_project(cato_api_client, project):

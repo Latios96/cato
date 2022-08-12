@@ -10,7 +10,7 @@ from cato_server.storage.abstract.test_heartbeat_repository import (
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.fail_timed_out_tests import FailTimedOutTests
 from cato_server.usecases.finish_test import FinishTest
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 

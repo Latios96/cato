@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 
 from cato.domain.comparison_settings import ComparisonSettings
@@ -29,7 +27,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 SUITES = [

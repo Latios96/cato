@@ -18,10 +18,7 @@ from cato_server.storage.abstract.status_filter import StatusFilter
 from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_save_success(

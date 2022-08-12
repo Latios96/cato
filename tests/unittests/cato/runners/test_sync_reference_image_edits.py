@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 
 from cato_common.domain.result_status import ResultStatus
@@ -10,7 +8,7 @@ from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.image import Image
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 

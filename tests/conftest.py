@@ -75,7 +75,7 @@ from cato_server.schedulers.abstract_scheduler_submitter import (
     AbstractSchedulerSubmitter,
 )
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.__fixtures__.authentication_fixtures import (  # noqa: F401
     http_session_factory,
     http_session,

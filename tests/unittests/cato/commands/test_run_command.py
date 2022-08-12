@@ -2,7 +2,6 @@
 # suite name
 # test identifier
 import copy
-import datetime
 import logging
 from unittest.mock import call
 
@@ -28,7 +27,7 @@ from cato.reporter.verbose_mode import VerboseMode
 from cato.runners.test_suite_runner import TestSuiteRunner
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.test_identifier import TestIdentifier
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 TEST = Test(

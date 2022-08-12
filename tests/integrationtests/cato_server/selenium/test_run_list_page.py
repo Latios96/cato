@@ -1,17 +1,8 @@
-import datetime
-
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.unified_test_status import UnifiedTestStatus
-from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
-    SqlAlchemyRunRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
-)
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.integrationtests.cato_server import selenium_test
-from tests.integrationtests.conftest import MyChromeDriver
 
 
 @selenium_test

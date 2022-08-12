@@ -1,5 +1,3 @@
-import datetime
-
 import pytest
 
 from cato_common.domain.machine_info import MachineInfo
@@ -9,7 +7,7 @@ from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.start_test import StartTest
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.utils import mock_safe
 
 

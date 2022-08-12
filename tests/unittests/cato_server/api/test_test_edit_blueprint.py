@@ -1,9 +1,7 @@
-import datetime
-
 from cato.domain.comparison_method import ComparisonMethod
 from cato.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.unified_test_status import UnifiedTestStatus
-from cato_server.utils.datetime_utils import aware_now_in_utc
+from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 def test_get_test_edits_by_test_result_id(client_with_session, test_edit, test_result):
