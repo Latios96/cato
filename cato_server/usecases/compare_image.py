@@ -6,7 +6,7 @@ import uuid
 from pathlib import Path
 from typing import IO, Tuple
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator

@@ -1,7 +1,7 @@
 import logging
 from typing import cast
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,

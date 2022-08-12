@@ -1,6 +1,6 @@
 import pytest
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.result_status import ResultStatus
 from cato_server.images.store_image import StoreImage

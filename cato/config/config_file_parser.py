@@ -4,8 +4,8 @@ from typing import IO, List, Dict
 
 from jsonschema import validate
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite

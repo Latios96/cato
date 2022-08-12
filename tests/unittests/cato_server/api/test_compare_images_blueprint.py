@@ -1,5 +1,5 @@
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 
 
 def test_upload_images_for_comparison_success(

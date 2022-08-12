@@ -3,9 +3,9 @@ from io import BytesIO
 import pytest
 
 from cato_common.domain.result_status import ResultStatus
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_result import ComparisonResult
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_result import ComparisonResult
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
 from cato_server.images.advanced_image_comparator import AdvancedImageComparator

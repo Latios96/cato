@@ -2,7 +2,7 @@ import datetime
 from dataclasses import dataclass
 from typing import Dict, Optional
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier

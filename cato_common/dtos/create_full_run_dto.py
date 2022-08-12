@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing import List, Optional, Dict
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.test_identifier import TestIdentifier
 

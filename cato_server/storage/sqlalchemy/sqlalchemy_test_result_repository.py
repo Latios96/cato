@@ -5,8 +5,8 @@ from typing import Optional, Set, Dict, List
 from sqlalchemy import Column, String, Integer, ForeignKey, JSON, Float, func
 from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier

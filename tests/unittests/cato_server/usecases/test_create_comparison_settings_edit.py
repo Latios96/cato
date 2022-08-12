@@ -2,8 +2,8 @@ import datetime
 
 import pytest
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult

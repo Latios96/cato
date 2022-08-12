@@ -4,8 +4,8 @@ from sqlalchemy import Column, Integer, ForeignKey, String, Float, func
 from sqlalchemy.orm import with_polymorphic
 from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_edit import (
     AbstractTestEdit,

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from cato.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_method import ComparisonMethod
 
 
 @dataclass

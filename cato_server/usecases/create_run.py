@@ -1,7 +1,7 @@
 import logging
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.suite_result import SuiteResult

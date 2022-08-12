@@ -1,6 +1,6 @@
 import pytest
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.test import Test
 from cato_common.domain.test_identifier import TestIdentifier
 from cato.domain.test_suite import (

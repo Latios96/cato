@@ -2,7 +2,7 @@ from fastapi import APIRouter, UploadFile
 from fastapi.params import File, Form
 from starlette.responses import JSONResponse, Response
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.task_queue.cato_celery import CatoCelery

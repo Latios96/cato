@@ -1,7 +1,7 @@
 import pytest
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_server.api.validators.create_test_edits_validators import (
     CreateComparisonSettingsEditValidator,
     CreateReferenceImageEditValidator,

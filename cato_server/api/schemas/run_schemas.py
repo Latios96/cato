@@ -2,7 +2,7 @@ from marshmallow import Schema, fields, EXCLUDE
 from marshmallow.validate import Length
 from marshmallow_enum import EnumField
 
-from cato.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_method import ComparisonMethod
 from cato_server.api.schemas.general import (
     ID_FIELD,
     NAME_FIELD,

@@ -1,5 +1,5 @@
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.utils.datetime_utils import aware_now_in_utc
 

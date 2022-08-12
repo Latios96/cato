@@ -3,7 +3,7 @@ import datetime
 from dateutil.tz import tzlocal
 from freezegun import freeze_time
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.test_identifier import TestIdentifier
@@ -11,15 +11,6 @@ from cato_common.dtos.create_full_run_dto import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     CreateFullRunDto,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
-    SqlAlchemyRunRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_suite_result_repository import (
-    SqlAlchemySuiteResultRepository,
-)
-from cato_server.storage.sqlalchemy.sqlalchemy_test_result_repository import (
-    SqlAlchemyTestResultRepository,
 )
 from cato_server.usecases.create_run import CreateRunUsecase
 

@@ -1,6 +1,6 @@
 from unittest import mock
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite

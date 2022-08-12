@@ -4,8 +4,8 @@ from unittest.mock import ANY
 
 import pytest
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import RunConfig
 from cato.domain.test import Test
 from cato_common.domain.result_status import ResultStatus

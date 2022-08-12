@@ -1,6 +1,6 @@
 from celery import Celery
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.task_queue.compare_image_task import (
     CompareImageTask,

@@ -16,8 +16,8 @@ from sqlalchemy.pool import StaticPool
 from starlette.testclient import TestClient
 
 from cato.config.config_file_writer import ConfigFileWriter
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato.domain.config import Config, RunConfig
 from cato.domain.test import Test
 from cato.domain.test_suite import TestSuite

@@ -3,8 +3,8 @@ import os
 
 import pytest
 
-from cato.domain.comparison_method import ComparisonMethod
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_api_client.task_result_template import TaskResultError
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult

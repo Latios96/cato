@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.images.store_image import StoreImage

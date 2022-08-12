@@ -4,7 +4,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import Response, JSONResponse
 
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.api.dtos.test_edit_count import TestEditCount
 from cato_server.api.validators.create_test_edits_validators import (

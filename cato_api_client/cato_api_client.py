@@ -5,7 +5,7 @@ from typing import Optional, Type, TypeVar, List, Dict, Callable
 from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
-from cato.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_api_client.http_template import HttpTemplate
 from cato_api_client.task_result_template import TaskResultTemplate
 from cato_common.domain.auth.api_token_str import ApiTokenStr
