@@ -9,7 +9,6 @@ from cato_common.mappers.abstract_class_mapper import AbstractClassMapper, T
 from cato_common.mappers.abstract_value_mapper import AbstractValueMapper
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry import MapperRegistry
-from cato_server.api.dtos.api_success import ApiSuccess
 
 
 class DateTimeValueMapper(AbstractValueMapper[datetime.datetime, str]):

@@ -2,7 +2,7 @@ from fastapi import APIRouter
 from starlette.responses import JSONResponse
 
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_server.api.dtos.api_success import ApiSuccess
+from cato_common.dtos.api_success import ApiSuccess
 
 
 class ApiTokenBlueprint(APIRouter):

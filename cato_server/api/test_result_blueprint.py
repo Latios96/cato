@@ -16,7 +16,7 @@ from cato_common.dtos.test_result_short_summary_dto import TestResultShortSummar
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest
-from cato_server.api.dtos.api_success import ApiSuccess
+from cato_common.dtos.api_success import ApiSuccess
 from cato_server.api.filter_option_utils import result_filter_options_from_request
 from cato_server.api.page_utils import page_request_from_request
 from cato_server.api.validators.test_result_validators import (
