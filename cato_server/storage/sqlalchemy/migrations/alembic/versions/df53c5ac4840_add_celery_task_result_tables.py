@@ -23,8 +23,9 @@ depends_on = None
 
 
 def upgrade():
-    op.execute(CreateSequence(Sequence("task_id_sequence")))
-    op.execute(CreateSequence(Sequence("taskset_id_sequence")))
+    if "sqlite" not in op.get_bind().engine.driver:
+        op.execute(CreateSequence(Sequence("task_id_sequence")))
+        op.execute(CreateSequence(Sequence("taskset_id_sequence")))
 
     op.create_table(
         "celery_taskmeta",
