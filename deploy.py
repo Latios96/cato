@@ -32,7 +32,7 @@ def main():
 
     print("Copy wheel..")
     wheel_path = os.path.join(
-        os.path.dirname(__file__), "dist", f"cato-{version}-py3-none-any.whl"
+        os.path.dirname(__file__), "dist", f"cato-server-{version}-py3-none-any.whl"
     )
     shutil.copy(
         wheel_path, os.path.join(r"M:\cato\wheels", os.path.basename(wheel_path))
