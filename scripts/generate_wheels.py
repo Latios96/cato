@@ -2,7 +2,7 @@ import shutil
 import tempfile
 import zipfile
 from pathlib import Path
-from typing import List
+from typing import List, Tuple
 
 import cato
 
@@ -91,12 +91,20 @@ def _modify_record(dist_folder: Path, modules_to_keep: List[str]):
         f.writelines(lines)
 
 
+def _include_files(target_folder: Path, include_files: List[Tuple[Path, Path]] = None):
+    if include_files:
+        for src, dst in include_files:
+            print(f"Copy {src} to {dst}")
+            shutil.copy(src, target_folder / dst)
+
+
 def create_new_wheel(
     path_to_wheel: Path,
     new_name: str,
     modules_to_keep: List[str],
     entry_points_to_keep: List[str],
     requirements_to_keep: List[str],
+    include_files: List[Tuple[Path, Path]] = None,
 ):
     with tempfile.TemporaryDirectory() as tmpdirname:
         print("extracting original wheel..")
@@ -109,6 +117,7 @@ def create_new_wheel(
         _modify_entry_points(dist_folder, entry_points_to_keep)
         _modify_name_and_requirements(dist_folder, new_name, requirements_to_keep)
         _modify_record(dist_folder, modules_to_keep)
+        _include_files(target_folder, include_files)
 
         path_to_new_wheel = path_to_wheel.parent / path_to_wheel.name.replace(
             "cato", new_name
@@ -120,11 +129,15 @@ def create_new_wheel(
 
 
 def find_current_wheel() -> Path:
+    return find_wheel("cato")
+
+
+def find_wheel(name) -> Path:
     current_version = cato.__version__
     return (
         Path(__file__).parent.parent
         / "dist"
-        / f"cato-{current_version}-py3-none-any.whl"
+        / f"{name}-{current_version}-py3-none-any.whl"
     )
 
 
@@ -213,5 +226,14 @@ if __name__ == "__main__":
             "tifffile",
             "pywavelets",
             "jsonschema",
+        ],
+        include_files=[
+            (
+                find_wheel("cato-client"),
+                Path("cato_server")
+                / "static"
+                / "static"
+                / "cato-server-0.0.0-py3-none-any.whl",
+            )
         ],
     )
