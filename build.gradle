@@ -126,7 +126,6 @@ task splitWheel(type: PythonTask){
     command = 'scripts/generate_wheels.py'
 }
 poetryBuild.finalizedBy splitWheel
-poetryBuild.finalizedBy patchRequirementsTxtIntoWheel
 
 task poetryUpdate(type: PythonTask){
     command = '-m poetry update'
