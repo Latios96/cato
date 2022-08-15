@@ -38,7 +38,8 @@ jobs:
       with:
         name: wheel-linux
         path: |
-          ./dist/*.whl
+          ./dist/cato-server*.whl
+          ./dist/cato-client*.whl
 
   build_windows:
     runs-on: windows-latest
