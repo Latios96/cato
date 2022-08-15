@@ -224,7 +224,7 @@ def test_find_by_test_id_should_return_all_test_edit_instances(
         id=0,
         test_id=test_result.id,
         test_identifier=test_result.test_identifier,
-        created_at=aware_now_in_utc(),
+        created_at=aware_now_in_utc() + datetime.timedelta(seconds=1),
         new_value=ReferenceImageEditValue(
             status=ResultStatus.SUCCESS,
             message=None,
