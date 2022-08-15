@@ -122,6 +122,10 @@ task poetryBuild(type: PythonTask){
 task patchRequirementsTxtIntoWheel(type: PythonTask){
     command = 'scripts/path_wheel_with_requirements_txt.py'
 }
+task splitWheel(type: PythonTask){
+    command = 'scripts/generate_wheels.py'
+}
+poetryBuild.finalizedBy splitWheel
 poetryBuild.finalizedBy patchRequirementsTxtIntoWheel
 
 task poetryUpdate(type: PythonTask){
@@ -195,4 +199,9 @@ task updateDependencies{
 task generatePyTypescriptModel(type: PythonTask){
     dependsOn 'pythonInstall'
     command = 'scripts/generate_typescript_models.py'
+}
+
+task installationTest(type: PythonTask){
+    dependsOn 'splitWheel'
+    command = 'scripts/install_test.py'
 }

@@ -24,6 +24,8 @@ jobs:
       run: ./gradlew build --info
     - name: Lint with Gradle
       run: ./gradlew lint --info
+    - name: Wheels installation test
+      run: ./gradlew :installationTest -x pythonUnittest -x pythonIntegrationtest
     - uses: actions/upload-artifact@v2
       name: Upload reports
       if: always()
