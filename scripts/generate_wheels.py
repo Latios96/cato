@@ -233,7 +233,7 @@ if __name__ == "__main__":
                 Path("cato_server")
                 / "static"
                 / "static"
-                / "cato-server-0.0.0-py3-none-any.whl",
+                / "cato-client-0.0.0-py3-none-any.whl",
             )
         ],
     )
