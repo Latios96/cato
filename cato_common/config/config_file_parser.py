@@ -69,7 +69,7 @@ class JsonConfigParser:
         return tests
 
     def _read_comparison_settings(self, test):
-        comparison_settings_dict = test.get("comparison_settings")
+        comparison_settings_dict = test.get("comparisonSettings")
         if comparison_settings_dict:
             return ComparisonSettings(
                 method=ComparisonMethod(comparison_settings_dict["method"]),

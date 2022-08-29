@@ -105,7 +105,7 @@ VALID_CONFIG_WITH_COMPARISON_SETTINGS = {
                 {
                     "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
-                    "comparison_settings": {"method": "SSIM", "threshold": 0.2},
+                    "comparisonSettings": {"method": "SSIM", "threshold": 0.2},
                 }
             ],
         }
