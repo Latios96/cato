@@ -219,8 +219,8 @@ class TestTestRunner:
             CompareImageResult(
                 status=ResultStatus.FAILED,
                 message="Images are not equal!",
-                reference_image_id=1,
-                output_image_id=2,
+                output_image_id=1,
+                reference_image_id=2,
                 diff_image_id=3,
                 error=1,
             )
