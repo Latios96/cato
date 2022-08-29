@@ -88,7 +88,7 @@ class CompareImagesBlueprint(APIRouter):
             )
 
         async_result = self._cato_celery.launch_compare_image_task(
-            output_image_file.id, output_image_file.id, parsed_comparison_settings
+            output_image_file.id, reference_image_file.id, parsed_comparison_settings
         )
         task_result = self._task_result_factory.from_async_result(async_result)
         return JSONResponse(
