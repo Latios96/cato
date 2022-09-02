@@ -9,7 +9,9 @@ from tests.integrationtests.command_fixture import run_cato_command, run_command
 def test_run_tests_fails_because_of_missing_reference_images(
     cato_config, live_server, env_with_api_token, api_token_str
 ):
-    result = run_the_cato_command(live_server, cato_config, env_with_api_token)
+    result = run_the_cato_command(
+        live_server, cato_config, env_with_api_token, expected_exit_code=1
+    )
     assert_all_tests_should_have_been_executed(result)
     assert_a_failure_message_was_printed(result)
     assert_a_failure_message_for_missing_reference_image_was_printed(result)
@@ -31,13 +33,15 @@ def test_running_all_tests_should_succeed(
     )
 
 
-def run_the_cato_command(live_server, cato_config, env_with_api_token):
+def run_the_cato_command(
+    live_server, cato_config, env_with_api_token, expected_exit_code=0
+):
     config_folder, config_path = cato_config
     os.chdir(config_folder)
     result = run_cato_command(
         ["run", "-u", live_server.server_url(), "-vvv"], env_with_api_token
     )
-    assert result.exit_code == 0
+    assert result.exit_code == expected_exit_code
     return result
 
 

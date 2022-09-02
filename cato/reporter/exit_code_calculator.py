@@ -12,5 +12,5 @@ class ExitCodeCalculator:
         stats = self._stats_calculator.calculate(result)
 
         if stats.failed_tests > 0:
-            return -1
+            return 1
         return 0

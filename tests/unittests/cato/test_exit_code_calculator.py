@@ -20,4 +20,4 @@ def test_failed_test_should_generate_exit_code_0():
 
     exit_code = generator.generate_exit_code([])
 
-    assert exit_code == -1
+    assert exit_code == 1
