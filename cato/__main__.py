@@ -86,9 +86,11 @@ def run(
 
     verbose_mode = VerboseMode.in_range(verbose)
 
-    run_command.run(
+    exit_code = run_command.run(
         path, suite_name, test_identifier_str, bool(only_failed), verbose_mode
     )
+
+    exit(exit_code)
 
 
 def submit(

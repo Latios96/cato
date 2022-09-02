@@ -8,6 +8,7 @@ from unittest.mock import call
 import pytest
 
 from cato.commands.run_command import RunCommand
+from cato.reporter.exit_code_calculator import ExitCodeCalculator
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
@@ -65,6 +66,7 @@ def test_context():
                 LastRunInformationRepository
             )
             self.mock_cato_api_client = mock_safe(CatoApiClient)
+            self.mock_exit_code_calculator = mock_safe(ExitCodeCalculator)
             self.run_command = RunCommand(
                 self.mock_json_config_parser,
                 self.mock_test_suite_runner,
@@ -74,9 +76,11 @@ def test_context():
                 self.mock_reporter,
                 lambda x: self.mock_last_run_information_repository,
                 self.mock_cato_api_client,
+                self.mock_exit_code_calculator,
             )
             self.mock_json_config_parser.parse.return_value = self.config
             self.run_command._read_config = lambda x: self.config
+            self.mock_exit_code_calculator.generate_exit_code.return_value = 42
 
     return TestContext()
 
@@ -115,7 +119,9 @@ class TestRunCommand:
             "End message"
         )
 
-        test_context.run_command.run("my_path", None, None, False, VerboseMode.DEFAULT)
+        exit_code = test_context.run_command.run(
+            "my_path", None, None, False, VerboseMode.DEFAULT
+        )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
             test_context.config
@@ -129,6 +135,10 @@ class TestRunCommand:
         )
         test_context.mock_reporter.set_verbose_mode.assert_called_with(
             VerboseMode.DEFAULT
+        )
+        assert exit_code == 42
+        test_context.mock_exit_code_calculator.generate_exit_code.assert_called_with(
+            result
         )
 
     def test_should_filter_by_suite_name(self, test_context):
