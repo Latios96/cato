@@ -3,6 +3,7 @@ import os
 
 from fastapi import APIRouter, UploadFile
 from fastapi.params import File
+from sentry_sdk import configure_scope
 from starlette.responses import FileResponse, JSONResponse, Response
 
 from cato_common.mappers.object_mapper import ObjectMapper
@@ -32,6 +33,10 @@ class FilesBlueprint(APIRouter):
         return JSONResponse(content=self._object_mapper.to_dict(f), status_code=201)
 
     def get_file(self, file_id: int) -> Response:
+        with configure_scope() as scope:
+            if scope.transaction:
+                scope.transaction.sampled = False
+
         file = self._file_storage.find_by_id(file_id)
         if not file:
             return Response(status_code=404)
