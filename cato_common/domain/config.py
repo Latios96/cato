@@ -10,13 +10,6 @@ class Config:
     suites: List[TestSuite]
     variables: Dict[str, str] = field(default_factory=dict)
 
-    def for_json(self):
-        return {
-            "project_name": self.project_name,
-            "suites": self.suites,
-            "variables": self.variables,
-        }
-
     @property
     def suite_count(self):
         return len(self.suites)
