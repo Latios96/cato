@@ -70,6 +70,33 @@ def test_success_override_file(tmp_path, config_fixture):
     assert (tmp_path / "image.exr").open().readlines() == ["test exr content"]
 
 
+def test_success_create_folders(tmp_path, config_fixture):
+    mock_variable_processor = mock_safe(VariableProcessor)
+    mock_variable_processor.evaluate_variables.return_value = {
+        "reference_image_png": str(tmp_path / "subfolder" / "image.png"),
+        "reference_image_exr": str(tmp_path / "subfolder" / "image.exr"),
+        "reference_image_no_extension": str(tmp_path / "image"),
+    }
+
+    mock_cato_api_client = mock_safe(CatoApiClient)
+    image = create_image("test.exr")
+    mock_cato_api_client.get_image_by_id.return_value = image
+    mock_cato_api_client.download_original_image.return_value = b"test exr content"
+    mock_reporter = mock_safe(Reporter)
+    sync_reference_image_edits = SyncReferenceImageEdits(
+        mock_cato_api_client, mock_variable_processor, mock_reporter
+    )
+    test_identifier = TestIdentifier.from_string("My_first_test_Suite/My_first_test")
+    reference_image_edit = create_reference_image_edit(test_identifier)
+
+    sync_reference_image_edits.update(config_fixture.RUN_CONFIG, [reference_image_edit])
+
+    assert (tmp_path / "subfolder" / "image.exr").exists()
+    assert (tmp_path / "subfolder" / "image.exr").open().readlines() == [
+        "test exr content"
+    ]
+
+
 def test_no_test_found_in_config_should_not_download(tmp_path, config_fixture):
     mock_variable_processor = mock_safe(VariableProcessor)
     mock_variable_processor.evaluate_variables.return_value = {

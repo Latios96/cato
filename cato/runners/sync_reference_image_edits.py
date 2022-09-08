@@ -50,6 +50,9 @@ class SyncReferenceImageEdits:
         self._reporter.report_message(
             f"Updating {edit.test_identifier} to a new reference image at {image_path}"
         )
+
+        self._create_folder_if_not_exists(image_path)
+
         with open(image_path, "wb") as f:
             f.write(image_contents)
 
@@ -70,3 +73,8 @@ class SyncReferenceImageEdits:
             return variables["reference_image_exr"]
         else:
             return variables["reference_image_no_extension"] + image_file_extension
+
+    def _create_folder_if_not_exists(self, image_path):
+        image_folder = os.path.dirname(image_path)
+        if not os.path.exists(image_folder):
+            os.makedirs(image_folder)
