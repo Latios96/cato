@@ -2,7 +2,7 @@ import json
 from typing import IO
 
 TEMPLATE = {
-    "project_name": "Example",
+    "projectName": "Example",
     "suites": [
         {
             "name": "My_first_test_Suite",
