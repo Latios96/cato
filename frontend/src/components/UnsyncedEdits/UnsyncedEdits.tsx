@@ -15,7 +15,7 @@ function UnsyncedEdits(props: Props) {
       </div>
       <div className={styles.unsyncedEditCopy}>
         <CopyToClipboardInput
-          clipboardText={`cato sync-edits -u ${window.location.host} -run-id ${props.runId}`}
+          clipboardText={`cato sync-edits -u ${window.location.origin} -run-id ${props.runId}`}
           tooltipText={"Copy sync command to clipboard"}
           copiedMessage={"Copied sync command!"}
         />
