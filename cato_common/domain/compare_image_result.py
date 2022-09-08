@@ -10,5 +10,5 @@ class CompareImageResult:
     message: Optional[str]
     reference_image_id: int
     output_image_id: int
-    diff_image_id: int
+    diff_image_id: Optional[int]
     error: float

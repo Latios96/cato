@@ -183,6 +183,31 @@ class TestCompareImage:
             == test_context.comparison_settings
         )
 
+    def test_compare_images_failure_with_no_diff_image(self, test_context):
+        test_context.mock_image_comparator.compare.return_value = ComparisonResult(
+            status=ResultStatus.FAILED,
+            message="Failed",
+            diff_image=None,
+            error=0,
+        )
+
+        result = test_context.compare_image.compare_image(
+            BytesIO(b"output image"),
+            "output.png",
+            BytesIO(b"reference image"),
+            "reference.png",
+            test_context.comparison_settings,
+        )
+
+        assert result == CompareImageResult(
+            status=ResultStatus.FAILED,
+            message="Failed",
+            reference_image_id=2,
+            output_image_id=1,
+            diff_image_id=None,
+            error=0,
+        )
+
     def test_compare_images_from_db_failure(self, test_context):
         test_context.mock_image_comparator.compare.return_value = ComparisonResult(
             status=ResultStatus.FAILED,
@@ -233,6 +258,43 @@ class TestCompareImage:
         assert (
             test_context.mock_image_comparator.compare.call_args[0][2]
             == test_context.comparison_settings
+        )
+
+    def test_compare_images_from_db_failure_with_no_diff_image(self, test_context):
+        test_context.mock_image_comparator.compare.return_value = ComparisonResult(
+            status=ResultStatus.FAILED,
+            message="Failed",
+            diff_image=None,
+            error=0,
+        )
+
+        result = test_context.compare_image.compare_image_from_db(
+            Image(
+                id=1,
+                name="output.png",
+                original_file_id=10,
+                channels=[],
+                width=1920,
+                height=1080,
+            ),
+            Image(
+                id=2,
+                name="reference.png",
+                original_file_id=20,
+                channels=[],
+                width=1920,
+                height=1080,
+            ),
+            test_context.comparison_settings,
+        )
+
+        assert result == CompareImageResult(
+            status=ResultStatus.FAILED,
+            message="Failed",
+            reference_image_id=2,
+            output_image_id=1,
+            diff_image_id=None,
+            error=0,
         )
 
     def test_compare_images_from_db_no_output_image(self, test_context):

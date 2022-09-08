@@ -47,7 +47,9 @@ class CompareImage:
                 reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
 
-            stored_diff_image = self._store_image.store_image(result.diff_image)
+            stored_diff_image = None
+            if result.diff_image:
+                stored_diff_image = self._store_image.store_image(result.diff_image)
 
             logger.debug("Deleting tmpdir %s", tmpdirname)
 
@@ -56,7 +58,7 @@ class CompareImage:
             message=result.message,
             reference_image_id=reference_image.id,
             output_image_id=output_image.id,
-            diff_image_id=stored_diff_image.id,
+            diff_image_id=stored_diff_image.id if stored_diff_image else None,
             error=result.error,
         )
 
@@ -98,7 +100,9 @@ class CompareImage:
                 reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
 
-            stored_diff_image = self._store_image.store_image(result.diff_image)
+            stored_diff_image = None
+            if result.diff_image:
+                stored_diff_image = self._store_image.store_image(result.diff_image)
 
             logger.debug("Deleting tmpdir %s", tmpdirname)
 
@@ -107,7 +111,7 @@ class CompareImage:
             message=result.message,
             reference_image_id=reference_image.id,
             output_image_id=output_image.id,
-            diff_image_id=stored_diff_image.id,
+            diff_image_id=stored_diff_image.id if stored_diff_image else None,
             error=result.error,
         )
 
