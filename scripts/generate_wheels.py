@@ -168,6 +168,7 @@ if __name__ == "__main__":
             "pathvalidate",
             "tabulate",
             "email-validator",
+            "Jinja2",
         ],
     )
 
