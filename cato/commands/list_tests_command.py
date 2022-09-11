@@ -1,7 +1,7 @@
 import logging
 
 from cato.commands.base_command import BaseCliCommand
-from cato.utils.resolve_config_path import resolve_config_path
+from cato.utils.config_utils import resolve_config_path
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.test_suite import (
     count_tests,

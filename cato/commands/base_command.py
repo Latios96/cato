@@ -1,6 +1,6 @@
 import os
 
-from cato.utils.resolve_config_path import resolve_config_path
+from cato.utils.config_utils import resolve_config_path
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.config import RunConfig
 

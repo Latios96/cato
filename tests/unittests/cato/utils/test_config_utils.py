@@ -1,6 +1,6 @@
 import os
 
-from cato.utils.resolve_config_path import resolve_config_path
+from cato.utils.config_utils import resolve_config_path
 
 
 def test_config_path_should_use_cwd():
