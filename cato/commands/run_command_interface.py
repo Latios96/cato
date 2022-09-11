@@ -38,7 +38,6 @@ class RunCommandInterface(BaseCliCommand):
         test_identifier_str: Optional[str],
         only_failed: bool,
     ) -> RunConfig:
-        path = self._config_path(path)
         config = self._read_config(path)
 
         last_run_information = None

@@ -1,5 +1,6 @@
 import os
 
+from cato.utils.resolve_config_path import resolve_config_path
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.config import RunConfig
 
@@ -9,15 +10,10 @@ class BaseCliCommand(object):
         self._json_config_parser = json_config_parser
 
     def _config_path(self, path: str) -> str:
-        if not path:
-            path = os.getcwd()
-        path = os.path.abspath(path)
-        if os.path.isdir(path):
-            path = os.path.join(path, "cato.json")
-        return path
+        return resolve_config_path(path)
 
     def _read_config(self, config_path: str) -> RunConfig:
-        config_path = self._config_path(config_path)
+        config_path = resolve_config_path(config_path)
         config = self._json_config_parser.parse(config_path)
         # todo add option to pass resources folder as argument
         return RunConfig(

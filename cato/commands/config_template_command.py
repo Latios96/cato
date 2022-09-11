@@ -1,4 +1,5 @@
 from cato.commands.base_command import BaseCliCommand
+from cato.utils.resolve_config_path import resolve_config_path
 from cato_common.config.config_template_generator import ConfigTemplateGenerator
 
 import logging
@@ -14,7 +15,7 @@ class ConfigTemplateCommand(BaseCliCommand):
         self,
         path: str,
     ) -> None:
-        path = self._config_path(path)
+        path = resolve_config_path(path)
 
         with open(path, "w") as f:
             self._config_template_generator.write(f)

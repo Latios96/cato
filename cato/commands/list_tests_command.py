@@ -1,6 +1,7 @@
 import logging
 
 from cato.commands.base_command import BaseCliCommand
+from cato.utils.resolve_config_path import resolve_config_path
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato_common.domain.test_suite import (
     count_tests,
@@ -19,7 +20,7 @@ class ListTestsCommand(BaseCliCommand):
         self._logger = logger
 
     def list_tests(self, path: str) -> None:
-        path = self._config_path(path)
+        path = resolve_config_path(path)
         config = self._json_config_parser.parse(path)
         self._logger.info(
             f"Found {count_tests(config.suites)} tests in {count_suites(config.suites)} suites:"
