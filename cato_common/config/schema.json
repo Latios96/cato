@@ -223,6 +223,16 @@
       "examples": [
         "My_first_test_Suite"
       ]
+    },
+    "serverUrl": {
+      "$id": "#/properties/suites/items/anyOf/0/properties/serverUrl",
+      "type": "string",
+      "title": "The url of the server to report to",
+      "description": "The url of the server to report to",
+      "default": null,
+      "examples": [
+        "http://localhost:5000"
+      ]
     }
   },
   "additionalProperties": true
