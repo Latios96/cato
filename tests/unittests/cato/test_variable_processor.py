@@ -1,9 +1,14 @@
+import pytest
+
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
 from cato_common.domain.test import Test
 from cato_common.domain.test_suite import TestSuite
 from cato.variable_processing.variable_predefinition import PREDEFINITIONS
-from cato.variable_processing.variable_processor import VariableProcessor
+from cato.variable_processing.variable_processor import (
+    VariableProcessor,
+    VariableSubstitutionRecursionDepthExceeded,
+)
 
 REFERENCE_IMAGE_PNG = "config_path/my_test_suite/test_name/reference.png"
 REFERENCE_IMAGE_NO_EXTENSION = "config_path/my_test_suite/test_name/reference"
@@ -74,7 +79,7 @@ def test_evaluate_variables_custom_image_output():
         "test_command",
         variables={
             "frame": "7",
-            "image_output_png": "{@image_output_folder}/test_name{@frame}.png",
+            "image_output_png": "{{image_output_folder}}/test_name{{frame}}.png",
         },
         comparison_settings=ComparisonSettings.default(),
     )
@@ -112,7 +117,7 @@ def test_format_command():
     variable_processor = VariableProcessor()
 
     command = variable_processor.format_command(
-        "{@image_output_png}", {"image_output_png": "test"}
+        "{{image_output_png}}", {"image_output_png": "test"}
     )
 
     assert command == "test"
@@ -355,7 +360,21 @@ def test_evaluate_variables_maya_predefinition():
     }
 
 
-# maya
-# vray
-# arnold
-# blender
+def test_raise_max_recursion_exceeded_for_cyclic_variables():
+    config = RunConfig(
+        project_name=EXAMPLE_PROJECT,
+        resource_path="config_path",
+        suites=[],
+        output_folder="test",
+    )
+    suite = TestSuite(name="my_test_suite", tests=[])
+    test = Test(
+        "test_name",
+        "test_command",
+        variables={"variable1": "{{variable2}}", "variable2": "{{variable1}}"},
+        comparison_settings=ComparisonSettings.default(),
+    )
+    variable_processor = VariableProcessor()
+
+    with pytest.raises(VariableSubstitutionRecursionDepthExceeded):
+        variable_processor.evaluate_variables(config, suite, test)

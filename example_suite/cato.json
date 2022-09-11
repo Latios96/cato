@@ -1,7 +1,7 @@
 {
   "projectName": "TestSpheres",
   "variables": {
-    "copy_image_command": "python -c \"import shutil;shutil.copy('{@reference_image_no_extension}{@extension}','{@image_output_no_extension}{@extension}')\""
+    "copy_image_command": "python -c \"import shutil;shutil.copy('{{reference_image_no_extension}}{{extension}}','{{image_output_no_extension}}{{extension}}')\""
   },
   "suites": [
     {
@@ -9,19 +9,19 @@
       "tests": [
         {
           "name": "exr_singlechannel_16_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         },
         {
           "name": "exr_singlechannel_32_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         },
         {
           "name": "exr_multichannel_16_bit_1080p",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         },
         {
           "name": "exr_multichannel_16_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         }
       ],
       "variables": {
@@ -33,7 +33,7 @@
       "tests": [
         {
           "name": "jpeg",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         }
       ],
       "variables": {
@@ -45,11 +45,11 @@
       "tests": [
         {
           "name": "png_8_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         },
         {
           "name": "png_16_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         }
       ],
       "variables": {
@@ -61,11 +61,11 @@
       "tests": [
         {
           "name": "tiff_8_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         },
         {
           "name": "tiff_16_bit",
-          "command": "{@copy_image_command}"
+          "command": "{{copy_image_command}}"
         }
       ],
       "variables": {

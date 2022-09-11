@@ -109,7 +109,7 @@ class TestTestRunner:
     def test_should_replace_placeholder(self, test_context):
         test = Test(
             name="my_first_test",
-            command="crayg -s {test_resources}/test.json -o {image_output_png}",
+            command="crayg -s {{test_resources}}/test.json -o {{image_output_png}}",
             variables={},
             comparison_settings=ComparisonSettings.default(),
         )
