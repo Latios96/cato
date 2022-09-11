@@ -21,6 +21,9 @@ from cato.commands.update_missing_reference_images_command import (
 )
 from cato.commands.update_reference_image_command import UpdateReferenceImageCommand
 from cato.commands.worker_run_command import WorkerRunCommand
+from cato.utils.config_utils import (
+    read_url_from_config_path,
+)
 from cato_common.config.user_config.user_config_repository import UserConfigRepository
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
@@ -38,18 +41,22 @@ if is_executed_as_module:
     logger = logging.getLogger(__name__)  # noqa: F811
 
 
-def create_object_graph(url: Optional[str] = None) -> ObjectGraph:
+def create_object_graph(
+    path: Optional[str] = None, url: Optional[str] = None, require_url: bool = False
+) -> ObjectGraph:
     if url:
         url = format_url(url)
     return pinject.new_object_graph(
         modules=[*imported_modules([cato, cato_api_client, cato_common])],
-        binding_specs=[TestExecutionReporterBindings(url)],
+        binding_specs=[TestExecutionReporterBindings(path, url, require_url)],
     )
 
 
 class TestExecutionReporterBindings(pinject.BindingSpec):
-    def __init__(self, url: Optional[str]):
-        self._url = url if url else "<not given>"
+    def __init__(
+        self, path: Optional[str], url: Optional[str], require_url: bool = False
+    ):
+        self._url = url if url else read_url_from_config_path(path, require_url)
 
     def configure(self, bind):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
@@ -81,7 +88,7 @@ def run(
     verbose: int,
     url: str,
 ) -> None:
-    obj_graph = create_object_graph(url)
+    obj_graph = create_object_graph(path, url, require_url=True)
     run_command = provide_safe(obj_graph, RunCommand)
 
     verbose_mode = VerboseMode.in_range(verbose)
@@ -100,7 +107,7 @@ def submit(
     only_failed: bool,
     url: str,
 ) -> None:
-    obj_graph = create_object_graph(url)
+    obj_graph = create_object_graph(path, url, require_url=True)
     submit_command = provide_safe(obj_graph, SubmitCommand)
 
     submit_command.run(path, suite_name, test_identifier_str, bool(only_failed))
@@ -141,14 +148,14 @@ def worker_run(
     submission_info_id: int,
     test_identifier_str: str,
 ) -> None:
-    obj_graph = create_object_graph(url)
+    obj_graph = create_object_graph(url, require_url=True)
     worker_command = provide_safe(obj_graph, WorkerRunCommand)
 
     worker_command.execute(submission_info_id, test_identifier_str)
 
 
 def sync_test_edits(path: str, url: str, run_id: int) -> None:
-    obj_graph = create_object_graph(url)
+    obj_graph = create_object_graph(path, url, require_url=True)
     sync_test_edits_command = provide_safe(obj_graph, SyncTestEditsCommand)
 
     sync_test_edits_command.sync(path, run_id)
@@ -174,7 +181,7 @@ def main():
         "--test-identifier",
         help="Identifier of test to run. Example: suite_name/test_name",
     )
-    run_parser.add_argument("-u", "--url", help="url to server", required=True)
+    run_parser.add_argument("-u", "--url", help="url to server")
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
     run_parser.add_argument("--only-failed", action="store_true")
 

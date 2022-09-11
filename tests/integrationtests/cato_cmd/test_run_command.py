@@ -1,3 +1,4 @@
+import json
 import os
 import sys
 
@@ -30,6 +31,34 @@ def test_running_all_tests_should_succeed(
     assert_success_message_was_printed(result)
     assert_the_success_result_is_available_on_the_server(
         result, live_server, api_token_str
+    )
+
+
+def test_running_the_cato_command_without_url_should_read_url_from_config(
+    live_server, cato_config, env_with_api_token
+):
+    config_folder, config_path = cato_config
+    with open(config_path) as f:
+        config_data = json.load(f)
+    config_data["serverUrl"] = live_server.server_url()
+    with open(config_path, "w") as f:
+        json.dump(config_data, f)
+    os.chdir(config_folder)
+    reference_images_exist(cato_config, env_with_api_token)
+    result = run_cato_command(["run", "-vvv"], env_with_api_token)
+    assert result.exit_code == 0
+    assert result.output_contains_line("[INFO]  Collecting machine info..\n")
+
+
+def test_running_the_cato_command_without_url_should_fail_with_no_url_in_config(
+    cato_config, env_with_api_token
+):
+    config_folder, config_path = cato_config
+    os.chdir(config_folder)
+    result = run_cato_command(["run", "-vvv"], env_with_api_token)
+    assert result.exit_code == 1
+    assert result.output_contains_line_matching(
+        'No server url was given. Provide one with -u/--url or add a "serverUrl" entry to .*'
     )
 
 
