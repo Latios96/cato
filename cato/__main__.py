@@ -125,13 +125,16 @@ def submit(
     )
 
 
-def update_missing_reference_images(path):
+def update_missing_reference_images(
+    path: str,
+    variables: Dict[str, str],
+) -> None:
     obj_graph = create_object_graph()
     update_missing_reference_images_command = obj_graph.provide(
         UpdateMissingReferenceImagesCommand
     )
 
-    update_missing_reference_images_command.update(path)
+    update_missing_reference_images_command.update(path, variables)
 
 
 def list_tests(path):
@@ -228,6 +231,8 @@ def main():
         parents=[parent_parser],
     )
     update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_vars_option(update_missing_parser)
+
     update_reference_parser = commands_subparser.add_parser(
         "update-reference",
         help="Updates reference images",
@@ -296,7 +301,7 @@ def main():
             args.var,
         )
     elif args.command == "update-missing-reference-images":
-        update_missing_reference_images(args.path)
+        update_missing_reference_images(args.path, args.var)
     elif args.command == "list-tests":
         list_tests(args.path)
     elif args.command == "update-reference":
