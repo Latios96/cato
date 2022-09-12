@@ -19,6 +19,8 @@ from cato_common.domain.test_identifier import TestIdentifier
 from tests.unittests.cato.commands.test_run_command import CONFIG
 from tests.utils import mock_safe
 
+CLI_VARS = {"my_cli_var": "my_cli_value"}
+
 
 @pytest.fixture
 def test_context():
@@ -49,7 +51,7 @@ class TestSubmitCommand:
     def test_should_submit_all_tests(self, test_context):
         test_context.mock_test_execution_reporter.run_id.return_value = 42
 
-        test_context.submit_command.run("my_path", None, None, False)
+        test_context.submit_command.run("my_path", None, None, False, CLI_VARS)
 
         test_context.mock_test_execution_reporter.start_execution.assert_called_with(
             test_context.config
@@ -67,12 +69,17 @@ class TestSubmitCommand:
         test_context.mock_logger.info.assert_called_with(
             f"Submitted 1 suite with 1 test to scheduler."
         )
+        test_context.submit_command._read_config.assert_called_with(
+            "my_path", cli_variables=CLI_VARS
+        )
 
     def test_should_raise_value_error_if_no_tests_match_suite_name(self, test_context):
         test_context.mock_test_execution_reporter.run_id.return_value = 42
 
         with pytest.raises(ValueError):
-            test_context.submit_command.run("my_path", "not existing name", None, False)
+            test_context.submit_command.run(
+                "my_path", "not existing name", None, False, CLI_VARS
+            )
 
     def test_should_raise_value_error_if_no_tests_match_suite_name_test_identifier(
         self, test_context
@@ -80,7 +87,9 @@ class TestSubmitCommand:
         test_context.mock_test_execution_reporter.run_id.return_value = 42
 
         with pytest.raises(ValueError):
-            test_context.submit_command.run("my_path", None, "not/existing name", False)
+            test_context.submit_command.run(
+                "my_path", None, "not/existing name", False, CLI_VARS
+            )
 
     def test_should_raise_value_error_if_no_tests_match_last_failed(self, test_context):
         test_context.mock_last_run_information_repository.read_last_run_information.return_value = LastRunInformation(
@@ -91,4 +100,6 @@ class TestSubmitCommand:
         ]
 
         with pytest.raises(ValueError):
-            test_context.submit_command.run("my_path", None, "not/existing name", False)
+            test_context.submit_command.run(
+                "my_path", None, "not/existing name", False, CLI_VARS
+            )

@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict
 
 from cato.commands.run_command_interface import RunCommandInterface
 from cato_common.config.config_file_parser import JsonConfigParser
@@ -43,9 +43,10 @@ class SubmitCommand(RunCommandInterface):
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
         only_failed: bool,
+        cli_variables: Dict[str, str],
     ) -> None:
         config = self._prepare_config(
-            path, suite_name, test_identifier_str, only_failed
+            path, suite_name, test_identifier_str, only_failed, cli_variables
         )
 
         if not config.suites:

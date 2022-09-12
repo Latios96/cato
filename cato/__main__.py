@@ -115,11 +115,14 @@ def submit(
     test_identifier_str: str,
     only_failed: bool,
     url: str,
+    variables: Dict[str, str],
 ) -> None:
     obj_graph = create_object_graph(path, url, require_url=True)
     submit_command = provide_safe(obj_graph, SubmitCommand)
 
-    submit_command.run(path, suite_name, test_identifier_str, bool(only_failed))
+    submit_command.run(
+        path, suite_name, test_identifier_str, bool(only_failed), variables
+    )
 
 
 def update_missing_reference_images(path):
@@ -217,6 +220,7 @@ def main():
     )
     submit_parser.add_argument("-u", "--url", help="url to server", required=True)
     submit_parser.add_argument("--only-failed", action="store_true")
+    _add_vars_option(submit_parser)
 
     update_missing_parser = commands_subparser.add_parser(
         "update-missing-reference-images",
@@ -289,6 +293,7 @@ def main():
             args.test_identifier,
             args.only_failed,
             args.url,
+            args.var,
         )
     elif args.command == "update-missing-reference-images":
         update_missing_reference_images(args.path)
