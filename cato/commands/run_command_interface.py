@@ -1,4 +1,4 @@
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict
 
 from cato.commands.base_command import BaseCliCommand
 from cato_common.config.config_file_parser import JsonConfigParser
@@ -37,8 +37,9 @@ class RunCommandInterface(BaseCliCommand):
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
         only_failed: bool,
+        cli_variables: Dict[str, str] = None,  # todo remove None default arg
     ) -> RunConfig:
-        config = self._read_config(path)
+        config = self._read_config(path, cli_variables=cli_variables)
 
         last_run_information = None
         if only_failed:

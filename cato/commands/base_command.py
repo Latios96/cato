@@ -14,7 +14,9 @@ class BaseCliCommand(object):
         return resolve_config_path(path)
 
     def _read_config(
-        self, config_path: str, cli_variables: Dict[str, str] = None
+        self,
+        config_path: str,
+        cli_variables: Dict[str, str] = None,  # todo remove None default arg
     ) -> RunConfig:
         config_path = resolve_config_path(config_path)
         config = self._json_config_parser.parse(config_path)

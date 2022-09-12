@@ -1,5 +1,5 @@
 import logging
-from typing import Optional, Callable
+from typing import Optional, Callable, Dict
 
 from cato.commands.run_command_interface import RunCommandInterface
 from cato.reporter.exit_code_calculator import ExitCodeCalculator
@@ -49,10 +49,11 @@ class RunCommand(RunCommandInterface):
         test_identifier_str: Optional[str],
         only_failed: bool,
         verbose_mode: VerboseMode,
+        cli_variables: Dict[str, str],
     ) -> int:
         self._reporter.set_verbose_mode(verbose_mode)
         config = self._prepare_config(
-            path, suite_name, test_identifier_str, only_failed
+            path, suite_name, test_identifier_str, only_failed, cli_variables
         )
 
         result = self._test_suite_runner.run_test_suites(config)

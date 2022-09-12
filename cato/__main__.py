@@ -1,7 +1,7 @@
 import argparse
 import logging
 import os.path
-from typing import Optional
+from typing import Optional, Dict
 
 import pinject
 from pinject.object_graph import ObjectGraph
@@ -24,6 +24,7 @@ from cato.commands.worker_run_command import WorkerRunCommand
 from cato.utils.config_utils import (
     read_url_from_config_path,
 )
+from cato.utils.store_dict_key_pair import StoreDictKeyPair
 from cato_common.config.user_config.user_config_repository import UserConfigRepository
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
@@ -89,6 +90,7 @@ def run(
     only_failed: bool,
     verbose: int,
     url: str,
+    variables: Dict[str, str],
 ) -> None:
     obj_graph = create_object_graph(path, url, require_url=True)
     run_command = provide_safe(obj_graph, RunCommand)
@@ -96,7 +98,12 @@ def run(
     verbose_mode = VerboseMode.in_range(verbose)
 
     exit_code = run_command.run(
-        path, suite_name, test_identifier_str, bool(only_failed), verbose_mode
+        path,
+        suite_name,
+        test_identifier_str,
+        bool(only_failed),
+        verbose_mode,
+        variables,
     )
 
     exit(exit_code)
@@ -186,6 +193,12 @@ def main():
     run_parser.add_argument("-u", "--url", help="url to server")
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
     run_parser.add_argument("--only-failed", action="store_true")
+    run_parser.add_argument(
+        "--var",
+        action=StoreDictKeyPair,
+        nargs="+",
+        help="Override project variables. Example: key=value",
+    )
 
     submit_parser = commands_subparser.add_parser(
         "submit",
@@ -263,6 +276,7 @@ def main():
             args.only_failed,
             args.verbose,
             args.url,
+            args.var,
         )
     elif args.command == "submit":
         submit(

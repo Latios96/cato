@@ -2,6 +2,7 @@ import copy
 import logging
 import os
 import sys
+from unittest import mock
 
 import pytest
 
@@ -39,7 +40,7 @@ def test_context():
                 self.mock_test_execution_reporter,
             )
             self.mock_json_config_parser.parse.return_value = self.config
-            self.submit_command._read_config = lambda x: self.config
+            self.submit_command._read_config = mock.MagicMock(return_value=self.config)
 
     return TestContext()
 

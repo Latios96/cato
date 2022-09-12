@@ -5,6 +5,7 @@ import copy
 import logging
 from unittest.mock import call
 
+import mock
 import pytest
 
 from cato.commands.run_command import RunCommand
@@ -50,6 +51,8 @@ CONFIG = RunConfig(
     variables={"my_var": "from_config"},
 )
 
+CLI_VARS = {"my_cli_var": "my_cli_value"}
+
 
 @pytest.fixture
 def test_context():
@@ -79,7 +82,7 @@ def test_context():
                 self.mock_exit_code_calculator,
             )
             self.mock_json_config_parser.parse.return_value = self.config
-            self.run_command._read_config = lambda x: self.config
+            self.run_command._read_config = mock.MagicMock(return_value=self.config)
             self.mock_exit_code_calculator.generate_exit_code.return_value = 42
 
     return TestContext()
@@ -120,7 +123,7 @@ class TestRunCommand:
         )
 
         exit_code = test_context.run_command.run(
-            "my_path", None, None, False, VerboseMode.DEFAULT
+            "my_path", None, None, False, VerboseMode.DEFAULT, CLI_VARS
         )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
@@ -140,10 +143,13 @@ class TestRunCommand:
         test_context.mock_exit_code_calculator.generate_exit_code.assert_called_with(
             result
         )
+        test_context.run_command._read_config.assert_called_with(
+            "my_path", cli_variables=CLI_VARS
+        )
 
     def test_should_filter_by_suite_name(self, test_context):
         test_context.run_command.run(
-            "my_path", "not existing name", None, False, VerboseMode.DEFAULT
+            "my_path", "not existing name", None, False, VerboseMode.DEFAULT, CLI_VARS
         )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
@@ -154,7 +160,12 @@ class TestRunCommand:
 
     def test_should_filter_by_test_identifier(self, test_context):
         test_context.run_command.run(
-            "my_path", None, "not_existing_suite/test", False, VerboseMode.DEFAULT
+            "my_path",
+            None,
+            "not_existing_suite/test",
+            False,
+            VerboseMode.DEFAULT,
+            CLI_VARS,
         )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
@@ -166,7 +177,12 @@ class TestRunCommand:
     def test_should_filter_by_invalid_test_identifier_str(self, test_context):
         with pytest.raises(ValueError):
             test_context.run_command.run(
-                "my_path", None, "not_existing_suite", False, VerboseMode.DEFAULT
+                "my_path",
+                None,
+                "not_existing_suite",
+                False,
+                VerboseMode.DEFAULT,
+                CLI_VARS,
             )
 
     def test_existing_last_run_information_should_filter_no_tests_executed(
@@ -179,7 +195,9 @@ class TestRunCommand:
             []
         )
 
-        test_context.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
+        test_context.run_command.run(
+            "my_path", None, None, True, VerboseMode.DEFAULT, CLI_VARS
+        )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
             test_context.config
@@ -196,7 +214,9 @@ class TestRunCommand:
             TestIdentifier.from_string("My_first_test_Suite/My_first_test")
         ]
 
-        test_context.run_command.run("my_path", None, None, True, VerboseMode.DEFAULT)
+        test_context.run_command.run(
+            "my_path", None, None, True, VerboseMode.DEFAULT, CLI_VARS
+        )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
             test_context.config
@@ -217,7 +237,9 @@ class TestRunCommand:
             TestIdentifier.from_string("My_first_test_Suite/My_first_test")
         ]
 
-        test_context.run_command.run("my_path", None, None, False, VerboseMode.DEFAULT)
+        test_context.run_command.run(
+            "my_path", None, None, False, VerboseMode.DEFAULT, CLI_VARS
+        )
 
         test_context.mock_test_suite_runner.run_test_suites.assert_called_with(
             test_context.config
