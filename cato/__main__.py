@@ -171,11 +171,13 @@ def worker_run(
     worker_command.execute(submission_info_id, test_identifier_str)
 
 
-def sync_test_edits(path: str, url: str, run_id: int) -> None:
+def sync_test_edits(
+    path: str, url: str, run_id: int, variables: Dict[str, str]
+) -> None:
     obj_graph = create_object_graph(path, url, require_url=True)
     sync_test_edits_command = provide_safe(obj_graph, SyncTestEditsCommand)
 
-    sync_test_edits_command.sync(path, run_id)
+    sync_test_edits_command.sync(path, run_id, variables)
 
 
 def _add_vars_option(run_parser):
@@ -279,6 +281,7 @@ def main():
         "-run-id", required=True, type=int, help="run id to take edits to sync from"
     )
     sync_test_edits_command_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_vars_option(sync_test_edits_command_parser)
 
     args = main_parser.parse_args()
 
@@ -312,7 +315,7 @@ def main():
     elif args.command == "worker-run":
         worker_run(args.url, args.submission_info_id, args.test_identifier)
     elif args.command == "sync-edits":
-        sync_test_edits(args.path, args.url, args.run_id)
+        sync_test_edits(args.path, args.url, args.run_id, args.var)
     else:
         logger.error(f"No method found to run command {args.command}")
 
