@@ -21,6 +21,8 @@ def resolve_config_path(path: Optional[str]) -> str:
 
 def read_url_from_config_path(path: Optional[str], require_url: bool) -> str:
     resolved_config_path = resolve_config_path(path)
+    if not os.path.exists(resolved_config_path):
+        return "<not given>"
     with open(resolved_config_path) as f:
         config: Dict[str, str] = json.load(f)
     config_from_url = config.get("serverUrl")

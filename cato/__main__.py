@@ -56,7 +56,9 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
     def __init__(
         self, path: Optional[str], url: Optional[str], require_url: bool = False
     ):
-        self._url = url if url else read_url_from_config_path(path, require_url)
+        self._url = url
+        if not url:
+            self._url = read_url_from_config_path(path, require_url)
 
     def configure(self, bind):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
@@ -148,7 +150,7 @@ def worker_run(
     submission_info_id: int,
     test_identifier_str: str,
 ) -> None:
-    obj_graph = create_object_graph(url, require_url=True)
+    obj_graph = create_object_graph(url=url, require_url=True)
     worker_command = provide_safe(obj_graph, WorkerRunCommand)
 
     worker_command.execute(submission_info_id, test_identifier_str)
