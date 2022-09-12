@@ -14,7 +14,7 @@ def test_read_config_should_populate_run_config_correctly(test_resource_provider
     config_directory = test_resource_provider.resource_by_name("cato_test_config")
     base_command = BaseCliCommand(JsonConfigParser())
 
-    run_config = base_command._read_config(config_directory)
+    run_config = base_command._read_config(config_directory, None)
 
     assert run_config == RunConfig(
         project_name="Example",

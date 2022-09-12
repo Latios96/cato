@@ -143,9 +143,7 @@ class TestRunCommand:
         test_context.mock_exit_code_calculator.generate_exit_code.assert_called_with(
             result
         )
-        test_context.run_command._read_config.assert_called_with(
-            "my_path", cli_variables=CLI_VARS
-        )
+        test_context.run_command._read_config.assert_called_with("my_path", CLI_VARS)
 
     def test_should_filter_by_suite_name(self, test_context):
         test_context.run_command.run(

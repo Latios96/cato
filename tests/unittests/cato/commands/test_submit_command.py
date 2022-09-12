@@ -69,9 +69,7 @@ class TestSubmitCommand:
         test_context.mock_logger.info.assert_called_with(
             f"Submitted 1 suite with 1 test to scheduler."
         )
-        test_context.submit_command._read_config.assert_called_with(
-            "my_path", cli_variables=CLI_VARS
-        )
+        test_context.submit_command._read_config.assert_called_with("my_path", CLI_VARS)
 
     def test_should_raise_value_error_if_no_tests_match_suite_name(self, test_context):
         test_context.mock_test_execution_reporter.run_id.return_value = 42

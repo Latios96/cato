@@ -37,9 +37,9 @@ class RunCommandInterface(BaseCliCommand):
         suite_name: Optional[str],
         test_identifier_str: Optional[str],
         only_failed: bool,
-        cli_variables: Dict[str, str] = None,  # todo remove None default arg
+        cli_variables: Dict[str, str],
     ) -> RunConfig:
-        config = self._read_config(path, cli_variables=cli_variables)
+        config = self._read_config(path, cli_variables)
 
         last_run_information = None
         if only_failed:
