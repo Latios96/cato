@@ -6,29 +6,24 @@ reviewed in a Browser interface.
 ![](docs/docs_banner.png)
 
 <!-- TOC -->
-
 * [Cato](#cato)
-    * [Inspiration](#inspiration)
-    * [How does it work?](#how-does-it-work)
-        * [Features](#features)
-            * [Developer Features](#developer-features)
-    * [How to use it?](#how-to-use-it)
-    * [Server Installation](#server-installation)
-        * [Prerequisites](#prerequisites)
-        * [Install](#install)
-    * [Architecture](#architecture)
-    * [Design Decisions](#design-decisions)
-        * [Client / Server Architecture](#client--server-architecture)
-        * [Serving the Frontend from Cato Server](#serving-the-frontend-from-cato-server)
-        * [why only run command tests](#why-only-run-command-tests)
-        * [Gradle](#gradle)
-        * [FastApi?](#fastapi)
-        * [why rely on external scheduler like Deadline?](#why-rely-on-external-scheduler-like-deadline)
-        * [Comparing Images on Server](#comparing-images-on-server)
-        * [Deduplicating File Storage](#deduplicating-file-storage)
-        * [task queue for image processing](#task-queue-for-image-processing)
-        * [Login using Keycloak / OIDC](#login-using-keycloak--oidc)
-
+  * [Inspiration](#inspiration)
+  * [How does it work?](#how-does-it-work)
+    * [Features](#features)
+      * [Developer Features](#developer-features)
+  * [How to use it?](#how-to-use-it)
+  * [Architecture](#architecture)
+  * [Design Decisions](#design-decisions)
+    * [Client / Server Architecture](#client--server-architecture)
+    * [Serving the Frontend from Cato Server](#serving-the-frontend-from-cato-server)
+    * [why only run command tests](#why-only-run-command-tests)
+    * [Gradle](#gradle)
+    * [FastApi?](#fastapi)
+    * [why rely on external scheduler like Deadline?](#why-rely-on-external-scheduler-like-deadline)
+    * [Comparing Images on Server](#comparing-images-on-server)
+    * [Deduplicating File Storage](#deduplicating-file-storage)
+    * [task queue for image processing](#task-queue-for-image-processing)
+    * [Login using Keycloak / OIDC](#login-using-keycloak--oidc)
 <!-- TOC -->
 
 ## Inspiration
@@ -191,113 +186,90 @@ overview page of the run, we can copy the `sync` command to sync our reference i
 
 ![](docs/copy_sync_command.png)
 
-## Server Installation
-
-### Prerequisites
-
-Installation on Linux is recommended
-
-- Postgres DB
-- RabbitMq
-- Keycloak
-- OpenImageIO's `oiiotool` and `iinfo`. Install on Ubuntu with `apt-get -y install openimageio-tools`
-
-### Install
-
-First, grab the Cato server wheel from [Github Releases](https://github.com/Latios96/cato/releases).
-
-After that, you can install the server
-
-```shell
-virtualenv venv
-source venv/bin/activate
-pip install cato-server-{version}-py3-none-any.whl
-# create a server config from template
-cato_server_admin config-template
-# (edit config and add db connection etc.)
-cato_server_admin migrate-db
-# start server
-cato_server
-# in other terminals, start cato_worker: 
-cato_worker
-# in other terminals, start cato_beat:
-cato_beat
-```
-
 ## Architecture
 
 ![](docs/cato-system-diagramm.svg)
 
-- Cato client: local test execution, reporting to server
-- Cato server: Rest API
-- Cato Worker: offloaded Image Processing
-- Cato Beat: schedule recurring tasks
-- Browser: displays the UI, talks to Rest API. For Logins, the browser is redirected to the Keycloak instance
+**Cato Client**
+
+Responsible for test execution, reporting to server
+
+**Cato Server**
+
+Offers Rest API to store test results in the PostgreSQL database and on the file storage.
+
+**Browser**
+
+Displays the UI, talks to Rest API. For Logins, the browser is redirected to the Keycloak instance.
+
+**Cato Worker**
+
+Offloaded Image Processing
+
+**Cato Beat**
+Schedule recurring tasks, for example every 2 minutes timed out tests are removed.
+
 
 ## Design Decisions
 
 ### Client / Server Architecture
 
-alternative: locally created html reports or something similar
-Reasons:
+A Client / Server Architecture was chosen for the following reasons. An alternative would have been a locally created HTML report os something similar.
 
-- distributed test execution
-- central instance, possible to collect information over multiple runs
-- use in CI: view results as they are produced
+- Editing of reference images / comparison settings
+  - Would also be possible with a local solution, but this would also require some kind of backend 
+- Distributed test execution
+  - easy to collect results using a central instance.
+- Easily collect information over multiple runs
+- Run tests in CI: view results as they are produced
+- Easily share run results (just copy link)
 
 ### Serving the Frontend from Cato Server
 
-- easier installation / setup
-
-### why only run command tests
-
-- ws intended for rendering tests, most renderers have cli interface, spawning a new process for each test is small
-  cost, since rendering task is expected to take longer
-- also, for this other frameworks like pytest exist, would rather build a pytest integration for cato than
-  reimplementing this
+Serving the Frontend from `cato server` means that only one Python wheel needs to be installed and started, which greatly simplifies deployment.
 
 ### Gradle
 
-- fully automated build, just execute build task to
+While Gradle is quite common in the Java world, not many people would expect that in a Python / Typescript project. However, I wanted a fully automated build. Executing the build task will do:
     - install Python deps
     - install Typescript deps
     - run Python Unittests
     - run Typescript Unittests
     - build React app
-    - run integration tests
-    - build different python wheels for client and server
-- task dependencies
-- cached and multithreaded execution
-- i know Gradle quite wel
+    - run Integration tests
+    - build different Python wheels for client and server
 
-### FastApi?
+With Gradle, it's possible to define dependencies between tasks, so all dependent tasks are also executed when executing one task. The task results are also cached and when no inputs to the task changes, the task is not executed again. Also, the tasks are executed in parallel if possible.
 
-    - originally flask, but wanted something more modern
-    - Django was also considered, felt really bloated, but would have been maybe a better choice. FastApi is for API only and is not intended for full applications with a frontend / sessions etc.  
 
-### why rely on external scheduler like Deadline?
+### Why relying on external scheduler like Deadline
 
-    - it's a complicated task (distribute load over multiple machines, restart failed tasks, ignore failing machines,
-      run certain things only on one OS etc. ) Deadline was chosen because I had many experience with running Deadline
-      and developing for it. Can be extended for example to use OpenCue
+Developing a scheduler is a complicated task with many challenges:
+- distribute load over multiple machines
+- restart failed tasks
+- ignore failing machines
+- run certain things only on one OS
+- ...
+
+Deadline was chosen because I had many experience with running Deadline and developing for it. There are no restrictions to extended Cato to use OpenCue, for example.
 
 ### Comparing Images on Server
 
-(easier client, server side implementation needed anyway for editing reference images in Browser)
+Images are compared on the server to make the client smaller and easier to distribute. Otherwise, this would currently require to install OpenImageIO on any client machine, which is challenging, since there are no public Windows builds available. Also, a server side implementation was needed anyway for editing reference images in Browser.
 
 ### Deduplicating File Storage
 
-images are often the same for multiple runs, reference images are always the same if
-not updated, output images are always the same if they don't involve noise. Save storage space and don't duplicate
-them). Howevr, current implementation has the issue, that it requires to run on a single machine, so it's currently
-not possible to run cato_server/cato_worker on different/multiple machines, which is a scaling/availability issue
+Images are often the same for multiple runs:
+- Reference images are always the same if not updated
+- output images are most of the time the same, they are only different if a test fails or they involve some kind of noise
 
-### task queue for image processing
+To save storage space, they are deduplicated by checksum and only stored once.
 
-can be very slow
+### Using a task queue for image processing
+
+Image processing can be quite slow, which can lead to HTTP request timeouts otherwise.
 
 ### Login using Keycloak / OIDC
 
 Implementing a Login / user managment can be very hard and since it's critical for application security, this is also
-not a good idea. Keycloak is easy to integrate and advanced login features like two
-factor authentication etc. just need to be configured and don't need to be implemented 
+not a good idea. Keycloak is ready to use and easy to integrate. Advanced login features (for example Two-Factor-Authentication) just need to be configured and don't need to be implemented. 
