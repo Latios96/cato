@@ -170,6 +170,15 @@ def sync_test_edits(path: str, url: str, run_id: int) -> None:
     sync_test_edits_command.sync(path, run_id)
 
 
+def _add_vars_option(run_parser):
+    run_parser.add_argument(
+        "--var",
+        action=StoreDictKeyPair,
+        nargs="+",
+        help="Override project variables. Example: key=value",
+    )
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -193,12 +202,7 @@ def main():
     run_parser.add_argument("-u", "--url", help="url to server")
     run_parser.add_argument("-v", "--verbose", action="count", default=1)
     run_parser.add_argument("--only-failed", action="store_true")
-    run_parser.add_argument(
-        "--var",
-        action=StoreDictKeyPair,
-        nargs="+",
-        help="Override project variables. Example: key=value",
-    )
+    _add_vars_option(run_parser)
 
     submit_parser = commands_subparser.add_parser(
         "submit",
