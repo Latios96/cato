@@ -144,11 +144,13 @@ def list_tests(path):
     list_tests_command.list_tests(path)
 
 
-def update_reference(path, test_identifier):
+def update_reference(
+    path: str, test_identifier: str, variables: Dict[str, str]
+) -> None:
     obj_graph = create_object_graph()
     update_reference_image_command = obj_graph.provide(UpdateReferenceImageCommand)
 
-    update_reference_image_command.update(path, test_identifier)
+    update_reference_image_command.update(path, test_identifier, variables)
 
 
 def config_template(path: str) -> None:
@@ -243,6 +245,7 @@ def main():
         help="Identifier of test to run. Example: suite_name/test_name",
     )
     update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_vars_option(update_reference_parser)
 
     list_parser = commands_subparser.add_parser(
         "list-tests", help="Lists tests in config file", parents=[parent_parser]
@@ -305,7 +308,7 @@ def main():
     elif args.command == "list-tests":
         list_tests(args.path)
     elif args.command == "update-reference":
-        update_reference(args.path, args.test_identifier)
+        update_reference(args.path, args.test_identifier, args.var)
     elif args.command == "worker-run":
         worker_run(args.url, args.submission_info_id, args.test_identifier)
     elif args.command == "sync-edits":
