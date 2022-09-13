@@ -13,6 +13,9 @@ from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
 from cato_server.admin_commands.wait_for_db_connection_command import (
     WaitForDbConnectionCommand,
 )
+from cato_server.admin_commands.wait_for_rabbitmq_connection_command import (
+    WaitForRabbitMqConnectionCommand,
+)
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
 
@@ -75,6 +78,16 @@ def wait_for_db_connection(path):
     wait_for_connection_command.wait_for_connection()
 
 
+def wait_for_rabbitmq_connection(path):
+    path = get_config_path(path)
+    obj_graph = create_obj_graph(path)
+
+    wait_for_connection_command = provide_safe(
+        obj_graph, WaitForRabbitMqConnectionCommand
+    )
+    wait_for_connection_command.wait_for_connection()
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -124,6 +137,15 @@ def main():
     )
     wait_for_db_connection_parser.add_argument("--config", help="path to config.ini")
 
+    wait_for_rabbitmq_connection_parser = commands_subparser.add_parser(
+        "wait-for-rabbitmq-connection",
+        help="Waits until the application can connect to RabbitMq",
+        parents=[parent_parser],
+    )
+    wait_for_rabbitmq_connection_parser.add_argument(
+        "--config", help="path to config.ini"
+    )
+
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -136,6 +158,8 @@ def main():
         create_api_token(args.config)
     elif args.command == "wait-for-db-connection":
         wait_for_db_connection(args.config)
+    elif args.command == "wait-for-rabbitmq-connection":
+        wait_for_rabbitmq_connection(args.config)
     else:
         logger.error(f"No method found to run command {args.command}")
 
