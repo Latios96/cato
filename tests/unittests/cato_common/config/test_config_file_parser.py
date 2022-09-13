@@ -5,6 +5,7 @@ import pytest
 from jsonschema import ValidationError
 
 from cato_common.config.config_file_parser import JsonConfigParser
+from cato_common.config.test_attribute_resolver import AttributeNotDefinedError
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import Config
@@ -112,6 +113,38 @@ VALID_CONFIG_WITH_COMPARISON_SETTINGS = {
     ],
 }
 
+VALID_CONFIG_INHERIT_COMMAND = {
+    "projectName": EXAMPLE_PROJECT,
+    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                }
+            ],
+        }
+    ],
+}
+
+VALID_CONFIG_INHERIT_COMPARISON_METHOD = {
+    "projectName": EXAMPLE_PROJECT,
+    "comparisonSettings": {"method": "SSIM"},
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
+                    "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
+                    "comparisonSettings": {"threshold": 0.1},
+                }
+            ],
+        }
+    ],
+}
+
 INVALID_CONFIG = {
     "suite": {
         "name": "My_first_test_Suite",
@@ -150,6 +183,20 @@ INVALID_COMPARISON_THRESHOLD = {
                     "name": "My_first_test",
                     "command": "mayabatch -s {config_file_folder}/{test_name.json} -o {image_output}/{test_name.png}",
                     "comparison_settings": {"method": "SSIM", "threshold": "0.1"},
+                }
+            ],
+        }
+    ],
+}
+
+INVALID_CONFIG_NO_COMMAND_DEFINED = {
+    "projectName": EXAMPLE_PROJECT,
+    "suites": [
+        {
+            "name": "My_first_test_Suite",
+            "tests": [
+                {
+                    "name": "My_first_test",
                 }
             ],
         }
@@ -271,4 +318,36 @@ def test_parse_use_defined_comparison_settings():
     test = config.suites[0].tests[0]
     assert test.comparison_settings == ComparisonSettings(
         method=ComparisonMethod.SSIM, threshold=0.2
+    )
+
+
+def test_parse_inherited_command_successfully():
+    json_config_parser = JsonConfigParser()
+
+    suites = json_config_parser.parse(
+        TEST_JSON, StringIO(json.dumps(VALID_CONFIG_INHERIT_COMMAND))
+    )
+
+    assert suites == EXPECTED_VALID_CONFIG
+
+
+def test_parse_no_command_defined_should_fail():
+    json_config_parser = JsonConfigParser()
+
+    with pytest.raises(AttributeNotDefinedError):
+        json_config_parser.parse(
+            TEST_JSON, StringIO(json.dumps(INVALID_CONFIG_NO_COMMAND_DEFINED))
+        )
+
+
+def test_parse_inherited_comparison_method_successfully():
+    json_config_parser = JsonConfigParser()
+
+    config = json_config_parser.parse(
+        TEST_JSON, StringIO(json.dumps(VALID_CONFIG_INHERIT_COMPARISON_METHOD))
+    )
+
+    test = config.suites[0].tests[0]
+    assert test.comparison_settings == ComparisonSettings(
+        method=ComparisonMethod.SSIM, threshold=0.1
     )

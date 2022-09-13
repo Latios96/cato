@@ -110,8 +110,7 @@
                         }
                       ],
                       "required": [
-                        "name",
-                        "command"
+                        "name"
                       ],
                       "properties": {
                         "name": {
@@ -150,10 +149,6 @@
 								"$id": "#root/suite/tests/items/comparison_settings",
 								"title": "Comparison_settings",
 								"type": "object",
-								"required": [
-									"method",
-									"threshold"
-								],
 								"properties": {
 									"method": {
 										"$id": "#root/suite/tests/items/comparison_settings/method",

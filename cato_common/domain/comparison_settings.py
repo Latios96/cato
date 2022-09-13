@@ -10,4 +10,5 @@ class ComparisonSettings:
 
     @staticmethod
     def default():
+        # type: ()->ComparisonSettings
         return ComparisonSettings(method=ComparisonMethod.SSIM, threshold=0.8)

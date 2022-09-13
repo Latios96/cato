@@ -4,12 +4,13 @@ from typing import IO, List, Dict
 
 from jsonschema import validate
 
+from cato_common.config.test_attribute_resolver import TestAttributeResolver
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import Config
 from cato_common.domain.test import Test
 from cato_common.domain.test_suite import TestSuite
-from cato_common.utils.typing import safe_cast
+from cato_common.utils.typing import safe_cast, safe_unwrap
 
 
 class JsonConfigParser:
@@ -43,7 +44,7 @@ class JsonConfigParser:
         suites = []
         for suite in data["suites"]:
             name = suite["name"]
-            tests = self._transform_test(suite)
+            tests = self._transform_test(data, suite)
             suites.append(
                 TestSuite(
                     name=name,
@@ -54,25 +55,39 @@ class JsonConfigParser:
 
         return suites
 
-    def _transform_test(self, suite: Dict) -> List[Test]:
+    def _transform_test(self, data: Dict, suite: Dict) -> List[Test]:
         tests = []
         for test in suite["tests"]:
-            comparison_settings = self._read_comparison_settings(test)
+            attribute_resolver = TestAttributeResolver(data, suite, test)
+
+            command = attribute_resolver.resolve_required_attribute("command")
+
+            comparison_settings = self._read_comparison_settings(attribute_resolver)
             tests.append(
                 Test(
                     name=test["name"],
-                    command=test["command"],
+                    command=command,
                     variables=test["variables"] if test.get("variables") else {},
                     comparison_settings=comparison_settings,
                 )
             )
         return tests
 
-    def _read_comparison_settings(self, test):
-        comparison_settings_dict = test.get("comparisonSettings")
-        if comparison_settings_dict:
-            return ComparisonSettings(
-                method=ComparisonMethod(comparison_settings_dict["method"]),
-                threshold=comparison_settings_dict["threshold"],
-            )
-        return ComparisonSettings.default()
+    def _read_comparison_settings(
+        self, attribute_resolver: TestAttributeResolver
+    ) -> ComparisonSettings:
+        method = attribute_resolver.resolve_optional_attribute(
+            "comparisonSettings.method"
+        )
+        threshold = attribute_resolver.resolve_optional_attribute(
+            "comparisonSettings.threshold"
+        )
+        no_comparison_settings_defined = method is None and threshold is None
+
+        if no_comparison_settings_defined:
+            return ComparisonSettings.default()
+
+        return ComparisonSettings(
+            method=ComparisonMethod(method),
+            threshold=float(safe_unwrap(threshold)),
+        )
