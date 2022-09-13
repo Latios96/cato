@@ -169,6 +169,7 @@ if __name__ == "__main__":
             "tabulate",
             "email-validator",
             "Jinja2",
+            "jsonpath-ng",
         ],
     )
 
@@ -227,6 +228,7 @@ if __name__ == "__main__":
             "tifffile",
             "pywavelets",
             "jsonschema",
+            "jsonpath-ng",
         ],
         include_files=[
             (
