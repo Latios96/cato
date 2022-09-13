@@ -28,7 +28,7 @@ def main():
         shutil.rmtree("cato_server/static")
 
     print("Building..")
-    subprocess.check_call("gradlew.bat build")
+    subprocess.check_call("gradlew.bat build -x pythonUnittest -x pythonIntegrationtest")
 
     print("Copy wheel..")
     wheel_path = os.path.join(
