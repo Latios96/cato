@@ -179,6 +179,10 @@ class PinjectBindings(pinject.BindingSpec):
             to_instance=self._bindings.configuration_bindings.app_configuration.logging_configuration,
         )
         bind(
+            "celery_configuration",
+            to_instance=self._bindings.configuration_bindings.app_configuration.celery_configuration,
+        )
+        bind(
             "scheduler_configuration",
             to_instance=self._bindings.configuration_bindings.app_configuration.scheduler_configuration,
         )
