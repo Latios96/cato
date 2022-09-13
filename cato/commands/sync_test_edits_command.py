@@ -2,6 +2,7 @@ import logging
 from typing import Dict
 
 from cato.commands.base_command import BaseCliCommand
+from cato.utils.config_utils import resolve_config_path
 from cato_common.config.config_file_parser import JsonConfigParser
 from cato.runners.sync_test_edits import SyncTestEdits
 
@@ -20,4 +21,4 @@ class SyncTestEditsCommand(BaseCliCommand):
     def sync(self, path: str, run_id: int, cli_variables: Dict[str, str]) -> None:
         config = self._read_config(path, cli_variables)
 
-        self._sync_test_edits.update(config, path, run_id)
+        self._sync_test_edits.update(config, resolve_config_path(path), run_id)
