@@ -1,9 +1,7 @@
 import logging
-from typing import TypeVar, Generic, Type, List, Dict, Optional
-
+from typing import TypeVar, Generic, Type, List, Dict, Optional, IO
 
 import requests
-from typing.io import IO
 
 from cato_common.mappers.object_mapper import ObjectMapper
 
@@ -33,16 +31,16 @@ class HttpTemplateResponse(Generic[R]):
     def get_entities(self) -> List[R]:
         return self._mapper.many_from_dict(self.get_json(), self._response_cls)
 
-    def get_json(self):
+    def get_json(self) -> Dict:
         return self._response.json()
 
     def __str__(self):
         return str(self._response)
 
-    def text(self):
+    def text(self) -> str:
         return self._response.text
 
-    def content(self):
+    def content(self) -> bytes:
         return self._response.content
 
 
@@ -61,12 +59,12 @@ class Unauthorized(HttpTemplateException):
 
 
 class HttpTemplate:
-    def __init__(self, object_mapper: ObjectMapper, requests_impl=requests):
+    def __init__(self, object_mapper: ObjectMapper, requests_impl=requests) -> None:
         self._object_mapper = object_mapper
         self._requests_impl = requests_impl
         self._headers: Dict[str, str] = {}
 
-    def set_authorization_header(self, value: str):
+    def set_authorization_header(self, value: str) -> None:
         self._headers["Authorization"] = value
 
     def get_for_entity(

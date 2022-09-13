@@ -58,7 +58,7 @@ class CatoApiClient:
             self._http_template, self._object_mapper
         )
 
-    def _login(self, api_token_str: ApiTokenStr):
+    def _login(self, api_token_str: ApiTokenStr) -> None:
         self._http_template.set_authorization_header(str(api_token_str.to_bearer()))
         self._http_template.get_for_entity(
             self._build_url("/api_tokens/is_valid"), ApiSuccess
@@ -110,6 +110,7 @@ class CatoApiClient:
                 )
             )
             return store_image_result.image
+        raise ValueError(f"Something went wrong when uploading image: {response}")
 
     def download_original_image(self, image_id: int) -> Optional[bytes]:
         url = self._build_url(f"/api/v1/images/original_file/{image_id}")
@@ -238,7 +239,7 @@ class CatoApiClient:
         url = self._build_url("/api/v1/test_results/finish")
         dto = FinishTestResultDto(
             id=test_result_id,
-            status=status.value,
+            status=UnifiedTestStatus.from_result_status(status),
             seconds=seconds,
             message=message,
             image_output=image_output,
@@ -281,12 +282,12 @@ class CatoApiClient:
 
     def get_test_edits_to_sync_for_run(self, run_id: int) -> List[AbstractTestEdit]:
         url = self._build_url("/api/v1/test_edits/runs/{}/edits-to-sync".format(run_id))
-        response = self._http_template.get_for_entity(url, List[Dict])
+        response = self._http_template.get_for_entity(url, Dict[str, str])
         if response.status_code() == 404:
             return []
         if response.status_code() == 200:
             dict_list = response.get_entities()
-            entity_list = []
+            entity_list: List[AbstractTestEdit] = []
             for d in dict_list:
                 if d["editType"] == "COMPARISON_SETTINGS":
                     entity_list.append(

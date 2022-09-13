@@ -50,7 +50,7 @@ class TaskResultTemplate:
             before=before_log(logger, logging.DEBUG),
             after=after_log(logger, logging.DEBUG),
         )
-        def fetch_task_result():
+        def fetch_task_result() -> T:
             task_result_response = self._http_template.get_for_entity(
                 task_result.url, TaskResult
             )
