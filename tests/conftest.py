@@ -290,6 +290,46 @@ def saving_run_factory(sqlalchemy_run_repository, project, run_factory):
 
 
 @pytest.fixture
+def run_batch_factory(project):
+    def func(
+        run_batch_identifier: Optional[RunBatchIdentifier] = None,
+        project_id: Optional[int] = None,
+    ):
+        return RunBatch(
+            id=0,
+            run_batch_identifier=or_default(
+                run_batch_identifier,
+                RunBatchIdentifier(
+                    provider=RunBatchProvider.LOCAL_COMPUTER,
+                    run_name=RunName("mac-os"),
+                    run_identifier=RunIdentifier("3046812908-1"),
+                ),
+            ),
+            project_id=or_default(project_id, project.id),
+        )
+
+    return func
+
+
+@pytest.fixture
+def saving_run_batch_factory(sqlalchemy_run_batch_repository, run_batch_factory):
+    def func(
+        run_batch_identifier: Optional[RunBatchIdentifier] = None,
+        project_id: Optional[int] = None,
+    ):
+        return sqlalchemy_run_batch_repository.save(
+            run_batch_factory(run_batch_identifier, project_id)
+        )
+
+    return func
+
+
+@pytest.fixture
+def run_batch(saving_run_batch_factory) -> RunBatch:
+    return saving_run_batch_factory()
+
+
+@pytest.fixture
 def suite_result_factory():
     def func(run_id=None, suite_name=None, suite_variables=None):
         return SuiteResult(
@@ -596,46 +636,6 @@ def auth_user(sqlalchemy_auth_user_repository):
         email=Email("foo@bar.com"),
     )
     return sqlalchemy_auth_user_repository.save(auth_user)
-
-
-@pytest.fixture
-def run_batch_factory(project):
-    def func(
-        run_batch_identifier: Optional[RunBatchIdentifier] = None,
-        project_id: Optional[int] = None,
-    ):
-        return RunBatch(
-            id=0,
-            run_batch_identifier=or_default(
-                run_batch_identifier,
-                RunBatchIdentifier(
-                    provider=RunBatchProvider.LOCAL_COMPUTER,
-                    run_name=RunName("mac-os"),
-                    run_identifier=RunIdentifier("3046812908-1"),
-                ),
-            ),
-            project_id=or_default(project_id, project.id),
-        )
-
-    return func
-
-
-@pytest.fixture
-def saving_run_batch_factory(sqlalchemy_run_batch_repository, run_batch_factory):
-    def func(
-        run_batch_identifier: Optional[RunBatchIdentifier] = None,
-        project_id: Optional[int] = None,
-    ):
-        return sqlalchemy_run_batch_repository.save(
-            run_batch_factory(run_batch_identifier, project_id)
-        )
-
-    return func
-
-
-@pytest.fixture
-def run_batch(saving_run_batch_factory) -> RunBatch:
-    return saving_run_batch_factory()
 
 
 def random_port():
