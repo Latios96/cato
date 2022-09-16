@@ -1,7 +1,6 @@
 from typing import List, Optional
 
 from sqlalchemy import Column, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
@@ -23,8 +22,6 @@ class _RunMapping(Base):
     started_at = Column(UtcDateTime)
     branch_name = Column(String, nullable=False)
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
-
-    suite_results = relationship("_SuiteResultMapping", backref="run")
 
 
 class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
