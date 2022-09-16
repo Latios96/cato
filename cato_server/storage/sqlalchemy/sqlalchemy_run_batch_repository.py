@@ -64,20 +64,21 @@ class _RunBatchMapping(Base):
 
 
 class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchRepository):
-    def find_by_run_batch_identifier(
-        self, run_batch_identifier: RunBatchIdentifier
+    def find_by_project_id_and_run_batch_identifier(
+        self, project_id: int, run_batch_identifier: RunBatchIdentifier
     ) -> Optional[RunBatch]:
         with self._session_maker() as session:
-            project = (
+            run_batch_mapping = (
                 session.query(_RunBatchMapping)
+                .filter(_RunBatchMapping.project_entity_id == project_id)
                 .filter(
                     _RunBatchMapping.run_batch_identifier
                     == _RunBatchIdentifierMapping.from_identifier(run_batch_identifier)
                 )
                 .first()
             )
-            if project:
-                return self.to_domain_object(project)
+            if run_batch_mapping:
+                return self.to_domain_object(run_batch_mapping)
 
     def to_entity(self, domain_object: RunBatch) -> _RunBatchMapping:
         return _RunBatchMapping(

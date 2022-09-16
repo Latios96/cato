@@ -6,7 +6,7 @@ from cato_server.storage.abstract.abstract_repository import AbstractRepository
 
 
 class RunBatchRepository(AbstractRepository[RunBatch, int]):
-    def find_by_run_batch_identifier(
-        self, run_batch_identifier: RunBatchIdentifier
+    def find_by_project_id_and_run_batch_identifier(
+        self, project_id: int, run_batch_identifier: RunBatchIdentifier
     ) -> Optional[RunBatch]:
         raise NotImplementedError()
