@@ -112,3 +112,25 @@ def test_find_by_project_id_and_run_batch_identifier_should_not_find_with_differ
     )
 
     assert found_run_batch is None
+
+
+def test_find_or_save_by_project_id_and_run_batch_identifier_should_create(
+    sqlalchemy_run_batch_repository, run_batch_factory, project
+):
+    run_batch = run_batch_factory()
+    saved_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+        project.id, run_batch.run_batch_identifier, lambda: run_batch
+    )
+
+    run_batch.id = 1
+    assert saved_run_batch == run_batch
+
+
+def test_find_or_save_by_project_id_and_run_batch_identifier_should_find(
+    sqlalchemy_run_batch_repository, run_batch
+):
+    found_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+        run_batch.project_id, run_batch.run_batch_identifier, lambda: run_batch
+    )
+
+    assert found_run_batch == run_batch

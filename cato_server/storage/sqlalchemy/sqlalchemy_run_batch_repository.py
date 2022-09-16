@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Callable
 
 from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import composite
@@ -68,17 +68,39 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
         self, project_id: int, run_batch_identifier: RunBatchIdentifier
     ) -> Optional[RunBatch]:
         with self._session_maker() as session:
-            run_batch_mapping = (
-                session.query(_RunBatchMapping)
-                .filter(_RunBatchMapping.project_entity_id == project_id)
-                .filter(
-                    _RunBatchMapping.run_batch_identifier
-                    == _RunBatchIdentifierMapping.from_identifier(run_batch_identifier)
-                )
-                .first()
+            return self._find_by_project_id_and_run_batch_identifier_impl(
+                session, project_id, run_batch_identifier
             )
-            if run_batch_mapping:
-                return self.to_domain_object(run_batch_mapping)
+
+    def find_or_save_by_project_id_and_run_batch_identifier(
+        self,
+        project_id: int,
+        run_batch_identifier: RunBatchIdentifier,
+        run_batch_factory: Callable[[], RunBatch],
+    ) -> RunBatch:
+        with self._session_maker() as session:
+            maybe_run_batch = self._find_by_project_id_and_run_batch_identifier_impl(
+                session, project_id, run_batch_identifier
+            )
+            if maybe_run_batch:
+                return maybe_run_batch
+            run_batch = run_batch_factory()
+            return self.save(run_batch)
+
+    def _find_by_project_id_and_run_batch_identifier_impl(
+        self, session, project_id: int, run_batch_identifier: RunBatchIdentifier
+    ) -> Optional[RunBatch]:
+        run_batch_mapping = (
+            session.query(_RunBatchMapping)
+            .filter(_RunBatchMapping.project_entity_id == project_id)
+            .filter(
+                _RunBatchMapping.run_batch_identifier
+                == _RunBatchIdentifierMapping.from_identifier(run_batch_identifier)
+            )
+            .first()
+        )
+        if run_batch_mapping:
+            return self.to_domain_object(run_batch_mapping)
 
     def to_entity(self, domain_object: RunBatch) -> _RunBatchMapping:
         return _RunBatchMapping(
