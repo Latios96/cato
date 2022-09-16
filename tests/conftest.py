@@ -19,6 +19,10 @@ from cato_common.config.config_file_writer import ConfigFileWriter
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import Config, RunConfig
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.test import Test
 from cato_common.domain.test_suite import TestSuite
 from cato_api_client.cato_api_client import CatoApiClient
@@ -50,6 +54,7 @@ from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
+from cato_server.domain.run_batch import RunBatch
 from cato_server.startup import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -107,6 +112,7 @@ from tests.__fixtures__.storage.repositories import (  # noqa: F401
     sqlalchemy_submission_info_repository,
     sqlalchemy_simple_file_storage,
     sqlalchemy_deduplicating_storage,
+    sqlalchemy_run_batch_repository,
 )
 from tests.utils import mock_safe
 
@@ -216,10 +222,33 @@ def sessionmaker_fixture(
     return sessionmaker(bind=sqlalchemy_engine)
 
 
+def or_default(value, default_value):
+    if value is "FORCE_NONE":
+        return None
+    if value is None:
+        return default_value
+    return value
+
+
 @pytest.fixture
-def project(sqlalchemy_project_repository):
-    project = Project(id=0, name="test_name")
-    return sqlalchemy_project_repository.save(project)
+def project_factory():
+    def func(name: Optional[str] = None):
+        return Project(id=0, name=or_default(name, "test_name"))
+
+    return func
+
+
+@pytest.fixture
+def saving_project_factory(sqlalchemy_project_repository, project_factory):
+    def func(name: Optional[str] = None):
+        return sqlalchemy_project_repository.save(project_factory(name))
+
+    return func
+
+
+@pytest.fixture
+def project(saving_project_factory):
+    return saving_project_factory()
 
 
 @pytest.fixture
@@ -294,14 +323,6 @@ def suite_result(sqlalchemy_suite_result_repository, run):
         id=0, run_id=run.id, suite_name="my_suite", suite_variables={"key": "value"}
     )
     return sqlalchemy_suite_result_repository.save(suite_result)
-
-
-def or_default(value, default_value):
-    if value is "FORCE_NONE":
-        return None
-    if value is None:
-        return default_value
-    return value
 
 
 @pytest.fixture
@@ -575,6 +596,46 @@ def auth_user(sqlalchemy_auth_user_repository):
         email=Email("foo@bar.com"),
     )
     return sqlalchemy_auth_user_repository.save(auth_user)
+
+
+@pytest.fixture
+def run_batch_factory(project):
+    def func(
+        run_batch_identifier: Optional[RunBatchIdentifier] = None,
+        project_id: Optional[int] = None,
+    ):
+        return RunBatch(
+            id=0,
+            run_batch_identifier=or_default(
+                run_batch_identifier,
+                RunBatchIdentifier(
+                    provider=RunBatchProvider.LOCAL_COMPUTER,
+                    run_name=RunName("mac-os"),
+                    run_identifier=RunIdentifier("3046812908-1"),
+                ),
+            ),
+            project_id=or_default(project_id, project.id),
+        )
+
+    return func
+
+
+@pytest.fixture
+def saving_run_batch_factory(sqlalchemy_run_batch_repository, run_batch_factory):
+    def func(
+        run_batch_identifier: Optional[RunBatchIdentifier] = None,
+        project_id: Optional[int] = None,
+    ):
+        return sqlalchemy_run_batch_repository.save(
+            run_batch_factory(run_batch_identifier, project_id)
+        )
+
+    return func
+
+
+@pytest.fixture
+def run_batch(saving_run_batch_factory) -> RunBatch:
+    return saving_run_batch_factory()
 
 
 def random_port():

@@ -19,6 +19,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_run_batch_repository import (
+    SqlAlchemyRunBatchRepository,
+)
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
 )
@@ -110,3 +113,10 @@ def sqlalchemy_simple_file_storage(sessionmaker_fixture, tmp_path):
 @pytest.fixture
 def sqlalchemy_deduplicating_storage(sessionmaker_fixture, tmp_path):
     return SqlAlchemyDeduplicatingFileStorage(sessionmaker_fixture, str(tmp_path))
+
+
+@pytest.fixture
+def sqlalchemy_run_batch_repository(
+    sessionmaker_fixture,
+) -> SqlAlchemyRunBatchRepository:
+    return SqlAlchemyRunBatchRepository(sessionmaker_fixture)
