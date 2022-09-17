@@ -1,14 +1,6 @@
 import logging
 from typing import Optional
 
-from cato_common.domain.config import RunConfig
-from cato_common.domain.run_batch_identifier import RunBatchIdentifier
-from cato_common.domain.run_batch_provider import RunBatchProvider
-from cato_common.domain.run_identifier import RunIdentifier
-from cato_common.domain.run_name import RunName
-from cato_common.domain.test import Test
-from cato_common.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_suite import TestSuite
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,
@@ -16,9 +8,14 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
+from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
 from cato_api_client.cato_api_client import CatoApiClient
+from cato_common.domain.config import RunConfig
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.test import Test
+from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_suite import TestSuite
 from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
     TestSuiteForRunCreation,
@@ -37,12 +34,14 @@ class TestExecutionDbReporter(TestExecutionReporter):
         machine_info_collector: MachineInfoCollector,
         cato_api_client: CatoApiClient,
         branch_detector: BranchDetector,
+        run_batch_identifier_detector: RunBatchIdentifierDetector,
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
         self.__run_id_value: Optional[int] = None
         self._machine_info: Optional[MachineInfo] = None
         self._branch_detector = branch_detector
+        self._run_batch_identifier_detector = run_batch_identifier_detector
 
     def use_run_id(self, run_id: int) -> None:
         if not self._cato_api_client.run_id_exists(run_id):
@@ -86,14 +85,11 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
 
         branch_name = self._branch_detector.detect_branch(config.resource_path)
-        run_batch_identifier_default = RunBatchIdentifier(
-            provider=RunBatchProvider.LOCAL_COMPUTER,
-            run_name=RunName("unknown"),
-            run_identifier=RunIdentifier.random(),
-        )
+        run_batch_identifier = self._run_batch_identifier_detector.detect()
+
         create_run_dto = CreateFullRunDto(
             project_id=project.id,
-            run_batch_identifier=run_batch_identifier_default,
+            run_batch_identifier=run_batch_identifier,
             test_suites=suites,
             branch_name=branch_name,
         )

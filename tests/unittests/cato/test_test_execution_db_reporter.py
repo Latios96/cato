@@ -3,6 +3,7 @@ from unittest import mock
 
 import pytest
 
+from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
@@ -67,10 +68,14 @@ def test_context():
             )
             self.mock_branch_detector = mock_safe(BranchDetector)
             self.mock_branch_detector.detect_branch.return_value = None
+            self.mock_run_batch_identifier_detector = mock_safe(
+                RunBatchIdentifierDetector
+            )
             self.test_execution_db_reporter = TestExecutionDbReporter(
                 self.mock_machine_info_collector,
                 self.mock_cato_api_client,
                 self.mock_branch_detector,
+                self.mock_run_batch_identifier_detector,
             )
 
     return TestContext()
@@ -94,17 +99,16 @@ class TestTestExecutionDbReporter:
             "my_project_name"
         )
 
-    @mock.patch("cato_common.domain.run_identifier.RunIdentifier.random")
-    def test_start_execution_should_create_run_with_branch_name(
-        self, mock_generate_random, test_context
-    ):
+    def test_start_execution_should_create_run_with_branch_name(self, test_context):
         run_identifier = RunIdentifier(str(uuid.uuid4()))
         run_batch_identifier = RunBatchIdentifier(
             provider=RunBatchProvider.LOCAL_COMPUTER,
             run_name=RunName("unknown"),
             run_identifier=run_identifier,
         )
-        mock_generate_random.return_value = run_identifier
+        test_context.mock_run_batch_identifier_detector.detect.return_value = (
+            run_batch_identifier
+        )
         test_context.mock_branch_detector.detect_branch.return_value = BranchName(
             "my_branch"
         )
