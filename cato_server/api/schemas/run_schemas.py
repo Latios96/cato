@@ -3,6 +3,7 @@ from marshmallow.validate import Length
 from marshmallow_enum import EnumField
 
 from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_server.api.schemas.general import (
     ID_FIELD,
     NAME_FIELD,
@@ -41,11 +42,23 @@ class TestSuiteForRunCreationSchema(Schema):
     tests = fields.List(fields.Nested(TestForRunCreationSchema), required=True)
 
 
+class RunBatchIdentifierSchema(Schema):
+    class Meta:
+        unknown = EXCLUDE
+
+    provider = EnumField(RunBatchProvider, required=True)
+    runName = fields.String(validate=[Length(min=1)], required=True, allow_none=False)
+    runIdentifier = fields.String(
+        validate=[Length(min=1)], required=True, allow_none=False
+    )
+
+
 class CreateFullRunSchema(Schema):
     class Meta:
         unknown = EXCLUDE
 
     projectId = ID_FIELD
+    runBatchIdentifier = fields.Nested(RunBatchIdentifierSchema, required=True)
     testSuites = fields.List(
         fields.Nested(TestSuiteForRunCreationSchema), required=True
     )

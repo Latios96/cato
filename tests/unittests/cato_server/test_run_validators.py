@@ -13,6 +13,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
@@ -49,6 +54,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 42,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
@@ -84,6 +94,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 42,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
@@ -122,6 +137,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
@@ -178,6 +198,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
@@ -228,6 +253,11 @@ class TestCreateFullRunValidator:
         errors = validator.validate(
             {
                 "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
                 "testSuites": [
                     {
                         "suiteName": "my_suite",
