@@ -115,7 +115,7 @@ from tests.__fixtures__.storage.repositories import (  # noqa: F401
     sqlalchemy_deduplicating_storage,
     sqlalchemy_run_batch_repository,
 )
-from tests.utils import mock_safe
+from tests.utils import mock_safe, or_default
 
 
 @event.listens_for(Engine, "connect")
@@ -221,16 +221,6 @@ def sessionmaker_fixture(
     )
     db_migrator.migrate()
     return sessionmaker(bind=sqlalchemy_engine)
-
-
-def or_default(value, default_value):
-    # todo also support callable for default value
-    # todo move to utils and add tests
-    if value is "FORCE_NONE":
-        return None
-    if value is None:
-        return default_value
-    return value
 
 
 @pytest.fixture
