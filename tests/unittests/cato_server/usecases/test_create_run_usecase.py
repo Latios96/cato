@@ -140,7 +140,7 @@ def test_should_create_with_previous_run(
     assert run == Run(
         id=2,
         project_id=project.id,
-        run_batch_id=3,
+        run_batch_id=2,
         started_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=previous_run.id,

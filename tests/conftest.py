@@ -255,7 +255,9 @@ def run_factory(saving_run_batch_factory):
         return Run(
             id=0,
             project_id=or_default(project_id, 1),
-            run_batch_id=or_default(run_batch_id, saving_run_batch_factory().id),
+            run_batch_id=or_default(
+                run_batch_id, lambda: saving_run_batch_factory().id
+            ),
             started_at=or_default(started_at, aware_now_in_utc()),
             branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
