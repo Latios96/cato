@@ -4,10 +4,6 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.run import Run
-from cato_common.domain.run_batch_identifier import RunBatchIdentifier
-from cato_common.domain.run_batch_provider import RunBatchProvider
-from cato_common.domain.run_identifier import RunIdentifier
-from cato_common.domain.run_name import RunName
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
@@ -111,17 +107,12 @@ class CreateRunUsecase:
         return previous_run_id
 
     def _get_run_batch(self, create_run_dto: CreateFullRunDto) -> RunBatch:
-        default_run_batch_identifier = RunBatchIdentifier(
-            provider=RunBatchProvider.LOCAL_COMPUTER,
-            run_name=RunName("windows"),
-            run_identifier=RunIdentifier.random(),
-        )
         return self._run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
             create_run_dto.project_id,
-            default_run_batch_identifier,
+            create_run_dto.run_batch_identifier,
             lambda: RunBatch(
                 id=0,
-                run_batch_identifier=default_run_batch_identifier,
+                run_batch_identifier=create_run_dto.run_batch_identifier,
                 project_id=create_run_dto.project_id,
                 runs=[],
             ),

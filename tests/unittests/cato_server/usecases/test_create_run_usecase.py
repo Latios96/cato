@@ -70,6 +70,10 @@ def test_should_create_without_branch_name_and_no_previous_run(
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
     assert sqlalchemy_run_batch_repository.find_by_id(1).runs == [run]
+    assert (
+        sqlalchemy_run_batch_repository.find_by_id(1).run_batch_identifier
+        == run_batch_identifier
+    )
 
 
 @freeze_time(STARTED_AT)
