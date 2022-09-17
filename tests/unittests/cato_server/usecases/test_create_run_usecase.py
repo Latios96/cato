@@ -41,6 +41,7 @@ def test_should_create_without_branch_name_and_no_previous_run(
     sqlalchemy_test_result_repository,
     project,
     object_mapper,
+    run_batch_identifier,
 ):
     usecase = CreateRunUsecase(
         sqlalchemy_run_repository,
@@ -53,6 +54,7 @@ def test_should_create_without_branch_name_and_no_previous_run(
     run = usecase.create_run(
         CreateFullRunDto(
             project_id=project.id,
+            run_batch_identifier=run_batch_identifier,
             test_suites=TEST_SUITES,
         )
     )
@@ -78,6 +80,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
     sqlalchemy_test_result_repository,
     project,
     object_mapper,
+    run_batch_identifier,
 ):
     usecase = CreateRunUsecase(
         sqlalchemy_run_repository,
@@ -90,6 +93,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
     run = usecase.create_run(
         CreateFullRunDto(
             project_id=project.id,
+            run_batch_identifier=run_batch_identifier,
             test_suites=TEST_SUITES,
             branch_name=BranchName("main"),
         )
@@ -118,6 +122,7 @@ def test_should_create_with_previous_run(
     sqlalchemy_suite_result_repository,
     sqlalchemy_run_repository,
     saving_run_batch_factory,
+    run_batch_identifier,
 ):
     previous_run = sqlalchemy_run_repository.save(
         run_factory(project_id=project.id, run_batch_id=saving_run_batch_factory().id)
@@ -133,6 +138,7 @@ def test_should_create_with_previous_run(
     run = usecase.create_run(
         CreateFullRunDto(
             project_id=project.id,
+            run_batch_identifier=run_batch_identifier,
             test_suites=TEST_SUITES,
         )
     )

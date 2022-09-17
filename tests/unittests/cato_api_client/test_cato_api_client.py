@@ -151,9 +151,10 @@ def test_upload_image_async_not_existing(cato_api_client):
         cato_api_client.upload_image(path)
 
 
-def test_create_run_success(cato_api_client, project):
+def test_create_run_success(cato_api_client, project, run_batch_identifier):
     dto = CreateFullRunDto(
         project_id=project.id,
+        run_batch_identifier=run_batch_identifier,
         test_suites=[
             TestSuiteForRunCreation(
                 suite_name="my_suite",
@@ -175,9 +176,10 @@ def test_create_run_success(cato_api_client, project):
     assert run.id == project.id
 
 
-def test_create_run_failure(cato_api_client):
+def test_create_run_failure(cato_api_client, run_batch_identifier):
     dto = CreateFullRunDto(
         project_id=42,
+        run_batch_identifier=run_batch_identifier,
         test_suites=[
             TestSuiteForRunCreation(
                 suite_name="my_suite",

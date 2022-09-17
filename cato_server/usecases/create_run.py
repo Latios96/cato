@@ -1,9 +1,8 @@
 import logging
-import uuid
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
@@ -14,6 +13,7 @@ from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from cato_server.domain.run_batch import RunBatch
 from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
 from cato_server.storage.abstract.run_repository import RunRepository
@@ -21,7 +21,6 @@ from cato_server.storage.abstract.suite_result_repository import SuiteResultRepo
 from cato_server.storage.abstract.test_result_repository import (
     TestResultRepository,
 )
-from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = logging.getLogger(__name__)
 DEFAULT_BRANCH = BranchName("default")

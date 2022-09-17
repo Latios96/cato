@@ -2,6 +2,10 @@ import logging
 from typing import Optional
 
 from cato_common.domain.config import RunConfig
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.test import Test
 from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.test_suite import TestSuite
@@ -82,9 +86,16 @@ class TestExecutionDbReporter(TestExecutionReporter):
             )
 
         branch_name = self._branch_detector.detect_branch(config.resource_path)
-
+        run_batch_identifier_default = RunBatchIdentifier(
+            provider=RunBatchProvider.LOCAL_COMPUTER,
+            run_name=RunName("unknown"),
+            run_identifier=RunIdentifier.random(),
+        )
         create_run_dto = CreateFullRunDto(
-            project_id=project.id, test_suites=suites, branch_name=branch_name
+            project_id=project.id,
+            run_batch_identifier=run_batch_identifier_default,
+            test_suites=suites,
+            branch_name=branch_name,
         )
         suite_count = len(suites)
         test_count = sum(map(lambda x: len(x.tests), suites))

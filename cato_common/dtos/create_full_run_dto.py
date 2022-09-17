@@ -3,6 +3,7 @@ from typing import List, Optional, Dict
 
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.test_identifier import TestIdentifier
 
 
@@ -25,5 +26,6 @@ class TestSuiteForRunCreation:
 @dataclass
 class CreateFullRunDto:
     project_id: int
+    run_batch_identifier: RunBatchIdentifier
     test_suites: List[TestSuiteForRunCreation]
     branch_name: Optional[BranchName] = None

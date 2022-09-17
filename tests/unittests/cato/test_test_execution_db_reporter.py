@@ -1,7 +1,14 @@
+import uuid
+from unittest import mock
+
 import pytest
 
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.test import Test
 from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.test_suite import TestSuite
@@ -87,7 +94,17 @@ class TestTestExecutionDbReporter:
             "my_project_name"
         )
 
-    def test_start_execution_should_create_run_with_branch_name(self, test_context):
+    @mock.patch("cato_common.domain.run_identifier.RunIdentifier.random")
+    def test_start_execution_should_create_run_with_branch_name(
+        self, mock_generate_random, test_context
+    ):
+        run_identifier = RunIdentifier(str(uuid.uuid4()))
+        run_batch_identifier = RunBatchIdentifier(
+            provider=RunBatchProvider.LOCAL_COMPUTER,
+            run_name=RunName("unknown"),
+            run_identifier=run_identifier,
+        )
+        mock_generate_random.return_value = run_identifier
         test_context.mock_branch_detector.detect_branch.return_value = BranchName(
             "my_branch"
         )
@@ -116,6 +133,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.create_run.assert_called_with(
             CreateFullRunDto(
                 project_id=1,
+                run_batch_identifier=run_batch_identifier,
                 test_suites=[
                     TestSuiteForRunCreation(
                         suite_name="my_suite",
