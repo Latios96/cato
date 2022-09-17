@@ -74,13 +74,13 @@ def test_find_by_project_id_and_run_batch_identifier_should_find_correct_one(
     saving_project_factory,
 ):
     for i in range(10):
-        run_identifier = RunIdentifier(str(uuid.uuid4()))
+        run_identifier = RunIdentifier.random()
         run_batch_identifier = run_batch.run_batch_identifier.copy(
             run_identifier=run_identifier
         )
         saving_run_batch_factory(run_batch_identifier=run_batch_identifier)
     for i in range(10):
-        run_identifier = RunIdentifier(str(uuid.uuid4()))
+        run_identifier = RunIdentifier.random()
         run_batch_identifier = run_batch.run_batch_identifier.copy(
             run_identifier=run_identifier
         )

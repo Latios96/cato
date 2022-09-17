@@ -115,7 +115,7 @@ class CreateRunUsecase:
         default_run_batch_identifier = RunBatchIdentifier(
             provider=RunBatchProvider.LOCAL_COMPUTER,
             run_name=RunName("windows"),
-            run_identifier=RunIdentifier(str(uuid.uuid4())),
+            run_identifier=RunIdentifier.random(),
         )
         return self._run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
             create_run_dto.project_id,

@@ -1,7 +1,6 @@
 import argparse
 import random
 import time
-import uuid
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Iterable
 
@@ -26,6 +25,7 @@ from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.utils.bindings import imported_modules
+from cato_common.utils.datetime_utils import aware_now_in_utc
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
 from cato_server.domain.run_batch import RunBatch
@@ -38,7 +38,6 @@ from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import Base
-from cato_common.utils.datetime_utils import aware_now_in_utc
 
 logger = cato_server.server_logging.logger
 
@@ -127,7 +126,7 @@ class DbLoadGenerator:
                     run_batch_identifier=RunBatchIdentifier(
                         provider=RunBatchProvider.LOCAL_COMPUTER,
                         run_name=RunName("windows"),
-                        run_identifier=RunIdentifier(str(uuid.uuid4())),
+                        run_identifier=RunIdentifier.random(),
                     ),
                 )
                 for x in range(self.current_preset["runs_per_project"])
