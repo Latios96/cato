@@ -7,6 +7,8 @@ from cato_common.domain.auth.username import Username
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.project import Project
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
@@ -34,7 +36,14 @@ if __name__ == "__main__":
             AuthUser,
         ]
     ).with_type_overrides(
-        {TestIdentifier: str, BranchName: str, Username: str, Email: str}
+        {
+            TestIdentifier: str,
+            BranchName: str,
+            Username: str,
+            Email: str,
+            RunName: str,
+            RunIdentifier: str,
+        }
     ).to_file(
         Path(__file__).parent.parent
         / "frontend"
