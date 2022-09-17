@@ -24,7 +24,7 @@ def test_context():
 
 
 def test_detect_local_computer(test_context):
-    detector = RunBatchIdentifierDetector()
+    detector = RunBatchIdentifierDetector(environment={})
 
     run_batch_identifier = detector.detect()
 
