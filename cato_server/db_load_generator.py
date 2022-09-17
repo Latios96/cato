@@ -1,6 +1,7 @@
 import argparse
 import random
 import time
+import uuid
 from concurrent.futures.thread import ThreadPoolExecutor
 from typing import Iterable
 
@@ -16,6 +17,10 @@ from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
 from cato_common.domain.run import Run
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
@@ -23,10 +28,12 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.utils.bindings import imported_modules
 from cato_server.configuration.app_configuration_reader import AppConfigurationReader
 from cato_server.configuration.bindings_factory import BindingsFactory
+from cato_server.domain.run_batch import RunBatch
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
@@ -64,6 +71,7 @@ class DbLoadGenerator:
         self,
         project_repository: ProjectRepository,
         run_repository: RunRepository,
+        run_batch_repository: RunBatchRepository,
         suite_result_repository: SuiteResultRepository,
         image_repository: ImageRepository,
         file_storage: AbstractFileStorage,
@@ -72,6 +80,7 @@ class DbLoadGenerator:
     ):
         self._project_repository = project_repository
         self._run_repository = run_repository
+        self._run_batch_repository = run_batch_repository
         self._suite_result_repository = suite_result_repository
         self._store_image = store_image
         self._test_result_repository = test_result_repository
@@ -110,11 +119,26 @@ class DbLoadGenerator:
 
     def _generate_runs(self, project):
         logger.info("Generating runs for project %s", project.name)
+        run_batches = self._run_batch_repository.insert_many(
+            [
+                RunBatch(
+                    id=0,
+                    project_id=project.id,
+                    run_batch_identifier=RunBatchIdentifier(
+                        provider=RunBatchProvider.LOCAL_COMPUTER,
+                        run_name=RunName("windows"),
+                        run_identifier=RunIdentifier(str(uuid.uuid4())),
+                    ),
+                )
+                for x in range(self.current_preset["runs_per_project"])
+            ]
+        )
         runs = self._run_repository.insert_many(
             [
                 Run(
                     id=0,
                     project_id=project.id,
+                    run_batch_id=run_batches[x].id,
                     started_at=aware_now_in_utc(),
                     branch_name=BranchName("default"),
                     previous_run_id=None,

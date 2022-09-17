@@ -3,8 +3,9 @@ import os
 import socketserver
 import sqlite3
 import tempfile
+import uuid
 from pathlib import Path
-from typing import Optional, Dict
+from typing import Optional, Dict, List, Tuple
 
 import humanfriendly
 import pytest
@@ -223,6 +224,8 @@ def sessionmaker_fixture(
 
 
 def or_default(value, default_value):
+    # todo also support callable for default value
+    # todo move to utils and add tests
     if value is "FORCE_NONE":
         return None
     if value is None:
@@ -252,23 +255,17 @@ def project(saving_project_factory):
 
 
 @pytest.fixture
-def run(sqlalchemy_run_repository, project):
-    run = Run(
-        id=0,
-        project_id=project.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-    )
-    return sqlalchemy_run_repository.save(run)
-
-
-@pytest.fixture
-def run_factory():
-    def func(project_id=None, started_at=None, branch_name: BranchName = None):
+def run_factory(saving_run_batch_factory):
+    def func(
+        project_id=None,
+        run_batch_id=None,
+        started_at=None,
+        branch_name: BranchName = None,
+    ):
         return Run(
             id=0,
             project_id=or_default(project_id, 1),
+            run_batch_id=or_default(run_batch_id, saving_run_batch_factory().id),
             started_at=or_default(started_at, aware_now_in_utc()),
             branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
@@ -279,9 +276,10 @@ def run_factory():
 
 @pytest.fixture
 def saving_run_factory(sqlalchemy_run_repository, project, run_factory):
-    def func(project_id=None, started_at=None):
+    def func(project_id=None, run_batch_id=None, started_at=None):
         run = run_factory(
             project_id=or_default(project_id, project.id),
+            run_batch_id=run_batch_id,
             started_at=started_at,
         )
         return sqlalchemy_run_repository.save(run)
@@ -290,22 +288,20 @@ def saving_run_factory(sqlalchemy_run_repository, project, run_factory):
 
 
 @pytest.fixture
-def run_batch_factory(project):
+def run_batch_factory(project, run_batch_identifier_factory):
     def func(
         run_batch_identifier: Optional[RunBatchIdentifier] = None,
         project_id: Optional[int] = None,
+        runs: Optional[List[Run]] = None,
     ):
+
         return RunBatch(
             id=0,
             run_batch_identifier=or_default(
-                run_batch_identifier,
-                RunBatchIdentifier(
-                    provider=RunBatchProvider.LOCAL_COMPUTER,
-                    run_name=RunName("mac-os"),
-                    run_identifier=RunIdentifier("3046812908-1"),
-                ),
+                run_batch_identifier, run_batch_identifier_factory()
             ),
             project_id=or_default(project_id, project.id),
+            runs=or_default(runs, []),
         )
 
     return func
@@ -316,17 +312,53 @@ def saving_run_batch_factory(sqlalchemy_run_batch_repository, run_batch_factory)
     def func(
         run_batch_identifier: Optional[RunBatchIdentifier] = None,
         project_id: Optional[int] = None,
+        runs: Optional[List[Run]] = None,
     ):
         return sqlalchemy_run_batch_repository.save(
-            run_batch_factory(run_batch_identifier, project_id)
+            run_batch_factory(run_batch_identifier, project_id, runs)
         )
 
     return func
 
 
 @pytest.fixture
+def run_batch_with_run(
+    project, run_factory, saving_run_batch_factory
+) -> Tuple[RunBatch, Run]:
+    run_batch = saving_run_batch_factory(runs=[run_factory(project_id=project.id)])
+    yield run_batch, run_batch.runs[0]
+
+
+@pytest.fixture
+def run(run_batch_with_run) -> Run:
+    run_batch, run = run_batch_with_run
+    return run
+
+
+@pytest.fixture
 def run_batch(saving_run_batch_factory) -> RunBatch:
-    return saving_run_batch_factory()
+    return saving_run_batch_factory(runs=[])
+
+
+@pytest.fixture
+def run_batch_identifier():
+    return RunBatchIdentifier(
+        provider=RunBatchProvider.LOCAL_COMPUTER,
+        run_name=RunName("mac-os"),
+        run_identifier=RunIdentifier("3046812908-1"),
+    )
+
+
+@pytest.fixture
+def run_batch_identifier_factory():
+    def func():
+        return RunBatchIdentifier(
+            provider=RunBatchProvider.LOCAL_COMPUTER,
+            run_name=RunName("mac-os"),
+            run_identifier=RunIdentifier(str(uuid.uuid4())),
+        )
+
+    return func
 
 
 @pytest.fixture

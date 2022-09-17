@@ -37,11 +37,8 @@ def upgrade():
             name="uq_batch_identifier_project",
         ),
     )
-    # op.execute(
-    #    "CREATE UNIQUE INDEX uq_batch_identifier_project on run_batch_entity (provider,run_name,run_identifier,project_entity_id);"
-    # )
 
 
 def downgrade():
-    op.drop_constraint("uq_batch_identifier_project", "user_entity")
+    op.drop_constraint("uq_batch_identifier_project", "run_batch_entity")
     op.drop_table("run_batch_entity")

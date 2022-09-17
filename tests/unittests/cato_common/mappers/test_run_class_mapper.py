@@ -10,6 +10,7 @@ def test_map_from_dict(object_mapper):
         {
             "id": 1,
             "projectId": 1,
+            "runBatchId": 1,
             "startedAt": started_at.isoformat(),
             "branchName": "default",
             "previousRunId": None,
@@ -20,6 +21,7 @@ def test_map_from_dict(object_mapper):
     assert result == Run(
         id=1,
         project_id=1,
+        run_batch_id=1,
         started_at=started_at,
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -33,6 +35,7 @@ def test_map_to_dict(object_mapper):
         Run(
             id=1,
             project_id=1,
+            run_batch_id=1,
             started_at=started_at,
             branch_name=BranchName("default"),
             previous_run_id=None,
@@ -42,6 +45,7 @@ def test_map_to_dict(object_mapper):
     assert result == {
         "id": 1,
         "projectId": 1,
+        "runBatchId": 1,
         "startedAt": started_at.isoformat(),
         "branchName": "default",
         "previousRunId": None,

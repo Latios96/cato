@@ -19,6 +19,7 @@ class _RunMapping(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
+    run_batch_entity_id = Column(Integer, ForeignKey("run_batch_entity.id"))
     started_at = Column(UtcDateTime)
     branch_name = Column(String, nullable=False)
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
@@ -29,6 +30,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         return _RunMapping(
             id=domain_object.id if domain_object.id else None,
             project_entity_id=domain_object.project_id,
+            run_batch_entity_id=domain_object.run_batch_id,
             started_at=domain_object.started_at,
             branch_name=str(domain_object.branch_name),
             previous_run_id=domain_object.previous_run_id,
@@ -38,6 +40,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
         return Run(
             id=entity.id,
             project_id=entity.project_entity_id,
+            run_batch_id=entity.run_batch_entity_id,
             started_at=entity.started_at,
             branch_name=BranchName(entity.branch_name),
             previous_run_id=entity.previous_run_id,

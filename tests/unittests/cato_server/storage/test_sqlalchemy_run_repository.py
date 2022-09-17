@@ -17,6 +17,7 @@ def test_to_entity(sqlalchemy_run_repository):
     run = Run(
         id=1,
         project_id=2,
+        run_batch_id=3,
         started_at=now,
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -26,6 +27,7 @@ def test_to_entity(sqlalchemy_run_repository):
 
     assert entity.id == 1
     assert entity.project_entity_id == 2
+    assert entity.run_batch_entity_id == 3
     assert entity.started_at == now
 
 
@@ -34,6 +36,7 @@ def test_to_domain_object(sqlalchemy_run_repository):
     run_entity = _RunMapping(
         id=1,
         project_entity_id=2,
+        run_batch_entity_id=3,
         started_at=now,
         branch_name="default",
         previous_run_id=None,
@@ -44,17 +47,19 @@ def test_to_domain_object(sqlalchemy_run_repository):
     assert run == Run(
         id=1,
         project_id=2,
+        run_batch_id=3,
         started_at=now,
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
 
 
-def test_save(sqlalchemy_run_repository, project):
+def test_save(sqlalchemy_run_repository, project, run_batch):
     start_time = aware_now_in_utc()
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=start_time,
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -64,13 +69,15 @@ def test_save(sqlalchemy_run_repository, project):
 
     assert run.id == 1
     assert run.project_id == 1
+    assert run.run_batch_id == 1
     assert run.started_at == start_time
 
 
-def test_save_no_project_id(sqlalchemy_run_repository):
+def test_save_no_project_id(sqlalchemy_run_repository, run_batch):
     run = Run(
         id=0,
         project_id=2,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -80,10 +87,13 @@ def test_save_no_project_id(sqlalchemy_run_repository):
         run = sqlalchemy_run_repository.save(run)
 
 
-def test_save_with_no_previous_run_id_is_possible(sqlalchemy_run_repository, project):
+def test_save_with_no_previous_run_id_is_possible(
+    sqlalchemy_run_repository, project, run_batch
+):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -93,11 +103,12 @@ def test_save_with_no_previous_run_id_is_possible(sqlalchemy_run_repository, pro
 
 
 def test_save_with_not_existing_previous_run_id_is_not_possible(
-    sqlalchemy_run_repository, project
+    sqlalchemy_run_repository, project, run_batch
 ):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=42,
@@ -107,11 +118,12 @@ def test_save_with_not_existing_previous_run_id_is_not_possible(
         sqlalchemy_run_repository.save(run)
 
 
-def test_find_by_id_should_find(sqlalchemy_run_repository, project):
+def test_find_by_id_should_find(sqlalchemy_run_repository, project, run_batch):
     start_time = aware_now_in_utc()
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=start_time,
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -130,10 +142,13 @@ def test_find_by_project_id_should_find_empty(sqlalchemy_run_repository):
     assert sqlalchemy_run_repository.find_by_project_id(10) == []
 
 
-def test_find_by_project_id_should_find_correct(sqlalchemy_run_repository, project):
+def test_find_by_project_id_should_find_correct(
+    sqlalchemy_run_repository, project, run_batch
+):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -154,11 +169,12 @@ def test_find_by_project_id_paginate_should_find_empty(sqlalchemy_run_repository
 
 
 def test_find_by_project_id_paginate_should_find_correct(
-    sqlalchemy_run_repository, project
+    sqlalchemy_run_repository, project, run_batch
 ):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -175,11 +191,12 @@ def test_find_by_project_id_paginate_should_find_correct(
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
-    sqlalchemy_run_repository, project
+    sqlalchemy_run_repository, project, run_batch
 ):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -190,6 +207,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
             Run(
                 id=0,
                 project_id=project.id,
+                run_batch_id=run_batch.id,
                 started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,
@@ -208,11 +226,12 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
-    sqlalchemy_run_repository, project
+    sqlalchemy_run_repository, project, run_batch
 ):
     run = Run(
         id=0,
         project_id=project.id,
+        run_batch_id=run_batch.id,
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
@@ -223,6 +242,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
             Run(
                 id=0,
                 project_id=project.id,
+                run_batch_id=run_batch.id,
                 started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,

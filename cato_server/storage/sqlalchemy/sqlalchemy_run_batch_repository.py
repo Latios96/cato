@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Callable
 
 from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import composite
+from sqlalchemy.orm import composite, relationship
 
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
@@ -13,6 +13,10 @@ from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
+    _RunMapping,
+    SqlAlchemyRunRepository,
 )
 
 
@@ -53,6 +57,8 @@ class _RunBatchMapping(Base):
     run_batch_identifier = composite(
         _RunBatchIdentifierMapping, provider, run_name, run_identifier
     )
+
+    runs = relationship(_RunMapping)
 
     UniqueConstraint(
         "provider",
@@ -103,19 +109,31 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
             return self.to_domain_object(run_batch_mapping)
 
     def to_entity(self, domain_object: RunBatch) -> _RunBatchMapping:
+        runs = list(
+            map(
+                lambda x: SqlAlchemyRunRepository.to_entity(None, x), domain_object.runs
+            )
+        )
         return _RunBatchMapping(
             id=domain_object.id if domain_object.id else None,
             run_batch_identifier=_RunBatchIdentifierMapping.from_identifier(
                 domain_object.run_batch_identifier
             ),
             project_entity_id=domain_object.project_id,
+            runs=runs,
         )
 
     def to_domain_object(self, entity: _RunBatchMapping) -> RunBatch:
+        runs = list(
+            map(
+                lambda x: SqlAlchemyRunRepository.to_domain_object(None, x), entity.runs
+            )
+        )
         return RunBatch(
             id=entity.id,
             run_batch_identifier=entity.run_batch_identifier.to_identifier(),
             project_id=entity.project_entity_id,
+            runs=runs,
         )
 
     def mapping_cls(self):

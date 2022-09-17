@@ -36,6 +36,7 @@ TEST_SUITES = [
 @freeze_time(STARTED_AT)
 def test_should_create_without_branch_name_and_no_previous_run(
     sqlalchemy_run_repository,
+    sqlalchemy_run_batch_repository,
     sqlalchemy_suite_result_repository,
     sqlalchemy_test_result_repository,
     project,
@@ -43,6 +44,7 @@ def test_should_create_without_branch_name_and_no_previous_run(
 ):
     usecase = CreateRunUsecase(
         sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
@@ -58,17 +60,20 @@ def test_should_create_without_branch_name_and_no_previous_run(
     assert run == Run(
         id=1,
         project_id=project.id,
+        run_batch_id=1,
         started_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
+    assert sqlalchemy_run_batch_repository.find_by_id(1).runs == [run]
 
 
 @freeze_time(STARTED_AT)
 def test_should_create_with_explicit_branch_name_and_no_previous_run(
     sqlalchemy_run_repository,
+    sqlalchemy_run_batch_repository,
     sqlalchemy_suite_result_repository,
     sqlalchemy_test_result_repository,
     project,
@@ -76,6 +81,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
 ):
     usecase = CreateRunUsecase(
         sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
@@ -92,6 +98,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
     assert run == Run(
         id=1,
         project_id=project.id,
+        run_batch_id=1,
         started_at=STARTED_AT,
         branch_name=BranchName("main"),
         previous_run_id=None,
@@ -104,15 +111,20 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
 def test_should_create_with_previous_run(
     sessionmaker_fixture,
     sqlalchemy_test_result_repository,
+    sqlalchemy_run_batch_repository,
     project,
     object_mapper,
     run_factory,
     sqlalchemy_suite_result_repository,
     sqlalchemy_run_repository,
+    saving_run_batch_factory,
 ):
-    previous_run = sqlalchemy_run_repository.save(run_factory(project_id=project.id))
+    previous_run = sqlalchemy_run_repository.save(
+        run_factory(project_id=project.id, run_batch_id=saving_run_batch_factory().id)
+    )
     usecase = CreateRunUsecase(
         sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         sqlalchemy_suite_result_repository,
         sqlalchemy_test_result_repository,
         object_mapper,
@@ -128,6 +140,7 @@ def test_should_create_with_previous_run(
     assert run == Run(
         id=2,
         project_id=project.id,
+        run_batch_id=3,
         started_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=previous_run.id,

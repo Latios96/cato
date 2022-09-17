@@ -13,8 +13,9 @@ class TestRunListPage:
         authenticated_selenium_driver,
         project,
         sqlalchemy_run_repository,
+        run_batch,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository)
+        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
         next_page = self._pagination_buttons_should_be_correctly_enabled(
             authenticated_selenium_driver
@@ -52,8 +53,9 @@ class TestRunListPage:
         live_server,
         authenticated_selenium_driver,
         sqlalchemy_run_repository,
+        run_batch,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository)
+        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
 
         self._assert_first_run_has_branch_default(authenticated_selenium_driver)
@@ -67,8 +69,9 @@ class TestRunListPage:
         live_server,
         authenticated_selenium_driver,
         sqlalchemy_run_repository,
+        run_batch,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository)
+        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
 
         self._visit_project_page_with_branch_filter_dev(
             live_server, project, authenticated_selenium_driver
@@ -119,12 +122,13 @@ class TestRunListPage:
     def _visit_project_page(self, live_server, project, selenium_driver):
         selenium_driver.get(f"{live_server.server_url()}/projects/{project.id}")
 
-    def _insert_many_runs(self, project, sqlalchemy_run_repository):
+    def _insert_many_runs(self, project, sqlalchemy_run_repository, run_batch):
         sqlalchemy_run_repository.insert_many(
             [
                 Run(
                     id=0,
                     project_id=project.id,
+                    run_batch_id=run_batch.id,
                     started_at=aware_now_in_utc(),
                     branch_name=BranchName("default") if x > 10 else BranchName("dev"),
                     previous_run_id=None,

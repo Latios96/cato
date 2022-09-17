@@ -18,6 +18,17 @@ def test_should_save_to_database(sqlalchemy_run_batch_repository, run_batch_fact
     assert saved_run_batch == run_batch
 
 
+def test_should_also_save_runs_to_database(
+    sqlalchemy_run_batch_repository, run_batch_factory, run_factory
+):
+    run_batch = run_batch_factory(runs=[run_factory()])
+
+    saved_run_batch = sqlalchemy_run_batch_repository.save(run_batch)
+
+    run_batch.id = 1
+    assert saved_run_batch.runs[0].id == 1
+
+
 def test_should_not_save_duplicated_run_batch_identifier(
     sqlalchemy_run_batch_repository, run_batch_factory
 ):

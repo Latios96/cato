@@ -1,14 +1,21 @@
 import logging
+import uuid
 
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_name import RunName
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.mappers.object_mapper import ObjectMapper
+from cato_server.domain.run_batch import RunBatch
+from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
@@ -24,11 +31,13 @@ class CreateRunUsecase:
     def __init__(
         self,
         run_repository: RunRepository,
+        run_batch_repository: RunBatchRepository,
         suite_result_repository: SuiteResultRepository,
         test_result_repository: TestResultRepository,
         object_mapper: ObjectMapper,
     ):
         self._run_repository = run_repository
+        self._run_batch_repository = run_batch_repository
         self._suite_result_repository = suite_result_repository
         self._test_result_repository = test_result_repository
         self._object_mapper = object_mapper
@@ -36,10 +45,12 @@ class CreateRunUsecase:
     def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
         branch_name = self._get_branch_name(create_run_dto)
         previous_run_id = self._get_previous_run_id(branch_name, create_run_dto)
+        run_batch = self._get_run_batch(create_run_dto)
 
         run = Run(
             id=0,
             project_id=create_run_dto.project_id,
+            run_batch_id=run_batch.id,
             started_at=aware_now_in_utc(),
             branch_name=branch_name,
             previous_run_id=previous_run_id,
@@ -99,3 +110,20 @@ class CreateRunUsecase:
         if previous_run:
             previous_run_id = previous_run.id
         return previous_run_id
+
+    def _get_run_batch(self, create_run_dto: CreateFullRunDto) -> RunBatch:
+        default_run_batch_identifier = RunBatchIdentifier(
+            provider=RunBatchProvider.LOCAL_COMPUTER,
+            run_name=RunName("windows"),
+            run_identifier=RunIdentifier(str(uuid.uuid4())),
+        )
+        return self._run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+            create_run_dto.project_id,
+            default_run_batch_identifier,
+            lambda: RunBatch(
+                id=0,
+                run_batch_identifier=default_run_batch_identifier,
+                project_id=create_run_dto.project_id,
+                runs=[],
+            ),
+        )

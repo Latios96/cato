@@ -25,6 +25,7 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.output_repository import OutputRepository
 from cato_server.storage.abstract.project_repository import ProjectRepository
+from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.session_repository import SessionRepository
 from cato_server.storage.abstract.submission_info_repository import (
@@ -53,6 +54,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_run_batch_repository import (
+    SqlAlchemyRunBatchRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     SqlAlchemyRunRepository,
@@ -95,6 +99,7 @@ class StorageBindings:
     test_edit_repository: Type[TestEditRepository]
     auth_user_repository: Type[AuthUserRepository]
     session_repository: Type[SessionRepository]
+    run_batch_repository: Type[RunBatchRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -222,6 +227,10 @@ class PinjectBindings(pinject.BindingSpec):
             "session_repository",
             to_class=self._bindings.storage_bindings.session_repository,
         )
+        bind(
+            "run_batch_repository",
+            to_class=self._bindings.storage_bindings.run_batch_repository,
+        )
 
         bind("celery_app", to_instance=self._bindings.task_queue_bindings.celery_app)
 
@@ -261,6 +270,7 @@ class BindingsFactory:
             test_edit_repository=SqlAlchemyTestEditRepository,
             auth_user_repository=SqlAlchemyAuthUserRepository,
             session_repository=SqlAlchemySessionRepository,
+            run_batch_repository=SqlAlchemyRunBatchRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )

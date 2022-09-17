@@ -97,6 +97,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,
             project_id=1,
+            run_batch_id=42,
             started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
@@ -146,6 +147,7 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,
             project_id=1,
+            run_batch_id=42,
             started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
