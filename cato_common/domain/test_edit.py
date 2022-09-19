@@ -21,6 +21,7 @@ class AbstractTestEdit:
     test_id: int
     test_identifier: TestIdentifier
     created_at: datetime.datetime
+    __json_type_info_attribute__ = "edit_type"
 
     def __post_init__(self):
         self.edit_type = None
@@ -39,7 +40,7 @@ class ComparisonSettingsEditValue:
 class ComparisonSettingsEdit(AbstractTestEdit):
     new_value: ComparisonSettingsEditValue
     old_value: ComparisonSettingsEditValue
-    edit_type: EditTypes = field(default_factory=lambda: EditTypes.COMPARISON_SETTINGS)
+    edit_type: EditTypes = EditTypes.COMPARISON_SETTINGS.name
 
     def __post_init__(self):
         self.edit_type = EditTypes.COMPARISON_SETTINGS
@@ -58,7 +59,7 @@ class ReferenceImageEditValue:
 class ReferenceImageEdit(AbstractTestEdit):
     new_value: ReferenceImageEditValue
     old_value: ReferenceImageEditValue
-    edit_type: EditTypes = field(default_factory=lambda: EditTypes.REFERENCE_IMAGE)
+    edit_type: EditTypes = EditTypes.REFERENCE_IMAGE.name
 
     def __post_init__(self):
         self.edit_type = EditTypes.REFERENCE_IMAGE
