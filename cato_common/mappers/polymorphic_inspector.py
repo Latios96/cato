@@ -1,6 +1,7 @@
 import inspect
 from collections import defaultdict
-from typing import Type, TypeVar, List, Set, cast
+from enum import Enum
+from typing import Type, TypeVar, List, Set, cast, Union
 
 JSON_TYPE_INFO_PROPERTY_NAME = "__json_type_info_attribute__"
 
@@ -8,8 +9,9 @@ T = TypeVar("T")
 
 
 class TypeInfo:
-    def __init__(self, value):
-        value = str(value)
+    def __init__(self, value: Union[str, Enum]):
+        if isinstance(value, Enum):
+            value = value.name
         value = value.strip()
         if not value:
             raise ValueError("A TypeInfo can not be empty or blank.")
