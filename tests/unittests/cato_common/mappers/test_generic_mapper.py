@@ -521,3 +521,27 @@ class TestMapFromDict:
         )
 
         assert result == DataClassWithUnderscoreMembers(my_int_=1)
+
+    def test_map_polymorphic_dataclass_parent(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {"myString": "test", "myInt": 42, "typeInfo": "BASE"},
+            PolymorphicDataClassBase,
+        )
+
+        assert result == PolymorphicDataClassBase(my_string="test", my_int=42)
+
+    def test_map_polymorphic_dataclass_child(self):
+        result = GenericClassMapper(MapperRegistry()).map_from_dict(
+            {
+                "myString": "test",
+                "myInt": 42,
+                "myChildString": "test",
+                "myChildInt": 42,
+                "typeInfo": "CHILD",
+            },
+            PolymorphicDataClassBase,
+        )
+
+        assert result == PolymorphicDataClassChild(
+            my_string="test", my_int=42, my_child_string="test", my_child_int=42
+        )
