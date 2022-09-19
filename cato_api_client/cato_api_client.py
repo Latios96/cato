@@ -1,15 +1,15 @@
 import datetime
 import logging
 import os
-from typing import Optional, Type, TypeVar, List, Dict, Callable
+from typing import Optional, Type, TypeVar, List, Callable
 from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
-from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_api_client.http_template import HttpTemplate
 from cato_api_client.task_result_template import TaskResultTemplate
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.domain.compare_image_result import CompareImageResult
+from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
 from cato_common.domain.output import Output
@@ -20,21 +20,19 @@ from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.tasks.task_result import TaskResult
 from cato_common.domain.test_edit import (
     AbstractTestEdit,
-    ComparisonSettingsEdit,
-    ReferenceImageEdit,
 )
 from cato_common.domain.test_failure_reason import TestFailureReason
+from cato_common.domain.test_heartbeat import TestHeartbeat
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.api_success import ApiSuccess
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.dtos.store_image_result import StoreImageResult
 from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
-from cato_common.dtos.api_success import ApiSuccess
-from cato_common.domain.test_heartbeat import TestHeartbeat
 
 logger = logging.getLogger(__name__)
 T = TypeVar("T")
@@ -282,24 +280,11 @@ class CatoApiClient:
 
     def get_test_edits_to_sync_for_run(self, run_id: int) -> List[AbstractTestEdit]:
         url = self._build_url("/api/v1/test_edits/runs/{}/edits-to-sync".format(run_id))
-        response = self._http_template.get_for_entity(url, Dict[str, str])
+        response = self._http_template.get_for_entity(url, AbstractTestEdit)
         if response.status_code() == 404:
             return []
         if response.status_code() == 200:
-            dict_list = response.get_entities()
-            entity_list: List[AbstractTestEdit] = []
-            for d in dict_list:
-                if d["editType"] == "COMPARISON_SETTINGS":
-                    entity_list.append(
-                        self._object_mapper.from_dict(d, ComparisonSettingsEdit)
-                    )
-                elif d["editType"] == "REFERENCE_IMAGE":
-                    entity_list.append(
-                        self._object_mapper.from_dict(d, ReferenceImageEdit)
-                    )
-                else:
-                    raise ValueError("Unsupported edit type: {}".format(d["editType"]))
-            return entity_list
+            return response.get_entities()
         self._raise_bad_parameters(response)
 
     def _build_url(self, url):
