@@ -9,6 +9,7 @@ from cato_common.mappers.polymorphic_inspector import (
     NoTypeInfoAttributeValue,
     NoTypeInfoAttributeName,
     DuplicatedTypeInfo,
+    NoClassWithTypeInfoFound,
 )
 
 
@@ -159,3 +160,37 @@ class TestGetTypeInfo:
         inspector = PolymorphicInspector()
         with pytest.raises(DuplicatedTypeInfo):
             inspector.get_type_info(Middle)
+
+
+class TestFindClassToInstantiateInHierarchy:
+    class Base:
+        __json_type_info_attribute__ = "type"
+        type = "BASE"
+
+    class Child(Base):
+        type = "CHILD"
+
+    def test_should_find_base(self):
+        inspector = PolymorphicInspector()
+        assert (
+            inspector.find_class_to_instantiate_in_hierarchy(
+                TestFindClassToInstantiateInHierarchy.Base, TypeInfo("BASE")
+            )
+            == TestFindClassToInstantiateInHierarchy.Base
+        )
+
+    def test_should_find_child(self):
+        inspector = PolymorphicInspector()
+        assert (
+            inspector.find_class_to_instantiate_in_hierarchy(
+                TestFindClassToInstantiateInHierarchy.Base, TypeInfo("CHILD")
+            )
+            == TestFindClassToInstantiateInHierarchy.Child
+        )
+
+    def test_should_not_find(self):
+        inspector = PolymorphicInspector()
+        with pytest.raises(NoClassWithTypeInfoFound):
+            inspector.find_class_to_instantiate_in_hierarchy(
+                TestFindClassToInstantiateInHierarchy.Base, TypeInfo("TEST")
+            )

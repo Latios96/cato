@@ -54,6 +54,13 @@ class DuplicatedTypeInfo(PolymorphicInspectionException):
         )
 
 
+class NoClassWithTypeInfoFound(PolymorphicInspectionException):
+    def __init__(self, type_info: TypeInfo) -> None:
+        super(NoClassWithTypeInfoFound, self).__init__(
+            f"No class with type info '{type_info}' was found."
+        )
+
+
 class PolymorphicInspector:
     def is_polymorphic_mapped_class(self, cls: Type[T]) -> bool:
         return hasattr(cls, JSON_TYPE_INFO_PROPERTY_NAME)
@@ -65,6 +72,19 @@ class PolymorphicInspector:
 
     def get_type_info_property(self, cls: Type) -> str:
         return cast(str, getattr(cls, JSON_TYPE_INFO_PROPERTY_NAME))
+
+    def find_class_to_instantiate_in_hierarchy(
+        self, cls: Type, type_info: TypeInfo
+    ) -> Type:
+        self._verify_no_duplicated_type_info_in_hierarchy(cls)
+        classes = self._get_classes_in_tree(cls)
+        for cl in classes:
+            try:
+                if self._read_type_info_for_cls(cl) == type_info:
+                    return cl
+            except PolymorphicInspectionException:
+                pass
+        raise NoClassWithTypeInfoFound(type_info)
 
     def _read_type_info_for_cls(self, cls: Type) -> TypeInfo:
         try:
