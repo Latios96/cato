@@ -9,8 +9,7 @@ T = TypeVar("T")
 
 class TypeInfo:
     def __init__(self, value):
-        if not isinstance(value, str):
-            raise ValueError(f"A TypeInfo has to be str, was {value.__class__}.")
+        value = str(value)
         value = value.strip()
         if not value:
             raise ValueError("A TypeInfo can not be empty or blank.")
