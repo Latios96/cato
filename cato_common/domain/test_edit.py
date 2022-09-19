@@ -1,5 +1,5 @@
 import datetime
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from enum import Enum
 from typing import TypeVar, Optional
 
@@ -40,7 +40,7 @@ class ComparisonSettingsEditValue:
 class ComparisonSettingsEdit(AbstractTestEdit):
     new_value: ComparisonSettingsEditValue
     old_value: ComparisonSettingsEditValue
-    edit_type: EditTypes = EditTypes.COMPARISON_SETTINGS.name
+    edit_type: EditTypes = EditTypes.COMPARISON_SETTINGS
 
     def __post_init__(self):
         self.edit_type = EditTypes.COMPARISON_SETTINGS
@@ -59,7 +59,7 @@ class ReferenceImageEditValue:
 class ReferenceImageEdit(AbstractTestEdit):
     new_value: ReferenceImageEditValue
     old_value: ReferenceImageEditValue
-    edit_type: EditTypes = EditTypes.REFERENCE_IMAGE.name
+    edit_type: EditTypes = EditTypes.REFERENCE_IMAGE
 
     def __post_init__(self):
         self.edit_type = EditTypes.REFERENCE_IMAGE
