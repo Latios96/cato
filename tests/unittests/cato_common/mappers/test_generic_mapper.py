@@ -86,6 +86,21 @@ class DataClassWithEnum:
     enum_value: MyEnum
 
 
+@dataclass
+class PolymorphicDataClassBase:
+    my_int: int
+    my_string: str
+    __json_type_info_attribute__ = "type_info"
+    type_info = "BASE"
+
+
+@dataclass
+class PolymorphicDataClassChild(PolymorphicDataClassBase):
+    my_child_int: int
+    my_child_string: str
+    type_info = "CHILD"
+
+
 class TestMapToDict:
     def test_map_simple_dataclass(self):
 
@@ -193,6 +208,28 @@ class TestMapToDict:
         )
 
         assert result == {"myInt_": 1}
+
+    def test_map_polymorphic_dataclass_parent(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            PolymorphicDataClassBase(my_string="test", my_int=42)
+        )
+
+        assert result == {"myString": "test", "myInt": 42, "typeInfo": "BASE"}
+
+    def test_map_polymorphic_dataclass_child(self):
+        result = GenericClassMapper(MapperRegistry()).map_to_dict(
+            PolymorphicDataClassChild(
+                my_string="test", my_int=42, my_child_string="test", my_child_int=42
+            )
+        )
+
+        assert result == {
+            "myString": "test",
+            "myInt": 42,
+            "myChildString": "test",
+            "myChildInt": 42,
+            "typeInfo": "CHILD",
+        }
 
 
 class TestMapFromDict:

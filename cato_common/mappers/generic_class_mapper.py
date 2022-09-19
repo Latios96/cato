@@ -9,6 +9,7 @@ from caseconverter import camelcase, snakecase  # type: ignore
 from dateutil.parser import parse
 
 from cato_common.mappers.mapper_registry import MapperRegistry
+from cato_common.mappers.polymorphic_inspector import PolymorphicInspector
 
 T = TypeVar("T")
 
@@ -16,6 +17,7 @@ T = TypeVar("T")
 class GenericClassMapper:
     def __init__(self, mapper_registry: MapperRegistry):
         self._mapper_registry = mapper_registry
+        self._polymorphic_inspector = PolymorphicInspector()
 
     def map_from_dict(self, json_data: Dict, cls: Type[T]) -> T:
         return self._from_dict(json_data, cls)  # type: ignore
@@ -37,6 +39,12 @@ class GenericClassMapper:
                 result[self._case_convert_write(field.name)] = self._to_dict(
                     getattr(obj, field.name)
                 )
+            if self._polymorphic_inspector.is_polymorphic_mapped_class(obj.__class__):
+                type_info_property = self._polymorphic_inspector.get_type_info_property(
+                    obj.__class__
+                )
+                type_info = self._polymorphic_inspector.get_type_info(obj.__class__)
+                result[self._case_convert_write(type_info_property)] = str(type_info)
             return result
         elif (
             isinstance(obj, Collection)
