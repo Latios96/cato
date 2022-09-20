@@ -5,6 +5,8 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.project import Project
 from cato_common.domain.run import (
     Run,
+)
+from cato_common.domain.run_information import (
     OS,
     LocalComputerRunInformation,
     GithubActionsRunInformation,

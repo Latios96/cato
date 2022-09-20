@@ -6,10 +6,12 @@ from sqlalchemy.orm import relationship
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import (
     Run,
+)
+from cato_common.domain.run_information import (
+    OS,
     BasicRunInformation,
     LocalComputerRunInformation,
     GithubActionsRunInformation,
-    OS,
 )
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.storage.page import PageRequest, Page

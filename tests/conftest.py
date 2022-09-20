@@ -39,10 +39,12 @@ from cato_common.domain.project import Project
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import (
     Run,
-    LocalComputerRunInformation,
+)
+from cato_common.domain.run_information import (
     OS,
-    GithubActionsRunInformation,
     BasicRunInformation,
+    LocalComputerRunInformation,
+    GithubActionsRunInformation,
 )
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.suite_result import SuiteResult

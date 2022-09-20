@@ -3,7 +3,8 @@ import logging
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.run import Run, LocalComputerRunInformation, OS
+from cato_common.domain.run import Run
+from cato_common.domain.run_information import OS, LocalComputerRunInformation
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus

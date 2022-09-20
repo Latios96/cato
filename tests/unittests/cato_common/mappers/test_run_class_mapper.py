@@ -1,5 +1,6 @@
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.run import Run, OS, LocalComputerRunInformation
+from cato_common.domain.run import Run
+from cato_common.domain.run_information import OS, LocalComputerRunInformation
 from cato_common.utils.datetime_utils import aware_now_in_utc
 
 

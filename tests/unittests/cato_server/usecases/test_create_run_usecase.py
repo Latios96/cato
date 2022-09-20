@@ -5,7 +5,8 @@ from freezegun import freeze_time
 
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.run import Run, LocalComputerRunInformation, OS
+from cato_common.domain.run import Run
+from cato_common.domain.run_information import OS, LocalComputerRunInformation
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.dtos.create_full_run_dto import (
     TestSuiteForRunCreation,

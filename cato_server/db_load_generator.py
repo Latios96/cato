@@ -15,7 +15,8 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
-from cato_common.domain.run import Run, LocalComputerRunInformation, OS
+from cato_common.domain.run import Run
+from cato_common.domain.run_information import OS, LocalComputerRunInformation
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
