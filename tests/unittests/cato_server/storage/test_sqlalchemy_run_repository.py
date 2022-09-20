@@ -227,7 +227,10 @@ def test_find_by_project_id_should_find_correct(
     )
     run = sqlalchemy_run_repository.save(run)
 
-    assert sqlalchemy_run_repository.find_by_project_id(project.id) == [run]
+    with sqltap_asserter(1):
+        runs_by_project_id = sqlalchemy_run_repository.find_by_project_id(project.id)
+
+    assert runs_by_project_id == [run]
 
 
 def test_find_by_project_id_paginate_should_find_empty(sqlalchemy_run_repository):

@@ -162,6 +162,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
                 .filter(self.mapping_cls().project_entity_id == id)
                 .order_by(self.mapping_cls().started_at.desc())
                 .order_by(self.mapping_cls().id.desc())
+                .options(self.default_query_options())
                 .all()
             )
 
