@@ -1,6 +1,6 @@
 from typing import List, Optional, cast
 
-from sqlalchemy import Column, Integer, ForeignKey, String
+from sqlalchemy import Column, Integer, ForeignKey, String, BigInteger
 from sqlalchemy.orm import relationship, with_polymorphic, joinedload
 
 from cato_common.domain.branch_name import BranchName
@@ -58,8 +58,8 @@ class _GithubActionsRunInformationMapping(_BasicRunInformationMapping):
     id = Column(
         Integer, ForeignKey("basic_run_information_entity.id"), primary_key=True
     )
-    github_run_id = Column(Integer, nullable=False)
-    job_id = Column(Integer, nullable=False)
+    github_run_id = Column(BigInteger, nullable=False)
+    job_id = Column(BigInteger, nullable=False)
     job_name = Column(String, nullable=False)
     actor = Column(String, nullable=False)
     attempt = Column(Integer, nullable=False)
