@@ -81,7 +81,10 @@ class _RunMapping(Base):
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
 
     run_information = relationship(
-        _BasicRunInformationMapping, uselist=False, back_populates="run"
+        _BasicRunInformationMapping,
+        uselist=False,
+        back_populates="run",
+        cascade="all, delete",
     )
 
 

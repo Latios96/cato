@@ -430,3 +430,37 @@ class TestFindBranchNamesForProject:
         result = sqlalchemy_run_repository.find_branches_for_project(project.id)
 
         assert result == [BranchName("dev"), BranchName("legacy"), BranchName("main")]
+
+
+def test_delete_should_also_delete_run_information(
+    sqlalchemy_run_repository,
+    project,
+    run_batch,
+    local_computer_run_information,
+    sessionmaker_fixture,
+):
+    start_time = aware_now_in_utc()
+    run = Run(
+        id=0,
+        project_id=project.id,
+        run_batch_id=run_batch.id,
+        started_at=start_time,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+        run_information=local_computer_run_information,
+    )
+
+    run = sqlalchemy_run_repository.save(run)
+    assert run.id == 1
+
+    sqlalchemy_run_repository.delete_by_id(run.id)
+
+    assert sqlalchemy_run_repository.find_by_id(run.id) is None
+    with sessionmaker_fixture() as session:
+        run_information_result = (
+            session.query(_LocalComputerRunInformationMapping)
+            .filter(_LocalComputerRunInformationMapping.id == run.run_information.id)
+            .first()
+        )
+
+    assert run_information_result is None
