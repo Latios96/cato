@@ -56,14 +56,20 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
     def find_by_id(self, id: K) -> Optional[T]:
         with self._session_maker() as session:
-            query = session.query(self.mapping_cls()).filter(
-                self.mapping_cls().id == id
+            query = (
+                session.query(self.mapping_cls())
+                .filter(self.mapping_cls().id == id)
+                .options(self.default_query_options())
             )
             return self._map_one_to_domain_object(query.first())
 
     def find_all(self) -> List[T]:
         with self._session_maker() as session:
-            results = session.query(self.mapping_cls()).all()
+            results = (
+                session.query(self.mapping_cls())
+                .options(self.default_query_options())
+                .all()
+            )
 
             return self._map_many_to_domain_object(results)
 
@@ -71,7 +77,9 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         with self._session_maker() as session:
 
             page = self._pageginate(
-                session, session.query(self.mapping_cls()), page_request
+                session,
+                session.query(self.mapping_cls()).options(self.default_query_options()),
+                page_request,
             )
 
             return page
@@ -81,6 +89,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
             entity = (
                 session.query(self.mapping_cls())
                 .filter(self.mapping_cls().id == id)
+                .options(self.default_query_options())
                 .first()
             )
             if not entity:
@@ -96,6 +105,9 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
 
     def mapping_cls(self):
         raise NotImplementedError()
+
+    def default_query_options(self):
+        return []
 
     def _map_one_to_domain_object(self, entity: Optional[E]) -> Optional[T]:
         if entity:
