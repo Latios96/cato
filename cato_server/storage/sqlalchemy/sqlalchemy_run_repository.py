@@ -159,7 +159,6 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
     ) -> Page[Run]:
         session = self._session_maker()
 
-        # query = session.query(self.mapping_cls(),with_polymorphic(_BasicRunInformationMapping,[_LocalComputerRunInformation, _GithubActionsRunInformation])).filter(
         query = (
             session.query(self.mapping_cls())
             .join(_BasicRunInformationMapping)
