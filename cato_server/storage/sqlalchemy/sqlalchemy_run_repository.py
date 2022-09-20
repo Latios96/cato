@@ -180,6 +180,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             session.query(self.mapping_cls())
             .join(_BasicRunInformationMapping)
             .filter(self.mapping_cls().project_entity_id == id)
+            .options(self.default_query_options())
         )
         if filter_options:
             query = self._apply_filter_options(query, filter_options)

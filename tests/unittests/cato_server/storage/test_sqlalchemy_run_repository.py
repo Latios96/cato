@@ -259,9 +259,12 @@ def test_find_by_project_id_paginate_should_find_correct(
 
     page_request = PageRequest.first(10)
 
-    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
-        project.id, page_request
-    ) == Page.from_page_request(
+    with sqltap_asserter(2):
+        runs = sqlalchemy_run_repository.find_by_project_id_with_paging(
+            project.id, page_request
+        )
+
+    assert runs == Page.from_page_request(
         page_request=page_request, total_entity_count=1, entities=[run]
     )
 
