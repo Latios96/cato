@@ -99,7 +99,9 @@ class TestTestExecutionDbReporter:
             "my_project_name"
         )
 
-    def test_start_execution_should_create_run_with_branch_name(self, test_context):
+    def test_start_execution_should_create_run_with_branch_name(
+        self, test_context, local_computer_run_information
+    ):
         run_identifier = RunIdentifier(str(uuid.uuid4()))
         run_batch_identifier = RunBatchIdentifier(
             provider=RunBatchProvider.LOCAL_COMPUTER,
@@ -122,6 +124,7 @@ class TestTestExecutionDbReporter:
             started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
+            run_information=local_computer_run_information,
         )
 
         test_context.test_execution_db_reporter.start_execution(
@@ -161,7 +164,7 @@ class TestTestExecutionDbReporter:
         assert test_context.test_execution_db_reporter._run_id == 5
 
     def test_start_execution_should_not_pass_branch_name_if_there_is_no_branch(
-        self, test_context
+        self, test_context, local_computer_run_information
     ):
         test_context.mock_cato_api_client.get_project_by_name.return_value = Project(
             id=1, name="my_project_name"
@@ -173,6 +176,7 @@ class TestTestExecutionDbReporter:
             started_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
+            run_information=local_computer_run_information,
         )
 
         test_context.test_execution_db_reporter.start_execution(

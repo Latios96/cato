@@ -3,16 +3,22 @@ from sqlalchemy.exc import IntegrityError
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.project import Project
-from cato_common.domain.run import Run
+from cato_common.domain.run import (
+    Run,
+    OS,
+    LocalComputerRunInformation,
+    GithubActionsRunInformation,
+)
 from cato_common.storage.page import PageRequest, Page
 from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     _RunMapping,
+    _LocalComputerRunInformationMapping,
 )
 from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
-def test_to_entity(sqlalchemy_run_repository):
+def test_to_entity(sqlalchemy_run_repository, local_computer_run_information):
     now = aware_now_in_utc()
     run = Run(
         id=1,
@@ -21,6 +27,7 @@ def test_to_entity(sqlalchemy_run_repository):
         started_at=now,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
 
     entity = sqlalchemy_run_repository.to_entity(run)
@@ -31,7 +38,7 @@ def test_to_entity(sqlalchemy_run_repository):
     assert entity.started_at == now
 
 
-def test_to_domain_object(sqlalchemy_run_repository):
+def test_to_domain_object(sqlalchemy_run_repository, local_computer_run_information):
     now = aware_now_in_utc()
     run_entity = _RunMapping(
         id=1,
@@ -40,6 +47,13 @@ def test_to_domain_object(sqlalchemy_run_repository):
         started_at=now,
         branch_name="default",
         previous_run_id=None,
+        run_information=_LocalComputerRunInformationMapping(
+            id=0,
+            run_entity_id=0,
+            os="WINDOWS",
+            computer_name="cray",
+            local_username="username",
+        ),
     )
 
     run = sqlalchemy_run_repository.to_domain_object(run_entity)
@@ -51,10 +65,13 @@ def test_to_domain_object(sqlalchemy_run_repository):
         started_at=now,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
 
 
-def test_save(sqlalchemy_run_repository, project, run_batch):
+def test_save_local_computer_run_information(
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
+):
     start_time = aware_now_in_utc()
     run = Run(
         id=0,
@@ -63,6 +80,7 @@ def test_save(sqlalchemy_run_repository, project, run_batch):
         started_at=start_time,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
 
     run = sqlalchemy_run_repository.save(run)
@@ -71,54 +89,14 @@ def test_save(sqlalchemy_run_repository, project, run_batch):
     assert run.project_id == 1
     assert run.run_batch_id == 1
     assert run.started_at == start_time
-
-
-def test_save_no_project_id(sqlalchemy_run_repository, run_batch):
-    run = Run(
-        id=0,
-        project_id=2,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=None,
+    assert run.run_information == LocalComputerRunInformation(
+        id=1, run_id=1, os=OS.WINDOWS, computer_name="cray", local_username="username"
     )
 
-    with pytest.raises(IntegrityError):
-        run = sqlalchemy_run_repository.save(run)
 
-
-def test_save_with_no_previous_run_id_is_possible(
-    sqlalchemy_run_repository, project, run_batch
+def test_save_github_actions_run_information(
+    sqlalchemy_run_repository, project, run_batch, github_actions_run_information
 ):
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-    )
-
-    sqlalchemy_run_repository.save(run)
-
-
-def test_save_with_not_existing_previous_run_id_is_not_possible(
-    sqlalchemy_run_repository, project, run_batch
-):
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=42,
-    )
-
-    with pytest.raises(IntegrityError):
-        sqlalchemy_run_repository.save(run)
-
-
-def test_find_by_id_should_find(sqlalchemy_run_repository, project, run_batch):
     start_time = aware_now_in_utc()
     run = Run(
         id=0,
@@ -127,6 +105,93 @@ def test_find_by_id_should_find(sqlalchemy_run_repository, project, run_batch):
         started_at=start_time,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=github_actions_run_information,
+    )
+
+    run = sqlalchemy_run_repository.save(run)
+
+    assert run.id == 1
+    assert run.project_id == 1
+    assert run.run_batch_id == 1
+    assert run.started_at == start_time
+    assert run.run_information == GithubActionsRunInformation(
+        id=1,
+        run_id=1,
+        os=OS.LINUX,
+        computer_name="cray",
+        github_run_id=3052454707,
+        job_id=4921861789,
+        job_name="build_ubuntu",
+        actor="Latios96",
+        attempt=1,
+        run_number=2,
+        github_url="https://github.com",
+        github_api_url="https://api.github.com",
+    )
+
+
+def test_save_no_project_id(
+    sqlalchemy_run_repository, run_batch, local_computer_run_information
+):
+    run = Run(
+        id=0,
+        project_id=2,
+        run_batch_id=run_batch.id,
+        started_at=aware_now_in_utc(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+        run_information=local_computer_run_information,
+    )
+
+    with pytest.raises(IntegrityError):
+        run = sqlalchemy_run_repository.save(run)
+
+
+def test_save_with_no_previous_run_id_is_possible(
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
+):
+    run = Run(
+        id=0,
+        project_id=project.id,
+        run_batch_id=run_batch.id,
+        started_at=aware_now_in_utc(),
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+        run_information=local_computer_run_information,
+    )
+
+    sqlalchemy_run_repository.save(run)
+
+
+def test_save_with_not_existing_previous_run_id_is_not_possible(
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
+):
+    run = Run(
+        id=0,
+        project_id=project.id,
+        run_batch_id=run_batch.id,
+        started_at=aware_now_in_utc(),
+        branch_name=BranchName("default"),
+        previous_run_id=42,
+        run_information=local_computer_run_information,
+    )
+
+    with pytest.raises(IntegrityError):
+        sqlalchemy_run_repository.save(run)
+
+
+def test_find_by_id_should_find(
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
+):
+    start_time = aware_now_in_utc()
+    run = Run(
+        id=0,
+        project_id=project.id,
+        run_batch_id=run_batch.id,
+        started_at=start_time,
+        branch_name=BranchName("default"),
+        previous_run_id=None,
+        run_information=local_computer_run_information,
     )
     run = sqlalchemy_run_repository.save(run)
 
@@ -143,7 +208,7 @@ def test_find_by_project_id_should_find_empty(sqlalchemy_run_repository):
 
 
 def test_find_by_project_id_should_find_correct(
-    sqlalchemy_run_repository, project, run_batch
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
 ):
     run = Run(
         id=0,
@@ -152,6 +217,7 @@ def test_find_by_project_id_should_find_correct(
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
     run = sqlalchemy_run_repository.save(run)
 
@@ -169,7 +235,7 @@ def test_find_by_project_id_paginate_should_find_empty(sqlalchemy_run_repository
 
 
 def test_find_by_project_id_paginate_should_find_correct(
-    sqlalchemy_run_repository, project, run_batch
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
 ):
     run = Run(
         id=0,
@@ -178,6 +244,7 @@ def test_find_by_project_id_paginate_should_find_correct(
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
     run = sqlalchemy_run_repository.save(run)
 
@@ -191,7 +258,7 @@ def test_find_by_project_id_paginate_should_find_correct(
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
-    sqlalchemy_run_repository, project, run_batch
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
 ):
     run = Run(
         id=0,
@@ -200,6 +267,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
     sqlalchemy_run_repository.save(run)
     runs = sqlalchemy_run_repository.insert_many(
@@ -211,22 +279,24 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_pag
                 started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,
+                run_information=local_computer_run_information,
             )
             for x in range(20)
         ]
     )
 
     page_request = PageRequest.first(1)
-
-    assert sqlalchemy_run_repository.find_by_project_id_with_paging(
+    all = sqlalchemy_run_repository.find_all()
+    paging = sqlalchemy_run_repository.find_by_project_id_with_paging(
         project.id, page_request
-    ) == Page.from_page_request(
+    )
+    assert paging == Page.from_page_request(
         page_request=page_request, total_entity_count=21, entities=[runs[19]]
     )
 
 
 def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
-    sqlalchemy_run_repository, project, run_batch
+    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
 ):
     run = Run(
         id=0,
@@ -235,6 +305,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
         started_at=aware_now_in_utc(),
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=local_computer_run_information,
     )
     run = sqlalchemy_run_repository.save(run)
     runs = sqlalchemy_run_repository.insert_many(
@@ -246,6 +317,7 @@ def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_sec
                 started_at=aware_now_in_utc(),
                 branch_name=BranchName("default"),
                 previous_run_id=None,
+                run_information=local_computer_run_information,
             )
             for x in range(20)
         ]

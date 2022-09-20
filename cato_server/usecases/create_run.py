@@ -3,7 +3,7 @@ import logging
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.run import Run
+from cato_common.domain.run import Run, LocalComputerRunInformation, OS
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
@@ -41,6 +41,9 @@ class CreateRunUsecase:
         branch_name = self._get_branch_name(create_run_dto)
         previous_run_id = self._get_previous_run_id(branch_name, create_run_dto)
         run_batch = self._get_run_batch(create_run_dto)
+        local_computer_run_information = self._get_local_computer_run_information(
+            create_run_dto
+        )
 
         run = Run(
             id=0,
@@ -49,6 +52,7 @@ class CreateRunUsecase:
             started_at=aware_now_in_utc(),
             branch_name=branch_name,
             previous_run_id=previous_run_id,
+            run_information=local_computer_run_information,
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)
@@ -116,4 +120,13 @@ class CreateRunUsecase:
                 project_id=create_run_dto.project_id,
                 runs=[],
             ),
+        )
+
+    def _get_local_computer_run_information(self, create_run_dto):
+        return LocalComputerRunInformation(
+            id=0,
+            run_id=0,
+            os=OS.WINDOWS,
+            computer_name="unknown",
+            local_username="unknown-user",
         )

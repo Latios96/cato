@@ -15,7 +15,7 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.image import Image, ImageChannel
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
-from cato_common.domain.run import Run
+from cato_common.domain.run import Run, LocalComputerRunInformation, OS
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
@@ -141,6 +141,13 @@ class DbLoadGenerator:
                     started_at=aware_now_in_utc(),
                     branch_name=BranchName("default"),
                     previous_run_id=None,
+                    run_information=LocalComputerRunInformation(
+                        id=0,
+                        run_id=0,
+                        os=OS.WINDOWS,
+                        computer_name="unknown",
+                        local_username="unknown-user",
+                    ),
                 )
                 for x in range(self.current_preset["runs_per_project"])
             ]

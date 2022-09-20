@@ -14,8 +14,14 @@ class TestRunListPage:
         project,
         sqlalchemy_run_repository,
         run_batch,
+        local_computer_run_information,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
+        self._insert_many_runs(
+            project,
+            sqlalchemy_run_repository,
+            run_batch,
+            local_computer_run_information,
+        )
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
         next_page = self._pagination_buttons_should_be_correctly_enabled(
             authenticated_selenium_driver
@@ -54,8 +60,14 @@ class TestRunListPage:
         authenticated_selenium_driver,
         sqlalchemy_run_repository,
         run_batch,
+        local_computer_run_information,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
+        self._insert_many_runs(
+            project,
+            sqlalchemy_run_repository,
+            run_batch,
+            local_computer_run_information,
+        )
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
 
         self._assert_first_run_has_branch_default(authenticated_selenium_driver)
@@ -70,8 +82,14 @@ class TestRunListPage:
         authenticated_selenium_driver,
         sqlalchemy_run_repository,
         run_batch,
+        local_computer_run_information,
     ):
-        self._insert_many_runs(project, sqlalchemy_run_repository, run_batch)
+        self._insert_many_runs(
+            project,
+            sqlalchemy_run_repository,
+            run_batch,
+            local_computer_run_information,
+        )
 
         self._visit_project_page_with_branch_filter_dev(
             live_server, project, authenticated_selenium_driver
@@ -122,7 +140,13 @@ class TestRunListPage:
     def _visit_project_page(self, live_server, project, selenium_driver):
         selenium_driver.get(f"{live_server.server_url()}/projects/{project.id}")
 
-    def _insert_many_runs(self, project, sqlalchemy_run_repository, run_batch):
+    def _insert_many_runs(
+        self,
+        project,
+        sqlalchemy_run_repository,
+        run_batch,
+        local_computer_run_information,
+    ):
         sqlalchemy_run_repository.insert_many(
             [
                 Run(
@@ -132,6 +156,7 @@ class TestRunListPage:
                     started_at=aware_now_in_utc(),
                     branch_name=BranchName("default") if x > 10 else BranchName("dev"),
                     previous_run_id=None,
+                    run_information=local_computer_run_information,
                 )
                 for x in range(50)
             ]

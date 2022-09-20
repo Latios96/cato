@@ -1,5 +1,5 @@
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.run import Run
+from cato_common.domain.run import Run, OS, LocalComputerRunInformation
 from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
@@ -14,6 +14,14 @@ def test_map_from_dict(object_mapper):
             "startedAt": started_at.isoformat(),
             "branchName": "default",
             "previousRunId": None,
+            "runInformation": {
+                "id": 0,
+                "runId": 0,
+                "os": "WINDOWS",
+                "computerName": "cray",
+                "localUsername": "username",
+                "runInformationType": "LOCAL_COMPUTER",
+            },
         },
         Run,
     )
@@ -25,6 +33,13 @@ def test_map_from_dict(object_mapper):
         started_at=started_at,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=LocalComputerRunInformation(
+            id=0,
+            run_id=0,
+            os=OS.WINDOWS,
+            computer_name="cray",
+            local_username="username",
+        ),
     )
 
 
@@ -39,6 +54,13 @@ def test_map_to_dict(object_mapper):
             started_at=started_at,
             branch_name=BranchName("default"),
             previous_run_id=None,
+            run_information=LocalComputerRunInformation(
+                id=0,
+                run_id=0,
+                os=OS.WINDOWS,
+                computer_name="cray",
+                local_username="username",
+            ),
         )
     )
 
@@ -49,4 +71,12 @@ def test_map_to_dict(object_mapper):
         "startedAt": started_at.isoformat(),
         "branchName": "default",
         "previousRunId": None,
+        "runInformation": {
+            "id": 0,
+            "runId": 0,
+            "os": "WINDOWS",
+            "computerName": "cray",
+            "localUsername": "username",
+            "runInformationType": "LOCAL_COMPUTER",
+        },
     }

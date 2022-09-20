@@ -5,7 +5,7 @@ from freezegun import freeze_time
 
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.run import Run
+from cato_common.domain.run import Run, LocalComputerRunInformation, OS
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.dtos.create_full_run_dto import (
     TestSuiteForRunCreation,
@@ -66,6 +66,13 @@ def test_should_create_without_branch_name_and_no_previous_run(
         started_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=None,
+        run_information=LocalComputerRunInformation(
+            id=1,
+            run_id=1,
+            os=OS.WINDOWS,
+            computer_name="unknown",
+            local_username="unknown-user",
+        ),
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -110,6 +117,13 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
         started_at=STARTED_AT,
         branch_name=BranchName("main"),
         previous_run_id=None,
+        run_information=LocalComputerRunInformation(
+            id=1,
+            run_id=1,
+            os=OS.WINDOWS,
+            computer_name="unknown",
+            local_username="unknown-user",
+        ),
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -154,6 +168,13 @@ def test_should_create_with_previous_run(
         started_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=previous_run.id,
+        run_information=LocalComputerRunInformation(
+            id=2,
+            run_id=2,
+            os=OS.WINDOWS,
+            computer_name="unknown",
+            local_username="unknown-user",
+        ),
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None

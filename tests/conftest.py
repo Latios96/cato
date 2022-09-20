@@ -37,7 +37,13 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
 from cato_common.domain.result_status import ResultStatus
-from cato_common.domain.run import Run
+from cato_common.domain.run import (
+    Run,
+    LocalComputerRunInformation,
+    OS,
+    GithubActionsRunInformation,
+    BasicRunInformation,
+)
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_edit import (
@@ -245,12 +251,13 @@ def project(saving_project_factory):
 
 
 @pytest.fixture
-def run_factory(saving_run_batch_factory):
+def run_factory(saving_run_batch_factory, local_computer_run_information):
     def func(
         project_id=None,
         run_batch_id=None,
         started_at=None,
         branch_name: BranchName = None,
+        run_information: BasicRunInformation = None,
     ):
         return Run(
             id=0,
@@ -261,6 +268,7 @@ def run_factory(saving_run_batch_factory):
             started_at=or_default(started_at, aware_now_in_utc()),
             branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
+            run_information=or_default(run_information, local_computer_run_information),
         )
 
     return func
@@ -286,7 +294,6 @@ def run_batch_factory(project, run_batch_identifier_factory):
         project_id: Optional[int] = None,
         runs: Optional[List[Run]] = None,
     ):
-
         return RunBatch(
             id=0,
             run_batch_identifier=or_default(
@@ -649,6 +656,31 @@ def submission_info(
         executable="executable",
     )
     return sqlalchemy_submission_info_repository.save(sub_info)
+
+
+@pytest.fixture
+def local_computer_run_information():
+    return LocalComputerRunInformation(
+        id=0, run_id=0, os=OS.WINDOWS, computer_name="cray", local_username="username"
+    )
+
+
+@pytest.fixture
+def github_actions_run_information():
+    return GithubActionsRunInformation(
+        id=0,
+        run_id=0,
+        os=OS.LINUX,
+        computer_name="cray",
+        github_run_id=3052454707,
+        job_id=4921861789,
+        job_name="build_ubuntu",
+        actor="Latios96",
+        attempt=1,
+        run_number=2,
+        github_url="https://github.com",
+        github_api_url="https://api.github.com",
+    )
 
 
 @pytest.fixture
