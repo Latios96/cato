@@ -1,7 +1,7 @@
 from typing import List, Optional, cast
 
 from sqlalchemy import Column, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, with_polymorphic, joinedload
 
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import (
@@ -138,6 +138,22 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
 
     def mapping_cls(self):
         return _RunMapping
+
+    def default_query_options(self):
+        return [
+            joinedload(
+                _RunMapping.run_information.of_type(
+                    with_polymorphic(
+                        _BasicRunInformationMapping,
+                        [
+                            _LocalComputerRunInformationMapping,
+                            _GithubActionsRunInformationMapping,
+                        ],
+                        flat=True,
+                    )
+                )
+            )
+        ]
 
     def find_by_project_id(self, id: int) -> List[Run]:
         with self._session_maker() as session:

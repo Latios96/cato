@@ -18,6 +18,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     _LocalComputerRunInformationMapping,
 )
 from cato_common.utils.datetime_utils import aware_now_in_utc
+from tests.unittests.cato_server.storage.conftest import sqltap_asserter
 
 
 def test_to_entity(sqlalchemy_run_repository, local_computer_run_information):
@@ -197,8 +198,11 @@ def test_find_by_id_should_find(
     )
     run = sqlalchemy_run_repository.save(run)
 
-    assert sqlalchemy_run_repository.find_by_id(run.id).project_id == project.id
-    assert sqlalchemy_run_repository.find_by_id(run.id).started_at == start_time
+    with sqltap_asserter(1):
+        run = sqlalchemy_run_repository.find_by_id(run.id)
+
+    assert run.project_id == project.id
+    assert run.started_at == start_time
 
 
 def test_find_by_id_should_not_find(sqlalchemy_run_repository):
