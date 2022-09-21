@@ -4,11 +4,18 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.run import Run
-from cato_common.domain.run_information import OS, LocalComputerRunInformation
+from cato_common.domain.run_information import (
+    LocalComputerRunInformation,
+    GithubActionsRunInformation,
+)
 from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
-from cato_common.dtos.create_full_run_dto import CreateFullRunDto
+from cato_common.dtos.create_full_run_dto import (
+    CreateFullRunDto,
+    LocalComputerRunInformationForRunCreation,
+    GithubActionsRunInformationForRunCreation,
+)
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.utils.datetime_utils import aware_now_in_utc
 from cato_server.domain.run_batch import RunBatch
@@ -124,10 +131,30 @@ class CreateRunUsecase:
         )
 
     def _get_local_computer_run_information(self, create_run_dto):
-        return LocalComputerRunInformation(
-            id=0,
-            run_id=0,
-            os=OS.WINDOWS,
-            computer_name="unknown",
-            local_username="unknown-user",
-        )
+        if isinstance(
+            create_run_dto.run_information, LocalComputerRunInformationForRunCreation
+        ):
+            return LocalComputerRunInformation(
+                id=0,
+                run_id=0,
+                os=create_run_dto.run_information.os,
+                computer_name=create_run_dto.run_information.computer_name,
+                local_username=create_run_dto.run_information.local_username,
+            )
+        elif isinstance(
+            create_run_dto.run_information, GithubActionsRunInformationForRunCreation
+        ):
+            return GithubActionsRunInformation(
+                id=0,
+                run_id=0,
+                os=create_run_dto.run_information.os,
+                computer_name=create_run_dto.run_information.computer_name,
+                github_run_id=create_run_dto.run_information.github_run_id,
+                job_id=create_run_dto.run_information.job_id,
+                job_name=create_run_dto.run_information.job_name,
+                actor=create_run_dto.run_information.actor,
+                attempt=create_run_dto.run_information.attempt,
+                run_number=create_run_dto.run_information.run_number,
+                github_url=create_run_dto.run_information.github_url,
+                github_api_url=create_run_dto.run_information.github_api_url,
+            )
