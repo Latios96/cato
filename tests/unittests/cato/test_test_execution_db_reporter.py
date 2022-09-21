@@ -9,6 +9,7 @@ from cato_common.domain.config import RunConfig
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_information import OS
 from cato_common.domain.run_name import RunName
 from cato_common.domain.test import Test
 from cato_common.domain.test_execution_result import TestExecutionResult
@@ -33,6 +34,7 @@ from cato_common.dtos.create_full_run_dto import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
+    LocalComputerRunInformationForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.utils.datetime_utils import aware_now_in_utc
@@ -158,6 +160,9 @@ class TestTestExecutionDbReporter:
                         suite_variables={},
                     )
                 ],
+                run_information=LocalComputerRunInformationForRunCreation(
+                    os=OS.WINDOWS, computer_name="cray", local_username="username"
+                ),
                 branch_name=BranchName("my_branch"),
             )
         )

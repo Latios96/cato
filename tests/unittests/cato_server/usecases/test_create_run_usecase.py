@@ -12,6 +12,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestSuiteForRunCreation,
     TestForRunCreation,
     CreateFullRunDto,
+    LocalComputerRunInformationForRunCreation,
 )
 from cato_server.usecases.create_run import CreateRunUsecase
 
@@ -56,6 +57,9 @@ def test_should_create_without_branch_name_and_no_previous_run(
         CreateFullRunDto(
             project_id=project.id,
             run_batch_identifier=run_batch_identifier,
+            run_information=LocalComputerRunInformationForRunCreation(
+                os=OS.WINDOWS, computer_name="cray", local_username="username"
+            ),
             test_suites=TEST_SUITES,
         )
     )
@@ -107,6 +111,9 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
             project_id=project.id,
             run_batch_identifier=run_batch_identifier,
             test_suites=TEST_SUITES,
+            run_information=LocalComputerRunInformationForRunCreation(
+                os=OS.WINDOWS, computer_name="cray", local_username="username"
+            ),
             branch_name=BranchName("main"),
         )
     )
@@ -159,6 +166,9 @@ def test_should_create_with_previous_run(
             project_id=project.id,
             run_batch_identifier=run_batch_identifier,
             test_suites=TEST_SUITES,
+            run_information=LocalComputerRunInformationForRunCreation(
+                os=OS.WINDOWS, computer_name="cray", local_username="username"
+            ),
         )
     )
 

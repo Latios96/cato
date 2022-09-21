@@ -14,6 +14,7 @@ from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
 from cato_common.domain.result_status import ResultStatus
+from cato_common.domain.run_information import OS
 from cato_common.domain.submission_info import SubmissionInfo
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
@@ -23,6 +24,7 @@ from cato_common.dtos.create_full_run_dto import (
     CreateFullRunDto,
     TestSuiteForRunCreation,
     TestForRunCreation,
+    LocalComputerRunInformationForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 from cato_common.utils.datetime_utils import aware_now_in_utc
@@ -170,6 +172,9 @@ def test_create_run_success(cato_api_client, project, run_batch_identifier):
                 ],
             )
         ],
+        run_information=LocalComputerRunInformationForRunCreation(
+            os=OS.WINDOWS, computer_name="cray", local_username="username"
+        ),
         branch_name=BranchName("default"),
     )
     run = cato_api_client.create_run(dto)
@@ -195,6 +200,9 @@ def test_create_run_failure(cato_api_client, run_batch_identifier):
                 ],
             )
         ],
+        run_information=LocalComputerRunInformationForRunCreation(
+            os=OS.WINDOWS, computer_name="cray", local_username="username"
+        ),
         branch_name=BranchName("default"),
     )
     with pytest.raises(ValueError):

@@ -1,3 +1,5 @@
+import pytest
+
 from cato_server.api.validators.run_validators import (
     CreateFullRunValidator,
 )
@@ -6,7 +8,31 @@ from tests.utils import mock_safe
 
 
 class TestCreateFullRunValidator:
-    def test_success(self):
+    @pytest.mark.parametrize(
+        "run_information",
+        [
+            {
+                "os": "WINDOWS",
+                "computerName": "cray",
+                "localUsername": "username",
+                "runInformationType": "LOCAL_COMPUTER",
+            },
+            {
+                "os": "LINUX",
+                "computerName": "cray",
+                "githubRunId": 3052454707,
+                "jobId": 4921861789,
+                "jobName": "buildUbuntu",
+                "actor": "Latios96",
+                "attempt": 1,
+                "runNumber": 2,
+                "githubUrl": "https://github.com",
+                "githubApiUrl": "https://api.github.com",
+                "runInformationType": "GITHUB_ACTIONS",
+            },
+        ],
+    )
+    def test_success(self, run_information):
         project_repository = mock_safe(ProjectRepository)
         validator = CreateFullRunValidator(project_repository)
 
@@ -41,6 +67,7 @@ class TestCreateFullRunValidator:
                         ],
                     }
                 ],
+                "runInformation": run_information,
             }
         )
 
@@ -82,6 +109,12 @@ class TestCreateFullRunValidator:
                         ],
                     }
                 ],
+                "runInformation": {
+                    "os": "WINDOWS",
+                    "computerName": "cray",
+                    "localUsername": "username",
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
             }
         )
 
@@ -117,6 +150,12 @@ class TestCreateFullRunValidator:
                         ],
                     }
                 ],
+                "runInformation": {
+                    "os": "WINDOWS",
+                    "computerName": "cray",
+                    "localUsername": "username",
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
             }
         )
 
@@ -186,6 +225,12 @@ class TestCreateFullRunValidator:
                         ],
                     },
                 ],
+                "runInformation": {
+                    "os": "WINDOWS",
+                    "computerName": "cray",
+                    "localUsername": "username",
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
             }
         )
 
@@ -241,6 +286,12 @@ class TestCreateFullRunValidator:
                         ],
                     },
                 ],
+                "runInformation": {
+                    "os": "WINDOWS",
+                    "computerName": "cray",
+                    "localUsername": "username",
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
             }
         )
 
@@ -282,7 +333,124 @@ class TestCreateFullRunValidator:
                     }
                 ],
                 "branchName": "",
+                "runInformation": {
+                    "os": "WINDOWS",
+                    "computerName": "cray",
+                    "localUsername": "username",
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
             }
         )
 
         assert errors == {"branchName": ["Shorter than minimum length 1."]}
+
+    def test_invalid_local_run_information(self):
+        project_repository = mock_safe(ProjectRepository)
+        validator = CreateFullRunValidator(project_repository)
+
+        errors = validator.validate(
+            {
+                "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
+                "testSuites": [
+                    {
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
+                        "tests": [
+                            {
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                                "comparisonSettings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
+                            }
+                        ],
+                    }
+                ],
+                "runInformation": {
+                    "os": "unknown",
+                    "computerName": None,
+                    "localUsername": None,
+                    "runInformationType": "LOCAL_COMPUTER",
+                },
+            }
+        )
+
+        assert errors == {
+            "runInformation": {
+                "computerName": ["Field may not be null."],
+                "localUsername": ["Field may not be null."],
+                "os": ["Invalid enum member unknown"],
+            }
+        }
+
+    def test_invalid_github_actions_run_information(self):
+        project_repository = mock_safe(ProjectRepository)
+        validator = CreateFullRunValidator(project_repository)
+
+        errors = validator.validate(
+            {
+                "projectId": 1,
+                "runBatchIdentifier": {
+                    "provider": "LOCAL_COMPUTER",
+                    "runName": "mac-os",
+                    "runIdentifier": "3046812908-1",
+                },
+                "testSuites": [
+                    {
+                        "suiteName": "my_suite",
+                        "suiteVariables": {},
+                        "tests": [
+                            {
+                                "testName": "test_name",
+                                "testIdentifier": "test/identifier",
+                                "testCommand": "cmd",
+                                "testVariables": {},
+                                "machineInfo": {
+                                    "cpuName": "test",
+                                    "cores": 8,
+                                    "memory": 8,
+                                },
+                                "comparisonSettings": {
+                                    "method": "SSIM",
+                                    "threshold": 1,
+                                },
+                            }
+                        ],
+                    }
+                ],
+                "runInformation": {
+                    "os": "LINUX",
+                    "computerName": "",
+                    "githubRunId": -3052454707,
+                    "jobId": 4921861789,
+                    "jobName": "buildUbuntu",
+                    "actor": "",
+                    "attempt": 1,
+                    "runNumber": 2,
+                    "githubUrl": "https://github.com",
+                    "githubApiUrl": "test",
+                    "runInformationType": "GITHUB_ACTIONS",
+                },
+            },
+        )
+
+        assert errors == {
+            "runInformation": {
+                "actor": ["Shorter than minimum length 1."],
+                "computerName": ["Shorter than minimum length 1."],
+                "githubApiUrl": ["Not a valid URL."],
+            }
+        }

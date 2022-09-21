@@ -12,6 +12,7 @@ from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.config import RunConfig
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.run_information import OS
 from cato_common.domain.test import Test
 from cato_common.domain.test_execution_result import TestExecutionResult
 from cato_common.domain.test_identifier import TestIdentifier
@@ -20,6 +21,7 @@ from cato_common.dtos.create_full_run_dto import (
     TestForRunCreation,
     TestSuiteForRunCreation,
     CreateFullRunDto,
+    LocalComputerRunInformationForRunCreation,
 )
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
 
@@ -91,6 +93,9 @@ class TestExecutionDbReporter(TestExecutionReporter):
             project_id=project.id,
             run_batch_identifier=run_batch_identifier,
             test_suites=suites,
+            run_information=LocalComputerRunInformationForRunCreation(
+                os=OS.WINDOWS, computer_name="cray", local_username="username"
+            ),
             branch_name=branch_name,
         )
         suite_count = len(suites)
