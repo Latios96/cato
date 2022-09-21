@@ -1,3 +1,4 @@
+import sys
 from dataclasses import dataclass
 from enum import Enum
 
@@ -8,6 +9,15 @@ class OS(Enum):
     WINDOWS = "WINDOWS"
     LINUX = "LINUX"
     MAC_OS = "MAC_OS"
+
+    @staticmethod
+    def get_current_os():
+        # type: ()-> OS
+        return {
+            "win32": OS.WINDOWS,
+            "linux": OS.LINUX,
+            "darwin": OS.MAC_OS,
+        }[sys.platform]
 
 
 @dataclass

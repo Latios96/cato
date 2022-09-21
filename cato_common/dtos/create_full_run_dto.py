@@ -40,6 +40,15 @@ class LocalComputerRunInformationForRunCreation(BasicRunInformationForRunCreatio
     local_username: str
     run_information_type = RunBatchProvider.LOCAL_COMPUTER
 
+    @staticmethod
+    def from_basic_run(basic_run, local_username):
+        # type: (BasicRunInformationForRunCreation,str)->LocalComputerRunInformationForRunCreation
+        return LocalComputerRunInformationForRunCreation(
+            os=basic_run.os,
+            computer_name=basic_run.computer_name,
+            local_username=local_username,
+        )
+
     def __post_init__(self):
         self.run_information_type = RunBatchProvider.LOCAL_COMPUTER
 
@@ -55,6 +64,32 @@ class GithubActionsRunInformationForRunCreation(BasicRunInformationForRunCreatio
     github_url: str
     github_api_url: str
     run_information_type = RunBatchProvider.GITHUB_ACTIONS
+
+    @staticmethod
+    def from_basic_run(
+        basic_run,
+        github_run_id,
+        job_id,
+        job_name,
+        actor,
+        attempt,
+        run_number,
+        github_url,
+        github_api_url,
+    ):
+        # type: (BasicRunInformationForRunCreation,int,int,str,str,int,int,str,str)->GithubActionsRunInformationForRunCreation
+        return GithubActionsRunInformationForRunCreation(
+            os=basic_run.os,
+            computer_name=basic_run.computer_name,
+            github_run_id=github_run_id,
+            job_id=job_id,
+            job_name=job_name,
+            actor=actor,
+            attempt=attempt,
+            run_number=run_number,
+            github_url=github_url,
+            github_api_url=github_api_url,
+        )
 
     def __post_init__(self):
         self.run_information_type = RunBatchProvider.GITHUB_ACTIONS
