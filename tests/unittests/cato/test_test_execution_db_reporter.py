@@ -1,19 +1,7 @@
 import uuid
-from unittest import mock
 
 import pytest
 
-from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
-from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_common.domain.config import RunConfig
-from cato_common.domain.run_batch_identifier import RunBatchIdentifier
-from cato_common.domain.run_batch_provider import RunBatchProvider
-from cato_common.domain.run_identifier import RunIdentifier
-from cato_common.domain.run_information import OS
-from cato_common.domain.run_name import RunName
-from cato_common.domain.test import Test
-from cato_common.domain.test_execution_result import TestExecutionResult
-from cato_common.domain.test_suite import TestSuite
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,
@@ -21,14 +9,28 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
+from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
+from cato.utils.run_information_detectors.run_information_detector import (
+    RunInformationDetector,
+)
 from cato_api_client.cato_api_client import CatoApiClient
 from cato_common.domain.branch_name import BranchName
+from cato_common.domain.comparison_settings import ComparisonSettings
+from cato_common.domain.config import RunConfig
 from cato_common.domain.image import Image
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.project import Project
-from cato_common.domain.run import Run
-from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.result_status import ResultStatus
+from cato_common.domain.run import Run
+from cato_common.domain.run_batch_identifier import RunBatchIdentifier
+from cato_common.domain.run_batch_provider import RunBatchProvider
+from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_information import OS
+from cato_common.domain.run_name import RunName
+from cato_common.domain.test import Test
+from cato_common.domain.test_execution_result import TestExecutionResult
+from cato_common.domain.test_identifier import TestIdentifier
+from cato_common.domain.test_suite import TestSuite
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.dtos.create_full_run_dto import (
     CreateFullRunDto,
@@ -73,11 +75,13 @@ def test_context():
             self.mock_run_batch_identifier_detector = mock_safe(
                 RunBatchIdentifierDetector
             )
+            self.mock_run_information_detector = mock_safe(RunInformationDetector)
             self.test_execution_db_reporter = TestExecutionDbReporter(
                 self.mock_machine_info_collector,
                 self.mock_cato_api_client,
                 self.mock_branch_detector,
                 self.mock_run_batch_identifier_detector,
+                self.mock_run_information_detector,
             )
 
     return TestContext()
@@ -104,6 +108,11 @@ class TestTestExecutionDbReporter:
     def test_start_execution_should_create_run_with_branch_name(
         self, test_context, local_computer_run_information
     ):
+        local_computer_run_information_for_run_creation = (
+            LocalComputerRunInformationForRunCreation(
+                os=OS.WINDOWS, computer_name="cray", local_username="username"
+            )
+        )
         run_identifier = RunIdentifier(str(uuid.uuid4()))
         run_batch_identifier = RunBatchIdentifier(
             provider=RunBatchProvider.LOCAL_COMPUTER,
@@ -127,6 +136,9 @@ class TestTestExecutionDbReporter:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+        )
+        test_context.mock_run_information_detector.detect.return_value = (
+            local_computer_run_information_for_run_creation
         )
 
         test_context.test_execution_db_reporter.start_execution(
@@ -160,13 +172,12 @@ class TestTestExecutionDbReporter:
                         suite_variables={},
                     )
                 ],
-                run_information=LocalComputerRunInformationForRunCreation(
-                    os=OS.WINDOWS, computer_name="cray", local_username="username"
-                ),
+                run_information=local_computer_run_information_for_run_creation,
                 branch_name=BranchName("my_branch"),
             )
         )
         assert test_context.test_execution_db_reporter._run_id == 5
+        test_context.mock_run_information_detector.detect.assert_called_once()
 
     def test_start_execution_should_not_pass_branch_name_if_there_is_no_branch(
         self, test_context, local_computer_run_information
