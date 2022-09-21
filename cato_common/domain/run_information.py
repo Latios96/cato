@@ -9,6 +9,7 @@ class OS(Enum):
     WINDOWS = "WINDOWS"
     LINUX = "LINUX"
     MAC_OS = "MAC_OS"
+    UNKNOWN = "UNKNOWN"
 
     @staticmethod
     def get_current_os():

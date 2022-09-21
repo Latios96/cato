@@ -17,7 +17,7 @@ depends_on = None
 
 
 def _insert_basic_information(connection, is_sqlite, run_id):
-    insert_statement = f"INSERT INTO basic_run_information_entity (run_entity_id, run_information_type, os, computer_name) VALUES ({run_id}, 'LOCAL_COMPUTER', 'unknown', 'unknown')"
+    insert_statement = f"INSERT INTO basic_run_information_entity (run_entity_id, run_information_type, os, computer_name) VALUES ({run_id}, 'LOCAL_COMPUTER', 'UNKNOWN', 'unknown')"
     if is_sqlite:
         return connection.execute(insert_statement).lastrowid
     return connection.execute(f"{insert_statement} RETURNING id").first()[0]
