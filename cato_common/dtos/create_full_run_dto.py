@@ -56,7 +56,7 @@ class LocalComputerRunInformationForRunCreation(BasicRunInformationForRunCreatio
 @dataclass
 class GithubActionsRunInformationForRunCreation(BasicRunInformationForRunCreation):
     github_run_id: int
-    job_id: int
+    html_url: str
     job_name: str
     actor: str
     attempt: int
@@ -69,7 +69,7 @@ class GithubActionsRunInformationForRunCreation(BasicRunInformationForRunCreatio
     def from_basic_run(
         basic_run,
         github_run_id,
-        job_id,
+        html_url,
         job_name,
         actor,
         attempt,
@@ -77,12 +77,12 @@ class GithubActionsRunInformationForRunCreation(BasicRunInformationForRunCreatio
         github_url,
         github_api_url,
     ):
-        # type: (BasicRunInformationForRunCreation,int,int,str,str,int,int,str,str)->GithubActionsRunInformationForRunCreation
+        # type: (BasicRunInformationForRunCreation,int,str,str,str,int,int,str,str)->GithubActionsRunInformationForRunCreation
         return GithubActionsRunInformationForRunCreation(
             os=basic_run.os,
             computer_name=basic_run.computer_name,
             github_run_id=github_run_id,
-            job_id=job_id,
+            html_url=html_url,
             job_name=job_name,
             actor=actor,
             attempt=attempt,

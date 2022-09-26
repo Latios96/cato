@@ -150,7 +150,7 @@ class CreateRunUsecase:
                 os=create_run_dto.run_information.os,
                 computer_name=create_run_dto.run_information.computer_name,
                 github_run_id=create_run_dto.run_information.github_run_id,
-                job_id=create_run_dto.run_information.job_id,
+                html_url=create_run_dto.run_information.html_url,
                 job_name=create_run_dto.run_information.job_name,
                 actor=create_run_dto.run_information.actor,
                 attempt=create_run_dto.run_information.attempt,

@@ -45,7 +45,7 @@ class LocalComputerRunInformation(BasicRunInformation):
 @dataclass
 class GithubActionsRunInformation(BasicRunInformation):
     github_run_id: int
-    job_id: int
+    html_url: str
     job_name: str
     actor: str
     attempt: int

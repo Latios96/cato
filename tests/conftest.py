@@ -675,7 +675,7 @@ def github_actions_run_information():
         os=OS.LINUX,
         computer_name="cray",
         github_run_id=3052454707,
-        job_id=4921861789,
+        html_url="https://github.com/owner/repo-name/actions/runs/3052454707/jobs/4921861789",
         job_name="build_ubuntu",
         actor="Latios96",
         attempt=1,

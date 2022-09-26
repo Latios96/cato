@@ -59,7 +59,7 @@ class _GithubActionsRunInformationMapping(_BasicRunInformationMapping):
         Integer, ForeignKey("basic_run_information_entity.id"), primary_key=True
     )
     github_run_id = Column(BigInteger, nullable=False)
-    job_id = Column(BigInteger, nullable=False)
+    html_url = Column(String, nullable=False)
     job_name = Column(String, nullable=False)
     actor = Column(String, nullable=False)
     attempt = Column(Integer, nullable=False)
@@ -249,7 +249,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
                 os=run_information.os.name,
                 computer_name=run_information.computer_name,
                 github_run_id=run_information.github_run_id,
-                job_id=run_information.job_id,
+                html_url=run_information.html_url,
                 job_name=run_information.job_name,
                 actor=run_information.actor,
                 attempt=run_information.attempt,
@@ -280,7 +280,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
                 os=OS(entity.os),
                 computer_name=entity.computer_name,
                 github_run_id=entity.github_run_id,
-                job_id=entity.job_id,
+                html_url=entity.html_url,
                 job_name=entity.job_name,
                 actor=entity.actor,
                 attempt=entity.attempt,
