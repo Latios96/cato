@@ -168,3 +168,72 @@ def test_get_branch_list_with_default_branch(client_with_session, project, run):
 
     assert rv.status_code == 200
     assert rv.json() == ["default"]
+
+
+CREATE_RUN_PAYLOAD_TEMPLATE = {
+    "projectId": 1,
+    "runBatchIdentifier": {
+        "provider": "LOCAL_COMPUTER",
+        "runName": "mac-os",
+        "runIdentifier": "3046812908-1",
+    },
+    "testSuites": [
+        {
+            "suiteName": "my_suite",
+            "suiteVariables": {},
+            "tests": [
+                {
+                    "testName": "test_name",
+                    "testIdentifier": "test/identifier",
+                    "testCommand": "cmd",
+                    "testVariables": {},
+                    "machineInfo": {
+                        "cpuName": "test",
+                        "cores": 8,
+                        "memory": 8,
+                    },
+                    "comparisonSettings": {
+                        "method": "SSIM",
+                        "threshold": 1,
+                    },
+                }
+            ],
+        }
+    ],
+}
+
+
+def test_create_run_with_local_computer_run_information(
+    client_with_session,
+    project,
+    run_batch_identifier,
+    local_computer_run_information,
+    object_mapper,
+):
+    payload = CREATE_RUN_PAYLOAD_TEMPLATE.copy()
+    payload["runInformation"] = object_mapper.to_dict(local_computer_run_information)
+
+    rv = client_with_session.post("/api/v1/runs/full", json=payload)
+
+    assert rv.status_code == 201
+    response_json = rv.json()
+    assert response_json["runInformation"]["runInformationType"] == "LOCAL_COMPUTER"
+    assert response_json["runInformation"]["runId"] == response_json["id"]
+
+
+def test_create_run_with_github_actions_run_information(
+    client_with_session,
+    project,
+    run_batch_identifier,
+    github_actions_run_information,
+    object_mapper,
+):
+    payload = CREATE_RUN_PAYLOAD_TEMPLATE.copy()
+    payload["runInformation"] = object_mapper.to_dict(github_actions_run_information)
+
+    rv = client_with_session.post("/api/v1/runs/full", json=payload)
+
+    assert rv.status_code == 201
+    response_json = rv.json()
+    assert response_json["runInformation"]["runInformationType"] == "GITHUB_ACTIONS"
+    assert response_json["runInformation"]["runId"] == response_json["id"]

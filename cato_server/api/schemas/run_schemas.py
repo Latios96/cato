@@ -74,7 +74,7 @@ class LocalRunInformationSchema(BasicRunInformationSchema):
 
 class GithubActionsRunInformationSchema(BasicRunInformationSchema):
     githubRunId = fields.Integer(min=1, required=True, allow_none=False)
-    jobId = fields.Integer(min=1, required=True, allow_none=False)
+    htmlUrl = fields.Url(required=True, allow_none=False)
     jobName = fields.String(validate=[Length(min=1)], required=True, allow_none=False)
     actor = fields.String(validate=[Length(min=1)], required=True, allow_none=False)
     attempt = fields.Integer(min=1, required=True, allow_none=False)
