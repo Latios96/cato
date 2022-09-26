@@ -6,6 +6,8 @@ from dataclasses import dataclass
 from difflib import SequenceMatcher
 from typing import List, Optional
 
+from tests.integrationtests.utils import _strip_github_actions_from_env
+
 
 @dataclass
 class CommandResult:
@@ -42,10 +44,7 @@ def run_command(cmd: List[str], env=None) -> CommandResult:
     if sys.platform == "linux":
         cmd = " ".join(cmd)
     output_lines = []
-    if not env:
-        env = os.environ.copy()
-    if "GITHUB_ACTIONS" in env.keys():
-        env.pop("GITHUB_ACTIONS")
+    env = _strip_github_actions_from_env(env)
     popen = subprocess.Popen(
         cmd,
         stdout=subprocess.PIPE,
