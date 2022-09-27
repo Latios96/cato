@@ -1,3 +1,4 @@
+import datetime
 from dataclasses import dataclass, field
 from typing import List
 
@@ -10,4 +11,5 @@ class RunBatch:
     id: int
     run_batch_identifier: RunBatchIdentifier
     project_id: int
+    created_at: datetime.datetime
     runs: List[Run] = field(default_factory=list)

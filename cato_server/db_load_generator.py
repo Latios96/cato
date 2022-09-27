@@ -124,6 +124,7 @@ class DbLoadGenerator:
                 RunBatch(
                     id=0,
                     project_id=project.id,
+                    created_at=aware_now_in_utc(),
                     run_batch_identifier=RunBatchIdentifier(
                         provider=RunBatchProvider.LOCAL_COMPUTER,
                         run_name=RunName("windows"),

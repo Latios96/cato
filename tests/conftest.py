@@ -294,6 +294,7 @@ def run_batch_factory(project, run_batch_identifier_factory):
     def func(
         run_batch_identifier: Optional[RunBatchIdentifier] = None,
         project_id: Optional[int] = None,
+        created_at: Optional[datetime.datetime] = None,
         runs: Optional[List[Run]] = None,
     ):
         return RunBatch(
@@ -302,6 +303,7 @@ def run_batch_factory(project, run_batch_identifier_factory):
                 run_batch_identifier, run_batch_identifier_factory()
             ),
             project_id=or_default(project_id, project.id),
+            created_at=or_default(created_at, aware_now_in_utc()),
             runs=or_default(runs, []),
         )
 
@@ -313,10 +315,11 @@ def saving_run_batch_factory(sqlalchemy_run_batch_repository, run_batch_factory)
     def func(
         run_batch_identifier: Optional[RunBatchIdentifier] = None,
         project_id: Optional[int] = None,
+        created_at: Optional[datetime.datetime] = None,
         runs: Optional[List[Run]] = None,
     ):
         return sqlalchemy_run_batch_repository.save(
-            run_batch_factory(run_batch_identifier, project_id, runs)
+            run_batch_factory(run_batch_identifier, project_id, created_at, runs)
         )
 
     return func

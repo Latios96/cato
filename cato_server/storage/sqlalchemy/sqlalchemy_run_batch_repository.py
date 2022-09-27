@@ -18,6 +18,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     _RunMapping,
     SqlAlchemyRunRepository,
 )
+from cato_server.storage.sqlalchemy.type_decorators.utc_date_time import UtcDateTime
 
 
 @dataclass
@@ -53,6 +54,7 @@ class _RunBatchMapping(Base):
     run_name = Column(String, nullable=False)
     run_identifier = Column(String, nullable=False)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"), nullable=False)
+    created_at = Column(UtcDateTime, nullable=False)
 
     run_batch_identifier = composite(
         _RunBatchIdentifierMapping, provider, run_name, run_identifier
@@ -121,6 +123,7 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
                 domain_object.run_batch_identifier
             ),
             project_entity_id=domain_object.project_id,
+            created_at=domain_object.created_at,
             runs=runs,
         )
 
@@ -134,6 +137,7 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
             id=entity.id,
             run_batch_identifier=entity.run_batch_identifier.to_identifier(),
             project_id=entity.project_entity_id,
+            created_at=entity.created_at,
             runs=runs,
         )
 

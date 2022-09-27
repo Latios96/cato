@@ -126,6 +126,7 @@ class CreateRunUsecase:
                 id=0,
                 run_batch_identifier=create_run_dto.run_batch_identifier,
                 project_id=create_run_dto.project_id,
+                created_at=aware_now_in_utc(),
                 runs=[],
             ),
         )
