@@ -10,62 +10,61 @@ from cato_common.domain.run_name import RunName
 from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
-def test_should_save_to_database(sqlalchemy_run_batch_repository, run_batch_factory):
-    run_batch = run_batch_factory()
+class TestSave:
+    def test_should_save_to_database(
+        self, sqlalchemy_run_batch_repository, run_batch_factory
+    ):
+        run_batch = run_batch_factory()
 
-    saved_run_batch = sqlalchemy_run_batch_repository.save(run_batch)
+        saved_run_batch = sqlalchemy_run_batch_repository.save(run_batch)
 
-    run_batch.id = 1
-    assert saved_run_batch == run_batch
+        run_batch.id = 1
+        assert saved_run_batch == run_batch
 
+    def test_should_also_save_runs_to_database(
+        self, sqlalchemy_run_batch_repository, run_batch_factory, run_factory
+    ):
+        run_batch = run_batch_factory(runs=[run_factory()])
 
-def test_should_also_save_runs_to_database(
-    sqlalchemy_run_batch_repository, run_batch_factory, run_factory
-):
-    run_batch = run_batch_factory(runs=[run_factory()])
+        saved_run_batch = sqlalchemy_run_batch_repository.save(run_batch)
 
-    saved_run_batch = sqlalchemy_run_batch_repository.save(run_batch)
+        run_batch.id = 1
+        assert saved_run_batch.runs[0].id == 1
 
-    run_batch.id = 1
-    assert saved_run_batch.runs[0].id == 1
+    def test_should_not_save_duplicated_run_batch_identifier(
+        self, sqlalchemy_run_batch_repository, run_batch_factory
+    ):
+        run_batch = run_batch_factory()
 
-
-def test_should_not_save_duplicated_run_batch_identifier(
-    sqlalchemy_run_batch_repository, run_batch_factory
-):
-    run_batch = run_batch_factory()
-
-    sqlalchemy_run_batch_repository.save(run_batch)
-    with pytest.raises(IntegrityError):
         sqlalchemy_run_batch_repository.save(run_batch)
+        with pytest.raises(IntegrityError):
+            sqlalchemy_run_batch_repository.save(run_batch)
 
-
-def test_should_not_save_multiple_runs_with_different_identifiers(
-    sqlalchemy_run_batch_repository, run_batch_factory
-):
-    run_batch_1 = run_batch_factory()
-    run_batch_2 = run_batch_factory(
-        RunBatchIdentifier(
-            provider=RunBatchProvider.LOCAL_COMPUTER,
-            run_name=RunName("mac-os"),
-            run_identifier=RunIdentifier("3046812908-2"),
+    def test_should_not_save_multiple_runs_with_different_identifiers(
+        self, sqlalchemy_run_batch_repository, run_batch_factory
+    ):
+        run_batch_1 = run_batch_factory()
+        run_batch_2 = run_batch_factory(
+            RunBatchIdentifier(
+                provider=RunBatchProvider.LOCAL_COMPUTER,
+                run_name=RunName("mac-os"),
+                run_identifier=RunIdentifier("3046812908-2"),
+            )
         )
-    )
 
-    sqlalchemy_run_batch_repository.save(run_batch_1)
-    sqlalchemy_run_batch_repository.save(run_batch_2)
+        sqlalchemy_run_batch_repository.save(run_batch_1)
+        sqlalchemy_run_batch_repository.save(run_batch_2)
 
+    def test_should_not_save_multiple_runs_with_different_project_ids(
+        self, sqlalchemy_run_batch_repository, run_batch_factory, saving_project_factory
+    ):
+        run_batch_1 = run_batch_factory()
+        run_batch_2 = run_batch_factory(
+            project_id=saving_project_factory(name="other_project").id
+        )
 
-def test_should_not_save_multiple_runs_with_different_project_ids(
-    sqlalchemy_run_batch_repository, run_batch_factory, saving_project_factory
-):
-    run_batch_1 = run_batch_factory()
-    run_batch_2 = run_batch_factory(
-        project_id=saving_project_factory(name="other_project").id
-    )
-
-    sqlalchemy_run_batch_repository.save(run_batch_1)
-    sqlalchemy_run_batch_repository.save(run_batch_2)
+        sqlalchemy_run_batch_repository.save(run_batch_1)
+        sqlalchemy_run_batch_repository.save(run_batch_2)
 
 
 def test_find_by_project_id_and_run_batch_identifier_should_find_correct_one(
