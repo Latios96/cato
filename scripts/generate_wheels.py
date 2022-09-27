@@ -229,6 +229,7 @@ if __name__ == "__main__":
             "pywavelets",
             "jsonschema",
             "jsonpath-ng",
+            "marshmallow-polyfield",
         ],
         include_files=[
             (
