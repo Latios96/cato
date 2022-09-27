@@ -95,16 +95,20 @@ class TestSave:
 
         run = sqlalchemy_run_repository.save(run)
 
-        assert run.id == 1
-        assert run.project_id == 1
-        assert run.run_batch_id == 1
-        assert run.started_at == start_time
-        assert run.run_information == LocalComputerRunInformation(
+        assert run == Run(
             id=1,
-            run_id=1,
-            os=OS.WINDOWS,
-            computer_name="cray",
-            local_username="username",
+            project_id=1,
+            run_batch_id=1,
+            started_at=start_time,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=LocalComputerRunInformation(
+                id=1,
+                run_id=1,
+                os=OS.WINDOWS,
+                computer_name="cray",
+                local_username="username",
+            ),
         )
 
     def test_save_github_actions_run_information(
@@ -127,23 +131,27 @@ class TestSave:
 
         run = sqlalchemy_run_repository.save(run)
 
-        assert run.id == 1
-        assert run.project_id == 1
-        assert run.run_batch_id == 1
-        assert run.started_at == start_time
-        assert run.run_information == GithubActionsRunInformation(
+        assert run == Run(
             id=1,
-            run_id=1,
-            os=OS.LINUX,
-            computer_name="cray",
-            github_run_id=3052454707,
-            html_url="https://github.com/owner/repo-name/actions/runs/3052454707/jobs/4921861789",
-            job_name="build_ubuntu",
-            actor="Latios96",
-            attempt=1,
-            run_number=2,
-            github_url="https://github.com",
-            github_api_url="https://api.github.com",
+            project_id=1,
+            run_batch_id=1,
+            started_at=start_time,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=GithubActionsRunInformation(
+                id=1,
+                run_id=1,
+                os=OS.LINUX,
+                computer_name="cray",
+                github_run_id=3052454707,
+                html_url="https://github.com/owner/repo-name/actions/runs/3052454707/jobs/4921861789",
+                job_name="build_ubuntu",
+                actor="Latios96",
+                attempt=1,
+                run_number=2,
+                github_url="https://github.com",
+                github_api_url="https://api.github.com",
+            ),
         )
 
     def test_save_no_project_id(
