@@ -282,23 +282,10 @@ class TestFindByProjectIdPaginate:
             page_request=page_request, total_entity_count=0, entities=[]
         )
 
-    def test_find_by_project_id_paginate_should_find_correct(
-        self,
-        sqlalchemy_run_repository,
-        project,
-        run_batch,
-        local_computer_run_information,
+    def test_find_by_project_id_paginate_should_find_correct_single_run(
+        self, sqlalchemy_run_repository, project, saving_run_factory
     ):
-        run = Run(
-            id=0,
-            project_id=project.id,
-            run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
-            branch_name=BranchName("default"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
-        )
-        run = sqlalchemy_run_repository.save(run)
+        run = saving_run_factory()
 
         page_request = PageRequest.first(10)
 
@@ -312,36 +299,9 @@ class TestFindByProjectIdPaginate:
         )
 
     def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
-        self,
-        sqlalchemy_run_repository,
-        project,
-        run_batch,
-        local_computer_run_information,
+        self, sqlalchemy_run_repository, project, run_factory
     ):
-        run = Run(
-            id=0,
-            project_id=project.id,
-            run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
-            branch_name=BranchName("default"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
-        )
-        sqlalchemy_run_repository.save(run)
-        runs = sqlalchemy_run_repository.insert_many(
-            [
-                Run(
-                    id=0,
-                    project_id=project.id,
-                    run_batch_id=run_batch.id,
-                    started_at=aware_now_in_utc(),
-                    branch_name=BranchName("default"),
-                    previous_run_id=None,
-                    run_information=local_computer_run_information,
-                )
-                for x in range(20)
-            ]
-        )
+        runs = sqlalchemy_run_repository.insert_many([run_factory() for x in range(21)])
 
         page_request = PageRequest.first(1)
         all = sqlalchemy_run_repository.find_all()
@@ -349,40 +309,13 @@ class TestFindByProjectIdPaginate:
             project.id, page_request
         )
         assert paging == Page.from_page_request(
-            page_request=page_request, total_entity_count=21, entities=[runs[19]]
+            page_request=page_request, total_entity_count=21, entities=[runs[20]]
         )
 
     def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
-        self,
-        sqlalchemy_run_repository,
-        project,
-        run_batch,
-        local_computer_run_information,
+        self, sqlalchemy_run_repository, project, run_factory
     ):
-        run = Run(
-            id=0,
-            project_id=project.id,
-            run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
-            branch_name=BranchName("default"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
-        )
-        run = sqlalchemy_run_repository.save(run)
-        runs = sqlalchemy_run_repository.insert_many(
-            [
-                Run(
-                    id=0,
-                    project_id=project.id,
-                    run_batch_id=run_batch.id,
-                    started_at=aware_now_in_utc(),
-                    branch_name=BranchName("default"),
-                    previous_run_id=None,
-                    run_information=local_computer_run_information,
-                )
-                for x in range(20)
-            ]
-        )
+        runs = sqlalchemy_run_repository.insert_many([run_factory() for x in range(21)])
 
         page_request = PageRequest(page_size=5, page_number=2)
 
@@ -391,7 +324,7 @@ class TestFindByProjectIdPaginate:
         ) == Page.from_page_request(
             page_request=page_request,
             total_entity_count=21,
-            entities=[runs[14], runs[13], runs[12], runs[11], runs[10]],
+            entities=[runs[15], runs[14], runs[13], runs[12], runs[11]],
         )
 
     def test_find_by_project_id_with_paging_should_filter_for_branches(
