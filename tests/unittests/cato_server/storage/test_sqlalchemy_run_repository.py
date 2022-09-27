@@ -21,55 +21,57 @@ from cato_common.utils.datetime_utils import aware_now_in_utc
 from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
-def test_to_entity(sqlalchemy_run_repository, local_computer_run_information):
-    now = aware_now_in_utc()
-    run = Run(
-        id=1,
-        project_id=2,
-        run_batch_id=3,
-        started_at=now,
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
+class TestConversionMethods:
+    def test_to_entity(self, sqlalchemy_run_repository, local_computer_run_information):
+        now = aware_now_in_utc()
+        run = Run(
+            id=1,
+            project_id=2,
+            run_batch_id=3,
+            started_at=now,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
 
-    entity = sqlalchemy_run_repository.to_entity(run)
+        entity = sqlalchemy_run_repository.to_entity(run)
 
-    assert entity.id == 1
-    assert entity.project_entity_id == 2
-    assert entity.run_batch_entity_id == 3
-    assert entity.started_at == now
+        assert entity.id == 1
+        assert entity.project_entity_id == 2
+        assert entity.run_batch_entity_id == 3
+        assert entity.started_at == now
 
+    def test_to_domain_object(
+        self, sqlalchemy_run_repository, local_computer_run_information
+    ):
+        now = aware_now_in_utc()
+        run_entity = _RunMapping(
+            id=1,
+            project_entity_id=2,
+            run_batch_entity_id=3,
+            started_at=now,
+            branch_name="default",
+            previous_run_id=None,
+            run_information=_LocalComputerRunInformationMapping(
+                id=0,
+                run_entity_id=0,
+                os="WINDOWS",
+                computer_name="cray",
+                local_username="username",
+            ),
+        )
 
-def test_to_domain_object(sqlalchemy_run_repository, local_computer_run_information):
-    now = aware_now_in_utc()
-    run_entity = _RunMapping(
-        id=1,
-        project_entity_id=2,
-        run_batch_entity_id=3,
-        started_at=now,
-        branch_name="default",
-        previous_run_id=None,
-        run_information=_LocalComputerRunInformationMapping(
-            id=0,
-            run_entity_id=0,
-            os="WINDOWS",
-            computer_name="cray",
-            local_username="username",
-        ),
-    )
+        run = sqlalchemy_run_repository.to_domain_object(run_entity)
 
-    run = sqlalchemy_run_repository.to_domain_object(run_entity)
-
-    assert run == Run(
-        id=1,
-        project_id=2,
-        run_batch_id=3,
-        started_at=now,
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
+        assert run == Run(
+            id=1,
+            project_id=2,
+            run_batch_id=3,
+            started_at=now,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
 
 
 def test_save_local_computer_run_information(
