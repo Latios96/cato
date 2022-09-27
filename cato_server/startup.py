@@ -29,6 +29,7 @@ from cato_server.api.middlewares.redirect_to_frontend_middleware import (
 )
 from cato_server.api.middlewares.timing_middleware import TimingMiddleware
 from cato_server.api.projects_blueprint import ProjectsBlueprint
+from cato_server.api.run_batch_blueprint import RunBatchBlueprint
 from cato_server.api.runs_blueprint import RunsBlueprint
 from cato_server.api.schedulers_blueprint import SchedulersBlueprint
 from cato_server.api.submission_infos_blueprint import SubmissionInfosBlueprint
@@ -112,6 +113,7 @@ def create_app(
     app.include_router(obj_graph.provide(AuthUserBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(ApiTokenBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(TaskResultBlueprint), prefix="/api/v1")
+    app.include_router(obj_graph.provide(RunBatchBlueprint), prefix="/api/v1")
     app.include_router(obj_graph.provide(AuthBlueprint))
 
     static_directory = os.path.join(os.path.dirname(__file__), "static")
