@@ -11,9 +11,11 @@ def page_request_from_request(
     page_number = request_args.get("pageNumber")
     page_size = request_args.get("pageSize")
 
-    if page_number is None and page_size is None:
+    if page_number is None or page_size is None:
         return None
-
-    page_number = max(1, int(page_number))
-    page_size = max(1, int(page_size))
-    return PageRequest(page_number=page_number, page_size=page_size)
+    try:
+        page_number = max(1, int(page_number))
+        page_size = max(1, int(page_size))
+        return PageRequest(page_number=page_number, page_size=page_size)
+    except ValueError:
+        return None

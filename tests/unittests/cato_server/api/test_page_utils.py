@@ -8,6 +8,9 @@ from cato_common.storage.page import PageRequest
     "data,page_request",
     [
         ({}, None),
+        ({"pageSize": 1}, None),
+        ({"pageNumber": 1}, None),
+        ({"pageSize": "t", "pageNumber": "a"}, None),
         ({"pageSize": 0, "pageNumber": 0}, PageRequest(1, 1)),
         ({"pageSize": -1, "pageNumber": -1}, PageRequest(1, 1)),
         ({"pageSize": 3, "pageNumber": 2}, PageRequest(2, 3)),
