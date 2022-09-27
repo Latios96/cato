@@ -5,6 +5,7 @@ from cato_common.domain.image import Image, ImageChannel
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
+from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
 def test_should_save(sqlalchemy_image_repository, stored_file):
@@ -79,4 +80,6 @@ def test_should_find(sqlalchemy_image_repository, stored_file):
         )
     )
 
-    assert sqlalchemy_image_repository.find_by_id(image.id) == image
+    with sqltap_query_count_asserter(1):
+        image = sqlalchemy_image_repository.find_by_id(image.id)
+        assert image == image

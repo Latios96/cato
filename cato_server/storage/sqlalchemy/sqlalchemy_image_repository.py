@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, joinedload
 
 from cato_common.domain.image import Image, ImageChannel
 from cato_server.storage.abstract.image_repository import ImageRepository
@@ -72,3 +72,6 @@ class SqlAlchemyImageRepository(
 
     def mapping_cls(self):
         return ImageMapping
+
+    def default_query_options(self):
+        return [joinedload(ImageMapping.channels)]
