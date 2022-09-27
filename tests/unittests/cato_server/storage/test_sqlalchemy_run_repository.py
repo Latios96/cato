@@ -302,7 +302,6 @@ class TestFindByProjectIdPaginate:
         runs = sqlalchemy_run_repository.insert_many([run_factory() for x in range(21)])
 
         page_request = PageRequest.first(1)
-        all = sqlalchemy_run_repository.find_all()
         paging = sqlalchemy_run_repository.find_by_project_id_with_paging(
             project.id, page_request
         )
