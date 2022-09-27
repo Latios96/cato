@@ -74,115 +74,132 @@ class TestConversionMethods:
         )
 
 
-def test_save_local_computer_run_information(
-    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
-):
-    start_time = aware_now_in_utc()
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=start_time,
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
+class TestSave:
+    def test_save_local_computer_run_information(
+        self,
+        sqlalchemy_run_repository,
+        project,
+        run_batch,
+        local_computer_run_information,
+    ):
+        start_time = aware_now_in_utc()
+        run = Run(
+            id=0,
+            project_id=project.id,
+            run_batch_id=run_batch.id,
+            started_at=start_time,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
 
-    run = sqlalchemy_run_repository.save(run)
-
-    assert run.id == 1
-    assert run.project_id == 1
-    assert run.run_batch_id == 1
-    assert run.started_at == start_time
-    assert run.run_information == LocalComputerRunInformation(
-        id=1, run_id=1, os=OS.WINDOWS, computer_name="cray", local_username="username"
-    )
-
-
-def test_save_github_actions_run_information(
-    sqlalchemy_run_repository, project, run_batch, github_actions_run_information
-):
-    start_time = aware_now_in_utc()
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=start_time,
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=github_actions_run_information,
-    )
-
-    run = sqlalchemy_run_repository.save(run)
-
-    assert run.id == 1
-    assert run.project_id == 1
-    assert run.run_batch_id == 1
-    assert run.started_at == start_time
-    assert run.run_information == GithubActionsRunInformation(
-        id=1,
-        run_id=1,
-        os=OS.LINUX,
-        computer_name="cray",
-        github_run_id=3052454707,
-        html_url="https://github.com/owner/repo-name/actions/runs/3052454707/jobs/4921861789",
-        job_name="build_ubuntu",
-        actor="Latios96",
-        attempt=1,
-        run_number=2,
-        github_url="https://github.com",
-        github_api_url="https://api.github.com",
-    )
-
-
-def test_save_no_project_id(
-    sqlalchemy_run_repository, run_batch, local_computer_run_information
-):
-    run = Run(
-        id=0,
-        project_id=2,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
-
-    with pytest.raises(IntegrityError):
         run = sqlalchemy_run_repository.save(run)
 
+        assert run.id == 1
+        assert run.project_id == 1
+        assert run.run_batch_id == 1
+        assert run.started_at == start_time
+        assert run.run_information == LocalComputerRunInformation(
+            id=1,
+            run_id=1,
+            os=OS.WINDOWS,
+            computer_name="cray",
+            local_username="username",
+        )
 
-def test_save_with_no_previous_run_id_is_possible(
-    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
-):
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
+    def test_save_github_actions_run_information(
+        self,
+        sqlalchemy_run_repository,
+        project,
+        run_batch,
+        github_actions_run_information,
+    ):
+        start_time = aware_now_in_utc()
+        run = Run(
+            id=0,
+            project_id=project.id,
+            run_batch_id=run_batch.id,
+            started_at=start_time,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=github_actions_run_information,
+        )
 
-    sqlalchemy_run_repository.save(run)
+        run = sqlalchemy_run_repository.save(run)
 
+        assert run.id == 1
+        assert run.project_id == 1
+        assert run.run_batch_id == 1
+        assert run.started_at == start_time
+        assert run.run_information == GithubActionsRunInformation(
+            id=1,
+            run_id=1,
+            os=OS.LINUX,
+            computer_name="cray",
+            github_run_id=3052454707,
+            html_url="https://github.com/owner/repo-name/actions/runs/3052454707/jobs/4921861789",
+            job_name="build_ubuntu",
+            actor="Latios96",
+            attempt=1,
+            run_number=2,
+            github_url="https://github.com",
+            github_api_url="https://api.github.com",
+        )
 
-def test_save_with_not_existing_previous_run_id_is_not_possible(
-    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
-):
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=aware_now_in_utc(),
-        branch_name=BranchName("default"),
-        previous_run_id=42,
-        run_information=local_computer_run_information,
-    )
+    def test_save_no_project_id(
+        self, sqlalchemy_run_repository, run_batch, local_computer_run_information
+    ):
+        run = Run(
+            id=0,
+            project_id=2,
+            run_batch_id=run_batch.id,
+            started_at=aware_now_in_utc(),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
 
-    with pytest.raises(IntegrityError):
+        with pytest.raises(IntegrityError):
+            run = sqlalchemy_run_repository.save(run)
+
+    def test_save_with_no_previous_run_id_is_possible(
+        self,
+        sqlalchemy_run_repository,
+        project,
+        run_batch,
+        local_computer_run_information,
+    ):
+        run = Run(
+            id=0,
+            project_id=project.id,
+            run_batch_id=run_batch.id,
+            started_at=aware_now_in_utc(),
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
+
         sqlalchemy_run_repository.save(run)
+
+    def test_save_with_not_existing_previous_run_id_is_not_possible(
+        self,
+        sqlalchemy_run_repository,
+        project,
+        run_batch,
+        local_computer_run_information,
+    ):
+        run = Run(
+            id=0,
+            project_id=project.id,
+            run_batch_id=run_batch.id,
+            started_at=aware_now_in_utc(),
+            branch_name=BranchName("default"),
+            previous_run_id=42,
+            run_information=local_computer_run_information,
+        )
+
+        with pytest.raises(IntegrityError):
+            sqlalchemy_run_repository.save(run)
 
 
 def test_find_by_id_should_find(
