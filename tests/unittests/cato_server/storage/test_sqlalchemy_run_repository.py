@@ -202,30 +202,34 @@ class TestSave:
             sqlalchemy_run_repository.save(run)
 
 
-def test_find_by_id_should_find(
-    sqlalchemy_run_repository, project, run_batch, local_computer_run_information
-):
-    start_time = aware_now_in_utc()
-    run = Run(
-        id=0,
-        project_id=project.id,
-        run_batch_id=run_batch.id,
-        started_at=start_time,
-        branch_name=BranchName("default"),
-        previous_run_id=None,
-        run_information=local_computer_run_information,
-    )
-    run = sqlalchemy_run_repository.save(run)
+class TestFindById:
+    def test_should_find(
+        self,
+        sqlalchemy_run_repository,
+        project,
+        run_batch,
+        local_computer_run_information,
+    ):
+        start_time = aware_now_in_utc()
+        run = Run(
+            id=0,
+            project_id=project.id,
+            run_batch_id=run_batch.id,
+            started_at=start_time,
+            branch_name=BranchName("default"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        )
+        run = sqlalchemy_run_repository.save(run)
 
-    with sqltap_query_count_asserter(1):
-        run = sqlalchemy_run_repository.find_by_id(run.id)
+        with sqltap_query_count_asserter(1):
+            run = sqlalchemy_run_repository.find_by_id(run.id)
 
-    assert run.project_id == project.id
-    assert run.started_at == start_time
+        assert run.project_id == project.id
+        assert run.started_at == start_time
 
-
-def test_find_by_id_should_not_find(sqlalchemy_run_repository):
-    assert not sqlalchemy_run_repository.find_by_id(100)
+    def test_should_not_find(self, sqlalchemy_run_repository):
+        assert not sqlalchemy_run_repository.find_by_id(100)
 
 
 def test_find_by_project_id_should_find_empty(sqlalchemy_run_repository):
