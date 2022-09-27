@@ -29,7 +29,7 @@ class QueryCountNotMatching(Exception):
 
 
 @contextmanager
-def sqltap_asserter(expected_query_count: int):
+def sqltap_query_count_asserter(expected_query_count: int):
     profiler = sqltap.start()
     yield
     statistics = profiler.collect()

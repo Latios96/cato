@@ -18,7 +18,7 @@ from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import (
     _LocalComputerRunInformationMapping,
 )
 from cato_common.utils.datetime_utils import aware_now_in_utc
-from tests.unittests.cato_server.storage.conftest import sqltap_asserter
+from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
 def test_to_entity(sqlalchemy_run_repository, local_computer_run_information):
@@ -198,7 +198,7 @@ def test_find_by_id_should_find(
     )
     run = sqlalchemy_run_repository.save(run)
 
-    with sqltap_asserter(1):
+    with sqltap_query_count_asserter(1):
         run = sqlalchemy_run_repository.find_by_id(run.id)
 
     assert run.project_id == project.id
@@ -227,7 +227,7 @@ def test_find_by_project_id_should_find_correct(
     )
     run = sqlalchemy_run_repository.save(run)
 
-    with sqltap_asserter(1):
+    with sqltap_query_count_asserter(1):
         runs_by_project_id = sqlalchemy_run_repository.find_by_project_id(project.id)
 
     assert runs_by_project_id == [run]
@@ -259,7 +259,7 @@ def test_find_by_project_id_paginate_should_find_correct(
 
     page_request = PageRequest.first(10)
 
-    with sqltap_asserter(2):
+    with sqltap_query_count_asserter(2):
         runs = sqlalchemy_run_repository.find_by_project_id_with_paging(
             project.id, page_request
         )
