@@ -67,84 +67,80 @@ class TestSave:
         sqlalchemy_run_batch_repository.save(run_batch_2)
 
 
-def test_find_by_project_id_and_run_batch_identifier_should_find_correct_one(
-    sqlalchemy_run_batch_repository,
-    run_batch,
-    saving_run_batch_factory,
-    saving_project_factory,
-):
-    for i in range(10):
-        run_identifier = RunIdentifier.random()
+class TestFindByProjectIdAndRunBatchIdentifier:
+    def test_should_find_correct_one(
+        self,
+        sqlalchemy_run_batch_repository,
+        run_batch,
+        saving_run_batch_factory,
+        saving_project_factory,
+    ):
+        for i in range(10):
+            run_identifier = RunIdentifier.random()
+            run_batch_identifier = run_batch.run_batch_identifier.copy(
+                run_identifier=run_identifier
+            )
+            saving_run_batch_factory(run_batch_identifier=run_batch_identifier)
+        for i in range(10):
+            run_identifier = RunIdentifier.random()
+            run_batch_identifier = run_batch.run_batch_identifier.copy(
+                run_identifier=run_identifier
+            )
+            saving_run_batch_factory(
+                run_batch_identifier=run_batch_identifier,
+                project_id=saving_project_factory(name=str(uuid.uuid4())).id,
+            )
+
+        found_run_batch = (
+            sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
+                run_batch.project_id, run_batch.run_batch_identifier
+            )
+        )
+
+        assert found_run_batch == run_batch
+
+    def test_should_not_find_with_different_identifier(
+        self, sqlalchemy_run_batch_repository, run_batch
+    ):
         run_batch_identifier = run_batch.run_batch_identifier.copy(
-            run_identifier=run_identifier
+            run_identifier=RunIdentifier("3046812908-2")
         )
-        saving_run_batch_factory(run_batch_identifier=run_batch_identifier)
-    for i in range(10):
-        run_identifier = RunIdentifier.random()
-        run_batch_identifier = run_batch.run_batch_identifier.copy(
-            run_identifier=run_identifier
-        )
-        saving_run_batch_factory(
-            run_batch_identifier=run_batch_identifier,
-            project_id=saving_project_factory(name=str(uuid.uuid4())).id,
+        found_run_batch = (
+            sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
+                run_batch.project_id, run_batch_identifier
+            )
         )
 
-    found_run_batch = (
-        sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
-            run_batch.project_id, run_batch.run_batch_identifier
+        assert found_run_batch is None
+
+    def test_should_not_find_with_different_project_id(
+        self, sqlalchemy_run_batch_repository, run_batch
+    ):
+        found_run_batch = (
+            sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
+                42, run_batch.run_batch_identifier
+            )
         )
-    )
 
-    assert found_run_batch == run_batch
+        assert found_run_batch is None
 
-
-def test_find_by_project_id_and_run_batch_identifier_should_not_find_with_different_identifier(
-    sqlalchemy_run_batch_repository, run_batch
-):
-    run_batch_identifier = run_batch.run_batch_identifier.copy(
-        run_identifier=RunIdentifier("3046812908-2")
-    )
-    found_run_batch = (
-        sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
-            run_batch.project_id, run_batch_identifier
+    def test_should_create(
+        self, sqlalchemy_run_batch_repository, run_batch_factory, project
+    ):
+        run_batch = run_batch_factory()
+        saved_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+            project.id, run_batch.run_batch_identifier, lambda: run_batch
         )
-    )
 
-    assert found_run_batch is None
+        run_batch.id = 1
+        assert saved_run_batch == run_batch
 
-
-def test_find_by_project_id_and_run_batch_identifier_should_not_find_with_different_project_id(
-    sqlalchemy_run_batch_repository, run_batch
-):
-    found_run_batch = (
-        sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
-            42, run_batch.run_batch_identifier
+    def test_should_find(self, sqlalchemy_run_batch_repository, run_batch):
+        found_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+            run_batch.project_id, run_batch.run_batch_identifier, lambda: run_batch
         )
-    )
 
-    assert found_run_batch is None
-
-
-def test_find_or_save_by_project_id_and_run_batch_identifier_should_create(
-    sqlalchemy_run_batch_repository, run_batch_factory, project
-):
-    run_batch = run_batch_factory()
-    saved_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
-        project.id, run_batch.run_batch_identifier, lambda: run_batch
-    )
-
-    run_batch.id = 1
-    assert saved_run_batch == run_batch
-
-
-def test_find_or_save_by_project_id_and_run_batch_identifier_should_find(
-    sqlalchemy_run_batch_repository, run_batch
-):
-    found_run_batch = sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
-        run_batch.project_id, run_batch.run_batch_identifier, lambda: run_batch
-    )
-
-    assert found_run_batch == run_batch
+        assert found_run_batch == run_batch
 
 
 class TestDontUseTooManyQueries:
