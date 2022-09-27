@@ -271,9 +271,7 @@ class FindByProjectId:
 
 
 class TestFindByProjectIdPaginate:
-    def test_find_by_project_id_paginate_should_find_empty(
-        self, sqlalchemy_run_repository
-    ):
+    def test_should_find_empty(self, sqlalchemy_run_repository):
         page_request = PageRequest.first(10)
 
         assert sqlalchemy_run_repository.find_by_project_id_with_paging(
@@ -282,7 +280,7 @@ class TestFindByProjectIdPaginate:
             page_request=page_request, total_entity_count=0, entities=[]
         )
 
-    def test_find_by_project_id_paginate_should_find_correct_single_run(
+    def test_should_find_correct_single_run(
         self, sqlalchemy_run_repository, project, saving_run_factory
     ):
         run = saving_run_factory()
@@ -298,7 +296,7 @@ class TestFindByProjectIdPaginate:
             page_request=page_request, total_entity_count=1, entities=[run]
         )
 
-    def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_page(
+    def test_should_find_correct_max_count_exceeding_page(
         self, sqlalchemy_run_repository, project, run_factory
     ):
         runs = sqlalchemy_run_repository.insert_many([run_factory() for x in range(21)])
@@ -312,7 +310,7 @@ class TestFindByProjectIdPaginate:
             page_request=page_request, total_entity_count=21, entities=[runs[20]]
         )
 
-    def test_find_by_project_id_paginate_should_find_correct_max_count_exceeding_second_page(
+    def test_should_find_correct_max_count_exceeding_second_page(
         self, sqlalchemy_run_repository, project, run_factory
     ):
         runs = sqlalchemy_run_repository.insert_many([run_factory() for x in range(21)])
@@ -327,7 +325,7 @@ class TestFindByProjectIdPaginate:
             entities=[runs[15], runs[14], runs[13], runs[12], runs[11]],
         )
 
-    def test_find_by_project_id_with_paging_should_filter_for_branches(
+    def test_should_filter_for_branches(
         self, sqlalchemy_run_repository, project, run_factory
     ):
         sqlalchemy_run_repository.save(
