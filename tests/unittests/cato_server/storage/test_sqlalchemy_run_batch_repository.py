@@ -7,6 +7,7 @@ from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
 from cato_common.domain.run_name import RunName
+from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
 def test_should_save_to_database(sqlalchemy_run_batch_repository, run_batch_factory):
@@ -96,6 +97,54 @@ def test_find_by_project_id_and_run_batch_identifier_should_find_correct_one(
     )
 
     assert found_run_batch == run_batch
+
+
+class TestDontUseTooManyQueries:
+    def test_find_by_id_should_not_use_too_many_queries(
+        self,
+        sqlalchemy_run_batch_repository,
+        saving_run_batch_factory,
+        run_factory,
+        run_batch_identifier,
+    ):
+        run_batch = saving_run_batch_factory(
+            runs=[run_factory(run_batch_id=0) for x in range(5)]
+        )
+
+        with sqltap_query_count_asserter(1):
+            sqlalchemy_run_batch_repository.find_by_id(run_batch.id)
+
+    def test_find_by_project_id_and_run_batch_identifier_should_not_use_too_many_queries(
+        self,
+        sqlalchemy_run_batch_repository,
+        saving_run_batch_factory,
+        run_factory,
+        run_batch_identifier,
+    ):
+        run_batch = saving_run_batch_factory(
+            runs=[run_factory(run_batch_id=0) for x in range(5)]
+        )
+
+        with sqltap_query_count_asserter(1):
+            sqlalchemy_run_batch_repository.find_by_project_id_and_run_batch_identifier(
+                run_batch.project_id, run_batch.run_batch_identifier
+            )
+
+    def test_find_or_save_by_project_id_and_run_batch_identifier_should_not_use_too_many_queries(
+        self,
+        sqlalchemy_run_batch_repository,
+        saving_run_batch_factory,
+        run_factory,
+        run_batch_identifier,
+    ):
+        run_batch = saving_run_batch_factory(
+            runs=[run_factory(run_batch_id=0) for x in range(5)]
+        )
+
+        with sqltap_query_count_asserter(1):
+            sqlalchemy_run_batch_repository.find_or_save_by_project_id_and_run_batch_identifier(
+                run_batch.project_id, run_batch.run_batch_identifier, lambda: None
+            )
 
 
 def test_find_by_project_id_and_run_batch_identifier_should_not_find_with_different_identifier(

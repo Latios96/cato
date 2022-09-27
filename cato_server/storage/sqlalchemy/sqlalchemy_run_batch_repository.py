@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from typing import Optional, Callable
 
 from sqlalchemy import Column, Integer, String, ForeignKey, UniqueConstraint
-from sqlalchemy.orm import composite, relationship
+from sqlalchemy.orm import composite, relationship, joinedload
 
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
@@ -103,6 +103,7 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
                 _RunBatchMapping.run_batch_identifier
                 == _RunBatchIdentifierMapping.from_identifier(run_batch_identifier)
             )
+            .options(self.default_query_options())
             .first()
         )
         if run_batch_mapping:
@@ -138,3 +139,10 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
 
     def mapping_cls(self):
         return _RunBatchMapping
+
+    def default_query_options(self):
+        return [
+            joinedload(_RunBatchMapping.runs).options(
+                *SqlAlchemyRunRepository.default_query_options(None)
+            )
+        ]
