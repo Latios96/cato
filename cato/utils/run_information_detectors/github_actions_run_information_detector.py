@@ -9,11 +9,27 @@ from cato_common.dtos.create_full_run_dto import (
 )
 
 
+class GithubTokenMissingException(Exception):
+    def __init__(self):
+        super(GithubTokenMissingException, self).__init__(
+            "The Github token is missing, please provide it via the environment variable 'GITHUB_TOKEN'"
+        )
+
+
+class GithubJobNameMissingException(Exception):
+    def __init__(self):
+        super(GithubJobNameMissingException, self).__init__(
+            "The Github job name is missing, please provide it via the environment variable 'GITHUB_JOB_NAME'"
+        )
+
+
 class GithubActionsRunInformationDetector(AbstractDetector):
     def can_detect(self) -> bool:
         return self._environment.get("GITHUB_ACTIONS") is not None
 
     def detect(self) -> BasicRunInformationForRunCreation:
+        self._verify_custom_information_is_present()
+
         basic_run = super(GithubActionsRunInformationDetector, self).detect()
 
         github_run_id = int(self._environment["GITHUB_RUN_ID"])
@@ -36,6 +52,12 @@ class GithubActionsRunInformationDetector(AbstractDetector):
             github_url=github_url,
             github_api_url=github_api_url,
         )
+
+    def _verify_custom_information_is_present(self):
+        if not self._environment.get("GITHUB_TOKEN"):
+            raise GithubTokenMissingException()
+        if not self._environment.get("GITHUB_JOB_NAME"):
+            raise GithubJobNameMissingException()
 
     def _get_job_html_url(self) -> str:
         github_api_url = self._environment["GITHUB_API_URL"]

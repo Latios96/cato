@@ -6,6 +6,8 @@ import requests
 
 from cato.utils.run_information_detectors.github_actions_run_information_detector import (
     GithubActionsRunInformationDetector,
+    GithubTokenMissingException,
+    GithubJobNameMissingException,
 )
 from cato_common.domain.run_information import OS
 from cato_common.dtos.create_full_run_dto import (
@@ -169,7 +171,7 @@ class TestDetect:
         env = {
             "GITHUB_ACTIONS": "true",
             "GITHUB_RUN_ID": "3052454707",
-            "GITHUB_JOB": "build_ubuntu",
+            "GITHUB_JOB_NAME": "build_ubuntu",
             "GITHUB_ACTOR": "owner",
             "GITHUB_RUN_ATTEMPT": "1",
             "GITHUB_RUN_NUMBER": "2",
@@ -181,4 +183,18 @@ class TestDetect:
         detector = GithubActionsRunInformationDetector(environment=env)
 
         with pytest.raises(RuntimeError):
+            detector.detect()
+
+    def test_github_token_is_missing(self):
+        env = {"GITHUB_JOB_NAME": "test"}
+        detector = GithubActionsRunInformationDetector(environment=env)
+
+        with pytest.raises(GithubTokenMissingException):
+            detector.detect()
+
+    def test_github_job_name_is_missing(self):
+        env = {"GITHUB_TOKEN": "test"}
+        detector = GithubActionsRunInformationDetector(environment=env)
+
+        with pytest.raises(GithubJobNameMissingException):
             detector.detect()
