@@ -278,11 +278,17 @@ def run_factory(saving_run_batch_factory, local_computer_run_information):
 
 @pytest.fixture
 def saving_run_factory(sqlalchemy_run_repository, project, run_factory):
-    def func(project_id=None, run_batch_id=None, started_at=None):
+    def func(
+        project_id=None,
+        run_batch_id=None,
+        started_at=None,
+        run_information: BasicRunInformation = None,
+    ):
         run = run_factory(
             project_id=or_default(project_id, project.id),
             run_batch_id=run_batch_id,
             started_at=started_at,
+            run_information=run_information,
         )
         return sqlalchemy_run_repository.save(run)
 
