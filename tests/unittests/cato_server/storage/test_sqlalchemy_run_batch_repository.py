@@ -3,10 +3,13 @@ import uuid
 import pytest
 from sqlalchemy.exc import IntegrityError
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
 from cato_common.domain.run_name import RunName
+from cato_common.storage.page import PageRequest, Page
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from tests.unittests.cato_server.storage.conftest import sqltap_query_count_asserter
 
 
@@ -141,6 +144,94 @@ class TestFindByProjectIdAndRunBatchIdentifier:
         )
 
         assert found_run_batch == run_batch
+
+
+class TestFindByProjectIdPaginate:
+    def test_should_find_empty(self, sqlalchemy_run_batch_repository):
+        page_request = PageRequest.first(10)
+
+        assert sqlalchemy_run_batch_repository.find_by_project_id_with_paging(
+            10, page_request
+        ) == Page.from_page_request(
+            page_request=page_request, total_entity_count=0, entities=[]
+        )
+
+    def test_should_find_correct_single_run(
+        self, sqlalchemy_run_batch_repository, project, saving_run_batch_factory
+    ):
+        run_batch = saving_run_batch_factory()
+
+        page_request = PageRequest.first(10)
+
+        with sqltap_query_count_asserter(2):
+            runs = sqlalchemy_run_batch_repository.find_by_project_id_with_paging(
+                project.id, page_request
+            )
+
+        assert runs == Page.from_page_request(
+            page_request=page_request, total_entity_count=1, entities=[run_batch]
+        )
+
+    def test_should_find_correct_max_count_exceeding_page(
+        self, sqlalchemy_run_batch_repository, project, run_batch_factory
+    ):
+        run_batches = sqlalchemy_run_batch_repository.insert_many(
+            [run_batch_factory() for x in range(21)]
+        )
+
+        page_request = PageRequest.first(1)
+        paging = sqlalchemy_run_batch_repository.find_by_project_id_with_paging(
+            project.id, page_request
+        )
+        assert paging == Page.from_page_request(
+            page_request=page_request, total_entity_count=21, entities=[run_batches[20]]
+        )
+
+    def test_should_find_correct_max_count_exceeding_second_page(
+        self, sqlalchemy_run_batch_repository, project, run_batch_factory
+    ):
+        run_batches = sqlalchemy_run_batch_repository.insert_many(
+            [run_batch_factory() for x in range(21)]
+        )
+
+        page_request = PageRequest(page_size=5, page_number=2)
+
+        assert sqlalchemy_run_batch_repository.find_by_project_id_with_paging(
+            project.id, page_request
+        ) == Page.from_page_request(
+            page_request=page_request,
+            total_entity_count=21,
+            entities=[
+                run_batches[15],
+                run_batches[14],
+                run_batches[13],
+                run_batches[12],
+                run_batches[11],
+            ],
+        )
+
+    def test_should_filter_for_branches(
+        self,
+        sqlalchemy_run_batch_repository,
+        project,
+        run_factory,
+        saving_run_batch_factory,
+    ):
+        saving_run_batch_factory(
+            runs=[run_factory(project_id=project.id, branch_name=BranchName("default"))]
+        )
+        saving_run_batch_factory(
+            runs=[run_factory(project_id=project.id, branch_name=BranchName("main"))]
+        )
+
+        runs = sqlalchemy_run_batch_repository.find_by_project_id_with_paging(
+            project.id,
+            PageRequest(page_size=5, page_number=1),
+            RunFilterOptions(branches={BranchName("main")}),
+        )
+
+        assert len(runs.entities) == 1
+        assert runs.entities[0].runs[0].branch_name == BranchName("main")
 
 
 class TestDontUseTooManyQueries:

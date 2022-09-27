@@ -8,8 +8,10 @@ from cato_common.domain.run_batch_identifier import RunBatchIdentifier
 from cato_common.domain.run_batch_provider import RunBatchProvider
 from cato_common.domain.run_identifier import RunIdentifier
 from cato_common.domain.run_name import RunName
+from cato_common.storage.page import PageRequest, Page
 from cato_server.domain.run_batch import RunBatch
 from cato_server.storage.abstract.run_batch_repository import RunBatchRepository
+from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
@@ -110,6 +112,36 @@ class SqlAlchemyRunBatchRepository(AbstractSqlAlchemyRepository, RunBatchReposit
         )
         if run_batch_mapping:
             return self.to_domain_object(run_batch_mapping)
+
+    def find_by_project_id_with_paging(
+        self,
+        id: int,
+        page_request: PageRequest,
+        filter_options: Optional[RunFilterOptions] = None,
+    ) -> Page[RunBatch]:
+        with self._session_maker() as session:
+            query = (
+                session.query(self.mapping_cls())
+                .filter(self.mapping_cls().project_entity_id == id)
+                .options(self.default_query_options())
+            )
+            if filter_options:
+                query = self._apply_filter_options(query, filter_options)
+
+            return self._pageginate(
+                session,
+                query.order_by(self.mapping_cls().created_at.desc()).order_by(
+                    self.mapping_cls().id.desc()
+                ),
+                page_request,
+            )
+
+    def _apply_filter_options(self, query, filter_options: RunFilterOptions):
+        return query.filter(
+            self.mapping_cls().runs.any(
+                _RunMapping.branch_name.in_({x.name for x in filter_options.branches})
+            )
+        )
 
     def to_entity(self, domain_object: RunBatch) -> _RunBatchMapping:
         runs = list(
