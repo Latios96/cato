@@ -124,7 +124,7 @@ class TestDetect:
         env = {
             "GITHUB_ACTIONS": "true",
             "GITHUB_RUN_ID": "3052454707",
-            "GITHUB_JOB": "build_ubuntu",
+            "GITHUB_JOB_NAME": "build_ubuntu",
             "GITHUB_ACTOR": "owner",
             "GITHUB_RUN_ATTEMPT": "1",
             "GITHUB_RUN_NUMBER": "2",

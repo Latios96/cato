@@ -55,7 +55,7 @@ class GithubActionsRunInformationDetector(AbstractDetector):
             )
         response_json = response.json()
         jobs = response_json["jobs"]
-        job = self._find_job_by_name(jobs, self._environment["GITHUB_JOB"])
+        job = self._find_job_by_name(jobs, self._environment["GITHUB_JOB_NAME"])
         return cast(str, job["html_url"])
 
     def _find_job_by_name(self, jobs, job_name):
