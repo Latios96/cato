@@ -8,6 +8,7 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.project import Project
 from cato_common.domain.run_identifier import RunIdentifier
+from cato_common.domain.run_information import BasicRunInformation
 from cato_common.domain.run_name import RunName
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
@@ -34,6 +35,7 @@ if __name__ == "__main__":
             RunSummaryDto,
             CreateFullRunDto,
             AuthUser,
+            BasicRunInformation,
         ]
     ).with_type_overrides(
         {
