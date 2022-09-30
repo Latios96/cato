@@ -165,11 +165,15 @@ def test_find_by_run_id_and_name_should_not_find(sqlalchemy_suite_result_reposit
     assert not sqlalchemy_suite_result_repository.find_by_run_id_and_name(100, "")
 
 
-def test_suite_count_by_run_id_should_be_1(
+def test_suite_count_by_run_ids_should_be_1(
     sqlalchemy_suite_result_repository, run, suite_result
 ):
-    assert sqlalchemy_suite_result_repository.suite_count_by_run_id(run.id) == 1
+    assert sqlalchemy_suite_result_repository.suite_count_by_run_ids({run.id}) == {
+        run.id: 1
+    }
 
 
-def test_suite_count_by_run_id_should_be_0(sqlalchemy_suite_result_repository, run):
-    assert sqlalchemy_suite_result_repository.suite_count_by_run_id(run.id) == 0
+def test_suite_count_by_run_ids_should_be_0(sqlalchemy_suite_result_repository, run):
+    assert (
+        sqlalchemy_suite_result_repository.suite_count_by_run_ids({run.id})[run.id] == 0
+    )

@@ -1,6 +1,7 @@
-from typing import Optional, List
+from collections import defaultdict
+from typing import Optional, List, Set, Dict
 
-from sqlalchemy import Column, Integer, ForeignKey, String, JSON
+from sqlalchemy import Column, Integer, ForeignKey, String, JSON, func
 from sqlalchemy.orm import relationship
 
 from cato_common.storage.page import PageRequest, Page
@@ -89,13 +90,23 @@ class SqlAlchemySuiteResultRepository(
             return self.to_domain_object(entity)
         return None
 
-    def suite_count_by_run_id(self, run_id: int) -> int:
-        session = self._session_maker()
+    def suite_count_by_run_ids(self, run_ids: Set[int]) -> Dict[int, int]:
+        with self._session_maker() as session:
+            suite_result_counts = (
+                session.query(
+                    _SuiteResultMapping.run_entity_id,
+                    func.count(_SuiteResultMapping.id),
+                )
+                .filter(self.mapping_cls().run_entity_id.in_(run_ids))
+                .group_by(_SuiteResultMapping.run_entity_id)
+                .all()
+            )
 
-        count = (
-            session.query(_SuiteResultMapping.id)
-            .filter(self.mapping_cls().run_entity_id == run_id)
-            .count()
-        )
-        session.close()
-        return count
+            counts_by_run_id = defaultdict(lambda: 0)
+            counts_by_run_id.update(
+                {
+                    run_id: suite_result_count
+                    for run_id, suite_result_count in suite_result_counts
+                }
+            )
+            return counts_by_run_id

@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional, List, Set, Dict
 
 from cato_server.storage.abstract.abstract_repository import AbstractRepository
 from cato_common.domain.suite_result import SuiteResult
@@ -20,5 +20,5 @@ class SuiteResultRepository(AbstractRepository):
     def find_by_run_id(self, run_id: int) -> List[SuiteResult]:
         raise NotImplementedError()
 
-    def suite_count_by_run_id(self, run_id: int) -> int:
+    def suite_count_by_run_ids(self, run_ids: Set[int]) -> Dict[int, int]:
         raise NotImplementedError()
