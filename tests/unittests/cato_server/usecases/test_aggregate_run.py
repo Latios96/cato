@@ -97,6 +97,7 @@ def test_aggregate_page(test_context, local_computer_run_information):
                 status=RunStatus.FAILED,
                 duration=1,
                 branch_name=BranchName(name="main"),
+                run_information=local_computer_run_information,
             ),
             RunDto(
                 id=2,
@@ -105,6 +106,7 @@ def test_aggregate_page(test_context, local_computer_run_information):
                 status=RunStatus.FAILED,
                 duration=2,
                 branch_name=BranchName(name="main"),
+                run_information=local_computer_run_information,
             ),
         ],
     )

@@ -37,6 +37,7 @@ class AggregateRun:
                     status=status,
                     duration=duration_by_run_id[run.id],
                     branch_name=run.branch_name,
+                    run_information=run.run_information,
                 )
             )
 
