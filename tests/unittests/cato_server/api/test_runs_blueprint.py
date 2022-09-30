@@ -119,19 +119,6 @@ def test_get_run_by_project_id_pages_should_return_empty_page(
     }
 
 
-def test_get_status(client_with_session, run, test_result):
-    rv = client_with_session.get(f"/api/v1/runs/{run.id}/status")
-
-    assert rv.status_code == 200
-    assert rv.json() == {"status": "NOT_STARTED"}
-
-
-def test_get_status_404(client_with_session, run):
-    rv = client_with_session.get(f"/api/v1/runs/{run.id}/status")
-
-    assert rv.status_code == 404
-
-
 def test_get_run_summary(client_with_session, run, test_result):
     rv = client_with_session.get(f"/api/v1/runs/{run.id}/summary")
 

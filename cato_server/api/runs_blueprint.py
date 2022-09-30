@@ -56,7 +56,6 @@ class RunsBlueprint(APIRouter):
         self.get("/runs/project/{project_id}")(self.runs_by_project)
         self.get("/runs/project/{project_id}/branches")(self.get_branches)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
-        self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
         self.post("/runs/full")(self.create_run)
 
@@ -103,20 +102,6 @@ class RunsBlueprint(APIRouter):
             return Response(status_code=404)
 
         return JSONResponse(content={"succes": True}, status_code=200)
-
-    def status(self, run_id: int) -> Response:
-        status_by_run_id = self._test_result_repository.find_status_by_run_ids({run_id})
-
-        if not status_by_run_id.get(run_id):
-            return Response(status_code=404)
-
-        return JSONResponse(
-            content={
-                "status": RunStatusCalculator()
-                .calculate(status_by_run_id.get(run_id))
-                .name
-            }
-        )
 
     async def create_run(self, request: Request) -> Response:
         request_json = await request.json()
