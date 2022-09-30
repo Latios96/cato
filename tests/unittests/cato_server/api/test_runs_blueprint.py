@@ -216,7 +216,7 @@ def test_create_run_with_local_computer_run_information(
     payload = CREATE_RUN_PAYLOAD_TEMPLATE.copy()
     payload["runInformation"] = object_mapper.to_dict(local_computer_run_information)
 
-    rv = client_with_session.post("/api/v1/runs/full", json=payload)
+    rv = client_with_session.post("/api/v1/runs", json=payload)
 
     assert rv.status_code == 201
     response_json = rv.json()
@@ -234,7 +234,7 @@ def test_create_run_with_github_actions_run_information(
     payload = CREATE_RUN_PAYLOAD_TEMPLATE.copy()
     payload["runInformation"] = object_mapper.to_dict(github_actions_run_information)
 
-    rv = client_with_session.post("/api/v1/runs/full", json=payload)
+    rv = client_with_session.post("/api/v1/runs", json=payload)
 
     assert rv.status_code == 201
     response_json = rv.json()

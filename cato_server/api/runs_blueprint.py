@@ -57,7 +57,7 @@ class RunsBlueprint(APIRouter):
         self.get("/runs/project/{project_id}/branches")(self.get_branches)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
         self.get("/runs/{run_id}/summary")(self.summary)
-        self.post("/runs/full")(self.create_run)
+        self.post("/runs")(self.create_run)
 
     def runs_by_project(self, project_id: int, request: Request) -> Response:
         run_filter_options = run_filter_options_from_request(request.query_params)

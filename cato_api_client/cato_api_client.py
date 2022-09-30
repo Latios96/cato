@@ -176,7 +176,7 @@ class CatoApiClient:
         raise self._create_value_error_for_bad_request(response)
 
     def create_run(self, create_run_dto: CreateFullRunDto) -> Run:
-        url = self._build_url("/api/v1/runs/full")
+        url = self._build_url("/api/v1/runs")
         return self._create_with_http_template(url, create_run_dto, Run)
 
     def find_test_result_by_run_id_and_identifier(
