@@ -408,39 +408,52 @@ class SqlAlchemyTestResultRepository(
 
         return self._map_many_to_domain_object(entities)
 
-    def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
-        session = self._session_maker()
-        unified_status_counts = (
-            session.query(
-                _TestResultMapping.unified_test_status,
-                func.count(_TestResultMapping.unified_test_status),
+    def status_information_by_run_ids(
+        self, run_ids: Set[int]
+    ) -> Dict[int, TestResultStatusInformation]:
+        with self._session_maker() as session:
+            unified_status_counts = (
+                session.query(
+                    _TestResultMapping.unified_test_status,
+                    func.count(_TestResultMapping.unified_test_status),
+                    _RunMapping.id,
+                )
+                .select_from(_TestResultMapping)
+                .join(_SuiteResultMapping)
+                .join(_RunMapping)
+                .filter(_RunMapping.id.in_(run_ids))
+                .group_by(_TestResultMapping.unified_test_status)
+                .group_by(_RunMapping.id)
+                .all()
             )
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .group_by(_TestResultMapping.unified_test_status)
-            .all()
+
+            return self.__status_count_query_result_to_dict(unified_status_counts)
+
+    def __status_count_query_result_to_dict(self, unified_status_counts):
+        status_counts_by_run_id = defaultdict(
+            lambda: TestResultStatusInformation(
+                not_started=0,
+                running=0,
+                failed=0,
+                success=0,
+            )
         )
 
-        unified_status_counts_dict = self.__status_count_query_result_to_dict(
-            unified_status_counts
-        )
+        for (
+            unified_test_status,
+            unified_test_status_count,
+            run_id,
+        ) in unified_status_counts:
+            if unified_test_status == "NOT_STARTED":
+                status_counts_by_run_id[run_id].not_started = unified_test_status_count
+            elif unified_test_status == "RUNNING":
+                status_counts_by_run_id[run_id].running = unified_test_status_count
+            elif unified_test_status == "FAILED":
+                status_counts_by_run_id[run_id].failed = unified_test_status_count
+            elif unified_test_status == "SUCCESS":
+                status_counts_by_run_id[run_id].success = unified_test_status_count
 
-        not_started_count = unified_status_counts_dict.get("NOT_STARTED", 0)
-        running_count = unified_status_counts_dict.get("RUNNING", 0)
-        failed_count = unified_status_counts_dict.get("FAILED", 0)
-        success_count = unified_status_counts_dict.get("SUCCESS", 0)
-
-        session.close()
-        return TestResultStatusInformation(
-            not_started=not_started_count,
-            running=running_count,
-            failed=failed_count,
-            success=success_count,
-        )
-
-    def __status_count_query_result_to_dict(self, status_counts):
-        return {status: status_count for status, status_count in status_counts}
+        return status_counts_by_run_id
 
     def _add_filter_options(self, filter_options: TestResultFilterOptions, query):
         if filter_options and filter_options.status is not StatusFilter.NONE:

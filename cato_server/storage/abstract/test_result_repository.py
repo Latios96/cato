@@ -72,5 +72,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     ) -> List[TestResult]:
         raise NotImplementedError()
 
-    def status_information_by_run_id(self, run_id: int) -> TestResultStatusInformation:
+    def status_information_by_run_ids(
+        self, run_ids: Set[int]
+    ) -> Dict[int, TestResultStatusInformation]:
         raise NotImplementedError()
