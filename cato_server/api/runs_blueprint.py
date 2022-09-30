@@ -21,7 +21,6 @@ from cato_server.api.validators.run_validators import (
 )
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.project_repository import ProjectRepository
-from cato_server.storage.abstract.run_filter_options import RunFilterOptions
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
 from cato_server.storage.abstract.test_result_repository import (
@@ -55,70 +54,38 @@ class RunsBlueprint(APIRouter):
         self._run_status_calculator = RunStatusCalculator()
 
         self.get("/runs/project/{project_id}")(self.runs_by_project)
+        self.get("/runs/project/{project_id}/branches")(self.get_branches)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
-        self.post("/runs/full")(self.create_run)
         self.get("/runs/{run_id}/status")(self.status)
         self.get("/runs/{run_id}/summary")(self.summary)
-        self.get("/runs/project/{project_id}/branches")(self.get_branches)
+        self.post("/runs/full")(self.create_run)
 
     def runs_by_project(self, project_id: int, request: Request) -> Response:
-        page_request = page_request_from_request(request.query_params)
         run_filter_options = run_filter_options_from_request(request.query_params)
-        if page_request:
-            return self.runs_by_project_paged(
-                project_id, page_request, run_filter_options
-            )
-        runs = self._run_repository.find_by_project_id(project_id)
-        status_by_run_id = self._test_result_repository.find_status_by_project_id(
-            project_id
-        )
-        duration_by_run_id = self._test_result_repository.duration_by_run_ids(
-            {x.id for x in runs}
-        )
-        run_dtos = []
-        for run in runs:
-            status = self._run_status_calculator.calculate(
-                status_by_run_id.get(run.id, set())
-            )
-            run_dtos.append(
-                RunDto(
-                    id=run.id,
-                    project_id=run.id,
-                    started_at=run.started_at,
-                    status=status,
-                    duration=duration_by_run_id[run.id],
-                    branch_name=run.branch_name,
-                )
-            )
-        return JSONResponse(content=self._object_mapper.many_to_dict(run_dtos))
 
-    def runs_by_project_paged(
-        self,
-        project_id: int,
-        page_request: PageRequest,
-        run_filter_options: RunFilterOptions,
-    ) -> Response:
+        page_request = page_request_from_request(request.query_params)
+        if not page_request:
+            page_request = PageRequest.first(30)
+
         run_page = self._run_repository.find_by_project_id_with_paging(
             project_id, page_request, run_filter_options
         )
-        status_by_run_id = self._test_result_repository.find_status_by_project_id(
-            project_id
+        by_run_id = self._test_result_repository.find_status_by_project_id(project_id)
+        run_id = self._test_result_repository.duration_by_run_ids(
+            {x1.id for x1 in run_page.entities}
         )
-        duration_by_run_id = self._test_result_repository.duration_by_run_ids(
-            {x.id for x in run_page.entities}
-        )
-        run_dtos = []
+        dtos = []
         for run in run_page.entities:
-            status = self._run_status_calculator.calculate(
-                status_by_run_id.get(run.id, set())
+            status1 = self._run_status_calculator.calculate(
+                by_run_id.get(run.id, set())
             )
-            run_dtos.append(
+            dtos.append(
                 RunDto(
                     id=run.id,
                     project_id=run.id,
                     started_at=run.started_at,
-                    status=status,
-                    duration=duration_by_run_id[run.id],
+                    status=status1,
+                    duration=run_id[run.id],
                     branch_name=run.branch_name,
                 )
             )
@@ -126,7 +93,7 @@ class RunsBlueprint(APIRouter):
             page_number=page_request.page_number,
             page_size=page_request.page_size,
             total_entity_count=run_page.total_entity_count,
-            entities=run_dtos,
+            entities=dtos,
         )
         return JSONResponse(content=self._page_mapper.to_dict(page))
 

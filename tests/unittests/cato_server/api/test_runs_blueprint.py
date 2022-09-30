@@ -4,10 +4,21 @@ def test_get_run_by_project_id_should_return(client_with_session, project, run):
     rv = client_with_session.get(url)
 
     assert rv.status_code == 200
-    json = rv.json()
-    assert len(json) == 1
-    assert json[0]["id"] == 1
-    assert json[0]["projectId"] == 1
+    assert rv.json() == {
+        "entities": [
+            {
+                "id": 1,
+                "projectId": 1,
+                "startedAt": run.started_at.isoformat(),
+                "status": "NOT_STARTED",
+                "duration": 0,
+                "branchName": "default",
+            }
+        ],
+        "pageNumber": 1,
+        "pageSize": 30,
+        "totalEntityCount": 1,
+    }
 
 
 def test_get_run_by_project_id_should_return_empty_list(client_with_session, project):
@@ -16,7 +27,12 @@ def test_get_run_by_project_id_should_return_empty_list(client_with_session, pro
     rv = client_with_session.get(url)
 
     assert rv.status_code == 200
-    assert rv.json() == []
+    assert rv.json() == {
+        "entities": [],
+        "pageNumber": 1,
+        "pageSize": 30,
+        "totalEntityCount": 0,
+    }
 
 
 def test_get_run_by_project_id_paged_should_return(client_with_session, project, run):
