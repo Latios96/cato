@@ -1,6 +1,7 @@
+from typing import List
+
 from cato_common.domain.run import Run
 from cato_common.dtos.run_dto import RunDto
-from cato_common.storage.page import Page
 from cato_server.run_status_calculator import RunStatusCalculator
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 
@@ -15,21 +16,21 @@ class AggregateRun:
         self._run_status_calculator = run_status_calculator
 
     def aggregate_runs_by_project_id(
-        self, project_id: int, run_page: Page[Run]
-    ) -> Page[RunDto]:
+        self, project_id: int, runs: List[Run]
+    ) -> List[RunDto]:
         status_by_run_id = self._test_result_repository.find_status_by_project_id(
             project_id
         )
         duration_by_run_id = self._test_result_repository.duration_by_run_ids(
-            {run.id for run in run_page.entities}
+            {run.id for run in runs}
         )
 
-        dtos = []
-        for run in run_page.entities:
+        aggregates = []
+        for run in runs:
             status = self._run_status_calculator.calculate(
                 status_by_run_id.get(run.id, set())
             )
-            dtos.append(
+            aggregates.append(
                 RunDto(
                     id=run.id,
                     project_id=run.id,
@@ -41,9 +42,4 @@ class AggregateRun:
                 )
             )
 
-        return Page(
-            page_number=run_page.page_number,
-            page_size=run_page.page_size,
-            total_entity_count=run_page.total_entity_count,
-            entities=dtos,
-        )
+        return aggregates

@@ -10,7 +10,7 @@ from cato_common.dtos.run_dto import RunDto
 from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
-from cato_common.storage.page import PageRequest
+from cato_common.storage.page import PageRequest, Page
 from cato_server.api.filter_option_utils import run_filter_options_from_request
 from cato_server.api.page_utils import (
     page_request_from_request,
@@ -71,11 +71,17 @@ class RunsBlueprint(APIRouter):
         run_page = self._run_repository.find_by_project_id_with_paging(
             project_id, page_request, run_filter_options
         )
-        aggregated_run_page = self._aggregate_run.aggregate_runs_by_project_id(
-            project_id, run_page
+        aggregated_runs = self._aggregate_run.aggregate_runs_by_project_id(
+            project_id, run_page.entities
+        )
+        aggregated_runs_page = Page(
+            page_number=run_page.page_number,
+            page_size=run_page.page_size,
+            total_entity_count=run_page.total_entity_count,
+            entities=aggregated_runs,
         )
 
-        return JSONResponse(content=self._page_mapper.to_dict(aggregated_run_page))
+        return JSONResponse(content=self._page_mapper.to_dict(aggregated_runs_page))
 
     def run_id_exists(self, run_id: int) -> Response:
         run = self._run_repository.find_by_id(run_id)

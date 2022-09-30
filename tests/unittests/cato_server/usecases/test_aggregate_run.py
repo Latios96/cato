@@ -28,21 +28,9 @@ def test_context():
 
 
 def test_aggregate_empty_page(test_context):
-    page = Page(
-        page_number=1,
-        page_size=10,
-        total_entity_count=0,
-        entities=[],
-    )
+    aggregated_page = test_context.aggregate_run.aggregate_runs_by_project_id(1, [])
 
-    aggregated_page = test_context.aggregate_run.aggregate_runs_by_project_id(1, page)
-
-    assert aggregated_page == Page(
-        page_number=1,
-        page_size=10,
-        total_entity_count=0,
-        entities=[],
-    )
+    assert aggregated_page == []
 
 
 def test_aggregate_page(test_context, local_computer_run_information):
@@ -57,59 +45,49 @@ def test_aggregate_page(test_context, local_computer_run_information):
     test_context.mock_run_status_calculator.calculate.side_effect = (
         lambda x: RunStatus.SUCCESS if x == 1 else RunStatus.FAILED
     )
-    page = Page(
-        page_number=1,
-        page_size=10,
-        total_entity_count=0,
-        entities=[
-            Run(
-                id=1,
-                project_id=1,
-                run_batch_id=1,
-                started_at=datetime.datetime(year=2022, month=9, day=30),
-                branch_name=BranchName("main"),
-                previous_run_id=None,
-                run_information=local_computer_run_information,
-            ),
-            Run(
-                id=2,
-                project_id=1,
-                run_batch_id=1,
-                started_at=datetime.datetime(year=2022, month=9, day=30),
-                branch_name=BranchName("main"),
-                previous_run_id=None,
-                run_information=local_computer_run_information,
-            ),
-        ],
-    )
+    runs = [
+        Run(
+            id=1,
+            project_id=1,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+            branch_name=BranchName("main"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        ),
+        Run(
+            id=2,
+            project_id=1,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+            branch_name=BranchName("main"),
+            previous_run_id=None,
+            run_information=local_computer_run_information,
+        ),
+    ]
 
-    aggregated_page = test_context.aggregate_run.aggregate_runs_by_project_id(1, page)
+    aggregated_runs = test_context.aggregate_run.aggregate_runs_by_project_id(1, runs)
 
-    assert aggregated_page == Page(
-        page_number=1,
-        page_size=10,
-        total_entity_count=0,
-        entities=[
-            RunDto(
-                id=1,
-                project_id=1,
-                started_at=datetime.datetime(year=2022, month=9, day=30),
-                status=RunStatus.FAILED,
-                duration=1,
-                branch_name=BranchName(name="main"),
-                run_information=local_computer_run_information,
-            ),
-            RunDto(
-                id=2,
-                project_id=2,
-                started_at=datetime.datetime(year=2022, month=9, day=30),
-                status=RunStatus.FAILED,
-                duration=2,
-                branch_name=BranchName(name="main"),
-                run_information=local_computer_run_information,
-            ),
-        ],
-    )
+    assert aggregated_runs == [
+        RunDto(
+            id=1,
+            project_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+            status=RunStatus.FAILED,
+            duration=1,
+            branch_name=BranchName(name="main"),
+            run_information=local_computer_run_information,
+        ),
+        RunDto(
+            id=2,
+            project_id=2,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+            status=RunStatus.FAILED,
+            duration=2,
+            branch_name=BranchName(name="main"),
+            run_information=local_computer_run_information,
+        ),
+    ]
     test_context.mock_test_result_repository.find_status_by_project_id.assert_called_with(
         1
     )
