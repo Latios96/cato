@@ -3,7 +3,12 @@ import React from "react";
 import { render } from "@testing-library/react";
 import { Page } from "../../../components/Pagination/Page";
 import { HashRouter } from "react-router-dom";
-import { RunDto, RunStatus } from "../../../catoapimodels/catoapimodels";
+import {
+  OS,
+  RunBatchProvider,
+  RunDto,
+  RunStatus,
+} from "../../../catoapimodels/catoapimodels";
 
 describe("RunListImplementation", () => {
   it("should display a loading skeletion while loading", () => {
@@ -54,6 +59,14 @@ describe("RunListImplementation", () => {
           status: RunStatus.SUCCESS,
           duration: 1,
           branchName: "default",
+          runInformation: {
+            id: 0,
+            runId: 0,
+            os: OS.WINDOWS,
+            computerName: "cray",
+            localUsername: "username",
+            runInformationType: RunBatchProvider.LOCAL_COMPUTER,
+          },
         },
         {
           id: 2,
@@ -62,6 +75,14 @@ describe("RunListImplementation", () => {
           status: RunStatus.SUCCESS,
           duration: 1,
           branchName: "default",
+          runInformation: {
+            id: 0,
+            runId: 0,
+            os: OS.WINDOWS,
+            computerName: "cray",
+            localUsername: "username",
+            runInformationType: RunBatchProvider.LOCAL_COMPUTER,
+          },
         },
         {
           id: 3,
@@ -70,6 +91,14 @@ describe("RunListImplementation", () => {
           status: RunStatus.SUCCESS,
           duration: 1,
           branchName: "default",
+          runInformation: {
+            id: 0,
+            runId: 0,
+            os: OS.WINDOWS,
+            computerName: "cray",
+            localUsername: "username",
+            runInformationType: RunBatchProvider.LOCAL_COMPUTER,
+          },
         },
       ],
     };
