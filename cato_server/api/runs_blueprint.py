@@ -125,7 +125,10 @@ class RunsBlueprint(APIRouter):
             {run_id}
         )
         suite_count = suite_count_by_run_id[run_id]
-        test_count = self._test_result_repository.test_count_by_run_id(run_id)
+        test_count_by_run_id = self._test_result_repository.test_count_by_run_ids(
+            {run_id}
+        )
+        test_count = test_count_by_run_id[run_id]
         test_result_status_information = (
             self._test_result_repository.status_information_by_run_id(run_id)
         )

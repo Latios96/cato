@@ -257,18 +257,27 @@ class SqlAlchemyTestResultRepository(
 
         return status_by_run_id
 
-    def test_count_by_run_id(self, run_id: int) -> int:
-        session = self._session_maker()
-
-        count = (
-            session.query(_TestResultMapping)
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .count()
-        )
-        session.close()
-        return count
+    def test_count_by_run_ids(self, run_ids: Set[int]) -> Dict[int, int]:
+        with self._session_maker() as session:
+            test_result_counts = (
+                session.query(
+                    func.count(_TestResultMapping.id),
+                    _RunMapping.id,
+                )
+                .join(_SuiteResultMapping.test_results)
+                .join(_RunMapping)
+                .filter(_RunMapping.id.in_(run_ids))
+                .group_by(_RunMapping.id)
+                .all()
+            )
+            counts_by_run_id = defaultdict(lambda: 0)
+            counts_by_run_id.update(
+                {
+                    run_id: suite_result_count
+                    for suite_result_count, run_id in test_result_counts
+                }
+            )
+            return counts_by_run_id
 
     def duration_by_run_id(self, run_id: int) -> float:
         session = self._session_maker()

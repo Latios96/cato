@@ -537,15 +537,17 @@ def test_find_status_by_project_id_should_not_find(
 
 
 def test_test_count_by_run_id_should_find_one(
-    sqlalchemy_test_result_repository, run, test_result
+    sqlalchemy_test_result_repository, run, test_result, run_factory
 ):
-    assert sqlalchemy_test_result_repository.test_count_by_run_id(run.id) == 1
+    assert sqlalchemy_test_result_repository.test_count_by_run_ids({run.id}) == {1: 1}
 
 
 def test_test_count_by_run_id_should_find_nothing(
     sqlalchemy_test_result_repository, run
 ):
-    assert sqlalchemy_test_result_repository.test_count_by_run_id(run.id) == 0
+    assert (
+        sqlalchemy_test_result_repository.test_count_by_run_ids({run.id})[run.id] == 0
+    )
 
 
 def test_duration_by_run_id_single_test(

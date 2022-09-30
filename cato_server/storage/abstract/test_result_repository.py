@@ -53,7 +53,7 @@ class TestResultRepository(AbstractRepository[TestResult, int]):
     ) -> Dict[int, Set[UnifiedTestStatus]]:
         raise NotImplementedError()
 
-    def test_count_by_run_id(self, run_id: int) -> int:
+    def test_count_by_run_ids(self, run_ids: Set[int]) -> Dict[int, int]:
         raise NotImplementedError()
 
     def duration_by_run_id(self, run_id: int) -> float:
