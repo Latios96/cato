@@ -628,39 +628,6 @@ def test_test_count_by_run_id_should_find_nothing(
     )
 
 
-def test_duration_by_run_id_single_test(
-    sqlalchemy_test_result_repository, run, test_result
-):
-    assert (
-        sqlalchemy_test_result_repository.duration_by_run_id(run.id)
-        == test_result.seconds
-    )
-
-
-def test_duration_by_run_id_multiple_test(
-    sqlalchemy_test_result_repository, run, test_result
-):
-    test_result.id = 0
-    sqlalchemy_test_result_repository.save(test_result)
-
-    assert sqlalchemy_test_result_repository.duration_by_run_id(run.id) == 10
-
-
-def test_duration_by_run_id_no_tests(sqlalchemy_test_result_repository, run):
-    assert sqlalchemy_test_result_repository.duration_by_run_id(run.id) == 0
-
-
-def test_duration_by_run_id_respect_running_tests(
-    sqlalchemy_test_result_repository, run, test_result
-):
-    test_result.id = 0
-    test_result.unified_test_status = UnifiedTestStatus.RUNNING
-    test_result.started_at = aware_now_in_utc() - datetime.timedelta(seconds=10)
-    sqlalchemy_test_result_repository.save(test_result)
-
-    assert sqlalchemy_test_result_repository.duration_by_run_id(run.id) == 20
-
-
 def test_find_status_by_suite_ids(
     sqlalchemy_test_result_repository, suite_result, test_result
 ):
@@ -766,6 +733,13 @@ class TestDurationByRunIds:
         assert sqlalchemy_test_result_repository.duration_by_run_ids({run.id}) == {
             1: 10.0
         }
+
+    def test_multiple_runs(
+        self, sqlalchemy_test_result_repository, multiple_runs_with_tests
+    ):
+        assert sqlalchemy_test_result_repository.duration_by_run_ids(
+            {multiple_runs_with_tests.run_1.id, multiple_runs_with_tests.run_2.id}
+        ) == {2: 20.0, 3: 10.0}
 
     def test_duration_by_run_ids_no_tests(self, sqlalchemy_test_result_repository, run):
         assert sqlalchemy_test_result_repository.duration_by_run_ids({run.id}) == {1: 0}
