@@ -6,7 +6,7 @@ import { HashRouter } from "react-router-dom";
 import {
   OS,
   RunBatchProvider,
-  RunDto,
+  RunAggregate,
   RunStatus,
 } from "../../../catoapimodels/catoapimodels";
 
@@ -47,7 +47,7 @@ describe("RunListImplementation", () => {
   });
 
   it("should display a list of runs", () => {
-    const page: Page<RunDto> = {
+    const page: Page<RunAggregate> = {
       pageNumber: 1,
       pageSize: 3,
       totalEntityCount: 3,
@@ -67,6 +67,15 @@ describe("RunListImplementation", () => {
             localUsername: "username",
             runInformationType: RunBatchProvider.LOCAL_COMPUTER,
           },
+          suiteCount: 1,
+          testCount: 1,
+          progress: {
+            progressPercentage: 0,
+            waitingTestCount: 2,
+            runningTestCount: 3,
+            failedTestCount: 4,
+            succeededTestCount: 1,
+          },
         },
         {
           id: 2,
@@ -83,6 +92,15 @@ describe("RunListImplementation", () => {
             localUsername: "username",
             runInformationType: RunBatchProvider.LOCAL_COMPUTER,
           },
+          suiteCount: 1,
+          testCount: 1,
+          progress: {
+            progressPercentage: 0,
+            waitingTestCount: 2,
+            runningTestCount: 3,
+            failedTestCount: 4,
+            succeededTestCount: 1,
+          },
         },
         {
           id: 3,
@@ -98,6 +116,15 @@ describe("RunListImplementation", () => {
             computerName: "cray",
             localUsername: "username",
             runInformationType: RunBatchProvider.LOCAL_COMPUTER,
+          },
+          suiteCount: 1,
+          testCount: 1,
+          progress: {
+            progressPercentage: 0,
+            waitingTestCount: 2,
+            runningTestCount: 3,
+            failedTestCount: 4,
+            succeededTestCount: 1,
           },
         },
       ],

@@ -13,7 +13,8 @@ import {
   updateQueryString,
 } from "../../../utils/queryStringUtils";
 import { fromCommaSeparatedString, toCommaSeparatedString } from "./utils";
-import { RunDto } from "../../../catoapimodels/catoapimodels";
+import { RunAggregate } from "../../../catoapimodels/catoapimodels";
+
 interface Props {
   projectId: number;
 }
@@ -49,7 +50,7 @@ function RunList(props: Props) {
     isLoading: loadingRuns,
     error: errorRuns,
     data: runs,
-  } = useReFetch<Page<RunDto>>(
+  } = useReFetch<Page<RunAggregate>>(
     `/api/v1/runs/project/${props.projectId}?pageNumber=${
       state.page.pageNumber
     }&pageSize=${state.page.pageSize}&branches=${toCommaSeparatedString(

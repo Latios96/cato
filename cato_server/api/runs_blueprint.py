@@ -6,8 +6,6 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
-from cato_common.dtos.run_dto import RunDto
-from cato_common.dtos.run_summary_dto import RunSummaryDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
 from cato_common.storage.page import PageRequest, Page
@@ -105,44 +103,13 @@ class RunsBlueprint(APIRouter):
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)
-        status_by_run_id = self._test_result_repository.find_status_by_project_id(
-            run.project_id
-        )
-        status = self._run_status_calculator.calculate(
-            status_by_run_id.get(run.id, set())
-        )
-        duration = self._test_result_repository.duration_by_run_ids({run_id})[run_id]
-        run_dto = RunDto(
-            id=run.id,
-            project_id=run.id,
-            started_at=run.started_at,
-            status=status,
-            duration=duration,
-            branch_name=run.branch_name,
-            run_information=run.run_information,
-        )
-        suite_count_by_run_id = self._suite_result_repository.suite_count_by_run_ids(
-            {run_id}
-        )
-        suite_count = suite_count_by_run_id[run_id]
-        test_count_by_run_id = self._test_result_repository.test_count_by_run_ids(
-            {run_id}
-        )
-        test_count = test_count_by_run_id[run_id]
-        test_result_status_information = (
-            self._test_result_repository.status_information_by_run_ids({run_id})
-        )[run_id]
 
-        run_summary_dto = RunSummaryDto(
-            run=run_dto,
-            suite_count=suite_count,
-            test_count=test_count,
-            waiting_test_count=test_result_status_information.not_started,
-            running_test_count=test_result_status_information.running,
-            succeeded_test_count=test_result_status_information.success,
-            failed_test_count=test_result_status_information.failed,
+        run_aggregates = self._aggregate_run.aggregate_runs_by_project_id(
+            run.project_id, [run]
         )
-        return JSONResponse(content=self._object_mapper.to_dict(run_summary_dto))
+        run_aggregate = run_aggregates[0]
+
+        return JSONResponse(content=self._object_mapper.to_dict(run_aggregate))
 
     def get_branches(self, project_id: int) -> Response:
         branch_names = self._run_repository.find_branches_for_project(project_id)

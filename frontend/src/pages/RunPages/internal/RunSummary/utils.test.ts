@@ -4,10 +4,13 @@ describe("Run Summary utils", () => {
   it("should calculate status percentage correctly", () => {
     const statusPercentage = calculateStatusPercentage({
       testCount: 10,
-      waitingTestCount: 2,
-      runningTestCount: 3,
-      failedTestCount: 4,
-      succeededTestCount: 1,
+      progress: {
+        progressPercentage: 0,
+        waitingTestCount: 2,
+        runningTestCount: 3,
+        failedTestCount: 4,
+        succeededTestCount: 1,
+      },
     });
 
     expect(statusPercentage).toStrictEqual({

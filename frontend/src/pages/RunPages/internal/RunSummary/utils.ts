@@ -1,4 +1,4 @@
-import { RunSummaryDto } from "../../../../catoapimodels/catoapimodels";
+import { RunAggregate } from "../../../../catoapimodels/catoapimodels";
 
 export interface StatusPercentage {
   waitingToStart: number;
@@ -7,21 +7,16 @@ export interface StatusPercentage {
   failed: number;
 }
 export function calculateStatusPercentage(
-  runSummaryDto: Pick<
-    RunSummaryDto,
-    | "waitingTestCount"
-    | "testCount"
-    | "runningTestCount"
-    | "succeededTestCount"
-    | "failedTestCount"
-  >
+  runAggregate: Pick<RunAggregate, "testCount" | "progress">
 ): StatusPercentage {
   return {
     waitingToStart:
-      (runSummaryDto.waitingTestCount / runSummaryDto.testCount) * 100,
-    running: (runSummaryDto.runningTestCount / runSummaryDto.testCount) * 100,
+      (runAggregate.progress.waitingTestCount / runAggregate.testCount) * 100,
+    running:
+      (runAggregate.progress.runningTestCount / runAggregate.testCount) * 100,
     succeeded:
-      (runSummaryDto.succeededTestCount / runSummaryDto.testCount) * 100,
-    failed: (runSummaryDto.failedTestCount / runSummaryDto.testCount) * 100,
+      (runAggregate.progress.succeededTestCount / runAggregate.testCount) * 100,
+    failed:
+      (runAggregate.progress.failedTestCount / runAggregate.testCount) * 100,
   };
 }

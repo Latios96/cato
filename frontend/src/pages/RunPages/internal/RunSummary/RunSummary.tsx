@@ -17,7 +17,7 @@ import UnsyncedEdits from "../../../../components/UnsyncedEdits/UnsyncedEdits";
 import { calculateStatusPercentage } from "./utils";
 import { RunSummaryProgressBar } from "./RunSummaryProgressBar";
 import {
-  RunSummaryDto,
+  RunAggregate,
   TestEditCount,
 } from "../../../../catoapimodels/catoapimodels";
 
@@ -27,10 +27,10 @@ interface Props {
 
 export function RunSummary(props: Props) {
   const {
-    data: runSummaryDto,
+    data: runAggregate,
     isLoading,
     error,
-  } = useReFetch<RunSummaryDto>(`/api/v1/runs/${props.runId}/summary`, 5000, [
+  } = useReFetch<RunAggregate>(`/api/v1/runs/${props.runId}/summary`, 5000, [
     props.runId,
   ]);
 
@@ -44,32 +44,30 @@ export function RunSummary(props: Props) {
     [props.runId]
   );
 
-  function renderSummary(runSummaryDto: RunSummaryDto) {
-    const statusPercentage = calculateStatusPercentage(runSummaryDto);
+  function renderSummary(runAggregate: RunAggregate) {
+    const statusPercentage = calculateStatusPercentage(runAggregate);
     return (
       <>
         <InfoBox>
           <InfoBoxElement
-            value={"" + runSummaryDto.suiteCount}
+            value={"" + runAggregate.suiteCount}
             title={"suites"}
             id={"runSummary suites"}
           />
           <InfoBoxElement
-            value={"" + runSummaryDto.testCount}
+            value={"" + runAggregate.testCount}
             title={"tests"}
             id={"runSummary tests"}
           />
           <InfoBoxElement
-            value={"" + runSummaryDto.failedTestCount}
+            value={"" + runAggregate.progress.failedTestCount}
             title={"failed tests"}
             id={"runSummary failed tests"}
           />
           <InfoBoxElement
             value={
               "" +
-              formatDuration(
-                runSummaryDto.run.duration ? runSummaryDto.run.duration : 0
-              )
+              formatDuration(runAggregate.duration ? runAggregate.duration : 0)
             }
             title={"duration"}
             id={"runSummary duration"}
@@ -100,7 +98,7 @@ export function RunSummary(props: Props) {
           />
         </ErrorState>
         <DataLoadedState>
-          {runSummaryDto ? renderSummary(runSummaryDto) : null}
+          {runAggregate ? renderSummary(runAggregate) : null}
         </DataLoadedState>
       </LoadingStateHandler>
       <LoadingStateHandler

@@ -9,12 +9,12 @@ import _ from "lodash";
 import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
 import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
 import { SelectInput } from "../../../components/Inputs/Select/SelectInput";
-import { RunDto } from "../../../catoapimodels/catoapimodels";
+import { RunAggregate } from "../../../catoapimodels/catoapimodels";
 import FormattedTime from "../../../components/FormattedTime/FormattedTime";
 
 interface Props {
   projectId: number;
-  runs: Page<RunDto> | undefined;
+  runs: Page<RunAggregate> | undefined;
   isLoading: boolean;
   error?: Error;
   pageChanged: (pageRequest: PageRequest) => void;

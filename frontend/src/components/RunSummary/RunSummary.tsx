@@ -5,7 +5,7 @@ import { Spinner } from "react-bootstrap";
 import { formatDuration } from "../../utils/dateUtils";
 import InfoBox from "../InfoBox/InfoBox";
 import InfoBoxElement from "../InfoBox/InfoBoxElement/InfoBoxElement";
-import { RunSummaryDto } from "../../catoapimodels/catoapimodels";
+import { RunAggregate } from "../../catoapimodels/catoapimodels";
 
 interface Props {
   projectId: number;
@@ -13,7 +13,7 @@ interface Props {
 }
 
 interface State {
-  runSummaryDto: RunSummaryDto | null;
+  runAggregate: RunAggregate | null;
   isLoadingSummary: boolean;
 }
 
@@ -21,7 +21,7 @@ class RunSummary extends Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      runSummaryDto: null,
+      runAggregate: null,
       isLoadingSummary: false,
     };
   }
@@ -46,7 +46,7 @@ class RunSummary extends Component<Props, State> {
         .then((res) => res.json())
         .then(
           (result) => {
-            this.setState({ runSummaryDto: result, isLoadingSummary: false });
+            this.setState({ runAggregate: result, isLoadingSummary: false });
           },
           (error) => {}
         );
@@ -68,8 +68,8 @@ class RunSummary extends Component<Props, State> {
                 </Spinner>
               </div>
             </div>
-          ) : this.state.runSummaryDto ? (
-            this.renderInfoBox(this.state.runSummaryDto)
+          ) : this.state.runAggregate ? (
+            this.renderInfoBox(this.state.runAggregate)
           ) : (
             <React.Fragment />
           )}
@@ -78,20 +78,17 @@ class RunSummary extends Component<Props, State> {
     );
   }
 
-  renderInfoBox = (runSummaryDto: RunSummaryDto) => {
+  renderInfoBox = (runAggregate: RunAggregate) => {
     return (
       <InfoBox>
+        <InfoBoxElement value={"" + runAggregate.suiteCount} title={"suites"} />
+        <InfoBoxElement value={"" + runAggregate.testCount} title={"tests"} />
         <InfoBoxElement
-          value={"" + runSummaryDto.suiteCount}
-          title={"suites"}
-        />
-        <InfoBoxElement value={"" + runSummaryDto.testCount} title={"tests"} />
-        <InfoBoxElement
-          value={"" + runSummaryDto.failedTestCount}
+          value={"" + runAggregate.progress.failedTestCount}
           title={"failed tests"}
         />
         <InfoBoxElement
-          value={"" + formatDuration(runSummaryDto.run.duration)}
+          value={"" + formatDuration(runAggregate.duration)}
           title={"duration"}
         />
       </InfoBox>

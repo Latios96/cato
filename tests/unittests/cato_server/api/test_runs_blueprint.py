@@ -174,29 +174,31 @@ def test_get_run_summary(client_with_session, run, test_result):
     rv = client_with_session.get(f"/api/v1/runs/{run.id}/summary")
 
     assert rv.json() == {
-        "waitingTestCount": 1,
-        "failedTestCount": 0,
-        "runningTestCount": 0,
-        "succeededTestCount": 0,
-        "run": {
+        "id": 1,
+        "projectId": 1,
+        "startedAt": run.started_at.isoformat(),
+        "status": "NOT_STARTED",
+        "duration": 5.0,
+        "branchName": "default",
+        "runInformation": {
+            "computerName": "cray",
             "id": 1,
-            "projectId": 1,
-            "startedAt": run.started_at.isoformat(),
-            "status": "NOT_STARTED",
-            "duration": 5.0,
-            "branchName": "default",
-            "runInformation": {
-                "computerName": "cray",
-                "id": 1,
-                "localUsername": "username",
-                "os": "WINDOWS",
-                "runId": 1,
-                "runInformationType": "LOCAL_COMPUTER",
-            },
+            "localUsername": "username",
+            "os": "WINDOWS",
+            "runId": 1,
+            "runInformationType": "LOCAL_COMPUTER",
         },
         "suiteCount": 1,
         "testCount": 1,
+        "progress": {
+            "waitingTestCount": 1,
+            "failedTestCount": 0,
+            "runningTestCount": 0,
+            "succeededTestCount": 0,
+            "progressPercentage": 0.0,
+        },
     }
+
     assert rv.status_code == 200
 
 
