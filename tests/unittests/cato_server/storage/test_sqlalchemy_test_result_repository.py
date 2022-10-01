@@ -1,4 +1,5 @@
 import datetime
+from dataclasses import dataclass
 
 import pytest
 from sqlalchemy.exc import IntegrityError
@@ -6,6 +7,8 @@ from sqlalchemy.exc import IntegrityError
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.machine_info import MachineInfo
+from cato_common.domain.run import Run
+from cato_common.domain.suite_result import SuiteResult
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
@@ -19,6 +22,73 @@ from cato_server.storage.abstract.test_result_filter_options import (
     TestResultFilterOptions,
 )
 from cato_common.utils.datetime_utils import aware_now_in_utc
+
+
+@dataclass
+class MultipleRunsFixture:
+    run_1: Run
+    run_2: Run
+    suite_result_1: SuiteResult
+    suite_result_2: SuiteResult
+    test_result_run_1_1: TestResult
+    test_result_run_1_2: TestResult
+    test_result_run_1_3: TestResult
+    test_result_run_1_4: TestResult
+    test_result_run_2_1: TestResult
+    test_result_run_2_2: TestResult
+
+
+@pytest.fixture
+def multiple_runs_with_tests(
+    saving_run_factory,
+    saving_suite_result_factory,
+    saving_test_result_factory,
+    suite_result,
+):
+    run_1 = saving_run_factory()
+    run_2 = saving_run_factory()
+    suite_result_1 = saving_suite_result_factory(run_id=run_1.id)
+    suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
+    test_result_run_1_1 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
+    )
+    test_result_run_1_2 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        unified_test_status=UnifiedTestStatus.RUNNING,
+    )
+    test_result_run_1_3 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        unified_test_status=UnifiedTestStatus.SUCCESS,
+    )
+    test_result_run_1_4 = saving_test_result_factory(
+        suite_result_id=suite_result_1.id,
+        unified_test_status=UnifiedTestStatus.FAILED,
+    )
+    test_result_run_2_1 = saving_test_result_factory(
+        suite_result_id=suite_result_2.id,
+        unified_test_status=UnifiedTestStatus.NOT_STARTED,
+    )
+    test_result_run_2_2 = saving_test_result_factory(
+        suite_result_id=suite_result_2.id,
+        unified_test_status=UnifiedTestStatus.RUNNING,
+    )
+    saving_test_result_factory(
+        unified_test_status=UnifiedTestStatus.SUCCESS,
+        suite_result_id=suite_result.id,
+    )
+    return MultipleRunsFixture(
+        run_1=run_1,
+        run_2=run_2,
+        suite_result_1=suite_result_1,
+        suite_result_2=suite_result_2,
+        test_result_run_1_1=test_result_run_1_1,
+        test_result_run_1_2=test_result_run_1_2,
+        test_result_run_1_3=test_result_run_1_3,
+        test_result_run_1_4=test_result_run_1_4,
+        test_result_run_2_1=test_result_run_2_1,
+        test_result_run_2_2=test_result_run_2_2,
+    )
 
 
 def test_save_success(
@@ -816,59 +886,21 @@ class TestStatusInformationByRunIds:
         )
 
     def test_multiple_runs_only_correct_run(
-        self,
-        sqlalchemy_test_result_repository,
-        suite_result,
-        saving_test_result_factory,
-        saving_run_factory,
-        saving_suite_result_factory,
+        self, sqlalchemy_test_result_repository, multiple_runs_with_tests
     ):
-        run_1 = saving_run_factory()
-        run_2 = saving_run_factory()
-        suite_result_1 = saving_suite_result_factory(run_id=run_1.id)
-        suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
-        test_result_run_1_1 = saving_test_result_factory(
-            suite_result_id=suite_result_1.id,
-            unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        )
-        test_result_run_1_2 = saving_test_result_factory(
-            suite_result_id=suite_result_1.id,
-            unified_test_status=UnifiedTestStatus.RUNNING,
-        )
-        test_result_run_1_3 = saving_test_result_factory(
-            suite_result_id=suite_result_1.id,
-            unified_test_status=UnifiedTestStatus.SUCCESS,
-        )
-        test_result_run_1_5 = saving_test_result_factory(
-            suite_result_id=suite_result_1.id,
-            unified_test_status=UnifiedTestStatus.FAILED,
-        )
-        test_result_run_1_1 = saving_test_result_factory(
-            suite_result_id=suite_result_2.id,
-            unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        )
-        test_result_run_1_2 = saving_test_result_factory(
-            suite_result_id=suite_result_2.id,
-            unified_test_status=UnifiedTestStatus.RUNNING,
-        )
-        saving_test_result_factory(
-            unified_test_status=UnifiedTestStatus.SUCCESS,
-            suite_result_id=suite_result.id,
-        )
-
         status_information_run_1 = (
-            sqlalchemy_test_result_repository.status_information_by_run_ids({run_1.id})[
-                run_1.id
-            ]
+            sqlalchemy_test_result_repository.status_information_by_run_ids(
+                {multiple_runs_with_tests.run_1.id}
+            )[multiple_runs_with_tests.run_1.id]
         )
         assert status_information_run_1 == TestResultStatusInformation(
             not_started=1, running=1, failed=1, success=1
         )
 
         status_information_run_2 = (
-            sqlalchemy_test_result_repository.status_information_by_run_ids({run_2.id})[
-                run_2.id
-            ]
+            sqlalchemy_test_result_repository.status_information_by_run_ids(
+                {multiple_runs_with_tests.run_2.id}
+            )[multiple_runs_with_tests.run_2.id]
         )
         assert status_information_run_2 == TestResultStatusInformation(
             not_started=1, running=1, failed=0, success=0
