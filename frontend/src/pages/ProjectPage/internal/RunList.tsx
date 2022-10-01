@@ -51,7 +51,7 @@ function RunList(props: Props) {
     error: errorRuns,
     data: runs,
   } = useReFetch<Page<RunAggregate>>(
-    `/api/v1/runs/project/${props.projectId}?pageNumber=${
+    `/api/v1/runs/project/${props.projectId}/aggregate?pageNumber=${
       state.page.pageNumber
     }&pageSize=${state.page.pageSize}&branches=${toCommaSeparatedString(
       state.branches

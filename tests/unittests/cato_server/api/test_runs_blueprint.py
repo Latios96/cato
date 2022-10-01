@@ -1,5 +1,5 @@
 def test_get_run_by_project_id_should_return(client_with_session, project, run):
-    url = "/api/v1/runs/project/{}".format(project.id)
+    url = "/api/v1/runs/project/{}/aggregate".format(project.id)
 
     rv = client_with_session.get(url)
 
@@ -39,7 +39,7 @@ def test_get_run_by_project_id_should_return(client_with_session, project, run):
 
 
 def test_get_run_by_project_id_should_return_empty_list(client_with_session, project):
-    url = "/api/v1/runs/project/{}".format(project.id)
+    url = "/api/v1/runs/project/{}/aggregate".format(project.id)
 
     rv = client_with_session.get(url)
 
@@ -53,7 +53,9 @@ def test_get_run_by_project_id_should_return_empty_list(client_with_session, pro
 
 
 def test_get_run_by_project_id_paged_should_return(client_with_session, project, run):
-    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
+    url = "/api/v1/runs/project/{}/aggregate?pageNumber=1&pageSize=10".format(
+        project.id
+    )
 
     rv = client_with_session.get(url)
 
@@ -95,8 +97,10 @@ def test_get_run_by_project_id_paged_should_return(client_with_session, project,
 def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should_return_empty(
     client_with_session, project, run
 ):
-    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
-        project.id, "test"
+    url = (
+        "/api/v1/runs/project/{}/aggregate?pageNumber=1&pageSize=10&branches={}".format(
+            project.id, "test"
+        )
     )
 
     rv = client_with_session.get(url)
@@ -113,8 +117,10 @@ def test_get_run_by_project_id_paged_filtered_by_non_existing_branch_name_should
 def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_return(
     client_with_session, project, run
 ):
-    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10&branches={}".format(
-        project.id, "default"
+    url = (
+        "/api/v1/runs/project/{}/aggregate?pageNumber=1&pageSize=10&branches={}".format(
+            project.id, "default"
+        )
     )
 
     rv = client_with_session.get(url)
@@ -157,7 +163,9 @@ def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_ret
 def test_get_run_by_project_id_pages_should_return_empty_page(
     client_with_session, project
 ):
-    url = "/api/v1/runs/project/{}?pageNumber=1&pageSize=10".format(project.id)
+    url = "/api/v1/runs/project/{}/aggregate?pageNumber=1&pageSize=10".format(
+        project.id
+    )
 
     rv = client_with_session.get(url)
 
@@ -171,7 +179,7 @@ def test_get_run_by_project_id_pages_should_return_empty_page(
 
 
 def test_get_run_summary(client_with_session, run, test_result):
-    rv = client_with_session.get(f"/api/v1/runs/{run.id}/summary")
+    rv = client_with_session.get(f"/api/v1/runs/{run.id}/aggregate")
 
     assert rv.json() == {
         "id": 1,

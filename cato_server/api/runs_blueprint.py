@@ -53,13 +53,13 @@ class RunsBlueprint(APIRouter):
 
         self._run_status_calculator = RunStatusCalculator()
 
-        self.get("/runs/project/{project_id}")(self.runs_by_project)
+        self.get("/runs/project/{project_id}/aggregate")(self.aggregate_runs_by_project)
         self.get("/runs/project/{project_id}/branches")(self.get_branches)
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
-        self.get("/runs/{run_id}/summary")(self.summary)
+        self.get("/runs/{run_id}/aggregate")(self.aggregate_run)
         self.post("/runs")(self.create_run)
 
-    def runs_by_project(self, project_id: int, request: Request) -> Response:
+    def aggregate_runs_by_project(self, project_id: int, request: Request) -> Response:
         run_filter_options = run_filter_options_from_request(request.query_params)
 
         page_request = page_request_from_request(request.query_params)
@@ -99,7 +99,7 @@ class RunsBlueprint(APIRouter):
         run = self._create_run_usecase.create_run(create_run_dto)
         return JSONResponse(content=self._object_mapper.to_dict(run), status_code=201)
 
-    def summary(self, run_id: int) -> Response:
+    def aggregate_run(self, run_id: int) -> Response:
         run = self._run_repository.find_by_id(run_id)
         if not run:
             return Response(status_code=404)

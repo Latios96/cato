@@ -42,7 +42,7 @@ class RunSummary extends Component<Props, State> {
 
   fetchRunSummary = () => {
     this.setState({ isLoadingSummary: true }, () => {
-      fetch(`/api/v1/runs/${this.props.runId}/summary`)
+      fetch(`/api/v1/runs/${this.props.runId}/aggregate`)
         .then((res) => res.json())
         .then(
           (result) => {

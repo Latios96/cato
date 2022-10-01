@@ -30,7 +30,7 @@ export function RunSummary(props: Props) {
     data: runAggregate,
     isLoading,
     error,
-  } = useReFetch<RunAggregate>(`/api/v1/runs/${props.runId}/summary`, 5000, [
+  } = useReFetch<RunAggregate>(`/api/v1/runs/${props.runId}/aggregate`, 5000, [
     props.runId,
   ]);
 
