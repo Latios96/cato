@@ -614,18 +614,19 @@ def test_find_status_by_project_id_should_not_find(
     assert result == {}
 
 
-def test_test_count_by_run_id_should_find_one(
-    sqlalchemy_test_result_repository, run, test_result, run_factory
-):
-    assert sqlalchemy_test_result_repository.test_count_by_run_ids({run.id}) == {1: 1}
+class TestCountByRunId:
+    def test_should_find_one(
+        self, sqlalchemy_test_result_repository, run, test_result, run_factory
+    ):
+        assert sqlalchemy_test_result_repository.test_count_by_run_ids({run.id}) == {
+            1: 1
+        }
 
-
-def test_test_count_by_run_id_should_find_nothing(
-    sqlalchemy_test_result_repository, run
-):
-    assert (
-        sqlalchemy_test_result_repository.test_count_by_run_ids({run.id})[run.id] == 0
-    )
+    def test_should_find_nothing(self, sqlalchemy_test_result_repository, run):
+        assert (
+            sqlalchemy_test_result_repository.test_count_by_run_ids({run.id})[run.id]
+            == 0
+        )
 
 
 def test_find_status_by_suite_ids(
