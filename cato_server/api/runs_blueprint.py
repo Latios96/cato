@@ -111,7 +111,7 @@ class RunsBlueprint(APIRouter):
         status = self._run_status_calculator.calculate(
             status_by_run_id.get(run.id, set())
         )
-        duration = self._test_result_repository.duration_by_run_id(run_id)
+        duration = self._test_result_repository.duration_by_run_ids({run_id})[run_id]
         run_dto = RunDto(
             id=run.id,
             project_id=run.id,
