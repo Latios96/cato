@@ -622,6 +622,13 @@ class TestCountByRunId:
             1: 1
         }
 
+    def test_multiple_runs(
+        self, sqlalchemy_test_result_repository, multiple_runs_with_tests
+    ):
+        assert sqlalchemy_test_result_repository.test_count_by_run_ids(
+            {multiple_runs_with_tests.run_1.id, multiple_runs_with_tests.run_2.id}
+        ) == {2: 4, 3: 2}
+
     def test_should_find_nothing(self, sqlalchemy_test_result_repository, run):
         assert (
             sqlalchemy_test_result_repository.test_count_by_run_ids({run.id})[run.id]
