@@ -91,129 +91,137 @@ def multiple_runs_with_tests(
     )
 
 
-def test_save_success(
-    sqlalchemy_test_result_repository, suite_result, stored_image_factory, stored_file
-):
-    start_time = aware_now_in_utc()
-    end_time = aware_now_in_utc()
-    test_result = TestResult(
-        id=0,
-        suite_result_id=suite_result.id,
-        test_name="my_test_name",
-        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
-        test_command="my_command",
-        test_variables={"testkey": "test_value"},
-        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        seconds=5,
-        message="sucess",
-        image_output=stored_image_factory().id,
-        reference_image=stored_image_factory().id,
-        diff_image=stored_image_factory().id,
-        started_at=start_time,
-        finished_at=end_time,
-        comparison_settings=ComparisonSettings(
-            method=ComparisonMethod.SSIM, threshold=1
-        ),
-        error_value=0.5,
-        thumbnail_file_id=stored_file.id,
-        failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
-    )
+class TestSave:
+    def test_success(
+        self,
+        sqlalchemy_test_result_repository,
+        suite_result,
+        stored_image_factory,
+        stored_file,
+    ):
+        start_time = aware_now_in_utc()
+        end_time = aware_now_in_utc()
+        test_result = TestResult(
+            id=0,
+            suite_result_id=suite_result.id,
+            test_name="my_test_name",
+            test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
+            test_command="my_command",
+            test_variables={"testkey": "test_value"},
+            machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+            seconds=5,
+            message="sucess",
+            image_output=stored_image_factory().id,
+            reference_image=stored_image_factory().id,
+            diff_image=stored_image_factory().id,
+            started_at=start_time,
+            finished_at=end_time,
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            ),
+            error_value=0.5,
+            thumbnail_file_id=stored_file.id,
+            failure_reason=TestFailureReason.EXIT_CODE_NON_ZERO,
+        )
 
-    test_result_save = sqlalchemy_test_result_repository.save(test_result)
+        test_result_save = sqlalchemy_test_result_repository.save(test_result)
 
-    test_result.id = test_result_save.id
+        test_result.id = test_result_save.id
 
-    assert test_result_save == test_result
+        assert test_result_save == test_result
 
+    def test_save_with_success_no_failure_reason(
+        self,
+        sqlalchemy_test_result_repository,
+        suite_result,
+        stored_image_factory,
+        stored_file,
+    ):
+        start_time = aware_now_in_utc()
+        end_time = aware_now_in_utc()
+        test_result = TestResult(
+            id=0,
+            suite_result_id=suite_result.id,
+            test_name="my_test_name",
+            test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
+            test_command="my_command",
+            test_variables={"testkey": "test_value"},
+            machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+            seconds=5,
+            message="sucess",
+            image_output=stored_image_factory().id,
+            reference_image=stored_image_factory().id,
+            diff_image=stored_image_factory().id,
+            started_at=start_time,
+            finished_at=end_time,
+            comparison_settings=ComparisonSettings(
+                method=ComparisonMethod.SSIM, threshold=1
+            ),
+            error_value=0.5,
+            thumbnail_file_id=stored_file.id,
+            failure_reason=None,
+        )
 
-def test_save_with_success_no_failure_reason(
-    sqlalchemy_test_result_repository, suite_result, stored_image_factory, stored_file
-):
-    start_time = aware_now_in_utc()
-    end_time = aware_now_in_utc()
-    test_result = TestResult(
-        id=0,
-        suite_result_id=suite_result.id,
-        test_name="my_test_name",
-        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
-        test_command="my_command",
-        test_variables={"testkey": "test_value"},
-        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        seconds=5,
-        message="sucess",
-        image_output=stored_image_factory().id,
-        reference_image=stored_image_factory().id,
-        diff_image=stored_image_factory().id,
-        started_at=start_time,
-        finished_at=end_time,
-        comparison_settings=ComparisonSettings(
-            method=ComparisonMethod.SSIM, threshold=1
-        ),
-        error_value=0.5,
-        thumbnail_file_id=stored_file.id,
-        failure_reason=None,
-    )
+        test_result_save = sqlalchemy_test_result_repository.save(test_result)
 
-    test_result_save = sqlalchemy_test_result_repository.save(test_result)
+        test_result.id = test_result_save.id
 
-    test_result.id = test_result_save.id
+        assert test_result_save == test_result
 
-    assert test_result_save == test_result
+    def test_save_success_no_machine_info_no_comparison_settings(
+        self, sqlalchemy_test_result_repository, suite_result, stored_image_factory
+    ):
+        start_time = aware_now_in_utc()
+        end_time = aware_now_in_utc()
+        test_result = TestResult(
+            id=0,
+            suite_result_id=suite_result.id,
+            test_name="my_test_name",
+            test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
+            test_command="my_command",
+            test_variables={"testkey": "test_value"},
+            machine_info=None,
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+            seconds=5,
+            message="sucess",
+            image_output=stored_image_factory().id,
+            reference_image=stored_image_factory().id,
+            diff_image=stored_image_factory().id,
+            started_at=start_time,
+            finished_at=end_time,
+        )
 
+        test_result_save = sqlalchemy_test_result_repository.save(test_result)
 
-def test_save_success_no_machine_info_no_comparison_settings(
-    sqlalchemy_test_result_repository, suite_result, stored_image_factory
-):
-    start_time = aware_now_in_utc()
-    end_time = aware_now_in_utc()
-    test_result = TestResult(
-        id=0,
-        suite_result_id=suite_result.id,
-        test_name="my_test_name",
-        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
-        test_command="my_command",
-        test_variables={"testkey": "test_value"},
-        machine_info=None,
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        seconds=5,
-        message="sucess",
-        image_output=stored_image_factory().id,
-        reference_image=stored_image_factory().id,
-        diff_image=stored_image_factory().id,
-        started_at=start_time,
-        finished_at=end_time,
-    )
+        test_result.id = test_result_save.id
 
-    test_result_save = sqlalchemy_test_result_repository.save(test_result)
+        assert test_result_save == test_result
 
-    test_result.id = test_result_save.id
-
-    assert test_result_save == test_result
-
-
-def test_save_no_suite_result(sqlalchemy_test_result_repository, stored_image):
-    start_time = aware_now_in_utc()
-    end_time = aware_now_in_utc()
-    test_result = TestResult(
-        id=0,
-        suite_result_id=0,
-        test_name="my_test_name",
-        test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
-        test_command="my_command",
-        test_variables={"testkey": "test_value"},
-        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        seconds=5,
-        message="sucess",
-        image_output=stored_image.id,
-        reference_image=stored_image.id,
-        started_at=start_time,
-        finished_at=end_time,
-    )
-    with pytest.raises(IntegrityError):
-        sqlalchemy_test_result_repository.save(test_result)
+    def test_save_no_suite_result(
+        self, sqlalchemy_test_result_repository, stored_image
+    ):
+        start_time = aware_now_in_utc()
+        end_time = aware_now_in_utc()
+        test_result = TestResult(
+            id=0,
+            suite_result_id=0,
+            test_name="my_test_name",
+            test_identifier=TestIdentifier(suite_name="my_suite", test_name="my_test"),
+            test_command="my_command",
+            test_variables={"testkey": "test_value"},
+            machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+            seconds=5,
+            message="sucess",
+            image_output=stored_image.id,
+            reference_image=stored_image.id,
+            started_at=start_time,
+            finished_at=end_time,
+        )
+        with pytest.raises(IntegrityError):
+            sqlalchemy_test_result_repository.save(test_result)
 
 
 def test_find_by_suite_result_and_test_identifier(
