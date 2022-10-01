@@ -1,6 +1,7 @@
 from itertools import chain
 from typing import List
 
+from cato_common.domain.branch_name import BranchName
 from cato_common.dtos.run_aggregate import RunProgress
 from cato_common.dtos.run_batch_aggregate import RunBatchAggregate
 from cato_server.domain.run_batch import RunBatch
@@ -49,7 +50,7 @@ class AggregateRunBatch:
             runs=runs,
             status=status,
             duration=duration,
-            branch_name=runs[0].branch_name,
+            branch_name=runs[0].branch_name if runs else BranchName("unknown"),
             suite_count=suite_count,
             test_count=test_count,
             progress=progress,

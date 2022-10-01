@@ -36,7 +36,16 @@ class TestGetRunBatchesByProjectId:
         assert rv_json == {
             "entities": [
                 {
+                    "branchName": "default",
+                    "duration": 0,
                     "id": 1,
+                    "progress": {
+                        "failedTestCount": 0,
+                        "progressPercentage": 0,
+                        "runningTestCount": 0,
+                        "succeededTestCount": 0,
+                        "waitingTestCount": 0,
+                    },
                     "projectId": 1,
                     "runBatchIdentifier": {
                         "provider": "LOCAL_COMPUTER",
@@ -48,10 +57,16 @@ class TestGetRunBatchesByProjectId:
                     "runs": [
                         {
                             "branchName": "default",
+                            "duration": 0,
                             "id": 1,
-                            "previousRunId": None,
+                            "progress": {
+                                "failedTestCount": 0,
+                                "progressPercentage": 0,
+                                "runningTestCount": 0,
+                                "succeededTestCount": 0,
+                                "waitingTestCount": 0,
+                            },
                             "projectId": 1,
-                            "runBatchId": 1,
                             "runInformation": {
                                 "computerName": "cray",
                                 "id": 1,
@@ -60,9 +75,15 @@ class TestGetRunBatchesByProjectId:
                                 "runId": 1,
                                 "runInformationType": "LOCAL_COMPUTER",
                             },
+                            "status": "NOT_STARTED",
+                            "suiteCount": 0,
+                            "testCount": 0,
                         }
                     ],
-                },
+                    "status": "NOT_STARTED",
+                    "suiteCount": 0,
+                    "testCount": 0,
+                }
             ],
             "pageNumber": 1,
             "pageSize": 30,
@@ -92,7 +113,16 @@ class TestGetRunBatchesByProjectId:
         assert rv_json == {
             "entities": [
                 {
+                    "branchName": "default",
+                    "duration": 0,
                     "id": 1,
+                    "progress": {
+                        "failedTestCount": 0,
+                        "progressPercentage": 0,
+                        "runningTestCount": 0,
+                        "succeededTestCount": 0,
+                        "waitingTestCount": 0,
+                    },
                     "projectId": 1,
                     "runBatchIdentifier": {
                         "provider": "LOCAL_COMPUTER",
@@ -104,10 +134,16 @@ class TestGetRunBatchesByProjectId:
                     "runs": [
                         {
                             "branchName": "default",
+                            "duration": 0,
                             "id": 1,
-                            "previousRunId": None,
+                            "progress": {
+                                "failedTestCount": 0,
+                                "progressPercentage": 0,
+                                "runningTestCount": 0,
+                                "succeededTestCount": 0,
+                                "waitingTestCount": 0,
+                            },
                             "projectId": 1,
-                            "runBatchId": 1,
                             "runInformation": {
                                 "actor": "Latios96",
                                 "attempt": 1,
@@ -123,9 +159,15 @@ class TestGetRunBatchesByProjectId:
                                 "runInformationType": "GITHUB_ACTIONS",
                                 "runNumber": 2,
                             },
+                            "status": "NOT_STARTED",
+                            "suiteCount": 0,
+                            "testCount": 0,
                         }
                     ],
-                },
+                    "status": "NOT_STARTED",
+                    "suiteCount": 0,
+                    "testCount": 0,
+                }
             ],
             "pageNumber": 1,
             "pageSize": 30,
