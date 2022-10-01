@@ -614,7 +614,7 @@ def test_find_status_by_project_id_should_not_find(
     assert result == {}
 
 
-class TestCountByRunId:
+class TestCountByRunIds:
     def test_should_find_one(
         self, sqlalchemy_test_result_repository, run, test_result, run_factory
     ):
