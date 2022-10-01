@@ -279,36 +279,6 @@ class SqlAlchemyTestResultRepository(
             )
             return counts_by_run_id
 
-    def duration_by_run_id(self, run_id: int) -> float:
-        session = self._session_maker()
-
-        summed_duration = (
-            session.query(func.sum(_TestResultMapping.seconds).label("duration"))
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .scalar()
-        )
-        summed_duration = summed_duration if summed_duration is not None else 0
-
-        start_points_of_started_tests = (
-            session.query(_TestResultMapping)
-            .join(_SuiteResultMapping)
-            .join(_RunMapping)
-            .filter(_RunMapping.id == run_id)
-            .filter(_TestResultMapping.unified_test_status == "RUNNING")
-            .all()
-        )
-        now = aware_now_in_utc()
-        additional_durations = list(
-            map(lambda x: (now - x.started_at).seconds, start_points_of_started_tests)
-        )
-
-        total_duration = summed_duration + sum(additional_durations)
-
-        session.close()
-        return total_duration
-
     def duration_by_run_ids(self, run_ids: Set[int]) -> Dict[int, float]:
         session = self._session_maker()
 
