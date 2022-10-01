@@ -727,158 +727,171 @@ def test_duration_by_run_ids_respect_running_tests(
     assert sqlalchemy_test_result_repository.duration_by_run_ids({run.id}) == {1: 20.0}
 
 
-def test_status_information_by_run_id_empty_for_not_existing_run_id(
-    sqlalchemy_test_result_repository,
-):
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({42})[42]
-    )
+class TestStatusInformationByRunIds:
+    def test_empty_for_not_existing_run_id(
+        self,
+        sqlalchemy_test_result_repository,
+    ):
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({42})[42]
+        )
 
-    assert status_information == TestResultStatusInformation(
-        not_started=0, running=0, failed=0, success=0
-    )
+        assert status_information == TestResultStatusInformation(
+            not_started=0, running=0, failed=0, success=0
+        )
 
+    def test_empty_run_should_return_all_0(
+        self, sqlalchemy_test_result_repository, run
+    ):
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
+                run.id
+            ]
+        )
 
-def test_status_information_by_run_id_empty_run_should_return_all_0(
-    sqlalchemy_test_result_repository, run
-):
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
-            run.id
-        ]
-    )
+        assert status_information == TestResultStatusInformation(
+            not_started=0, running=0, failed=0, success=0
+        )
 
-    assert status_information == TestResultStatusInformation(
-        not_started=0, running=0, failed=0, success=0
-    )
+    def test_run_with_single_not_started_test(
+        self,
+        sqlalchemy_test_result_repository,
+        run,
+        suite_result,
+        saving_test_result_factory,
+    ):
+        saving_test_result_factory(
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+            suite_result_id=suite_result.id,
+        )
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
+                run.id
+            ]
+        )
 
+        assert status_information == TestResultStatusInformation(
+            not_started=1, running=0, failed=0, success=0
+        )
 
-def test_status_information_by_run_id_run_with_single_not_started_test(
-    sqlalchemy_test_result_repository, run, suite_result, saving_test_result_factory
-):
-    saving_test_result_factory(
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-        suite_result_id=suite_result.id,
-    )
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
-            run.id
-        ]
-    )
+    def test_run_with_single_running_test(
+        self,
+        sqlalchemy_test_result_repository,
+        run,
+        suite_result,
+        saving_test_result_factory,
+    ):
+        saving_test_result_factory(
+            unified_test_status=UnifiedTestStatus.RUNNING,
+            suite_result_id=suite_result.id,
+        )
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
+                run.id
+            ]
+        )
 
-    assert status_information == TestResultStatusInformation(
-        not_started=1, running=0, failed=0, success=0
-    )
+        assert status_information == TestResultStatusInformation(
+            not_started=0, running=1, failed=0, success=0
+        )
 
+    def test_run_with_single_failed_test(
+        self,
+        sqlalchemy_test_result_repository,
+        run,
+        suite_result,
+        saving_test_result_factory,
+    ):
+        saving_test_result_factory(
+            unified_test_status=UnifiedTestStatus.FAILED,
+            suite_result_id=suite_result.id,
+        )
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
+                run.id
+            ]
+        )
 
-def test_status_information_by_run_id_run_with_single_running_test(
-    sqlalchemy_test_result_repository, run, suite_result, saving_test_result_factory
-):
-    saving_test_result_factory(
-        unified_test_status=UnifiedTestStatus.RUNNING,
-        suite_result_id=suite_result.id,
-    )
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
-            run.id
-        ]
-    )
+        assert status_information == TestResultStatusInformation(
+            not_started=0, running=0, failed=1, success=0
+        )
 
-    assert status_information == TestResultStatusInformation(
-        not_started=0, running=1, failed=0, success=0
-    )
+    def test_run_with_single_succeded_test(
+        self,
+        sqlalchemy_test_result_repository,
+        run,
+        suite_result,
+        saving_test_result_factory,
+    ):
+        saving_test_result_factory(
+            unified_test_status=UnifiedTestStatus.SUCCESS,
+            suite_result_id=suite_result.id,
+        )
+        status_information = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
+                run.id
+            ]
+        )
 
+        assert status_information == TestResultStatusInformation(
+            not_started=0, running=0, failed=0, success=1
+        )
 
-def test_status_information_by_run_id_run_with_single_failed_test(
-    sqlalchemy_test_result_repository, run, suite_result, saving_test_result_factory
-):
-    saving_test_result_factory(
-        unified_test_status=UnifiedTestStatus.FAILED,
-        suite_result_id=suite_result.id,
-    )
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
-            run.id
-        ]
-    )
+    def test_multiple_runs_only_correct_run(
+        self,
+        sqlalchemy_test_result_repository,
+        suite_result,
+        saving_test_result_factory,
+        saving_run_factory,
+        saving_suite_result_factory,
+    ):
+        run_1 = saving_run_factory()
+        run_2 = saving_run_factory()
+        suite_result_1 = saving_suite_result_factory(run_id=run_1.id)
+        suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
+        test_result_run_1_1 = saving_test_result_factory(
+            suite_result_id=suite_result_1.id,
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+        )
+        test_result_run_1_2 = saving_test_result_factory(
+            suite_result_id=suite_result_1.id,
+            unified_test_status=UnifiedTestStatus.RUNNING,
+        )
+        test_result_run_1_3 = saving_test_result_factory(
+            suite_result_id=suite_result_1.id,
+            unified_test_status=UnifiedTestStatus.SUCCESS,
+        )
+        test_result_run_1_5 = saving_test_result_factory(
+            suite_result_id=suite_result_1.id,
+            unified_test_status=UnifiedTestStatus.FAILED,
+        )
+        test_result_run_1_1 = saving_test_result_factory(
+            suite_result_id=suite_result_2.id,
+            unified_test_status=UnifiedTestStatus.NOT_STARTED,
+        )
+        test_result_run_1_2 = saving_test_result_factory(
+            suite_result_id=suite_result_2.id,
+            unified_test_status=UnifiedTestStatus.RUNNING,
+        )
+        saving_test_result_factory(
+            unified_test_status=UnifiedTestStatus.SUCCESS,
+            suite_result_id=suite_result.id,
+        )
 
-    assert status_information == TestResultStatusInformation(
-        not_started=0, running=0, failed=1, success=0
-    )
+        status_information_run_1 = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run_1.id})[
+                run_1.id
+            ]
+        )
+        assert status_information_run_1 == TestResultStatusInformation(
+            not_started=1, running=1, failed=1, success=1
+        )
 
-
-def test_status_information_by_run_id_run_with_single_succeded_test(
-    sqlalchemy_test_result_repository, run, suite_result, saving_test_result_factory
-):
-    saving_test_result_factory(
-        unified_test_status=UnifiedTestStatus.SUCCESS,
-        suite_result_id=suite_result.id,
-    )
-    status_information = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run.id})[
-            run.id
-        ]
-    )
-
-    assert status_information == TestResultStatusInformation(
-        not_started=0, running=0, failed=0, success=1
-    )
-
-
-def test_status_information_by_run_id_multiple_runs_only_correct_run(
-    sqlalchemy_test_result_repository,
-    suite_result,
-    saving_test_result_factory,
-    saving_run_factory,
-    saving_suite_result_factory,
-):
-    run_1 = saving_run_factory()
-    run_2 = saving_run_factory()
-    suite_result_1 = saving_suite_result_factory(run_id=run_1.id)
-    suite_result_2 = saving_suite_result_factory(run_id=run_2.id)
-    test_result_run_1_1 = saving_test_result_factory(
-        suite_result_id=suite_result_1.id,
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-    )
-    test_result_run_1_2 = saving_test_result_factory(
-        suite_result_id=suite_result_1.id,
-        unified_test_status=UnifiedTestStatus.RUNNING,
-    )
-    test_result_run_1_3 = saving_test_result_factory(
-        suite_result_id=suite_result_1.id,
-        unified_test_status=UnifiedTestStatus.SUCCESS,
-    )
-    test_result_run_1_5 = saving_test_result_factory(
-        suite_result_id=suite_result_1.id,
-        unified_test_status=UnifiedTestStatus.FAILED,
-    )
-    test_result_run_1_1 = saving_test_result_factory(
-        suite_result_id=suite_result_2.id,
-        unified_test_status=UnifiedTestStatus.NOT_STARTED,
-    )
-    test_result_run_1_2 = saving_test_result_factory(
-        suite_result_id=suite_result_2.id,
-        unified_test_status=UnifiedTestStatus.RUNNING,
-    )
-    saving_test_result_factory(
-        unified_test_status=UnifiedTestStatus.SUCCESS,
-        suite_result_id=suite_result.id,
-    )
-
-    status_information_run_1 = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run_1.id})[
-            run_1.id
-        ]
-    )
-    assert status_information_run_1 == TestResultStatusInformation(
-        not_started=1, running=1, failed=1, success=1
-    )
-
-    status_information_run_2 = (
-        sqlalchemy_test_result_repository.status_information_by_run_ids({run_2.id})[
-            run_2.id
-        ]
-    )
-    assert status_information_run_2 == TestResultStatusInformation(
-        not_started=1, running=1, failed=0, success=0
-    )
+        status_information_run_2 = (
+            sqlalchemy_test_result_repository.status_information_by_run_ids({run_2.id})[
+                run_2.id
+            ]
+        )
+        assert status_information_run_2 == TestResultStatusInformation(
+            not_started=1, running=1, failed=0, success=0
+        )
