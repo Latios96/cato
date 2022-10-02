@@ -3,8 +3,7 @@ import datetime
 import pytest
 
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.run import Run
-from cato_common.dtos.run_aggregate import RunAggregate, RunProgress
+from cato_common.dtos.run_aggregate import RunProgress
 from cato_common.dtos.run_batch_aggregate import RunBatchAggregate
 from cato_server.domain.run_batch import RunBatch
 from cato_server.domain.run_status import RunStatus
@@ -28,43 +27,17 @@ def test_context():
 
 
 def test_aggregate_run_batch(
-    test_context, run_batch_identifier, local_computer_run_information
+    test_context,
+    run_batch_identifier,
+    local_computer_run_information,
+    run_factory,
+    run_aggregate_factory,
 ):
-    run_1_aggregate = RunAggregate(
-        id=1,
-        project_id=1,
-        started_at=datetime.datetime(year=2022, month=9, day=30),
-        status=RunStatus.SUCCESS,
-        duration=1,
-        branch_name=BranchName(name="main"),
-        run_information=local_computer_run_information,
-        suite_count=1,
-        test_count=10,
-        progress=RunProgress(
-            waiting_test_count=1,
-            running_test_count=2,
-            failed_test_count=3,
-            succeeded_test_count=4,
-            progress_percentage=0.9,
-        ),
+    run_1_aggregate = run_aggregate_factory(
+        id=1, duration=1, status=RunStatus.SUCCESS, suite_count=1, test_count=10
     )
-    run_2_aggregate = RunAggregate(
-        id=2,
-        project_id=1,
-        started_at=datetime.datetime(year=2022, month=9, day=30),
-        status=RunStatus.FAILED,
-        duration=2,
-        branch_name=BranchName(name="main"),
-        run_information=local_computer_run_information,
-        suite_count=2,
-        test_count=10,
-        progress=RunProgress(
-            waiting_test_count=1,
-            running_test_count=2,
-            failed_test_count=3,
-            succeeded_test_count=4,
-            progress_percentage=0.9,
-        ),
+    run_2_aggregate = run_aggregate_factory(
+        id=2, duration=2, status=RunStatus.FAILED, suite_count=2, test_count=10
     )
     test_context.mock_aggregate_run.aggregate_runs_by_project_id.return_value = [
         run_1_aggregate,
@@ -72,23 +45,15 @@ def test_aggregate_run_batch(
     ]
     test_context.mock_run_status_calculator.calculate.return_value = RunStatus.FAILED
     run_batch_runs = [
-        Run(
+        run_factory(
             id=1,
-            project_id=1,
             run_batch_id=1,
             started_at=datetime.datetime(year=2022, month=9, day=30),
-            branch_name=BranchName("main"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
         ),
-        Run(
+        run_factory(
             id=2,
-            project_id=1,
             run_batch_id=1,
             started_at=datetime.datetime(year=2022, month=9, day=30),
-            branch_name=BranchName("main"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
         ),
     ]
     run_batches = [
