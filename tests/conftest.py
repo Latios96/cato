@@ -58,12 +58,14 @@ from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_result import TestResult
 from cato_common.domain.unified_test_status import UnifiedTestStatus
+from cato_common.dtos.run_aggregate import RunProgress, RunAggregate
 from cato_common.mappers.generic_class_mapper import GenericClassMapper
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.configuration.parts.celery_configuration import CeleryConfiguration
 from cato_server.configuration.parts.oiio_configuration import OiioConfiguration
 from cato_server.domain.run_batch import RunBatch
+from cato_server.domain.run_status import RunStatus
 from cato_server.startup import create_app
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.bindings_factory import (
@@ -704,6 +706,65 @@ def auth_user(sqlalchemy_auth_user_repository):
         email=Email("foo@bar.com"),
     )
     return sqlalchemy_auth_user_repository.save(auth_user)
+
+
+@pytest.fixture
+def run_aggregate_factory(local_computer_run_information: LocalComputerRunInformation):
+    def func(
+        id: Optional[int] = None,
+        project_id: Optional[int] = None,
+        started_at: Optional[datetime.datetime] = None,
+        status: Optional[RunStatus] = None,
+        duration: Optional[float] = None,
+        branch_name: Optional[BranchName] = None,
+        run_information: Optional[BasicRunInformation] = None,
+        suite_count: Optional[int] = None,
+        test_count: Optional[int] = None,
+        progress: Optional[RunProgress] = None,
+    ):
+        return RunAggregate(
+            id=or_default(
+                id,
+                1,
+            ),
+            project_id=or_default(project_id, 1),
+            started_at=or_default(
+                started_at, datetime.datetime(year=2022, month=9, day=30)
+            ),
+            status=or_default(
+                status,
+                RunStatus.SUCCESS,
+            ),
+            duration=or_default(
+                duration,
+                1,
+            ),
+            branch_name=or_default(
+                branch_name,
+                BranchName(name="main"),
+            ),
+            run_information=or_default(run_information, local_computer_run_information),
+            suite_count=or_default(
+                suite_count,
+                1,
+            ),
+            test_count=or_default(
+                test_count,
+                10,
+            ),
+            progress=or_default(
+                progress,
+                RunProgress(
+                    waiting_test_count=1,
+                    running_test_count=2,
+                    failed_test_count=3,
+                    succeeded_test_count=4,
+                    progress_percentage=0.9,
+                ),
+            ),
+        )
+
+    return func
 
 
 def random_port():
