@@ -29,7 +29,7 @@ function RunBatchListEntry(props: Props) {
               {"#" + props.runBatch.runs[0].id}
             </Link>
           ) : (
-            <></>
+            <>{props.runBatch.runBatchIdentifier.runName}</>
           )
         }
         runLike={{ ...props.runBatch, ...props.runBatch.runs[0] }}
