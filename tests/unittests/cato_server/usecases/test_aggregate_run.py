@@ -39,7 +39,7 @@ def test_aggregate_empty_page(test_context):
     assert aggregated_page == []
 
 
-def test_aggregate_page(test_context, local_computer_run_information):
+def test_aggregate_page(test_context, local_computer_run_information, run_factory):
     test_context.mock_test_result_repository.find_status_by_project_id.return_value = {
         1: {UnifiedTestStatus.SUCCESS},
         2: {UnifiedTestStatus.FAILED},
@@ -65,23 +65,15 @@ def test_aggregate_page(test_context, local_computer_run_information):
         2: 2,
     }
     runs = [
-        Run(
+        run_factory(
             id=1,
-            project_id=1,
             run_batch_id=1,
             started_at=datetime.datetime(year=2022, month=9, day=30),
-            branch_name=BranchName("main"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
         ),
-        Run(
+        run_factory(
             id=2,
-            project_id=1,
             run_batch_id=1,
             started_at=datetime.datetime(year=2022, month=9, day=30),
-            branch_name=BranchName("main"),
-            previous_run_id=None,
-            run_information=local_computer_run_information,
         ),
     ]
 
