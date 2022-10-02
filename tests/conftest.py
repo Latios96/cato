@@ -265,7 +265,7 @@ def run_factory(saving_run_batch_factory, local_computer_run_information):
         run_information: BasicRunInformation = None,
     ):
         return Run(
-            id=or_default(id, 1),
+            id=or_default(id, 0),
             project_id=or_default(project_id, 1),
             run_batch_id=or_default(
                 run_batch_id, lambda: saving_run_batch_factory().id
