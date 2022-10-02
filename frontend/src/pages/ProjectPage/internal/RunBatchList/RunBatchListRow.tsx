@@ -44,16 +44,19 @@ function RunBatchListRow(props: Props) {
       style={props.isExpandable ? { fontWeight: "600" } : {}}
     >
       <td>
-        <div className={"d-flex align-items-center"}>
+        <div className={"d-flex align-items-center"} style={{ gap: "4px" }}>
           {showCaret ? (
             <Expander
               isExpanded={props.isExpanded}
               onExpandToggleClick={props.onExpandToggleClick}
             />
           ) : (
-            <div style={{ width: "16px" }} />
+            <div style={{ width: "20x" }} />
           )}
-          {props.isIndented ? <div style={{ width: "25px" }} /> : null}
+          <div
+            className={props.isIndented ? "mr-4" : ""}
+            style={{ width: props.isExpandable ? "" : "20px" }}
+          />
           {props.link}
           {props.representsSingleRun || props.isExpandable ? (
             <RunBatchProviderInformation

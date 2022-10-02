@@ -8,7 +8,7 @@ interface Props {
 
 function Expander(props: Props) {
   return (
-    <div className={"mr-2"}>
+    <div>
       {props.isExpanded ? (
         <CaretDownFill size={20} onClick={props.onExpandToggleClick} />
       ) : (
