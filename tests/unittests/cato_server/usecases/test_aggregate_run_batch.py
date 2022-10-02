@@ -99,3 +99,78 @@ def test_aggregate_run_batch(
     test_context.mock_run_status_calculator.calculate.assert_called_with(
         {RunStatus.SUCCESS, RunStatus.FAILED}
     )
+
+
+def test_aggregate_multiple_run_batches_should_have_correct_runs(
+    test_context, run_batch_identifier, run_factory, run_aggregate_factory
+):
+    run_1_aggregate = run_aggregate_factory(
+        id=1, duration=1, status=RunStatus.SUCCESS, suite_count=1, test_count=10
+    )
+    run_2_aggregate = run_aggregate_factory(
+        id=2, duration=2, status=RunStatus.FAILED, suite_count=2, test_count=10
+    )
+    run_3_aggregate = run_aggregate_factory(
+        id=3, duration=1, status=RunStatus.SUCCESS, suite_count=1, test_count=10
+    )
+    run_4_aggregate = run_aggregate_factory(
+        id=4, duration=2, status=RunStatus.FAILED, suite_count=2, test_count=10
+    )
+    test_context.mock_aggregate_run.aggregate_runs_by_project_id.return_value = [
+        run_1_aggregate,
+        run_2_aggregate,
+        run_3_aggregate,
+        run_4_aggregate,
+    ]
+    test_context.mock_run_status_calculator.calculate.return_value = RunStatus.FAILED
+    run_batch_1_runs = [
+        run_factory(
+            id=1,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+        ),
+        run_factory(
+            id=2,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+        ),
+    ]
+    run_batch_2_runs = [
+        run_factory(
+            id=3,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+        ),
+        run_factory(
+            id=4,
+            run_batch_id=1,
+            started_at=datetime.datetime(year=2022, month=9, day=30),
+        ),
+    ]
+    run_batches = [
+        RunBatch(
+            id=1,
+            run_batch_identifier=run_batch_identifier,
+            project_id=1,
+            created_at=datetime.datetime(year=2022, month=9, day=30),
+            runs=run_batch_1_runs,
+        ),
+        RunBatch(
+            id=2,
+            run_batch_identifier=run_batch_identifier,
+            project_id=1,
+            created_at=datetime.datetime(year=2022, month=9, day=30),
+            runs=run_batch_2_runs,
+        ),
+    ]
+
+    aggregated_run_batches = (
+        test_context.aggregate_run_batch.aggregate_run_batches_by_project_id(
+            1, run_batches
+        )
+    )
+    run_ids = list(
+        map(lambda batch: [x.id for x in batch.runs], aggregated_run_batches)
+    )
+
+    assert run_ids == [[1, 2], [3, 4]]
