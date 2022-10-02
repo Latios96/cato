@@ -5,7 +5,6 @@ import {
   RunBatchAggregate,
   RunBatchIdentifier,
 } from "../../../../catoapimodels/catoapimodels";
-import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import ProgressBar from "./ProgressBar";
 import FormattedTime from "../../../../components/FormattedTime/FormattedTime";
 import { formatDuration } from "../../../../utils/dateUtils";
@@ -30,11 +29,12 @@ interface Props {
   isExpanded: boolean;
   onExpandToggleClick: () => void;
 }
+/* TODO improve code by using mode
 enum Mode {
   EXPENDABLE_RUN_BATCH,
   EXPANDED_RUN_BATCH,
   RUN_BATCH_WITH_SINGLE_RUN,
-}
+}*/
 
 function RunBatchListRow(props: Props) {
   const showCaret = props.isExpandable;

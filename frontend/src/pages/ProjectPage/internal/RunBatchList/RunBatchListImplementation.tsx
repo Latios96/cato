@@ -1,6 +1,5 @@
 import React from "react";
 import styles from "./RunBatchList.module.scss";
-import { Link } from "react-router-dom";
 import { Page, PageRequest } from "../../../../components/Pagination/Page";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
@@ -8,7 +7,6 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import SimplePaginationControls from "../../../../components/Pagination/SimplePaginationControls";
 import { SelectInput } from "../../../../components/Inputs/Select/SelectInput";
 import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
-import RunBatchListRow from "./RunBatchListRow";
 import RunBatchListEntry from "./RunBatchListEntry";
 
 interface Props {

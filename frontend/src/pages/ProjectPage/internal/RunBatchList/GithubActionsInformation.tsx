@@ -1,5 +1,5 @@
 import React from "react";
-import { BoxArrowInUpRight, Github } from "react-bootstrap-icons";
+import { BoxArrowInUpRight } from "react-bootstrap-icons";
 import { GithubActionsRunInformation } from "../../../../catoapimodels/catoapimodels";
 
 interface Props {

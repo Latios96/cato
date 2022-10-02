@@ -1,10 +1,6 @@
 import React from "react";
-import {
-  BasicRunInformation,
-  RunBatchProvider,
-} from "../../../../catoapimodels/catoapimodels";
+import { RunBatchProvider } from "../../../../catoapimodels/catoapimodels";
 import { Github, Pc, QuestionCircle } from "react-bootstrap-icons";
-import GithubActionsInformation from "./GithubActionsInformation";
 import WrapTitle from "../../../../components/WrapTitle/WrapTitle";
 
 interface Props {

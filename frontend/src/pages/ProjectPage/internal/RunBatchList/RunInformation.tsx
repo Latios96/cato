@@ -1,6 +1,5 @@
 import React from "react";
 import { BasicRunInformation } from "../../../../catoapimodels/catoapimodels";
-import { Pc, QuestionCircle } from "react-bootstrap-icons";
 import GithubActionsInformation from "./GithubActionsInformation";
 import OsInformation from "./OsInformation";
 
