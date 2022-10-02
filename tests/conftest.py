@@ -255,6 +255,7 @@ def project(saving_project_factory):
 @pytest.fixture
 def run_factory(saving_run_batch_factory, local_computer_run_information):
     def func(
+        id=None,
         project_id=None,
         run_batch_id=None,
         started_at=None,
@@ -262,7 +263,7 @@ def run_factory(saving_run_batch_factory, local_computer_run_information):
         run_information: BasicRunInformation = None,
     ):
         return Run(
-            id=0,
+            id=or_default(id, 1),
             project_id=or_default(project_id, 1),
             run_batch_id=or_default(
                 run_batch_id, lambda: saving_run_batch_factory().id
