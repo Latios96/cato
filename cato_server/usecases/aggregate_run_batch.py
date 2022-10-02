@@ -72,7 +72,7 @@ class AggregateRunBatch:
 
         progress = 0
         if test_count:
-            progress = float(executed_tests) / float(test_count)
+            progress = float(executed_tests) / float(test_count) * 100
 
         return RunProgress(
             waiting_test_count=waiting,

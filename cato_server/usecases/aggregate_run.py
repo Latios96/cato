@@ -92,4 +92,4 @@ class AggregateRun:
         )
         if not test_count:
             return 0
-        return float(executed_tests) / float(test_count)
+        return float(executed_tests) / float(test_count) * 100

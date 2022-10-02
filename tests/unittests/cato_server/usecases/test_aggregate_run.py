@@ -95,7 +95,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
                 running_test_count=2,
                 failed_test_count=3,
                 succeeded_test_count=4,
-                progress_percentage=0.9,
+                progress_percentage=90.0,
             ),
         ),
         RunAggregate(
@@ -113,7 +113,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
                 running_test_count=2,
                 failed_test_count=3,
                 succeeded_test_count=4,
-                progress_percentage=0.9,
+                progress_percentage=90.0,
             ),
         ),
     ]

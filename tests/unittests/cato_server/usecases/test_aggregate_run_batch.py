@@ -89,7 +89,7 @@ def test_aggregate_run_batch(
                 running_test_count=4,
                 failed_test_count=6,
                 succeeded_test_count=8,
-                progress_percentage=0.9,
+                progress_percentage=90.0,
             ),
         )
     ]
