@@ -5,13 +5,14 @@ import {
   RunBatchAggregate,
   RunBatchIdentifier,
 } from "../../../../catoapimodels/catoapimodels";
-import { CaretRightFill } from "react-bootstrap-icons";
+import { CaretDownFill, CaretRightFill } from "react-bootstrap-icons";
 import ProgressBar from "./ProgressBar";
 import FormattedTime from "../../../../components/FormattedTime/FormattedTime";
 import { formatDuration } from "../../../../utils/dateUtils";
 import RunStatus from "../../../../components/Status/RunStatus";
 import RunInformation from "./RunInformation";
 import RunBatchProviderInformation from "./RunBatchProviderInformation";
+import Expander from "./Expander";
 
 type RunLike = (RunBatchAggregate | RunAggregate) & {
   runInformation?: BasicRunInformation;
@@ -26,16 +27,29 @@ interface Props {
   representsSingleRun: boolean;
   link: ReactElement;
   runLike: RunLike;
+  isExpanded: boolean;
+  onExpandToggleClick: () => void;
+}
+enum Mode {
+  EXPENDABLE_RUN_BATCH,
+  EXPANDED_RUN_BATCH,
+  RUN_BATCH_WITH_SINGLE_RUN,
 }
 
 function RunBatchListRow(props: Props) {
   const showCaret = props.isExpandable;
   return (
-    <tr key={props.runLike.id}>
+    <tr
+      key={props.runLike.id}
+      style={props.isExpandable ? { fontWeight: "600" } : {}}
+    >
       <td>
         <div className={"d-flex align-items-center"}>
           {showCaret ? (
-            <CaretRightFill size={16} />
+            <Expander
+              isExpanded={props.isExpanded}
+              onExpandToggleClick={props.onExpandToggleClick}
+            />
           ) : (
             <div style={{ width: "16px" }} />
           )}

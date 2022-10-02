@@ -9,6 +9,7 @@ import SimplePaginationControls from "../../../../components/Pagination/SimplePa
 import { SelectInput } from "../../../../components/Inputs/Select/SelectInput";
 import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
 import RunBatchListRow from "./RunBatchListRow";
+import RunBatchListEntry from "./RunBatchListEntry";
 
 interface Props {
   projectId: number;
@@ -67,48 +68,11 @@ function RunBatchListImplementation(props: Props) {
         <tbody>
           {props.runs && !props.isLoading
             ? props.runs.entities.map((runBatch) => {
-                const hasSingleRun = runBatch.runs.length === 1;
                 return (
-                  <>
-                    <RunBatchListRow
-                      key={runBatch.id}
-                      isExpandable={!hasSingleRun}
-                      isIndented={false}
-                      representsSingleRun={hasSingleRun}
-                      link={
-                        hasSingleRun ? (
-                          <Link
-                            to={`/projects/${props.projectId}/runs/${runBatch.id}`}
-                          >
-                            {"#" + runBatch.id}
-                          </Link>
-                        ) : (
-                          <>{"#" + runBatch.id}</>
-                        )
-                      }
-                      runLike={{ ...runBatch, ...runBatch.runs[0] }}
-                    />
-                    {runBatch.runs.length > 1
-                      ? runBatch.runs.map((run) => {
-                          return (
-                            <RunBatchListRow
-                              key={run.id}
-                              isIndented={true}
-                              isExpandable={false}
-                              representsSingleRun={false}
-                              link={
-                                <Link
-                                  to={`/projects/${props.projectId}/runs/${run.id}`}
-                                >
-                                  {"#" + run.id}
-                                </Link>
-                              }
-                              runLike={run}
-                            />
-                          );
-                        })
-                      : null}
-                  </>
+                  <RunBatchListEntry
+                    runBatch={runBatch}
+                    projectId={props.projectId}
+                  />
                 );
               })
             : null}
