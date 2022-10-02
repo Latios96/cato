@@ -30,7 +30,7 @@ class AggregateRunBatch:
         last_index = 0
         for run_batch in run_batches:
             runs = run_aggregates[last_index : last_index + len(run_batch.runs)]
-            last_index = len(run_batch.runs)
+            last_index += len(run_batch.runs)
             run_batch_aggregate = self._aggregate_run_batch(run_batch, runs)
             run_batch_aggregates.append(run_batch_aggregate)
 

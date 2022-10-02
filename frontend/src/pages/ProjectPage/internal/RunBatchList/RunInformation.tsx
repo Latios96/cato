@@ -1,21 +1,22 @@
 import React from "react";
 import { BasicRunInformation } from "../../../../catoapimodels/catoapimodels";
-import { Pc } from "react-bootstrap-icons";
+import { Pc, QuestionCircle } from "react-bootstrap-icons";
 import GithubActionsInformation from "./GithubActionsInformation";
+import OsInformation from "./OsInformation";
 
 interface Props {
   runInformation: BasicRunInformation;
 }
 
 function RunInformation(props: Props) {
-  switch (props.runInformation.runInformationType) {
-    case "LOCAL_COMPUTER":
-      return <Pc size={20} />;
-    case "GITHUB_ACTIONS":
-      return <GithubActionsInformation runInformation={props.runInformation} />;
-    default:
-      return <></>;
-  }
+  return (
+    <>
+      <OsInformation os={props.runInformation.os} />
+      {props.runInformation.runInformationType === "GITHUB_ACTIONS" ? (
+        <GithubActionsInformation runInformation={props.runInformation} />
+      ) : null}
+    </>
+  );
 }
 
 export default RunInformation;

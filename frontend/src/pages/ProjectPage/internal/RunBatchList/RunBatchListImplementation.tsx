@@ -67,14 +67,14 @@ function RunBatchListImplementation(props: Props) {
         <tbody>
           {props.runs && !props.isLoading
             ? props.runs.entities.map((runBatch) => {
-                const hasSingleRun = runBatch.runs.length <= 1;
+                const hasSingleRun = runBatch.runs.length === 1;
                 return (
                   <>
                     <RunBatchListRow
                       key={runBatch.id}
-                      id={runBatch.id}
                       isExpandable={!hasSingleRun}
                       isIndented={false}
+                      representsSingleRun={hasSingleRun}
                       link={
                         hasSingleRun ? (
                           <Link
@@ -86,21 +86,16 @@ function RunBatchListImplementation(props: Props) {
                           <>{"#" + runBatch.id}</>
                         )
                       }
-                      runBatchIdentifier={runBatch.runBatchIdentifier}
-                      status={runBatch.status}
-                      progress={runBatch.progress}
-                      branchName={runBatch.branchName}
-                      createdAt={runBatch.createdAt}
-                      duration={runBatch.duration}
+                      runLike={{ ...runBatch, ...runBatch.runs[0] }}
                     />
                     {runBatch.runs.length > 1
                       ? runBatch.runs.map((run) => {
                           return (
                             <RunBatchListRow
-                              id={run.id}
                               key={run.id}
                               isIndented={true}
                               isExpandable={false}
+                              representsSingleRun={false}
                               link={
                                 <Link
                                   to={`/projects/${props.projectId}/runs/${run.id}`}
@@ -108,13 +103,7 @@ function RunBatchListImplementation(props: Props) {
                                   {"#" + run.id}
                                 </Link>
                               }
-                              runBatchIdentifier={runBatch.runBatchIdentifier}
-                              status={run.status}
-                              progress={run.progress}
-                              branchName={run.branchName}
-                              createdAt={run.startedAt}
-                              duration={run.duration}
-                              runInformation={run.runInformation}
+                              runLike={run}
                             />
                           );
                         })

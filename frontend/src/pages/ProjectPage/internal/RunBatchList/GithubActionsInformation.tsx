@@ -15,7 +15,6 @@ function GithubActionsInformation(props: Props) {
         rel="noopener noreferrer"
         title={"View run on Github Actions"}
       >
-        <Github size={20} />
         <BoxArrowInUpRight />
       </a>
     </>
