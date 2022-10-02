@@ -3,17 +3,17 @@ import {
   Page,
   PageRequest,
   requestFirstPageOfSize,
-} from "../../../components/Pagination/Page";
+} from "../../../../components/Pagination/Page";
 import RunListImplementation from "./RunListImplementation";
-import { useReFetch } from "../../../hooks/useReFetch";
+import { useReFetch } from "../../../../hooks/useReFetch";
 import { useHistory } from "react-router-dom";
 import queryString from "query-string";
 import {
   popFromQueryString,
   updateQueryString,
-} from "../../../utils/queryStringUtils";
-import { fromCommaSeparatedString, toCommaSeparatedString } from "./utils";
-import { RunAggregate } from "../../../catoapimodels/catoapimodels";
+} from "../../../../utils/queryStringUtils";
+import { fromCommaSeparatedString, toCommaSeparatedString } from "../utils";
+import { RunAggregate } from "../../../../catoapimodels/catoapimodels";
 
 interface Props {
   projectId: number;

@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./RunList.module.scss";
-import RunStatus from "../../../components/Status/RunStatus";
+import RunStatus from "../../../../components/Status/RunStatus";
 import { Link } from "react-router-dom";
-import { formatDuration } from "../../../utils/dateUtils";
-import { Page, PageRequest } from "../../../components/Pagination/Page";
+import { formatDuration } from "../../../../utils/dateUtils";
+import { Page, PageRequest } from "../../../../components/Pagination/Page";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
-import ErrorMessageBox from "../../../components/ErrorMessageBox/ErrorMessageBox";
-import SimplePaginationControls from "../../../components/Pagination/SimplePaginationControls";
-import { SelectInput } from "../../../components/Inputs/Select/SelectInput";
-import { RunAggregate } from "../../../catoapimodels/catoapimodels";
-import FormattedTime from "../../../components/FormattedTime/FormattedTime";
+import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
+import SimplePaginationControls from "../../../../components/Pagination/SimplePaginationControls";
+import { SelectInput } from "../../../../components/Inputs/Select/SelectInput";
+import { RunAggregate } from "../../../../catoapimodels/catoapimodels";
+import FormattedTime from "../../../../components/FormattedTime/FormattedTime";
 
 interface Props {
   projectId: number;

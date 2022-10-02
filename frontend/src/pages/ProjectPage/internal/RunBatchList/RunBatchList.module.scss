@@ -1,0 +1,65 @@
+@import "../../../../custom";
+.runList {
+  margin: auto;
+  margin-top: 35px;
+  margin-bottom: 140px;
+  width: 950px;
+  table {
+    text-align: center;
+  }
+  tr {
+    border-bottom: 1px solid #a1a1a1;
+    height: 60px;
+    a {
+      text-decoration: underline;
+      &:hover {
+        color: $cato-highlight;
+      }
+    }
+  }
+  col:nth-of-type(1) {
+    width: 150px;
+  }
+  col:nth-of-type(2) {
+    width: 100px;
+  }
+  col:nth-of-type(3) {
+    width: 200px;
+  }
+  col:nth-of-type(4) {
+    width: 250px;
+  }
+  col:nth-of-type(5) {
+    width: 130px;
+  }
+  col:nth-of-type(6) {
+    width: 200px;
+  }
+}
+.error {
+  margin-top: 70px;
+  display: flex;
+}
+.runListLoading {
+  margin-top: 70px;
+  display: flex;
+  div {
+    margin: auto;
+    p {
+      margin-bottom: 0;
+    }
+  }
+}
+.paginationControls {
+  margin-top: 15px;
+  display: flex;
+  div:nth-child(1) {
+    margin: auto;
+  }
+}
+.branchSelectorContainer {
+  display: flex;
+  justify-content: flex-end;
+  padding-bottom: 15px;
+  padding-right: 15px;
+}

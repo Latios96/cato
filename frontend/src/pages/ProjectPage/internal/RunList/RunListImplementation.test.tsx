@@ -1,14 +1,14 @@
 import RunListImplementation from "./RunListImplementation";
 import React from "react";
 import { render } from "@testing-library/react";
-import { Page } from "../../../components/Pagination/Page";
+import { Page } from "../../../../components/Pagination/Page";
 import { HashRouter } from "react-router-dom";
 import {
   OS,
-  RunBatchProvider,
   RunAggregate,
+  RunBatchProvider,
   RunStatus,
-} from "../../../catoapimodels/catoapimodels";
+} from "../../../../catoapimodels/catoapimodels";
 
 describe("RunListImplementation", () => {
   it("should display a loading skeletion while loading", () => {
