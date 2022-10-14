@@ -61,6 +61,7 @@ tenacity = "^8.0.1"
 celery = {extras = ["rabbitmq"], version = "^5.2.7"}
 jsonpath-ng = "^1.5.3"
 marshmallow-polyfield = "^5.10"
+importlib-metadata = "^4.12" # todo remove once Python > 3.7
 
 [tool.poetry.dev-dependencies]
 black = "^22.6.0"
