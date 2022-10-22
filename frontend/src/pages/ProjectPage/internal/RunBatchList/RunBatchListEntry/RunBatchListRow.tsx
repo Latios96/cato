@@ -63,8 +63,7 @@ function RunBatchListRow(props: Props) {
               runBatchProvider={props.runLike.runBatchIdentifier!.provider}
             />
           ) : null}
-          {props.runLike.runInformation &&
-          (!props.isExpandable || props.representsSingleRun) ? (
+          {props.runLike.runInformation && !props.isExpandable ? (
             <RunInformation runInformation={props.runLike.runInformation} />
           ) : null}
         </div>
