@@ -42,9 +42,7 @@ function RunBatchListRow(props: Props) {
             isExpanded={props.isExpanded}
             onExpandToggleClick={props.onExpandToggleClick}
           />
-        ) : (
-          <div style={{ width: "20x" }} />
-        )}
+        ) : null}
       </>
     );
   }
@@ -77,11 +75,12 @@ function RunBatchListRow(props: Props) {
       className={props.isExpandable ? styles.boldRow : ""}
     >
       <td>
-        <div className={"d-flex align-items-center"} style={{ gap: "4px" }}>
+        <div className={styles.row}>
           {renderCarret()}
           <div
-            className={props.isIndented ? "mr-4" : ""}
-            style={{ width: props.isExpandable ? "" : "20px" }}
+            className={`${props.isIndented ? "mr-4" : ""} ${
+              !props.isExpandable ? styles.indenter : ""
+            }`}
           />
           {props.label}
           {renderRunBatchProviderInformation()}

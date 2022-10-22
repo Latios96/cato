@@ -1,3 +1,11 @@
 .boldRow {
   font-weight: 600;
 }
+.row {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+.indenter {
+  width: 20px;
+}
