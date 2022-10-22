@@ -5,7 +5,7 @@ import {
   RunBatchAggregate,
   RunBatchIdentifier,
 } from "../../../../catoapimodels/catoapimodels";
-import ProgressBar from "./ProgressBar";
+import ProgressBar from "../../../../components/ProgressBar/ProgressBar";
 import FormattedTime from "../../../../components/FormattedTime/FormattedTime";
 import { formatDuration } from "../../../../utils/dateUtils";
 import RunStatus from "../../../../components/Status/RunStatus";
@@ -32,7 +32,7 @@ interface Props {
 /* TODO improve code by using mode
 enum Mode {
   EXPENDABLE_RUN_BATCH,
-  EXPANDED_RUN_BATCH,
+  EXPANDED_RUN_BATCH_ENTRY,
   RUN_BATCH_WITH_SINGLE_RUN,
 }*/
 

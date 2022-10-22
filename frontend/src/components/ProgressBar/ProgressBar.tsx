@@ -1,6 +1,6 @@
 import React from "react";
 import styles from "./ProgressBar.module.scss";
-import Tooltip from "../../../../components/Tooltip/Tooltip";
+import Tooltip from "../Tooltip/Tooltip";
 interface Props {
   progressPercentage: number;
 }
