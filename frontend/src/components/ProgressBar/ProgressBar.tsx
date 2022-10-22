@@ -10,11 +10,13 @@ function ProgressBar(props: Props) {
     <Tooltip
       tooltipText={`${props.progressPercentage.toFixed(2)}%`}
       tooltippedElement={
-        <div className={styles.progressOuter}>
-          <div
-            className={styles.progressBar}
-            style={{ width: `${props.progressPercentage}%` }}
-          ></div>
+        <div className={styles.tooltipCatcher}>
+          <div className={styles.progressOuter}>
+            <div
+              className={styles.progressBar}
+              style={{ width: `${props.progressPercentage}%` }}
+            ></div>
+          </div>
         </div>
       }
     />
