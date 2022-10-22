@@ -1,5 +1,5 @@
 import React from "react";
-import { BasicRunInformation } from "../../../../catoapimodels/catoapimodels";
+import { BasicRunInformation } from "../../../../../catoapimodels/catoapimodels";
 import GithubActionsInformation from "./GithubActionsInformation";
 import OsInformation from "./OsInformation";
 

@@ -1,7 +1,7 @@
 import React from "react";
-import { OS } from "../../../../catoapimodels/catoapimodels";
+import { OS } from "../../../../../catoapimodels/catoapimodels";
 import { Apple, QuestionCircle, Ubuntu, Windows } from "react-bootstrap-icons";
-import WrapTitle from "../../../../components/WrapTitle/WrapTitle";
+import WrapTitle from "../../../../../components/WrapTitle/WrapTitle";
 
 interface Props {
   os: OS;

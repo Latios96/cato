@@ -7,7 +7,7 @@ import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessage
 import SimplePaginationControls from "../../../../components/Pagination/SimplePaginationControls";
 import { SelectInput } from "../../../../components/Inputs/Select/SelectInput";
 import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
-import RunBatchListEntry from "./RunBatchListEntry";
+import RunBatchListEntry from "./RunBatchListEntry/RunBatchListEntry";
 
 interface Props {
   projectId: number;

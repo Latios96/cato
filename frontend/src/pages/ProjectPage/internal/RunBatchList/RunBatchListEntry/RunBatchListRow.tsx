@@ -4,11 +4,11 @@ import {
   RunAggregate,
   RunBatchAggregate,
   RunBatchIdentifier,
-} from "../../../../catoapimodels/catoapimodels";
-import ProgressBar from "../../../../components/ProgressBar/ProgressBar";
-import FormattedTime from "../../../../components/FormattedTime/FormattedTime";
-import { formatDuration } from "../../../../utils/dateUtils";
-import RunStatus from "../../../../components/Status/RunStatus";
+} from "../../../../../catoapimodels/catoapimodels";
+import ProgressBar from "../../../../../components/ProgressBar/ProgressBar";
+import FormattedTime from "../../../../../components/FormattedTime/FormattedTime";
+import { formatDuration } from "../../../../../utils/dateUtils";
+import RunStatus from "../../../../../components/Status/RunStatus";
 import RunInformation from "./RunInformation";
 import RunBatchProviderInformation from "./RunBatchProviderInformation";
 import Expander from "./Expander";

@@ -1,5 +1,5 @@
 import React from "react";
-import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
+import { RunBatchAggregate } from "../../../../../catoapimodels/catoapimodels";
 import RunBatchListRow from "./RunBatchListRow";
 import { Link } from "react-router-dom";
 import { useToggle } from "rooks";
