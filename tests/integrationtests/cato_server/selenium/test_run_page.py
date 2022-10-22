@@ -21,7 +21,7 @@ class TestRunOverviewPage:
 
         project_page_link.click()
 
-        assert authenticated_selenium_driver.find_element_by_link_text("Run #1")
+        assert authenticated_selenium_driver.find_element_by_link_text("#1")
 
     def test_overview_page_should_auto_update(
         self,

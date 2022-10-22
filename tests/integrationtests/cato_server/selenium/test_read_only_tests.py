@@ -36,13 +36,13 @@ class ProjectPage:
 
     def should_display_run_list(self):
         self.stateless_test.authenticated_selenium_driver.wait_until(
-            lambda driver: driver.find_element_by_xpath("//a[text()='Run #1']")
+            lambda driver: driver.find_element_by_xpath("//a[text()='#1']")
         )
 
     def select_run(self):
         run_number = (
             self.stateless_test.authenticated_selenium_driver.find_element_by_xpath(
-                "//a[text()='Run #1']"
+                "//a[text()='#1']"
             )
         )
         run_number.click()

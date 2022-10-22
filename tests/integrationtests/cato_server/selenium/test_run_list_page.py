@@ -2,6 +2,7 @@ from cato_common.domain.branch_name import BranchName
 from cato_common.domain.run import Run
 from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_common.utils.datetime_utils import aware_now_in_utc
+from cato_server.domain.run_batch import RunBatch
 from tests.integrationtests.cato_server import selenium_test
 
 
@@ -12,15 +13,17 @@ class TestRunListPage:
         live_server,
         authenticated_selenium_driver,
         project,
-        sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         run_batch,
         local_computer_run_information,
+        run_batch_identifier,
     ):
-        self._insert_many_runs(
+        self._insert_many_run_batches(
             project,
-            sqlalchemy_run_repository,
+            sqlalchemy_run_batch_repository,
             run_batch,
             local_computer_run_information,
+            run_batch_identifier,
         )
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
         next_page = self._pagination_buttons_should_be_correctly_enabled(
@@ -58,15 +61,17 @@ class TestRunListPage:
         project,
         live_server,
         authenticated_selenium_driver,
-        sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         run_batch,
         local_computer_run_information,
+        run_batch_identifier,
     ):
-        self._insert_many_runs(
+        self._insert_many_run_batches(
             project,
-            sqlalchemy_run_repository,
+            sqlalchemy_run_batch_repository,
             run_batch,
             local_computer_run_information,
+            run_batch_identifier,
         )
         self._visit_project_page(live_server, project, authenticated_selenium_driver)
 
@@ -80,15 +85,17 @@ class TestRunListPage:
         project,
         live_server,
         authenticated_selenium_driver,
-        sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         run_batch,
         local_computer_run_information,
+        run_batch_identifier,
     ):
-        self._insert_many_runs(
+        self._insert_many_run_batches(
             project,
-            sqlalchemy_run_repository,
+            sqlalchemy_run_batch_repository,
             run_batch,
             local_computer_run_information,
+            run_batch_identifier,
         )
 
         self._visit_project_page_with_branch_filter_dev(
@@ -106,22 +113,23 @@ class TestRunListPage:
 
     def _update_run_status(self, sqlalchemy_test_result_repository, test_result):
         test_result.unified_test_status = UnifiedTestStatus.RUNNING
-        sqlalchemy_test_result_repository.save(test_result)
+        print("SAVED", sqlalchemy_test_result_repository.save(test_result))
 
     def _assert_first_run_status_icon_has_title(self, selenium_driver, title):
+        # //*[@id="runList"]/tbody/tr[1]/td[2]/span
         selenium_driver.wait_until(
             lambda driver: driver.find_element_by_id("runList").find_element_by_xpath(
-                f'//*[@id="runList"]/tbody/tr/td[1]/span[@title="{title}"]'
+                f'//*[@id="runList"]/tbody/tr/td[2]/span[@title="{title}"]'
             )
         )
 
     def _run_25_should_be_on_page(self, selenium_driver):
         selenium_driver.wait_until(
-            lambda driver: driver.find_element_by_link_text("Run #25")
+            lambda driver: driver.find_element_by_link_text("#25")
         )
 
     def _run_50_should_be_on_page(self, selenium_driver):
-        assert selenium_driver.find_element_by_link_text("Run #50")
+        assert selenium_driver.find_element_by_link_text("#50")
 
     def _pagination_buttons_should_be_correctly_enabled(self, selenium_driver):
         selenium_driver.wait_until(
@@ -140,23 +148,34 @@ class TestRunListPage:
     def _visit_project_page(self, live_server, project, selenium_driver):
         selenium_driver.get(f"{live_server.server_url()}/projects/{project.id}")
 
-    def _insert_many_runs(
+    def _insert_many_run_batches(
         self,
         project,
-        sqlalchemy_run_repository,
+        sqlalchemy_run_batch_repository,
         run_batch,
         local_computer_run_information,
+        run_batch_identifier,
     ):
-        sqlalchemy_run_repository.insert_many(
+        sqlalchemy_run_batch_repository.insert_many(
             [
-                Run(
+                RunBatch(
                     id=0,
+                    run_batch_identifier=run_batch_identifier.copy(run_identifier=x),
                     project_id=project.id,
-                    run_batch_id=run_batch.id,
-                    started_at=aware_now_in_utc(),
-                    branch_name=BranchName("default") if x > 10 else BranchName("dev"),
-                    previous_run_id=None,
-                    run_information=local_computer_run_information,
+                    created_at=aware_now_in_utc(),
+                    runs=[
+                        Run(
+                            id=0,
+                            project_id=project.id,
+                            run_batch_id=0,
+                            started_at=aware_now_in_utc(),
+                            branch_name=BranchName("default")
+                            if x > 10
+                            else BranchName("dev"),
+                            previous_run_id=None,
+                            run_information=local_computer_run_information,
+                        )
+                    ],
                 )
                 for x in range(50)
             ]
@@ -188,5 +207,5 @@ class TestRunListPage:
 
     def _select_first_run_branch_name(self, selenium_driver):
         return selenium_driver.find_element_by_xpath(
-            '//*[@id="runList"]/tbody/tr[1]/td[3]'
+            '//*[@id="runList"]/tbody/tr[1]/td[4]'
         )
