@@ -24,7 +24,7 @@ interface Props {
   isIndented: boolean;
   isExpandable: boolean;
   representsSingleRun: boolean;
-  link: ReactElement;
+  label: ReactElement;
   runLike: RunLike;
   isExpanded: boolean;
   onExpandToggleClick: () => void;
@@ -57,7 +57,7 @@ function RunBatchListRow(props: Props) {
             className={props.isIndented ? "mr-4" : ""}
             style={{ width: props.isExpandable ? "" : "20px" }}
           />
-          {props.link}
+          {props.label}
           {props.representsSingleRun || props.isExpandable ? (
             <RunBatchProviderInformation
               runBatchProvider={props.runLike.runBatchIdentifier!.provider}

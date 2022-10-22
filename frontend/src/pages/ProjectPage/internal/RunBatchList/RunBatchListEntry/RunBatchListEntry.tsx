@@ -21,7 +21,7 @@ function RunBatchListEntry(props: Props) {
         isIndented={false}
         representsSingleRun={hasSingleRun}
         onExpandToggleClick={() => toggleExpanded(!isExpanded)}
-        link={
+        label={
           hasSingleRun ? (
             <Link
               to={`/projects/${props.projectId}/runs/${props.runBatch.runs[0].id}`}
@@ -44,7 +44,7 @@ function RunBatchListEntry(props: Props) {
                 isExpanded={false}
                 representsSingleRun={false}
                 onExpandToggleClick={() => {}}
-                link={
+                label={
                   <Link to={`/projects/${props.projectId}/runs/${run.id}`}>
                     {"#" + run.id}
                   </Link>
