@@ -1,44 +1,18 @@
 import React from "react";
-import {
-  Page,
-  PageRequest,
-  requestFirstPageOfSize,
-} from "../../../../components/Pagination/Page";
+import { Page } from "../../../../components/Pagination/Page";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import { useHistory } from "react-router-dom";
-import queryString from "query-string";
 import {
   popFromQueryString,
   updateQueryString,
 } from "../../../../utils/queryStringUtils";
-import { fromCommaSeparatedString, toCommaSeparatedString } from "../utils";
+import { toCommaSeparatedString } from "../utils";
 import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
 import RunBatchListImplementation from "./RunBatchListImplementation";
+import { parseStateFromQueryString } from "./queryStringState";
+
 interface Props {
   projectId: number;
-}
-interface State {
-  page: PageRequest;
-  branches: Set<string>;
-}
-function parseStateFromQueryString(theQueryString: string): State {
-  // todo extract and tests
-  const queryParams = queryString.parse(theQueryString, {
-    parseNumbers: true,
-  });
-  const state = {
-    page: requestFirstPageOfSize(25),
-    branches: new Set<string>(),
-  };
-
-  if (queryParams.pageNumber && queryParams.pageSize) {
-    state.page.pageSize = Number(queryParams.pageSize);
-    state.page.pageNumber = Number(queryParams.pageNumber);
-  }
-  if (queryParams.branches) {
-    state.branches = fromCommaSeparatedString("" + queryParams.branches);
-  }
-  return state;
 }
 
 function RunBatchList(props: Props) {
