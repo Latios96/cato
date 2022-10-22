@@ -8,11 +8,15 @@ interface Props {
 
 function Expander(props: Props) {
   return (
-    <div>
+    <div
+      role="button"
+      aria-expanded={props.isExpanded}
+      onClick={props.onExpandToggleClick}
+    >
       {props.isExpanded ? (
-        <CaretDownFill size={20} onClick={props.onExpandToggleClick} />
+        <CaretDownFill size={20} />
       ) : (
-        <CaretRightFill size={20} onClick={props.onExpandToggleClick} />
+        <CaretRightFill size={20} />
       )}
     </div>
   );
