@@ -12,6 +12,7 @@ import RunStatus from "../../../../../components/Status/RunStatus";
 import RunInformation from "./RunInformation";
 import RunBatchProviderInformation from "./RunBatchProviderInformation";
 import Expander from "./Expander";
+import styles from "./RunBatchListRow.module.scss";
 
 type RunLike = (RunBatchAggregate | RunAggregate) & {
   runInformation?: BasicRunInformation;
@@ -32,34 +33,59 @@ interface Props {
 
 function RunBatchListRow(props: Props) {
   const showCaret = props.isExpandable;
+
+  function renderCarret() {
+    return (
+      <>
+        {showCaret ? (
+          <Expander
+            isExpanded={props.isExpanded}
+            onExpandToggleClick={props.onExpandToggleClick}
+          />
+        ) : (
+          <div style={{ width: "20x" }} />
+        )}
+      </>
+    );
+  }
+
+  function renderRunBatchProviderInformation() {
+    return (
+      <>
+        {props.representsSingleRun || props.isExpandable ? (
+          <RunBatchProviderInformation
+            runBatchProvider={props.runLike.runBatchIdentifier!.provider}
+          />
+        ) : null}
+      </>
+    );
+  }
+
+  function renderRunInformation() {
+    return (
+      <>
+        {props.runLike.runInformation && !props.isExpandable ? (
+          <RunInformation runInformation={props.runLike.runInformation} />
+        ) : null}
+      </>
+    );
+  }
+
   return (
     <tr
       key={props.runLike.id}
-      style={props.isExpandable ? { fontWeight: "600" } : {}}
+      className={props.isExpandable ? styles.boldRow : ""}
     >
       <td>
         <div className={"d-flex align-items-center"} style={{ gap: "4px" }}>
-          {showCaret ? (
-            <Expander
-              isExpanded={props.isExpanded}
-              onExpandToggleClick={props.onExpandToggleClick}
-            />
-          ) : (
-            <div style={{ width: "20x" }} />
-          )}
+          {renderCarret()}
           <div
             className={props.isIndented ? "mr-4" : ""}
             style={{ width: props.isExpandable ? "" : "20px" }}
           />
           {props.label}
-          {props.representsSingleRun || props.isExpandable ? (
-            <RunBatchProviderInformation
-              runBatchProvider={props.runLike.runBatchIdentifier!.provider}
-            />
-          ) : null}
-          {props.runLike.runInformation && !props.isExpandable ? (
-            <RunInformation runInformation={props.runLike.runInformation} />
-          ) : null}
+          {renderRunBatchProviderInformation()}
+          {renderRunInformation()}
         </div>
       </td>
       <td>
