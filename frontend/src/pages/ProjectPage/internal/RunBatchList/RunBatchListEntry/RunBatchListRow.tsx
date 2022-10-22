@@ -29,12 +29,6 @@ interface Props {
   isExpanded: boolean;
   onExpandToggleClick: () => void;
 }
-/* TODO improve code by using mode
-enum Mode {
-  EXPENDABLE_RUN_BATCH,
-  EXPANDED_RUN_BATCH_ENTRY,
-  RUN_BATCH_WITH_SINGLE_RUN,
-}*/
 
 function RunBatchListRow(props: Props) {
   const showCaret = props.isExpandable;
