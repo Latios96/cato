@@ -45,7 +45,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         with self._session_maker() as session:
             mapped_entities = list(map(self.to_entity, domain_objects))
 
-            session.bulk_save_objects(mapped_entities, return_defaults=True)
+            session.add_all(mapped_entities)
 
             session.flush()
             session.commit()
