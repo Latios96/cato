@@ -8,6 +8,14 @@ import SimplePaginationControls from "../../../../components/Pagination/SimplePa
 import { SelectInput } from "../../../../components/Inputs/Select/SelectInput";
 import { RunBatchAggregate } from "../../../../catoapimodels/catoapimodels";
 import RunBatchListEntry from "./RunBatchListEntry/RunBatchListEntry";
+import {
+  DataLoadedState,
+  ErrorState,
+  LoadingState,
+  LoadingStateHandler,
+} from "../../../../components/LoadingStateHandler/LoadingStateHandler";
+import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
+import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
 
 interface Props {
   projectId: number;
@@ -21,17 +29,6 @@ interface Props {
 }
 
 function RunBatchListImplementation(props: Props) {
-  if (props.error) {
-    return (
-      <div className={styles.error}>
-        <ErrorMessageBox
-          heading={"An error occurred while loading the runs"}
-          message={props.error.message}
-        />
-      </div>
-    );
-  }
-
   return (
     <div className={styles.runList}>
       <div className={styles.branchSelectorContainer}>
@@ -64,29 +61,52 @@ function RunBatchListImplementation(props: Props) {
           </tr>
         </thead>
         <tbody>
-          {props.runs && !props.isLoading
-            ? props.runs.entities.map((runBatch) => {
-                return (
-                  <RunBatchListEntry
-                    runBatch={runBatch}
-                    projectId={props.projectId}
-                  />
-                );
-              })
-            : null}
+          <LoadingStateHandler isLoading={props.isLoading} error={props.error}>
+            <ErrorState>
+              <div className={styles.error}>
+                <ErrorMessageBox
+                  heading={"An error occurred while loading the runs"}
+                  message={props.error?.message}
+                />
+              </div>
+            </ErrorState>
+            <LoadingState>
+              <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
+                {_.range(7).map((i) => {
+                  return (
+                    <p key={i}>
+                      <Skeleton count={1} width={840} height={60} />
+                    </p>
+                  );
+                })}
+              </SkeletonTheme>
+            </LoadingState>
+            <DataLoadedState>
+              <CollectionHandler
+                data={props.runs?.entities}
+                placeHolder={
+                  <div className={"d-flex"}>
+                    <PlaceHolderText
+                      text={"No runs"}
+                      className={styles.noSuitesPlaceholder}
+                    />
+                  </div>
+                }
+                renderElements={(data) => {
+                  return data.map((runBatch) => {
+                    return (
+                      <RunBatchListEntry
+                        runBatch={runBatch}
+                        projectId={props.projectId}
+                      />
+                    );
+                  });
+                }}
+              />
+            </DataLoadedState>
+          </LoadingStateHandler>
         </tbody>
       </table>
-      {props.isLoading ? (
-        <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-          {_.range(7).map((i) => {
-            return (
-              <p key={i}>
-                <Skeleton count={1} width={840} height={60} />
-              </p>
-            );
-          })}
-        </SkeletonTheme>
-      ) : null}
       {props.runs ? (
         <div className={styles.paginationControls}>
           <SimplePaginationControls
