@@ -39,6 +39,7 @@ def upgrade():
 
     with op.batch_alter_table("run_entity", schema=None) as batch_op:
         batch_op.alter_column("branch_name", existing_type=sa.String(), nullable=False)
+
     projects = conn.execute("select id from project_entity").fetchall()
     for project in projects:
         project_id = project[0]
