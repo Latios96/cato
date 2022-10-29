@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "cato"
-version = "0.61.0"
+version = "0.62.0"
 description = "Cato is a visual regression testing tool intended for the development of vfx production renderers"
 authors = ["Jan Honsbrok <jan.honsbrok@gmail.com>"]
 include = [
