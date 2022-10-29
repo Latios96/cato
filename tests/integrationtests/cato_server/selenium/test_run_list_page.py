@@ -118,7 +118,6 @@ class TestRunListPage:
         print("SAVED", sqlalchemy_test_result_repository.save(test_result))
 
     def _assert_first_run_status_icon_has_title(self, selenium_driver, title):
-        # //*[@id="runList"]/tbody/tr[1]/td[2]/span
         selenium_driver.wait_until(
             lambda driver: driver.find_element(By.ID, "runList").find_element(
                 By.XPATH, f'//*[@id="runList"]/tbody/tr/td[2]/span[@title="{title}"]'

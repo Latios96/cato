@@ -1,5 +1,3 @@
-# result only for success
-# error message only for failed
 import pytest
 
 from cato_common.domain.tasks.task_result import (

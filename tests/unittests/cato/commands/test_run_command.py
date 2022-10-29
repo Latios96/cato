@@ -1,6 +1,3 @@
-# no filter
-# suite name
-# test identifier
 import copy
 import logging
 from unittest.mock import call

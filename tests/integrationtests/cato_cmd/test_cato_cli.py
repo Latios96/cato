@@ -14,7 +14,7 @@ from tests.integrationtests.utils import snapshot_output, run_command
 @pytest.fixture
 def run_config(tmp_path, test_resource_provider, object_mapper):
     test1 = Test(
-        name="PythonOutputVersion",  # copy image script
+        name="PythonOutputVersion",
         command=f"python {os.path.join(os.path.dirname(__file__), 'copy_image.py')} {test_resource_provider.resource_by_name('test_image_black.png')} {{{{image_output_png}}}}",
         variables={
             "reference_image_png": test_resource_provider.resource_by_name(

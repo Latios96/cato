@@ -14,9 +14,6 @@ def test_create_with_empty_name_should_fail():
         )
 
 
-# test legal: "test test"
-
-
 @pytest.mark.parametrize(
     "name",
     [

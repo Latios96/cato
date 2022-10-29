@@ -1,6 +1,3 @@
-# read existing token from env
-# read token from existing config
-# no token in env/config -> failure
 import pytest
 
 from cato.authentication.api_token_storage import (

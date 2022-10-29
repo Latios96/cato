@@ -1,6 +1,3 @@
-# get type info for base class, both attr authored
-# get type info for child class, both attr authored
-# get type info for child class, property attr authored in parent class
 import pytest
 
 from cato_common.mappers.polymorphic_inspector import (

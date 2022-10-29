@@ -1,7 +1,6 @@
 __version__ = "0.61.0"
 import logging
 
-# create logger with 'spam_application'
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 ch = logging.StreamHandler()

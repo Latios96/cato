@@ -1,7 +1,3 @@
-# submission info
-# config
-# test suite
-# tests
 from marshmallow import Schema, EXCLUDE, fields
 from marshmallow.validate import Length
 
