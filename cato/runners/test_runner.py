@@ -95,11 +95,11 @@ class TestRunner:
             or not self._output_folder.image_output_exists(image_output)
         )
         image_output_str = emoji.emojize(
-            ":x:\n".join(self._image_outputs(variables)), use_aliases=True
+            ":x:\n".join(self._image_outputs(variables)), language="alias"
         )
         message_image_output_missing = emoji.emojize(
             f"No given image output path exists: \n{image_output_str} :x:",
-            use_aliases=True,
+            language="alias",
         )
 
         reference_image = self._output_folder.any_existing(

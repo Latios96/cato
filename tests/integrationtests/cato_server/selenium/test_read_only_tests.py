@@ -1,6 +1,7 @@
 import time
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.select import Select
 
 from tests.integrationtests.cato_server import selenium_test
@@ -30,20 +31,18 @@ class ProjectPage:
 
     def the_project_name_should_be_visible(self):
         self.stateless_test.authenticated_selenium_driver.wait_until(
-            lambda driver: driver.find_element_by_tag_name("h1").text
+            lambda driver: driver.find_element(By.TAG_NAME, "h1").text
             == self.stateless_test.project.name
         )
 
     def should_display_run_list(self):
         self.stateless_test.authenticated_selenium_driver.wait_until(
-            lambda driver: driver.find_element_by_xpath("//a[text()='#1']")
+            lambda driver: driver.find_element(By.XPATH, "//a[text()='#1']")
         )
 
     def select_run(self):
-        run_number = (
-            self.stateless_test.authenticated_selenium_driver.find_element_by_xpath(
-                "//a[text()='#1']"
-            )
+        run_number = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.XPATH, "//a[text()='#1']"
         )
         run_number.click()
         self.stateless_test.assert_current_url_is("/projects/1/runs/1")
@@ -60,10 +59,8 @@ class RunView:
         assert run_summary_headline.text == "Run Summary: #1"
 
     def the_suites_tab_should_be_selected(self):
-        suites_tab = (
-            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-                "controlled-tab-example-tab-suites"
-            )
+        suites_tab = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "controlled-tab-example-tab-suites"
         )
         assert suites_tab.get_attribute("class") == "nav-item nav-link active"
 
@@ -134,8 +131,8 @@ class RunView:
         self.stateless_test.assert_current_url_is("/projects/1/runs/1")
 
     def select_tests_tab(self):
-        self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "controlled-tab-example-tab-tests"
+        self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "controlled-tab-example-tab-tests"
         ).click()
         self.stateless_test.assert_current_url_is("/projects/1/runs/1/tests")
 
@@ -165,8 +162,8 @@ class TestResultPage:
 
     def should_display_test_duration(self, duration):
         assert (
-            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-                "test-duration-value"
+            self.stateless_test.authenticated_selenium_driver.find_element(
+                By.ID, "test-duration-value"
             ).text
             == duration
         )
@@ -212,8 +209,8 @@ class TestResultPage:
         dropdown.select_by_visible_text("alpha")
 
     def alpha_image_should_be_shown(self):
-        images = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "ImageCompariontest"
+        images = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "ImageCompariontest"
         ).find_elements_by_tag_name("img")
         assert (
             images[0].get_attribute("src")
@@ -227,8 +224,8 @@ class TestResultPage:
             )
         )
         assert dropdown.first_selected_option.text == "rgb"
-        images = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "ImageCompariontest"
+        images = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "ImageCompariontest"
         ).find_elements_by_tag_name("img")
         assert (
             images[0].get_attribute("src")
@@ -236,26 +233,26 @@ class TestResultPage:
         )
 
     def click_full_screen_button(self):
-        button = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "app-open-image-comparison-modal"
+        button = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "app-open-image-comparison-modal"
         )
         button.click()
 
     def image_comparison_modal_should_be_shown(self):
-        assert self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "app-image-comparison-modal"
+        assert self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "app-image-comparison-modal"
         )
 
     def click_image_comparison_close_modal_button(self):
-        button = self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-            "app-close-image-comparison-modal"
+        button = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, "app-close-image-comparison-modal"
         )
         button.click()
 
     def image_comparison_modal_should_not_be_shown(self):
         try:
-            self.stateless_test.authenticated_selenium_driver.find_element_by_id(
-                "app-image-comparison-modal"
+            self.stateless_test.authenticated_selenium_driver.find_element(
+                By.ID, "app-image-comparison-modal"
             )
         except NoSuchElementException:
             pass

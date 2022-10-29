@@ -1,4 +1,5 @@
 import pytest
+from selenium.webdriver.common.by import By
 
 from cato_server.configuration.oidc_config import OidcConfiguration
 from cato_server.domain.auth.secret_str import SecretStr
@@ -33,10 +34,10 @@ def live_server_with_keycloak(
 def test_login_via_keycloak(live_server_with_keycloak, selenium_driver):
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}")
 
-    selenium_driver.find_element_by_id("login").click()
+    selenium_driver.find_element(By.ID, "login").click()
     _login_with_test_user(selenium_driver)
 
-    selenium_driver.find_element_by_xpath("//*[text()='test_name']")
+    selenium_driver.find_element(By.XPATH, "//*[text()='test_name']")
 
 
 @testcontainers_test
@@ -45,14 +46,14 @@ def test_login_from_project_url_should_land_on_project_page(
 ):
     selenium_driver.get(f"{live_server_with_keycloak.server_url()}/projects/1")
 
-    selenium_driver.find_element_by_id("login").click()
+    selenium_driver.find_element(By.ID, "login").click()
     _login_with_test_user(selenium_driver)
 
     selenium_driver.wait_until(
         lambda driver: driver.current_url.endswith("/projects/1")
     )
     selenium_driver.wait_until(
-        lambda driver: driver.find_element_by_tag_name("h1").text == "test_name"
+        lambda driver: driver.find_element(By.TAG_NAME, "h1").text == "test_name"
     )
 
 
@@ -64,11 +65,11 @@ def test_login_from_login_url_should_land_on_home(
 
     _login_with_test_user(selenium_driver)
 
-    selenium_driver.find_element_by_xpath("//*[text()='test_name']")
+    selenium_driver.find_element(By.XPATH, "//*[text()='test_name']")
     assert selenium_driver.current_url == f"{live_server_with_keycloak.server_url()}/"
 
 
 def _login_with_test_user(selenium_driver):
-    selenium_driver.find_element_by_id("username").send_keys("test")
-    selenium_driver.find_element_by_id("password").send_keys("password")
-    selenium_driver.find_element_by_id("kc-login").click()
+    selenium_driver.find_element(By.ID, "username").send_keys("test")
+    selenium_driver.find_element(By.ID, "password").send_keys("password")
+    selenium_driver.find_element(By.ID, "kc-login").click()

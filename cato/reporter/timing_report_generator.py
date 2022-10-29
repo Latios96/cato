@@ -25,9 +25,9 @@ class TimingReportGenerator:
             name = f"{suite_result.test_suite.name}/{test_result.test.name}"
             duration = humanfriendly.format_timespan(test_result.seconds)
             result = (
-                emoji.emojize(":white_check_mark:", use_aliases=True)
+                emoji.emojize(":white_check_mark:", language="alias")
                 if test_result.status == ResultStatus.SUCCESS
-                else emoji.emojize(":x:", use_aliases=True)
+                else emoji.emojize(":x:", language="alias")
             )
             entries.append((name, duration, result))
 

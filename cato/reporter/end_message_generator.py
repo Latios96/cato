@@ -31,4 +31,4 @@ Ran {} tests""".format(
                 stats.failed_tests
             )
 
-        return emoji.emojize(end_message, use_aliases=True)
+        return emoji.emojize(end_message, language="alias")

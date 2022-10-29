@@ -12,6 +12,7 @@ import uvicorn
 from selenium import webdriver
 from selenium.common.exceptions import WebDriverException
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
 from webdriver_manager.core.utils import ChromeType
@@ -31,9 +32,7 @@ class LiveServer:
             @classmethod
             def run(cls):
                 print(f"Running server on port {self._port}")
-                config = uvicorn.Config(
-                    self._app, host="127.0.0.1", port=self._port, debug=True
-                )
+                config = uvicorn.Config(self._app, host="127.0.0.1", port=self._port)
                 self.server = uvicorn.Server(config)
                 self.server.run()
 
@@ -114,7 +113,7 @@ class MyChromeDriver(webdriver.Chrome):
         self.execute_cdp_cmd("Network.disable", {})
 
     def find_element_by_css_module_class_name(self, class_name: str):
-        return self.find_element_by_css_selector(f'[class^="{class_name}"]')
+        return self.find_element(By.CSS_SELECTOR, f'[class^="{class_name}"]')
 
     def wait_until(self, predicate: Callable[[webdriver.Chrome], bool], timeout=20):
         return WebDriverWait(self, timeout).until(
