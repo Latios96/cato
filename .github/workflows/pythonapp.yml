@@ -59,6 +59,8 @@ jobs:
       - name: Install Python deps (to prevent pywin32_bootstrap issues in CI)
         run: |
           pip install poetry
+          python -m virtualenv .venv
+          call .venv\Scripts\activate
           poetry export -o requirements-poetry.txt --without-hashes
           pip install -r requirements.txt
           pip install -r requirements-poetry.txt
