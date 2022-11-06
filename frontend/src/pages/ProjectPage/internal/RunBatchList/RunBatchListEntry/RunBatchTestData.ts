@@ -18,7 +18,7 @@ export const RUN_BATCH_AGGREGATE_WITH_MULTIPLE_RUNS: RunBatchAggregate = {
     {
       id: 257,
       projectId: 257,
-      startedAt: "2022-09-28T11:40:43.834115+00:00",
+      createdAt: "2022-09-28T11:40:43.834115+00:00",
       status: RunStatus.SUCCESS,
       duration: 497.852595,
       branchName: "master",
@@ -51,7 +51,7 @@ export const RUN_BATCH_AGGREGATE_WITH_MULTIPLE_RUNS: RunBatchAggregate = {
     {
       id: 259,
       projectId: 259,
-      startedAt: "2022-09-28T11:43:02.484020+00:00",
+      createdAt: "2022-09-28T11:43:02.484020+00:00",
       status: RunStatus.SUCCESS,
       duration: 725.386864,
       branchName: "master",
@@ -84,7 +84,7 @@ export const RUN_BATCH_AGGREGATE_WITH_MULTIPLE_RUNS: RunBatchAggregate = {
     {
       id: 258,
       projectId: 258,
-      startedAt: "2022-09-28T11:41:05.763081+00:00",
+      createdAt: "2022-09-28T11:41:05.763081+00:00",
       status: RunStatus.SUCCESS,
       duration: 745.139177,
       branchName: "master",
@@ -141,7 +141,7 @@ export const RUN_BATCH_AGGREGATE_WITH_SINGLE_RUN: RunBatchAggregate = {
     {
       id: 249,
       projectId: 249,
-      startedAt: "2022-09-17T14:06:45.783561+00:00",
+      createdAt: "2022-09-17T14:06:45.783561+00:00",
       status: RunStatus.FAILED,
       duration: 614.1098890000002,
       branchName: "master",

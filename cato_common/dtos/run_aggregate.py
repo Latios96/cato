@@ -19,7 +19,7 @@ class RunProgress:
 class RunAggregate:
     id: int
     project_id: int
-    started_at: datetime
+    created_at: datetime
     status: RunStatus
     duration: float
     branch_name: BranchName

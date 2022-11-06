@@ -83,7 +83,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
         RunAggregate(
             id=1,
             project_id=1,
-            started_at=datetime.datetime(year=2022, month=9, day=30),
+            created_at=datetime.datetime(year=2022, month=9, day=30),
             status=RunStatus.FAILED,
             duration=1,
             branch_name=BranchName(name="default"),
@@ -101,7 +101,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
         RunAggregate(
             id=2,
             project_id=2,
-            started_at=datetime.datetime(year=2022, month=9, day=30),
+            created_at=datetime.datetime(year=2022, month=9, day=30),
             status=RunStatus.FAILED,
             duration=2,
             branch_name=BranchName(name="default"),
@@ -181,7 +181,7 @@ def test_aggregate_run_without_suites_and_tests(
         RunAggregate(
             id=1,
             project_id=1,
-            started_at=datetime.datetime(year=2022, month=9, day=30),
+            created_at=datetime.datetime(year=2022, month=9, day=30),
             status=RunStatus.FAILED,
             duration=0,
             branch_name=BranchName(name="default"),

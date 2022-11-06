@@ -51,7 +51,7 @@ class AggregateRun:
                 RunAggregate(
                     id=run.id,
                     project_id=run.id,
-                    started_at=run.created_at,
+                    created_at=run.created_at,
                     status=status,
                     duration=duration_by_run_id[run.id],
                     branch_name=run.branch_name,

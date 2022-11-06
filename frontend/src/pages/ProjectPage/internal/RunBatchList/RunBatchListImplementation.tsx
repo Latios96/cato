@@ -56,7 +56,7 @@ function RunBatchListImplementation(props: Props) {
             <th>Status</th>
             <th>Progress</th>
             <th>Branch</th>
-            <th>Started</th>
+            <th>Created</th>
             <th>Duration</th>
           </tr>
         </thead>

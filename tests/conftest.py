@@ -728,7 +728,7 @@ def run_aggregate_factory(local_computer_run_information: LocalComputerRunInform
                 1,
             ),
             project_id=or_default(project_id, 1),
-            started_at=or_default(
+            created_at=or_default(
                 started_at, datetime.datetime(year=2022, month=9, day=30)
             ),
             status=or_default(

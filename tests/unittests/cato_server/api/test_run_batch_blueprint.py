@@ -32,7 +32,7 @@ class TestGetRunBatchesByProjectId:
         assert rv.status_code == 200
         rv_json = rv.json()
         rv_json["entities"][0].pop("createdAt")
-        rv_json["entities"][0]["runs"][0].pop("startedAt")
+        rv_json["entities"][0]["runs"][0].pop("createdAt")
         assert rv_json == {
             "entities": [
                 {
@@ -109,7 +109,7 @@ class TestGetRunBatchesByProjectId:
         assert rv.status_code == 200
         rv_json = rv.json()
         rv_json["entities"][0].pop("createdAt")
-        rv_json["entities"][0]["runs"][0].pop("startedAt")
+        rv_json["entities"][0]["runs"][0].pop("createdAt")
         assert rv_json == {
             "entities": [
                 {

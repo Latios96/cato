@@ -9,7 +9,7 @@ def test_get_run_by_project_id_should_return(client_with_session, project, run):
             {
                 "id": 1,
                 "projectId": 1,
-                "startedAt": run.created_at.isoformat(),
+                "createdAt": run.created_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
                 "branchName": "default",
@@ -65,7 +65,7 @@ def test_get_run_by_project_id_paged_should_return(client_with_session, project,
             {
                 "id": 1,
                 "projectId": 1,
-                "startedAt": run.created_at.isoformat(),
+                "createdAt": run.created_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
                 "branchName": "default",
@@ -131,7 +131,7 @@ def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_ret
             {
                 "id": 1,
                 "projectId": 1,
-                "startedAt": run.created_at.isoformat(),
+                "createdAt": run.created_at.isoformat(),
                 "status": "NOT_STARTED",
                 "duration": 0,
                 "branchName": "default",
@@ -184,7 +184,7 @@ def test_get_run_summary(client_with_session, run, test_result):
     assert rv.json() == {
         "id": 1,
         "projectId": 1,
-        "startedAt": run.created_at.isoformat(),
+        "createdAt": run.created_at.isoformat(),
         "status": "NOT_STARTED",
         "duration": 5.0,
         "branchName": "default",
