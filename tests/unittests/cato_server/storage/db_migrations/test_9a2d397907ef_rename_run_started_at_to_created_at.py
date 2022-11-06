@@ -1,7 +1,7 @@
 import uuid
 
 import pytest
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import DatabaseError
 
 from cato_server.configuration.parts.storage_configuration import StorageConfiguration
 from cato_server.storage.sqlalchemy.migrations.db_migrator import DbMigrator
@@ -50,7 +50,7 @@ def revision_7a69c3f1d789_run_batch_add_created_at_column(
 def _verify_column_started_at_not_exists_anymore(
     mapped_db_connection_string, connection, project_id, run_batch_id
 ):
-    with pytest.raises(OperationalError):
+    with pytest.raises(DatabaseError):
         insert_statement = f"INSERT INTO run_entity (project_entity_id,started_at,branch_name,run_batch_entity_id) VALUES({project_id},CURRENT_TIMESTAMP,'main', {run_batch_id})"
         if "sqlite" in mapped_db_connection_string:
             return connection.execute(insert_statement).lastrowid
