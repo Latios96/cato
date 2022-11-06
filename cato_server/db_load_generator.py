@@ -140,7 +140,7 @@ class DbLoadGenerator:
                     id=0,
                     project_id=project.id,
                     run_batch_id=run_batches[x].id,
-                    started_at=aware_now_in_utc(),
+                    created_at=aware_now_in_utc(),
                     branch_name=BranchName("default"),
                     previous_run_id=None,
                     run_information=LocalComputerRunInformation(

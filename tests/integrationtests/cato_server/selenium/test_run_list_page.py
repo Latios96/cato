@@ -171,7 +171,7 @@ class TestRunListPage:
                             id=0,
                             project_id=project.id,
                             run_batch_id=0,
-                            started_at=aware_now_in_utc(),
+                            created_at=aware_now_in_utc(),
                             branch_name=BranchName("default")
                             if x > 10
                             else BranchName("dev"),

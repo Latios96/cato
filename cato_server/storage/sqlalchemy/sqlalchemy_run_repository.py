@@ -76,7 +76,7 @@ class _RunMapping(Base):
     id = Column(Integer, primary_key=True, autoincrement=True)
     project_entity_id = Column(Integer, ForeignKey("project_entity.id"))
     run_batch_entity_id = Column(Integer, ForeignKey("run_batch_entity.id"))
-    started_at = Column(UtcDateTime)
+    created_at = Column(UtcDateTime)
     branch_name = Column(String, nullable=False)
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
 
@@ -98,7 +98,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             id=domain_object.id if domain_object.id else None,
             project_entity_id=domain_object.project_id,
             run_batch_entity_id=domain_object.run_batch_id,
-            started_at=domain_object.started_at,
+            created_at=domain_object.created_at,
             branch_name=str(domain_object.branch_name),
             previous_run_id=domain_object.previous_run_id,
             run_information=SqlAlchemyRunRepository._run_information_to_entity(
@@ -115,7 +115,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             id=entity.id,
             project_id=entity.project_entity_id,
             run_batch_id=entity.run_batch_entity_id,
-            started_at=entity.started_at,
+            created_at=entity.created_at,
             branch_name=BranchName(entity.branch_name),
             previous_run_id=entity.previous_run_id,
             run_information=SqlAlchemyRunRepository._run_information_to_domain_object(
@@ -160,7 +160,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             entities = (
                 session.query(self.mapping_cls())
                 .filter(self.mapping_cls().project_entity_id == id)
-                .order_by(self.mapping_cls().started_at.desc())
+                .order_by(self.mapping_cls().created_at.desc())
                 .order_by(self.mapping_cls().id.desc())
                 .options(self.default_query_options())
                 .all()
@@ -186,7 +186,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             query = self._apply_filter_options(query, filter_options)
         page = self._pageginate(
             session,
-            query.order_by(self.mapping_cls().started_at.desc()).order_by(
+            query.order_by(self.mapping_cls().created_at.desc()).order_by(
                 self.mapping_cls().id.desc()
             ),
             page_request,

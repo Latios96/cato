@@ -270,7 +270,7 @@ def run_factory(saving_run_batch_factory, local_computer_run_information):
             run_batch_id=or_default(
                 run_batch_id, lambda: saving_run_batch_factory().id
             ),
-            started_at=or_default(started_at, aware_now_in_utc()),
+            created_at=or_default(started_at, aware_now_in_utc()),
             branch_name=or_default(branch_name, BranchName("default")),
             previous_run_id=None,
             run_information=or_default(run_information, local_computer_run_information),

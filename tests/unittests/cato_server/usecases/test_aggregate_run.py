@@ -168,7 +168,7 @@ def test_aggregate_run_without_suites_and_tests(
             id=1,
             project_id=1,
             run_batch_id=1,
-            started_at=datetime.datetime(year=2022, month=9, day=30),
+            created_at=datetime.datetime(year=2022, month=9, day=30),
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,

@@ -57,7 +57,7 @@ class CreateRunUsecase:
             id=0,
             project_id=create_run_dto.project_id,
             run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
+            created_at=aware_now_in_utc(),
             branch_name=branch_name,
             previous_run_id=previous_run_id,
             run_information=local_computer_run_information,

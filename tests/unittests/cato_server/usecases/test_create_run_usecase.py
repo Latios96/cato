@@ -73,7 +73,7 @@ def test_should_create_without_branch_name_and_no_previous_run(
         id=1,
         project_id=project.id,
         run_batch_id=1,
-        started_at=STARTED_AT,
+        created_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=LocalComputerRunInformation(
@@ -126,7 +126,7 @@ def test_should_create_with_local_run_information(
         id=1,
         project_id=project.id,
         run_batch_id=1,
-        started_at=STARTED_AT,
+        created_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=LocalComputerRunInformation(
@@ -188,7 +188,7 @@ def test_should_create_with_github_actions_run_information(
         id=1,
         project_id=project.id,
         run_batch_id=1,
-        started_at=STARTED_AT,
+        created_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=GithubActionsRunInformation(
@@ -249,7 +249,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
         id=1,
         project_id=project.id,
         run_batch_id=1,
-        started_at=STARTED_AT,
+        created_at=STARTED_AT,
         branch_name=BranchName("main"),
         previous_run_id=None,
         run_information=LocalComputerRunInformation(
@@ -303,7 +303,7 @@ def test_should_create_with_previous_run(
         id=2,
         project_id=project.id,
         run_batch_id=2,
-        started_at=STARTED_AT,
+        created_at=STARTED_AT,
         branch_name=BranchName("default"),
         previous_run_id=previous_run.id,
         run_information=LocalComputerRunInformation(

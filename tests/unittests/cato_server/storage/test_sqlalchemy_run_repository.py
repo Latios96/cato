@@ -28,7 +28,7 @@ class TestConversionMethods:
             id=1,
             project_id=2,
             run_batch_id=3,
-            started_at=now,
+            created_at=now,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -39,7 +39,7 @@ class TestConversionMethods:
         assert entity.id == 1
         assert entity.project_entity_id == 2
         assert entity.run_batch_entity_id == 3
-        assert entity.started_at == now
+        assert entity.created_at == now
 
     def test_to_domain_object(
         self, sqlalchemy_run_repository, local_computer_run_information
@@ -49,7 +49,7 @@ class TestConversionMethods:
             id=1,
             project_entity_id=2,
             run_batch_entity_id=3,
-            started_at=now,
+            created_at=now,
             branch_name="default",
             previous_run_id=None,
             run_information=_LocalComputerRunInformationMapping(
@@ -67,7 +67,7 @@ class TestConversionMethods:
             id=1,
             project_id=2,
             run_batch_id=3,
-            started_at=now,
+            created_at=now,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -87,7 +87,7 @@ class TestSave:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=start_time,
+            created_at=start_time,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -99,7 +99,7 @@ class TestSave:
             id=1,
             project_id=1,
             run_batch_id=1,
-            started_at=start_time,
+            created_at=start_time,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=LocalComputerRunInformation(
@@ -123,7 +123,7 @@ class TestSave:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=start_time,
+            created_at=start_time,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=github_actions_run_information,
@@ -135,7 +135,7 @@ class TestSave:
             id=1,
             project_id=1,
             run_batch_id=1,
-            started_at=start_time,
+            created_at=start_time,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=GithubActionsRunInformation(
@@ -161,7 +161,7 @@ class TestSave:
             id=0,
             project_id=2,
             run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
+            created_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -181,7 +181,7 @@ class TestSave:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
+            created_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -200,7 +200,7 @@ class TestSave:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
+            created_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=42,
             run_information=local_computer_run_information,
@@ -223,7 +223,7 @@ class TestFindById:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=start_time,
+            created_at=start_time,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -234,7 +234,7 @@ class TestFindById:
             run = sqlalchemy_run_repository.find_by_id(run.id)
 
         assert run.project_id == project.id
-        assert run.started_at == start_time
+        assert run.created_at == start_time
 
     def test_should_not_find(self, sqlalchemy_run_repository):
         assert not sqlalchemy_run_repository.find_by_id(100)
@@ -255,7 +255,7 @@ class FindByProjectId:
             id=0,
             project_id=project.id,
             run_batch_id=run_batch.id,
-            started_at=aware_now_in_utc(),
+            created_at=aware_now_in_utc(),
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
@@ -432,7 +432,7 @@ def test_delete_should_also_delete_run_information(
         id=0,
         project_id=project.id,
         run_batch_id=run_batch.id,
-        started_at=start_time,
+        created_at=start_time,
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=local_computer_run_information,

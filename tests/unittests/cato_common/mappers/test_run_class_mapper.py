@@ -12,7 +12,7 @@ def test_map_from_dict(object_mapper):
             "id": 1,
             "projectId": 1,
             "runBatchId": 1,
-            "startedAt": started_at.isoformat(),
+            "createdAt": started_at.isoformat(),
             "branchName": "default",
             "previousRunId": None,
             "runInformation": {
@@ -31,7 +31,7 @@ def test_map_from_dict(object_mapper):
         id=1,
         project_id=1,
         run_batch_id=1,
-        started_at=started_at,
+        created_at=started_at,
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=LocalComputerRunInformation(
@@ -52,7 +52,7 @@ def test_map_to_dict(object_mapper):
             id=1,
             project_id=1,
             run_batch_id=1,
-            started_at=started_at,
+            created_at=started_at,
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=LocalComputerRunInformation(
@@ -69,7 +69,7 @@ def test_map_to_dict(object_mapper):
         "id": 1,
         "projectId": 1,
         "runBatchId": 1,
-        "startedAt": started_at.isoformat(),
+        "createdAt": started_at.isoformat(),
         "branchName": "default",
         "previousRunId": None,
         "runInformation": {
