@@ -1,4 +1,5 @@
 import json
+import uuid
 from io import StringIO
 
 import pytest
@@ -351,3 +352,30 @@ def test_parse_inherited_comparison_method_successfully():
     assert test.comparison_settings == ComparisonSettings(
         method=ComparisonMethod.SSIM, threshold=0.1
     )
+
+
+@pytest.fixture
+def large_config_dict():
+    return {
+        "projectName": "test",
+        "command": "{{appleseedcommand}}",
+        "suites": [
+            {
+                "name": str(uuid.uuid4()),
+                "tests": [
+                    {
+                        "name": str(uuid.uuid4()),
+                    }
+                    for y in range(20)
+                ],
+            }
+            for x in range(50)
+        ],
+    }
+
+
+@pytest.mark.timeout(1)
+def test_performance_regression(large_config_dict):
+    json_config_parser = JsonConfigParser()
+
+    json_config_parser.parse_dict(large_config_dict)

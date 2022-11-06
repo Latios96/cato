@@ -1,5 +1,4 @@
-from typing import Dict, Optional, cast
-from jsonpath_ng import parse  # type: ignore
+from typing import Dict, Optional, cast, Any
 
 
 class AttributeNotDefinedError(Exception):
@@ -62,11 +61,14 @@ class TestAttributeResolver:
     def _access_attribute_by_path(
         self, data: Dict[str, str], attribute_path: str
     ) -> Optional[str]:
-        if not attribute_path.startswith("$."):
-            attribute_path = f"$.{attribute_path}"
-        expr = parse(attribute_path)
+        attribute_strs = attribute_path.split(".")
 
-        result = expr.find(data)
-        if not result:
+        current: Any = data
+        for attribute in attribute_strs:
+            if not current:
+                break
+            current = current.get(attribute)
+
+        if not current:
             return None
-        return cast(str, result[0].value)
+        return cast(str, current)
