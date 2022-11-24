@@ -169,7 +169,6 @@ if __name__ == "__main__":
             "tabulate",
             "email-validator",
             "Jinja2",
-            "jsonpath-ng",
         ],
     )
 
