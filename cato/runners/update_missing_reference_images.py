@@ -9,14 +9,21 @@ from cato.file_system_abstractions.output_folder import OutputFolder
 from cato.variable_processing.variable_processor import VariableProcessor
 
 
+def ensure_folder(path: str) -> None:
+    if not os.path.exists(path):
+        os.makedirs(path)
+
+
 class UpdateMissingReferenceImages:
     def __init__(
         self,
         output_folder: OutputFolder,
         copy_file: Callable[[str, str], None] = shutil.copy,
+        ensure_folder: Callable[[str], None] = ensure_folder,
     ):
         self._output_folder = output_folder
         self._copy_file = copy_file
+        self._ensure_folder = ensure_folder
 
     def update(self, config: RunConfig) -> None:
         for suite, test in iterate_suites_and_tests(config.suites):
@@ -46,5 +53,6 @@ class UpdateMissingReferenceImages:
                     variables["reference_image_no_extension"]
                     + os.path.splitext(image_output)[1]
                 )
+                self._ensure_folder(os.path.dirname(target_path))
                 logger.info(f"Copy {image_output} to {target_path}..")
                 self._copy_file(image_output, target_path)

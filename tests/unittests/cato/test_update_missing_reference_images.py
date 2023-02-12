@@ -16,10 +16,11 @@ EXISTS_PNG = "exists.png"
 
 def test_should_update_missing():
     mock_copy = mock.MagicMock()
+    mock_ensure_folder = mock.MagicMock()
     output_folder = mock_safe(OutputFolder)
     output_folder.any_existing.side_effect = [EXISTS_PNG, None]
     missing_reference_images = UpdateMissingReferenceImages(
-        output_folder, copy_file=mock_copy
+        output_folder, copy_file=mock_copy, ensure_folder=mock_ensure_folder
     )
     test = Test(
         name="my_first_test",
@@ -40,6 +41,7 @@ def test_should_update_missing():
     mock_copy.assert_called_once_with(
         EXISTS_PNG, "/example/my_first_test/reference.png"
     )
+    mock_ensure_folder.assert_called_with("/example/my_first_test")
 
 
 def test_should_not_update_because_exists():
