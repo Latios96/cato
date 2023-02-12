@@ -131,6 +131,34 @@ def test_compare_image_should_succeed_same_image(
 
 
 @mock.patch("uuid.uuid4")
+def test_compare_image_should_succeed_for_image_that_produced_NaN_score(
+    mock_uuid4, test_resource_provider, tmpdir
+):
+    mock_uuid4.return_value = "c04b964d-f443-4ae9-8b43-47fe6d2422d0"
+    image = test_resource_provider.resource_by_name("producedNaN.exr")
+    with tempfile.TemporaryDirectory() as tmpdirname:
+        other_image = os.path.join(tmpdirname, "producedNaN.exr")
+        shutil.copy(image, other_image)
+        image_comparator = AdvancedImageComparator()
+
+        comparison_result = image_comparator.compare(
+            image,
+            other_image,
+            ComparisonSettings(threshold=1, method=ComparisonMethod.SSIM),
+            str(tmpdir),
+        )
+
+        assert comparison_result == ComparisonResult(
+            status=ResultStatus.SUCCESS,
+            message=None,
+            diff_image=tmpdir.join(
+                "diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"
+            ),
+            error=1.0,
+        )
+
+
+@mock.patch("uuid.uuid4")
 def test_compare_image_should_fail_for_same_image_paths(
     mock_uuid4, test_resource_provider, tmpdir
 ):

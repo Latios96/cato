@@ -1,4 +1,5 @@
 import logging
+import math
 import os.path
 import uuid
 
@@ -73,6 +74,8 @@ class AdvancedImageComparator:
             reference_image, output_image, full=True, multichannel=True
         )
         score = float(score)
+        if math.isnan(score):
+            score = 1
         logger.debug("SSIM score: %s ", score)
         diff = diff.astype("float32")
 
