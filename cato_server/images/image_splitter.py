@@ -72,6 +72,8 @@ class ImageSplitter:
             image_cmd_part = (
                 f' -i "{image_path}" --ch {",".join(channels)} -o "{target_image}"'
             )
+            if channel_name == "rgb":
+                image_cmd_part = " --premult" + image_cmd_part
             commands_builder.push(image_cmd_part)
 
         commands = commands_builder.finalize()
