@@ -31,7 +31,7 @@
     "react-loading-skeleton": "^3.0.3",
     "react-modal": "^3.12.1",
     "react-router-dom": "^5.2.0",
-    "react-scripts": "5.0.0",
+    "react-scripts": "5.0.1",
     "react-spinners": "^0.11.0",
     "rooks": "^5.4.6",
     "s-ago": "^2.2.0",
@@ -41,10 +41,10 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test --watchAll=false",
-    "eject": "react-scripts eject",
+    "start": "react-scripts --openssl-legacy-provider start",
+    "build": "react-scripts --openssl-legacy-provider build",
+    "test": "react-scripts --openssl-legacy-provider test --watchAll=false",
+    "eject": "react-scripts --openssl-legacy-provider eject",
     "format": "prettier src -w",
     "lint": "eslint src --max-warnings=0"
   },
