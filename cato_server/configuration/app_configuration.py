@@ -20,6 +20,7 @@ class AppConfiguration:
     secrets_configuration: SecretsConfiguration
     hostname: str
     public_url: str
+    workers: int
     storage_configuration: StorageConfiguration
     logging_configuration: LoggingConfiguration
     scheduler_configuration: SchedulerConfiguration

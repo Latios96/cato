@@ -26,6 +26,7 @@ class AppConfigurationWriter:
         config_writer.set("app", "debug", str(config.debug))
         config_writer.set("app", "hostname", config.hostname)
         config_writer.set("app", "public_url", config.public_url)
+        config_writer.set("app", "workers", str(config.workers))
         config_writer.set(
             "secrets",
             "sessions_secret",

@@ -32,6 +32,7 @@ class AppConfigurationDefaults:
             secrets_configuration=SecretsConfiguration.default(),
             hostname="localhost",
             public_url="http://127.0.0.1",
+            workers=16,
             storage_configuration=StorageConfiguration(
                 database_url="db_url", file_storage_url="file_storage_url"
             ),
@@ -62,6 +63,7 @@ class AppConfigurationDefaults:
             secrets_configuration=SecretsConfiguration.default(),
             hostname="localhost",
             public_url="http://127.0.0.1",
+            workers=16,
             storage_configuration=StorageConfiguration(
                 database_url="sqlite:///{}".format(
                     os.path.join(config_folder, "cato.db")

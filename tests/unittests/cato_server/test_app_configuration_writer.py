@@ -12,6 +12,7 @@ port = 5000
 debug = False
 hostname = localhost
 public_url = http://127.0.0.1
+workers = 16
 
 [secrets]
 sessions_secret = SESSIONS_SECRET

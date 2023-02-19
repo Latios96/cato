@@ -812,6 +812,7 @@ def app_and_config_fixture(
         ),
         hostname=f"localhost",
         public_url=f"http://127.0.0.1:{port}",
+        workers=16,
         storage_configuration=StorageConfiguration(
             database_url=db_connection_string, file_storage_url=str(tmp_path)
         ),

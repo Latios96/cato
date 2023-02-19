@@ -55,6 +55,7 @@ class AppConfigurationReader:
             debug=config.getboolean(
                 "app", "debug", fallback=AppConfigurationDefaults.DEBUG_DEFAULT
             ),
+            workers=config.getint("app", "workers", fallback=0),
             secrets_configuration=secrets_configuration,
             hostname=config.get("app", "hostname"),
             public_url=config.get("app", "public_url"),

@@ -29,6 +29,7 @@ def test_run_db_load_test(tmp_path, snapshot):
         debug=True,
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=16,
         secrets_configuration=SecretsConfiguration(
             sessions_secret=SecretStr("SESSIONS_SECRET"),
             csrf_secret=SecretStr("CSRF_SECRET"),

@@ -26,6 +26,7 @@ port=5000
 debug=True
 hostname=localhost
 public_url=http://127.0.0.1
+workers=16
 [secrets]
 sessions_secret=SESSIONS_SECRET
 csrf_secret=CSRF_SECRET
@@ -465,6 +466,7 @@ def test_read_valid_file(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=16,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -502,6 +504,7 @@ def test_read_missing_debug_should_default_to_false(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=0,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -539,6 +542,7 @@ def test_read_with_logging(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=0,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -604,6 +608,7 @@ def test_read_scheduler_with_deadline_should_use_default_url(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=0,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -641,6 +646,7 @@ def test_read_scheduler_with_deadline_should_use_provided_url(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=0,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
@@ -678,6 +684,7 @@ def test_read_with_session_lifetime(ini_file_creator):
         ),
         hostname="localhost",
         public_url="http://127.0.0.1",
+        workers=0,
         storage_configuration=StorageConfiguration(
             database_url="my_database_url", file_storage_url="my_file_storage_url"
         ),
