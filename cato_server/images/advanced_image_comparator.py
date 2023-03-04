@@ -28,8 +28,10 @@ class AdvancedImageComparator:
         comparison_settings: ComparisonSettings,
         workdir: str,
     ) -> ComparisonResult:
-        reference_output = os.path.abspath(reference) == os.path.abspath(output)
-        if reference_output:
+        reference_and_output_are_the_same = os.path.abspath(
+            reference
+        ) == os.path.abspath(output)
+        if reference_and_output_are_the_same:
             raise ValueError(
                 f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
             )
