@@ -8,7 +8,11 @@ import ImageComparison from "../ImageComparison/ImageComparison";
 import { FailureMessageBox } from "./MessageBoxes/MessageBoxes";
 import TestResultComparisonResult from "../TestResultComparisonResult/TestResultComparisonResult";
 import UpdateReferenceImageButton from "./UpdateReferenceImageButton";
-import { TestResultDto } from "../../catoapimodels/catoapimodels";
+import {
+  ComparisonMethod,
+  TestResultDto,
+} from "../../catoapimodels/catoapimodels";
+
 interface Props {
   result: TestResultDto;
 }
@@ -45,6 +49,9 @@ function renderImages(result: TestResultDto): React.ReactNode {
         imageOutput={result.imageOutput}
         referenceImage={result.referenceImage}
         diffImage={result.diffImage}
+        comparisonMethod={
+          result.comparisonSettings?.method || ComparisonMethod.SSIM
+        }
       />
     </React.Fragment>
   );

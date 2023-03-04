@@ -4,6 +4,7 @@ import ReactCompareImage from "react-compare-image";
 import { Spinner } from "react-bootstrap";
 import { CompareModes } from "../CompareModes";
 import DiffImageDisplay from "../DiffImageDisplay/DiffImageDisplay";
+import { ComparisonMethod } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
   outputImageUrl: string;
@@ -13,6 +14,7 @@ interface Props {
   height: number;
   identifier: string;
   mode: CompareModes;
+  comparisonMethod: ComparisonMethod;
 }
 
 interface State {
@@ -109,7 +111,10 @@ class SingleChannelComparison extends Component<Props, State> {
                 key={this.state.outputImageUrlToRender}
               />
             ) : (
-              <DiffImageDisplay imageUrl={this.props.diffImageUrl} />
+              <DiffImageDisplay
+                imageUrl={this.props.diffImageUrl}
+                comparisonMethod={this.props.comparisonMethod}
+              />
             )
           ) : (
             <div className={styles.spinner}>

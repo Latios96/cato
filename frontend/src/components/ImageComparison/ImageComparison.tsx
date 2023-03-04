@@ -4,11 +4,12 @@ import { Button } from "react-bootstrap";
 import { Fullscreen } from "react-bootstrap-icons";
 import ImageComparisonFullScreenModal from "./ImageComparisonFullScreenModal/ImageComparisonFullScreenModal";
 import styles from "./ImageComparison.module.scss";
-import { Image } from "../../catoapimodels/catoapimodels";
+import { ComparisonMethod, Image } from "../../catoapimodels/catoapimodels";
 interface Props {
   imageOutput: Image | null | undefined;
   referenceImage: Image | null | undefined;
   diffImage: Image | null | undefined;
+  comparisonMethod: ComparisonMethod;
 }
 const ImageComparison = (props: Props) => {
   const [modalIsOpen, setModalOpen] = useState(false);
@@ -19,6 +20,7 @@ const ImageComparison = (props: Props) => {
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
         diffImage={props.diffImage}
+        comparisonMethod={props.comparisonMethod}
       />
 
       <div className={styles.fullscreenButtonContainer}>
@@ -41,6 +43,7 @@ const ImageComparison = (props: Props) => {
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
         diffImage={props.diffImage}
+        comparisonMethod={props.comparisonMethod}
       />
     </div>
   );

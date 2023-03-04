@@ -4,7 +4,7 @@ import { X } from "react-bootstrap-icons";
 import { Button } from "react-bootstrap";
 import MultiChannelImageComparison from "../MultiChannelImageComparison/MultiChannelImageComparison";
 import styles from "./ImageComparisonFullScreenModal.module.scss";
-import { Image } from "../../../catoapimodels/catoapimodels";
+import { ComparisonMethod, Image } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
   modalIsOpen: boolean;
@@ -12,6 +12,7 @@ interface Props {
   imageOutput: Image | null | undefined;
   referenceImage: Image | null | undefined;
   diffImage: Image | null | undefined;
+  comparisonMethod: ComparisonMethod;
 }
 
 const ImageComparisonFullScreenModal = (props: Props) => {
@@ -38,6 +39,7 @@ const ImageComparisonFullScreenModal = (props: Props) => {
         imageOutput={props.imageOutput}
         referenceImage={props.referenceImage}
         diffImage={props.diffImage}
+        comparisonMethod={props.comparisonMethod}
       />
     </Modal>
   );

@@ -5,13 +5,14 @@ import styles from "./MultiChannelImageComparion.module.scss";
 import { CompareModes } from "../CompareModes";
 import AlphaButton from "../AlphaButton/AlphaButton";
 import SingleImageDisplay from "../SingleImageDisplay/SingleImageDisplay";
-import { Image } from "../../../catoapimodels/catoapimodels";
+import { ComparisonMethod, Image } from "../../../catoapimodels/catoapimodels";
 
 interface Props {
   imageOutput: Image | null | undefined;
   referenceImage: Image | null | undefined;
   diffImage: Image | null | undefined;
   id: string;
+  comparisonMethod: ComparisonMethod;
 }
 
 interface State {
@@ -147,6 +148,7 @@ class MultiChannelImageComparison extends Component<Props, State> {
             }
             identifier={"test"}
             mode={this.state.selectedMode}
+            comparisonMethod={this.props.comparisonMethod}
           />
         ) : (
           <SingleImageDisplay
