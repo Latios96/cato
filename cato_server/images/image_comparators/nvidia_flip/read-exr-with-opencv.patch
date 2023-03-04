@@ -1,0 +1,51 @@
+diff --git a/python/data.py b/python/data.py
+index a30b7a0..743e850 100644
+--- a/python/data.py
++++ b/python/data.py
+@@ -50,8 +50,8 @@
+ # Code by Pontus Andersson, Jim Nilsson, and Tomas Akenine-Moller.
+ 
+ import numpy as np
+-import OpenEXR as exr
+-import Imath
++import cv2
++from skimage.color import rgba2rgb
+ from PIL import Image
+ 
+ def HWCtoCHW(x):
+@@ -103,29 +103,12 @@ def read_exr(filename):
+ 	:param filename: string describing file path
+ 	:return: RGB image in float32 format (with HxWxC layout)
+ 	"""
+-	exrfile = exr.InputFile(filename)
+-	header = exrfile.header()
+-
+-	dw = header['dataWindow']
+-	isize = (dw.max.y - dw.min.y + 1, dw.max.x - dw.min.x + 1)
+-
+-	channelData = dict()
+-
+-	# Convert all channels in the image to numpy arrays
+-	for c in header['channels']:
+-		C = exrfile.channel(c, Imath.PixelType(Imath.PixelType.FLOAT))
+-		C = np.frombuffer(C, dtype=np.float32)
+-		C = np.reshape(C, isize)
+-
+-		channelData[c] = C
+-
+-	if len(channelData) == 1:
+-		channelData['R'] = channelData['G'] = channelData['B'] = channelData[next(iter(channelData))]
+-
+-	colorChannels = ['R', 'G', 'B']
+-	img = np.concatenate([channelData[c][...,np.newaxis] for c in colorChannels], axis=2)
+-
+-	return np.maximum(np.nan_to_num(np.array(img)), 0.0) # added maximum to avoid negative values in images
++	img = cv2.imread(filename, cv2.IMREAD_UNCHANGED | cv2.IMREAD_ANYDEPTH)
++	if img.shape[2] == 4:
++		img = rgba2rgb(img)
++	return np.maximum(
++		np.nan_to_num(np.array(img)), 0.0
++	)  # added maximum to avoid negative values in images
+ 
+ def index2color(index_map, color_map):
+ 	"""
