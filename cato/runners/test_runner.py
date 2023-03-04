@@ -74,6 +74,7 @@ class TestRunner:
         elapsed = (end - start).total_seconds()
 
         if command_result.exit_code != 0:
+            # todo if exit code is not none, also compare images, but fail test in any case
             return TestExecutionResult(
                 test,
                 ResultStatus.FAILED,

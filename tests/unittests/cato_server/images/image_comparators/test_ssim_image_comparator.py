@@ -3,12 +3,7 @@ import shutil
 import tempfile
 from unittest import mock
 
-import cv2
-from skimage import metrics
-
 import pytest
-from PIL import ImageChops
-from PIL import Image
 
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.comparison_method import ComparisonMethod
@@ -16,6 +11,10 @@ from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_server.images.image_comparators.ssim_image_comparator import (
     SsimImageComparator,
+)
+from tests.unittests.cato_server.images.image_comparators.utils import (
+    images_are_equal,
+    images_are_visually_equal,
 )
 
 
@@ -67,15 +66,6 @@ def test_compare_image_should_fail_one_pixel_different(
     )
 
 
-def images_are_equal(image1, image2):
-    image_one = Image.open(image1)
-    image_two = Image.open(image2)
-    diff = ImageChops.difference(image_one, image_two)
-    if diff.getbbox():
-        return False
-    return True
-
-
 @mock.patch("uuid.uuid4")
 def test_compare_image_should_fail_waith_and_without_watermark(
     mock_uuid4, test_resource_provider, tmpdir
@@ -100,7 +90,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
     )
     assert images_are_equal(
         comparison_result.diff_image,
-        test_resource_provider.resource_by_name("with_watermark_diff.png"),
+        test_resource_provider.resource_by_name("with_watermark_diff_ssim.png"),
     )
 
 
@@ -259,35 +249,8 @@ def test_compare_image_should_generate_diff_image_correctly(
     assert comparison_result.status == ResultStatus.FAILED
     assert comparison_result.message.startswith("Images are not equal! SSIM score was ")
     expected_diff_image = test_resource_provider.resource_by_name(
-        os.path.join("sphere_test_images", "expected_diff", image_name + ".png")
+        os.path.join("sphere_test_images", "expected_diff_ssim", image_name + ".png")
     )
     assert images_are_visually_equal(
         comparison_result.diff_image, expected_diff_image, 0.99
     )
-
-
-def _normalize_image(image):
-    if image.dtype == "uint8":
-        image = image.astype("float32")
-        image /= 255.0
-        return image
-    elif image.dtype == "uint16":
-        image = image.astype("float32")
-        image /= 65535
-        return image
-    elif image.dtype == "float32":
-        return image
-
-
-def images_are_visually_equal(image1, image2, threshold):
-    image_one = _normalize_image(
-        cv2.imread(image1, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
-    )
-    image_two = _normalize_image(
-        cv2.imread(image2, cv2.IMREAD_COLOR | cv2.IMREAD_ANYDEPTH)
-    )
-
-    (score, diff) = metrics.structural_similarity(
-        image_one, image_two, full=True, multichannel=True
-    )
-    return score > threshold
