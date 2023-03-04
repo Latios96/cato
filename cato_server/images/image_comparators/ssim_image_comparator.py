@@ -20,7 +20,7 @@ from cato_server.domain.resolution import Resolution
 logger = logging.getLogger(__name__)
 
 
-class AdvancedImageComparator:
+class SsimImageComparator:
     def compare(
         self,
         reference: str,

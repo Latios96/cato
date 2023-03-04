@@ -8,7 +8,9 @@ from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
-from cato_server.images.advanced_image_comparator import AdvancedImageComparator
+from cato_server.images.image_comparators.ssim_image_comparator import (
+    SsimImageComparator,
+)
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.usecases.compare_image import CompareImage
@@ -23,7 +25,7 @@ def test_context():
             self.counter = 0
             self.mock_store_image = mock_safe(StoreImage)
             self.mock_store_image.store_image.side_effect = self._mocked_store_image
-            self.mock_image_comparator = mock_safe(AdvancedImageComparator)
+            self.mock_image_comparator = mock_safe(SsimImageComparator)
             self.mock_file_storage = mock_safe(AbstractFileStorage)
             self.comparison_result = ComparisonResult(
                 status=ResultStatus.SUCCESS, message="", diff_image="some-path", error=1

@@ -14,13 +14,15 @@ from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_server.images.advanced_image_comparator import AdvancedImageComparator
+from cato_server.images.image_comparators.ssim_image_comparator import (
+    SsimImageComparator,
+)
 
 
 def test_compare_image_should_fail_different_resolution(test_resource_provider, tmpdir):
     output_image = test_resource_provider.resource_by_name("100x100_reference.png")
     reference_image = test_resource_provider.resource_by_name("200x100_reference.png")
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     comparison_result = image_comparator.compare(
         reference_image,
@@ -46,7 +48,7 @@ def test_compare_image_should_fail_one_pixel_different(
     reference_image = test_resource_provider.resource_by_name(
         "single_pixel_reference.png"
     )
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     comparison_result = image_comparator.compare(
         reference_image,
@@ -81,7 +83,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
     mock_uuid4.return_value = "c04b964d-f443-4ae9-8b43-47fe6d2422d0"
     output_image = test_resource_provider.resource_by_name("with_watermark.png")
     reference_image = test_resource_provider.resource_by_name("without_watermark.png")
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     comparison_result = image_comparator.compare(
         reference_image,
@@ -111,7 +113,7 @@ def test_compare_image_should_succeed_same_image(
     with tempfile.TemporaryDirectory() as tmpdirname:
         other_image = os.path.join(tmpdirname, "100x100_reference.png")
         shutil.copy(image, other_image)
-        image_comparator = AdvancedImageComparator()
+        image_comparator = SsimImageComparator()
 
         comparison_result = image_comparator.compare(
             image,
@@ -139,7 +141,7 @@ def test_compare_image_should_succeed_for_image_that_produced_NaN_score(
     with tempfile.TemporaryDirectory() as tmpdirname:
         other_image = os.path.join(tmpdirname, "producedNaN.exr")
         shutil.copy(image, other_image)
-        image_comparator = AdvancedImageComparator()
+        image_comparator = SsimImageComparator()
 
         comparison_result = image_comparator.compare(
             image,
@@ -164,7 +166,7 @@ def test_compare_image_should_fail_for_same_image_paths(
 ):
     mock_uuid4.return_value = "c04b964d-f443-4ae9-8b43-47fe6d2422d0"
     image = test_resource_provider.resource_by_name("100x100_reference.png")
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     with pytest.raises(ValueError):
         comparison_result = image_comparator.compare(
@@ -182,7 +184,7 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
     mock_uuid4.return_value = "c04b964d-f443-4ae9-8b43-47fe6d2422d0"
     output_image = test_resource_provider.resource_by_name("with_watermark.png")
     reference_image = test_resource_provider.resource_by_name("without_watermark.png")
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     comparison_result = image_comparator.compare(
         reference_image,
@@ -212,7 +214,7 @@ def test_compare_image_should_fail_for_non_images(
 ):
     image1 = test_resource_provider.resource_by_name(image1_name)
     image2 = test_resource_provider.resource_by_name(image2_name)
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     with pytest.raises(ValueError):
         comparison_result = image_comparator.compare(
@@ -245,7 +247,7 @@ def test_compare_image_should_generate_diff_image_correctly(
     output_image = test_resource_provider.resource_by_name(
         os.path.join("sphere_test_images", "output", image_name + extension)
     )
-    image_comparator = AdvancedImageComparator()
+    image_comparator = SsimImageComparator()
 
     comparison_result = image_comparator.compare(
         reference_image,
