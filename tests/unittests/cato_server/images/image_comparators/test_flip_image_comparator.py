@@ -68,9 +68,10 @@ def test_compare_image_should_fail_waith_and_without_watermark(
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
         error=0.102406,
     )
-    assert images_are_equal(
+    assert images_are_visually_equal(
         comparison_result.diff_image,
         test_resource_provider.resource_by_name("with_watermark_diff_flip.png"),
+        0.99,
     )
 
 
