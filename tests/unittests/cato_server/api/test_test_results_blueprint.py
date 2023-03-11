@@ -156,6 +156,7 @@ def test_get_test_results_by_run_id_should_find(client_with_session, run, test_r
             "name": "my_test_name",
             "testIdentifier": "my_suite/my_test_name",
             "thumbnailFileId": None,
+            "seconds": 5.0,
         }
     ]
 
@@ -175,6 +176,7 @@ def test_get_test_results_by_run_id_should_find_with_status_filter(
             "name": "my_test_name",
             "testIdentifier": "my_suite/my_test_name",
             "thumbnailFileId": None,
+            "seconds": 5.0,
         }
     ]
 
@@ -207,6 +209,7 @@ def test_get_test_results_by_run_id_paginated_should_find(
                 "name": "my_test_name",
                 "testIdentifier": "my_suite/my_test_name",
                 "thumbnailFileId": None,
+                "seconds": 5.0,
             }
         ],
     }
@@ -231,6 +234,7 @@ def test_get_test_results_by_run_id_paginated_should_find_with_status_filter(
                 "name": "my_test_name",
                 "testIdentifier": "my_suite/my_test_name",
                 "thumbnailFileId": None,
+                "seconds": 5.0,
             }
         ],
     }

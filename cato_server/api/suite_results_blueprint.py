@@ -135,6 +135,7 @@ class SuiteResultsBlueprint(APIRouter):
                     test_identifier=test.test_identifier,
                     unified_test_status=test.unified_test_status,
                     thumbnail_file_id=test.thumbnail_file_id,
+                    seconds=test.seconds,
                 )
             )
 

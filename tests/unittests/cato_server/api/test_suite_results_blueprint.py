@@ -156,6 +156,7 @@ def test_get_by_id_should_find_should_contain_no_tests(
                 "unifiedTestStatus": "NOT_STARTED",
                 "testIdentifier": "my_suite/my_test_name",
                 "thumbnailFileId": None,
+                "seconds": 5.0,
             }
         ],
     }
