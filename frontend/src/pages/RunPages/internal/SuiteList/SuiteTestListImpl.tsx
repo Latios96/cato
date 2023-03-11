@@ -11,6 +11,7 @@ import TestStatus from "../../../../components/Status/TestStatus";
 import React from "react";
 import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
 import { TestResultDto } from "../../../../catoapimodels/catoapimodels";
+import { toHoursAndMinutes } from "../../../../utils/dateUtils";
 interface Props {
   loading: boolean;
   error?: Error;
@@ -76,6 +77,7 @@ export function SuiteTestListImpl(props: Props) {
                       />
                     </span>
                     <span>{test.testName}</span>
+                    <span>{toHoursAndMinutes(test.seconds || 0)}</span>
                   </div>
                 );
               })}

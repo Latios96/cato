@@ -29,6 +29,13 @@
       margin-bottom: auto;
       margin-left: 10px;
     }
+    > span:nth-child(4) {
+      margin-right: 10px;
+      margin-left: auto;
+      align-self: end;
+      font-size: 14px;
+      color: $cato-dimmed;
+    }
   }
   > div:hover {
     background-color: $cato-highlight-hover;
