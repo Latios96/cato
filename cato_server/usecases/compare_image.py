@@ -9,9 +9,7 @@ from typing import IO, Tuple
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
-from cato_server.images.image_comparators.ssim_image_comparator import (
-    SsimImageComparator,
-)
+from cato_server.images.image_comparators.image_comparator import ImageComparator
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 
@@ -22,11 +20,11 @@ class CompareImage:
     def __init__(
         self,
         store_image: StoreImage,
-        ssim_image_comparator: SsimImageComparator,
+        image_comparator: ImageComparator,
         file_storage: AbstractFileStorage,
     ):
         self._store_image = store_image
-        self._advanced_image_comparator = ssim_image_comparator
+        self._image_comparator = image_comparator
         self._file_storage = file_storage
 
     def compare_image(
@@ -45,7 +43,7 @@ class CompareImage:
                 tmpdirname, reference_image_file, reference_image_name
             )
 
-            result = self._advanced_image_comparator.compare(
+            result = self._image_comparator.compare(
                 reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
 
@@ -98,7 +96,7 @@ class CompareImage:
                 reference_image.name,
             )
 
-            result = self._advanced_image_comparator.compare(
+            result = self._image_comparator.compare(
                 reference_image_path, output_image_path, comparison_settings, tmpdirname
             )
 
