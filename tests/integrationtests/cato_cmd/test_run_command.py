@@ -96,6 +96,9 @@ def assert_the_failure_result_is_available_on_the_server(
 ):
     run_id = _parse_run_id_from_output(command_result)
     run_json = _read_run_from_server(live_server, run_id, api_token_str)
+
+    run_json[0].pop("seconds")
+    run_json[1].pop("seconds")
     assert run_json == [
         {
             "unifiedTestStatus": "FAILED",
@@ -158,6 +161,9 @@ def assert_the_success_result_is_available_on_the_server(
 ):
     run_id = _parse_run_id_from_output(command_result)
     run_json = _read_run_from_server(live_server, run_id, api_token_str)
+
+    run_json[0].pop("seconds")
+    run_json[1].pop("seconds")
     assert run_json == [
         {
             "unifiedTestStatus": "SUCCESS",
