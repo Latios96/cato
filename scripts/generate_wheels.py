@@ -231,6 +231,7 @@ if __name__ == "__main__":
             "jsonschema",
             "jsonpath-ng",
             "marshmallow-polyfield",
+            "matplotlib",
         ],
         include_files=[
             (
