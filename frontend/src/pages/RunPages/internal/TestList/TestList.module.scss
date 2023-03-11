@@ -30,6 +30,12 @@
     border-bottom: 1px solid $cato-highlight-hover;
     white-space: nowrap;
   }
+  td:nth-child(6) {
+    text-align: end;
+    padding-right: 10px;
+    color: #686868;
+    font-size: 14px;
+  }
 }
 .active {
   background-color: $cato-highlight;

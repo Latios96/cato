@@ -17,6 +17,7 @@ import { CollectionHandler } from "../../../../components/CollectionHandler/Coll
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
 import { TestResultShortSummaryDto } from "../../../../catoapimodels/catoapimodels";
+import { toHoursAndMinutes } from "../../../../utils/dateUtils";
 
 interface Props {
   projectId: number;
@@ -69,6 +70,8 @@ function TestList(props: Props) {
             <col />
             <col />
             <col />
+            <col />
+            <col />
           </colgroup>
           <tbody>
             <CollectionHandler
@@ -108,6 +111,7 @@ function TestList(props: Props) {
                       <td>{test.testIdentifier.split("/")[0]}</td>
                       <td>/</td>
                       <td>{test.testIdentifier.split("/")[1]}</td>
+                      <td>{toHoursAndMinutes(test.seconds || 0)}</td>
                     </tr>
                   );
                 })

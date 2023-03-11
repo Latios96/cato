@@ -13,3 +13,4 @@ class TestResultShortSummaryDto:
     test_identifier: TestIdentifier
     unified_test_status: UnifiedTestStatus
     thumbnail_file_id: Optional[int]
+    seconds: Optional[float]

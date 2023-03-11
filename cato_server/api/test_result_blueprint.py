@@ -171,6 +171,7 @@ class TestResultsBlueprint(APIRouter):
                     test_identifier=test_result.test_identifier,
                     unified_test_status=test_result.unified_test_status,
                     thumbnail_file_id=test_result.thumbnail_file_id,
+                    seconds=test_result.seconds,
                 )
             )
         return JSONResponse(
@@ -196,6 +197,7 @@ class TestResultsBlueprint(APIRouter):
                     test_identifier=test_result.test_identifier,
                     unified_test_status=test_result.unified_test_status,
                     thumbnail_file_id=test_result.thumbnail_file_id,
+                    seconds=test_result.seconds,
                 )
             )
         page.entities = test_result_short_summary_dtos
