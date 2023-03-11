@@ -71,6 +71,7 @@ def _modify_name_and_requirements(
             processed_lines.append(f"Name: {new_name}\n")
         elif line.startswith("Requires-Dist: "):
             package_name = line.split(" ")[1].strip()
+            package_name = package_name.split("==")[0]
             if package_name in requirements_to_keep:
                 processed_lines.append(line)
         else:
