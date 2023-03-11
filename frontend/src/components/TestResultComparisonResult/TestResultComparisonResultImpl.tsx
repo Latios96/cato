@@ -32,7 +32,7 @@ export function TestResultComparisonResultImpl(props: Props) {
       method:
         state.currentMethod === ComparisonMethod.SSIM
           ? ComparisonMethod.SSIM
-          : ComparisonMethod.SSIM,
+          : ComparisonMethod.FLIP,
       threshold: parseFloat(state.currentThreshold),
     });
 
@@ -53,6 +53,12 @@ export function TestResultComparisonResultImpl(props: Props) {
                         className={styles.methodInput}
                         value={state.currentMethod}
                         data-testid={"edit-comparison-settings-method"}
+                        onChange={(e) => {
+                          props.dispatch({
+                            type: ActionType.SET_CURRENT_METHOD,
+                            payload: e.target.value,
+                          });
+                        }}
                       >
                         {Object.values(ComparisonMethod).map((v) => {
                           return <option key={v}>{v}</option>;
