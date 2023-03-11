@@ -2,6 +2,7 @@ import logging
 
 from celery.result import AsyncResult
 from fastapi import APIRouter
+from sentry_sdk import configure_scope
 from starlette.responses import JSONResponse
 
 from cato_common.mappers.object_mapper import ObjectMapper
@@ -26,6 +27,9 @@ class TaskResultBlueprint(APIRouter):
         self.get("/result/{task_id}")(self.get_task_result)
 
     def get_task_result(self, task_id):
+        with configure_scope() as scope:
+            if scope.transaction:
+                scope.transaction.sampled = False
         async_result = AsyncResult(task_id, app=self._cato_celery.celery_app)
         task_result = self._task_result_factory.from_async_result(async_result)
         return JSONResponse(content=self._object_mapper.to_dict(task_result))
