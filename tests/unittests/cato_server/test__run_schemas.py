@@ -7,10 +7,11 @@ from cato_server.api.schemas.run_schemas import (
 
 
 class TestComparisonSettingsSchema:
-    def test_success(self):
+    @pytest.mark.parametrize("method", ["SSIM", "FLIP"])
+    def test_success(self, method):
         schema = ComparisonSettingsSchema()
 
-        errors = schema.validate({"method": "SSIM", "threshold": 1})
+        errors = schema.validate({"method": method, "threshold": 1})
 
         assert errors == {}
 

@@ -154,7 +154,7 @@
 										"$id": "#root/suite/tests/items/comparison_settings/method",
 										"title": "Method",
 										"type": "string",
-                                              "enum": ["SSIM"],
+                                              "enum": ["SSIM", "FLIP"],
 
 										"default": "",
 										"examples": [
