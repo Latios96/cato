@@ -204,7 +204,7 @@ zstd = ["zstandard"]
 
 [[package]]
 name = "certifi"
-version = "2022.12.7"
+version = "2023.5.7"
 description = "Python package for providing Mozilla's CA Bundle."
 category = "main"
 optional = false
@@ -1449,7 +1449,7 @@ pycryptodome = ["pyasn1", "pycryptodome (>=3.3.1,<4.0.0)"]
 
 [[package]]
 name = "python-keycloak"
-version = "2.16.0"
+version = "2.16.1"
 description = "python-keycloak is a Python package providing access to the Keycloak API."
 category = "dev"
 optional = false
@@ -1493,7 +1493,7 @@ python-versions = "*"
 
 [[package]]
 name = "requests"
-version = "2.29.0"
+version = "2.30.0"
 description = "Python HTTP for Humans."
 category = "main"
 optional = false
@@ -1503,7 +1503,7 @@ python-versions = ">=3.7"
 certifi = ">=2017.4.17"
 charset-normalizer = ">=2,<4"
 idna = ">=2.5,<4"
-urllib3 = ">=1.21.1,<1.27"
+urllib3 = ">=1.21.1,<3"
 
 [package.extras]
 socks = ["PySocks (>=1.5.6,!=1.5.7)"]
@@ -1584,7 +1584,7 @@ urllib3 = {version = ">=1.26,<2.0", extras = ["socks"]}
 
 [[package]]
 name = "sentry-sdk"
-version = "1.21.1"
+version = "1.22.1"
 description = "Python client for Sentry (https://sentry.io)"
 category = "main"
 optional = false
@@ -1592,7 +1592,10 @@ python-versions = "*"
 
 [package.dependencies]
 certifi = "*"
-urllib3 = {version = ">=1.26.11", markers = "python_version >= \"3.6\""}
+urllib3 = [
+    {version = "<2.0.0", markers = "python_version < \"3.6\""},
+    {version = ">=1.26.11,<2.0.0", markers = "python_version >= \"3.6\""},
+]
 
 [package.extras]
 aiohttp = ["aiohttp (>=3.5)"]
@@ -1955,14 +1958,14 @@ python-versions = "*"
 
 [[package]]
 name = "types-requests"
-version = "2.29.0.0"
+version = "2.30.0.0"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
 python-versions = "*"
 
 [package.dependencies]
-types-urllib3 = "<1.27"
+types-urllib3 = "*"
 
 [[package]]
 name = "types-tabulate"
@@ -2103,7 +2106,7 @@ test = ["websockets"]
 
 [[package]]
 name = "werkzeug"
-version = "2.3.2"
+version = "2.3.3"
 description = "The comprehensive WSGI web application library."
 category = "dev"
 optional = false
@@ -2238,8 +2241,8 @@ celery = [
     {file = "celery-5.2.7.tar.gz", hash = "sha256:fafbd82934d30f8a004f81e8f7a062e31413a23d444be8ee3326553915958c6d"},
 ]
 certifi = [
-    {file = "certifi-2022.12.7-py3-none-any.whl", hash = "sha256:4ad3232f5e926d6718ec31cfc1fcadfde020920e278684144551c91769c7bc18"},
-    {file = "certifi-2022.12.7.tar.gz", hash = "sha256:35824b4c3a97115964b408844d64aa14db1cc518f6562e8d7261699d1350a9e3"},
+    {file = "certifi-2023.5.7-py3-none-any.whl", hash = "sha256:c6c2e98f5c7869efca1f8916fed228dd91539f9f1b444c314c06eef02980c716"},
+    {file = "certifi-2023.5.7.tar.gz", hash = "sha256:0f0d56dc5a6ad56fd4ba36484d6cc34451e1c6548c61daad8c320169f91eddc7"},
 ]
 cffi = [
     {file = "cffi-1.15.1-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a66d3508133af6e8548451b25058d5812812ec3798c886bf38ed24a98216fab2"},
@@ -3406,8 +3409,8 @@ python-jose = [
     {file = "python_jose-3.3.0-py2.py3-none-any.whl", hash = "sha256:9b1376b023f8b298536eedd47ae1089bcdb848f1535ab30555cd92002d78923a"},
 ]
 python-keycloak = [
-    {file = "python_keycloak-2.16.0-py3-none-any.whl", hash = "sha256:d29e8c12b377c6bd5f209aa0df3ee333ed7cce37c80c1727ab3c3dc25b32733e"},
-    {file = "python_keycloak-2.16.0.tar.gz", hash = "sha256:7bd6ef04fd5553661c7b1e8e9432c607d1ec4099cb3acd5711e11ebbc486b88e"},
+    {file = "python_keycloak-2.16.1-py3-none-any.whl", hash = "sha256:7c9263af71648df298f634faaef4f31faedd438b2958862945dd1bc1b787b669"},
+    {file = "python_keycloak-2.16.1.tar.gz", hash = "sha256:2f22700b6ef8c167284a82c23736f6febc905bd0ab85981dca12171adf3667af"},
 ]
 python-multipart = [
     {file = "python-multipart-0.0.5.tar.gz", hash = "sha256:f7bb5f611fc600d15fa47b3974c8aa16e93724513b49b5f95c81e6624c83fa43"},
@@ -3431,8 +3434,8 @@ pywin32 = [
     {file = "pywin32-303-cp39-cp39-win_amd64.whl", hash = "sha256:79cbb862c11b9af19bcb682891c1b91942ec2ff7de8151e2aea2e175899cda34"},
 ]
 requests = [
-    {file = "requests-2.29.0-py3-none-any.whl", hash = "sha256:e8f3c9be120d3333921d213eef078af392fba3933ab7ed2d1cba3b56f2568c3b"},
-    {file = "requests-2.29.0.tar.gz", hash = "sha256:f2e34a75f4749019bb0e3effb66683630e4ffeaf75819fb51bebef1bf5aef059"},
+    {file = "requests-2.30.0-py3-none-any.whl", hash = "sha256:10e94cc4f3121ee6da529d358cdaeaff2f1c409cd377dbc72b825852f2f7e294"},
+    {file = "requests-2.30.0.tar.gz", hash = "sha256:239d7d4458afcb28a692cdd298d87542235f4ca8d36d03a15bfc128a6559a2f4"},
 ]
 requests-toolbelt = [
     {file = "requests-toolbelt-0.10.1.tar.gz", hash = "sha256:62e09f7ff5ccbda92772a29f394a49c3ad6cb181d568b1337626b2abb628a63d"},
@@ -3459,8 +3462,8 @@ selenium = [
     {file = "selenium-4.9.0.tar.gz", hash = "sha256:478fae77cdfaec32adb1e68d59632c8c191f920535282abcaa2d1a3d98655624"},
 ]
 sentry-sdk = [
-    {file = "sentry-sdk-1.21.1.tar.gz", hash = "sha256:99c15556a23621be9f18c2955f7ce63321713bf1c0ad396b27b61399bac5f458"},
-    {file = "sentry_sdk-1.21.1-py2.py3-none-any.whl", hash = "sha256:092888f3abf7a2ea78f0bfcefc3e0465caee2b6f0efb26f538ccc60f95dca179"},
+    {file = "sentry-sdk-1.22.1.tar.gz", hash = "sha256:052dff5069c6f0d836ee014323576824a9b40836fc003fb12489a1f19c60a3c9"},
+    {file = "sentry_sdk-1.22.1-py2.py3-none-any.whl", hash = "sha256:c6c6946f8c927adb00af1c5ab6921df38775b2199b9003816d5935a1310352d5"},
 ]
 setuptools = [
     {file = "setuptools-67.7.2-py3-none-any.whl", hash = "sha256:23aaf86b85ca52ceb801d32703f12d77517b2556af839621c641fca11287952b"},
@@ -3604,8 +3607,8 @@ types-python-dateutil = [
     {file = "types_python_dateutil-2.8.19.12-py3-none-any.whl", hash = "sha256:fe5b545e678ec13e3ddc83a0eee1545c1b5e2fba4cfc39b276ab6f4e7604a923"},
 ]
 types-requests = [
-    {file = "types-requests-2.29.0.0.tar.gz", hash = "sha256:c86f4a955d943d2457120dbe719df24ef0924e11177164d10a0373cf311d7b4d"},
-    {file = "types_requests-2.29.0.0-py3-none-any.whl", hash = "sha256:4cf6e323e856c779fbe8815bb977a5bf5d6c5034713e4c17ff2a9a20610f5b27"},
+    {file = "types-requests-2.30.0.0.tar.gz", hash = "sha256:dec781054324a70ba64430ae9e62e7e9c8e4618c185a5cb3f87a6738251b5a31"},
+    {file = "types_requests-2.30.0.0-py3-none-any.whl", hash = "sha256:c6cf08e120ca9f0dc4fa4e32c3f953c3fba222bcc1db6b97695bce8da1ba9864"},
 ]
 types-tabulate = [
     {file = "types-tabulate-0.9.0.2.tar.gz", hash = "sha256:1dd4322a3a146e9073169c74278b8f14a58eb9905ca9db0d2588df408f27cac9"},
@@ -3684,8 +3687,8 @@ websocket-client = [
     {file = "websocket_client-1.5.1-py3-none-any.whl", hash = "sha256:cdf5877568b7e83aa7cf2244ab56a3213de587bbe0ce9d8b9600fc77b455d89e"},
 ]
 werkzeug = [
-    {file = "Werkzeug-2.3.2-py3-none-any.whl", hash = "sha256:b7b8bc1609f35ae8e45d48a9b58d7a4eb1e41eec148d37e977e5df6ebf3398b2"},
-    {file = "Werkzeug-2.3.2.tar.gz", hash = "sha256:2f3278e9ef61511cdf82cc28fc5da0f5b501dd8f01ecf5ef6a5d810048f68702"},
+    {file = "Werkzeug-2.3.3-py3-none-any.whl", hash = "sha256:4866679a0722de00796a74086238bb3b98d90f423f05de039abb09315487254a"},
+    {file = "Werkzeug-2.3.3.tar.gz", hash = "sha256:a987caf1092edc7523edb139edb20c70571c4a8d5eed02e0b547b4739174d091"},
 ]
 wrapt = [
     {file = "wrapt-1.15.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:ca1cccf838cd28d5a0883b342474c630ac48cac5df0ee6eacc9c7290f76b11c1"},
