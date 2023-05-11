@@ -33,13 +33,15 @@ function RunSuitePage(props: Props) {
               failureReasonIsNotFilterable={true}
             />
           </div>
-          <SuiteList
-            projectId={props.projectId}
-            runId={props.runId}
-            filterOptions={state.currentFilterOptions}
-          />
+          <div className={styles.scrollContainerTestsOrSuite}>
+            <SuiteList
+              projectId={props.projectId}
+              runId={props.runId}
+              filterOptions={state.currentFilterOptions}
+            />
+          </div>
         </div>
-        <div>
+        <div className={styles.scrollContainerSelectedTest}>
           <div>
             {state.selectedTest ? (
               <TestResultComponent

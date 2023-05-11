@@ -34,21 +34,26 @@ function RunTestsPage(props: Props) {
               }}
             />
           </div>
-          <TestList
-            projectId={props.projectId}
-            runId={props.runId}
-            filterOptions={state.currentFilterOptions}
-            selectedTestId={state.selectedTest}
-            selectedTestIdChanged={(testId) => {
-              history.push({
-                search: updateQueryString(history.location.search, {
-                  selectedTest: testId,
-                }),
-              });
-            }}
-          />
+          <div className={styles.scrollContainerTestsOrSuite}>
+            <TestList
+              projectId={props.projectId}
+              runId={props.runId}
+              filterOptions={state.currentFilterOptions}
+              selectedTestId={state.selectedTest}
+              selectedTestIdChanged={(testId) => {
+                history.push({
+                  search: updateQueryString(history.location.search, {
+                    selectedTest: testId,
+                  }),
+                });
+              }}
+            />
+          </div>
         </div>
-        <div id={"selectedTestContainer"}>
+        <div
+          id={"selectedTestContainer"}
+          className={styles.scrollContainerSelectedTest}
+        >
           <div>
             {state.selectedTest ? (
               <TestResultComponent

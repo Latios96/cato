@@ -1,7 +1,7 @@
 @import "../../../../custom";
 .sideMenu {
   width: 180px;
-  min-height: 100vh;
+  height: calc(100vh - 60px);
   background-color: #171717;
   li {
     margin: 10px;
