@@ -268,3 +268,23 @@ def test_compare_image_should_generate_diff_image_correctly(
     assert images_are_visually_equal(
         comparison_result.diff_image, expected_diff_image, 0.97
     )
+
+
+def test_compare_image_should_fail_different_resolution(test_resource_provider, tmpdir):
+    output_image = test_resource_provider.resource_by_name("100x100_reference.png")
+    reference_image = test_resource_provider.resource_by_name("200x100_reference.png")
+    image_comparator = FlipImageComparator()
+
+    comparison_result = image_comparator.compare(
+        reference_image,
+        output_image,
+        ComparisonSettings(threshold=1, method=ComparisonMethod.FLIP),
+        str(tmpdir),
+    )
+
+    assert comparison_result == ComparisonResult(
+        status=ResultStatus.FAILED,
+        message="Images have different resolutions! Reference image is 100x200px, output image is 100x100px",
+        diff_image=None,
+        error=0,
+    )

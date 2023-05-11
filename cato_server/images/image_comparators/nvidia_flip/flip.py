@@ -946,7 +946,9 @@ if __name__ == "__main__":
 
         else:
             test = load_image_array(test_path)
-            assert reference.shape == test.shape
+            assert (
+                reference.shape == test.shape
+            ), f"Images have different resolutions! Reference image is {reference.shape[1]}x{reference.shape[2]}px, output image is {test.shape[1]}x{test.shape[2]}px"
             if (
                 (reference < 0).any()
                 or (reference > 1).any()

@@ -71,6 +71,15 @@ class FlipImageComparator:
                 raise ValueError(
                     f"Could not read image from {output}, unsupported file format!"
                 )
+            if "Images have different resolutions" in process_output:
+                return ComparisonResult(
+                    status=ResultStatus.FAILED,
+                    message=process_output.split("\n")[-1].replace(
+                        "AssertionError: ", ""
+                    ),
+                    diff_image=None,
+                    error=0,
+                )
             raise RuntimeError(process_output)
 
         diff_image = os.path.join(workdir, diff_image_basename + ".png")
