@@ -1,6 +1,5 @@
 import React, { PropsWithChildren } from "react";
 import Header from "../components/Header/Header";
-import Footer from "../components/Footer/Footer";
 import { Helmet } from "react-helmet";
 
 interface Props {
@@ -17,7 +16,6 @@ const BasicPage = (props: PropsWithChildren<Props>) => {
         <Header />
         {props.children}
       </div>
-      <Footer />
     </>
   );
 };
