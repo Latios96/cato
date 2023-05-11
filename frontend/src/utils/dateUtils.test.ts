@@ -2,7 +2,7 @@ import each from "jest-each";
 import { formatDuration, toHoursAndMinutes } from "./dateUtils";
 
 describe("format duration", () => {
-  each([[undefined, null, "NaN"]]).it(
+  each([[undefined, null, "NaN", "-1"]]).it(
     "should format %s to empty string",
     (value) => {
       expect(formatDuration(value)).toBe("");
@@ -18,6 +18,9 @@ describe("format duration", () => {
 });
 
 describe("toHoursAndMinutes", () => {
+  it("should format -1 to empty", () => {
+    expect(toHoursAndMinutes(-1)).toBe("");
+  });
   it("should format 0 to empty", () => {
     expect(toHoursAndMinutes(0)).toBe("");
   });
