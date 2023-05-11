@@ -6,6 +6,7 @@ $theme-colors: (
   "danger": #ff4136,
 );
 @import "../node_modules/bootstrap/scss/bootstrap";
+@import "react-loading-skeleton/dist/skeleton.css";
 
 body {
   margin: 0;
