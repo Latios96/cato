@@ -3,6 +3,7 @@ import subprocess
 import sys
 import uuid
 from pathlib import Path
+from typing import Optional
 
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
@@ -28,6 +29,16 @@ class FlipImageComparator:
             raise ValueError(
                 f"Images to compare need to be different, pointing to same path: {os.path.abspath(reference)}"
             )
+
+        same_format_error = self._verify_images_have_same_format(reference, output)
+        if same_format_error:
+            return ComparisonResult(
+                status=ResultStatus.FAILED,
+                message=same_format_error,
+                diff_image=None,
+                error=1,
+            )
+
         # check resolution
         # compare images
 
@@ -85,3 +96,12 @@ class FlipImageComparator:
             diff_image=diff_image,
             error=mean_error,
         )
+
+    def _verify_images_have_same_format(
+        self, reference: str, output: str
+    ) -> Optional[str]:
+        reference_image_extension = os.path.splitext(reference)[1]
+        output_image_extension = os.path.splitext(output)[1]
+
+        if reference_image_extension != output_image_extension:
+            return f"FLIP does not support comparison of reference {reference_image_extension} to output {output_image_extension}, image need to have same format."

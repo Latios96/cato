@@ -148,6 +148,42 @@ def test_compare_image_should_fail_for_same_image_paths(
         )
 
 
+def test_compare_image_should_fail_when_comparing_png_to_exr(tmpdir):
+    image_comparator = FlipImageComparator()
+
+    comparison_result = image_comparator.compare(
+        "image.exr",
+        "image.png",
+        ComparisonSettings(threshold=1, method=ComparisonMethod.FLIP),
+        str(tmpdir),
+    )
+
+    assert comparison_result == ComparisonResult(
+        status=ResultStatus.FAILED,
+        message=f"FLIP does not support comparison of reference .exr to output .png, image need to have same format.",
+        diff_image=None,
+        error=1,
+    )
+
+
+def test_compare_image_should_fail_when_comparing_exr_to_png(tmpdir):
+    image_comparator = FlipImageComparator()
+
+    comparison_result = image_comparator.compare(
+        "image.png",
+        "image.exr",
+        ComparisonSettings(threshold=1, method=ComparisonMethod.FLIP),
+        str(tmpdir),
+    )
+
+    assert comparison_result == ComparisonResult(
+        status=ResultStatus.FAILED,
+        message=f"FLIP does not support comparison of reference .png to output .exr, image need to have same format.",
+        diff_image=None,
+        error=1,
+    )
+
+
 @mock.patch("uuid.uuid4")
 def test_compare_image_should_succeed_threshold_not_exceeded(
     mock_uuid4, test_resource_provider, tmpdir
@@ -175,9 +211,7 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
 @pytest.mark.parametrize(
     "image1_name,image2_name",
     [
-        ("unsupported-file.txt", "alembic-config-for-tests.ini"),
-        ("with_watermark.png", "unsupported-file.txt"),
-        ("unsupported-file.txt", "with_watermark.png"),
+        ("unsupported-file.txt", "other-unsupported-file.txt"),
     ],
 )
 def test_compare_image_should_fail_for_non_images(
