@@ -74,9 +74,26 @@ function RunBatchListImplementation(props: Props) {
               <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
                 {_.range(7).map((i) => {
                   return (
-                    <p key={i}>
-                      <Skeleton count={1} width={840} height={60} />
-                    </p>
+                    <tr>
+                      <td>
+                        <Skeleton count={1} width={135} height={24} />
+                      </td>
+                      <td width={93}>
+                        <Skeleton count={1} width={30} height={24} />
+                      </td>
+                      <td>
+                        <Skeleton count={1} width={177} height={10} />
+                      </td>
+                      <td>
+                        <Skeleton count={1} width={70} height={24} />
+                      </td>
+                      <td>
+                        <Skeleton count={1} width={70} height={24} />
+                      </td>
+                      <td>
+                        <Skeleton count={1} width={70} height={24} />
+                      </td>
+                    </tr>
                   );
                 })}
               </SkeletonTheme>

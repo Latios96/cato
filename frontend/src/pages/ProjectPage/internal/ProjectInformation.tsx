@@ -18,7 +18,7 @@ function ProjectInformation(props: Props) {
       <div className={styles.projectInformation}>
         <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
           <p>
-            <Skeleton count={1} width={160} height={50} />
+            <Skeleton count={1} width={300} height={50} />
           </p>
         </SkeletonTheme>
       </div>
