@@ -27,7 +27,7 @@ export const ProjectsViewPresenter = (props: Props) => {
       error={props.fetchResult.error}
     >
       <LoadingState>
-        <div className={styles.projectsView}>
+        <div className={styles.projectsViewLoading}>
           <Spinner
             animation="border"
             role="LoadingIndicator"
