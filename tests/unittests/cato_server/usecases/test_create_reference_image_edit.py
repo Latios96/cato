@@ -111,7 +111,7 @@ def test_create_reference_image_edit_with_success(test_result_factory):
     mock_test_edit_repository.save.side_effect = lambda x: x
     mock_test_result_repository = mock_safe(TestResultRepository)
     original_output_image_id = 10
-    mock_test_result_repository.find_by_id.return_value = test_result_factory(
+    test_result = test_result_factory(
         id=5,
         image_output=original_output_image_id,
         unified_test_status=UnifiedTestStatus.SUCCESS,
@@ -121,6 +121,7 @@ def test_create_reference_image_edit_with_success(test_result_factory):
         error_value=1,
         comparison_settings=ComparisonSettings.default(),
     )
+    mock_test_result_repository.find_by_id.return_value = test_result
     mock_compare_image = mock_safe(CompareImage)
     mock_compare_image.compare_image_from_db.return_value = CompareImageResult(
         status=ResultStatus.SUCCESS,
@@ -163,6 +164,13 @@ def test_create_reference_image_edit_with_success(test_result_factory):
             error_value=0.1,
         ),
     )
+
+    mock_test_result_repository.save.assert_called_once()
+    assert test_result.reference_image == original_output_image_id
+    assert test_result.diff_image == 13
+    assert test_result.unified_test_status == UnifiedTestStatus.SUCCESS
+    assert test_result.message == "still success"
+    assert test_result.error_value == 0.1
 
 
 def _create_image(x):

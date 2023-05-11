@@ -76,6 +76,7 @@ class CreateReferenceImageEdit:
         test_result.unified_test_status = UnifiedTestStatus.from_result_status(
             result.status
         )
+        test_result.error_value = result.error
         test_result.message = result.message
         self._test_result_repository.save(test_result)
 
