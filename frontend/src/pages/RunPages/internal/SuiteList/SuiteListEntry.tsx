@@ -13,6 +13,7 @@ import {
 import SuiteTestList from "./SuiteTestList";
 import queryString from "query-string";
 import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
+import Skeleton from "react-loading-skeleton";
 
 interface Props {
   suite: SuiteResultDto;
@@ -20,7 +21,7 @@ interface Props {
   runId: number;
 }
 
-function SuiteListEntry(props: Props) {
+export function SuiteListEntry(props: Props) {
   const history = useHistory();
   const [expanded, toggle] = useToggle(false);
 
@@ -67,4 +68,20 @@ function SuiteListEntry(props: Props) {
   );
 }
 
-export default SuiteListEntry;
+export function SuiteListEntrySkeleton() {
+  return (
+    <div>
+      <div className={styles.suiteListEntry}>
+        <span>
+          <ChevronRight />
+        </span>
+        <span>
+          <Skeleton width={27} height={27} />
+        </span>
+        <span>
+          <Skeleton width={100} height={27} />
+        </span>
+      </div>
+    </div>
+  );
+}

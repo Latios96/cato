@@ -9,7 +9,7 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import styles from "./SuiteList.module.scss";
-import SuiteListEntry from "./SuiteListEntry";
+import { SuiteListEntry, SuiteListEntrySkeleton } from "./SuiteListEntry";
 import { useReFetch } from "../../../../hooks/useReFetch";
 import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
@@ -35,15 +35,13 @@ function SuiteList(props: Props) {
     <LoadingStateHandler isLoading={isLoading} error={error}>
       <LoadingState>
         <div className={styles.loading}>
-          <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-            {_.range(10).map((i) => {
-              return (
-                <p>
-                  <Skeleton count={1} width={720} height={40} />
-                </p>
-              );
-            })}
-          </SkeletonTheme>
+          <div className={styles.suiteList} id={"suiteList"}>
+            <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
+              {_.range(15).map((i) => {
+                return <SuiteListEntrySkeleton />;
+              })}
+            </SkeletonTheme>
+          </div>
         </div>
       </LoadingState>
       <ErrorState>

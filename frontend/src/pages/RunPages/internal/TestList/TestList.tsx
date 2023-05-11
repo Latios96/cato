@@ -44,17 +44,42 @@ function TestList(props: Props) {
   return (
     <LoadingStateHandler isLoading={isLoading} error={error}>
       <LoadingState>
-        <div className={styles.loading}>
-          <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-            {_.range(10).map((i) => {
-              return (
-                <p>
-                  <Skeleton count={1} width={720} height={40} />
-                </p>
-              );
-            })}
-          </SkeletonTheme>
-        </div>
+        <table className={styles.testList} id={"testList"}>
+          <colgroup>
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+          </colgroup>
+          <tbody>
+            <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
+              {_.range(25).map((i) => {
+                return (
+                  <tr>
+                    <td>
+                      <Skeleton count={1} width={30} height={27} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={60} height={30} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={150} height={20} />
+                    </td>
+                    <td>/</td>
+                    <td>
+                      <Skeleton count={1} width={300} height={20} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={35} height={20} />
+                    </td>
+                  </tr>
+                );
+              })}
+            </SkeletonTheme>
+          </tbody>
+        </table>
       </LoadingState>
       <ErrorState>
         {" "}
