@@ -69,7 +69,9 @@ export function SelectInput(props: Props) {
                       <CheckLg size={20} />
                     ) : null}
                   </span>
-                  <span>{element}</span>
+                  <span className={styles.element} title={element}>
+                    {element}
+                  </span>
                 </div>
               );
             })}
