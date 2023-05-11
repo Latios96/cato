@@ -57,4 +57,4 @@ class CommandRunner:
                 self._output_processor.process(line)
         stdout.close()
         return_code = popen.wait()
-        return CommandResult(cmd, return_code, log_lines_collector.lines)
+        return CommandResult(cmd, return_code, [cmd + "\n", *log_lines_collector.lines])

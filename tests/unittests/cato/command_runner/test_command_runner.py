@@ -16,7 +16,21 @@ def test_command_runner_success():
     result = command_runner.run(cmd)
 
     assert result == CommandResult(
-        cmd, 0, ["0\n", "1\n", "2\n", "3\n", "4\n", "5\n", "6\n", "7\n", "8\n", "9\n"]
+        cmd,
+        0,
+        [
+            cmd + "\n",
+            "0\n",
+            "1\n",
+            "2\n",
+            "3\n",
+            "4\n",
+            "5\n",
+            "6\n",
+            "7\n",
+            "8\n",
+            "9\n",
+        ],
     )
 
 
@@ -27,7 +41,7 @@ def test_read_from_stdout_only():
 
     result = command_runner.run(cmd)
 
-    assert result == CommandResult(cmd, 0, ["Hello world from STDOUT"])
+    assert result == CommandResult(cmd, 0, [cmd + "\n", "Hello world from STDOUT"])
 
 
 def test_read_from_stderr_only():
@@ -37,7 +51,7 @@ def test_read_from_stderr_only():
 
     result = command_runner.run(cmd)
 
-    assert result == CommandResult(cmd, 0, ["Hello world from STDERR"])
+    assert result == CommandResult(cmd, 0, [cmd + "\n", "Hello world from STDERR"])
 
 
 def test_read_from_both():
@@ -48,6 +62,7 @@ def test_read_from_both():
     result = command_runner.run(cmd)
 
     assert set(result.output) == {
+        cmd + "\n",
         "Hello world from STDOUT\n",
         "Hello world from STDERR\n",
     }
