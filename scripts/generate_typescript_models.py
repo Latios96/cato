@@ -16,6 +16,7 @@ from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.run_aggregate import RunAggregate
 from cato_common.dtos.run_batch_aggregate import RunBatchAggregate
 from cato_common.dtos.suite_result_dto import SuiteResultDto
+from cato_common.dtos.suite_result_summary_dto import SuiteResultSummaryDto
 from cato_common.dtos.test_result_dto import TestResultDto
 from cato_common.dtos.test_result_short_summary_dto import TestResultShortSummaryDto
 from cato_server.api.dtos.test_edit_count import TestEditCount
@@ -38,6 +39,7 @@ if __name__ == "__main__":
             BasicRunInformation,
             RunAggregate,
             RunBatchAggregate,
+            SuiteResultSummaryDto,
         ]
     ).with_type_overrides(
         {
