@@ -7,7 +7,9 @@ const LogComponent = (props: Props) => {
   return (
     <div>
       <div className={style.terminalBackground}>
-        <pre className={style.terminalContent}>{props.content}</pre>
+        <pre className={style.terminalContent}>
+          <code>{props.content}</code>
+        </pre>
       </div>
     </div>
   );
