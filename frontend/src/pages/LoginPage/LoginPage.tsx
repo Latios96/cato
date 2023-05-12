@@ -3,6 +3,7 @@ import styles from "./LoginPage.module.scss";
 // @ts-ignore
 import video from "./cato_login_keyvisual_animation_1080p.mp4";
 import { Helmet } from "react-helmet";
+import Logo from "../../components/Logo/Logo";
 
 function LoginPage() {
   return (
@@ -15,7 +16,7 @@ function LoginPage() {
           <source src={video} type="video/mp4" />
         </video>
         <div className={styles.loginContainer}>
-          <span className={styles.logo}>cato</span>
+          <Logo height={90} />
           <a
             id={"login"}
             className="btn btn-primary"

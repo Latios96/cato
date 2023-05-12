@@ -5,6 +5,7 @@ import { LoginButton } from "../LoginButton/LoginButton";
 import { AboutUserMenu } from "./AboutUserMenu";
 import RenderOnAnonymous from "../Authentication/RenderOnAnonymous";
 import RenderOnAuthenticated from "../Authentication/RenderOnAuthenticated";
+import Logo from "../Logo/Logo";
 
 interface Props {}
 
@@ -13,7 +14,7 @@ function Header(props: Props) {
     <div className={styles.header}>
       <Link to={"/"}>
         <div className={styles.logo}>
-          <span className={styles.logoCato}>cato</span>
+          <Logo height={35} />
         </div>
       </Link>
       <span

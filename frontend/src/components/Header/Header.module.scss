@@ -1,4 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;600&display=swap");
 @import "../../custom.scss";
 $border-color: #d0d0d0;
 
@@ -10,12 +9,8 @@ $border-color: #d0d0d0;
 }
 .logo {
   color: white;
-  font-family: "Poppins", sans-serif;
-  font-size: 25px;
   margin: 11px 35px;
 }
 .logoCato {
   color: white;
-  font-family: "Poppins", sans-serif;
-  font-weight: 600;
 }
