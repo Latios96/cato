@@ -4,7 +4,7 @@ import { formatDuration } from "../../../../utils/dateUtils";
 import React from "react";
 
 import styles from "./RunSummary.module.scss";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import {
   DataLoadedState,
   ErrorState,
@@ -82,14 +82,12 @@ export function RunSummary(props: Props) {
     <div className={styles.runSummary}>
       <LoadingStateHandler isLoading={isLoading} error={error}>
         <LoadingState>
-          <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-            <p>
-              <Skeleton count={1} width={720} height={100} />
-            </p>
-            <p>
-              <Skeleton count={1} width={720} height={25} />
-            </p>
-          </SkeletonTheme>
+          <p>
+            <Skeleton count={1} width={720} height={100} />
+          </p>
+          <p>
+            <Skeleton count={1} width={720} height={25} />
+          </p>
         </LoadingState>
         <ErrorState>
           <ErrorMessageBox

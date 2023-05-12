@@ -5,7 +5,6 @@ import {
   LoadingState,
   LoadingStateHandler,
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
-import { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import styles from "./SuiteList.module.scss";
@@ -36,11 +35,9 @@ function SuiteList(props: Props) {
       <LoadingState>
         <div className={styles.loading}>
           <div className={styles.suiteList} id={"suiteList"}>
-            <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-              {_.range(15).map((i) => {
-                return <SuiteListEntrySkeleton />;
-              })}
-            </SkeletonTheme>
+            {_.range(15).map((i) => {
+              return <SuiteListEntrySkeleton />;
+            })}
           </div>
         </div>
       </LoadingState>

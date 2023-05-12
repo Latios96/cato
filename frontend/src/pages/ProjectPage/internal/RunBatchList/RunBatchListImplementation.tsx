@@ -1,7 +1,7 @@
 import React from "react";
 import styles from "./RunBatchList.module.scss";
 import { Page, PageRequest } from "../../../../components/Pagination/Page";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import SimplePaginationControls from "../../../../components/Pagination/SimplePaginationControls";
@@ -71,32 +71,30 @@ function RunBatchListImplementation(props: Props) {
               </div>
             </ErrorState>
             <LoadingState>
-              <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-                {_.range(7).map((i) => {
-                  return (
-                    <tr>
-                      <td>
-                        <Skeleton count={1} width={135} height={24} />
-                      </td>
-                      <td width={93}>
-                        <Skeleton count={1} width={30} height={24} />
-                      </td>
-                      <td>
-                        <Skeleton count={1} width={177} height={10} />
-                      </td>
-                      <td>
-                        <Skeleton count={1} width={70} height={24} />
-                      </td>
-                      <td>
-                        <Skeleton count={1} width={70} height={24} />
-                      </td>
-                      <td>
-                        <Skeleton count={1} width={70} height={24} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </SkeletonTheme>
+              {_.range(7).map((i) => {
+                return (
+                  <tr>
+                    <td>
+                      <Skeleton count={1} width={135} height={24} />
+                    </td>
+                    <td width={93}>
+                      <Skeleton count={1} width={30} height={24} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={177} height={10} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={70} height={24} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={70} height={24} />
+                    </td>
+                    <td>
+                      <Skeleton count={1} width={70} height={24} />
+                    </td>
+                  </tr>
+                );
+              })}
             </LoadingState>
             <DataLoadedState>
               <CollectionHandler

@@ -10,7 +10,7 @@ import {
   LoadingStateHandler,
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import Skeleton from "react-loading-skeleton";
 import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
@@ -54,30 +54,28 @@ function TestList(props: Props) {
             <col />
           </colgroup>
           <tbody>
-            <SkeletonTheme baseColor="#f7f7f7" highlightColor="white">
-              {_.range(25).map((i) => {
-                return (
-                  <tr>
-                    <td>
-                      <Skeleton count={1} width={30} height={27} />
-                    </td>
-                    <td>
-                      <Skeleton count={1} width={60} height={30} />
-                    </td>
-                    <td>
-                      <Skeleton count={1} width={150} height={20} />
-                    </td>
-                    <td>/</td>
-                    <td>
-                      <Skeleton count={1} width={300} height={20} />
-                    </td>
-                    <td>
-                      <Skeleton count={1} width={35} height={20} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </SkeletonTheme>
+            {_.range(25).map((i) => {
+              return (
+                <tr>
+                  <td>
+                    <Skeleton count={1} width={30} height={27} />
+                  </td>
+                  <td>
+                    <Skeleton count={1} width={60} height={30} />
+                  </td>
+                  <td>
+                    <Skeleton count={1} width={150} height={20} />
+                  </td>
+                  <td>/</td>
+                  <td>
+                    <Skeleton count={1} width={300} height={20} />
+                  </td>
+                  <td>
+                    <Skeleton count={1} width={35} height={20} />
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </LoadingState>
