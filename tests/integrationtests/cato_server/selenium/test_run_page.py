@@ -433,7 +433,7 @@ class TestRunSuitePage:
         assert (
             selenium_driver.find_element(
                 By.XPATH,
-                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[3]',
+                f'//*[@id="suite-{suite_result.id}-test-{test_result.id}"]/span[3]',
             ).text
             == test_result.test_name
         )
@@ -457,7 +457,7 @@ class TestRunSuitePage:
     def _should_display_suite_result(self, selenium_driver, suite_result):
         assert (
             selenium_driver.find_element(
-                By.XPATH, '//*[@id="suiteList"]/div[1]/div[1]/span[3]'
+                By.XPATH, f'//*[@id="suiteListEntry{suite_result.id}"]/span[3]'
             ).text
             == suite_result.suite_name
         )
@@ -476,7 +476,7 @@ class TestRunSuitePage:
         assert (
             selenium_driver.find_element(
                 By.XPATH,
-                f'//*[@id="suiteListEntryContent{suite_result.id}"]/div[1]/span[3]',
+                f'//*[@id="suite-{suite_result.id}-test-{test_result.id}"]/span[3]',
             ).text
             == test_result.test_name
         )

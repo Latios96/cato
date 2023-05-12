@@ -12,11 +12,11 @@ import {
 } from "../../../../utils/queryStringUtils";
 import SuiteTestList from "./SuiteTestList";
 import queryString from "query-string";
-import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
+import { SuiteResultSummaryDto } from "../../../../catoapimodels/catoapimodels";
 import Skeleton from "react-loading-skeleton";
 
 interface Props {
-  suite: SuiteResultDto;
+  suite: SuiteResultSummaryDto;
   projectId: number;
   runId: number;
 }
@@ -29,7 +29,7 @@ export function SuiteListEntry(props: Props) {
     let search = "";
     if (!expanded) {
       search = updateQueryString(history.location.search, {
-        selectedSuite: props.suite.id,
+        selectedSuite: props.suite.id, // todo store expanded suites
       });
     } else {
       search = popFromQueryString(history.location.search, ["selectedSuite"]);

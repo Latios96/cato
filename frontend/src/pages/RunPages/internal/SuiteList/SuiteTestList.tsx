@@ -2,23 +2,17 @@ import React from "react";
 import { updateQueryString } from "../../../../utils/queryStringUtils";
 import queryString from "query-string";
 import { useHistory } from "react-router-dom";
-import { useReFetch } from "../../../../hooks/useReFetch";
-import { SuiteTestListImpl } from "./SuiteTestListImpl";
-import {
-  SuiteResultDto,
-  TestResultDto,
-} from "../../../../catoapimodels/catoapimodels";
+import { SuiteResultSummaryDto } from "../../../../catoapimodels/catoapimodels";
+import styles from "./SuiteListEntry.module.scss";
+import TestStatus from "../../../../components/Status/TestStatus";
+import { Thumbnail } from "../../../../components/Thumbnail/Thumbnail";
+import { toHoursAndMinutes } from "../../../../utils/dateUtils";
 
 interface Props {
-  suite: SuiteResultDto;
+  suite: SuiteResultSummaryDto;
 }
 
 function SuiteTestList(props: Props) {
-  const { data, isLoading, error } = useReFetch<TestResultDto[]>(
-    `/api/v1/test_results/suite_result/${props.suite.id}`,
-    5000,
-    [props.suite.id]
-  );
   const history = useHistory();
   const queryParams = queryString.parse(history.location.search, {
     parseNumbers: true,
@@ -26,21 +20,46 @@ function SuiteTestList(props: Props) {
 
   const selectedTestId = queryParams.selectedTest;
   return (
-    <SuiteTestListImpl
-      loading={isLoading}
-      error={error}
-      data={data}
-      selectedTestId={selectedTestId}
-      onClick={(test) => {
-        history.push({
-          search: updateQueryString(history.location.search, {
-            selectedSuite: props.suite.id,
-            selectedTest: test.id,
-          }),
-        });
-      }}
-      suiteId={props.suite.id}
-    />
+    <div className={styles.suiteListEntryContent}>
+      {props.suite.tests.length === 0 ? (
+        <div>
+          <span>This suite has no tests</span>
+        </div>
+      ) : null}
+      {props.suite.tests.map((test) => {
+        return (
+          <div
+            onClick={(e) => {
+              history.push({
+                search: updateQueryString(history.location.search, {
+                  selectedSuite: props.suite.id,
+                  selectedTest: test.id,
+                }),
+              });
+            }}
+            className={selectedTestId === test.id ? styles.active : ""}
+            id={`suite-${props.suite.id}-test-${test.id}`}
+          >
+            <span>
+              <TestStatus testResult={test} />
+            </span>
+            <span>
+              <Thumbnail
+                url={
+                  test.thumbnailFileId
+                    ? `/api/v1/files/${test.thumbnailFileId}`
+                    : undefined
+                }
+                width={"55px"}
+                height={"30px"}
+              />
+            </span>
+            <span>{test.name}</span>
+            <span>{toHoursAndMinutes(test.seconds || 0)}</span>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 

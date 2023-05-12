@@ -3,9 +3,9 @@ import { Check, Hourglass } from "react-bootstrap-icons";
 import RenderingBucketIcon from "../Icons/RenderingBucketIcon";
 import { XCircleIcon } from "@primer/octicons-react";
 import styles from "./StatusStyles.module.scss";
-import { SuiteResultDto } from "../../catoapimodels/catoapimodels";
+import { SuiteResultSummaryDto } from "../../catoapimodels/catoapimodels";
 interface Props {
-  suiteResult: SuiteResultDto;
+  suiteResult: SuiteResultSummaryDto;
 }
 
 const SuiteStatus = (props: Props) => {

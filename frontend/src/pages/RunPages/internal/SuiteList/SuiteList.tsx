@@ -5,7 +5,7 @@ import {
   LoadingState,
   LoadingStateHandler,
 } from "../../../../components/LoadingStateHandler/LoadingStateHandler";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
+import { SkeletonTheme } from "react-loading-skeleton";
 import _ from "lodash";
 import ErrorMessageBox from "../../../../components/ErrorMessageBox/ErrorMessageBox";
 import styles from "./SuiteList.module.scss";
@@ -15,7 +15,7 @@ import { FilterOptions } from "../../../../models/FilterOptions";
 import { filterOptionsToQueryString } from "../../../../utils/filterOptionUtils";
 import PlaceHolderText from "../../../../components/PlaceholderText/PlaceHolderText";
 import { CollectionHandler } from "../../../../components/CollectionHandler/CollectionHandler";
-import { SuiteResultDto } from "../../../../catoapimodels/catoapimodels";
+import { SuiteResultSummaryDto } from "../../../../catoapimodels/catoapimodels";
 interface Props {
   projectId: number;
   runId: number;
@@ -23,7 +23,7 @@ interface Props {
 }
 
 function SuiteList(props: Props) {
-  const { data, isLoading, error } = useReFetch<SuiteResultDto[]>(
+  const { data, isLoading, error } = useReFetch<SuiteResultSummaryDto[]>(
     `/api/v1/suite_results/run/${props.runId}?${filterOptionsToQueryString(
       props.filterOptions
     )}`,
