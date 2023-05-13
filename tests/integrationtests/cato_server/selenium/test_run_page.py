@@ -212,17 +212,20 @@ class TestRunTestPage:
         )
 
     def _should_display_test_result(self, selenium_driver, test_result):
-        assert (
-            selenium_driver.find_element(
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element(
                 By.XPATH, '//*[@id="testList"]/tbody/tr/td[3]'
             ).text
-            == test_result.test_identifier.suite_name
+            == test_result.test_identifier.suite_name,
+            5,
         )
-        assert (
-            selenium_driver.find_element(
+
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element(
                 By.XPATH, '//*[@id="testList"]/tbody/tr/td[5]'
             ).text
-            == test_result.test_identifier.test_name
+            == test_result.test_identifier.test_name,
+            5,
         )
 
     def _switch_to_tests_page(self, selenium_driver):
