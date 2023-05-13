@@ -10,6 +10,7 @@ from cato_common.utils.typing import safe_unwrap
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.task_queue.cato_celery import CatoCelery
 from cato_server.usecases.compare_image import CompareImage
 from cato_common.utils.datetime_utils import aware_now_in_utc
 
@@ -23,11 +24,13 @@ class CreateReferenceImageEdit:
         test_result_repository: TestResultRepository,
         compare_image: CompareImage,
         image_repository: ImageRepository,
+        cato_celery: CatoCelery,
     ):
         self._test_edit_repository = test_edit_repository
         self._test_result_repository = test_result_repository
         self._compare_image = compare_image
         self._image_repository = image_repository
+        self._cato_celery = cato_celery
 
     def can_be_edited(self, test_result_id: int) -> CanBeEdited:
         try:
@@ -85,6 +88,15 @@ class CreateReferenceImageEdit:
             saved_edit.id,
             test_result_id,
         )
+
+        try:
+            self._cato_celery.launch_create_thumbnail_task(test_result.id)
+        except Exception as e:
+            logger.error(
+                "Error when launching thumbnail task for test result with id %s, test result won't have a thumbnail:",
+                test_result_id,
+            )
+            logger.exception(e)
 
         return cast(ReferenceImageEdit, saved_edit)
 

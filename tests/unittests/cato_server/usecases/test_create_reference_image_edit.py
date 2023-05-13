@@ -11,6 +11,7 @@ from cato_common.domain.unified_test_status import UnifiedTestStatus
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_edit_repository import TestEditRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
+from cato_server.task_queue.cato_celery import CatoCelery
 from cato_server.usecases.compare_image import CompareImage
 from cato_server.usecases.create_reference_image_edit import CreateReferenceImageEdit
 from tests.utils import mock_safe
@@ -30,11 +31,13 @@ def test_can_be_edited_should_return_ok(test_result_factory):
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
     mock_image_repository.find_by_id.return_value = image
+    mock_cato_celery = mock_safe(CatoCelery)
     create_reference_image_edit = CreateReferenceImageEdit(
         mock_test_edit_repository,
         mock_test_result_repository,
         mock_compare_image,
         mock_image_repository,
+        mock_cato_celery,
     )
 
     result = create_reference_image_edit.can_be_edited(1)
@@ -48,11 +51,13 @@ def test_can_be_edited_should_return_not_ok_no_test_result_found():
     mock_test_result_repository.find_by_id.return_value = None
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
+    mock_cato_celery = mock_safe(CatoCelery)
     create_reference_image_edit = CreateReferenceImageEdit(
         mock_test_edit_repository,
         mock_test_result_repository,
         mock_compare_image,
         mock_image_repository,
+        mock_cato_celery,
     )
 
     result = create_reference_image_edit.can_be_edited(1)
@@ -68,11 +73,13 @@ def test_can_be_edited_should_return_not_ok_no_image_output(test_result_factory)
     )
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
+    mock_cato_celery = mock_safe(CatoCelery)
     create_reference_image_edit = CreateReferenceImageEdit(
         mock_test_edit_repository,
         mock_test_result_repository,
         mock_compare_image,
         mock_image_repository,
+        mock_cato_celery,
     )
 
     result = create_reference_image_edit.can_be_edited(1)
@@ -92,11 +99,13 @@ def test_can_be_edited_should_return_not_ok_no_comparison_settings(
     )
     mock_compare_image = mock_safe(CompareImage)
     mock_image_repository = mock_safe(ImageRepository)
+    mock_cato_celery = mock_safe(CatoCelery)
     create_reference_image_edit = CreateReferenceImageEdit(
         mock_test_edit_repository,
         mock_test_result_repository,
         mock_compare_image,
         mock_image_repository,
+        mock_cato_celery,
     )
 
     result = create_reference_image_edit.can_be_edited(1)
@@ -133,11 +142,13 @@ def test_create_reference_image_edit_with_success(test_result_factory):
     )
     mock_image_repository = mock_safe(ImageRepository)
     mock_image_repository.find_by_id.side_effect = _create_image
+    mock_cato_celery = mock_safe(CatoCelery)
     create_reference_image_edit = CreateReferenceImageEdit(
         mock_test_edit_repository,
         mock_test_result_repository,
         mock_compare_image,
         mock_image_repository,
+        mock_cato_celery,
     )
     created_at = datetime.datetime(year=2021, month=original_reference_image_id, day=17)
     create_reference_image_edit._get_created_at = lambda: created_at
@@ -171,6 +182,7 @@ def test_create_reference_image_edit_with_success(test_result_factory):
     assert test_result.unified_test_status == UnifiedTestStatus.SUCCESS
     assert test_result.message == "still success"
     assert test_result.error_value == 0.1
+    mock_cato_celery.launch_create_thumbnail_task.assert_called_with(test_result.id)
 
 
 def _create_image(x):
