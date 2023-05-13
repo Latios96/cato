@@ -129,8 +129,9 @@ class MyChromeDriver(webdriver.Chrome):
 def wrap_catch_webdriver_exceptions(predicate: Callable[[webdriver.Chrome], bool]):
     def func(driver):
         try:
-            return predicate(driver)
-        except WebDriverException:
+            return predicate(driver) or True
+        except WebDriverException as e:
+            print(e)
             return False
 
     return func
