@@ -296,7 +296,7 @@ class ReadOnlySeleniumTest:
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
         header_link = (
             self.authenticated_selenium_driver.find_element_by_css_module_class_name(
-                "Header_logoCato"
+                "Header_logo"
             )
         )
         header_link.click()
