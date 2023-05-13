@@ -89,7 +89,7 @@ class TestRunTestPage:
     ):
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
         self._assert_no_test_is_selected(authenticated_selenium_driver)
-        self._select_a_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, test_result)
         self._assert_test_is_selected(authenticated_selenium_driver)
 
     def test_selecting_a_test_should_display_should_survive_refresh(
@@ -97,7 +97,7 @@ class TestRunTestPage:
     ):
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
         self._assert_no_test_is_selected(authenticated_selenium_driver)
-        self._select_a_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, test_result)
         self._assert_test_is_selected(authenticated_selenium_driver)
         authenticated_selenium_driver.refresh()
         self._assert_test_is_selected(authenticated_selenium_driver)
@@ -110,14 +110,14 @@ class TestRunTestPage:
         test_result,
         saving_test_result_factory,
     ):
-        saving_test_result_factory(
+        other_test = saving_test_result_factory(
             suite_result_id=test_result.suite_result_id,
             unified_test_status=UnifiedTestStatus.RUNNING,
         )
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
-        self._select_a_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, test_result)
         self._assert_test_is_selected(authenticated_selenium_driver)
-        self._select_other_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, other_test)
         self._assert_other_test_is_selected(authenticated_selenium_driver)
 
     def test_editing_the_tests_comparison_settings_should_work(
@@ -129,7 +129,7 @@ class TestRunTestPage:
         suite_result,
         stored_image,
     ):
-        saving_test_result_factory(
+        test_result = saving_test_result_factory(
             suite_result_id=suite_result.id,
             unified_test_status=UnifiedTestStatus.SUCCESS,
             image_output=stored_image.id,
@@ -139,7 +139,7 @@ class TestRunTestPage:
             ),
         )
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
-        self._select_a_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, test_result)
         self._edit_tests_threshold(authenticated_selenium_driver)
         self._test_should_be_updated(authenticated_selenium_driver)
 
@@ -152,7 +152,7 @@ class TestRunTestPage:
         suite_result,
         stored_image,
     ):
-        saving_test_result_factory(
+        test_result = saving_test_result_factory(
             suite_result_id=suite_result.id,
             unified_test_status=UnifiedTestStatus.FAILED,
             message="Reference image <not found> does not exist!",
@@ -163,7 +163,7 @@ class TestRunTestPage:
             ),
         )
         self._visit_run_test_page(live_server, run, authenticated_selenium_driver)
-        self._select_a_test(authenticated_selenium_driver)
+        self._select_a_test(authenticated_selenium_driver, test_result)
         self._update_tests_reference_image(authenticated_selenium_driver)
         self._test_reference_image_should_be_updated(authenticated_selenium_driver)
 
@@ -172,11 +172,6 @@ class TestRunTestPage:
             By.ID, "selectedTestContainer"
         ).find_element(By.XPATH, "//*[text()='started: ']")
 
-    def _select_other_test(self, selenium_driver):
-        selenium_driver.find_element(
-            By.XPATH, '//*[@id="testList"]/tbody/tr[2]'
-        ).click()
-
     def _assert_test_is_selected(self, selenium_driver):
         assert selenium_driver.wait_until(
             lambda driver: driver.find_element(
@@ -184,8 +179,11 @@ class TestRunTestPage:
             ).find_element(By.XPATH, "//*[text()='waiting to start...']")
         )
 
-    def _select_a_test(self, selenium_driver):
-        selenium_driver.find_element(By.XPATH, '//*[@id="testList"]/tbody/tr').click()
+    def _select_a_test(self, selenium_driver, test_result):
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element(By.ID, f"test-{test_result.id}").click(),
+            5,
+        )
 
     def _assert_no_test_is_selected(self, selenium_driver):
         assert selenium_driver.find_element(
@@ -396,13 +394,13 @@ class TestRunSuitePage:
         self._visit_run_suite_page(live_server, run, authenticated_selenium_driver)
 
         self._assert_first_suite_status_icon_has_title(
-            authenticated_selenium_driver, "not started"
+            authenticated_selenium_driver, suite_result, "not started"
         )
 
         self._update_run_status(sqlalchemy_test_result_repository, test_result)
 
         self._assert_first_suite_status_icon_has_title(
-            authenticated_selenium_driver, "running"
+            authenticated_selenium_driver, suite_result, "running"
         )
 
     def test_expanded_suite_should_auto_update(
@@ -484,9 +482,14 @@ class TestRunSuitePage:
             == test_result.test_name
         )
 
-    def _assert_first_suite_status_icon_has_title(self, selenium_driver, title):
-        assert selenium_driver.find_element(By.ID, "suiteList").find_element(
-            By.XPATH, f'//*[@id="suiteListEntry1"]/span[2]/span[@title="{title}"]'
+    def _assert_first_suite_status_icon_has_title(
+        self, selenium_driver, suite_result, title
+    ):
+        selenium_driver.wait_until(
+            lambda driver: driver.find_element(
+                By.XPATH, f'//*[@id="suiteListEntry{suite_result.id}"]/span[2]/span'
+            ).get_attribute("title")
+            == title
         )
 
     def _assert_first_test_status_icon_has_title(self, selenium_driver, title):
