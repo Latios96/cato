@@ -1,33 +1,26 @@
 import { useCallback, useEffect, useState } from "react";
 import { useIntervalWhen } from "rooks";
 import { FetchResult } from "./useFetch";
-interface UseReFetchResult<T> {
-  data?: T;
-  isLoading: boolean;
-  error?: Error;
+
+interface UseReFetchResult<T> extends FetchResult<T> {
+  isFirstFetch: boolean;
 }
 
 export function useReFetch<TData = any>(
   url: string,
   interval: number,
   dependencies?: any[]
-): UseReFetchResult<TData> {
-  const [isFirstFetch, setFirstFetch] = useState(true);
-  const markFirstFetch = useCallback(() => {
-    if (isFirstFetch) {
-      setFirstFetch(false);
-    }
-  }, [isFirstFetch]);
-  const [fetchResult, setFetchResult] = useState<FetchResult<TData>>({
+): FetchResult<TData> {
+  const [fetchResult, setFetchResult] = useState<UseReFetchResult<TData>>({
     isLoading: true,
     data: undefined,
     error: undefined,
+    isFirstFetch: true,
   });
 
   const doFetch = useCallback(() => {
     fetch(url)
       .then((res) => {
-        markFirstFetch();
         if (!res.ok) {
           throw new Error(`${res.status}: ${res.statusText}`);
         }
@@ -39,6 +32,7 @@ export function useReFetch<TData = any>(
             isLoading: false,
             data: result,
             error: undefined,
+            isFirstFetch: false,
           });
         },
         (error: Error) =>
@@ -46,9 +40,10 @@ export function useReFetch<TData = any>(
             isLoading: false,
             data: undefined,
             error: error,
+            isFirstFetch: false,
           })
       );
-  }, [markFirstFetch, url]);
+  }, [url]);
 
   useEffect(() => {
     doFetch();
@@ -64,9 +59,10 @@ export function useReFetch<TData = any>(
     interval,
     true
   );
+
   return {
     data: fetchResult.data,
-    isLoading: isFirstFetch ? fetchResult.isLoading : false,
+    isLoading: fetchResult.isFirstFetch ? fetchResult.isLoading : false,
     error: fetchResult.error,
   };
 }
