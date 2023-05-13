@@ -111,6 +111,7 @@ function TestList(props: Props) {
                 tests.map((test) => {
                   return (
                     <tr
+                      id={`test-${test.id}`}
                       onClick={() => props.selectedTestIdChanged(test.id)}
                       className={
                         test.id === props.selectedTestId ? styles.active : ""
