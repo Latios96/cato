@@ -1,34 +1,30 @@
 import React from "react";
 import styles from "./ProjectInformation.module.scss";
-import { useFetch } from "use-http";
 import Skeleton from "react-loading-skeleton";
 import { Helmet } from "react-helmet";
 import { Project } from "../../../catoapimodels/catoapimodels";
 interface Props {
-  projectId: number;
+  project: Project | undefined;
+  isLoading: boolean;
 }
 
 function ProjectInformation(props: Props) {
-  const { loading, data } = useFetch<Project>(
-    "/api/v1/projects/" + props.projectId,
-    []
-  );
-  if (loading) {
+  if (props.isLoading) {
     return (
       <div className={styles.projectInformation}>
-        <p>
-          <Skeleton count={1} width={300} height={50} />
-        </p>
+        <div className={styles.projectInformationSkeleton}>
+          <Skeleton count={1} width={350} height={30} />
+        </div>
       </div>
     );
   }
   return (
     <>
       <Helmet>
-        <title>{data ? data.name : "Cato"}</title>
+        <title>{props.project?.name || "Cato"}</title>
       </Helmet>
       <div className={styles.projectInformation}>
-        <h1>{data ? data.name : ""}</h1>
+        <h1>{props.project?.name || ""}</h1>
       </div>
     </>
   );
