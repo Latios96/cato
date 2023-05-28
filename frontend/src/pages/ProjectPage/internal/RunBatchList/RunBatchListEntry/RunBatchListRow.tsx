@@ -7,7 +7,7 @@ import {
 } from "../../../../../catoapimodels/catoapimodels";
 import ProgressBar from "../../../../../components/ProgressBar/ProgressBar";
 import FormattedTime from "../../../../../components/FormattedTime/FormattedTime";
-import { formatDuration } from "../../../../../utils/dateUtils";
+import { toHoursAndMinutes } from "../../../../../utils/dateUtils";
 import RunStatus from "../../../../../components/Status/RunStatus";
 import RunInformation from "./RunInformation";
 import RunBatchProviderInformation from "./RunBatchProviderInformation";
@@ -102,7 +102,9 @@ function RunBatchListRow(props: Props) {
         />
       </td>
       <td>
-        {props.runLike.duration ? formatDuration(props.runLike.duration) : "—"}
+        {props.runLike.duration
+          ? toHoursAndMinutes(props.runLike.duration)
+          : "—"}
       </td>
     </tr>
   );
