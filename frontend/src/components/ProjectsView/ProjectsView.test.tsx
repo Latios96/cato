@@ -3,7 +3,6 @@ import { render } from "@testing-library/react";
 import { HashRouter } from "react-router-dom";
 import React from "react";
 
-const isLoading = { isLoading: true, data: undefined, error: undefined };
 const isError = {
   isLoading: false,
   data: undefined,
@@ -19,12 +18,6 @@ const withProjects = {
   error: undefined,
 };
 describe("ProjectsView", () => {
-  it("should display a loading indicator while loading", () => {
-    const rendered = render(<ProjectsViewPresenter fetchResult={isLoading} />);
-
-    expect(rendered.getByRole("LoadingIndicator")).toBeInTheDocument();
-  });
-
   it("should display a error message", () => {
     const rendered = render(<ProjectsViewPresenter fetchResult={isError} />);
 

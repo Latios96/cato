@@ -3,7 +3,6 @@ import styles from "./ProjectsView.module.css";
 import LinkCard from "../LinkCard/LinkCard";
 import PlaceHolderText from "../PlaceholderText/PlaceHolderText";
 import _ from "lodash";
-import { Spinner } from "react-bootstrap";
 import { FetchResult, useFetch } from "../../hooks/useFetch";
 import {
   DataLoadedState,
@@ -13,6 +12,7 @@ import {
 } from "../LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../ErrorMessageBox/ErrorMessageBox";
 import { Project } from "../../catoapimodels/catoapimodels";
+import Skeleton from "react-loading-skeleton";
 
 interface Props {
   fetchResult: FetchResult<Project[]>;
@@ -27,14 +27,16 @@ export const ProjectsViewPresenter = (props: Props) => {
       error={props.fetchResult.error}
     >
       <LoadingState>
-        <div className={styles.projectsViewLoading}>
-          <Spinner
-            animation="border"
-            role="LoadingIndicator"
-            className={styles.centered}
-          >
-            <span className="sr-only">Loading...</span>
-          </Spinner>
+        <div className={styles.projectsView}>
+          {_.range(6).map((i) => {
+            return (
+              <div key={i} className={styles.projectsViewProjectComponent}>
+                <div style={{ width: 307, height: 132, padding: "10px" }}>
+                  <Skeleton count={1} width={287} height={112} />
+                </div>
+              </div>
+            );
+          })}
         </div>
       </LoadingState>
       <ErrorState>
