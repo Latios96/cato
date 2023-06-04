@@ -12,7 +12,6 @@ import {
 } from "../LoadingStateHandler/LoadingStateHandler";
 import ErrorMessageBox from "../ErrorMessageBox/ErrorMessageBox";
 import { Project } from "../../catoapimodels/catoapimodels";
-import Skeleton from "react-loading-skeleton";
 
 interface Props {
   fetchResult: FetchResult<Project[]>;
@@ -31,9 +30,7 @@ export const ProjectsViewPresenter = (props: Props) => {
           {_.range(6).map((i) => {
             return (
               <div key={i} className={styles.projectsViewProjectComponent}>
-                <div style={{ width: 307, height: 132, padding: "10px" }}>
-                  <Skeleton count={1} width={287} height={112} />
-                </div>
+                <LinkCard isLoading={true}></LinkCard>
               </div>
             );
           })}
