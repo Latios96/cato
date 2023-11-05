@@ -148,8 +148,8 @@ def selenium_driver() -> MyChromeDriver:
         if not os.environ.get("CI")
         else os.path.join(os.environ["CHROMEWEBDRIVER"], "chromedriver")
     )
+    chrome_options.binary_location = driver_path
     driver = MyChromeDriver(
-        executable_path=driver_path,
         options=chrome_options,
     )
     driver.implicitly_wait(5)
