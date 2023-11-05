@@ -22,19 +22,19 @@ def upgrade():
             sa.Column(
                 "comparison_settings_method",
                 sa.String(),
-            ),
-            batch_op.add_column(
-                sa.Column(
-                    "comparison_settings_threshold",
-                    sa.Float(),
-                )
-            ),
-            batch_op.add_column(
-                sa.Column(
-                    "error_value",
-                    sa.Float(),
-                )
-            ),
+            )
+        )
+        batch_op.add_column(
+            sa.Column(
+                "comparison_settings_threshold",
+                sa.Float(),
+            )
+        ),
+        batch_op.add_column(
+            sa.Column(
+                "error_value",
+                sa.Float(),
+            )
         )
 
 
