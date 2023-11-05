@@ -15,7 +15,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.utils import ChromeType
+from webdriver_manager.core.os_manager import ChromeType
 
 from cato_common.utils.datetime_utils import aware_now_in_utc
 
