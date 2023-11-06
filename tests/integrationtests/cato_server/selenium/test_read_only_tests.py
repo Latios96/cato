@@ -315,9 +315,11 @@ class ReadOnlySeleniumTest:
         self.home_page.the_link_card_for_the_project_should_be_displayed()
         self.home_page.when_clicking_the_card_it_should_navigate_to_project_page()
         self.project_page.the_project_name_should_be_visible()
-        assert self.authenticated_selenium_driver.wait_until(
-            lambda driver: driver.title == self.project.name
-        )
+
+        def assert_title_changed(driver):
+            assert driver.title == self.project.name
+
+        self.authenticated_selenium_driver.wait_until(assert_title_changed)
 
 
 class ProjectPageShouldNavigateToProjectTest(ReadOnlySeleniumTest):
