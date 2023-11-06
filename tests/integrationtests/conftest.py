@@ -140,7 +140,7 @@ def wrap_catch_webdriver_exceptions(predicate: Callable[[webdriver.Chrome], bool
 @pytest.fixture
 def selenium_driver() -> MyChromeDriver:
     chrome_options = Options()
-    chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
     driver_path = (
         ChromeDriverManager(
             chrome_type=ChromeType.GOOGLE,
@@ -148,7 +148,7 @@ def selenium_driver() -> MyChromeDriver:
         if not os.environ.get("CI")
         else os.path.join(os.environ["CHROMEWEBDRIVER"], "chromedriver")
     )
-    chrome_options.binary_location = driver_path
+    # chrome_options.binary_location = driver_path
     driver = MyChromeDriver(
         options=chrome_options,
     )

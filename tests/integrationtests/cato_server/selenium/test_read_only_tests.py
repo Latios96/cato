@@ -13,10 +13,13 @@ class HomePage:
         self.stateless_test = stateless_test
 
     def the_link_card_for_the_project_should_be_displayed(self):
-        link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
-            "LinkCard_cardContentDiv"
+        link_card_text = self.stateless_test.authenticated_selenium_driver.wait_until(
+            lambda driver: self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
+                "LinkCard_cardContentDiv"
+            ).text
         )
-        assert link_card.text == self.stateless_test.project.name
+
+        assert link_card_text == self.stateless_test.project.name
 
     def when_clicking_the_card_it_should_navigate_to_project_page(self):
         link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
@@ -30,9 +33,14 @@ class ProjectPage:
         self.stateless_test = stateless_test
 
     def the_project_name_should_be_visible(self):
+        def assert_project_name_changed(driver):
+            assert (
+                driver.find_element(By.TAG_NAME, "h1").text
+                == self.stateless_test.project.name
+            )
+
         self.stateless_test.authenticated_selenium_driver.wait_until(
-            lambda driver: driver.find_element(By.TAG_NAME, "h1").text
-            == self.stateless_test.project.name
+            assert_project_name_changed
         )
 
     def should_display_run_list(self):

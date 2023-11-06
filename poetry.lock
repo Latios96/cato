@@ -24,14 +24,14 @@ tz = ["python-dateutil"]
 
 [[package]]
 name = "amqp"
-version = "5.1.1"
+version = "5.2.0"
 description = "Low-level AMQP client for Python (fork of amqplib)."
 category = "main"
 optional = false
 python-versions = ">=3.6"
 
 [package.dependencies]
-vine = ">=5.0.0"
+vine = ">=5.0.0,<6.0.0"
 
 [[package]]
 name = "anyio"
@@ -90,7 +90,7 @@ cryptography = ">=3.2"
 
 [[package]]
 name = "billiard"
-version = "4.1.0"
+version = "4.2.0"
 description = "Python multiprocessing fork with improvements and bugfixes"
 category = "main"
 optional = false
@@ -1967,19 +1967,27 @@ python-versions = "*"
 
 [[package]]
 name = "types-requests"
-version = "2.31.0.10"
+version = "2.31.0.6"
 description = "Typing stubs for requests"
 category = "dev"
 optional = false
 python-versions = ">=3.7"
 
 [package.dependencies]
-urllib3 = ">=2"
+types-urllib3 = "*"
 
 [[package]]
 name = "types-tabulate"
 version = "0.9.0.3"
 description = "Typing stubs for tabulate"
+category = "dev"
+optional = false
+python-versions = "*"
+
+[[package]]
+name = "types-urllib3"
+version = "1.26.25.14"
+description = "Typing stubs for urllib3"
 category = "dev"
 optional = false
 python-versions = "*"
@@ -2025,20 +2033,19 @@ six = "*"
 
 [[package]]
 name = "urllib3"
-version = "2.0.7"
+version = "1.26.18"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 category = "main"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*, !=3.4.*, !=3.5.*"
 
 [package.dependencies]
-pysocks = {version = ">=1.5.6,<1.5.7 || >1.5.7,<2.0", optional = true, markers = "extra == \"socks\""}
+PySocks = {version = ">=1.5.6,<1.5.7 || >1.5.7,<2.0", optional = true, markers = "extra == \"socks\""}
 
 [package.extras]
-brotli = ["brotli (>=1.0.9)", "brotlicffi (>=0.8.0)"]
-secure = ["certifi", "cryptography (>=1.9)", "idna (>=2.0.0)", "pyopenssl (>=17.1.0)", "urllib3-secure-extra"]
-socks = ["pysocks (>=1.5.6,!=1.5.7,<2.0)"]
-zstd = ["zstandard (>=0.18.0)"]
+brotli = ["brotli (==1.0.9)", "brotli (>=1.0.9)", "brotlicffi (>=0.8.0)", "brotlipy (>=0.6.0)"]
+secure = ["certifi", "cryptography (>=1.3.4)", "idna (>=2.0.0)", "ipaddress", "pyOpenSSL (>=0.14)", "urllib3-secure-extra"]
+socks = ["PySocks (>=1.5.6,!=1.5.7,<2.0)"]
 
 [[package]]
 name = "uvicorn"
@@ -2180,7 +2187,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.10,<3.11"
-content-hash = "e9fbba6cf80faf3c7d8b40769e059e5b9a3c6891bc372178c1b8af3f5c2130ce"
+content-hash = "c0ec3230a2fdbbfa4e9f25d056333a631371291a362fd75dc35622ba93077ced"
 
 [metadata.files]
 aiofiles = [
@@ -2192,8 +2199,8 @@ alembic = [
     {file = "alembic-1.12.1.tar.gz", hash = "sha256:bca5877e9678b454706347bc10b97cb7d67f300320fa5c3a94423e8266e2823f"},
 ]
 amqp = [
-    {file = "amqp-5.1.1-py3-none-any.whl", hash = "sha256:6f0956d2c23d8fa6e7691934d8c3930eadb44972cbbd1a7ae3a520f735d43359"},
-    {file = "amqp-5.1.1.tar.gz", hash = "sha256:2c1b13fecc0893e946c65cbd5f36427861cffa4ea2201d8f6fca22e2a373b5e2"},
+    {file = "amqp-5.2.0-py3-none-any.whl", hash = "sha256:827cb12fb0baa892aad844fd95258143bce4027fdac4fccddbc43330fd281637"},
+    {file = "amqp-5.2.0.tar.gz", hash = "sha256:a1ecff425ad063ad42a486c902807d1482311481c8ad95a72694b2975e75f7fd"},
 ]
 anyio = [
     {file = "anyio-3.7.1-py3-none-any.whl", hash = "sha256:91dee416e570e92c64041bd18b900d1d6fa78dff7048769ce5ac5ddad004fbb5"},
@@ -2212,8 +2219,8 @@ authlib = [
     {file = "Authlib-1.2.1.tar.gz", hash = "sha256:421f7c6b468d907ca2d9afede256f068f87e34d23dd221c07d13d4c234726afb"},
 ]
 billiard = [
-    {file = "billiard-4.1.0-py3-none-any.whl", hash = "sha256:0f50d6be051c6b2b75bfbc8bfd85af195c5739c281d3f5b86a5640c65563614a"},
-    {file = "billiard-4.1.0.tar.gz", hash = "sha256:1ad2eeae8e28053d729ba3373d34d9d6e210f6e4d8bf0a9c64f92bd053f1edf5"},
+    {file = "billiard-4.2.0-py3-none-any.whl", hash = "sha256:07aa978b308f334ff8282bd4a746e681b3513db5c9a514cbdd810cbbdc19714d"},
+    {file = "billiard-4.2.0.tar.gz", hash = "sha256:9a3c3184cb275aa17a732f93f65b20c525d3d9f253722d26a82194803ade5a2c"},
 ]
 black = [
     {file = "black-22.12.0-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9eedd20838bd5d75b80c9f5487dbcb06836a43833a37846cf1d8c1cc01cef59d"},
@@ -2678,7 +2685,6 @@ gevent = [
     {file = "gevent-22.10.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:877abdb3a669576b1d51ce6a49b7260b2a96f6b2424eb93287e779a3219d20ba"},
     {file = "gevent-22.10.2-cp311-cp311-musllinux_1_1_x86_64.whl", hash = "sha256:d21ad79cca234cdbfa249e727500b0ddcbc7adfff6614a96e6eaa49faca3e4f2"},
     {file = "gevent-22.10.2-cp311-cp311-win_amd64.whl", hash = "sha256:1e955238f59b2947631c9782a713280dd75884e40e455313b5b6bbc20b92ff73"},
-    {file = "gevent-22.10.2-cp36-cp36m-macosx_10_9_x86_64.whl", hash = "sha256:5aa99e4882a9e909b4756ee799c6fa0f79eb0542779fad4cc60efa23ec1b2aa8"},
     {file = "gevent-22.10.2-cp36-cp36m-manylinux2010_x86_64.whl", hash = "sha256:d82081656a5b9a94d37c718c8646c757e1617e389cdc533ea5e6a6f0b8b78545"},
     {file = "gevent-22.10.2-cp36-cp36m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:54f4bfd74c178351a4a05c5c7df6f8a0a279ff6f392b57608ce0e83c768207f9"},
     {file = "gevent-22.10.2-cp36-cp36m-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:1ff3796692dff50fec2f381b9152438b221335f557c4f9b811f7ded51b7a25a1"},
@@ -2686,7 +2692,6 @@ gevent = [
     {file = "gevent-22.10.2-cp36-cp36m-musllinux_1_1_x86_64.whl", hash = "sha256:9d85574eb729f981fea9a78998725a06292d90a3ed50ddca74530c3148c0be41"},
     {file = "gevent-22.10.2-cp36-cp36m-win32.whl", hash = "sha256:8c192d2073e558e241f0b592c1e2b34127a4481a5be240cad4796533b88b1a98"},
     {file = "gevent-22.10.2-cp36-cp36m-win_amd64.whl", hash = "sha256:a2237451c721a0f874ef89dbb4af4fdc172b76a964befaa69deb15b8fff10f49"},
-    {file = "gevent-22.10.2-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:53ee7f170ed42c7561fe8aff5d381dc9a4124694e70580d0c02fba6aafc0ea37"},
     {file = "gevent-22.10.2-cp37-cp37m-manylinux2010_x86_64.whl", hash = "sha256:96c56c280e3c43cfd075efd10b250350ed5ffd3c1514ec99a080b1b92d7c8374"},
     {file = "gevent-22.10.2-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b6c144e08dfad4106effc043a026e5d0c0eff6ad031904c70bf5090c63f3a6a7"},
     {file = "gevent-22.10.2-cp37-cp37m-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:018f93de7d5318d2fb440f846839a4464738468c3476d5c9cf7da45bb71c18bd"},
@@ -2694,7 +2699,6 @@ gevent = [
     {file = "gevent-22.10.2-cp37-cp37m-musllinux_1_1_x86_64.whl", hash = "sha256:84c517e33ed604fa06b7d756dc0171169cc12f7fdd68eb7b17708a62eebf4516"},
     {file = "gevent-22.10.2-cp37-cp37m-win32.whl", hash = "sha256:4114f0f439f0b547bb6f1d474fee99ddb46736944ad2207cef3771828f6aa358"},
     {file = "gevent-22.10.2-cp37-cp37m-win_amd64.whl", hash = "sha256:0d581f22a5be6281b11ad6309b38b18f0638cf896931223cbaa5adb904826ef6"},
-    {file = "gevent-22.10.2-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:2929377c8ebfb6f4d868d161cd8de2ea6b9f6c7a5fcd4f78bcd537319c16190b"},
     {file = "gevent-22.10.2-cp38-cp38-manylinux2010_x86_64.whl", hash = "sha256:efc003b6c1481165af61f0aeac248e0a9ac8d880bb3acbe469b448674b2d5281"},
     {file = "gevent-22.10.2-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:db562a8519838bddad0c439a2b12246bab539dd50e299ea7ff3644274a33b6a5"},
     {file = "gevent-22.10.2-cp38-cp38-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:1472012493ca1fac103f700d309cb6ef7964dcdb9c788d1768266e77712f5e49"},
@@ -2702,7 +2706,6 @@ gevent = [
     {file = "gevent-22.10.2-cp38-cp38-musllinux_1_1_x86_64.whl", hash = "sha256:8729129edef2637a8084258cb9ec4e4d5ca45d97ac77aa7a6ff19ccb530ab731"},
     {file = "gevent-22.10.2-cp38-cp38-win32.whl", hash = "sha256:ae90226074a6089371a95f20288431cd4b3f6b0b096856afd862e4ac9510cddd"},
     {file = "gevent-22.10.2-cp38-cp38-win_amd64.whl", hash = "sha256:494c7f29e94df9a1c3157d67bb7edfa32a46eed786e04d9ee68d39f375e30001"},
-    {file = "gevent-22.10.2-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:58898dbabb5b11e4d0192aae165ad286dc6742c543e1be9d30dc82753547c508"},
     {file = "gevent-22.10.2-cp39-cp39-manylinux2010_x86_64.whl", hash = "sha256:4197d423e198265eef39a0dea286ef389da9148e070310f34455ecee8172c391"},
     {file = "gevent-22.10.2-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:da4183f0b9d9a1e25e1758099220d32c51cc2c6340ee0dea3fd236b2b37598e4"},
     {file = "gevent-22.10.2-cp39-cp39-manylinux_2_17_ppc64le.manylinux2014_ppc64le.whl", hash = "sha256:a5488eba6a568b4d23c072113da4fc0feb1b5f5ede7381656dc913e0d82204e2"},
@@ -3751,12 +3754,16 @@ types-python-dateutil = [
     {file = "types_python_dateutil-2.8.19.14-py3-none-any.whl", hash = "sha256:f977b8de27787639986b4e28963263fd0e5158942b3ecef91b9335c130cb1ce9"},
 ]
 types-requests = [
-    {file = "types-requests-2.31.0.10.tar.gz", hash = "sha256:dc5852a76f1eaf60eafa81a2e50aefa3d1f015c34cf0cba130930866b1b22a92"},
-    {file = "types_requests-2.31.0.10-py3-none-any.whl", hash = "sha256:b32b9a86beffa876c0c3ac99a4cd3b8b51e973fb8e3bd4e0a6bb32c7efad80fc"},
+    {file = "types-requests-2.31.0.6.tar.gz", hash = "sha256:cd74ce3b53c461f1228a9b783929ac73a666658f223e28ed29753771477b3bd0"},
+    {file = "types_requests-2.31.0.6-py3-none-any.whl", hash = "sha256:a2db9cb228a81da8348b49ad6db3f5519452dd20a9c1e1a868c83c5fe88fd1a9"},
 ]
 types-tabulate = [
     {file = "types-tabulate-0.9.0.3.tar.gz", hash = "sha256:197651f9d6467193cd166d8500116a6d3a26f2a4eb2db093bc9535ee1c0be55e"},
     {file = "types_tabulate-0.9.0.3-py3-none-any.whl", hash = "sha256:462d1b62e01728416e8277614d6a3eb172d53a8efaf04a04a973ff2dd45238f6"},
+]
+types-urllib3 = [
+    {file = "types-urllib3-1.26.25.14.tar.gz", hash = "sha256:229b7f577c951b8c1b92c1bc2b2fdb0b49847bd2af6d1cc2a2e3dd340f3bda8f"},
+    {file = "types_urllib3-1.26.25.14-py3-none-any.whl", hash = "sha256:9683bbb7fb72e32bfe9d2be6e04875fbe1b3eeec3cbb4ea231435aa7fd6b4f0e"},
 ]
 typing-extensions = [
     {file = "typing_extensions-4.8.0-py3-none-any.whl", hash = "sha256:8f92fc8806f9a6b641eaa5318da32b44d401efaac0f6678c9bc448ba3605faa0"},
@@ -3775,8 +3782,8 @@ url-normalize = [
     {file = "url_normalize-1.4.3-py2.py3-none-any.whl", hash = "sha256:ec3c301f04e5bb676d333a7fa162fa977ad2ca04b7e652bfc9fac4e405728eed"},
 ]
 urllib3 = [
-    {file = "urllib3-2.0.7-py3-none-any.whl", hash = "sha256:fdb6d215c776278489906c2f8916e6e7d4f5a9b602ccbcfdf7f016fc8da0596e"},
-    {file = "urllib3-2.0.7.tar.gz", hash = "sha256:c97dfde1f7bd43a71c8d2a58e369e9b2bf692d1334ea9f9cae55add7d0dd0f84"},
+    {file = "urllib3-1.26.18-py2.py3-none-any.whl", hash = "sha256:34b97092d7e0a3a8cf7cd10e386f401b3737364026c45e622aa02903dffe0f07"},
+    {file = "urllib3-1.26.18.tar.gz", hash = "sha256:f8ecc1bba5667413457c529ab955bf8c67b45db799d159066261719e328580a0"},
 ]
 uvicorn = [
     {file = "uvicorn-0.19.0-py3-none-any.whl", hash = "sha256:cc277f7e73435748e69e075a721841f7c4a95dba06d12a72fe9874acced16f6f"},
