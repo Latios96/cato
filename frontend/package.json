@@ -15,7 +15,7 @@
     "@types/react-dom": "^18.0.0",
     "@types/react-query": "^1.1.2",
     "@types/react-router-dom": "^5.1.7",
-    "axios": "^0.26.1",
+    "axios": "^1.6.0",
     "babel-loader": "8.2.4",
     "bootstrap": "^4.5.3",
     "date-fns": "^2.28.0",
