@@ -1,4 +1,5 @@
 """ FLIP metric functions """
+
 #################################################################################
 # Copyright (c) 2020-2022, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 #
@@ -132,9 +133,9 @@ def tone_map(img, exposure, tone_mapper="aces"):
     x2 = np.power(x, 2)
     nom = k0 * x2 + k1 * x + k2
     denom = k3 * x2 + k4 * x + k5
-    denom[
-        np.isinf(denom)
-    ] = 1.0  # if denom is inf, then so is nom => nan. Pixel is very bright. It becomes inf here, but 1 after clamp below
+    denom[np.isinf(denom)] = (
+        1.0  # if denom is inf, then so is nom => nan. Pixel is very bright. It becomes inf here, but 1 after clamp below
+    )
     y = np.divide(nom, denom)
     return np.clip(y, 0.0, 1.0)
 

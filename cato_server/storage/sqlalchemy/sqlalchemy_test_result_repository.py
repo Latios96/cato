@@ -78,9 +78,11 @@ class SqlAlchemyTestResultRepository(
             test_identifier=str(domain_object.test_identifier),
             test_command=domain_object.test_command,
             test_variables=domain_object.test_variables,
-            machine_info=dataclasses.asdict(domain_object.machine_info)
-            if domain_object.machine_info
-            else None,
+            machine_info=(
+                dataclasses.asdict(domain_object.machine_info)
+                if domain_object.machine_info
+                else None
+            ),
             unified_test_status=domain_object.unified_test_status.name,
             seconds=domain_object.seconds,
             message=domain_object.message,
@@ -89,17 +91,23 @@ class SqlAlchemyTestResultRepository(
             diff_image_id=domain_object.diff_image,
             started_at=domain_object.started_at,
             finished_at=domain_object.finished_at,
-            comparison_settings_method=domain_object.comparison_settings.method.value
-            if domain_object.comparison_settings
-            else None,
-            comparison_settings_threshold=domain_object.comparison_settings.threshold
-            if domain_object.comparison_settings
-            else None,
+            comparison_settings_method=(
+                domain_object.comparison_settings.method.value
+                if domain_object.comparison_settings
+                else None
+            ),
+            comparison_settings_threshold=(
+                domain_object.comparison_settings.threshold
+                if domain_object.comparison_settings
+                else None
+            ),
             error_value=domain_object.error_value,
             thumbnail_file_entity_id=domain_object.thumbnail_file_id,
-            failure_reason=domain_object.failure_reason.name
-            if domain_object.failure_reason
-            else None,
+            failure_reason=(
+                domain_object.failure_reason.name
+                if domain_object.failure_reason
+                else None
+            ),
         )
 
     def to_domain_object(self, entity: _TestResultMapping) -> TestResult:
@@ -110,13 +118,15 @@ class SqlAlchemyTestResultRepository(
             test_identifier=TestIdentifier.from_string(entity.test_identifier),
             test_command=entity.test_command,
             test_variables=entity.test_variables,
-            machine_info=MachineInfo(
-                cpu_name=entity.machine_info["cpu_name"],
-                cores=entity.machine_info["cores"],
-                memory=entity.machine_info["memory"],
-            )
-            if entity.machine_info
-            else None,
+            machine_info=(
+                MachineInfo(
+                    cpu_name=entity.machine_info["cpu_name"],
+                    cores=entity.machine_info["cores"],
+                    memory=entity.machine_info["memory"],
+                )
+                if entity.machine_info
+                else None
+            ),
             unified_test_status=UnifiedTestStatus(entity.unified_test_status),
             seconds=entity.seconds,
             message=entity.message,
@@ -125,17 +135,21 @@ class SqlAlchemyTestResultRepository(
             diff_image=entity.diff_image_id,
             started_at=entity.started_at,
             finished_at=entity.finished_at,
-            comparison_settings=ComparisonSettings(
-                method=ComparisonMethod(entity.comparison_settings_method),
-                threshold=entity.comparison_settings_threshold,
-            )
-            if entity.comparison_settings_method
-            else None,
+            comparison_settings=(
+                ComparisonSettings(
+                    method=ComparisonMethod(entity.comparison_settings_method),
+                    threshold=entity.comparison_settings_threshold,
+                )
+                if entity.comparison_settings_method
+                else None
+            ),
             error_value=entity.error_value,
             thumbnail_file_id=entity.thumbnail_file_entity_id,
-            failure_reason=TestFailureReason(entity.failure_reason)
-            if entity.failure_reason
-            else None,
+            failure_reason=(
+                TestFailureReason(entity.failure_reason)
+                if entity.failure_reason
+                else None
+            ),
         )
 
     def mapping_cls(self):

@@ -44,8 +44,8 @@ class TestCreateComparisonSettingsEditValidator:
     )
     def test_failure(self, data, expected_errors, test_result_factory):
         mock_test_result_repository = mock_safe(TestResultRepository)
-        mock_test_result_repository.find_by_id.side_effect = (
-            lambda x: None if x == 1 else test_result_factory()
+        mock_test_result_repository.find_by_id.side_effect = lambda x: (
+            None if x == 1 else test_result_factory()
         )
         validator = CreateComparisonSettingsEditValidator(mock_test_result_repository)
 

@@ -57,8 +57,8 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
         2: TestResultStatusInformation(not_started=1, running=2, failed=3, success=4),
     }
 
-    test_context.mock_run_status_calculator.calculate.side_effect = (
-        lambda x: RunStatus.SUCCESS if x == 1 else RunStatus.FAILED
+    test_context.mock_run_status_calculator.calculate.side_effect = lambda x: (
+        RunStatus.SUCCESS if x == 1 else RunStatus.FAILED
     )
     test_context.mock_suite_result_repository.suite_count_by_run_ids.return_value = {
         1: 1,
@@ -156,8 +156,8 @@ def test_aggregate_run_without_suites_and_tests(
         1: TestResultStatusInformation(not_started=0, running=0, failed=0, success=0),
     }
 
-    test_context.mock_run_status_calculator.calculate.side_effect = (
-        lambda x: RunStatus.SUCCESS if x == 1 else RunStatus.FAILED
+    test_context.mock_run_status_calculator.calculate.side_effect = lambda x: (
+        RunStatus.SUCCESS if x == 1 else RunStatus.FAILED
     )
     test_context.mock_suite_result_repository.suite_count_by_run_ids.return_value = {
         1: 1,

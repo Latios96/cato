@@ -5,6 +5,7 @@ Revises: 9bf8a029dc0e
 Create Date: 2022-03-17 17:00:27.742001
 
 """
+
 import json
 
 from alembic import op
@@ -37,7 +38,7 @@ def upgrade():
     submission_infos = conn.execute(
         "select id,config from submission_info_entity"
     ).fetchall()
-    for (submission_info_id, submission_info) in submission_infos:
+    for submission_info_id, submission_info in submission_infos:
         data = (
             json.loads(submission_info)
             if not isinstance(submission_info, dict)

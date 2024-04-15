@@ -187,9 +187,11 @@ class TestRunner:
                     ResultStatus.FAILED,
                     command_result.output,
                     elapsed,
-                    image_compare_result.message
-                    if image_compare_result.message
-                    else "",
+                    (
+                        image_compare_result.message
+                        if image_compare_result.message
+                        else ""
+                    ),
                     image_compare_result.output_image_id,
                     image_compare_result.reference_image_id,
                     image_compare_result.diff_image_id,

@@ -5,6 +5,7 @@ Revises: 80ef9d93643b
 Create Date: 2022-09-16 12:10:27.857617
 
 """
+
 import uuid
 
 from alembic import op

@@ -172,9 +172,9 @@ class TestRunListPage:
                             project_id=project.id,
                             run_batch_id=0,
                             created_at=aware_now_in_utc(),
-                            branch_name=BranchName("default")
-                            if x > 10
-                            else BranchName("dev"),
+                            branch_name=(
+                                BranchName("default") if x > 10 else BranchName("dev")
+                            ),
                             previous_run_id=None,
                             run_information=local_computer_run_information,
                         )

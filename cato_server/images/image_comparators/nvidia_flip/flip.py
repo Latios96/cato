@@ -1,4 +1,5 @@
 """ FLIP metric tool """
+
 #################################################################################
 # Copyright (c) 2020-2022, NVIDIA CORPORATION & AFFILIATES. All rights reserved.
 #
@@ -938,9 +939,11 @@ if __name__ == "__main__":
             if args.no_exposure_map == False:
                 exposure_map_path = ("%s/%s.png") % (
                     args.directory,
-                    "exposure_map." + basename
-                    if default_basename
-                    else basename + ".exposure_map",
+                    (
+                        "exposure_map." + basename
+                        if default_basename
+                        else basename + ".exposure_map"
+                    ),
                 )
                 save_image(exposure_map_path, exposure_map)
 

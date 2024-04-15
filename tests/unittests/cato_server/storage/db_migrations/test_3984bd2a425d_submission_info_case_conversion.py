@@ -89,8 +89,10 @@ def test_upgrade_submission_info_camel_case_conversion(
             "select config from submission_info_entity"
         ).all() == [
             (
-                json.dumps(CONVERTED_CONFIG_TEMPLATE)
-                if "sqlite" in mapped_db_connection_string
-                else CONVERTED_CONFIG_TEMPLATE,
+                (
+                    json.dumps(CONVERTED_CONFIG_TEMPLATE)
+                    if "sqlite" in mapped_db_connection_string
+                    else CONVERTED_CONFIG_TEMPLATE
+                ),
             )
         ]

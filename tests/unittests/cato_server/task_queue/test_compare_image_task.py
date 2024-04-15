@@ -46,13 +46,13 @@ def test_compare_images_successfully(
 ):
     output_image_file = stored_file_factory(id=1)
     reference_image_file = stored_file_factory(id=2)
-    test_context.mock_file_storage.find_by_id.side_effect = (
-        lambda x: output_image_file if x == 1 else reference_image_file
+    test_context.mock_file_storage.find_by_id.side_effect = lambda x: (
+        output_image_file if x == 1 else reference_image_file
     )
     output_image = stored_image_factory(id=1)
     reference_image = stored_image_factory(id=2)
-    test_context.mock_store_image.store_image_from_file_entity.side_effect = (
-        lambda x: output_image if x.id == output_image_file.id else reference_image
+    test_context.mock_store_image.store_image_from_file_entity.side_effect = lambda x: (
+        output_image if x.id == output_image_file.id else reference_image
     )
     compare_image_settings = ComparisonSettings.default()
     compare_image_params = CompareImageParams(
@@ -73,8 +73,8 @@ def test_compare_images_successfully(
 
 def test_no_output_image_in_db_should_fail(test_context, stored_file_factory):
     reference_image_file = stored_file_factory(id=2)
-    test_context.mock_file_storage.find_by_id.side_effect = (
-        lambda x: reference_image_file if x == 2 else None
+    test_context.mock_file_storage.find_by_id.side_effect = lambda x: (
+        reference_image_file if x == 2 else None
     )
     compare_image_settings = ComparisonSettings.default()
     compare_image_params = CompareImageParams(
@@ -87,8 +87,8 @@ def test_no_output_image_in_db_should_fail(test_context, stored_file_factory):
 
 def test_no_reference_image_in_db_should_fail(test_context, stored_file_factory):
     output_image_file = stored_file_factory(id=1)
-    test_context.mock_file_storage.find_by_id.side_effect = (
-        lambda x: output_image_file if x == 1 else None
+    test_context.mock_file_storage.find_by_id.side_effect = lambda x: (
+        output_image_file if x == 1 else None
     )
     compare_image_settings = ComparisonSettings.default()
     compare_image_params = CompareImageParams(
