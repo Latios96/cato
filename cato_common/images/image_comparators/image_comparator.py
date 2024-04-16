@@ -1,10 +1,10 @@
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_server.images.image_comparators.flip_image_comparator import (
+from cato_common.images.image_comparators.flip_image_comparator import (
     FlipImageComparator,
 )
-from cato_server.images.image_comparators.ssim_image_comparator import (
+from cato_common.images.image_comparators.ssim_image_comparator import (
     SsimImageComparator,
 )
 

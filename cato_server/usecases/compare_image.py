@@ -9,7 +9,7 @@ from typing import IO, Tuple
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.image import Image
-from cato_server.images.image_comparators.image_comparator import ImageComparator
+from cato_common.images.image_comparators.image_comparator import ImageComparator
 from cato_server.images.store_image import StoreImage
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 

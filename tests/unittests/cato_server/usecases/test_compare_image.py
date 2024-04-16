@@ -8,7 +8,7 @@ from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.file import File
 from cato_common.domain.image import Image
-from cato_server.images.image_comparators.ssim_image_comparator import (
+from cato_common.images.image_comparators.ssim_image_comparator import (
     SsimImageComparator,
 )
 from cato_server.images.store_image import StoreImage

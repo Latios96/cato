@@ -12,7 +12,7 @@ from cato_server.storage.abstract.abstract_file_storage import AbstractFileStora
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.abstract.test_result_repository import TestResultRepository
 from cato_server.usecases.create_thumbnail import CreateThumbnail
-from tests.unittests.cato_server.images.image_comparators.utils import images_are_equal
+from tests.unittests.cato_common.images.image_comparators.utils import images_are_equal
 from tests.utils import mock_safe
 
 

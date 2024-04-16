@@ -1,6 +1,6 @@
 import pytest
 
-from cato_server.domain.resolution import Resolution
+from cato_common.domain.resolution import Resolution
 
 
 def test_to_string():

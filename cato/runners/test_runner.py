@@ -1,3 +1,5 @@
+import tempfile
+
 import emoji
 
 from cato_common.domain.config import RunConfig
@@ -16,6 +18,7 @@ from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.utils.datetime_utils import aware_now_in_utc
+from cato_common.images.image_comparators.image_comparator import ImageComparator
 
 
 class TestRunner:
@@ -28,6 +31,7 @@ class TestRunner:
         output_folder: OutputFolder,
         test_execution_reporter: TestExecutionReporter,
         cato_api_client: CatoApiClient,
+        image_comparator: ImageComparator,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -35,6 +39,7 @@ class TestRunner:
         self._variable_processor = VariableProcessor()
         self._test_execution_reporter = test_execution_reporter
         self._cato_api_client = cato_api_client
+        self._image_comparator = image_comparator
 
     def run_test(
         self, config: RunConfig, current_suite: TestSuite, test: Test
@@ -174,12 +179,20 @@ class TestRunner:
             "Found reference image at path {}".format(reference_image)
         )
         if reference_image is not None and image_output is not None:
-            self._reporter.report_message("Comparing images on the server..")
-            image_compare_result = self._cato_api_client.compare_images(
-                reference_image,
-                image_output,
-                test.comparison_settings,
-            )
+            self._reporter.report_message("Comparing images locally..")
+
+            with tempfile.TemporaryDirectory() as tmpdirname:
+                image_compare_result = self._image_comparator.compare(
+                    reference_image, image_output, test.comparison_settings, tmpdirname
+                )
+
+                reference_image_id = self._cato_api_client.upload_image(
+                    reference_image
+                ).id
+                output_image_id = self._cato_api_client.upload_image(image_output).id
+                diff_image_id = self._cato_api_client.upload_image(
+                    image_compare_result.diff_image
+                ).id
 
             if image_compare_result.status == ResultStatus.FAILED:
                 return TestExecutionResult(
@@ -192,9 +205,9 @@ class TestRunner:
                         if image_compare_result.message
                         else ""
                     ),
-                    image_compare_result.output_image_id,
-                    image_compare_result.reference_image_id,
-                    image_compare_result.diff_image_id,
+                    output_image_id,
+                    reference_image_id,
+                    diff_image_id,
                     start,
                     end,
                     error_value=image_compare_result.error,
@@ -207,9 +220,9 @@ class TestRunner:
                 command_result.output,
                 elapsed,
                 message="",
-                image_output=image_compare_result.output_image_id,
-                reference_image=image_compare_result.reference_image_id,
-                diff_image=image_compare_result.diff_image_id,
+                image_output=output_image_id,
+                reference_image=reference_image_id,
+                diff_image=diff_image_id,
                 started_at=start,
                 finished_at=end,
                 error_value=image_compare_result.error,

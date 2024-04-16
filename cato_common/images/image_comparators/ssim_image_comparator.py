@@ -15,7 +15,7 @@ from PIL import Image, ImageOps
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
-from cato_server.domain.resolution import Resolution
+from cato_common.domain.resolution import Resolution
 
 logger = logging.getLogger(__name__)
 
@@ -73,7 +73,7 @@ class SsimImageComparator:
         reference_image = self._normalize_image(reference_image)
 
         (score, diff) = metrics.structural_similarity(
-            reference_image, output_image, full=True, multichannel=True
+            reference_image, output_image, full=True, channel_axis=-1
         )
         score = float(score)
         if math.isnan(score):

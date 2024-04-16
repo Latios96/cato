@@ -5,6 +5,7 @@ from unittest.mock import ANY
 import pytest
 
 from cato_common.domain.comparison_method import ComparisonMethod
+from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
 from cato_common.domain.test import Test
@@ -20,6 +21,7 @@ from cato_common.domain.image import Image
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.compare_image_result import CompareImageResult
+from cato_common.images.image_comparators.image_comparator import ImageComparator
 from tests.utils import mock_safe
 
 EXAMPLE_PROJECT = "Example Project"
@@ -41,12 +43,11 @@ def test_context():
             self.mock_cato_api_client.upload_image.side_effect = (
                 self._mocked_store_image
             )
-            self.mock_cato_api_client.compare_images.return_value = CompareImageResult(
+            self.mock_image_comparator = mock_safe(ImageComparator)
+            self.mock_image_comparator.compare.return_value = ComparisonResult(
                 status=ResultStatus.SUCCESS,
                 message="",
-                reference_image_id=1,
-                output_image_id=2,
-                diff_image_id=3,
+                diff_image="diff-image-path.png",
                 error=1,
             )
             self.test_runner = TestRunner(
@@ -55,6 +56,7 @@ def test_context():
                 self.output_folder,
                 self.test_execution_reporter,
                 self.mock_cato_api_client,
+                self.mock_image_comparator,
             )
 
         def _mocked_store_image(self, path):
@@ -180,9 +182,8 @@ class TestTestRunner:
         assert result.reference_image == 1
         assert result.diff_image == 3
         assert result.failure_reason is None
-        test_context.mock_cato_api_client.upload_image.assert_not_called()
-        test_context.mock_cato_api_client.compare_images.assert_called_with(
-            ANY, ANY, comparison_settings
+        test_context.mock_image_comparator.compare.assert_called_with(
+            ANY, ANY, comparison_settings, ANY
         )
 
     def test_should_have_failed_with_exit_code_0(self, test_context):
@@ -215,15 +216,11 @@ class TestTestRunner:
 
     def test_should_have_failed_with_images_not_equal(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
-        test_context.mock_cato_api_client.compare_images.return_value = (
-            CompareImageResult(
-                status=ResultStatus.FAILED,
-                message="Images are not equal!",
-                output_image_id=1,
-                reference_image_id=2,
-                diff_image_id=3,
-                error=1,
-            )
+        test_context.mock_image_comparator.compare.return_value = ComparisonResult(
+            status=ResultStatus.FAILED,
+            message="Images are not equal!",
+            diff_image="diff-image-path.png",
+            error=1,
         )
         test = Test(
             name="my_first_test",
@@ -248,14 +245,14 @@ class TestTestRunner:
 
         assert result.status == ResultStatus.FAILED
         assert result.message == "Images are not equal!"
-        assert result.image_output == 1
-        assert result.reference_image == 2
+        assert result.reference_image == 1
+        assert result.image_output == 2
         assert result.diff_image == 3
         assert result.error_value is not None
         assert result.failure_reason == TestFailureReason.IMAGES_ARE_NOT_EQUAL
-        test_context.mock_cato_api_client.upload_image.assert_not_called()
-        test_context.mock_cato_api_client.compare_images.assert_called_with(
-            ANY, ANY, comparison_settings
+        assert test_context.mock_cato_api_client.upload_image.call_count == 3
+        test_context.mock_image_comparator.compare.assert_called_with(
+            ANY, ANY, comparison_settings, ANY
         )
 
     def test_should_have_failed_with_missing_reference_image(self, test_context):

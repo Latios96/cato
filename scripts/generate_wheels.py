@@ -171,6 +171,12 @@ if __name__ == "__main__":
             "email-validator",
             "Jinja2",
             "url-normalize",
+            "matplotlib",
+            "Pillow",
+            "opencv-python-headless",
+            "numpy",
+            "scikit-image",
+            "scipy",
         ],
     )
 

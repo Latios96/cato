@@ -38,7 +38,7 @@ snapshots["test_worker_run_command 2"] = [
 [INFO]  Copy <a> to <b>
 [INFO]  Found image output at path <foo>
 [INFO]  Found image output at path <bar>
-[INFO]  Comparing images on the server..
+[INFO]  Comparing images locally..
 [INFO]  PythonOutputVersion succeeded in 0.12 seconds
 [INFO]  Reporting test result of test PythonTestSuite/PythonOutputVersion..
 [INFO]  Uploading output of test PythonTestSuite/PythonOutputVersion..
