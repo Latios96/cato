@@ -190,6 +190,8 @@ class TestRunner:
                     reference_image
                 ).id
                 output_image_id = self._cato_api_client.upload_image(image_output).id
+                if not image_compare_result.diff_image:
+                    raise ValueError("Comparison failed")
                 diff_image_id = self._cato_api_client.upload_image(
                     image_compare_result.diff_image
                 ).id

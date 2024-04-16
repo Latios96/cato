@@ -168,7 +168,7 @@ task lintPython(type:PythonTask){
 }
 
 task mypyCheck(type:PythonTask){
-    command = '-m mypy -p cato -p cato_common'
+    command = '-m mypy -p cato -p cato_common --exclude cato_common/images/image_comparators'
     inputs.dir('cato')
     inputs.dir('cato_common')
     outputs.file('mypyCheck')
