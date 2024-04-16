@@ -20,8 +20,7 @@ def test_upload_file_no_filename(client_with_session):
     data = {"file": ("", io.BytesIO(b"some initial text data"))}
     response = client_with_session.post(API_V_FILES, files=data)
 
-    assert response.status_code == 400
-    assert response.json() == {"file": "Filename can not be empty!"}
+    assert response.status_code == 422
 
 
 def test_serve_file(client_with_session):

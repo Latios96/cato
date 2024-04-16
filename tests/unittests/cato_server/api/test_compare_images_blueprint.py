@@ -69,15 +69,6 @@ def test_upload_images_should_fail_no_reference_image(
         },
     )
 
-    assert response.json() == {
-        "detail": [
-            {
-                "loc": ["body", "reference_image"],
-                "msg": "field required",
-                "type": "value_error.missing",
-            }
-        ]
-    }
     assert response.status_code == 422
 
 

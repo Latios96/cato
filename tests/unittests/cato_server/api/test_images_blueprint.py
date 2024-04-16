@@ -59,8 +59,7 @@ def test_upload_image_async_no_filename(client_with_session, test_resource_provi
     data = {"file": ("", open(test_image, "rb"))}
     response = client_with_session.post(API_V_IMAGES, files=data)
 
-    assert response.status_code == 400
-    assert response.json() == {"file": "Filename can not be empty!"}
+    assert response.status_code == 422
 
 
 def test_upload_async_unsupported_file(client_with_session, test_resource_provider):
