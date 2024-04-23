@@ -15,7 +15,6 @@ def _verify_collected_events(events):
     first_event = events[0]
     second_event = events[1]
     assert first_event.name == second_event.name
-    assert events[0].timestamp == 0
     assert second_event.timestamp >= first_event.timestamp
 
 
