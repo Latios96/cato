@@ -99,3 +99,19 @@ def test_get_json_trace():
             },
         ]
     }
+
+
+def test_get_collected_event_names():
+    performance_stats_collector = PerformanceStatsCollector()
+
+    with performance_stats_collector.collect_cato_run_timing():
+        pass
+    with performance_stats_collector.collect_create_run_timing():
+        pass
+    with performance_stats_collector.collect_create_run_timing():
+        pass
+
+    assert performance_stats_collector.get_collected_event_names() == {
+        "Cato Run",
+        "Create run in DB",
+    }

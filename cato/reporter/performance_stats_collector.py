@@ -4,7 +4,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass
 from enum import Enum
-from typing import List
+from typing import List, Set
 
 from cato_common.domain.test_identifier import TestIdentifier
 
@@ -106,6 +106,12 @@ class PerformanceStatsCollector:
         json_data = {"traceEvents": chrome_trace_events}
 
         return json.dumps(json_data, separators=(",", ":"))
+
+    def get_collected_event_names(self) -> Set[str]:
+        names = set()
+        for event in self._events:
+            names.add(event.name)
+        return names
 
     def _current_microseconds(self):
         return time.time() * 1000000
