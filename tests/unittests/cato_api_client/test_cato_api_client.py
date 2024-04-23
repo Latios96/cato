@@ -131,6 +131,19 @@ def test_upload_output_failure(cato_api_client):
         cato_api_client.upload_output(42, "my text")
 
 
+def test_upload_performance_trace_success(cato_api_client, run):
+    performance_trace_id = cato_api_client.upload_performance_trace(
+        run.id, """{"traceEvents":[]}"""
+    )
+
+    assert performance_trace_id == 1
+
+
+def test_upload_performance_trace_failure(cato_api_client):
+    with pytest.raises(ValueError):
+        cato_api_client.upload_performance_trace(1, """{"traceEvents":[]}""")
+
+
 def test_upload_image(cato_api_client, test_resource_provider):
     path = test_resource_provider.resource_by_name("test.exr")
 

@@ -1,7 +1,7 @@
 import datetime
 import logging
 import os
-from typing import Optional, Type, TypeVar, List, Callable
+from typing import Optional, Type, TypeVar, List, Callable, Dict
 from urllib.parse import quote
 
 import cato_api_client.api_client_logging  # noqa: F401
@@ -207,6 +207,13 @@ class CatoApiClient:
         return self._create_with_http_template(
             url, UploadOutputDto(test_result_id=test_result_id, text=output), Output
         )
+
+    def upload_performance_trace(self, run_id: int, performance_trace_json) -> int:
+        url = self._build_url(f"/api/v1/runs/{run_id}/performance_trace")
+        result = self._create_with_http_template(
+            url, {"performance_trace_json": performance_trace_json}, Dict
+        )
+        return result["id"]
 
     def heartbeat_test(self, run_id: int, test_identifier: TestIdentifier) -> None:
         url = self._build_url(
