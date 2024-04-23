@@ -153,4 +153,8 @@ class RunsBlueprint(APIRouter):
         if not performance_trace:
             return Response(status_code=404)
 
-        return JSONResponse(content=self._object_mapper.to_dict(performance_trace))
+        return Response(
+            content=performance_trace.performance_trace_json,
+            status_code=200,
+            media_type="application/json",
+        )
