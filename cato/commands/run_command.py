@@ -1,4 +1,5 @@
 import logging
+import time
 from typing import Optional, Callable, Dict
 
 from cato.commands.run_command_interface import RunCommandInterface
@@ -51,6 +52,7 @@ class RunCommand(RunCommandInterface):
         verbose_mode: VerboseMode,
         cli_variables: Dict[str, str],
     ) -> int:
+        start_time = time.time()
         self._reporter.set_verbose_mode(verbose_mode)
         config = self._prepare_config(
             path, suite_name, test_identifier_str, only_failed, cli_variables
@@ -62,6 +64,9 @@ class RunCommand(RunCommandInterface):
         self._logger.info(self._timing_report_generator.generate(result))
 
         self._logger.info("")
-        self._logger.info(self._end_message_generator.generate_end_message(result))
+        total_time = time.time() - start_time
+        self._logger.info(
+            self._end_message_generator.generate_end_message(result, total_time)
+        )
 
         return self._exit_code_calculator.generate_exit_code(result)

@@ -4,6 +4,7 @@ from unittest.mock import call
 
 import mock
 import pytest
+from mock.mock import ANY
 
 from cato.commands.run_command import RunCommand
 from cato.reporter.exit_code_calculator import ExitCodeCalculator
@@ -128,7 +129,7 @@ class TestRunCommand:
         )
         test_context.mock_timing_report_generator.generate.assert_called_with(result)
         test_context.mock_end_message_generator.generate_end_message.assert_called_with(
-            result
+            result, ANY
         )
         test_context.mock_logger.info.assert_has_calls(
             [call(""), call("Timing report"), call(""), call("End message")]

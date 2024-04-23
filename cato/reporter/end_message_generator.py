@@ -10,7 +10,9 @@ class EndMessageGenerator:
     def __init__(self, stats_calculator: StatsCalculator):
         self._stats_calculator = stats_calculator
 
-    def generate_end_message(self, result: List[TestSuiteExecutionResult]) -> str:
+    def generate_end_message(
+        self, result: List[TestSuiteExecutionResult], total_time: float
+    ) -> str:
 
         stats = self._stats_calculator.calculate(result)
 
@@ -30,5 +32,8 @@ Ran {} tests""".format(
 {}  failed   :x:""".format(
                 stats.failed_tests
             )
+
+        end_message += f"""
+Command execution took {total_time:.1f}s"""
 
         return emoji.emojize(end_message, language="alias")
