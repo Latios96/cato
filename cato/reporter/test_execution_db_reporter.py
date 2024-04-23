@@ -202,3 +202,8 @@ class TestExecutionDbReporter(TestExecutionReporter):
             logger.info("Collecting machine info..")
             self._machine_info = self._machine_info_collector.collect()
         return self._machine_info
+
+    def report_performance_trace(self, performance_trace_json: str) -> None:
+        self._cato_api_client.upload_performance_trace(
+            self._run_id, performance_trace_json
+        )

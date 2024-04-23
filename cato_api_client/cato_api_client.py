@@ -208,7 +208,7 @@ class CatoApiClient:
             url, UploadOutputDto(test_result_id=test_result_id, text=output), Output
         )
 
-    def upload_performance_trace(self, run_id: int, performance_trace_json) -> int:
+    def upload_performance_trace(self, run_id: int, performance_trace_json: str) -> int:
         url = self._build_url(f"/api/v1/runs/{run_id}/performance_trace")
         result = self._create_with_http_template(
             url, {"performance_trace_json": performance_trace_json}, Dict

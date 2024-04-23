@@ -33,3 +33,6 @@ class TestExecutionReporter:
         self, last_run_information_repository: LastRunInformationRepository
     ) -> None:
         raise NotImplementedError()
+
+    def report_performance_trace(self, performance_trace_json: str) -> None:
+        raise NotImplementedError()

@@ -79,4 +79,8 @@ class TestSuiteRunner:
                 self._last_run_information_repository_factory(config.output_folder)
             )
 
+        self._test_execution_reporter.report_performance_trace(
+            self._performance_stats_collector.get_json_trace()
+        )
+
         return results
