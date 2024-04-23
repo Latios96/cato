@@ -1,7 +1,9 @@
 from typing import List, Callable
 
+from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato_common.domain.config import RunConfig
 from cato_common.domain.result_status import ResultStatus
+from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.test_suite_execution_result import TestSuiteExecutionResult
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
@@ -22,6 +24,7 @@ class TestSuiteRunner:
         last_run_information_repository_factory: Callable[
             [str], LastRunInformationRepository
         ],
+        performance_stats_collector: PerformanceStatsCollector,
     ):
         self._test_runner = test_runner
         self._reporter = reporter
@@ -29,35 +32,51 @@ class TestSuiteRunner:
         self._last_run_information_repository_factory = (
             last_run_information_repository_factory
         )
+        self._performance_stats_collector = performance_stats_collector
 
     def run_test_suites(self, config: RunConfig) -> List[TestSuiteExecutionResult]:
-
         if not config.suites:
             raise ValueError("At least one TestSuite is required!")
 
         results = []
+        with self._performance_stats_collector.collect_cato_run_timing():
+            with self._performance_stats_collector.collect_create_run_timing():
+                self._test_execution_reporter.start_execution(config)
 
-        self._test_execution_reporter.start_execution(config)
+            for suite in config.suites:
+                with self._performance_stats_collector.collect_suite_timing(suite.name):
+                    test_results = []
+                    suite_status = ResultStatus.SUCCESS
+                    self._reporter.report_start_test_suite(suite)
+                    for test in suite.tests:
+                        test_identifier = TestIdentifier(suite.name, test.name)
+                        with self._performance_stats_collector.collect_test_timing(
+                            test_identifier
+                        ):
+                            with self._performance_stats_collector.collect_start_test_request_timing():
+                                self._test_execution_reporter.report_test_execution_start(
+                                    suite, test
+                                )
 
-        for suite in config.suites:
-            test_results = []
-            suite_status = ResultStatus.SUCCESS
-            self._reporter.report_start_test_suite(suite)
-            for test in suite.tests:
-                self._test_execution_reporter.report_test_execution_start(suite, test)
-                result = self._test_runner.run_test(config, suite, test)
-                if result.status == ResultStatus.SUCCESS:
-                    self._reporter.report_test_success(result)
-                else:
-                    self._reporter.report_test_failure(result)
-                    suite_status = ResultStatus.FAILED
-                test_results.append(result)
-                self._test_execution_reporter.report_test_result(suite, result)
+                            result = self._test_runner.run_test(config, suite, test)
 
-            results.append(TestSuiteExecutionResult(suite, suite_status, test_results))
+                            if result.status == ResultStatus.SUCCESS:
+                                self._reporter.report_test_success(result)
+                            else:
+                                self._reporter.report_test_failure(result)
+                                suite_status = ResultStatus.FAILED
+                            test_results.append(result)
+                            with self._performance_stats_collector.collect_report_test_result():
+                                self._test_execution_reporter.report_test_result(
+                                    suite, result
+                                )
 
-        self._test_execution_reporter.report_test_execution_end(
-            self._last_run_information_repository_factory(config.output_folder)
-        )
+                    results.append(
+                        TestSuiteExecutionResult(suite, suite_status, test_results)
+                    )
+
+            self._test_execution_reporter.report_test_execution_end(
+                self._last_run_information_repository_factory(config.output_folder)
+            )
 
         return results

@@ -5,6 +5,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,
 )
+from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
@@ -39,6 +40,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         branch_detector: BranchDetector,
         run_batch_identifier_detector: RunBatchIdentifierDetector,
         run_information_detector: RunInformationDetector,
+        performance_stats_collector: PerformanceStatsCollector,
     ):
         self._machine_info_collector = machine_info_collector
         self._cato_api_client = cato_api_client
@@ -47,6 +49,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
         self._branch_detector = branch_detector
         self._run_batch_identifier_detector = run_batch_identifier_detector
         self._run_information_detector = run_information_detector
+        self._performance_stats_collector = performance_stats_collector
 
     def use_run_id(self, run_id: int) -> None:
         if not self._cato_api_client.run_id_exists(run_id):
@@ -156,22 +159,24 @@ class TestExecutionDbReporter(TestExecutionReporter):
             return
 
         logger.info(f"Reporting test result of test {test_identifier}..")
-        self._cato_api_client.finish_test(
-            test_result.id,
-            error_value=test_execution_result.error_value,
-            status=test_execution_result.status,
-            seconds=test_execution_result.seconds,
-            message=test_execution_result.message,
-            image_output=test_execution_result.image_output,
-            reference_image=test_execution_result.reference_image,
-            diff_image=test_execution_result.diff_image,
-            failure_reason=test_execution_result.failure_reason,
-        )
+        with self._performance_stats_collector.collect_finish_test_timing():
+            self._cato_api_client.finish_test(
+                test_result.id,
+                error_value=test_execution_result.error_value,
+                status=test_execution_result.status,
+                seconds=test_execution_result.seconds,
+                message=test_execution_result.message,
+                image_output=test_execution_result.image_output,
+                reference_image=test_execution_result.reference_image,
+                diff_image=test_execution_result.diff_image,
+                failure_reason=test_execution_result.failure_reason,
+            )
 
         logger.info(f"Uploading output of test {test_identifier}..")
-        self._cato_api_client.upload_output(
-            test_result.id, "".join(test_execution_result.output)
-        )
+        with self._performance_stats_collector.collect_upload_log_output_timing():
+            self._cato_api_client.upload_output(
+                test_result.id, "".join(test_execution_result.output)
+            )
 
     def report_heartbeat(self, test_identifier: TestIdentifier) -> None:
         self._cato_api_client.heartbeat_test(self._run_id, test_identifier)

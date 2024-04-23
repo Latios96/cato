@@ -1,5 +1,6 @@
 import pytest
 
+from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
 from cato_common.domain.test import Test
@@ -25,11 +26,13 @@ def test_run_empty_suites_should_fail():
     mock_test_runner = mock_safe(TestRunner)
     mock_execution_reporter = mock_safe(TestExecutionReporter)
     mock_last_run_information_repository = mock_safe(LastRunInformationRepository)
+    performance_stats_collector = PerformanceStatsCollector()
     test_suite_runner = TestSuiteRunner(
         mock_test_runner,
         mock_reporter,
         mock_execution_reporter,
         lambda x: mock_last_run_information_repository,
+        performance_stats_collector,
     )
 
     with pytest.raises(ValueError):
@@ -41,6 +44,7 @@ def test_run_empty_suites_should_fail():
                 output_folder="output",
             )
         )
+    assert performance_stats_collector.get_collected_event_names() == set()
 
 
 def test_run_suite_should_report_start_and_delegate_to_test_runner():
@@ -48,11 +52,13 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     mock_test_runner = mock_safe(TestRunner)
     mock_execution_reporter = mock_safe(TestExecutionReporter)
     mock_last_run_information_repository = mock_safe(LastRunInformationRepository)
+    performance_stats_collector = PerformanceStatsCollector()
     test_suite_runner = TestSuiteRunner(
         mock_test_runner,
         mock_reporter,
         mock_execution_reporter,
         lambda x: mock_last_run_information_repository,
+        performance_stats_collector,
     )
     test = Test(
         name="my_first_test",
@@ -75,6 +81,14 @@ def test_run_suite_should_report_start_and_delegate_to_test_runner():
     mock_execution_reporter.report_test_execution_end.assert_called_with(
         mock_last_run_information_repository
     )
+    assert performance_stats_collector.get_collected_event_names() == {
+        "Cato Run",
+        "Create run in DB",
+        "Suite example",
+        "Test example/my_first_test",
+        "report test result",
+        "start test request",
+    }
 
 
 def test_run_suite_should_return_correctly_collected_results():
@@ -82,11 +96,13 @@ def test_run_suite_should_return_correctly_collected_results():
     mock_test_runner = mock_safe(TestRunner)
     mock_execution_reporter = mock_safe(TestExecutionReporter)
     mock_last_run_information_repository = mock_safe(LastRunInformationRepository)
+    performance_stats_collector = PerformanceStatsCollector()
     test_suite_runner = TestSuiteRunner(
         mock_test_runner,
         mock_reporter,
         mock_execution_reporter,
         lambda x: mock_last_run_information_repository,
+        performance_stats_collector,
     )
     test = Test(
         name="my_first_test",
@@ -125,3 +141,11 @@ def test_run_suite_should_return_correctly_collected_results():
     mock_execution_reporter.report_test_execution_end.assert_called_with(
         mock_last_run_information_repository
     )
+    assert performance_stats_collector.get_collected_event_names() == {
+        "Cato Run",
+        "Create run in DB",
+        "Suite example",
+        "Test example/my_first_test",
+        "report test result",
+        "start test request",
+    }

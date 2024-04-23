@@ -6,6 +6,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
     LastRunInformation,
 )
+from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.branch_detector import BranchDetector
 from cato.utils.machine_info_collector import MachineInfoCollector
@@ -76,12 +77,14 @@ def test_context():
                 RunBatchIdentifierDetector
             )
             self.mock_run_information_detector = mock_safe(RunInformationDetector)
+            self.performance_stats_collector = PerformanceStatsCollector()
             self.test_execution_db_reporter = TestExecutionDbReporter(
                 self.mock_machine_info_collector,
                 self.mock_cato_api_client,
                 self.mock_branch_detector,
                 self.mock_run_batch_identifier_detector,
                 self.mock_run_information_detector,
+                self.performance_stats_collector,
             )
 
     return TestContext()
@@ -103,6 +106,11 @@ class TestTestExecutionDbReporter:
 
         test_context.mock_cato_api_client.create_project.assert_called_with(
             "my_project_name"
+        )
+
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
         )
 
     def test_start_execution_should_create_run_with_branch_name(
@@ -178,6 +186,10 @@ class TestTestExecutionDbReporter:
         )
         assert test_context.test_execution_db_reporter._run_id == 5
         test_context.mock_run_information_detector.detect.assert_called_once()
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_start_execution_should_not_pass_branch_name_if_there_is_no_branch(
         self, test_context, local_computer_run_information
@@ -209,6 +221,10 @@ class TestTestExecutionDbReporter:
             test_context.mock_cato_api_client.create_run.call_args[0][0].branch_name
             is None
         )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_test_execution_start_should_report(
         self, test_result_factory, test_context
@@ -231,6 +247,10 @@ class TestTestExecutionDbReporter:
                 machine_info=MachineInfo(cpu_name="my_cpu", cores=8, memory=8),
             )
         )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_test_execution_start_no_test_result_should_exit(
         self, test_result_factory, test_context
@@ -245,12 +265,20 @@ class TestTestExecutionDbReporter:
         )
 
         test_context.mock_cato_api_client.update_test_result.assert_not_called()
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_test_execution_start_missing_run_id_should_fail(self, test_context):
         with pytest.raises(RuntimeError):
             test_context.test_execution_db_reporter.report_test_execution_start(
                 SUITES[0], SUITES[0].tests[0]
             )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_heartbeat_should_fail_no_run_id(self, test_context):
         test_identifier = TestIdentifier("my_suite", "my_test")
@@ -259,6 +287,10 @@ class TestTestExecutionDbReporter:
             test_context.test_execution_db_reporter.report_heartbeat(test_identifier)
 
         test_context.mock_cato_api_client.heartbeat_test.assert_not_called()
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_heartbeat_should_report(self, test_context):
         test_context.test_execution_db_reporter._run_id = 5
@@ -268,6 +300,10 @@ class TestTestExecutionDbReporter:
 
         test_context.mock_cato_api_client.heartbeat_test.assert_called_with(
             5, test_identifier
+        )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
         )
 
     def test_report_test_result_should_report(self, test_result_factory, test_context):
@@ -319,6 +355,10 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.upload_output.assert_called_with(
             test_result.id, "thisismyoutput"
         )
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "upload log output",
+            "finish test",
+        }
 
     def test_report_test_result_result_not_found_should_exit(self, test_context):
         test_context.test_execution_db_reporter._run_id = 5
@@ -349,6 +389,10 @@ class TestTestExecutionDbReporter:
         test_context.mock_cato_api_client.upload_image.assert_not_called()
         test_context.mock_cato_api_client.finish_test.assert_not_called()
         test_context.mock_cato_api_client.upload_output.assert_not_called()
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_report_test_result_should_report_without_images(
         self, test_result_factory, test_context
@@ -394,6 +438,10 @@ class TestTestExecutionDbReporter:
             test_result.id, "thisismyoutput"
         )
         test_context.mock_cato_api_client.upload_image.assert_not_called()
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "upload log output",
+            "finish test",
+        }
 
     def test_report_test_result_no_run_id_should_fail(self, test_context):
         test_execution_result = TestExecutionResult(
@@ -415,6 +463,10 @@ class TestTestExecutionDbReporter:
             test_context.test_execution_db_reporter.report_test_result(
                 SUITES[0], test_execution_result
             )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_should_write_last_run_id(self, test_context):
         test_context.test_execution_db_reporter._run_id = 2
@@ -426,19 +478,35 @@ class TestTestExecutionDbReporter:
         test_context.mock_last_run_information_repository.write_last_run_information.assert_called_with(
             LastRunInformation(last_run_id=2)
         )
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_use_run_id(self, test_context):
         test_context.test_execution_db_reporter.use_run_id(10)
 
         assert test_context.test_execution_db_reporter._run_id == 10
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_use_not_existing_run_id_should_fail(self, test_context):
         test_context.mock_cato_api_client.run_id_exists.return_value = False
 
         with pytest.raises(ValueError):
             test_context.test_execution_db_reporter.use_run_id(10)
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )
 
     def test_run_id(self, test_context):
         test_context.test_execution_db_reporter.use_run_id(10)
 
         assert test_context.test_execution_db_reporter.run_id() == 10
+        assert (
+            test_context.performance_stats_collector.get_collected_event_names()
+            == set()
+        )

@@ -4,6 +4,7 @@ from unittest.mock import ANY
 
 import pytest
 
+from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
@@ -50,6 +51,7 @@ def test_context():
                 diff_image="diff-image-path.png",
                 error=1,
             )
+            self.performance_stats_collector = PerformanceStatsCollector()
             self.test_runner = TestRunner(
                 self.command_runner,
                 self.reporter,
@@ -57,6 +59,7 @@ def test_context():
                 self.test_execution_reporter,
                 self.mock_cato_api_client,
                 self.mock_image_comparator,
+                self.performance_stats_collector,
             )
 
         def _mocked_store_image(self, path):
@@ -107,6 +110,9 @@ class TestTestRunner:
             TestIdentifier("suite", "my_first_test")
         )
         mock_heartbeat_reporter_class.return_value.stop.assert_called_once()
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "test command execution"
+        }
 
     def test_should_replace_placeholder(self, test_context):
         test = Test(
@@ -131,6 +137,9 @@ class TestTestRunner:
         test_context.command_runner.run.assert_called_with(
             "crayg -s test/suite/my_first_test/test.json -o output/result/suite/my_first_test/my_first_test.png",
         )
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "test command execution"
+        }
 
     def test_should_collect_timing_info(self, test_context):
         test = Test(
@@ -152,6 +161,9 @@ class TestTestRunner:
         )
 
         assert result.seconds >= 0
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "test command execution"
+        }
 
     def test_should_have_succeded_with_exit_code_0(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
@@ -185,6 +197,13 @@ class TestTestRunner:
         test_context.mock_image_comparator.compare.assert_called_with(
             ANY, ANY, comparison_settings, ANY
         )
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "image comparison",
+            "test command execution",
+            "upload diff image",
+            "upload output image",
+            "upload reference image",
+        }
 
     def test_should_have_failed_with_exit_code_0(self, test_context):
         test_context.output_folder.reference_image_exists.return_value = True
@@ -213,6 +232,9 @@ class TestTestRunner:
         assert result.status == ResultStatus.FAILED
         assert result.error_value == None
         assert result.failure_reason == TestFailureReason.EXIT_CODE_NON_ZERO
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "test command execution"
+        }
 
     def test_should_have_failed_with_images_not_equal(self, test_context):
         comparison_settings = ComparisonSettings(ComparisonMethod.SSIM, 0.2)
@@ -254,6 +276,13 @@ class TestTestRunner:
         test_context.mock_image_comparator.compare.assert_called_with(
             ANY, ANY, comparison_settings, ANY
         )
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "image comparison",
+            "test command execution",
+            "upload diff image",
+            "upload output image",
+            "upload reference image",
+        }
 
     def test_should_have_failed_with_missing_reference_image(self, test_context):
         test_context.output_folder.reference_image_exists.return_value = False
@@ -297,6 +326,10 @@ class TestTestRunner:
         assert result.failure_reason == TestFailureReason.REFERENCE_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
         assert test_context.mock_cato_api_client.upload_image.call_count == 1
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "upload output image",
+            "test command execution",
+        }
 
     def test_should_have_failed_with_missing_image_output(self, test_context):
         test_context.output_folder.image_output_exists.return_value = False
@@ -340,6 +373,10 @@ class TestTestRunner:
         assert result.failure_reason == TestFailureReason.OUTPUT_IMAGE_MISSING
         test_context.reporter.report_message.assert_called_with(result.message)
         assert test_context.mock_cato_api_client.upload_image.call_count == 1
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "upload reference image",
+            "test command execution",
+        }
 
     def test_should_have_failed_with_missing_reference_and_image_output(
         self, test_context
@@ -394,3 +431,6 @@ class TestTestRunner:
             result.message.split(", ")[1]
         )
         test_context.mock_cato_api_client.upload_image.assert_not_called()
+        assert test_context.performance_stats_collector.get_collected_event_names() == {
+            "test command execution"
+        }

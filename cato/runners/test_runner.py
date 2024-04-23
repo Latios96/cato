@@ -2,6 +2,10 @@ import tempfile
 
 import emoji
 
+from cato.reporter.performance_stats_collector import (
+    ImageType,
+    PerformanceStatsCollector,
+)
 from cato_common.domain.config import RunConfig
 from cato_common.domain.test import Test
 from cato_common.domain.test_execution_result import TestExecutionResult
@@ -32,6 +36,7 @@ class TestRunner:
         test_execution_reporter: TestExecutionReporter,
         cato_api_client: CatoApiClient,
         image_comparator: ImageComparator,
+        performance_stats_collector: PerformanceStatsCollector,
     ):
         self._command_runner = command_runner
         self._reporter = reporter
@@ -40,6 +45,7 @@ class TestRunner:
         self._test_execution_reporter = test_execution_reporter
         self._cato_api_client = cato_api_client
         self._image_comparator = image_comparator
+        self._performance_stats_collector = performance_stats_collector
 
     def run_test(
         self, config: RunConfig, current_suite: TestSuite, test: Test
@@ -73,7 +79,8 @@ class TestRunner:
         start = aware_now_in_utc()
 
         self._reporter.report_test_command('Command: "{}"'.format(command))
-        command_result = self._command_runner.run(command)
+        with self._performance_stats_collector.collect_test_command_execution_timing():
+            command_result = self._command_runner.run(command)
 
         end = aware_now_in_utc()
         elapsed = (end - start).total_seconds()
@@ -119,7 +126,10 @@ class TestRunner:
 
         if no_reference_image and not no_image_output and image_output is not None:
             self._reporter.report_message(message_reference_image_missing)
-            image_output_image = self._cato_api_client.upload_image(image_output)
+            with self._performance_stats_collector.collect_image_upload_timing(
+                ImageType.OUTPUT
+            ):
+                image_output_image = self._cato_api_client.upload_image(image_output)
             return TestExecutionResult(
                 test,
                 ResultStatus.FAILED,
@@ -137,7 +147,12 @@ class TestRunner:
 
         if no_image_output and not no_reference_image and reference_image is not None:
             self._reporter.report_message(message_image_output_missing)
-            reference_image_image = self._cato_api_client.upload_image(reference_image)
+            with self._performance_stats_collector.collect_image_upload_timing(
+                ImageType.REFERENCE
+            ):
+                reference_image_image = self._cato_api_client.upload_image(
+                    reference_image
+                )
             return TestExecutionResult(
                 test,
                 ResultStatus.FAILED,
@@ -182,19 +197,34 @@ class TestRunner:
             self._reporter.report_message("Comparing images locally..")
 
             with tempfile.TemporaryDirectory() as tmpdirname:
-                image_compare_result = self._image_comparator.compare(
-                    reference_image, image_output, test.comparison_settings, tmpdirname
-                )
+                with self._performance_stats_collector.collect_image_comparison_timing():
+                    image_compare_result = self._image_comparator.compare(
+                        reference_image,
+                        image_output,
+                        test.comparison_settings,
+                        tmpdirname,
+                    )
 
-                reference_image_id = self._cato_api_client.upload_image(
-                    reference_image
-                ).id
-                output_image_id = self._cato_api_client.upload_image(image_output).id
+                with self._performance_stats_collector.collect_image_upload_timing(
+                    ImageType.REFERENCE
+                ):
+                    reference_image_id = self._cato_api_client.upload_image(
+                        reference_image
+                    ).id
+                with self._performance_stats_collector.collect_image_upload_timing(
+                    ImageType.OUTPUT
+                ):
+                    output_image_id = self._cato_api_client.upload_image(
+                        image_output
+                    ).id
                 if not image_compare_result.diff_image:
                     raise ValueError("Comparison failed")
-                diff_image_id = self._cato_api_client.upload_image(
-                    image_compare_result.diff_image
-                ).id
+                with self._performance_stats_collector.collect_image_upload_timing(
+                    ImageType.DIFF
+                ):
+                    diff_image_id = self._cato_api_client.upload_image(
+                        image_compare_result.diff_image
+                    ).id
 
             if image_compare_result.status == ResultStatus.FAILED:
                 return TestExecutionResult(
