@@ -1,4 +1,3 @@
-import { Speedometer2 } from "react-bootstrap-icons";
 import Button from "../Button/Button";
 import { PropsWithChildren } from "react";
 
