@@ -76,10 +76,12 @@ class CatoApiClient:
             raise ValueError(f"Path {path} does not exists!")
 
         url = self._build_url("/api/v1/files")
-        files = {"file": open(path, "rb")}
+        f = open(path, "rb")
+        files = {"file": f}
 
         logger.info("Uploading file %s", path)
         response = self._http_template.post_files_for_entity(url, None, files, File)
+        f.close()
 
         if response.status_code() == 201:
             return response.get_entity()
@@ -90,12 +92,14 @@ class CatoApiClient:
             raise ValueError(f"Path {path} does not exists!")
 
         url = self._build_url("/api/v1/images")
-        files = {"file": (os.path.basename(path), open(path, "rb"))}
+        f = open(path, "rb")
+        files = {"file": (os.path.basename(path), f)}
 
         logger.info("Uploading image %s", path)
         response = self._http_template.post_files_for_entity(
             url, None, files, TaskResult
         )
+        f.close()
 
         if response.status_code() == 201:
             task_result = response.get_entity()
