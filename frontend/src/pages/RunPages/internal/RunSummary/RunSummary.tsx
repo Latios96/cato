@@ -20,6 +20,8 @@ import {
   RunAggregate,
   TestEditCount,
 } from "../../../../catoapimodels/catoapimodels";
+import PerformanceTraceButton from "../../../../components/PerformanceTraceButton/PerformanceTraceButton";
+import { Speedometer2 } from "react-bootstrap-icons";
 
 interface Props {
   runId: number;
@@ -74,6 +76,18 @@ export function RunSummary(props: Props) {
           />
         </InfoBox>
         <RunSummaryProgressBar statusPercentage={statusPercentage} />
+        {runAggregate.performanceTraceId != null ? (
+          <div className={"flex"}>
+            <Speedometer2 size={16} className={"m-1"} />
+            <span className={"m-1"}>Cato Client Performance Trace</span>
+            <PerformanceTraceButton
+              runId={runAggregate.id}
+              performanceTraceId={runAggregate.performanceTraceId}
+            >
+              Open
+            </PerformanceTraceButton>
+          </div>
+        ) : null}
       </>
     );
   }
