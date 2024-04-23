@@ -15,3 +15,23 @@ def test_find_by_id(sqlalchemy_performance_trace_repository, performance_trace):
     )
 
     assert found_trace == performance_trace
+
+
+def test_find_by_run_id_should_find(
+    sqlalchemy_performance_trace_repository,
+    sqlalchemy_run_repository,
+    run,
+    performance_trace,
+):
+    run.performance_trace_id = performance_trace.id
+    sqlalchemy_run_repository.save(run)
+
+    found_trace = sqlalchemy_performance_trace_repository.find_by_run_id(run.id)
+
+    assert found_trace == performance_trace
+
+
+def test_find_by_run_id_should_not_find(sqlalchemy_performance_trace_repository, run):
+    found_trace = sqlalchemy_performance_trace_repository.find_by_run_id(run.id)
+
+    assert found_trace is None

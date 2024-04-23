@@ -18,6 +18,9 @@ from cato_server.schedulers.deadline.deadline_api import DeadlineApi
 from cato_server.schedulers.deadline.deadline_scheduler_submitter import (
     DeadlineSchedulerSubmitter,
 )
+from cato_server.storage.abstract.abstract_performance_trace_repository import (
+    PerformanceTraceRepository,
+)
 from cato_server.storage.abstract.auth_user_repository import (
     AuthUserRepository,
 )
@@ -51,6 +54,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
+)
+from cato_server.storage.sqlalchemy.sqlalchemy_performance_trace_repository import (
+    SqlAlchemyPerformanceTraceRepository,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
     SqlAlchemyProjectRepository,
@@ -100,6 +106,7 @@ class StorageBindings:
     auth_user_repository: Type[AuthUserRepository]
     session_repository: Type[SessionRepository]
     run_batch_repository: Type[RunBatchRepository]
+    performance_trace_repository: Type[PerformanceTraceRepository]
     session_maker_binding: Any
     root_path_binding: str
 
@@ -231,6 +238,10 @@ class PinjectBindings(pinject.BindingSpec):
             "run_batch_repository",
             to_class=self._bindings.storage_bindings.run_batch_repository,
         )
+        bind(
+            "performance_trace_repository",
+            to_class=self._bindings.storage_bindings.performance_trace_repository,
+        )
 
         bind("celery_app", to_instance=self._bindings.task_queue_bindings.celery_app)
 
@@ -271,6 +282,7 @@ class BindingsFactory:
             auth_user_repository=SqlAlchemyAuthUserRepository,
             session_repository=SqlAlchemySessionRepository,
             run_batch_repository=SqlAlchemyRunBatchRepository,
+            performance_trace_repository=SqlAlchemyPerformanceTraceRepository,
             root_path_binding=self._configuration.storage_configuration.file_storage_url,
             session_maker_binding=self._get_session_maker(),
         )

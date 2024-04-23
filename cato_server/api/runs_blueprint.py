@@ -147,3 +147,10 @@ class RunsBlueprint(APIRouter):
         self._run_repository.save(run)
 
         return JSONResponse(content={"id": performance_trace.id}, status_code=201)
+
+    def get_performance_trace_by_run_id(self, run_id: int) -> Response:
+        performance_trace = self._performance_trace_repository.find_by_run_id(run_id)
+        if not performance_trace:
+            return Response(status_code=404)
+
+        return JSONResponse(content=self._object_mapper.to_dict(performance_trace))

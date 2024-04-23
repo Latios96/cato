@@ -1,3 +1,5 @@
+from typing import Optional
+
 from sqlalchemy import Column, Integer, Text
 
 from cato_common.domain.performance_trace import PerformanceTrace
@@ -8,6 +10,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
     Base,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_run_repository import _RunMapping
 
 
 class PerformanceTraceMapping(Base):
@@ -34,3 +37,14 @@ class SqlAlchemyPerformanceTraceRepository(
 
     def mapping_cls(self):
         return PerformanceTraceMapping
+
+    def find_by_run_id(self, run_id: int) -> Optional[PerformanceTrace]:
+        session = self._session_maker()
+
+        query = (
+            session.query(self.mapping_cls())
+            .join(_RunMapping)
+            .filter(_RunMapping.id == run_id)
+            .options(self.default_query_options())
+        )
+        return self._map_one_to_domain_object(query.first())

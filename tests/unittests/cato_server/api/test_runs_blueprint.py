@@ -30,6 +30,7 @@ def test_get_run_by_project_id_should_return(client_with_session, project, run):
                     "succeededTestCount": 0,
                     "waitingTestCount": 0,
                 },
+                "performanceTraceId": None,
             }
         ],
         "pageNumber": 1,
@@ -86,6 +87,7 @@ def test_get_run_by_project_id_paged_should_return(client_with_session, project,
                     "succeededTestCount": 0,
                     "waitingTestCount": 0,
                 },
+                "performanceTraceId": None,
             }
         ],
         "pageNumber": 1,
@@ -152,6 +154,7 @@ def test_get_run_by_project_id_paged_filtered_by_existing_branch_name_should_ret
                     "succeededTestCount": 0,
                     "waitingTestCount": 0,
                 },
+                "performanceTraceId": None,
             }
         ],
         "pageNumber": 1,
@@ -205,6 +208,7 @@ def test_get_run_summary(client_with_session, run, test_result):
             "succeededTestCount": 0,
             "progressPercentage": 0.0,
         },
+        "performanceTraceId": None,
     }
 
     assert rv.status_code == 200
@@ -309,3 +313,40 @@ def test_create_run_with_github_actions_run_information(
     response_json = rv.json()
     assert response_json["runInformation"]["runInformationType"] == "GITHUB_ACTIONS"
     assert response_json["runInformation"]["runId"] == response_json["id"]
+
+
+class TestCreatePerformanceTrace:
+    def test_success(self, client_with_session, run):
+        payload = {
+            "performance_trace_json": """{"traceEvents":[]}""",
+        }
+
+        rv = client_with_session.post(
+            f"/api/v1/runs/{run.id}/performance_trace", json=payload
+        )
+
+        assert rv.status_code == 201
+        response_json = rv.json()
+        assert response_json == {"id": 1}
+
+    def test_wrong_payload(self, client_with_session, run):
+        payload = {}
+
+        rv = client_with_session.post(
+            f"/api/v1/runs/{run.id}/performance_trace", json=payload
+        )
+
+        assert rv.status_code == 400
+        response_json = rv.json()
+        assert response_json == {"performance_trace_json": "missing"}
+
+    def test_not_existing_run(self, client_with_session):
+        payload = {
+            "performance_trace_json": """{"traceEvents":[]}""",
+        }
+
+        rv = client_with_session.post(f"/api/v1/runs/1/performance_trace", json=payload)
+
+        assert rv.status_code == 404
+        response_json = rv.json()
+        assert response_json == {"run_id": "no run found"}
