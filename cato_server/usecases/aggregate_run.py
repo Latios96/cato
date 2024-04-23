@@ -61,6 +61,7 @@ class AggregateRun:
                     progress=self._aggregate_progress(
                         test_count_by_run_id[run.id], test_result_status_information
                     ),
+                    performance_trace_id=run.performance_trace_id,
                 )
             )
 

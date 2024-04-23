@@ -12,6 +12,7 @@ from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
 
 class PerformanceTraceMapping(Base):
     __tablename__ = "performance_trace_entity"
+
     id = Column(Integer, primary_key=True, autoincrement=True)
     performance_trace_json = Column(Text, nullable=False)
 

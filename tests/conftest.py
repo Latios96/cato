@@ -776,6 +776,7 @@ def run_aggregate_factory(local_computer_run_information: LocalComputerRunInform
                     progress_percentage=0.9,
                 ),
             ),
+            performance_trace_id=None,
         )
 
     return func

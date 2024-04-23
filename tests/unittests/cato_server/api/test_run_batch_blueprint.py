@@ -78,6 +78,7 @@ class TestGetRunBatchesByProjectId:
                             "status": "NOT_STARTED",
                             "suiteCount": 0,
                             "testCount": 0,
+                            "performanceTraceId": None,
                         }
                     ],
                     "status": "NOT_STARTED",
@@ -162,6 +163,7 @@ class TestGetRunBatchesByProjectId:
                             "status": "NOT_STARTED",
                             "suiteCount": 0,
                             "testCount": 0,
+                            "performanceTraceId": None,
                         }
                     ],
                     "status": "NOT_STARTED",

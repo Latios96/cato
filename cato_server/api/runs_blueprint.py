@@ -5,6 +5,7 @@ from fastapi import APIRouter
 from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
+from cato_common.domain.performance_trace import PerformanceTrace
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.mappers.page_mapper import PageMapper
@@ -17,6 +18,9 @@ from cato_server.api.validators.run_validators import (
     CreateFullRunValidator,
 )
 from cato_server.run_status_calculator import RunStatusCalculator
+from cato_server.storage.abstract.abstract_performance_trace_repository import (
+    PerformanceTraceRepository,
+)
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.abstract.run_repository import RunRepository
 from cato_server.storage.abstract.suite_result_repository import SuiteResultRepository
@@ -40,6 +44,7 @@ class RunsBlueprint(APIRouter):
         object_mapper: ObjectMapper,
         page_mapper: PageMapper,
         aggregate_run: AggregateRun,
+        performance_trace_repository: PerformanceTraceRepository,
     ):
         super(RunsBlueprint, self).__init__()
         self._run_repository = run_repository
@@ -50,6 +55,7 @@ class RunsBlueprint(APIRouter):
         self._object_mapper = object_mapper
         self._page_mapper = page_mapper
         self._aggregate_run = aggregate_run
+        self._performance_trace_repository = performance_trace_repository
 
         self._run_status_calculator = RunStatusCalculator()
 
@@ -58,6 +64,11 @@ class RunsBlueprint(APIRouter):
         self.get("/runs/{run_id}/exists")(self.run_id_exists)
         self.get("/runs/{run_id}/aggregate")(self.aggregate_run)
         self.post("/runs")(self.create_run)
+
+        self.post("/runs/{run_id}/performance_trace")(self.create_performance_trace)
+        self.get("/runs/{run_id}/performance_trace")(
+            self.get_performance_trace_by_run_id
+        )
 
     def aggregate_runs_by_project(self, project_id: int, request: Request) -> Response:
         run_filter_options = run_filter_options_from_request(request.query_params)
@@ -114,3 +125,25 @@ class RunsBlueprint(APIRouter):
     def get_branches(self, project_id: int) -> Response:
         branch_names = self._run_repository.find_branches_for_project(project_id)
         return JSONResponse(content=self._object_mapper.many_to_dict(branch_names))
+
+    async def create_performance_trace(self, run_id: int, request: Request) -> Response:
+        request_json = await request.json()
+        performance_trace_json = request_json.get("performance_trace_json")
+        if not performance_trace_json:
+            return JSONResponse(
+                content={"performance_trace_json": "missing"}, status_code=BAD_REQUEST
+            )
+
+        run = self._run_repository.find_by_id(run_id)
+        if not run:
+            return JSONResponse(content={"run_id": "no run found"}, status_code=404)
+
+        performance_trace = PerformanceTrace(
+            id=0, performance_trace_json=performance_trace_json
+        )
+        performance_trace = self._performance_trace_repository.save(performance_trace)
+
+        run.performance_trace_id = performance_trace.id
+        self._run_repository.save(run)
+
+        return JSONResponse(content={"id": performance_trace.id}, status_code=201)

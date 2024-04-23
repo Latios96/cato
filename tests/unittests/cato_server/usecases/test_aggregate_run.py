@@ -97,6 +97,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
                 succeeded_test_count=4,
                 progress_percentage=90.0,
             ),
+            performance_trace_id=None,
         ),
         RunAggregate(
             id=2,
@@ -115,6 +116,7 @@ def test_aggregate_page(test_context, local_computer_run_information, run_factor
                 succeeded_test_count=4,
                 progress_percentage=90.0,
             ),
+            performance_trace_id=None,
         ),
     ]
     test_context.mock_test_result_repository.find_status_by_project_id.assert_called_with(
@@ -196,5 +198,6 @@ def test_aggregate_run_without_suites_and_tests(
                 succeeded_test_count=0,
                 progress_percentage=0,
             ),
+            performance_trace_id=None,
         )
     ]
