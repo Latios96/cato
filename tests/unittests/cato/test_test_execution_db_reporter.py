@@ -144,6 +144,7 @@ class TestTestExecutionDbReporter:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
         test_context.mock_run_information_detector.detect.return_value = (
             local_computer_run_information_for_run_creation
@@ -205,6 +206,7 @@ class TestTestExecutionDbReporter:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         test_context.test_execution_db_reporter.start_execution(

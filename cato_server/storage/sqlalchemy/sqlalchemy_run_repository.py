@@ -79,6 +79,9 @@ class _RunMapping(Base):
     created_at = Column(UtcDateTime)
     branch_name = Column(String, nullable=False)
     previous_run_id = Column(Integer, ForeignKey("run_entity.id"), nullable=True)
+    performance_trace_entity_id = Column(
+        Integer, ForeignKey("performance_trace_entity.id"), nullable=True
+    )
 
     run_information = relationship(
         _BasicRunInformationMapping,
@@ -104,6 +107,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             run_information=SqlAlchemyRunRepository._run_information_to_entity(
                 domain_object.run_information
             ),
+            performance_trace_entity_id=domain_object.performance_trace_id,
         )
 
     def to_domain_object(self, entity: _RunMapping) -> Run:
@@ -121,6 +125,7 @@ class SqlAlchemyRunRepository(AbstractSqlAlchemyRepository, RunRepository):
             run_information=SqlAlchemyRunRepository._run_information_to_domain_object(
                 entity.run_information
             ),
+            performance_trace_id=entity.performance_trace_entity_id,
         )
 
     def insert_many(self, domain_objects: List[Run]) -> List[Run]:

@@ -23,6 +23,7 @@ def test_map_from_dict(object_mapper):
                 "localUsername": "username",
                 "runInformationType": "LOCAL_COMPUTER",
             },
+            "performanceTraceId": None,
         },
         Run,
     )
@@ -41,6 +42,7 @@ def test_map_from_dict(object_mapper):
             computer_name="cray",
             local_username="username",
         ),
+        performance_trace_id=None,
     )
 
 
@@ -62,6 +64,7 @@ def test_map_to_dict(object_mapper):
                 computer_name="cray",
                 local_username="username",
             ),
+            performance_trace_id=None,
         )
     )
 
@@ -80,4 +83,5 @@ def test_map_to_dict(object_mapper):
             "localUsername": "username",
             "runInformationType": "LOCAL_COMPUTER",
         },
+        "performanceTraceId": None,
     }

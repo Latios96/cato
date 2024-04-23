@@ -83,6 +83,7 @@ def test_should_create_without_branch_name_and_no_previous_run(
             computer_name="cray",
             local_username="username",
         ),
+        performance_trace_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -136,6 +137,7 @@ def test_should_create_with_local_run_information(
             computer_name="cray",
             local_username="username",
         ),
+        performance_trace_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -205,6 +207,7 @@ def test_should_create_with_github_actions_run_information(
             github_url="https://github.com",
             github_api_url="https://api.github.com",
         ),
+        performance_trace_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -259,6 +262,7 @@ def test_should_create_with_explicit_branch_name_and_no_previous_run(
             computer_name="cray",
             local_username="username",
         ),
+        performance_trace_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None
@@ -313,6 +317,7 @@ def test_should_create_with_previous_run(
             computer_name="cray",
             local_username="username",
         ),
+        performance_trace_id=None,
     )
     assert sqlalchemy_test_result_repository.find_by_id(1).machine_info == None
     assert sqlalchemy_test_result_repository.find_by_id(1).failure_reason == None

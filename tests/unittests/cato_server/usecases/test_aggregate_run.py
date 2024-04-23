@@ -172,6 +172,7 @@ def test_aggregate_run_without_suites_and_tests(
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         ),
     ]
 

@@ -14,6 +14,9 @@ from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
 from cato_server.storage.sqlalchemy.sqlalchemy_output_repository import (
     SqlAlchemyOutputRepository,
 )
+from cato_server.storage.sqlalchemy.sqlalchemy_performance_trace_repository import (
+    SqlAlchemyPerformanceTraceRepository,
+)
 
 # todo move sessionmaker_fixture here
 from cato_server.storage.sqlalchemy.sqlalchemy_project_repository import (
@@ -56,6 +59,11 @@ def sqlalchemy_project_repository(sessionmaker_fixture):
 @pytest.fixture
 def sqlalchemy_output_repository(sessionmaker_fixture):
     return SqlAlchemyOutputRepository(sessionmaker_fixture)
+
+
+@pytest.fixture
+def sqlalchemy_performance_trace_repository(sessionmaker_fixture):
+    return SqlAlchemyPerformanceTraceRepository(sessionmaker_fixture)
 
 
 @pytest.fixture

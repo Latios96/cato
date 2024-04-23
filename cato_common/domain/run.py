@@ -15,3 +15,4 @@ class Run:
     branch_name: BranchName
     previous_run_id: Optional[int]
     run_information: BasicRunInformation
+    performance_trace_id: Optional[int]

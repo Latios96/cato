@@ -61,6 +61,7 @@ class CreateRunUsecase:
             branch_name=branch_name,
             previous_run_id=previous_run_id,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
         run = self._run_repository.save(run)
         logger.info("Created run %s", run)

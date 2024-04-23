@@ -32,6 +32,7 @@ class TestConversionMethods:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         entity = sqlalchemy_run_repository.to_entity(run)
@@ -59,6 +60,7 @@ class TestConversionMethods:
                 computer_name="cray",
                 local_username="username",
             ),
+            performance_trace_entity_id=None,
         )
 
         run = sqlalchemy_run_repository.to_domain_object(run_entity)
@@ -71,6 +73,7 @@ class TestConversionMethods:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
 
@@ -91,6 +94,7 @@ class TestSave:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         run = sqlalchemy_run_repository.save(run)
@@ -109,6 +113,7 @@ class TestSave:
                 computer_name="cray",
                 local_username="username",
             ),
+            performance_trace_id=None,
         )
 
     def test_save_github_actions_run_information(
@@ -127,6 +132,7 @@ class TestSave:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=github_actions_run_information,
+            performance_trace_id=None,
         )
 
         run = sqlalchemy_run_repository.save(run)
@@ -152,6 +158,7 @@ class TestSave:
                 github_url="https://github.com",
                 github_api_url="https://api.github.com",
             ),
+            performance_trace_id=None,
         )
 
     def test_save_no_project_id(
@@ -165,6 +172,7 @@ class TestSave:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         with pytest.raises(IntegrityError):
@@ -185,6 +193,7 @@ class TestSave:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         sqlalchemy_run_repository.save(run)
@@ -204,6 +213,7 @@ class TestSave:
             branch_name=BranchName("default"),
             previous_run_id=42,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
 
         with pytest.raises(IntegrityError):
@@ -227,6 +237,7 @@ class TestFindById:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
         run = sqlalchemy_run_repository.save(run)
 
@@ -259,6 +270,7 @@ class FindByProjectId:
             branch_name=BranchName("default"),
             previous_run_id=None,
             run_information=local_computer_run_information,
+            performance_trace_id=None,
         )
         run = sqlalchemy_run_repository.save(run)
 
@@ -436,6 +448,7 @@ def test_delete_should_also_delete_run_information(
         branch_name=BranchName("default"),
         previous_run_id=None,
         run_information=local_computer_run_information,
+        performance_trace_id=None,
     )
 
     run = sqlalchemy_run_repository.save(run)
