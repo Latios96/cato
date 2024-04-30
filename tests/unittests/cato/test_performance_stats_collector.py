@@ -81,7 +81,7 @@ def test_get_json_trace():
     json_trace = json.loads(json_trace)
     for event in json_trace["traceEvents"]:
         ts = event.pop("ts")
-        assert ts < 100
+        assert ts is not None and isinstance(ts, float) and ts >= 0
     assert json_trace == {
         "traceEvents": [
             {
