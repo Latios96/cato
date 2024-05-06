@@ -18,7 +18,7 @@ from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.runners.command_runner import CommandRunner, CommandResult
 from cato.runners.test_runner import TestRunner
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_common.domain.test_failure_reason import TestFailureReason
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.compare_image_result import CompareImageResult
@@ -71,6 +71,7 @@ def test_context():
                 channels=[],
                 width=10,
                 height=20,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
 
     return TestContext()

@@ -7,7 +7,7 @@ from cato_common.domain.comparison_method import ComparisonMethod
 from cato_common.domain.comparison_result import ComparisonResult
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.file import File
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_common.images.image_comparators.ssim_image_comparator import (
     SsimImageComparator,
 )
@@ -55,6 +55,7 @@ def test_context():
                 channels=[],
                 width=10,
                 height=20,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
 
     return TestContext()
@@ -109,6 +110,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             Image(
                 id=2,
@@ -117,6 +119,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             test_context.comparison_settings,
         )
@@ -226,6 +229,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             Image(
                 id=2,
@@ -234,6 +238,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             test_context.comparison_settings,
         )
@@ -278,6 +283,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             Image(
                 id=2,
@@ -286,6 +292,7 @@ class TestCompareImage:
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             ),
             test_context.comparison_settings,
         )
@@ -313,6 +320,7 @@ class TestCompareImage:
                     channels=[],
                     width=1920,
                     height=1080,
+                    transcoding_state=ImageTranscodingState.TRANSCODED,
                 ),
                 Image(
                     id=2,
@@ -321,6 +329,7 @@ class TestCompareImage:
                     channels=[],
                     width=1920,
                     height=1080,
+                    transcoding_state=ImageTranscodingState.TRANSCODED,
                 ),
                 test_context.comparison_settings,
             )
@@ -339,6 +348,7 @@ class TestCompareImage:
                     channels=[],
                     width=1920,
                     height=1080,
+                    transcoding_state=ImageTranscodingState.TRANSCODED,
                 ),
                 Image(
                     id=2,
@@ -347,6 +357,7 @@ class TestCompareImage:
                     channels=[],
                     width=1920,
                     height=1080,
+                    transcoding_state=ImageTranscodingState.TRANSCODED,
                 ),
                 test_context.comparison_settings,
             )

@@ -5,7 +5,7 @@ from cato.reporter.reporter import Reporter
 from cato.runners.sync_reference_image_edits import SyncReferenceImageEdits
 from cato.variable_processing.variable_processor import VariableProcessor
 from cato_api_client.cato_api_client import CatoApiClient
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.utils.datetime_utils import aware_now_in_utc
@@ -187,6 +187,7 @@ def create_image(name):
         channels=[],
         width=1920,
         height=1080,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 

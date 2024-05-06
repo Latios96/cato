@@ -1,5 +1,11 @@
 from dataclasses import dataclass
+from enum import Enum
 from typing import List
+
+
+class ImageTranscodingState(str, Enum):
+    WAITING_FOR_TRANSCODING = "WAITING_FOR_TRANSCODING"
+    TRANSCODED = "TRANSCODED"
 
 
 @dataclass
@@ -18,3 +24,4 @@ class Image:
     channels: List[ImageChannel]
     width: int
     height: int
+    transcoding_state: ImageTranscodingState

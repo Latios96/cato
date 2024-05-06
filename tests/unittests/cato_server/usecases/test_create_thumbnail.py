@@ -3,7 +3,7 @@ from pathlib import Path
 import pytest
 
 from cato_common.domain.file import File
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
@@ -33,6 +33,7 @@ def test_context(test_result_factory):
                 channels=[],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
             self.original_file = File(
                 id=0, name="the_image.png", hash="hash", value_counter=0

@@ -9,7 +9,7 @@ from cato_api_client.task_result_template import TaskResultError
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.compare_image_result import CompareImageResult
 from cato_common.domain.file import File
-from cato_common.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
@@ -156,6 +156,7 @@ def test_upload_image(cato_api_client, test_resource_provider):
         channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
         width=2048,
         height=1556,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 

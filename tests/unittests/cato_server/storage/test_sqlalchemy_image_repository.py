@@ -1,7 +1,7 @@
 import pytest
 from sqlalchemy.exc import IntegrityError
 
-from cato_common.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
@@ -17,6 +17,7 @@ def test_should_save(sqlalchemy_image_repository, stored_file):
             channels=[],
             width=1920,
             height=1080,
+            transcoding_state=ImageTranscodingState.TRANSCODED,
         )
     )
 
@@ -27,6 +28,7 @@ def test_should_save(sqlalchemy_image_repository, stored_file):
         channels=[],
         width=1920,
         height=1080,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 
@@ -42,6 +44,7 @@ def test_save_should_fail_not_existing_file_id(
                 channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=2)],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
         )
 
@@ -58,6 +61,7 @@ def test_save_should_fail_not_existing_file_id_for_channel(
                 channels=[ImageChannel(id=0, image_id=0, name="rgb", file_id=42)],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
         )
 
@@ -77,6 +81,7 @@ def test_should_find(sqlalchemy_image_repository, stored_file):
             ],
             width=1920,
             height=1080,
+            transcoding_state=ImageTranscodingState.TRANSCODED,
         )
     )
 

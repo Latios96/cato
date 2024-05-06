@@ -33,7 +33,7 @@ from cato_common.domain.auth.email import Email
 from cato_common.domain.auth.username import Username
 from cato_common.domain.branch_name import BranchName
 from cato_common.domain.file import File
-from cato_common.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
 from cato_common.domain.project import Project
@@ -637,6 +637,7 @@ def stored_image_factory(
                 ],
                 width=1920,
                 height=1080,
+                transcoding_state=ImageTranscodingState.TRANSCODED,
             )
         )
 

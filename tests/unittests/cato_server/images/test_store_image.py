@@ -1,5 +1,5 @@
 import pytest
-from cato_common.domain.image import ImageChannel, Image
+from cato_common.domain.image import ImageChannel, Image, ImageTranscodingState
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
 )
@@ -46,6 +46,7 @@ def test_store_rgb_jpeg(
         channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
         width=100,
         height=100,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 
@@ -76,6 +77,7 @@ def test_store_rgb_png(
         channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
         width=220,
         height=224,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 
@@ -113,6 +115,7 @@ def test_store_multichannel_exr(
         ],
         width=960,
         height=540,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 

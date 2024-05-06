@@ -7,7 +7,7 @@ from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_common.domain.test_edit import (
     ComparisonSettingsEdit,
     ComparisonSettingsEditValue,
@@ -104,6 +104,7 @@ def _create_image(x):
         channels=[],
         width=1920,
         height=1080,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
 
 

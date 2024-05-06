@@ -1,7 +1,7 @@
 from sqlalchemy import Column, Integer, ForeignKey, String
 from sqlalchemy.orm import relationship, joinedload
 
-from cato_common.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
@@ -25,6 +25,7 @@ class ImageMapping(Base):
     width = Column(Integer, nullable=False)
     height = Column(Integer, nullable=False)
     channels = relationship(ImageChannelMapping)
+    transcoding_state = Column(String, nullable=False)
 
 
 class SqlAlchemyImageRepository(
@@ -38,6 +39,7 @@ class SqlAlchemyImageRepository(
             width=domain_object.width,
             height=domain_object.height,
             channels=list(map(self._map_channel_to_entity, domain_object.channels)),
+            transcoding_state=domain_object.transcoding_state.name,
         )
 
     def _map_channel_to_entity(
@@ -58,6 +60,7 @@ class SqlAlchemyImageRepository(
             channels=list(map(self._map_channel_to_domain_object, entity.channels)),
             width=entity.width,
             height=entity.height,
+            transcoding_state=ImageTranscodingState(entity.transcoding_state),
         )
 
     def _map_channel_to_domain_object(

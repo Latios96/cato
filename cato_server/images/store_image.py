@@ -5,7 +5,7 @@ import tempfile
 from PIL import Image as PillowImage
 
 from cato_common.domain.file import File
-from cato_common.domain.image import Image, ImageChannel
+from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_server.images.image_splitter import ImageSplitter
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.abstract.image_repository import ImageRepository
@@ -64,6 +64,7 @@ class StoreImage:
             channels=channel_files,
             width=width,
             height=height,
+            transcoding_state=ImageTranscodingState.TRANSCODED,
         )
         logger.info("Saving image %s to db..", image)
         image = self._image_repository.save(image)

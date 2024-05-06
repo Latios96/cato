@@ -4,7 +4,7 @@ from cato_common.domain.can_be_edited import CanBeEdited
 from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.compare_image_result import CompareImageResult
-from cato_common.domain.image import Image
+from cato_common.domain.image import Image, ImageTranscodingState
 from cato_common.domain.test_edit import ReferenceImageEdit, ReferenceImageEditValue
 from cato_common.domain.test_identifier import TestIdentifier
 from cato_common.domain.unified_test_status import UnifiedTestStatus
@@ -21,7 +21,13 @@ original_reference_image_id = 9
 
 def test_can_be_edited_should_return_ok(test_result_factory):
     image = Image(
-        id=1, name="test.png", original_file_id=1, channels=[], width=1920, height=1080
+        id=1,
+        name="test.png",
+        original_file_id=1,
+        channels=[],
+        width=1920,
+        height=1080,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
     mock_test_edit_repository = mock_safe(TestEditRepository)
     mock_test_result_repository = mock_safe(TestResultRepository)
@@ -193,4 +199,5 @@ def _create_image(x):
         channels=[],
         width=1920,
         height=1080,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
     )
