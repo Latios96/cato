@@ -34,6 +34,27 @@ class StoreImage:
         return self.store_image_from_file_entity(original_file)
 
     def store_image_from_file_entity(self, original_file: File) -> Image:
+        image = self.store_image_for_transcoding(original_file)
+        image = self.transcode_image(image)
+        return image
+
+    def store_image_for_transcoding(self, original_file: File) -> Image:
+        image = Image(
+            id=0,
+            name=original_file.name,
+            original_file_id=original_file.id,
+            channels=[],
+            width=0,
+            height=0,
+            transcoding_state=ImageTranscodingState.WAITING_FOR_TRANSCODING,
+        )
+        logger.info("Saving image %s to db..", image)
+        image = self._image_repository.save(image)
+        logger.info("Saved image with id %s", image.id)
+        return image
+
+    def transcode_image(self, image: Image) -> Image:
+        original_file = self._file_storage.find_by_id(image.original_file_id)
         logger.info("Splitting image into channels..")
 
         channel_files = []
@@ -49,7 +70,10 @@ class StoreImage:
                 logger.debug("Saved channel %s to %s", channel_name, channel_file)
                 channel_files.append(
                     ImageChannel(
-                        id=0, image_id=0, name=channel_name, file_id=channel_file.id
+                        id=0,
+                        image_id=image.id,
+                        name=channel_name,
+                        file_id=channel_file.id,
                     )
                 )
 
@@ -57,18 +81,13 @@ class StoreImage:
 
             logger.debug("Removing temporary directory..")
 
-        image = Image(
-            id=0,
-            name=original_file.name,
-            original_file_id=original_file.id,
-            channels=channel_files,
-            width=width,
-            height=height,
-            transcoding_state=ImageTranscodingState.TRANSCODED,
-        )
-        logger.info("Saving image %s to db..", image)
+        image.channels = channel_files
+        image.width = width
+        image.height = height
+        image.transcoding_state = ImageTranscodingState.TRANSCODED
+
         image = self._image_repository.save(image)
-        logger.info("Saved image with id %s", image.id)
+        logger.info("Updated image with id %s", image.id)
         return image
 
     def _get_image_resolution(self, channels):

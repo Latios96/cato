@@ -151,3 +151,66 @@ def test_store_no_image(
 
     with pytest.raises(NotAnImageException):
         store_image.store_image(__file__)
+
+
+def test_store_image_for_transcoding(
+    sqlalchemy_deduplicating_storage,
+    sqlalchemy_image_repository,
+    tmp_path,
+    test_resource_provider,
+    stored_file,
+):
+    store_image = StoreImage(
+        sqlalchemy_deduplicating_storage,
+        sqlalchemy_image_repository,
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
+    )
+
+    image = store_image.store_image_for_transcoding(stored_file)
+
+    assert image == Image(
+        id=1,
+        name="test.exr",
+        original_file_id=1,
+        channels=[],
+        width=0,
+        height=0,
+        transcoding_state=ImageTranscodingState.WAITING_FOR_TRANSCODING,
+    )
+
+
+def test_transcode_image(
+    sqlalchemy_deduplicating_storage,
+    sqlalchemy_image_repository,
+    tmp_path,
+    test_resource_provider,
+):
+    store_image = StoreImage(
+        sqlalchemy_deduplicating_storage,
+        sqlalchemy_image_repository,
+        ImageSplitter(
+            OiioBinariesDiscovery(),
+            OiioCommandExecutor(),
+            AppConfigurationDefaults().create(),
+        ),
+    )
+
+    original_file = sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name("test_image_white.png")
+    )
+    image = store_image.store_image_for_transcoding(original_file)
+    transcoded_image = store_image.transcode_image(image)
+
+    assert transcoded_image == Image(
+        id=1,
+        name="test_image_white.png",
+        original_file_id=1,
+        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
+        width=220,
+        height=224,
+        transcoding_state=ImageTranscodingState.TRANSCODED,
+    )
