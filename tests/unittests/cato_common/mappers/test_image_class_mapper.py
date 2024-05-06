@@ -10,7 +10,7 @@ def test_from_dict_with_id(object_mapper):
             "channels": [{"id": 1, "imageId": 2, "name": "rgb", "fileId": 3}],
             "width": 100,
             "height": 100,
-            "imageTranscodingState": "TRANSCODED",
+            "transcodingState": "TRANSCODED",
         },
         Image,
     )
@@ -46,5 +46,5 @@ def test_to_dict(object_mapper):
         "channels": [{"id": 1, "imageId": 2, "name": "rgb", "fileId": 3}],
         "width": 100,
         "height": 100,
-        "imageTranscodingState": "TRANSCODED",
+        "transcodingState": "TRANSCODED",
     }

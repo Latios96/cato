@@ -23,7 +23,7 @@ def test_get_image_found_image(client_with_session, test_resource_provider):
         "originalFileId": 1,
         "width": 100,
         "height": 100,
-        "imageTranscodingState": "TRANSCODED",
+        "transcodingState": "TRANSCODED",
     }
 
 
@@ -48,7 +48,7 @@ def test_upload_async_image(
                 "name": "test_image_white.jpg",
                 "originalFileId": 1,
                 "width": 100,
-                "imageTranscodingState": "TRANSCODED",
+                "transcodingState": "TRANSCODED",
             }
         },
         "state": "SUCCESS",
