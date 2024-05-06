@@ -31,7 +31,7 @@ class AbstractSqlAlchemyRepository(Generic[T, E, K]):
         if is_insert:
             session.add(mapped_entity)
         else:
-            session.merge(mapped_entity)
+            mapped_entity = session.merge(mapped_entity)
         session.flush()
 
         domain_object = self.to_domain_object(mapped_entity)
