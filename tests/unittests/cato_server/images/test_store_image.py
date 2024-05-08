@@ -1,3 +1,5 @@
+from unittest import mock
+
 import pytest
 from cato_common.domain.image import ImageChannel, Image, ImageTranscodingState
 from cato_server.configuration.app_configuration_defaults import (
@@ -11,12 +13,15 @@ from cato_server.images.oiio_command_executor import (
 from cato_server.images.oiio_binaries_discovery import OiioBinariesDiscovery
 
 from cato_server.images.store_image import StoreImage
+from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
+from cato_server.storage.abstract.image_repository import ImageRepository
 from cato_server.storage.sqlalchemy.sqlalchemy_deduplicating_file_storage import (
     SqlAlchemyDeduplicatingFileStorage,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_image_repository import (
     SqlAlchemyImageRepository,
 )
+from tests.utils import mock_safe
 
 
 def test_store_rgb_jpeg(
@@ -214,3 +219,57 @@ def test_transcode_image(
         height=224,
         transcoding_state=ImageTranscodingState.TRANSCODED,
     )
+
+
+def test_transcode_should_fail_original_file_not_found():
+    mock_file_storage = mock_safe(AbstractFileStorage)
+    mock_file_storage.find_by_id.return_value = None
+    mock_image_repository = mock_safe(ImageRepository)
+    mock_image_splitter = mock_safe(ImageSplitter)
+    store_image = StoreImage(
+        mock_file_storage, mock_image_repository, mock_image_splitter
+    )
+    image = Image(
+        0,
+        name="test.exr",
+        original_file_id=42,
+        channels=[],
+        width=0,
+        height=0,
+        transcoding_state=ImageTranscodingState.WAITING_FOR_TRANSCODING,
+    )
+
+    with pytest.raises(RuntimeError):
+        store_image.transcode_image(image)
+
+    mock_image_repository.save.assert_called_with(image)
+    assert image.transcoding_state == ImageTranscodingState.UNABLE_TO_TRANSCODE
+
+
+def test_storing_image_unable_to_transcode_should_store_unable_to_transcode():
+    mock_file_storage = mock_safe(AbstractFileStorage)
+    mock_file_storage.find_by_id.return_value = None
+    mock_image_repository = mock_safe(ImageRepository)
+    mock_image_splitter = mock_safe(ImageSplitter)
+    store_image = StoreImage(
+        mock_file_storage, mock_image_repository, mock_image_splitter
+    )
+    image = Image(
+        0,
+        name="test.exr",
+        original_file_id=42,
+        channels=[],
+        width=0,
+        height=0,
+        transcoding_state=ImageTranscodingState.WAITING_FOR_TRANSCODING,
+    )
+
+    with mock.patch(
+        "cato_server.images.store_image.StoreImage._transcode"
+    ) as patch_transcode:
+        patch_transcode.side_effect = Exception("Something went wrong")
+        with pytest.raises(Exception):
+            store_image.transcode_image(image)
+
+    mock_image_repository.save.assert_called_with(image)
+    assert image.transcoding_state == ImageTranscodingState.UNABLE_TO_TRANSCODE

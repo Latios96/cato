@@ -153,10 +153,10 @@ def test_upload_image(cato_api_client, test_resource_provider):
         id=1,
         name="test.exr",
         original_file_id=1,
-        channels=[ImageChannel(id=1, image_id=1, name="rgb", file_id=2)],
-        width=2048,
-        height=1556,
-        transcoding_state=ImageTranscodingState.TRANSCODED,
+        channels=[],
+        width=0,
+        height=0,
+        transcoding_state=ImageTranscodingState.WAITING_FOR_TRANSCODING,
     )
 
 

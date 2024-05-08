@@ -6,6 +6,7 @@ from typing import List
 class ImageTranscodingState(str, Enum):
     WAITING_FOR_TRANSCODING = "WAITING_FOR_TRANSCODING"
     TRANSCODED = "TRANSCODED"
+    UNABLE_TO_TRANSCODE = "UNABLE_TO_TRANSCODE"
 
 
 @dataclass

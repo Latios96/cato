@@ -10,7 +10,10 @@ from cato_server.task_queue.create_thumbnail_task import (
     CreateThumbnailTask,
     CreateThumbnailParams,
 )
-from cato_server.task_queue.store_image_task import StoreImageTask, StoreImageParams
+from cato_server.task_queue.transcode_image_task import (
+    TranscodeImageTask,
+    TranscodeImageParams,
+)
 
 
 class CatoCelery:
@@ -18,14 +21,14 @@ class CatoCelery:
         self,
         celery_app: Celery,
         create_thumbnail_task: CreateThumbnailTask,
-        store_image_task: StoreImageTask,
+        transcode_image_task: TranscodeImageTask,
         compare_image_task: CompareImageTask,
         object_mapper: ObjectMapper,
     ):
         self.celery_app = celery_app
         self._object_mapper = object_mapper
         self._create_thumbnail_task = create_thumbnail_task
-        self._store_image_task = store_image_task
+        self._transcode_image_task = transcode_image_task
         self._compare_image_task = compare_image_task
 
         @self.celery_app.task
@@ -35,10 +38,10 @@ class CatoCelery:
         self._create_thumbnail_celery_task = _create_thumbnail
 
         @self.celery_app.task
-        def _store_image(params_str: str):
-            return self._store_image_task.execute(params_str)
+        def _transcode_image(params_str: str):
+            return self._transcode_image_task.execute(params_str)
 
-        self._store_image_celery_task = _store_image
+        self._transcode_image_celery_task = _transcode_image
 
         @self.celery_app.task
         def _compare_image(params_str: str):
@@ -52,10 +55,10 @@ class CatoCelery:
             CreateThumbnailParams(test_result_id=test_result_id),
         )
 
-    def launch_store_image_task(self, original_file_id: int):
+    def launch_transcode_image_task(self, image_id: int):
         return self._wrap_launch(
-            self._store_image_celery_task,
-            StoreImageParams(original_file_id=original_file_id),
+            self._transcode_image_celery_task,
+            TranscodeImageParams(image_id=image_id),
         )
 
     def launch_compare_image_task(

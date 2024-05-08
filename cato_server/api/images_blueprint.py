@@ -55,12 +55,9 @@ class ImagesBlueprint(APIRouter):
             return JSONResponse(
                 content={"message": "Error when saving image"}, status_code=400
             )
-
-        async_result = self._cato_celery.launch_store_image_task(original_file.id)
-        task_result = self._task_result_factory.from_async_result(async_result)
-        return JSONResponse(
-            content=self._object_mapper.to_dict(task_result), status_code=201
-        )
+        image = self._store_image.store_image_for_transcoding(original_file)
+        self._cato_celery.launch_transcode_image_task(image.id)
+        return JSONResponse(content=self._object_mapper.to_dict(image), status_code=201)
 
     def get_original_image_file(self, image_id: int) -> Response:
         image = self._image_repository.find_by_id(image_id)

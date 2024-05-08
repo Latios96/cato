@@ -12,6 +12,8 @@ import {
   ComparisonMethod,
   TestResultDto,
 } from "../../catoapimodels/catoapimodels";
+import Spinner from "../Spinner/Spinner";
+import { ExclamationTriangle } from "react-bootstrap-icons";
 
 interface Props {
   result: TestResultDto;
@@ -42,18 +44,75 @@ function renderFailureInformation(result: TestResultDto): React.ReactNode {
   return <FailureMessageBox message={result.message} />;
 }
 
+function anyImageHasTranscodingError(result: TestResultDto) {
+  if (
+    result.imageOutput &&
+    result.imageOutput.transcodingState === "UNABLE_TO_TRANSCODE"
+  ) {
+    return true;
+  }
+  if (
+    result.referenceImage &&
+    result.referenceImage.transcodingState === "UNABLE_TO_TRANSCODE"
+  ) {
+    return true;
+  }
+  if (
+    result.diffImage &&
+    result.diffImage.transcodingState === "UNABLE_TO_TRANSCODE"
+  ) {
+    return true;
+  }
+  return false;
+}
+
+function allAvailableImagesAreTranscoded(result: TestResultDto) {
+  if (
+    result.imageOutput &&
+    result.imageOutput.transcodingState !== "TRANSCODED"
+  ) {
+    return false;
+  }
+  if (
+    result.referenceImage &&
+    result.referenceImage.transcodingState !== "TRANSCODED"
+  ) {
+    return false;
+  }
+  if (result.diffImage && result.diffImage.transcodingState !== "TRANSCODED") {
+    return false;
+  }
+  return true;
+}
+
 function renderImages(result: TestResultDto): React.ReactNode {
+  if (anyImageHasTranscodingError(result)) {
+    return (
+      <div className={"d-flex align-items-center mb-3"}>
+        <ExclamationTriangle size={16} />
+        <span className={"ml-2"}>Unable to transcode one or more images.</span>
+      </div>
+    );
+  }
+  if (allAvailableImagesAreTranscoded(result)) {
+    return (
+      <React.Fragment>
+        <ImageComparison
+          imageOutput={result.imageOutput}
+          referenceImage={result.referenceImage}
+          diffImage={result.diffImage}
+          comparisonMethod={
+            result.comparisonSettings?.method || ComparisonMethod.SSIM
+          }
+        />
+      </React.Fragment>
+    );
+  }
   return (
-    <React.Fragment>
-      <ImageComparison
-        imageOutput={result.imageOutput}
-        referenceImage={result.referenceImage}
-        diffImage={result.diffImage}
-        comparisonMethod={
-          result.comparisonSettings?.method || ComparisonMethod.SSIM
-        }
-      />
-    </React.Fragment>
+    <div className={"d-flex align-items-center mb-3"}>
+      <Spinner />
+      <span className={"ml-2"}>Transcoding...</span>
+    </div>
   );
 }
 

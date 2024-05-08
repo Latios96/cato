@@ -30,7 +30,6 @@ from cato_common.dtos.api_success import ApiSuccess
 from cato_common.dtos.create_full_run_dto import CreateFullRunDto
 from cato_common.dtos.finish_test_result_dto import FinishTestResultDto
 from cato_common.dtos.start_test_result_dto import StartTestResultDto
-from cato_common.dtos.store_image_result import StoreImageResult
 from cato_common.dtos.upload_output_dto import UploadOutputDto
 from cato_common.mappers.object_mapper import ObjectMapper
 
@@ -96,22 +95,12 @@ class CatoApiClient:
         files = {"file": (os.path.basename(path), f)}
 
         logger.info("Uploading image %s", path)
-        response = self._http_template.post_files_for_entity(
-            url, None, files, TaskResult
-        )
+        response = self._http_template.post_files_for_entity(url, None, files, Image)
         f.close()
 
         if response.status_code() == 201:
-            task_result = response.get_entity()
-            store_image_result = (
-                self._task_result_template.wait_for_task_result_to_complete(
-                    task_result,
-                    StoreImageResult,
-                    timeout=datetime.timedelta(seconds=120),
-                    poll_interval=datetime.timedelta(seconds=1),
-                )
-            )
-            return store_image_result.image
+            return response.get_entity()
+
         raise ValueError(f"Something went wrong when uploading image: {response}")
 
     def download_original_image(self, image_id: int) -> Optional[bytes]:

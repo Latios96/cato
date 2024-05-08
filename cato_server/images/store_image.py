@@ -54,11 +54,29 @@ class StoreImage:
         return image
 
     def transcode_image(self, image: Image) -> Image:
+        try:
+            self._transcode(image)
+        except Exception as e:
+            logger.error(e)
+            logger.error("Image will be saved as UNABLE_TO_TRANSCODE")
+            image.transcoding_state = ImageTranscodingState.UNABLE_TO_TRANSCODE
+            self._image_repository.save(image)
+            raise e
+
+        image = self._image_repository.save(image)
+        logger.info("Updated image with id %s", image.id)
+
+        return image
+
+    def _transcode(self, image):
         original_file = self._file_storage.find_by_id(image.original_file_id)
+        if not original_file:
+            raise RuntimeError(
+                f"Did not expect to not find an Image with id {image.id} in the db.",
+            )
+
         logger.info("Splitting image into channels..")
-
         channel_files = []
-
         with tempfile.TemporaryDirectory() as tmpdirname:
             channels = self._image_splitter.split_image_into_channels(
                 self._file_storage.get_path(original_file), tmpdirname
@@ -80,15 +98,10 @@ class StoreImage:
             width, height = self._get_image_resolution(channels)
 
             logger.debug("Removing temporary directory..")
-
         image.channels = channel_files
         image.width = width
         image.height = height
         image.transcoding_state = ImageTranscodingState.TRANSCODED
-
-        image = self._image_repository.save(image)
-        logger.info("Updated image with id %s", image.id)
-        return image
 
     def _get_image_resolution(self, channels):
         for channel_name, channel_path in channels:

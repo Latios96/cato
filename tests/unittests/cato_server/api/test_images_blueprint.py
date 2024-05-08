@@ -11,48 +11,16 @@ def test_get_image_found_image(client_with_session, test_resource_provider):
     test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
     data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
     response = client_with_session.post(API_V_IMAGES, files=data)
-    image_id = response.json()["result_"]["image"]["id"]
 
-    response = client_with_session.get(f"/api/v1/images/{image_id}")
-
-    assert response.status_code == 200
+    assert response.status_code == 201
     assert response.json() == {
-        "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
+        "channels": [],
         "id": 1,
         "name": "test_image_white.jpg",
         "originalFileId": 1,
-        "width": 100,
-        "height": 100,
-        "transcodingState": "TRANSCODED",
-    }
-
-
-def test_upload_async_image(
-    client_with_session, test_resource_provider, app_and_config_fixture
-):
-    app, config = app_and_config_fixture
-    test_image = test_resource_provider.resource_by_name("test_image_white.jpg")
-    data = {"file": ("test_image_white.jpg", open(test_image, "rb"))}
-    response = client_with_session.post(API_V_IMAGES, files=data)
-
-    assert response.status_code == 201
-    response_json = response.json()
-    assert len(response_json.pop("taskId")) == 36
-    assert response_json == {
-        "errorMessage_": None,
-        "result_": {
-            "image": {
-                "channels": [{"fileId": 2, "id": 1, "imageId": 1, "name": "rgb"}],
-                "height": 100,
-                "id": 1,
-                "name": "test_image_white.jpg",
-                "originalFileId": 1,
-                "width": 100,
-                "transcodingState": "TRANSCODED",
-            }
-        },
-        "state": "SUCCESS",
-        "url": f"http://127.0.0.1:{config.port}/api/v1/result/{response.json()['taskId']}",
+        "width": 0,
+        "height": 0,
+        "transcodingState": "WAITING_FOR_TRANSCODING",
     }
 
 
@@ -70,7 +38,15 @@ def test_upload_async_unsupported_file(client_with_session, test_resource_provid
 
     response = client_with_session.post(API_V_IMAGES, files=data)
 
-    assert response.json()["state"] == "FAILURE"
+    assert response.json() == {
+        "channels": [],
+        "height": 0,
+        "id": 1,
+        "name": "test_file.txt",
+        "originalFileId": 1,
+        "transcodingState": "WAITING_FOR_TRANSCODING",
+        "width": 0,
+    }
 
 
 def test_get_original_image_file_should_return_file(client_with_session, stored_image):
