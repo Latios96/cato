@@ -20,7 +20,7 @@ class Response:
         return self._json_value
 
 
-@mock.patch("requests.get")
+@mock.patch("requests.Session.get")
 def test_get_for_entity_success(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(200, {"id": 1, "name": "test-project"})
     http_template = HttpTemplate(object_mapper)
@@ -31,7 +31,7 @@ def test_get_for_entity_success(mock_requests_get, object_mapper):
     assert response.get_entity() == Project(id=1, name="test-project")
 
 
-@mock.patch("requests.get")
+@mock.patch("requests.Session.get")
 def test_get_many_for_entity_success(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(
         200, [{"id": 1, "name": "test-project"}, {"id": 2, "name": "test-project"}]
@@ -47,7 +47,7 @@ def test_get_many_for_entity_success(mock_requests_get, object_mapper):
     ]
 
 
-@mock.patch("requests.get")
+@mock.patch("requests.Session.get")
 def test_get_for_entity_404(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(404, None)
     http_template = HttpTemplate(object_mapper)
@@ -59,7 +59,7 @@ def test_get_for_entity_404(mock_requests_get, object_mapper):
         response.get_entity()
 
 
-@mock.patch("requests.get")
+@mock.patch("requests.Session.get")
 def test_get_for_entity_500(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(500, None)
     http_template = HttpTemplate(object_mapper)
@@ -68,7 +68,7 @@ def test_get_for_entity_500(mock_requests_get, object_mapper):
         http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
 
-@mock.patch("requests.get")
+@mock.patch("requests.Session.get")
 def test_get_for_entity_401(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(401, None)
     http_template = HttpTemplate(object_mapper)
@@ -77,7 +77,7 @@ def test_get_for_entity_401(mock_requests_get, object_mapper):
         http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
 
-@mock.patch("requests.post")
+@mock.patch("requests.Session.post")
 def test_post_for_entity_success(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
     http_template = HttpTemplate(object_mapper)
@@ -90,7 +90,7 @@ def test_post_for_entity_success(mock_requests_post, object_mapper):
     assert response.get_entity() == Project(id=2, name="test-project")
 
 
-@mock.patch("requests.post")
+@mock.patch("requests.Session.post")
 def test_post_for_entity_404(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(404, None)
     http_template = HttpTemplate(object_mapper)
@@ -106,7 +106,7 @@ def test_post_for_entity_404(mock_requests_post, object_mapper):
         response.get_entity()
 
 
-@mock.patch("requests.patch")
+@mock.patch("requests.Session.patch")
 def test_patch_for_entity_success(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
     http_template = HttpTemplate(object_mapper)
@@ -119,7 +119,7 @@ def test_patch_for_entity_success(mock_requests_post, object_mapper):
     assert response.get_entity() == Project(id=2, name="test-project")
 
 
-@mock.patch("requests.patch")
+@mock.patch("requests.Session.patch")
 def test_patch_for_entity_404(mock_requests_post, object_mapper):
     mock_requests_post.return_value = Response(404, None)
     http_template = HttpTemplate(object_mapper)

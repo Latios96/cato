@@ -62,6 +62,8 @@ class HttpTemplate:
     def __init__(self, object_mapper: ObjectMapper, requests_impl=requests) -> None:
         self._object_mapper = object_mapper
         self._requests_impl = requests_impl
+        if requests_impl == requests:
+            self._requests_impl = requests_impl.Session()
         self._headers: Dict[str, str] = {}
 
     def set_authorization_header(self, value: str) -> None:
