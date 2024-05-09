@@ -77,9 +77,9 @@ const ProjectCard = (props: Props) => {
         }}
       />
       <Link to={linkTo} style={{ textDecoration: "none" }}>
-        <div className={`overflow-hidden rounded ${styles.projectCard}`}>
+        <div className={`${styles.projectCard} overflow-hidden rounded `}>
           <div
-            className={`overflow-hidden d-flex justify-content-center align-items-center ${styles.projectCardImage}`}
+            className={`${styles.projectCardImage} overflow-hidden d-flex justify-content-center align-items-center `}
           >
             {props.isLoading ? (
               <Skeleton
@@ -117,7 +117,7 @@ const ProjectCard = (props: Props) => {
                   overlay={
                     <div
                       id={`${props.project?.name}-menu ${props.project?.name}-menu-open`}
-                      className={`rounded overflow-hidden d-flex flex-column ${styles.projectCardMenu}`}
+                      className={`${styles.projectCardMenu} rounded overflow-hidden d-flex flex-column `}
                     >
                       <MenuItem
                         onClick={() => {
