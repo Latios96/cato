@@ -92,6 +92,11 @@ const ProjectCard = (props: Props) => {
               <img
                 className={"w-100 object-fit-cover"}
                 src={`/api/v1/files/${props.project.thumbnailFileId}`}
+                style={
+                  props.project.status === ProjectStatus.ARCHIVED
+                    ? { filter: "grayscale(1)" }
+                    : {}
+                }
               />
             ) : (
               <Images className={"m-auto"} size={50} color={"grey"} />
