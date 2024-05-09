@@ -25,6 +25,8 @@ class ProjectsBlueprint(APIRouter):
         self.get("/projects/{project_id}")(self.get_project)
         self.get("/projects/name/{project_name}")(self.get_project_by_name)
         self.post("/projects")(self.create_project)
+        self.post("/projects/{project_id}/status/active")(self.activate_project)
+        self.post("/projects/{project_id}/status/archived")(self.archive_project)
 
     def get_projects(self) -> Response:
         projects = self._project_repository.find_all()
@@ -55,4 +57,26 @@ class ProjectsBlueprint(APIRouter):
         project = self._project_repository.find_by_name(project_name)
         if not project:
             return Response(status_code=404)
+        return JSONResponse(content=self._object_mapper.to_dict(project))
+
+    def activate_project(self, project_id: int) -> Response:
+        project = self._project_repository.find_by_id(project_id)
+
+        if not project:
+            return Response(status_code=404)
+
+        project.status = ProjectStatus.ACTIVE
+        self._project_repository.save(project)
+
+        return JSONResponse(content=self._object_mapper.to_dict(project))
+
+    def archive_project(self, project_id: int) -> Response:
+        project = self._project_repository.find_by_id(project_id)
+
+        if not project:
+            return Response(status_code=404)
+
+        project.status = ProjectStatus.ARCHIVED
+        self._project_repository.save(project)
+
         return JSONResponse(content=self._object_mapper.to_dict(project))

@@ -1,3 +1,5 @@
+from cato_common.domain.project import ProjectStatus
+
 API_V_PROJECTS = "/api/v1/projects"
 
 
@@ -53,5 +55,41 @@ def test_get_project_by_name_should_get(client_with_session, project):
 
 def test_get_project_by_name_should_return_none(client_with_session, project):
     rv = client_with_session.get("/api/v1/projects/name/te")
+
+    assert rv.status_code == 404
+
+
+def test_activate_project_success(
+    client_with_session, project, sqlalchemy_project_repository
+):
+    project.status = ProjectStatus.ARCHIVED
+    sqlalchemy_project_repository.save(project)
+
+    rv = client_with_session.post(f"/api/v1/projects/{project.id}/status/active")
+
+    assert rv.status_code == 200
+    assert rv.json() == {"id": 1, "name": "test_name", "status": "ACTIVE"}
+
+
+def test_activate_project_project_not_found(client_with_session):
+    rv = client_with_session.post(f"/api/v1/projects/42/status/active")
+
+    assert rv.status_code == 404
+
+
+def test_archive_project_success(
+    client_with_session, project, sqlalchemy_project_repository
+):
+    project.status = ProjectStatus.ACTIVE
+    sqlalchemy_project_repository.save(project)
+
+    rv = client_with_session.post(f"/api/v1/projects/{project.id}/status/archived")
+
+    assert rv.status_code == 200
+    assert rv.json() == {"id": 1, "name": "test_name", "status": "ARCHIVED"}
+
+
+def test_archive_project_project_not_found(client_with_session):
+    rv = client_with_session.post(f"/api/v1/projects/42/status/archived")
 
     assert rv.status_code == 404
