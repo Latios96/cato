@@ -296,7 +296,7 @@ class ReadOnlySeleniumTest:
         self.authenticated_selenium_driver.get(self.live_server.server_url())
         self.authenticated_selenium_driver.wait_until(
             lambda driver: driver.find_element_by_css_module_class_name(
-                "LinkCard_cardContentDiv"
+                "ProjectCard_projectCard"
             )
         )
         assert self.authenticated_selenium_driver.title == "Projects"
