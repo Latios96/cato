@@ -6,7 +6,7 @@ from starlette.requests import Request
 from starlette.responses import JSONResponse, Response
 
 from cato_server.api.validators.project_validators import CreateProjectValidator
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_common.mappers.object_mapper import ObjectMapper
 from cato_server.storage.abstract.project_repository import ProjectRepository
 
@@ -44,7 +44,7 @@ class ProjectsBlueprint(APIRouter):
 
         project_name = request_json["name"]
 
-        project = Project(id=0, name=project_name)
+        project = Project(id=0, name=project_name, status=ProjectStatus.ACTIVE)
         project = self._project_repository.save(project)
         logger.info("Created project %s", project)
         return JSONResponse(

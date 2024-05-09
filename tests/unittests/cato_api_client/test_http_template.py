@@ -8,7 +8,7 @@ from cato_api_client.http_template import (
     InternalServerError,
     Unauthorized,
 )
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 
 
 class Response:
@@ -22,19 +22,27 @@ class Response:
 
 @mock.patch("requests.Session.get")
 def test_get_for_entity_success(mock_requests_get, object_mapper):
-    mock_requests_get.return_value = Response(200, {"id": 1, "name": "test-project"})
+    mock_requests_get.return_value = Response(
+        200, {"id": 1, "name": "test-project", "status": "ACTIVE"}
+    )
     http_template = HttpTemplate(object_mapper)
 
     response = http_template.get_for_entity("/ap1/v1/projects/test-project", Project)
 
     assert response.status_code() == 200
-    assert response.get_entity() == Project(id=1, name="test-project")
+    assert response.get_entity() == Project(
+        id=1, name="test-project", status=ProjectStatus.ACTIVE
+    )
 
 
 @mock.patch("requests.Session.get")
 def test_get_many_for_entity_success(mock_requests_get, object_mapper):
     mock_requests_get.return_value = Response(
-        200, [{"id": 1, "name": "test-project"}, {"id": 2, "name": "test-project"}]
+        200,
+        [
+            {"id": 1, "name": "test-project", "status": "ACTIVE"},
+            {"id": 2, "name": "test-project", "status": "ACTIVE"},
+        ],
     )
     http_template = HttpTemplate(object_mapper)
 
@@ -42,8 +50,8 @@ def test_get_many_for_entity_success(mock_requests_get, object_mapper):
 
     assert response.status_code() == 200
     assert response.get_entities() == [
-        Project(id=1, name="test-project"),
-        Project(id=2, name="test-project"),
+        Project(id=1, name="test-project", status=ProjectStatus.ACTIVE),
+        Project(id=2, name="test-project", status=ProjectStatus.ACTIVE),
     ]
 
 
@@ -79,15 +87,21 @@ def test_get_for_entity_401(mock_requests_get, object_mapper):
 
 @mock.patch("requests.Session.post")
 def test_post_for_entity_success(mock_requests_post, object_mapper):
-    mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
+    mock_requests_post.return_value = Response(
+        200, {"id": 2, "name": "test-project", "status": "ACTIVE"}
+    )
     http_template = HttpTemplate(object_mapper)
 
     response = http_template.post_for_entity(
-        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
+        "/ap1/v1/projects/test-project",
+        Project(id=1, name="test", status=ProjectStatus.ACTIVE),
+        Project,
     )
 
     assert response.status_code() == 200
-    assert response.get_entity() == Project(id=2, name="test-project")
+    assert response.get_entity() == Project(
+        id=2, name="test-project", status=ProjectStatus.ACTIVE
+    )
 
 
 @mock.patch("requests.Session.post")
@@ -97,7 +111,7 @@ def test_post_for_entity_404(mock_requests_post, object_mapper):
 
     response = http_template.post_for_entity(
         "/ap1/v1/projects/test-project",
-        Project(id=1, name="test"),
+        Project(id=1, name="test", status=ProjectStatus.ACTIVE),
         Project,
     )
 
@@ -108,15 +122,21 @@ def test_post_for_entity_404(mock_requests_post, object_mapper):
 
 @mock.patch("requests.Session.patch")
 def test_patch_for_entity_success(mock_requests_post, object_mapper):
-    mock_requests_post.return_value = Response(200, {"id": 2, "name": "test-project"})
+    mock_requests_post.return_value = Response(
+        200, {"id": 2, "name": "test-project", "status": "ACTIVE"}
+    )
     http_template = HttpTemplate(object_mapper)
 
     response = http_template.patch_for_entity(
-        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
+        "/ap1/v1/projects/test-project",
+        Project(id=1, name="test", status=ProjectStatus.ACTIVE),
+        Project,
     )
 
     assert response.status_code() == 200
-    assert response.get_entity() == Project(id=2, name="test-project")
+    assert response.get_entity() == Project(
+        id=2, name="test-project", status=ProjectStatus.ACTIVE
+    )
 
 
 @mock.patch("requests.Session.patch")
@@ -125,7 +145,9 @@ def test_patch_for_entity_404(mock_requests_post, object_mapper):
     http_template = HttpTemplate(object_mapper)
 
     response = http_template.patch_for_entity(
-        "/ap1/v1/projects/test-project", Project(id=1, name="test"), Project
+        "/ap1/v1/projects/test-project",
+        Project(id=1, name="test", status=ProjectStatus.ACTIVE),
+        Project,
     )
 
     assert response.status_code() == 404

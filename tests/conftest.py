@@ -36,7 +36,7 @@ from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import (
     Run,
@@ -237,8 +237,12 @@ def sessionmaker_fixture(
 
 @pytest.fixture
 def project_factory():
-    def func(name: Optional[str] = None):
-        return Project(id=0, name=or_default(name, "test_name"))
+    def func(name: Optional[str] = None, status=ProjectStatus.ACTIVE):
+        return Project(
+            id=0,
+            name=or_default(name, "test_name"),
+            status=or_default(status, ProjectStatus.ACTIVE),
+        )
 
     return func
 

@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 
 from cato_common.domain.branch_name import BranchName
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_common.domain.run import (
     Run,
 )
@@ -373,7 +373,9 @@ class TestFindLastRunForProject:
         project,
         run_factory,
     ):
-        project2 = sqlalchemy_project_repository.save(Project(id=0, name="test"))
+        project2 = sqlalchemy_project_repository.save(
+            Project(id=0, name="test", status=ProjectStatus.ACTIVE)
+        )
         runs = sqlalchemy_run_repository.insert_many(
             [run_factory(project_id=project.id) for x in range(20)]
         )

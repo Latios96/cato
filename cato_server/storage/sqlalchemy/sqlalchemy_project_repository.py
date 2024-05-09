@@ -3,7 +3,7 @@ from typing import Optional
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
 
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_server.storage.abstract.project_repository import ProjectRepository
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
@@ -16,6 +16,7 @@ class _ProjectMapping(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True)
     name = Column(String, unique=True)
+    status = Column(String, nullable=False)
 
     runs = relationship("_RunMapping", backref="project")
 
@@ -33,11 +34,15 @@ class SqlAlchemyProjectRepository(AbstractSqlAlchemyRepository, ProjectRepositor
 
     def to_entity(self, domain_object: Project) -> _ProjectMapping:
         return _ProjectMapping(
-            id=domain_object.id if domain_object.id else None, name=domain_object.name
+            id=domain_object.id if domain_object.id else None,
+            name=domain_object.name,
+            status=domain_object.status,
         )
 
     def to_domain_object(self, entity: _ProjectMapping) -> Project:
-        return Project(id=entity.id, name=entity.name)
+        return Project(
+            id=entity.id, name=entity.name, status=ProjectStatus(entity.status)
+        )
 
     def mapping_cls(self):
         return _ProjectMapping

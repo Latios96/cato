@@ -12,7 +12,7 @@ from cato_common.domain.file import File
 from cato_common.domain.image import Image, ImageChannel, ImageTranscodingState
 from cato_common.domain.machine_info import MachineInfo
 from cato_common.domain.output import Output
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run_information import OS
 from cato_common.domain.submission_info import SubmissionInfo
@@ -33,7 +33,7 @@ from cato_common.utils.datetime_utils import aware_now_in_utc
 def test_get_project_by_name_should_get_project(cato_api_client, project):
     project = cato_api_client.get_project_by_name("test_name")
 
-    assert project == Project(1, "test_name")
+    assert project == Project(1, "test_name", status=ProjectStatus.ACTIVE)
 
 
 def test_get_project_by_name_should_get_none(cato_api_client):
@@ -45,7 +45,7 @@ def test_get_project_by_name_should_get_none(cato_api_client):
 def test_create_project_should_create_project(cato_api_client):
     project = cato_api_client.create_project("my_project")
 
-    assert project == Project(id=1, name="my_project")
+    assert project == Project(id=1, name="my_project", status=ProjectStatus.ACTIVE)
 
 
 def test_create_project_should_not_create_invalid_name(cato_api_client):

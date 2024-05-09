@@ -20,7 +20,7 @@ from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.config import RunConfig
 from cato_common.domain.image import Image
 from cato_common.domain.machine_info import MachineInfo
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_common.domain.result_status import ResultStatus
 from cato_common.domain.run import Run
 from cato_common.domain.run_batch_identifier import RunBatchIdentifier
@@ -134,7 +134,7 @@ class TestTestExecutionDbReporter:
             "my_branch"
         )
         test_context.mock_cato_api_client.get_project_by_name.return_value = Project(
-            id=1, name="my_project_name"
+            id=1, name="my_project_name", status=ProjectStatus.ACTIVE
         )
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,
@@ -196,7 +196,7 @@ class TestTestExecutionDbReporter:
         self, test_context, local_computer_run_information
     ):
         test_context.mock_cato_api_client.get_project_by_name.return_value = Project(
-            id=1, name="my_project_name"
+            id=1, name="my_project_name", status=ProjectStatus.ACTIVE
         )
         test_context.mock_cato_api_client.create_run.return_value = Run(
             id=5,

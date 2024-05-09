@@ -1,6 +1,6 @@
 from sqlalchemy.orm import sessionmaker
 
-from cato_common.domain.project import Project
+from cato_common.domain.project import Project, ProjectStatus
 from cato_server.configuration.app_configuration import AppConfiguration
 from cato_server.configuration.app_configuration_defaults import (
     AppConfigurationDefaults,
@@ -147,7 +147,7 @@ def test_create_storage_bindings_using_sqlite_in_memory():
 
     assert (
         SqlAlchemyProjectRepository(storage_bindings.session_maker_binding)
-        .save(Project(id=0, name="test"))
+        .save(Project(id=0, name="test", status=ProjectStatus.ACTIVE))
         .id
         == 1
     )
