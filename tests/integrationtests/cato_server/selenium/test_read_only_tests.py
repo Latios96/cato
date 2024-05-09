@@ -15,7 +15,7 @@ class HomePage:
     def the_link_card_for_the_project_should_be_displayed(self):
         link_card_text = self.stateless_test.authenticated_selenium_driver.wait_until(
             lambda driver: self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
-                "LinkCard_cardContentDiv"
+                "ProjectCard_projectCard"
             ).text
         )
 
@@ -23,7 +23,7 @@ class HomePage:
 
     def when_clicking_the_card_it_should_navigate_to_project_page(self):
         link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
-            "LinkCard_cardContentDiv"
+            "ProjectCard_projectCard"
         )
         link_card.click()
 
@@ -296,7 +296,7 @@ class ReadOnlySeleniumTest:
         self.authenticated_selenium_driver.get(self.live_server.server_url())
         self.authenticated_selenium_driver.wait_until(
             lambda driver: driver.find_element_by_css_module_class_name(
-                "ProjectCard_projectCard"
+                "ProjectsView_projectsViewProjectComponent"
             )
         )
         assert self.authenticated_selenium_driver.title == "Projects"
