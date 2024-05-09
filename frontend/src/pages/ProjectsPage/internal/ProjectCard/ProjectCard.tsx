@@ -90,6 +90,7 @@ const ProjectCard = (props: Props) => {
               />
             ) : props.project?.thumbnailFileId ? (
               <img
+                alt={"project"}
                 className={"w-100 object-fit-cover"}
                 src={`/api/v1/files/${props.project.thumbnailFileId}`}
                 style={
