@@ -67,7 +67,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
                 "No project with name %s exists, creating one..", config.project_name
             )
             project = self._cato_api_client.create_project(config.project_name)
-            logger.info("Created project %s", project)
+            logger.info("Created project %s with id %s.", project.name, project.id)
 
         logger.info("Creating run..")
 

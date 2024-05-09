@@ -10,7 +10,7 @@ snapshots = Snapshot()
 snapshots["test_submit_command 1"] = [
     """[INFO]  Reporting execution start to server..
 [INFO]  No project with name EXAMPLE_PROJECT exists, creating one..
-[INFO]  Created project Project(id=2, name='EXAMPLE_PROJECT', status=<ProjectStatus.ACTIVE: 'ACTIVE'>)
+[INFO]  Created project EXAMPLE_PROJECT with id 2.
 [INFO]  Creating run..
 [INFO]  Reporting execution of 1 suite and 1 test
 [INFO]  You can find your run at http://127.0.0.1:12345/projects/2/runs/1
@@ -22,7 +22,7 @@ snapshots["test_submit_command 1"] = [
 snapshots["test_worker_run_command 1"] = [
     """[INFO]  Reporting execution start to server..
 [INFO]  No project with name EXAMPLE_PROJECT exists, creating one..
-[INFO]  Created project Project(id=2, name='EXAMPLE_PROJECT', status=<ProjectStatus.ACTIVE: 'ACTIVE'>)
+[INFO]  Created project EXAMPLE_PROJECT with id 2.
 [INFO]  Creating run..
 [INFO]  Reporting execution of 1 suite and 1 test
 [INFO]  You can find your run at http://127.0.0.1:12345/projects/2/runs/1
