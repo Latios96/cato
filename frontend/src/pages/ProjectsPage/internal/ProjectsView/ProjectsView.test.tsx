@@ -16,13 +16,13 @@ const withProjects = {
     {
       id: 1,
       name: "test 1",
-      status: ProjectStatus.ARCHIVED,
+      status: ProjectStatus.ACTIVE,
       thumbnailFileId: undefined,
     },
     {
       id: 2,
       name: "test 2",
-      status: ProjectStatus.ARCHIVED,
+      status: ProjectStatus.ACTIVE,
       thumbnailFileId: undefined,
     },
   ],
