@@ -39,14 +39,16 @@ export const ProjectsViewPresenter = (props: Props) => {
       error={props.fetchResult.error}
     >
       <LoadingState>
-        <div className={styles.projectsView}>
-          {_.range(6).map((i) => {
-            return (
-              <div key={i} className={styles.projectsViewProjectComponent}>
-                <ProjectCard isLoading={true}></ProjectCard>
-              </div>
-            );
-          })}
+        <div className={styles.projectsViewContainer}>
+          <div className={styles.projectsView}>
+            {_.range(6).map((i) => {
+              return (
+                <div key={i} className={styles.projectsViewProjectComponent}>
+                  <ProjectCard isLoading={true}></ProjectCard>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </LoadingState>
       <ErrorState>

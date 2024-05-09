@@ -13,8 +13,18 @@ const noProjects = { isLoading: false, data: [], error: undefined };
 const withProjects = {
   isLoading: false,
   data: [
-    { id: 1, name: "test 1", status: ProjectStatus.ARCHIVED },
-    { id: 2, name: "test 2", status: ProjectStatus.ARCHIVED },
+    {
+      id: 1,
+      name: "test 1",
+      status: ProjectStatus.ARCHIVED,
+      thumbnailFileId: undefined,
+    },
+    {
+      id: 2,
+      name: "test 2",
+      status: ProjectStatus.ARCHIVED,
+      thumbnailFileId: undefined,
+    },
   ],
   error: undefined,
 };
