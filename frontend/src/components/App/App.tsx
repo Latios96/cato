@@ -6,7 +6,7 @@ import {
   RouteComponentProps,
   BrowserRouter,
 } from "react-router-dom";
-import ProjectsPage from "../../pages/ProjectsPage";
+import ProjectsPage from "../../pages/ProjectsPage/ProjectsPage";
 import ProjectPage from "../../pages/ProjectPage/ProjectPage";
 import AboutPage from "../../pages/AboutPage";
 import RunOverviewPage from "../../pages/RunPages/RunOverviewPage";

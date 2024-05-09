@@ -2,6 +2,7 @@ import { ProjectsViewPresenter } from "./ProjectsView";
 import { render } from "@testing-library/react";
 import { HashRouter } from "react-router-dom";
 import React from "react";
+import { ProjectStatus } from "../../../../catoapimodels/catoapimodels";
 
 const isError = {
   isLoading: false,
@@ -12,8 +13,8 @@ const noProjects = { isLoading: false, data: [], error: undefined };
 const withProjects = {
   isLoading: false,
   data: [
-    { id: 1, name: "test 1" },
-    { id: 2, name: "test 2" },
+    { id: 1, name: "test 1", status: ProjectStatus.ARCHIVED },
+    { id: 2, name: "test 2", status: ProjectStatus.ARCHIVED },
   ],
   error: undefined,
 };
