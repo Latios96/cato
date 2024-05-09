@@ -14,4 +14,9 @@ def test_map_to_dict(object_mapper):
         Project(id=1, name="project", status=ProjectStatus.ACTIVE)
     )
 
-    assert result == {"id": 1, "name": "project", "status": "ACTIVE"}
+    assert result == {
+        "id": 1,
+        "name": "project",
+        "status": "ACTIVE",
+        "thumbnailFileId": None,
+    }

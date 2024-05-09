@@ -10,7 +10,12 @@ class TestMapToDict:
 
         result = object_mapper.to_dict(object)
 
-        assert result == {"id": 1, "name": "test", "status": "ACTIVE"}
+        assert result == {
+            "id": 1,
+            "name": "test",
+            "status": "ACTIVE",
+            "thumbnailFileId": None,
+        }
 
     def test_called_with_dict_should_work(self, object_mapper):
         the_dict = {"key": "value"}
@@ -41,7 +46,10 @@ class TestMapToJson:
 
         result = object_mapper.to_json(object)
 
-        assert result == '{"id": 1, "name": "test", "status": "ACTIVE"}'
+        assert (
+            result
+            == '{"id": 1, "name": "test", "status": "ACTIVE", "thumbnailFileId": null}'
+        )
 
 
 class TestMapFromJson:
@@ -63,8 +71,8 @@ class TestManyVariants:
         dicts = object_mapper.many_to_dict(objects)
 
         assert dicts == [
-            {"id": 1, "name": "test1", "status": "ACTIVE"},
-            {"id": 2, "name": "test2", "status": "ACTIVE"},
+            {"id": 1, "name": "test1", "status": "ACTIVE", "thumbnailFileId": None},
+            {"id": 2, "name": "test2", "status": "ACTIVE", "thumbnailFileId": None},
         ]
 
     def test_many_to_json(self, object_mapper):
@@ -77,7 +85,7 @@ class TestManyVariants:
 
         assert (
             dicts
-            == '[{"id": 1, "name": "test1", "status": "ACTIVE"}, {"id": 2, "name": "test2", "status": "ACTIVE"}]'
+            == '[{"id": 1, "name": "test1", "status": "ACTIVE", "thumbnailFileId": null}, {"id": 2, "name": "test2", "status": "ACTIVE", "thumbnailFileId": null}]'
         )
 
     def test_many_from_dict(self, object_mapper):

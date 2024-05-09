@@ -34,7 +34,9 @@ def test_map_to_dict(object_mapper):
     result = page_class_mapper.to_dict(page)
 
     assert result == {
-        "entities": [{"id": 0, "name": "test", "status": "ACTIVE"}],
+        "entities": [
+            {"id": 0, "name": "test", "status": "ACTIVE", "thumbnailFileId": None}
+        ],
         "pageNumber": 1,
         "pageSize": 10,
         "totalEntityCount": 1,
