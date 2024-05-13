@@ -582,7 +582,7 @@ woff = ["brotli (>=1.0.1)", "brotlicffi (>=0.8.0)", "zopfli (>=0.1.4)"]
 
 [[package]]
 name = "freezegun"
-version = "1.5.0"
+version = "1.5.1"
 description = "Let your Python tests travel through time"
 category = "dev"
 optional = false
@@ -1274,15 +1274,15 @@ windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
 name = "pygount"
-version = "1.6.1"
+version = "1.7.0"
 description = "count source lines of code (SLOC) using pygments"
 category = "dev"
 optional = false
-python-versions = ">=3.8,<4"
+python-versions = "<3.13,>=3.8"
 
 [package.dependencies]
 chardet = ">=5,<6"
-gitpython = ">=3.1.31,<4.0.0"
+gitpython = ">=3,<4"
 pygments = ">=2,<3"
 rich = ">=9,<14"
 
@@ -2714,8 +2714,8 @@ fonttools = [
     {file = "fonttools-4.51.0.tar.gz", hash = "sha256:dc0673361331566d7a663d7ce0f6fdcbfbdc1f59c6e3ed1165ad7202ca183c68"},
 ]
 freezegun = [
-    {file = "freezegun-1.5.0-py3-none-any.whl", hash = "sha256:ec3f4ba030e34eb6cf7e1e257308aee2c60c3d038ff35996d7475760c9ff3719"},
-    {file = "freezegun-1.5.0.tar.gz", hash = "sha256:200a64359b363aa3653d8aac289584078386c7c3da77339d257e46a01fb5c77c"},
+    {file = "freezegun-1.5.1-py3-none-any.whl", hash = "sha256:bf111d7138a8abe55ab48a71755673dbaa4ab87f4cff5634a4442dfec34c15f1"},
+    {file = "freezegun-1.5.1.tar.gz", hash = "sha256:b29dedfcda6d5e8e083ce71b2b542753ad48cfec44037b3fc79702e2980a89e9"},
 ]
 future = [
     {file = "future-0.18.3.tar.gz", hash = "sha256:34a17436ed1e96697a86f9de3d15a3b0be01d8bc8de9c1dffd59fb8234ed5307"},
@@ -3506,8 +3506,8 @@ pygments = [
     {file = "pygments-2.18.0.tar.gz", hash = "sha256:786ff802f32e91311bff3889f6e9a86e81505fe99f2735bb6d60ae0c5004f199"},
 ]
 pygount = [
-    {file = "pygount-1.6.1-py3-none-any.whl", hash = "sha256:85b1d06d51398150fe6de3ec39feca867e95dc9c7a1a45f4dee731ab43177bcf"},
-    {file = "pygount-1.6.1.tar.gz", hash = "sha256:fac00c6bd61ab6d7633fe8724ae73943cde169de4f2a014244a488037a14d385"},
+    {file = "pygount-1.7.0-py3-none-any.whl", hash = "sha256:acbb97aa5e9b2c8b63f4bb32d4c2155c59053092edebba4670ada551d86d377d"},
+    {file = "pygount-1.7.0.tar.gz", hash = "sha256:b2767fe9533f8f0e987f9b4d317fe03a2a937dc3f93f8f319ecaf95b4b4eb07e"},
 ]
 pyparsing = [
     {file = "pyparsing-3.1.2-py3-none-any.whl", hash = "sha256:f9db75911801ed778fe61bb643079ff86601aca99fcae6345aa67292038fb742"},
