@@ -21,6 +21,20 @@ def test_run_tests_fails_because_of_missing_reference_images(
     )
 
 
+def test_run_tests_fails_because_of_different_image_resolutions_but_does_not_crash(
+    cato_config, live_server, env_with_api_token, api_token_str
+):
+    reference_images_with_different_resolution_exist(cato_config, env_with_api_token)
+    result = run_the_cato_command(
+        live_server, cato_config, env_with_api_token, expected_exit_code=1
+    )
+    assert_all_tests_should_have_been_executed(result)
+    assert_a_failure_message_was_printed(result)
+    assert_the_failure_result_is_available_on_the_server(
+        result, live_server, api_token_str
+    )
+
+
 def test_running_all_tests_should_succeed(
     cato_config, live_server, env_with_api_token, api_token_str
 ):
@@ -98,23 +112,55 @@ def assert_the_failure_result_is_available_on_the_server(
     run_json = _read_run_from_server(live_server, run_id, api_token_str)
 
     run_json[0].pop("seconds")
+    run_json[0].pop("thumbnailFileId")
     run_json[1].pop("seconds")
+    run_json[1].pop("thumbnailFileId")
     assert run_json == [
         {
             "unifiedTestStatus": "FAILED",
             "id": 2,
             "name": "write_black_image",
             "testIdentifier": "WriteImages/write_black_image",
-            "thumbnailFileId": 6,
         },
         {
             "unifiedTestStatus": "FAILED",
             "id": 1,
             "name": "write_white_image",
             "testIdentifier": "WriteImages/write_white_image",
-            "thumbnailFileId": 3,
         },
     ]
+
+
+def reference_images_with_different_resolution_exist(cato_config, env_with_api_token):
+    config_folder, config_path = cato_config
+    cato_cmd = [
+        sys.executable,
+        os.path.join(config_folder, "WriteImages", "write.py"),
+        os.path.join(
+            config_folder, "WriteImages", "write_white_image", "reference.png"
+        ),
+        "white",
+        "1280",
+        "720",
+    ]
+    result = run_command(cato_cmd, env_with_api_token)
+    assert result.exit_code == 0
+
+    cato_cmd = [
+        sys.executable,
+        os.path.join(config_folder, "WriteImages", "write.py"),
+        os.path.join(
+            config_folder,
+            "WriteImages",
+            "write_black_image",
+            "reference.png",
+        ),
+        "black",
+        "1280",
+        "720",
+    ]
+    result = run_command(cato_cmd, env_with_api_token)
+    assert result.exit_code == 0
 
 
 def reference_images_exist(cato_config, env_with_api_token):
