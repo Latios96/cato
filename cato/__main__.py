@@ -180,111 +180,22 @@ def sync_test_edits(
     sync_test_edits_command.sync(path, run_id, variables)
 
 
-def _add_vars_option(run_parser):
-    run_parser.add_argument(
+def _add_common_args(parser):
+    parser.add_argument(
         "--var",
         action=StoreDictKeyPair,
         nargs="+",
         help="Override project variables. Example: key=value",
     )
 
-
-def main():
-    parent_parser = argparse.ArgumentParser(add_help=False)
-    main_parser = argparse.ArgumentParser()
-    commands_subparser = main_parser.add_subparsers(title="commands", dest="command")
-    config_template_parser = commands_subparser.add_parser(
-        "config-template", help="Create a template config file", parents=[parent_parser]
-    )
-    config_template_parser.add_argument(
-        "path", help="folder where to create the config file"
+    parser.add_argument(
+        "--trace",
+        action="store_true",
+        help="Produces a Chromium trace file for the cato cli in the current directory",
     )
 
-    run_parser = commands_subparser.add_parser(
-        "run", help="Execute tests from a config file", parents=[parent_parser]
-    )
-    run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-    run_parser.add_argument("--suite", help="Suite to run")
-    run_parser.add_argument(
-        "--test-identifier",
-        help="Identifier of test to run. Example: suite_name/test_name",
-    )
-    run_parser.add_argument("-u", "--url", help="url to server")
-    run_parser.add_argument("-v", "--verbose", action="count", default=1)
-    run_parser.add_argument("--only-failed", action="store_true")
-    _add_vars_option(run_parser)
 
-    submit_parser = commands_subparser.add_parser(
-        "submit",
-        help="Submit tests from a config file to scheduler",
-        parents=[parent_parser],
-    )
-    submit_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-    submit_parser.add_argument("--suite", help="Suite to run")
-    submit_parser.add_argument(
-        "--test-identifier",
-        help="Identifier of test to run. Example: suite_name/test_name",
-    )
-    submit_parser.add_argument("-u", "--url", help="url to server", required=True)
-    submit_parser.add_argument("--only-failed", action="store_true")
-    _add_vars_option(submit_parser)
-
-    update_missing_parser = commands_subparser.add_parser(
-        "update-missing-reference-images",
-        help="Updates missing reference images after a test run",
-        parents=[parent_parser],
-    )
-    update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-    _add_vars_option(update_missing_parser)
-
-    update_reference_parser = commands_subparser.add_parser(
-        "update-reference",
-        help="Updates reference images",
-        parents=[parent_parser],
-    )
-    update_reference_parser.add_argument(
-        "--test-identifier",
-        help="Identifier of test to run. Example: suite_name/test_name",
-    )
-    update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-    _add_vars_option(update_reference_parser)
-
-    list_parser = commands_subparser.add_parser(
-        "list-tests", help="Lists tests in config file", parents=[parent_parser]
-    )
-    list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-
-    worker_execute_command_parser = commands_subparser.add_parser(
-        "worker-run",
-        help="Run test in a distributed environment. Not for direct human use",
-        parents=[parent_parser],
-    )
-    worker_execute_command_parser.add_argument(
-        "-u", "--url", help="url to server", required=True
-    )
-    worker_execute_command_parser.add_argument(
-        "-submission-info-id", required=True, type=int, help="run id to report to"
-    )
-    worker_execute_command_parser.add_argument(
-        "-test-identifier", required=True, help="Identifier of the test to run"
-    )
-
-    sync_test_edits_command_parser = commands_subparser.add_parser(
-        "sync-edits",
-        help="Sync test edits from UI back locally",
-        parents=[parent_parser],
-    )
-    sync_test_edits_command_parser.add_argument(
-        "-u", "--url", help="url to server", required=True
-    )
-    sync_test_edits_command_parser.add_argument(
-        "-run-id", required=True, type=int, help="run id to take edits to sync from"
-    )
-    sync_test_edits_command_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
-    _add_vars_option(sync_test_edits_command_parser)
-
-    args = main_parser.parse_args()
-
+def handle_args(args) -> None:
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
@@ -318,6 +229,114 @@ def main():
         sync_test_edits(args.path, args.url, args.run_id, args.var)
     else:
         logger.error(f"No method found to run command {args.command}")
+
+
+def main():
+    parent_parser = argparse.ArgumentParser(add_help=False)
+    main_parser = argparse.ArgumentParser()
+    commands_subparser = main_parser.add_subparsers(title="commands", dest="command")
+    config_template_parser = commands_subparser.add_parser(
+        "config-template", help="Create a template config file", parents=[parent_parser]
+    )
+    config_template_parser.add_argument(
+        "path", help="folder where to create the config file"
+    )
+
+    run_parser = commands_subparser.add_parser(
+        "run", help="Execute tests from a config file", parents=[parent_parser]
+    )
+    run_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    run_parser.add_argument("--suite", help="Suite to run")
+    run_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
+    run_parser.add_argument("-u", "--url", help="url to server")
+    run_parser.add_argument("-v", "--verbose", action="count", default=1)
+    run_parser.add_argument("--only-failed", action="store_true")
+    _add_common_args(run_parser)
+
+    submit_parser = commands_subparser.add_parser(
+        "submit",
+        help="Submit tests from a config file to scheduler",
+        parents=[parent_parser],
+    )
+    submit_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    submit_parser.add_argument("--suite", help="Suite to run")
+    submit_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
+    submit_parser.add_argument("-u", "--url", help="url to server", required=True)
+    submit_parser.add_argument("--only-failed", action="store_true")
+    _add_common_args(submit_parser)
+
+    update_missing_parser = commands_subparser.add_parser(
+        "update-missing-reference-images",
+        help="Updates missing reference images after a test run",
+        parents=[parent_parser],
+    )
+    update_missing_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_common_args(update_missing_parser)
+
+    update_reference_parser = commands_subparser.add_parser(
+        "update-reference",
+        help="Updates reference images",
+        parents=[parent_parser],
+    )
+    update_reference_parser.add_argument(
+        "--test-identifier",
+        help="Identifier of test to run. Example: suite_name/test_name",
+    )
+    update_reference_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_common_args(update_reference_parser)
+
+    list_parser = commands_subparser.add_parser(
+        "list-tests", help="Lists tests in config file", parents=[parent_parser]
+    )
+    list_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+
+    worker_execute_command_parser = commands_subparser.add_parser(
+        "worker-run",
+        help="Run test in a distributed environment. Not for direct human use",
+        parents=[parent_parser],
+    )
+    worker_execute_command_parser.add_argument(
+        "-u", "--url", help="url to server", required=True
+    )
+    worker_execute_command_parser.add_argument(
+        "-submission-info-id", required=True, type=int, help="run id to report to"
+    )
+    worker_execute_command_parser.add_argument(
+        "-test-identifier", required=True, help="Identifier of the test to run"
+    )
+
+    sync_test_edits_command_parser = commands_subparser.add_parser(
+        "sync-edits",
+        help="Sync test edits from UI back locally",
+        parents=[parent_parser],
+    )
+    sync_test_edits_command_parser.add_argument(
+        "-u", "--url", help="url to server", required=True
+    )
+    sync_test_edits_command_parser.add_argument(
+        "-run-id", required=True, type=int, help="run id to take edits to sync from"
+    )
+    sync_test_edits_command_parser.add_argument("--path", help=PATH_TO_CONFIG_FILE)
+    _add_common_args(sync_test_edits_command_parser)
+
+    args = main_parser.parse_args()
+
+    if hasattr(args, "trace") and args.trace:
+        from pytracing import TraceProfiler
+
+        tp = TraceProfiler(output=open("cato-cli-trace.json", "w"))
+        with tp.traced():
+            logger.info("TraceProfiler initialized")
+            handle_args(args)
+            return
+
+    handle_args(args)
 
 
 if __name__ == "__main__":

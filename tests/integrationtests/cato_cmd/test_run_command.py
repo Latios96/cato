@@ -48,6 +48,21 @@ def test_running_all_tests_should_succeed(
     )
 
 
+def test_should_produce_trace(
+    cato_config, live_server, env_with_api_token, api_token_str
+):
+    reference_images_exist(cato_config, env_with_api_token)
+    result = run_the_cato_command(
+        live_server, cato_config, env_with_api_token, trace=True
+    )
+    assert_all_tests_should_have_been_executed(result)
+    assert_no_failure_message_was_printed(result)
+    assert_a_trace_file_was_produced(cato_config)
+    assert_the_success_result_is_available_on_the_server(
+        result, live_server, api_token_str
+    )
+
+
 def test_running_the_cato_command_without_url_should_read_url_from_config(
     live_server, cato_config, env_with_api_token
 ):
@@ -77,15 +92,22 @@ def test_running_the_cato_command_without_url_should_fail_with_no_url_in_config(
 
 
 def run_the_cato_command(
-    live_server, cato_config, env_with_api_token, expected_exit_code=0
+    live_server, cato_config, env_with_api_token, expected_exit_code=0, trace=False
 ):
     config_folder, config_path = cato_config
     os.chdir(config_folder)
-    result = run_cato_command(
-        ["run", "-u", live_server.server_url(), "-vvv"], env_with_api_token
-    )
+    args = ["run", "-u", live_server.server_url(), "-vvv"]
+    if trace:
+        args.append("--trace")
+    result = run_cato_command(args, env_with_api_token)
     assert result.exit_code == expected_exit_code
     return result
+
+
+def assert_a_trace_file_was_produced(cato_config):
+    config_folder, config_path = cato_config
+    trace_file = os.path.join(config_folder, "cato-cli-trace.json")
+    assert os.path.exists(trace_file)
 
 
 def assert_all_tests_should_have_been_executed(command_result):

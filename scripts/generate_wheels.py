@@ -177,6 +177,7 @@ if __name__ == "__main__":
             "numpy",
             "scikit-image",
             "scipy",
+            "pytracing",
         ],
     )
 
