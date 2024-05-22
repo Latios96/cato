@@ -195,7 +195,7 @@ def _add_common_args(parser):
     )
 
 
-def handle_args(args) -> None:
+def handle_args(args: argparse.Namespace) -> None:
     if args.command == "config-template":
         config_template(args.path)
     elif args.command == "run":
@@ -328,7 +328,7 @@ def main():
     args = main_parser.parse_args()
 
     if hasattr(args, "trace") and args.trace:
-        from pytracing import TraceProfiler
+        from pytracing import TraceProfiler  # type: ignore
 
         tp = TraceProfiler(output=open("cato-cli-trace.json", "w"))
         with tp.traced():
