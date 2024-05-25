@@ -13,10 +13,10 @@ from cato_common.utils.datetime_utils import aware_now_in_utc
 
 
 @pytest.fixture
-def user_local_storage():
+def user_local_storage(machine_info):
     return UserLocalStorage(
         machine_info_cache_entry=MachineInfoCacheEntry(
-            MachineInfo(cpu_name="cpu", cores=56, memory=8),
+            machine_info=machine_info,
             timestamp=aware_now_in_utc(),
         ),
         api_tokens={"http://localhost:5000": ApiTokenStr("test")},

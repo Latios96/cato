@@ -538,6 +538,11 @@ def test_result(
 
 
 @pytest.fixture
+def machine_info():
+    return MachineInfo(cpu_name="cpu", cores=56, memory=8)
+
+
+@pytest.fixture
 def test_edit(sqlalchemy_test_edit_repository, test_result, stored_image_factory):
     test_edit = ComparisonSettingsEdit(
         id=0,
