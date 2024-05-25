@@ -5,11 +5,15 @@ from cato_common.config.user_local_storage.user_local_storage_repository import 
     UserLocalStorageRepository,
 )
 from cato_common.domain.auth.api_token_str import ApiTokenStr
+from cato_common.domain.machine_info import MachineInfo
 
 
 @pytest.fixture
 def user_local_storage():
-    return UserLocalStorage(api_tokens={"http://localhost:5000": ApiTokenStr("test")})
+    return UserLocalStorage(
+        machine_info=MachineInfo(cpu_name="cpu", cores=56, memory=8),
+        api_tokens={"http://localhost:5000": ApiTokenStr("test")},
+    )
 
 
 @pytest.fixture
@@ -32,7 +36,7 @@ def test_write_user_local_storage(
     assert user_local_storage_path.exists()
     assert (
         user_local_storage_path.open().read()
-        == '{"api_tokens": {"http://localhost:5000": "test"}}'
+        == '{"machine_info": {"cpu_name": "cpu", "cores": 56, "memory": 8}, "api_tokens": {"http://localhost:5000": "test"}}'
     )
 
 

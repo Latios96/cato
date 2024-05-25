@@ -50,7 +50,7 @@ class TestGetApiToken:
     def test_get_api_token_from_config_success(self):
         mock_user_local_storage_repository = mock_safe(UserLocalStorageRepository)
         mock_user_local_storage_repository.read.return_value = UserLocalStorage(
-            api_tokens={URL: ApiTokenStr("token")}
+            machine_info=None, api_tokens={URL: ApiTokenStr("token")}
         )
         api_token_storage = ApiTokenStorage(
             URL,
@@ -66,7 +66,7 @@ class TestGetApiToken:
     def test_get_api_token_no_token_in_env_or_config_failure(self):
         mock_user_local_storage_repository = mock_safe(UserLocalStorageRepository)
         mock_user_local_storage_repository.read.return_value = UserLocalStorage(
-            api_tokens={}
+            machine_info=None, api_tokens={}
         )
         api_token_storage = ApiTokenStorage(
             URL,
@@ -80,7 +80,7 @@ class TestGetApiToken:
     def test_get_api_token_no_token_config_for_url(self):
         mock_user_local_storage_repository = mock_safe(UserLocalStorageRepository)
         mock_user_local_storage_repository.read.return_value = UserLocalStorage(
-            api_tokens={"other_url": ApiTokenStr("token")}
+            machine_info=None, api_tokens={"other_url": ApiTokenStr("token")}
         )
         api_token_storage = ApiTokenStorage(
             URL,
