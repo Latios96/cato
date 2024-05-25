@@ -23,6 +23,15 @@ def test_smoke_test_cato_server_admin():
     return run_command(cmd)
 
 
+def test_smoke_test_cato_worker():
+    cmd = [
+        sys.executable,
+        os.path.join(os.path.dirname(cato_server.__file__), "cato_worker.py"),
+        "-h",
+    ]
+    return run_command(cmd)
+
+
 def test_smoke_test_cato_server():
     cmd = [
         sys.executable,
