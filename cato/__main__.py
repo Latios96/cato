@@ -25,7 +25,9 @@ from cato.utils.config_utils import (
     read_url_from_config_path,
 )
 from cato.utils.store_dict_key_pair import StoreDictKeyPair
-from cato_common.config.user_config.user_config_repository import UserConfigRepository
+from cato_common.config.user_local_storage.user_local_storage_repository import (
+    UserLocalStorageRepository,
+)
 from cato.file_system_abstractions.last_run_information_repository import (
     LastRunInformationRepository,
 )
@@ -78,7 +80,7 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
             "api_token_provider",
             to_instance=lambda: ApiTokenStorage(
                 self._url,
-                UserConfigRepository(os.path.expanduser("~/.cato/config.json")),
+                UserLocalStorageRepository(os.path.expanduser("~/.cato/config.json")),
             ).get_api_token(),
         )
 

@@ -5,5 +5,5 @@ from cato_common.domain.auth.api_token_str import ApiTokenStr
 
 
 @dataclass
-class UserConfig:
+class UserLocalStorage:
     api_tokens: Dict[str, ApiTokenStr] = field(default_factory=dict)

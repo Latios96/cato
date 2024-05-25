@@ -1,46 +1,52 @@
 import pytest
 
-from cato_common.config.user_config.user_config import UserConfig
-from cato_common.config.user_config.user_config_repository import UserConfigRepository
+from cato_common.config.user_local_storage.user_local_storage import UserLocalStorage
+from cato_common.config.user_local_storage.user_local_storage_repository import (
+    UserLocalStorageRepository,
+)
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 
 
 @pytest.fixture
-def user_config():
-    return UserConfig(api_tokens={"http://localhost:5000": ApiTokenStr("test")})
+def user_local_storage():
+    return UserLocalStorage(api_tokens={"http://localhost:5000": ApiTokenStr("test")})
 
 
 @pytest.fixture
-def user_config_path(tmp_path):
-    return tmp_path / "cato_user_config.json"
+def user_local_storage_path(tmp_path):
+    return tmp_path / "cato_user_local_storage.json"
 
 
 @pytest.fixture
-def user_config_repository(tmp_path, user_config_path):
-    return UserConfigRepository(str(user_config_path))
+def user_local_storage_repository(tmp_path, user_local_storage_path):
+    return UserLocalStorageRepository(str(user_local_storage_path))
 
 
-def test_write_user_config(user_config_repository, user_config, user_config_path):
-    assert not user_config_path.exists()
+def test_write_user_local_storage(
+    user_local_storage_repository, user_local_storage, user_local_storage_path
+):
+    assert not user_local_storage_path.exists()
 
-    user_config_repository.write(user_config)
+    user_local_storage_repository.write(user_local_storage)
 
-    assert user_config_path.exists()
+    assert user_local_storage_path.exists()
     assert (
-        user_config_path.open().read()
+        user_local_storage_path.open().read()
         == '{"api_tokens": {"http://localhost:5000": "test"}}'
     )
 
 
-def test_read_not_existing_user_config(user_config_repository):
-    user_config = user_config_repository.read()
+def test_read_not_existing_user_local_storage(user_local_storage_repository):
+    user_local_storage = user_local_storage_repository.read()
 
-    assert user_config == UserConfig()
+    assert user_local_storage == UserLocalStorage()
 
 
-def test_read_existing_user_config(user_config_repository, user_config):
-    user_config_repository.write(user_config)
+def test_read_existing_user_local_storage(
+    user_local_storage_repository, user_local_storage
+):
+    user_local_storage_repository.write(user_local_storage)
 
-    read_user_config = user_config_repository.read()
+    read_user_local_storage = user_local_storage_repository.read()
 
-    assert user_config == read_user_config
+    assert user_local_storage == read_user_local_storage
