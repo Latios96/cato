@@ -76,7 +76,9 @@ def test_running_the_cato_command_without_url_should_read_url_from_config(
     reference_images_exist(cato_config, env_with_api_token)
     result = run_cato_command(["run", "-vvv"], env_with_api_token)
     assert result.exit_code == 0
-    assert result.output_contains_line("[INFO]  Collecting machine info..\n")
+    assert result.output_contains_line(
+        "[INFO]  Collecting machine info (once per day)..\n"
+    )
 
 
 def test_running_the_cato_command_without_url_should_fail_with_no_url_in_config(

@@ -32,7 +32,7 @@ snapshots["test_worker_run_command 1"] = [
 ]
 
 snapshots["test_worker_run_command 2"] = [
-    """[INFO]  Collecting machine info..
+    """[INFO]  Collecting machine info (once per day)..
 [INFO]  Running PythonOutputVersion..
 [INFO]  Command: <some command>
 [INFO]  Copy <a> to <b>

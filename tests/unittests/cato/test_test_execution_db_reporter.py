@@ -9,7 +9,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.utils.branch_detector import BranchDetector
-from cato.utils.machine_info_collector import MachineInfoCollector
+from cato.utils.machine_info_cache import MachineInfoCache
 from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
 from cato.utils.run_information_detectors.run_information_detector import (
     RunInformationDetector,
@@ -63,8 +63,8 @@ SUITES = [
 def test_context():
     class TestContext:
         def __init__(self):
-            self.mock_machine_info_collector = mock_safe(MachineInfoCollector)
-            self.mock_machine_info_collector.collect.return_value = MachineInfo(
+            self.mock_machine_info_cache = mock_safe(MachineInfoCache)
+            self.mock_machine_info_cache.get_machine_info.return_value = MachineInfo(
                 cpu_name="my_cpu", cores=8, memory=8
             )
             self.mock_cato_api_client = mock_safe(CatoApiClient)
@@ -79,7 +79,7 @@ def test_context():
             self.mock_run_information_detector = mock_safe(RunInformationDetector)
             self.performance_stats_collector = PerformanceStatsCollector()
             self.test_execution_db_reporter = TestExecutionDbReporter(
-                self.mock_machine_info_collector,
+                self.mock_machine_info_cache,
                 self.mock_cato_api_client,
                 self.mock_branch_detector,
                 self.mock_run_batch_identifier_detector,

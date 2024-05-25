@@ -22,7 +22,7 @@ class MachineInfoCache(object):
         self._machine_info_collector = machine_info_collector
         self._cached: Optional[MachineInfo] = None
 
-    def get_machine_info(self):
+    def get_machine_info(self) -> MachineInfo:
         if self._cached:
             return self._cached
 
@@ -31,10 +31,10 @@ class MachineInfoCache(object):
 
         if machine_info_cache_entry is not None and machine_info_cache_entry.is_valid():
             self._cached = machine_info_cache_entry.machine_info
-            logger.info("Using cached MachineInfo")
+            logger.info("Using cached machine info from user local storage")
             return self._cached
 
-        logger.info("Collecting MachineInfo (once per day)..")
+        logger.info("Collecting machine info (once per day)..")
         machine_info = self._machine_info_collector.collect()
         user_local_storage.machine_info_cache_entry = MachineInfoCacheEntry(
             machine_info=machine_info

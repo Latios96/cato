@@ -35,6 +35,8 @@ from cato.reporter.test_execution_db_reporter import TestExecutionDbReporter
 from cato.reporter.verbose_mode import VerboseMode
 from cato.utils.url_format import format_url
 from cato_api_client.http_template import HttpTemplate
+from cato_common.mappers.generic_class_mapper import GenericClassMapper
+from cato_common.mappers.object_mapper import ObjectMapper
 from cato_common.utils.bindings import imported_modules, provide_safe
 from cato_common.mappers.mapper_registry_factory import MapperRegistryFactory
 
@@ -67,20 +69,30 @@ class TestExecutionReporterBindings(pinject.BindingSpec):
         bind("test_execution_reporter", to_class=TestExecutionDbReporter)
         bind("http_template", to_class=HttpTemplate)
         bind("url", to_instance=self._url)
+        mapper_registry = MapperRegistryFactory().create_mapper_registry()
         bind(
             "mapper_registry",
-            to_instance=MapperRegistryFactory().create_mapper_registry(),
+            to_instance=mapper_registry,
         )
         bind("logger", to_instance=logger)
         bind(
             "last_run_information_repository_factory",
             to_instance=lambda x: LastRunInformationRepository(x),
         )
+
+        user_local_storage = os.environ.get("CATO_USER_LOCAL_STORAGE")
+        if not user_local_storage:
+            user_local_storage = os.path.expanduser("~/.cato/config.json")
+        user_local_storage_repository = UserLocalStorageRepository(
+            user_local_storage, ObjectMapper(GenericClassMapper(mapper_registry))
+        )
+        bind("user_local_storage_repository", to_instance=user_local_storage_repository)
+
         bind(
             "api_token_provider",
             to_instance=lambda: ApiTokenStorage(
                 self._url,
-                UserLocalStorageRepository(os.path.expanduser("~/.cato/config.json")),
+                user_local_storage_repository,
             ).get_api_token(),
         )
 

@@ -8,7 +8,7 @@ from cato.file_system_abstractions.last_run_information_repository import (
 from cato.reporter.performance_stats_collector import PerformanceStatsCollector
 from cato.reporter.test_execution_reporter import TestExecutionReporter
 from cato.utils.branch_detector import BranchDetector
-from cato.utils.machine_info_collector import MachineInfoCollector
+from cato.utils.machine_info_cache import MachineInfoCache
 from cato.utils.run_batch_identifier_detector import RunBatchIdentifierDetector
 from cato.utils.run_information_detectors.run_information_detector import (
     RunInformationDetector,
@@ -35,14 +35,14 @@ class TestExecutionDbReporter(TestExecutionReporter):
 
     def __init__(
         self,
-        machine_info_collector: MachineInfoCollector,
+        machine_info_cache: MachineInfoCache,
         cato_api_client: CatoApiClient,
         branch_detector: BranchDetector,
         run_batch_identifier_detector: RunBatchIdentifierDetector,
         run_information_detector: RunInformationDetector,
         performance_stats_collector: PerformanceStatsCollector,
     ):
-        self._machine_info_collector = machine_info_collector
+        self._machine_info_cache = machine_info_cache
         self._cato_api_client = cato_api_client
         self.__run_id_value: Optional[int] = None
         self._machine_info: Optional[MachineInfo] = None
@@ -133,7 +133,7 @@ class TestExecutionDbReporter(TestExecutionReporter):
             return
 
         logger.debug(f"Reporting execution start of test {test_identifier}..")
-        machine_info = self._get_machine_info()
+        machine_info = self._machine_info_cache.get_machine_info()
         start_test_result = StartTestResultDto(
             id=test_result.id, machine_info=machine_info
         )
@@ -196,12 +196,6 @@ class TestExecutionDbReporter(TestExecutionReporter):
     @_run_id.setter
     def _run_id(self, run_id: int) -> None:
         self.__run_id_value = run_id
-
-    def _get_machine_info(self) -> MachineInfo:
-        if not self._machine_info:
-            logger.info("Collecting machine info..")
-            self._machine_info = self._machine_info_collector.collect()
-        return self._machine_info
 
     def report_performance_trace(self, performance_trace_json: str) -> None:
         self._cato_api_client.upload_performance_trace(

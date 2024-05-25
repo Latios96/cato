@@ -7,7 +7,7 @@ from cato_common.config.user_local_storage.user_local_storage import UserLocalSt
 from cato_common.domain.auth.api_token_str import ApiTokenStr
 from cato_common.mappers.object_mapper import ObjectMapper
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger("cato")
 
 
 class UserLocalStorageRepository:
@@ -18,9 +18,11 @@ class UserLocalStorageRepository:
     def read(self) -> UserLocalStorage:
         if not os.path.exists(self._path):
             return UserLocalStorage()
-
-        with open(self._path, "r") as f:
-            data = json.load(f)
+        try:
+            with open(self._path, "r") as f:
+                data = json.load(f)
+        except PermissionError:
+            return UserLocalStorage()
 
         api_tokens = {k: ApiTokenStr(v) for k, v in data["api_tokens"].items()}
         machine_info_cache_entry = None
@@ -48,4 +50,5 @@ class UserLocalStorageRepository:
                     },
                 },
                 f,
+                indent=4,
             )

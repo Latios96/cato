@@ -160,9 +160,12 @@ def api_token_str(api_token_str_factory):
 
 
 @pytest.fixture
-def env_with_api_token(api_token_str):
+def env_with_api_token(api_token_str, tmp_path):
     env_copy = os.environ.copy()
     env_copy["CATO_API_TOKEN"] = str(api_token_str)
+    env_copy["CATO_USER_LOCAL_STORAGE"] = str(
+        tmp_path / "cato_user_storage" / "config.json"
+    )
     return env_copy
 
 
