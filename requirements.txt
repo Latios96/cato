@@ -8,4 +8,6 @@ imageio
 networkx
 tifffile
 pywavelets
+https://github.com/Latios96/flip-build-wheels/releases/download/v2024-05-29/flip-1.4-cp310-cp310-win_amd64.whl ; sys_platform == 'win32'
+https://github.com/Latios96/flip-build-wheels/releases/download/v2024-05-29/flip-1.4-cp310-cp310-linux_x86_64.whl ; sys_platform == 'linux'
 
