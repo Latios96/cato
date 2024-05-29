@@ -1,6 +1,7 @@
 import os
 import shutil
 import tempfile
+from pathlib import Path
 from unittest import mock
 
 import pytest
@@ -263,6 +264,15 @@ def test_compare_image_should_generate_diff_image_correctly(
     expected_diff_image = test_resource_provider.resource_by_name(
         os.path.join("sphere_test_images", "expected_diff_flip", image_name + ".png")
     )
+
+    # todo remove this
+    target_folder = Path(__file__).parent.parent.parent.parent.parent.joinpath(
+        "reports"
+    )
+    shutil.copy(
+        comparison_result.diff_image, target_folder.joinpath(f"{image_name}_debug.html")
+    )
+
     assert images_are_visually_equal(
         comparison_result.diff_image, expected_diff_image, 0.97
     )
