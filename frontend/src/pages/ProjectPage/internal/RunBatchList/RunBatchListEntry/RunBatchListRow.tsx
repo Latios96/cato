@@ -1,9 +1,9 @@
 import React, { ReactElement } from "react";
 import {
   BasicRunInformation,
-  RunAggregate,
-  RunBatchAggregate,
   RunBatchIdentifier,
+  RunProgress,
+  RunStatus as RunStatus_,
 } from "../../../../../catoapimodels/catoapimodels";
 import ProgressBar from "../../../../../components/ProgressBar/ProgressBar";
 import FormattedTime from "../../../../../components/FormattedTime/FormattedTime";
@@ -14,12 +14,16 @@ import RunBatchProviderInformation from "./RunBatchProviderInformation";
 import Expander from "./Expander";
 import styles from "./RunBatchListRow.module.scss";
 
-type RunLike = (RunBatchAggregate | RunAggregate) & {
+export interface RunLike {
   runInformation?: BasicRunInformation;
   runBatchIdentifier?: RunBatchIdentifier;
   createdAt?: string;
-  startedAt?: string;
-};
+  status: RunStatus_;
+  branchName: string;
+  duration: number;
+  id: number;
+  progress: RunProgress;
+}
 
 interface Props {
   isIndented: boolean;
@@ -97,9 +101,7 @@ function RunBatchListRow(props: Props) {
       </td>
       <td>{props.runLike.branchName}</td>
       <td>
-        <FormattedTime
-          datestr={props.runLike.createdAt || props.runLike.startedAt}
-        />
+        <FormattedTime datestr={props.runLike.createdAt} />
       </td>
       <td>
         {props.runLike.duration
