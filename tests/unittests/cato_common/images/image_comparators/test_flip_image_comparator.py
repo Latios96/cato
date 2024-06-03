@@ -269,7 +269,6 @@ def test_compare_image_should_generate_diff_image_correctly(
     target_folder = Path(__file__).parent.parent.parent.parent.parent.joinpath(
         "reports"
     )
-    target_folder.mkdir(exist_ok=True)
     shutil.copy(
         comparison_result.diff_image, target_folder.joinpath(f"{image_name}_debug.html")
     )
