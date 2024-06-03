@@ -65,7 +65,7 @@ def test_compare_image_should_fail_waith_and_without_watermark(
         status=ResultStatus.FAILED,
         message="Images are not equal! FLIP mean error was 0.102, max threshold is 0.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
-        error=0.102399,
+        error=0.102406,
     )
     assert images_are_visually_equal(
         comparison_result.diff_image,
@@ -147,27 +147,6 @@ def test_compare_image_should_fail_for_same_image_paths(
         )
 
 
-@pytest.mark.parametrize("format", [".tif", ".tiff", ".jpg", ".jpeg"])
-def test_compare_image_should_fail_when_comparing_images_that_are_not_png_or_exr(
-    tmpdir, format
-):
-    image_comparator = FlipImageComparator()
-
-    comparison_result = image_comparator.compare(
-        "reference" + format,
-        "output" + format,
-        ComparisonSettings(threshold=1, method=ComparisonMethod.FLIP),
-        str(tmpdir),
-    )
-
-    assert comparison_result == ComparisonResult(
-        status=ResultStatus.FAILED,
-        message=f"FLIP does not support comparison of images with format {format}. Only .png and .exr are supported.",
-        diff_image=None,
-        error=1,
-    )
-
-
 def test_compare_image_should_fail_when_comparing_png_to_exr(tmpdir):
     image_comparator = FlipImageComparator()
 
@@ -224,8 +203,30 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
         status=ResultStatus.SUCCESS,
         message=None,
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
-        error=0.102399,
+        error=0.102406,
     )
+
+
+@pytest.mark.parametrize(
+    "image1_name,image2_name",
+    [
+        ("unsupported-file.txt", "other-unsupported-file.txt"),
+    ],
+)
+def test_compare_image_should_fail_for_non_images(
+    image1_name, image2_name, test_resource_provider, tmpdir
+):
+    image1 = test_resource_provider.resource_by_name(image1_name)
+    image2 = test_resource_provider.resource_by_name(image2_name)
+    image_comparator = FlipImageComparator()
+
+    with pytest.raises(ValueError):
+        comparison_result = image_comparator.compare(
+            image1,
+            image2,
+            ComparisonSettings(threshold=1, method=ComparisonMethod.FLIP),
+            str(tmpdir),
+        )
 
 
 @pytest.mark.parametrize(
@@ -282,7 +283,7 @@ def test_compare_image_should_fail_different_resolution(test_resource_provider, 
 
     assert comparison_result == ComparisonResult(
         status=ResultStatus.FAILED,
-        message="FLIP: Reference and test image resolutions differ. Reference image resolution: 100x200 Test image resolution: 100x100",
+        message="Images have different resolutions! Reference image is 100x200px, output image is 100x100px",
         diff_image=None,
         error=0,
     )
