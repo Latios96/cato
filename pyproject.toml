@@ -62,7 +62,7 @@ celery = {extras = ["rabbitmq"], version = "^5.2.7"}
 marshmallow-polyfield = "^5.11"
 url-normalize = "^1.4.3"
 matplotlib = "^3.7.1"
-urllib3 = "^1.26.18" # https://github.com/docker/docker-py/issues/3113#issuecomment-1533389349
+urllib3 = "^1.26.19" # https://github.com/docker/docker-py/issues/3113#issuecomment-1533389349
 pytracing = "^0.4"
 
 [tool.poetry.dev-dependencies]
