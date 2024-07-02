@@ -28,7 +28,7 @@ python.installVirtualenv = true
 python.envPath = ".venv"
 
 python{
-	pip "poetry:1.2.2"
+	pip "poetry:1.8.3"
 }
 
 githook {
