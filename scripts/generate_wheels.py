@@ -145,7 +145,7 @@ def find_wheel(name) -> Path:
 if __name__ == "__main__":
     create_new_wheel(
         find_current_wheel(),
-        new_name="cato-client",
+        new_name="catoclient",
         modules_to_keep=["cato", "cato_api_client", "cato_common"],
         entry_points_to_keep=["cato"],
         requirements_to_keep=[
@@ -183,7 +183,7 @@ if __name__ == "__main__":
 
     create_new_wheel(
         find_current_wheel(),
-        new_name="cato-server",
+        new_name="catoserver",
         modules_to_keep=["cato_server", "cato_common"],
         entry_points_to_keep=[
             "cato_worker",
@@ -242,11 +242,11 @@ if __name__ == "__main__":
         ],
         include_files=[
             (
-                find_wheel("cato-client"),
+                find_wheel("catoclient"),
                 Path("cato_server")
                 / "static"
                 / "static"
-                / "cato-client-0.0.0-py3-none-any.whl",
+                / "catoclient-0.0.0-py3-none-any.whl",
             )
         ],
     )

@@ -45,7 +45,7 @@ def create_virtual_env(folder: Path) -> Venv:
 def check_cato_server_wheel():
     with tempfile.TemporaryDirectory() as tmpdirname:
         venv = create_virtual_env(Path(tmpdirname))
-        venv.run_pip(["install", str(find_wheel("cato-server"))])
+        venv.run_pip(["install", str(find_wheel("catoserver"))])
         venv.run_executable("python", ["-m", "cato_server", "-h"])
         venv.run_executable("cato_beat", ["-h"])
         venv.run_executable("cato_worker", ["-h"])
@@ -55,7 +55,7 @@ def check_cato_server_wheel():
 def check_cato_client_wheel():
     with tempfile.TemporaryDirectory() as tmpdirname:
         venv = create_virtual_env(Path(tmpdirname))
-        venv.run_pip(["install", str(find_wheel("cato-client"))])
+        venv.run_pip(["install", str(find_wheel("catoclient"))])
         venv.run_executable("cato", ["-h"])
 
 
