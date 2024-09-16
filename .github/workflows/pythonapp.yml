@@ -30,7 +30,7 @@ jobs:
       run: ./gradlew lint --info
     - name: Wheels installation test
       run: ./gradlew :installationTest -x pythonUnittest -x pythonIntegrationtest
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       name: Upload reports
       if: always()
       with:
@@ -38,7 +38,7 @@ jobs:
         path: |
           ./tests/reports/*.html
         retention-days: 10
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       with:
         name: wheel-linux
         path: |
