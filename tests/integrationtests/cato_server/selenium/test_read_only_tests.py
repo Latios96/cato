@@ -299,7 +299,11 @@ class ReadOnlySeleniumTest:
                 "ProjectsView_projectsViewProjectComponent"
             )
         )
-        assert self.authenticated_selenium_driver.title == "Projects"
+
+        def assert_title_changed(driver):
+            assert driver.title == "Projects"
+
+        self.authenticated_selenium_driver.wait_until(assert_title_changed)
 
     def when_clicking_on_cato_in_header_it_should_navigate_to_home(self):
         header_link = (
