@@ -3248,24 +3248,23 @@ files = [
 
 [[package]]
 name = "snapshottest"
-version = "0.6.0"
+version = "1.0.0a1"
 description = "Snapshot testing for pytest, unittest, Django, and Nose"
 optional = false
 python-versions = "*"
 files = [
-    {file = "snapshottest-0.6.0-py2.py3-none-any.whl", hash = "sha256:9b177cffe0870c589df8ddbee0a770149c5474b251955bdbde58b7f32a4ec429"},
-    {file = "snapshottest-0.6.0.tar.gz", hash = "sha256:bbcaf81d92d8e330042e5c928e13d9f035e99e91b314fe55fda949c2f17b653c"},
+    {file = "snapshottest-1.0.0a1-py3-none-any.whl", hash = "sha256:fff0e1da3825c32d001018777c3b56d1eae1c850fc5b3418618da3d7f2cd152f"},
+    {file = "snapshottest-1.0.0a1.tar.gz", hash = "sha256:6ef848ee4d6621baff79df6a36bb1da4d7eddf5013dc6b9ca9c361bc42c605b9"},
 ]
 
 [package.dependencies]
 fastdiff = ">=0.1.4,<1"
-six = ">=1.10.0"
 termcolor = "*"
 
 [package.extras]
 nose = ["nose"]
 pytest = ["pytest"]
-test = ["django (>=1.10.6)", "nose", "pytest (>=4.6)", "pytest-cov", "six"]
+test = ["django (>=1.10.6)", "nose", "pytest (>=4.6)", "pytest-cov"]
 
 [[package]]
 name = "sniffio"
@@ -4026,4 +4025,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "46deab77735558253993229088b4b3287d536b6e95e7cd0f0350c058e200df2f"
+content-hash = "9be7f0a1661fa170c1be74776c4201bbb3ead6cac23ec25f1d31ed9b5af35645"
