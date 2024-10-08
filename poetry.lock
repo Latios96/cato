@@ -2356,7 +2356,7 @@ files = [
 
 [[package]]
 name = "py-typescript-generator"
-version = "0.3.0"
+version = "0.3.1"
 description = "Generate TypeScript types from Python classes"
 optional = false
 python-versions = ">=3.10"
@@ -2371,8 +2371,8 @@ typing-inspect = "^0.8.0"
 [package.source]
 type = "git"
 url = "https://github.com/Latios96/py-typescript-generator.git"
-reference = "v0.3.0"
-resolved_reference = "a398d5d2bd9f2e9da553fdb4fbac54927ca2800b"
+reference = "v0.3.1"
+resolved_reference = "800bc400397203ecdef2e044aab133c55447ea84"
 
 [[package]]
 name = "pyasn1"
@@ -4026,4 +4026,4 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.13"
-content-hash = "6a6d55a7495efaf98ab50ebae43e79da174f7c22a12b23a271a79ebba793eb8b"
+content-hash = "46deab77735558253993229088b4b3287d536b6e95e7cd0f0350c058e200df2f"
