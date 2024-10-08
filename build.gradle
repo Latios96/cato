@@ -30,6 +30,7 @@ python.requirements.use = false
 
 python{
 	pip "poetry:1.8.3"
+	pip "setuptools:75.1.0"
 }
 
 githook {
