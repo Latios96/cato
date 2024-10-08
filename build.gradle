@@ -5,7 +5,7 @@ buildscript {
 }
 
 plugins {
-    id 'ru.vyarus.use-python' version '2.3.0'
+    id 'ru.vyarus.use-python' version '4.0.0'
     id "com.github.node-gradle.node" version "2.2.4"
     id "com.star-zero.gradle.githook" version "1.2.1"
 }
@@ -26,6 +26,7 @@ task build{
 
 python.installVirtualenv = true
 python.envPath = ".venv"
+python.requirements.use = false
 
 python{
 	pip "poetry:1.8.3"
