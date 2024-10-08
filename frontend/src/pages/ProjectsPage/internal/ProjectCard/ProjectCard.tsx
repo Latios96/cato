@@ -76,7 +76,11 @@ const ProjectCard = (props: Props) => {
           }
         }}
       />
-      <Link to={linkTo} style={{ textDecoration: "none" }}>
+      <Link
+        to={linkTo}
+        style={{ textDecoration: "none" }}
+        id={`project-card-${props.project?.id}`}
+      >
         <div className={`${styles.projectCard} overflow-hidden rounded `}>
           <div
             className={`${styles.projectCardImage} overflow-hidden d-flex justify-content-center align-items-center `}

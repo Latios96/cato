@@ -13,17 +13,16 @@ class HomePage:
         self.stateless_test = stateless_test
 
     def the_link_card_for_the_project_should_be_displayed(self):
-        link_card_text = self.stateless_test.authenticated_selenium_driver.wait_until(
-            lambda driver: self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
-                "ProjectCard_projectCard"
-            ).text
+        self.stateless_test.authenticated_selenium_driver.wait_until(
+            lambda driver: self.stateless_test.authenticated_selenium_driver.find_element(
+                By.XPATH,
+                f'//*[@id="project-card-{self.stateless_test.project.id}"]//*[contains(text(), "{self.stateless_test.project.name}")]',
+            )
         )
 
-        assert link_card_text == self.stateless_test.project.name
-
     def when_clicking_the_card_it_should_navigate_to_project_page(self):
-        link_card = self.stateless_test.authenticated_selenium_driver.find_element_by_css_module_class_name(
-            "ProjectCard_projectCard"
+        link_card = self.stateless_test.authenticated_selenium_driver.find_element(
+            By.ID, f"project-card-{self.stateless_test.project.id}"
         )
         link_card.click()
 
