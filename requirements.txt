@@ -1,4 +1,4 @@
-scikit-image==0.19.3
+scikit-image==0.24.0
 cycler
 kiwisolver
 pytz
