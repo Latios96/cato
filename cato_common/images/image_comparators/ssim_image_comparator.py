@@ -73,7 +73,11 @@ class SsimImageComparator:
         reference_image = self._normalize_image(reference_image)
 
         (score, diff) = metrics.structural_similarity(
-            reference_image, output_image, full=True, channel_axis=-1
+            reference_image,
+            output_image,
+            full=True,
+            channel_axis=-1,
+            data_range=output_image.max() - output_image.min(),
         )
         score = float(score)
         if math.isnan(score):
@@ -145,7 +149,9 @@ class SsimImageComparator:
 
         composited_diff_image = Image.composite(output_image, heatmap, l_thresholded)
         target_path = os.path.join(workdir, f"diff_image_{uuid.uuid4()}.png")
-        composited_diff_image.save(target_path)
+        no_alpha = Image.new("RGB", composited_diff_image.size, (0, 0, 0))
+        no_alpha.paste(composited_diff_image, (0, 0), composited_diff_image)
+        no_alpha.save(target_path)
         return target_path
 
     def _normalize_image(self, image):

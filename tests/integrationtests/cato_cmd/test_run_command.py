@@ -240,14 +240,14 @@ def assert_the_success_result_is_available_on_the_server(
             "id": 2,
             "name": "write_black_image",
             "testIdentifier": "WriteImages/write_black_image",
-            "thumbnailFileId": 16,
+            "thumbnailFileId": 14,
         },
         {
             "unifiedTestStatus": "SUCCESS",
             "id": 1,
             "name": "write_white_image",
             "testIdentifier": "WriteImages/write_white_image",
-            "thumbnailFileId": 8,
+            "thumbnailFileId": 7,
         },
     ]
 

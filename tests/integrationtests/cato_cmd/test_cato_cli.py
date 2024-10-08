@@ -107,6 +107,10 @@ def test_worker_run_command(
             "Copy .* to .*": "Copy <a> to <b>",
             "Found image output at path .*": "Found image output at path <foo>",
             "Found reference image at path .*": "Found image output at path <bar>",
+            ".*RuntimeWarning.*": "",
+            ".*S = \(A1.*": "",
+            ".*heatmap.clip.*": "",
+            ".*cv2.cvtColor.*": "",
         },
         env=env_with_api_token,
     )

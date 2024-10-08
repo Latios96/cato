@@ -58,11 +58,11 @@ def test_compare_image_should_fail_one_pixel_different(
 
     assert comparison_result == ComparisonResult(
         status=ResultStatus.FAILED,
-        message="Images are not equal! SSIM score was 0.995, max threshold is 1.000",
+        message="Images are not equal! SSIM score was 0.994, max threshold is 1.000",
         diff_image=str(
             tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png")
         ),
-        error=0.994861900806427,
+        error=0.9944998621940613,
     )
 
 
@@ -84,9 +84,9 @@ def test_compare_image_should_fail_waith_and_without_watermark(
 
     assert comparison_result == ComparisonResult(
         status=ResultStatus.FAILED,
-        message="Images are not equal! SSIM score was 0.918, max threshold is 1.000",
+        message="Images are not equal! SSIM score was 0.911, max threshold is 1.000",
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
-        error=0.9175751805305481,
+        error=0.9112997651100159,
     )
     assert images_are_equal(
         comparison_result.diff_image,
@@ -187,7 +187,7 @@ def test_compare_image_should_succeed_threshold_not_exceeded(
         status=ResultStatus.SUCCESS,
         message=None,
         diff_image=tmpdir.join("diff_image_c04b964d-f443-4ae9-8b43-47fe6d2422d0.png"),
-        error=0.9175751805305481,
+        error=0.9112997651100159,
     )
 
 

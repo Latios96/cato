@@ -34,7 +34,11 @@ def images_are_visually_equal(image1, image2, threshold):
     )
 
     (score, diff) = metrics.structural_similarity(
-        image_one, image_two, full=True, multichannel=True
+        image_one,
+        image_two,
+        full=True,
+        channel_axis=-1,
+        data_range=image_two.max() - image_two.min(),
     )
     print(score)
     return score > threshold
