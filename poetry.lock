@@ -1013,6 +1013,64 @@ flake8 = ">=3.0"
 pycodestyle = "*"
 
 [[package]]
+name = "flip-evaluator"
+version = "1.6"
+description = "A Difference Evaluator for Alternating Images"
+optional = false
+python-versions = ">=3.8"
+files = [
+    {file = "flip-evaluator-1.6.tar.gz", hash = "sha256:54949e283d79a440b85014b0ca933c087b4a3f27448e59a7e50d097fad31782b"},
+    {file = "flip_evaluator-1.6-cp310-cp310-macosx_10_15_x86_64.whl", hash = "sha256:35251c8e7c1f5c67340fc936b596c136fd87973134113bbd7faceb611059c578"},
+    {file = "flip_evaluator-1.6-cp310-cp310-macosx_11_0_arm64.whl", hash = "sha256:c7610ca423ad71a5e34dbb00c5c144e073808b49eeb9871e20595cc640f443ad"},
+    {file = "flip_evaluator-1.6-cp310-cp310-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ef348f5c2ecfb594a9f0832b35bc8b99b887e939881e6f945eb03307a2738a74"},
+    {file = "flip_evaluator-1.6-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8183cfdf68c2b015c3f7635a04e0f27cdf2ff3126f0399a02328deab77341f2b"},
+    {file = "flip_evaluator-1.6-cp310-cp310-musllinux_1_2_i686.whl", hash = "sha256:fe18a273eb607368c0cd01777379fa3d00a76fdd314893ce1a83412e7e4775f3"},
+    {file = "flip_evaluator-1.6-cp310-cp310-musllinux_1_2_x86_64.whl", hash = "sha256:e13f3cf8cc93f0c0edecc86a5f98bf31705bfb7145d349bc3945ed919c7328df"},
+    {file = "flip_evaluator-1.6-cp310-cp310-win32.whl", hash = "sha256:e52d4f9ffe1c4800334dccf78343c990d78aef340c26a2c8afb4b02c8ca00aba"},
+    {file = "flip_evaluator-1.6-cp310-cp310-win_amd64.whl", hash = "sha256:9fdf8118db7b4581e5607cb57d45432b997f19485efef8870ccfb549569382c3"},
+    {file = "flip_evaluator-1.6-cp311-cp311-macosx_10_15_x86_64.whl", hash = "sha256:0239c50842e1efa03d46b2fdfaf6aac449706df723c8ef33c38dc29387b053c2"},
+    {file = "flip_evaluator-1.6-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:5ad8c9ed0aa7586c6a8faa35f4486eec6642346367c309c2cfbb3776b797e6d1"},
+    {file = "flip_evaluator-1.6-cp311-cp311-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:e72a4db7176660fffd529fc9b3468e592fae1298503eb6147bfbeff8275d2c25"},
+    {file = "flip_evaluator-1.6-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:8044f7fa80e9b802546fcd2d4a17a1ac42cc6c365d7f187d3a0f2c0a769e1c4b"},
+    {file = "flip_evaluator-1.6-cp311-cp311-musllinux_1_2_i686.whl", hash = "sha256:dd872f4c7ffb6c79138c6b773e67afc4775e7dd3a0d502b02a49e8489c1c8dad"},
+    {file = "flip_evaluator-1.6-cp311-cp311-musllinux_1_2_x86_64.whl", hash = "sha256:d1abd09077820afba8f86b41a5761509915a5a9c8771d6abc60bc665820f84b8"},
+    {file = "flip_evaluator-1.6-cp311-cp311-win32.whl", hash = "sha256:8a3ec807f9728951fecdcc707e7827bee09d57fb0f88d07621d9e010e88b2f86"},
+    {file = "flip_evaluator-1.6-cp311-cp311-win_amd64.whl", hash = "sha256:ac86c719ad75d04cda925be17519f35ef1b9bf80ce05439322217f95471ea1d3"},
+    {file = "flip_evaluator-1.6-cp312-cp312-macosx_10_15_x86_64.whl", hash = "sha256:43b7f873b0cb599c0dbca8ca4c007471a5c1ed97606f4a16edbf57caafadfeb1"},
+    {file = "flip_evaluator-1.6-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:656684323761a0703628ad76ec4bbd65149b135e14dbb96f527c8ca1a5d196f7"},
+    {file = "flip_evaluator-1.6-cp312-cp312-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b7d207105760b5dc52370263889d4398e6c1ad6be40d0c132cfd98542f4db90e"},
+    {file = "flip_evaluator-1.6-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:c43e2c249ed70d866edfdd83fd408374496c3a7417ca56e859141da2f244f7bd"},
+    {file = "flip_evaluator-1.6-cp312-cp312-musllinux_1_2_i686.whl", hash = "sha256:b388f8460408e545766e65903d301e85887c9c2204ac62b70842e2ba7bfcd806"},
+    {file = "flip_evaluator-1.6-cp312-cp312-musllinux_1_2_x86_64.whl", hash = "sha256:4835eab1c15642823757f4043bfcffaf3ac56c93969bb1c1c43bcc6d2270ea82"},
+    {file = "flip_evaluator-1.6-cp312-cp312-win32.whl", hash = "sha256:bbcc54c70ed29b2ba93fb42ca4946fb5cc9a87264fecf831bb96343537db1d0b"},
+    {file = "flip_evaluator-1.6-cp312-cp312-win_amd64.whl", hash = "sha256:36e1c290194f6e50d3ffd4e3014939b4f5a43971fd830baff3f6894418d5582a"},
+    {file = "flip_evaluator-1.6-cp313-cp313-macosx_10_15_x86_64.whl", hash = "sha256:a40ba1febe592d7004f8c968988bcf20c92b49d3dcc7ea85621ced18f22736fc"},
+    {file = "flip_evaluator-1.6-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:bdec6f15ff26c05c9ead6a90f557d65b007a0a321d537ae22996670c560b47ce"},
+    {file = "flip_evaluator-1.6-cp313-cp313-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:6423dfc80e04c5a0215d44df144593703b3e37b0e37acdabd9c6f5f08be30a64"},
+    {file = "flip_evaluator-1.6-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:5427f522967a61a0a1acc06078280bfec52bc445f176700d074b29e820e2aa40"},
+    {file = "flip_evaluator-1.6-cp313-cp313-musllinux_1_2_i686.whl", hash = "sha256:4c715ad536556c64d9ccd22fba569eccf4d720fe6a6dcee757e087dbe9e45792"},
+    {file = "flip_evaluator-1.6-cp313-cp313-musllinux_1_2_x86_64.whl", hash = "sha256:1c5bab7bb2a26fe27d27b69d22e09825f7c641a91329da9689024f3c57ba7f86"},
+    {file = "flip_evaluator-1.6-cp313-cp313-win32.whl", hash = "sha256:18073e446041e02ceb6903eebfcae29369404b88a336416a092228a0a90860c6"},
+    {file = "flip_evaluator-1.6-cp313-cp313-win_amd64.whl", hash = "sha256:4fff828810979aff9ab1318bfb4abdaf8689503c0aa38985f62978a70f6ee62c"},
+    {file = "flip_evaluator-1.6-cp38-cp38-macosx_10_15_x86_64.whl", hash = "sha256:ff60e86b4be156f29fdc6ccb879c68f303f37bb298abdeb629ccba4bb7bb4515"},
+    {file = "flip_evaluator-1.6-cp38-cp38-macosx_11_0_arm64.whl", hash = "sha256:fb94be403af24048716424e9b58bf7de6cb7676c80ef1e72826c360a2177607b"},
+    {file = "flip_evaluator-1.6-cp38-cp38-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:780c9941569754684614eeff3d011c3fcfbcbd1b21d4223ae68134482fff5e72"},
+    {file = "flip_evaluator-1.6-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:4256559a877b16afa5fa27d3a090dfe3388cb14d802712ff21673217bd895762"},
+    {file = "flip_evaluator-1.6-cp38-cp38-musllinux_1_2_i686.whl", hash = "sha256:1b9d4b41b4c0dc83fec170c1b38e68c479123919372ed3434bd78cf23baff57b"},
+    {file = "flip_evaluator-1.6-cp38-cp38-musllinux_1_2_x86_64.whl", hash = "sha256:96f17705eee54877934bcfce1939c314569a2c31a50267594c943d0b2ec29060"},
+    {file = "flip_evaluator-1.6-cp38-cp38-win32.whl", hash = "sha256:b32f02289962211719d280174a989ce7537f5d1ec1cb0fc80b54a37c23563a15"},
+    {file = "flip_evaluator-1.6-cp38-cp38-win_amd64.whl", hash = "sha256:ff37de190d4add51ad04b6cee1a6dd9b1fb97b26b3859cd7f98b98621bd8edb8"},
+    {file = "flip_evaluator-1.6-cp39-cp39-macosx_10_15_x86_64.whl", hash = "sha256:a12b5f13e1e04965a871ea7ca742f824a6e18ac3be98ae5d9523d254029a1770"},
+    {file = "flip_evaluator-1.6-cp39-cp39-macosx_11_0_arm64.whl", hash = "sha256:37b741376789d1813bf98be2fc89856822fbfaad0309075281531c5cbd31973f"},
+    {file = "flip_evaluator-1.6-cp39-cp39-manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:ad9f6272a95d6621ff6ce131fd657d2f906276b8c10d2f0d5ca6f7ec272b411c"},
+    {file = "flip_evaluator-1.6-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:120944741894e70ffbf7a496d251e85b591ebaf40bb6746d9c4581e45b75140a"},
+    {file = "flip_evaluator-1.6-cp39-cp39-musllinux_1_2_i686.whl", hash = "sha256:f3aecf7fb2ae79a59981d216098c33bf2509ac426b5fab28b24f1b4f70cefc8a"},
+    {file = "flip_evaluator-1.6-cp39-cp39-musllinux_1_2_x86_64.whl", hash = "sha256:16333b09072155ec41e5d9b806ac66a04098f600b6120ae0be4c42b946bad319"},
+    {file = "flip_evaluator-1.6-cp39-cp39-win32.whl", hash = "sha256:bf33a692c3379c47e6526079739da2553cf0b53e37100423e8da2e39a15a8177"},
+    {file = "flip_evaluator-1.6-cp39-cp39-win_amd64.whl", hash = "sha256:c2aba17b162bf3fa0f68a8841031442c589b23180fc3912cafb8c3dcfefc5641"},
+]
+
+[[package]]
 name = "fonttools"
 version = "4.54.1"
 description = "Tools to manipulate font files"
@@ -4021,4 +4079,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.11"
-content-hash = "ac3df926133f09350a6314d1c0e613dd417dd92a7c9dfa89d3c1cfd8cac78dc7"
+content-hash = "16c0c8ca85fc6c7877a862bb1a866fc963a5742016d603204b18ad60d0a1f3d6"

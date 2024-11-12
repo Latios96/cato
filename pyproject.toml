@@ -64,6 +64,7 @@ url-normalize = "^1.4.3"
 matplotlib = "^3.7.1"
 urllib3 = "^1.26.18" # https://github.com/docker/docker-py/issues/3113#issuecomment-1533389349
 pytracing = "^0.4"
+flip-evaluator = "^1.6"
 
 [tool.poetry.dev-dependencies]
 black = "^24.3.0"

@@ -11,7 +11,7 @@ from cato_common.domain.comparison_settings import ComparisonSettings
 from cato_common.domain.result_status import ResultStatus
 
 logger = logging.getLogger(__name__)
-import flip
+from flip_evaluator import flip_python_api
 
 
 class FlipImageComparator:
@@ -52,7 +52,7 @@ class FlipImageComparator:
 
         # todo check resolution errors
         try:
-            diff_image_np, mean_error, stats = flip.evaluate(
+            diff_image_np, mean_error, stats = flip_python_api.evaluate(
                 reference,
                 output,
                 "HDR" if reference.endswith(".exr") else "LDR",

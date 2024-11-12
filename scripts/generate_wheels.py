@@ -178,7 +178,7 @@ if __name__ == "__main__":
             "scikit-image",
             "scipy",
             "pytracing",
-            "flip",
+            "flip-evaluator",
         ],
     )
 
@@ -240,7 +240,7 @@ if __name__ == "__main__":
             "jsonpath-ng",
             "marshmallow-polyfield",
             "matplotlib",
-            "flip",
+            "flip-evaluator",
         ],
         include_files=[
             (
