@@ -58,7 +58,7 @@ jobs:
           python-version: ${{ matrix.python }}
       - name: Install Python deps (to prevent pywin32_bootstrap issues in CI)
         run: |
-          pip install poetry
+          pip install poetry==1.8.3
           python -m virtualenv .venv
           .venv\Scripts\activate
           poetry export -o requirements-poetry.txt --without-hashes
