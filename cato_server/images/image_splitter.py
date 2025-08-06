@@ -88,11 +88,11 @@ class ImageSplitter:
         return command, status, output
 
     def __get_key(self, name):
-        if name in ["R", "G", "B"]:
+        if name.upper() in ["R", "G", "B"]:
             key = "rgb"
-        elif name == "A":
+        elif name.upper() == "A":
             key = "alpha"
-        elif name == "Z":
+        elif name.upper() == "Z":
             key = "depth"
         else:
             key = name.split(".")[0]
