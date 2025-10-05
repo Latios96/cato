@@ -7,6 +7,7 @@ from cato_common.domain.file import File
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_server.storage.sqlalchemy.abstract_sqlalchemy_repository import (
     AbstractSqlAlchemyRepository,
+    K,
 )
 from cato_server.storage.sqlalchemy.sqlalchemy_simple_file_storage import (
     _FileMapping,
@@ -173,3 +174,30 @@ class SqlAlchemyDeduplicatingFileStorage(
     def _get_value_counter_from_path(self, path):
         value = os.path.splitext(os.path.basename(path))[0]
         return int(value)
+
+    def delete_by_id(self, id: K) -> None:
+        f = self.find_by_id(id)
+
+        super().delete_by_id(id)
+
+        if self._has_other_entry(f):
+            return
+
+        path = self.get_path(f)
+        if not os.path.exists(path):
+            return
+        os.remove(path)
+
+    def _has_other_entry(self, file: File):
+        with self._session_maker() as session:
+            entity = (
+                session.query(_FileMapping)
+                .filter(
+                    _FileMapping.hash == file.hash
+                    and _FileMapping.value_counter == file.value_counter
+                )
+                .first()
+            )
+            if not entity:
+                return False
+            return True

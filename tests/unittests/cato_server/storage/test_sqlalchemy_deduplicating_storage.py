@@ -173,3 +173,51 @@ def test_hash_collision_should_store_into_next_value_counter(
             )
         )
     ) == {"0.png", "1.png"}
+
+
+def test_delete_file_with_no_remaining_duplicates(
+    sqlalchemy_deduplicating_storage, test_resource_provider
+):
+    f = sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name(TEST_IMAGE_WHITE_PNG)
+    )
+    assert os.path.exists(sqlalchemy_deduplicating_storage.get_path(f))
+
+    sqlalchemy_deduplicating_storage.delete_by_id(f.id)
+
+    assert sqlalchemy_deduplicating_storage.find_by_id(f.id) is None
+    assert not os.path.exists(sqlalchemy_deduplicating_storage.get_path(f))
+
+
+def test_delete_file_with_no_file_on_disk_should_not_fail(
+    sqlalchemy_deduplicating_storage, test_resource_provider
+):
+    f = sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name(TEST_IMAGE_WHITE_PNG)
+    )
+    os.remove(sqlalchemy_deduplicating_storage.get_path(f))
+
+    sqlalchemy_deduplicating_storage.delete_by_id(f.id)
+
+    assert sqlalchemy_deduplicating_storage.find_by_id(f.id) is None
+
+
+def test_delete_file_with_remaining_duplicates(
+    sqlalchemy_deduplicating_storage, test_resource_provider
+):
+    f1 = sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name(TEST_IMAGE_WHITE_PNG)
+    )
+    f2 = sqlalchemy_deduplicating_storage.save_file(
+        test_resource_provider.resource_by_name(TEST_IMAGE_WHITE_PNG)
+    )
+    assert os.path.exists(sqlalchemy_deduplicating_storage.get_path(f1))
+    assert sqlalchemy_deduplicating_storage.get_path(
+        f1
+    ) == sqlalchemy_deduplicating_storage.get_path(f2)
+
+    sqlalchemy_deduplicating_storage.delete_by_id(f1.id)
+
+    assert sqlalchemy_deduplicating_storage.find_by_id(f1.id) is None
+    assert sqlalchemy_deduplicating_storage.find_by_id(f2.id) is not None
+    assert os.path.exists(sqlalchemy_deduplicating_storage.get_path(f2))
