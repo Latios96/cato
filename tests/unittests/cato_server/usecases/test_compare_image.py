@@ -35,7 +35,7 @@ def test_context():
             )
             self.mock_image_comparator.compare.return_value = self.comparison_result
             self.mock_file_storage.find_by_id.side_effect = lambda x: File(
-                id=x, name=f"{x}.png", hash="1", value_counter=0
+                id=x, name=f"{x}.png", hash="1", value_counter=0, byte_count=None
             )
             self.mock_file_storage.get_read_stream.side_effect = lambda x: BytesIO(
                 b"output image" if x == 1 else b"reference image"
@@ -97,7 +97,7 @@ class TestCompareImage:
 
     def test_compare_images_from_db_successfully(self, test_context):
         test_context.mock_file_storage.find_by_id.side_effect = lambda x: File(
-            id=x, name=f"{x}.png", hash="1", value_counter=0
+            id=x, name=f"{x}.png", hash="1", value_counter=0, byte_count=None
         )
         test_context.mock_file_storage.get_read_stream.side_effect = lambda x: BytesIO(
             b"output image"
@@ -308,7 +308,9 @@ class TestCompareImage:
 
     def test_compare_images_from_db_no_output_image(self, test_context):
         test_context.mock_file_storage.find_by_id.side_effect = lambda x: (
-            File(id=x, name=f"{x}.png", hash="1", value_counter=0) if x == 10 else None
+            File(id=x, name=f"{x}.png", hash="1", value_counter=0, byte_count=None)
+            if x == 10
+            else None
         )
 
         with pytest.raises(ValueError):

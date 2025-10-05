@@ -17,6 +17,7 @@ def test_save_file(sqlalchemy_deduplicating_storage, test_resource_provider):
     assert f.id == 1
     assert f.name == TEST_IMAGE_WHITE_PNG
     assert f.hash
+    assert f.byte_count == 1969
 
 
 def test_save_files(sqlalchemy_deduplicating_storage, tmp_path, test_resource_provider):
@@ -39,6 +40,7 @@ def test_save_stream(sqlalchemy_deduplicating_storage, test_resource_provider):
     assert f.id == 1
     assert f.name == TEST_IMAGE_WHITE_PNG
     assert f.hash
+    assert f.byte_count == 1969
 
 
 def test_get_stream(sqlalchemy_deduplicating_storage, test_resource_provider):
@@ -95,6 +97,7 @@ def test_save_same_file_should_store_one_file_on_disk(
         test_resource_provider.resource_by_name(TEST_IMAGE_WHITE_PNG)
     )
     assert f1.name
+    assert f1.byte_count == 1969
     assert f1.id != f2.id
     assert f1.hash == f2.hash
 
@@ -119,6 +122,7 @@ def test_save_different_files_should_store_two_files_on_disk(
         test_resource_provider.resource_by_name("test_image_black.png")
     )
     assert f1.id != f2.id
+    assert f1.byte_count == 1969
     assert f1.hash != f2.hash
 
     assert set(os.listdir(str(tmp_path))) == {f1.hash[0:2], f2.hash[0:2]}
@@ -158,6 +162,7 @@ def test_hash_collision_should_store_into_next_value_counter(
         test_resource_provider.resource_by_name("test_image_black.png")
     )
     assert f1.id != f2.id
+    assert f1.byte_count == 1969
     assert f1.hash == f2.hash
 
     assert set(os.listdir(str(tmp_path))) == {f1.hash[0:2]}

@@ -63,6 +63,7 @@ def test_upload_file(cato_api_client, test_resource_provider):
         name="test.exr",
         hash="a233c347f49d2745b4f759bec0da9414e1bc980b1ece56f98dd7f9696d608709",
         value_counter=0,
+        byte_count=87444,
     )
 
 

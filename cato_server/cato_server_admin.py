@@ -10,6 +10,9 @@ from cato_server.admin_commands.config_template_command import ConfigTemplateCom
 from cato_server.admin_commands.create_api_token_command import CreateApiTokenCommand
 from cato_server.admin_commands.create_backup_command import CreateBackupCommand
 from cato_server.admin_commands.migrate_db_command import MigrateDbCommand
+from cato_server.admin_commands.populate_byte_count_command import (
+    PopulateByteCountCommand,
+)
 from cato_server.admin_commands.wait_for_db_connection_command import (
     WaitForDbConnectionCommand,
 )
@@ -88,6 +91,14 @@ def wait_for_rabbitmq_connection(path):
     wait_for_connection_command.wait_for_connection()
 
 
+def populate_byte_count(path):
+    path = get_config_path(path)
+    obj_graph = create_obj_graph(path)
+
+    populate_byte_count_command = provide_safe(obj_graph, PopulateByteCountCommand)
+    populate_byte_count_command.populate_byte_count()
+
+
 def main():
     parent_parser = argparse.ArgumentParser(add_help=False)
     main_parser = argparse.ArgumentParser()
@@ -146,6 +157,13 @@ def main():
         "--config", help="path to config.ini"
     )
 
+    populate_byte_count_parser = commands_subparser.add_parser(
+        "populate-byte-count",
+        help="Populate the byte_count field of file db entities",
+        parents=[parent_parser],
+    )
+    populate_byte_count_parser.add_argument("--config", help="path to config.ini")
+
     args = main_parser.parse_args()
 
     if args.command == "config-template":
@@ -160,6 +178,8 @@ def main():
         wait_for_db_connection(args.config)
     elif args.command == "wait-for-rabbitmq-connection":
         wait_for_rabbitmq_connection(args.config)
+    elif args.command == "populate-byte-count":
+        populate_byte_count(args.config)
     else:
         logger.error(f"No method found to run command {args.command}")
 

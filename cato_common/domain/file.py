@@ -1,4 +1,5 @@
 from dataclasses import dataclass
+from typing import Optional
 
 
 @dataclass
@@ -7,3 +8,4 @@ class File:
     name: str
     hash: str
     value_counter: int
+    byte_count: Optional[int]

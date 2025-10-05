@@ -6,12 +6,14 @@ def test_map_from_dict(object_mapper):
         {"id": 1, "name": "file_name", "hash": "the_hash", "value_counter": 0}, File
     )
 
-    assert result == File(id=1, name="file_name", hash="the_hash", value_counter=0)
+    assert result == File(
+        id=1, name="file_name", hash="the_hash", value_counter=0, byte_count=None
+    )
 
 
 def test_map_to_dict(object_mapper):
     result = object_mapper.to_dict(
-        File(id=1, name="file_name", hash="the_hash", value_counter=0)
+        File(id=1, name="file_name", hash="the_hash", value_counter=0, byte_count=None)
     )
 
     assert result == {
@@ -19,4 +21,5 @@ def test_map_to_dict(object_mapper):
         "name": "file_name",
         "hash": "the_hash",
         "valueCounter": 0,
+        "byteCount": None,
     }

@@ -59,8 +59,18 @@ class SqlAlchemyDeduplicatingFileStorage(
 
     def _create_file_obj_for_stream(self, name: str, stream: IO) -> Tuple[File, AnyStr]:
         bytes = stream.read()
+        byte_count = len(bytes)
         file_hash = self._hash_calculatur(bytes).hexdigest()
-        return File(id=0, name=name, hash=str(file_hash), value_counter=0), bytes
+        return (
+            File(
+                id=0,
+                name=name,
+                hash=str(file_hash),
+                value_counter=0,
+                byte_count=byte_count,
+            ),
+            bytes,
+        )
 
     def _create_file_obj_for_path(self, path: str) -> Tuple[File, AnyStr]:
         with open(path, "rb") as f:
@@ -72,10 +82,17 @@ class SqlAlchemyDeduplicatingFileStorage(
             name=domain_object.name,
             hash=domain_object.hash,
             value_counter=domain_object.value_counter,
+            byte_count=domain_object.byte_count,
         )
 
     def to_domain_object(self, entity: _FileMapping) -> File:
-        return File(id=entity.id, name=entity.name, hash=entity.hash, value_counter=0)
+        return File(
+            id=entity.id,
+            name=entity.name,
+            hash=entity.hash,
+            value_counter=0,
+            byte_count=entity.byte_count,
+        )
 
     def mapping_cls(self):
         return _FileMapping

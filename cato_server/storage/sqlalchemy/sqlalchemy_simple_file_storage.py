@@ -3,7 +3,7 @@ import os
 import shutil
 from typing import IO, Tuple, AnyStr
 
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, BigInteger
 
 from cato_server.storage.abstract.abstract_file_storage import AbstractFileStorage
 from cato_common.domain.file import File
@@ -24,6 +24,7 @@ class _FileMapping(Base):
     name = Column(String)
     hash = Column(String)
     value_counter = Column(Integer)
+    byte_count = Column(BigInteger)
 
 
 class SqlAlchemySimpleFileStorage(
@@ -63,8 +64,18 @@ class SqlAlchemySimpleFileStorage(
 
     def _create_file_obj_for_stream(self, name: str, stream: IO) -> Tuple[File, AnyStr]:
         bytes = stream.read()
+        byte_count = len(bytes)
         file_hash = hashlib.sha3_256(bytes).hexdigest()
-        return File(id=0, name=name, hash=str(file_hash), value_counter=0), bytes
+        return (
+            File(
+                id=0,
+                name=name,
+                hash=str(file_hash),
+                value_counter=0,
+                byte_count=byte_count,
+            ),
+            bytes,
+        )
 
     def _create_file_obj_for_path(self, path: str) -> Tuple[File, AnyStr]:
         with open(path, "rb") as f:
@@ -75,10 +86,17 @@ class SqlAlchemySimpleFileStorage(
             id=domain_object.id if domain_object.id else None,
             name=domain_object.name,
             hash=domain_object.hash,
+            byte_count=domain_object.byte_count,
         )
 
     def to_domain_object(self, entity: _FileMapping) -> File:
-        return File(id=entity.id, name=entity.name, hash=entity.hash, value_counter=0)
+        return File(
+            id=entity.id,
+            name=entity.name,
+            hash=entity.hash,
+            value_counter=0,
+            byte_count=entity.byte_count,
+        )
 
     def mapping_cls(self):
         return _FileMapping

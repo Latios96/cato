@@ -27,9 +27,11 @@ def test_should_create_thumbnail(test_result_factory, tmp_path, test_resource_pr
         height=1080,
         transcoding_state=ImageTranscodingState.TRANSCODED,
     )
-    original_file = File(id=0, name="the_image.png", hash="hash", value_counter=0)
+    original_file = File(
+        id=0, name="the_image.png", hash="hash", value_counter=0, byte_count=None
+    )
     saved_thumbnail_file = File(
-        id=10, name="the_image.png", hash="hash", value_counter=0
+        id=10, name="the_image.png", hash="hash", value_counter=0, byte_count=None
     )
     saved_thumbnail_path = tmp_path / "saved_thumbnail.png"
 

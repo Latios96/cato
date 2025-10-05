@@ -13,6 +13,7 @@ def test_upload_file(client_with_session):
         "id": 1,
         "name": "my_file_name",
         "valueCounter": 0,
+        "byteCount": 22,
     }
 
 

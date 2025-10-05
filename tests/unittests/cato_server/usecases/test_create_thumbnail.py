@@ -36,10 +36,18 @@ def test_context(test_result_factory):
                 transcoding_state=ImageTranscodingState.TRANSCODED,
             )
             self.original_file = File(
-                id=0, name="the_image.png", hash="hash", value_counter=0
+                id=0,
+                name="the_image.png",
+                hash="hash",
+                value_counter=0,
+                byte_count=None,
             )
             self.saved_thumbnail_file = File(
-                id=10, name="the_image.png", hash="hash", value_counter=0
+                id=10,
+                name="the_image.png",
+                hash="hash",
+                value_counter=0,
+                byte_count=None,
             )
             self.mock_image_repository = mock_safe(ImageRepository)
             self.mock_file_storage = mock_safe(AbstractFileStorage)
