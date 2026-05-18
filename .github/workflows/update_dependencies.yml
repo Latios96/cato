@@ -1,8 +1,6 @@
 name: Update Dependencies
 
 on:
-  schedule:
-    - cron: '0 6 * * 1,6'
 
 jobs:
   update_dependencies:
